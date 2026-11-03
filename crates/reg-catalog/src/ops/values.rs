@@ -112,7 +112,13 @@ fn values(server: &Server, params: &Params) -> Result<Value, Error> {
                 .map_err(|_| Error::invalid_parameter("level"))
         })
         .transpose()?;
-    let conn = server.catalog.connect()?;
+    let conn = if let Some(hash) = by_hash {
+        server.catalog.connect_for_hash("valueset", hash)?
+    } else if let Some(value) = params.get("classification") {
+        server.catalog.connect_for_ref(value)?
+    } else {
+        server.catalog.connect()?
+    };
     let page = if let Some(&code) = params.get("code") {
         pair(server, &conn, params, code)?
     } else {

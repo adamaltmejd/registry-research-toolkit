@@ -238,8 +238,11 @@ Accepting one requires reviewed curation and a premise lock.
 
 **Identity.**
 
-- Each occurrence carries an opaque *source key*: the provider's variable id where one
-  exists, otherwise the folded column name, scoped to the register.
+- Reader occurrences carry an opaque *source key*: the provider's variable id where one
+  exists, otherwise the folded column name, scoped to the register. An asserted
+  occurrence without a `key` guard currently gets a per-statement source key
+  (`stmt:<scoped identity>`). Aligning that default with the folded column is deferred
+  to the id sprint in [REBUILD.md §D](../REBUILD.md#d-deferrals).
 - Occurrences with one key in one register are one variable. The exception is a key that
   covers two folded spellings in overlapping periods anywhere in the register. The
   comparison uses the preferred edition of each period, so a preliminary and a final
@@ -260,7 +263,12 @@ Accepting one requires reviewed curation and a premise lock.
   splits. The first ledger is generated from today's slug pins. A release build refuses
   a variable without an id, or a ledger id reported unplaced (no placed target) or split
   (anchors reach several variables). The latter refusals name the ledger file, line and
-  id; dev builds keep reporting them without refusing.
+  id; dev builds keep reporting them without refusing. Build collects publication
+  refusals across registers, including refused curation and public-name collisions,
+  before placing a catalog. With `--report`, it writes the normal report plus `refusals`
+  (register, kind and full details), even when publication is refused. Inventory-wide
+  refusals have no register; all curation refusals retain their source locations. Stderr
+  summarizes counts; malformed inputs that prevent resolution still abort early.
 - **Row id:** renumbered every build and never exposed.
 
 **Curation.**
@@ -307,9 +315,17 @@ Accepting one requires reviewed curation and a premise lock.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
   withholds the selected occurrences. An explicit `set variable` changes the variable of
   exactly the selected occurrences; every unselected occurrence resolves as if the
-  statement were absent. The same exact-selection rule governs every field override:
-  change only selected whole occurrences, or the selected entity for fields owned by
-  tables, releases or variables. Selectors and premises use the immutable phase view.
+  statement were absent. A default group with no selected member keeps its default id.
+  Only a group with both selected and unselected members re-derives its inherited id
+  from anchors reaching its unselected members, falling back to the default id if none
+  reaches them; a dated anchor identifies the whole remaining group, not only its anchor
+  day. This prevents the default pass's id-order winner from absorbing a curated split.
+  Anchors spanning several default groups retain default identities rather than merging
+  those groups. The same exact-selection rule governs every field override: change only
+  selected whole occurrences, or the selected entity for fields owned by tables,
+  releases or variables. Selectors and premises use the immutable phase view.
+  Assignments cannot merge concurrent different folded spellings in one table;
+  resolution refuses with `D-11` at lock, before a malformed segment can be published.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
   `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
   occurrences; text runs and segments derive from those occurrences. `period` changes
@@ -322,14 +338,35 @@ Accepting one requires reviewed curation and a premise lock.
   storage; register tags have no home and remain deferred rather than propagating to
   variables. `notice` resolves to a finding on its selected subject. The emitter
   serializes these resolved facts and never derives them from provenance. Occurrence
-  descriptions live in the existing `override` table and are returned with segment
-  evidence; they do not replace definitions or operational definitions. No field gets a
-  second home. A value-set override chooses the occurrence's own set while retaining its
-  source population alternatives as evidence. Unsupported entity/field combinations are
-  located refusals. Type corrections that change the family participate in F6 and
-  ambiguity resolution; length corrections do not. Corrected conflict markers clear
-  while the original premises remain evidence. Format is carried and published without
-  changing agreement or F1 findings.
+  descriptions are not a field: source wording stays in occurrence labels, definitions
+  and operational definitions. A variable has one optional curated `description`, owned
+  by `var:<id>` and stored in `variable.description_text`. An occurrence description
+  setter is a located `description-subject` refusal; different descriptions for one
+  variable are refused, not selected by period or precedence. Table and release
+  descriptions remain fields of those entities. No fact gets a second semantic home. A
+  value-set override chooses the occurrence's own set while retaining its source
+  population alternatives as evidence. Unsupported entity/field combinations are located
+  refusals. Type corrections that change the family participate in F6 and ambiguity
+  resolution; length corrections do not. Corrected conflict markers clear while the
+  original premises remain evidence. Format is carried and published without changing
+  agreement or F1 findings.
+- **One variable, one description (maintainer, 2026-11-02).** The one curated
+  description states both what the variable means and how it is measured or derived.
+  There is no separate curated operational definition. For example: "Usual weekly hours
+  in the main job; the sum of HuVanlTim and BiVanlTim; from 2021 agreed hours are used
+  where usual equals agreed hours." The provider's definition/operational definition
+  split is source structure, retained as evidence and in the explicitly marked provider
+  fallback when a curated description is not yet available. Spelling variants and
+  wording drift are consolidated into one text. A minor change in scope or exact
+  definition belongs in that description with its change and year. A material change in
+  meaning requires a separate variable. Temporal succession uses `continues` with an
+  evidenced `at`; different meanings in parallel tables require a candidate split,
+  without a succession edge. Historical codings distinguished within one column do not
+  alone imply a split. Materially different meanings cannot be separate descriptions on
+  the same variable. Source-field corrections and drift findings retain their existing
+  semantics; correcting an occurrence's operational definition does not create a second
+  curated variable description. Identity questions require review before splitting
+  variables or assigning relation dates.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -374,17 +411,61 @@ Accepting one requires reviewed curation and a premise lock.
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
   version follows occurrences into segments and orders. Variable `tags` applies as
-  normalized membership, independently of identity, binding, ordering and peers.
-  Sentinels, roles and unit types remain deferred to D's planned sentinel and
-  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
-  entity-name and search curation.
-- `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
-  as keys. Premises contain sorted `subjects` and `objects`: source locators,
-  coordinates, overridden values, guards and dependent facts, including the destination
-  facts used by table moves. Dependencies are evidence, never extra rows selected for
-  rewriting. Missing or changed premises, empty or ambiguous selectors, and conflicts
-  are located refusals. Release builds fail; dev builds skip refused statements and
-  report them. A `set` equal to the source is a redundant-set finding.
+  normalized membership, independently of identity, binding, ordering and peers. Table
+  and occurrence `role` values use one validated vocabulary for each entity kind.
+  `unit_type` populates the table's unit-type reference; variables do not inherit it.
+  Table setters require a source-stated or asserted table, not a synthesized implicit
+  table. Table and release `name` changes preserve their public ids; variable names use
+  `label`. Variable `synonyms` enrich search labels without adding delivery aliases.
+  `set sentinels` at an occurrence or variable address applies after value-set overrides
+  to the published hashes, including population alternatives. Sentinel codes are
+  set-wide: `vs_item.sentinel` changes for every reference to that shared set. Missing
+  codes in an explicit setter and disagreeing local declarations for the same hash
+  refuse at their authoring locations. Classification inventory `sentinel_codes` names
+  known non-canonical codes in columns bound to that exact version, not codes in its
+  canonical book. It marks the listed codes present in each bound occurrence's value
+  sets, including population alternatives; declarations absent from all bound sets are
+  counted, not refused. Classification lists sharing a bound set are additive. A listed
+  code that is canonical in any version bound to that set, including the declaring
+  version, refuses at the binding and inventory locations. The bits remain set-wide, and
+  the hash remains based on code, label and parent, without sentinel status.
+  Occurrence-scoped sentinel claims on shared sets are deferred to sentinel-aware
+  value-set identity; revisit when a dropped scoped entry needs it. Register name
+  corrections that differ from source remain deferred: they need a register address in
+  the grammar.
+- `curation.lock` is minified canonical JSON with `version = 3` and normalized statement
+  hashes as keys. The top-level `objects` map stores each full object once, keyed by the
+  SHA-256 of its canonical JSON. Each statement's `objects` is a sorted list of those
+  keys; `subjects` is unchanged. References are resolved and digest keys checked when
+  reading. Object order is not semantic; comparison uses canonical full-object order,
+  retaining field-level old/new diagnostics rather than reporting only changed hashes.
+  Versions 1 and 2 refuse with an instruction to run `reg-build lock`; locks are
+  regenerated, never migrated. Variable-level setters are `var:` setters containing only
+  `sets`, `tags`, `label`, `description`, `definition`, `operational_definition` or
+  `synonyms`. Their locked `subjects` record the variable slug, distinct matched locator
+  count and SHA-256 of the sorted canonical locator JSON lines. Changed membership
+  refuses with the variable subject and old/new counts, even when the counts are equal.
+  Occurrence field values and container facts (register, table and release objects) are
+  not premises for these setters. No container fact is folded into the digest: these
+  fields apply metadata to the matched variable without consuming container contents;
+  selector membership is already checked by the locator digest. Non-container objects
+  retain their full premises. None of these seven fields references a value set or
+  classification: those dependencies arise from other setter fields, which retain full
+  premises. A variable-level lock entry therefore has constant size, independent of
+  occurrence count and container text length. Every other statement, including mixed
+  setters with occurrence-level fields, keeps the full premise. Application and conflict
+  detection always use full in-memory subjects. Full premises contain sorted `subjects`
+  and `objects`: source locators, coordinates, overridden values, guards and dependent
+  facts, including the destination facts used by table moves. Dependencies are evidence,
+  never extra rows selected for rewriting. Missing or changed premises, empty or
+  ambiguous selectors, and conflicts are located refusals. Release builds fail; dev
+  builds skip refused statements and report them. A `set` equal to the source is a
+  redundant-set finding.
+- Source premise field projections and their canonical sort keys are shared per source
+  within each immutable view. Statement, conflict and lock bookkeeping clone shared
+  snapshots; acknowledgement findings copy only the snapshot they extend. Field
+  applications retain before/after records only for changed facts, while metadata and
+  provenance remain independent of record changes.
 - Evaluation serializes shared code-list facts once per phase and indexes selectors and
   application dependencies once per register phase. Conflict candidates share source
   locators, assertion addresses or table moves; the identity and overlap rules still
@@ -441,14 +522,14 @@ optional user-facing text. Kind-specific content is:
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `length`, `format`, `notice`, `coverage`,
-`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name` and `synonyms`.
-Source-shaped assertion fields have a separate closed schema, including table `name` and
-occurrence `type` and `length`. Lists of sets, tags, sentinels and synonyms normalize as
-sorted sets; asserted codes sort by code, while duplicate codes are refused. Addresses
-normalize folded spellings, expanded braces and sorted guards and period tokens before
-hashing. Links add relations; conflicting successions refuse. There is no
-successor-choice or `reject` form. Merged release changes update every claim to the
-release's final placement.
+`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name`, `synonyms`, `axes`
+and `facets`. Source-shaped assertion fields have a separate closed schema, including
+table `name` and occurrence `type` and `length`. Lists of sets, tags, sentinels and
+synonyms normalize as sorted sets; asserted codes sort by code, while duplicate codes
+are refused. Addresses normalize folded spellings, expanded braces and sorted guards and
+period tokens before hashing. Links add relations; conflicting successions refuse. There
+is no successor-choice or `reject` form. Merged release changes update every claim to
+the release's final placement.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
@@ -540,11 +621,14 @@ overlapping curated overrides are refused at both locations.
   With no usable canonical label, use the column alone. Reserve existing, retired and
   table ids before allocating new ones. Existing ids, including manually shortened label
   slugs, are never renamed by minting.
-- **Retirements.** `curation/retired.toml` permanently records each retired public id,
-  its kind, retirement version and reason (`merged`, `split` or `withdrawn`). Any PR
-  removing a published id adds its entry in the same PR; the id-sprint assembler appends
-  renames. The builder emits these entries to `ident_retired`, refuses live collisions
-  and reserves their names during minting. Entries are never removed or redirected.
+- **Retirements.** For ids published before v1, a rename switches the id; no retirement,
+  redirect or rename warning is required. For ids published from v1,
+  `curation/retired.toml` permanently records each retired public id, its kind,
+  retirement version and reason (`merged`, `split` or `withdrawn`); removing a published
+  id requires its entry in the same PR. The builder emits them to `ident_retired`,
+  refuses live collisions with both `ident` and `var_set` (including tags), and reserves
+  their names during minting and set membership admission. From v1, entries are never
+  removed or redirected.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.
@@ -657,8 +741,9 @@ overlapping curated overrides are refused at both locations.
   D-8 attaches it to SCB `r34` through ordinary curation, generated by the temporary D
   converter: folded spelling, worksheet family and whole occurrence periods select
   export rows, including D-4 assertions. VarId changes remain distinct identities.
-  Workbook wording supplies occurrence descriptions only where no curated description
-  exists; SCB labels and definitions stand. Evidenced sensitivity differences use
+  Workbook wording is reviewed into one variable description where no curated
+  description exists; differing wording is consolidated under the one-description rule,
+  while SCB labels and definitions stand. Evidenced sensitivity differences use
   occurrence setters, lineage uses `derived_from`, and individually reviewed quantities
   and codings of one concept use one consolidated `sets` setter per final variable.
   Headings yield reviewable candidates from the reader's section map, and adopted sets
@@ -721,16 +806,21 @@ overlapping curated overrides are refused at both locations.
 
 **Decisions taken in milestone C.**
 
-- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
-  natural key (pid, table name, meta key), never by row id, in nine sections: schema
-  (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
-  retired), provider and register names, table names and spans, per-variable segments,
-  label and definition runs, value sets (with the codes added and removed where only a
-  segment's value-set hash changed), and finding counts per code. Text shows at most `N`
-  (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
-  something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
-  and `curation_digest` never count, since they differ every release), 2 on a usage or
-  IO error or a missing or different `schema_version` major.
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
+  catalogs by natural key (pid, table name, meta key), never by row id, in nine
+  sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
+  kind changed, moved, retired), provider and register names, table names, roles,
+  unit-type slugs and spans, per-variable segments, label and definition runs, value
+  sets (including shared-hash sentinel changes and the codes added and removed where
+  only a segment's value-set hash changed), and finding counts per code. Text shows at
+  most `N` (default 20) per section; `--json` is complete. Exit 0 when nothing differs,
+  1 when something does (the meta keys `generation_id`, `catalog_version`,
+  `builder_version` and `curation_digest` never count, since they differ every release),
+  2 on a usage or IO error or a missing or different `schema_version` major. A surviving
+  variable id is listed as moved when both occurrence target sets are non-empty and no
+  old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
+  periods. Explicit table ids are compared by table name; implicit tables share their
+  register's id and are excluded.
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -741,13 +831,30 @@ overlapping curated overrides are refused at both locations.
   release does not state, each at its line, since a hand-written frame skips the checks
   a source reader's input has passed.
 - **Verification.** `reg-build verify FILE [--previous FILE]` is the single artifact
-  check: integrity, the schema's post-write queries, each value set's items hashing to
-  its address, and with `--previous` the id rules against the previous release. `emit`
-  runs it on the staged file before replacing the output, so conformance and the release
-  skill call the same authority. The schema version is
+  check: integrity, the schema's post-write queries (including same-register sets with
+  at least two distinct members and live/retired collisions), each value set's items
+  hashing to its address, and with `--previous` the id rules against the previous
+  release. `emit` runs it on the staged file before replacing the output, so conformance
+  and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable.
+  other version is not comparable. When the previous release's catalog version has an
+  integer major of at least 1, removed ids from `ident` or `var_set` must appear with
+  the same kind in `ident_retired`, and existing retirements must remain. A published
+  variable id's targets are its column-bearing occurrences' (table slug, folded
+  spelling, `[start, end)` period) triples. Targets overlap when table and spelling
+  match and their periods overlap; matching names in disjoint periods do not preserve
+  identity. An explicit table id targets its table name. Implicit tables share their
+  register's id and are excluded from the table rule. If an id of the same kind
+  survives, both target sets are non-empty, and no old/new targets overlap,
+  `verify --previous` refuses it as moved under that same version rule, naming the pid
+  and both target sets; retire that id and mint a new one. Otherwise, missing unretired
+  ids, moved ids and removed retirements are reported on stdout, one line per id in id
+  order with a total count, without refusing. The rule follows the previous release's
+  version, whatever the candidate's: a `dev` or 1.0.0 candidate compared with a 0.x
+  release is lenient. No flag changes this rule; other verification checks still apply.
+  Overlapping targets, including growth, are allowed. `diff` lists and counts moved ids
+  in its `ids` section. Registers and providers are excluded from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
@@ -857,6 +964,35 @@ Rules:
   context. Fine-grained HTTP routes map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
+**Curated by default, evidence on request (maintainer, 2026-11-02).** A variable's
+`show` summary returns its name, the one optional curated `description`, register,
+coverage hull (`period`), tables, sets (groups) and tags. Detailed coverage spans and
+gaps remain the `coverage` facet. The description combines meaning, measurement and
+derivation; `texts`, source spellings and a promoted top-level `definition` are not
+summary fields.
+
+When no curated description exists, `source_definition` supplies the most recent used
+occurrence's available source definition and operational definition as one `text`, with
+its period and `origin: "provider"`. Equal or contained wording is shown once; otherwise
+the two original texts are joined by a newline. Comparison collapses whitespace, folds
+case and ignores trailing Unicode punctuation; displayed wording stays original. The
+fields are never assembled from different occurrences or years. A completely silent
+provider has no invented fallback. This is explicitly provider wording, not a curated
+description.
+
+`show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
+texts use the same containment rule within each occurrence, then identical normalized
+texts are grouped with all their periods, preserving gaps. Each text retains its source
+occurrences: labels, units, periods, table, status, source keys, exact spellings and
+source locators. Occurrences without either text are kept in `source_only`. Evidence
+also includes delivered/curated aliases; applied curation fields with statement
+file/line, evidence and caveat; and linked documents. Original provider text and
+spelling values are restored from override provenance when a correction exists,
+including a source that was silent. Actual description, identity and group/tag statement
+locators are included; a ledger id does not acquire an invented statement. Evidence is
+never loaded or returned by the default summary. `segments(evidence=true)` remains the
+structural segment evidence pathway.
+
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
 agents need no install and no 1.2 GB download. `/mcp` and every POST share one rate
 limit per client address, sized for tool calls (`reg-meta/src/limit.rs`). A published
@@ -893,16 +1029,33 @@ provider oddities into the universal shape.
 ## FQID grammar
 
 Every entity has a fully qualified identifier: a `/`-separated string whose kind follows
-from its segment count and the `class/` prefix alone. `reg-core` owns the grammar
-(`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
+from its segment count and the leading `class/` or `set/` namespace. `reg-core` owns the
+grammar (`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
 (ledgers under `curation/`) and resolves a ref to an entity
 ([REBUILD.md](../REBUILD.md)).
 
-- 1 segment is a provider, 2 a register, 3 a table or a variable (a register's implicit
-  table has the register's 2-part id).
-- A leading `class/` marks a classification (`class/<slug>`) or a version
-  (`class/<family>/<version>`). `class` is reserved as a slug everywhere, and so is
-  `group`, the first segment of the group refs the grammar still reserves.
+  | Kind                   | Public id                                                                         |
+  | ---------------------- | --------------------------------------------------------------------------------- |
+  | provider               | `<provider>`                                                                      |
+  | register               | `<provider>/<register>`                                                           |
+  | table or variable      | `<provider>/<register>/<slug>`; an implicit table uses its register's two-part id |
+  | classification family  | `class/<family>`                                                                  |
+  | classification version | `class/<family>/<version>`                                                        |
+  | set                    | `set/<provider>/<register>/<slug>`                                                |
+
+- `class` is reserved as a slug everywhere. `set` and `group` are reserved only as
+  leading provider segments; they remain valid register and final slugs. The set
+  namespace's provider obeys the same provider restrictions. The builder refuses a
+  reserved provider in the manifest or source frame with located `provider-reserved`. A
+  plain three-part ref never addresses a set, even when its final slug matches a set's
+  slug. Set refs are presentation addresses, never project bindings, source tables or
+  relation endpoints.
+- A slash-separated ref is checked against this grammar before exact lookup. The leading
+  `set/` namespace resolves only a set. Malformed set refs are `invalid_ref`; a
+  well-formed absent set is `not_found`. Exact lookup cannot reinterpret the kind. Sets
+  resolve only by their namespaced id: bare-name lookup excludes sets, so a same-slug
+  set never makes an ordinary variable's bare name ambiguous. Bare `set` is an ordinary
+  name and may resolve a variable; only leading `set/` selects the set namespace.
 - A slug is lowercase ASCII kebab-case, `^[a-z](?:-?[a-z0-9])*$`; a class version may
   start with a digit.
 - Time is context, not identity: no id has a period slot. The period grammar is `YYYY`,
@@ -1187,6 +1340,10 @@ then a holdings asset paired with the base catalog. The same compiler and
 second steward's webapp and steward-specific MCP is later, not E; E establishes the
 data/config contract, not a second deployment.
 
+`reg-build holdings --report FILE` forwards the ordinary supplemental build report,
+including located release refusals; it does not admit a refused artifact. Reports and
+holdings outputs cannot overwrite the reference catalog.
+
 The compiler has explicit paths and pins; it reads no neighbouring files implicitly. The
 inspected private inputs worktree is clean at commit
 `9186fcbceeb2283a50c7f684764869e4dda5765e` (also the current `curation/inputs.toml`
@@ -1414,18 +1571,138 @@ search indexes stay in the catalog file. Holdings inputs and stored cross-file m
 use public ids; integer ids are local to each database and never joined across files
 without their database origin. Do not import schema-v3's obsolete programme id ranges or
 `UNION ALL` of unqualified row ids.
-`reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
-cross-file references that SQLite cannot enforce as foreign keys.
+`reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
+the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
+admits the clean steward checkout against the repository, commit, config and input pins
+recorded in the holdings file, then independently re-reads the census and storage
+export. Every census table and exact physical column must be present, with no extra
+coordinates; offered columns must match the source schema, table type, storage type,
+length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
+Physical mappings must equal the complete admitted explicit mappings or automatic
+spelling matches: interval unions grouped by table, variable, role, carried flag,
+caveat, authored window and evidence locator. Verification derives these expectations
+from the admitted sources independently of compiler candidates and placements, including
+shared projection keys. Missing coverage or changed attributes refuse with located
+`holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
+artifact table/column ids without printing private physical identifiers.
+
+The census is the authority for physical possession (maintainer, 2026-11-02), and its
+replacement is an ordinary pinned input change followed by recompilation. Reviewed
+routes and windows on surviving columns remain authored inputs. A vanished column named
+by an authored decision is `stale_declared_mapping_target`, located to that decision and
+its route locators; it is not silently retired. A new column passes through ordinary
+interval-local matching and is retained with `mapping_missing` when undocumented. There
+is no migration or carry-forward of old physical rows.
+
+Steward attestation can support years absent from the reference catalog (maintainer,
+2026-11-02). Provider labels, definitions and value sets for those years are not a
+prerequisite. A canonical occurrence can be added when all five conditions hold:
+
+1. The same register and delivery-table series are established by the census naming and
+   pinned series topology, including its covered-year tables.
+2. The exact physical column name occurs for that variable, or its spelling is
+   documented. The same exact census spelling with an unambiguous covered-year mapping
+   is a spelling witness; the pinned reader's literal-prefix rules still apply.
+3. The periods are contiguous or the series is continuous, with no documented break,
+   recode or intervening `continues` successor. Missing provider metadata alone is not a
+   documented break.
+4. Storage families are compatible with covered-year occurrences. Actual covered-year
+   storage facts take precedence over provider type descriptions; nearest covered facts
+   are compared so an unrelated later storage change is not projected backwards.
+5. No contrary fact assigns the name to another variable in that year/table or documents
+   a meaning change. Accepted earlier-coding bindings remain contrary evidence to
+   replacing that coding with the later canonical meaning.
+
+A documented steward variable may retain its private definition namespace: both
+placements must have located provenance to the same actual source register and census
+series. That namespace alone does not establish a different physical source.
+
+Each such occurrence and physical binding carries
+`no provider metadata for <years>; identity from census column and series continuity`,
+with located evidence for the conditions, and enters the private global-curation
+worklist. A failed condition is named in the hold and its follow-up. Shared-shape
+choices without a separating fact remain held. Documentary new-variable definitions
+still use ordinary supplemental transcription and ledgers. Compiling these attestations
+never changes global validity or invents historical provider types, code lists or
+definitions.
+
+A census table need not have a logical route when no route is proved. Its held columns
+remain held, and other columns without an accepted owner remain `mapping_missing`.
+Absence of a route grants no possession; a declared route for an offered binding must
+resolve. This lets a fully held table survive a census refresh without a guessed route.
+An authored mapping may itself have `hold` and `follow_up`, with a reason and locator.
+It produces a `mapping_held` notice with its requested window and follow-up, never a
+placement or automatic fallback. This preserves a proved earlier-coding binding beside
+an unproved later meaning without pretending that either widens global validity.
+
+The compiler's closed steward config adds `inputs.holdings` (authored replacement
+topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
+SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
+individual file pins are also accepted. Every supplemental manifest input is pinned too.
+Config bytes must match the selected Git commit, including when index flags hide
+worktree changes. Paths stay inside that checkout and directory traversal refuses
+symlinks. `--registry <file>` selects an explicit alternative pin registry, including
+the synthetic corpus; it does not weaken commit or input admission.
+
+`inputs.holdings` declares physical tables and reviewed column decisions once. The old
+inventory and series remain migration evidence, not additional compiler authorities.
+Automatic matching still reads the raw census against the resolved semantic view; it
+does not consume generated automatic mappings. The census reader's closed config names
+the table header and numbered-column prefix and permits evidenced literal prefix
+rewrites only. Identifiers remain exact after reader trimming; rewrites affect matching,
+not emitted physical names. CSV errors identify input roles and row numbers without
+echoing private source values.
+
+Ordinary supplemental curation records its locks with
+`reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
+The same premise path runs during holdings compilation. A referenced base public id
+records its kind and exact catalog generation/file digest in the ordinary premise;
+changing the base requires explicit lock review. `holding_relation` stores these
+ordinary `derived_from` links with qualified public-id endpoints and local statement
+provenance. The supplemental subject and reference object retain their own database
+origins, including reverse graph queries. Only derivation crosses this boundary;
+identity/succession relations are not imported as shortcuts. Standalone catalog builds
+do not admit `--base` or emit a catalog with unresolved external endpoints.
+
+In paired metadata search, `scope=steward` restricts register, table and variable hits
+to accepted placements and their requested intervals before counts and ranking. A code
+or document hit is not itself a possession claim; linked values and documents remain
+available through semantic metadata. Supplemental results retain their own group, count
+and cursor. Reference-only response fields remain unchanged.
 
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
-overwritten. Their public ids must be distinct; the reader resolves a public id to one
-database origin before using its local row id. Shared code lists are addressed by
-content hash. The same catalog-check implementation can read this composed semantic view
-without changing base entities. Ordinary SWECOV-only provider definitions and steward
-slots both use this home (maintainer 2026-10-29); pre-2018 current coding also uses
-ordinary supplemental coding-table definitions; there is no new addressable "form"
-entity and no base-copy/append pipeline.
+overwritten. Their public ids must be distinct except for the explicit same-variable
+occurrence bindings below; the reader resolves an ordinary public id to one database
+origin before using its local row id. Shared code lists are addressed by content hash.
+The same catalog-check implementation can read this composed semantic view without
+changing base entities. Ordinary SWECOV-only provider definitions and steward slots both
+use this home (maintainer 2026-10-29); pre-2018 current coding also uses ordinary
+supplemental coding-table definitions; there is no new addressable "form" entity and no
+base-copy/append pipeline.
+
+Steward-attested occurrences of a canonical variable use the same ordinary CSV reader
+and ledger with the canonical variable/table ids. The pinned optional
+`inputs.reference_occurrences` TOML declares each `(table_pid, variable_pid)` with a
+locator and reviewed identity evidence from provider documents or census/series
+continuity. The compiler and pair verifier require both endpoints in both origins, the
+same register/provider, dated tables, nonempty source periods, and no overlap with
+existing reference segments. Both endpoints must exist, but the base may omit their
+membership: an evidenced, nonempty steward occurrence can supply the received table's
+missing key without inventing global validity. An empty supplemental occurrence still
+refuses (`holdings_reference_occurrence_empty`), even if the base lacks membership. Only
+the explicit variables, tables and their parent registers may share public identities;
+other collisions still refuse. These declarations are occurrence bindings, not aliases,
+derivations or copied reference rows. The verifier compares them with the pinned input.
+Holdings schema 2 adds `holding_reference_occurrence`; older holdings are recompiled.
+
+Reference `coverage` spans retain their original meaning. In selected steward mode,
+`coverage.steward_occurrences` exposes these canonical variables' attested supplemental
+periods, documentary label/definition, logical type/coding/value set and local source
+locators, beside accepted physical `held` intervals. Variable holdings include these
+steward-attested memberships even when the global member list omits them. This keeps the
+provenance and scope explicit without widening or copying global semantics. Logical
+order consumption of these occurrences remains e-order work.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -1434,44 +1711,97 @@ digest, plus input/curation/compiler pins. Admission checks both schemas exactly
 pairing pins; it does not accept another generation because the public ids happen to
 resolve.
 
+Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
+recompiled. Family declarations and their evidence remain steward input facts, with no
+register or physical-table naming rules in the compiler.
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
-  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-  | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
-  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                        |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                               |
-  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                        |
+  | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements`, reason and source locator. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                                   |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason, follow-up issue and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                          |
+  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried`, caveat/window and evidence locator. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                   |
 
-Row keys are `role = row_key` on column placements, validated against the logical
-column's role; there is no `holding_key` or `tbl_key` table (clean-room design §2.2, §13
-D10; schema-v3 prefatory rulings). Carried copies retain that role and grant no
-additional ordered cell. Stable key ordering derives from column ordinals. Holdings
-listings are metadata, not confidential by default (§13 D9); this does not authorize
-publishing private source documents, secrets or any microdata.
+Required held keys are the received row's entity components and time components,
+reviewed from received-row evidence. The pinned physical `[[table.key]]` declarations
+are their authority, not builder panel keys or a catalog identifier role. The 2026-10-23
+ruling excludes ordinary linking identifiers and descriptive fields. A donor table's
+identifiers do not redefine the received row unit. Each pinned physical table declares
+these requirements in `[[table.key]]`; the compiler stores that evidence as
+`holding_table.key_requirements`, and standalone verification compares it to the pinned
+source again. This is metadata on the physical table, not a new `holding_key` or
+`tbl_key` entity. Every offered interval must have exactly one applicable declaration
+and every declared physical component must have an applicable mapping on that received
+table through its authored default or explicit mapping routes. Those mappings must cover
+each offered span; a globally existing variable or a mapping on an unrelated route
+cannot satisfy the declaration. There is no identifier-based or missing-key fallback.
+Steward orders use the same declared entity/time components and their received column
+names. Panel identifier-kind comparisons use the declared entity subset; time components
+do not define identifier kinds. Linking identifiers remain ordinary columns and enter
+the order only when explicitly selected.
 
-Partition and projection are mutually exclusive. Projection parents must exist and cover
-the projected mapping's interval and logical variable; a parent is not itself a
-projection; no projection is an SQL join instruction. Index mappings by logical table,
-variable and start/end and columns by holding/name. Coverage is computed from indexed
-facts, not stored guesses about future UI summaries. Include source digests and the
-accepted census accounting in `meta`/`input`; publish no raw private locators that
-expose confidential document paths. Published locators use input-role ids and safe
-relative metadata locations.
+A time component can instead be supplied by a declared physical period column, or by the
+table's period (`year`, `month`, `day`, or the attested delivery `period`). A constant
+year/month/day must be the same across the entire physical table; a pooled multi-year
+table cannot pretend to supply one year. An attested delivery `period` must be one
+merged bounded span, not disjoint deliveries or an open interval. A physical period
+column is offered as an implicit time supplier only where an active declaration uses
+`period_key = "column"`. Physical time components remain required beside any additional
+implicit period dimension. Missing physical components require an explicit, located
+table-key hold and follow-up; it must be the table's sole key declaration, without a
+scoped `period`. Its columns remain held, not unmatched, and never become orderable
+placements. New census columns remain ordinary unmatched notices. Semantic `role` is
+retained from the reference or supplemental occurrence; it does not by itself make an
+identifier required. Carried copies must be declared entity/time components, including
+received keys whose old donor role was not `row_key`. They grant no additional ordered
+cell. Stable key ordering derives from column ordinals. Holdings listings are metadata
+(§13 D9); this does not authorize publishing private source documents, secrets or
+microdata.
+
+Partition and projection are mutually exclusive. A projection parent must exist and must
+not itself be a projection. Each mapped child span must have a nonempty shared declared
+entity/time key: matching entity components and matching time components in the
+applicable child and parent declarations. The parent must actually hold every shared
+component over that span; missing claims refuse with located
+`holdings_projection_key_missing`. Only shared components the parent holds are carried;
+child-only key components remain ordinary child placements. The relationship claims a
+shared key served by the parent; the child remains a separate extract with its own key
+and file. It does not require the parent to hold every child data variable or cover its
+interval. A child-only data cell is an ordinary placement ordered from the child's file.
+If the same logical cell is placed in both parent and child, the duplicate is authorized
+by the declared projection; undeclared duplicates still refuse. Carried-key rules remain
+in force. A child's required held keys may add entity components absent from the parent
+(recipient × child) and are independently key-validated. No projection is an SQL join
+instruction.
+
+This follows the maintainer's 2026-10-18 rulings "Projection, all 6 years" for
+`RTB_PostNr_YYYY` of `RTBYYYY` (`series/rtb-postnr.toml`) and "HUSH projection of PERS"
+(`series/swecov-sos-ekb-hush.toml`) for the EKB household extract: postal codes and
+household amounts are child-only data, not claims that the parent holds them.
+
+Index mappings by logical table, variable and start/end and columns by holding/name.
+Coverage is computed from indexed facts, not stored guesses about future UI summaries.
+Include source digests and the accepted census accounting in `meta`/`input`; publish no
+raw private locators that expose confidential document paths. Published locators use
+input-role ids and safe relative metadata locations.
 
 `reg-build verify` is the sole publication validator. It checks exact census accounting
-(one disposition per table; every physical column represented), referential integrity,
-form/window containment, complete storage facts for orderable columns, key roles and
-presence, disjointness/uniqueness of emitted placements, projection rules and located
-caveats. Competing candidate owners have already become `ambiguous_delivered_owners`
-notices with their contested placements omitted, so they do not violate uniqueness.
-Partitions authorize several explicitly disjoint locations; projections and carried keys
-authorize duplicates only under their stated rules. A warning cannot license an
-otherwise ambiguous mapping. Unmatched columns are notices/worklist entries, not
-publication blockers; they count in coverage but do not order until a valid mapping
-exists. Excluded, lookup and retained-unknown tables are accounted with reasons; a
-lookup used as a logical codelist is not thereby observation data.
+(one disposition per table; every physical column represented), stored disposition and
+periods against the pinned authored topology before using them as bounds, referential
+integrity, form/window containment, complete storage facts for orderable columns, key
+roles and presence, disjointness/uniqueness of emitted placements, projection rules and
+located caveats. Competing candidate owners have already become
+`ambiguous_delivered_owners` notices with their contested placements omitted, so they do
+not violate uniqueness. Partitions authorize several explicitly disjoint locations;
+projections, carried keys and documented position families authorize duplicates only
+under their stated rules. A warning cannot license an otherwise ambiguous mapping.
+Unmatched columns are notices/worklist entries, not publication blockers; they count in
+coverage but do not order until a valid mapping exists. Excluded, lookup and
+retained-unknown tables are accounted with reasons; a lookup used as a logical codelist
+is not thereby observation data.
 
 For example, `Swedbank_V15` is explicitly partition `v15` for 2020
 (`series/swedbank-v15.toml`); its label is not inferred from its name. Conversely,
@@ -1582,16 +1912,27 @@ resolution; only unmatched slots need new ids. In particular the five legacy yea
 uses are resolution/retargeting work, not an automatic minting queue. D32 still governs
 catalog identity: no catalog series entity and no merge of co-delivered slot variables.
 
-Under this decision, `holding_mapping` has one slot `variable_pid` per physical
+Under this decision, `holding_mapping` has one `variable_pid` per physical
 column/window; it has no member discriminator. Optional `slot_kind/index` on
-`holding_column` describes topology/order only, never N:1 identity. For a worked target
-shape (illustrative ids pending the normal ledger review),
+`holding_column` describes topology/order and never invents variable identity. A
+documented position family may place the same existing variable in several columns of
+one physical table (maintainer e-slots ruling, 2026-11-02). Each member explicitly
+declares the same nonblank `slot_family`, `slot_kind = "position"`, a distinct positive
+integer `slot_index`, and a locator evidencing the slot association. The exception is
+local to the same physical table and logical table/variable; it grants no cross-file
+duplication or temporal coverage. Index spellings such as `2` and `"02"` denote the same
+position and refuse as duplicates. The verifier compares family, kind, index and
+evidence locator with the pinned steward input before accepting the exception. Bare slot
+tags, different families and undeclared duplicates still refuse. Existing distinct
+steward slot variables keep their identities. For a worked target shape (illustrative
+ids pending the normal ledger review),
 `(table_pid = swecov/par-sv-slots, variable_pid = swecov/par-sv-slots/dia1, interval = [2019-01-01,2021-01-01))`
 points to `SWECOV_SOS_SV.DIA1` and carries `slot_kind = position`, `slot_index = 1` on
 its physical column. The provider long DIA is lineage evidence, not the target of that
-placement. Before these ids exist, an order of provider DIA does **not** select
-`DIA1`…`DIA30`. Do not publish mappings against invented ids. There is no holdings-only
-one-to-many expansion contract.
+placement. Without an explicit evidenced family mapping, an order of provider DIA does
+**not** select `DIA1`…`DIA30`. Do not publish mappings against invented ids. A family
+declaration authorizes physical placements; it does not add a logical-order expansion or
+a new catalog series entity.
 
 For example, in the adopted SV slot model, select the thirty adopted slot variables as a
 set; each maps to exactly one literal `DIA<N>` column, and the person row key is added
@@ -1824,7 +2165,7 @@ cases, and the SWECOV series.
   | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                              |
   | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                           |
   | Warned-gap catalog-state clones                            | Dropped                       | Ordinary supplemental coding tables preserve provenance and warn-not-hold notices; never copy widened global segments or add a holdings-only exception contract.                  |
-  | Alias, `same_as`, succession as possession shortcut        | Dropped                       | Documentary relations grant no possession.                                                                                                                                        |
+  | Alias or succession as possession shortcut                 | Dropped                       | Documentary relations grant no possession.                                                                                                                                        |
   | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                       |
   | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                            |
   | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                                      |
@@ -1959,13 +2300,13 @@ published relation endpoints can be followed. Ordinary bindings and the predeces
 retain explicit clipping; preliminary data remains a warning. A refusal blocks the whole
 order with the existing structured findings, never returns a partial order.
 
-  | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                         |
-  | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin selects an exact curated class version (schema §2.2). Missing versions are `fqid_unresolved`; unrelated versions are refused.                                       |
-  | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not. |
-  | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                         |
-  | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                       |
-  | panel `entity_key`, `time_key`            | removed                                                  | Keys come from the catalog: a table's row keys are its segments with role `row_key` (schema §0), and the time axis is the member table's `time_point` / `time_start` segment, else the member source's period.              |
+  | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                                                                      |
+  | ----------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin selects an exact curated class version (schema §2.2). Missing versions are `fqid_unresolved`; unrelated versions are refused.                                                                                    |
+  | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not.                                              |
+  | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                                                                      |
+  | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                                                                    |
+  | panel `entity_key`, `time_key`            | removed                                                  | Steward keys come from the pinned holdings table's declared entity/time requirements, not all identifier roles. Reference-only orders use catalog `row_key` segments; their time axis is the member table's `time_point` / `time_start` segment, else the source period. |
 
 A panel is a named grouping of sources with a comment. Which keys join across members is
 the researcher's call; the order check warns (`panel_row_keys_differ`).
@@ -2002,9 +2343,10 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 
 ## Search
 
-`search` and `search_facets` read one FTS5 index, `search` (columns `name`: pid and
-delivered spellings; `label`: labels; `body`: definitions, descriptions and document
-text), whose rowid is `search_item.id`. The builder indexes raw text under
+`search` and `search_facets` read the primary FTS5 index `search` (columns `name`: pid
+and delivered spellings; `label`: labels; `body`: definitions, register/table
+descriptions and document text), plus `search_description` for the curated variable
+description. Both use `search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
 of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
 A call returns one ranked list.
@@ -2016,10 +2358,12 @@ A call returns one ranked list.
    characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
-2. **Rank.** `bm25(search, 10.0, 5.0, 1.0)` (name, label, body), ascending. FTS5 scores
-   a row by its weighted hit count against its whole token count, so a hit weighs most
-   in an id or spelling and least in a definition or document text: a variable labelled
-   `Vikt` ranks above a longer one whose definition says vikt.
+2. **Rank.** Primary matches first, then description matches absent from the primary
+   match set. Within each index, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
+   ascending. The primary corpus and its scores are unaffected by descriptions. FTS5
+   scores a row by its weighted hit count against its whole token count, so a hit weighs
+   most in an id or spelling and least in a definition or document text: a variable
+   labelled `Vikt` ranks above a longer one whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
    `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
    unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
@@ -2029,7 +2373,11 @@ A call returns one ranked list.
    `invalid_ref`; it keeps `search_item.register_id = id`, which drops code rows and
    keeps a document linked to that register (its first linked subject's). `period` keeps
    `start < e AND s < end` over the row's hull, which drops code and document rows (no
-   span). So `type=code` with `register` or `period` is empty.
+   span). So `type=code` with `register` or `period` is empty. `tag` accepts a tag slug
+   or its `tag/<slug>` public id and keeps only variables belonging to that tag; an
+   unknown tag refuses with `not_found`, like an unknown register. It applies before
+   paging and paired-result counts, and belongs to the cursor context like every other
+   search filter.
 5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
    cursor's context is every parameter but `cursor` and `limit`, its offset the hits
    returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page
@@ -2045,28 +2393,40 @@ A call returns one ranked list.
    - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.
-7. **Facets.** One `GROUP BY register_id` over the match with `kind = 'variable'`,
-   registers in pid order, each `{fqid, variable_matches}`. With `register` (resolved as
-   in 4), only that register, adding `variables`: every matched variable `{fqid, name}`
-   in pid order, `limit` ignored; `registers: []` when none matches. Without it, `limit`
-   adds `name` and the first `limit` matched variables in pid order. With neither,
-   counts only. A key a mode does not list is omitted, never `null`.
+7. **Facets.** One `GROUP BY register_id` over the deduplicated matches with
+   `kind = 'variable'`, registers in pid order, each `{fqid, variable_matches}`. With
+   `register` (resolved as in 4), only that register, adding `variables`: every matched
+   variable `{fqid, name}` in pid order, `limit` ignored; `registers: []` when none
+   matches. Without it, `limit` adds `name` and the first `limit` matched variables in
+   pid order. With neither, counts only. A key a mode does not list is omitted, never
+   `null`.
+
+**Variable descriptions (#2039).** The one curated variable description is indexed in
+`search_description`, alongside the primary name, labels, definitions and operational
+definitions so AND queries can span source and curated text. A description equal to a
+primary definition or operational definition is not indexed twice. The separate index
+keeps the primary BM25 corpus, scores and ranks unchanged; only new matches follow,
+ranked with the same weights and ties. Facets count each variable once. Search hits keep
+their definition field, and `show` supplies the one description. `period` filters the
+variable's coverage hull, including gaps, rather than the wording's applicability; a
+dated minor change is stated in the description. The index and variable description
+field are part of this PR's catalog schema 5.
 
 `resolve` is different: exact `fold_identity` lookup of delivered column names, no
 full-text fallback and no scoring. It maps known headers; it is not discovery.
 
 ## Value sets and classifications
 
-A value set is content-addressed: its hash covers the sorted `(code, label)` items, so
-segments that deliver the same codes share one set, and a segment with no value set has
-`value_set: null`. `values` reads a set by its hash, or lists the sets holding a code
-and label. The blank code `""` is an item like any other. Classifications (versions,
-codes, correspondences) use curated identities. `curation/classifications.toml` holds
-family/version metadata, served names, publisher, existence periods and explicit
-succession edges. Its code lists reference reader value sets; they are never copied into
-inventory items. Inventory versions reuse the existing `assert classification-version`
-construction and emission path. Inline `items` remain available for genuinely
-hand-authored assertions.
+A value set is content-addressed: its hash covers the sorted `(code, label, parent)`
+items, so segments that deliver the same codes share one set, and a segment with no
+value set has `value_set: null`. `values` reads a set by its hash, or lists the sets
+holding a code and label. The blank code `""` is an item like any other. Classifications
+(versions, codes, correspondences) use curated identities.
+`curation/classifications.toml` holds family/version metadata, served names, publisher,
+existence periods, sentinel codes and explicit succession edges. Its code lists
+reference reader value sets; they are never copied into inventory items. Inventory
+versions reuse the existing `assert classification-version` construction and emission
+path. Inline `items` remain available for genuinely hand-authored assertions.
 
 Book periods describe existence only. They are neither inferred nor truncated, and
 versions of one family may overlap. Applicability comes exclusively from occurrence
@@ -2078,26 +2438,52 @@ substitutes a version or reinterprets codes.
 ## Sets and tags
 
 Variable membership is curated with `set sets` and `set tags` and emitted through the
-existing membership storage. The D-9 converter combines explicit legacy groups with
-existing memberships into one setter per final variable. It converts membership only:
-axes, filters, value labels, coordinates, delivery-column hints and tag rank/star/notes
-are dropped with a named reason in its source-located report. Useful presentation
-metadata is deferred to the webapp rebuild (source recorded in REBUILD.md). Register tag
-memberships are deferred because the catalog has no register tag home; they are never
-expanded onto variables. Tag search is not implemented in D-9.
+existing membership storage. A register's `set:<slug>` subject gives an existing set its
+`label`, optional `description` and ordered `axes = [{id, label}]`. These use the same
+statements, resolution, locks and provenance as other curated fields. Set labels and
+descriptions occupy `var_set.name_text` and `description_text`; ordered axes occupy
+`var_set_axis`. A variable's `facets = {axis = {value, label}}` supplies its coordinate
+in its one set, in `var_set_member_facet`; omitted labels default to the value. An
+undeclared axis or a variable outside the set refuses at its statement location. These
+tables are part of catalog schema 6.
+
+Facets do not name a set, so a faceted variable must belong to exactly one set;
+ambiguous membership refuses rather than choosing one alphabetically. Presentation
+refusals use the ordinary curation removal and rerun path. A stale set declaration
+withdraws dependent facets and their provenance: development builds continue with
+located warnings, while release builds collect the refusals in their report.
+
+`show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
+optional `description`, register public id, ordered `axes`, and `members`. Each member
+supplies `fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members
+sort by facet value in axis order (missing coordinates first), then by name and public id.
+`tags` is the union of the members' tags in public-id order. The summary contains
+curated presentation data; source evidence remains on the individual variables.
+
+The D-9 converter ported memberships; W6 restores unambiguously mapped legacy set
+labels, axes and member coordinates. Delivery-column hints, multi-coordinate identity
+splits, tag rank and classification groups stay outside this presentation model.
+Register tag memberships and tag star/notes remain maintainer decisions; register tags
+are never expanded onto variables. Tags filter search and have no `show` page.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it
 there should find in one place. A set never spans registers, and finding a concept
-across registers is a tag's job. It is presentation only, never an id kind, a binding or
-an order key.
+across registers is a tag's job. Its public id addresses presentation only; it is never
+a variable identity, a binding or an order key.
 
 A set is warranted when one register has two or more variables that are each an amount
 (or a coding) of the same concept for some unit under some definition. A component the
 source names as part of the concept counts, and so does a quantity computed from it (a
 ratio to the median, a weight, a cost-adjusted remainder). An input to the concept stays
 out: gross income goes into disposable income but is not a quantity of it. A lone
-variable gets no set.
+variable gets no set. The build refuses fewer than two distinct final member variables
+at the originating curation statement, after all memberships resolve. Repeated
+occurrences of one variable never supply a second member. Artifact verification also
+checks this minimum and that every member belongs to the set's register. Lock and build
+refuse a variable assigned to more than one set, naming every set and originating
+statement after identity resolution and before membership setters apply; tags are
+exempt.
 
 **A tag** is a curated thematic vocabulary across providers and registers, so a
 researcher can find "a measure of income" without knowing the register. A tag is broad:
@@ -2106,12 +2492,24 @@ a topic typed before knowing which register holds it (`income`, `transfers`,
 register's variables is a set. Tags are search-only: they discover and never touch
 identity, and a variable page does not list the variables sharing its tags (#1794).
 
+`curation/tag-vocabulary.toml` defines the flat vocabulary as `[[tag]]` entries with
+only `id`, `label` and `definition`. Ids are unique catalog slugs; labels and
+definitions are nonblank Swedish text. Unknown fields refuse. Build and lock refuse
+unknown membership slugs at their curation statement locations. The vocabulary is
+included in the build input hash, but never in lock premises or per-register lock
+digests: editing a definition needs no relock. Tag labels and definitions populate the
+existing `var_set.name_text` and `description_text`. Variable and set summaries expose
+tag memberships, and `search?tag=` narrows discovery to the tag's variables.
+
 ## Relationship graph
 
 `graph` returns the `relation` edges where the ref is the subject or the object. A
-relation has a `kind`: `continues` (a successor takes over, with the day it starts),
+relation has a `kind`: `continues` (successor → predecessor, with its evidenced `at`),
 `derived_from` (the lineage), `equivalent` and `label_of`. `kind` narrows the edges. A
-lone entity with no relations returns no edges.
+lone entity with no relations returns no edges. Variable succession and table succession
+use `continues`; a representation change is not a separate succession model. The public
+`at` period is stored as `at_start`/`at_end` on the relation, and no day is inferred
+from a coverage end.
 
 ## Documentation and what is not in the catalog
 
@@ -2161,6 +2559,7 @@ terms describe its cross-provider meanings.
   | Term           | Meaning                                                                                                |
   | -------------- | ------------------------------------------------------------------------------------------------------ |
   | variable       | The addressable variable and FQID target: identity `(provider, register, slug)`, one or more segments. |
+  | set            | A register-local presentation group at `set/<provider>/<register>/<slug>`; not an order binding.       |
   | binding        | A project's use of a variable, named by its FQID.                                                      |
   | segment        | A maximal run of one form of a variable in one table.                                                  |
   | equivalent     | A curated symmetric relation between variables in different registers or providers.                    |

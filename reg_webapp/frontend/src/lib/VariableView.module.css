@@ -1,0 +1,83 @@
+/* Five fixed tracks fit the detail pane; secondary facts live in Definitions. */
+.registerRead:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.segments table {
+  table-layout: fixed;
+}
+.segments th,
+.segments td {
+  padding-inline: var(--space-1);
+  box-sizing: border-box;
+}
+.spelling {
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.valueSet {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  white-space: nowrap;
+  cursor: help;
+}
+.valueSet[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.firstName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.more {
+  flex-shrink: 0;
+}
+.listGap {
+  display: grid;
+  gap: var(--space-2);
+  overflow-wrap: anywhere;
+}
+.wordingPeriod {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.singleLine {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueSetCell {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.classification {
+  flex-shrink: 0;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueSetCell .valueSet {
+  flex: 1;
+  min-width: 0;
+}

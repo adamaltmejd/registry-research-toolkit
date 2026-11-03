@@ -19,6 +19,8 @@ pub struct Item {
     pub name: String,
     pub label: String,
     pub body: String,
+    /// The variable description, indexed separately from the primary row.
+    pub description: String,
 }
 
 /// The row ids the entities were given, by the emitter's natural-key order.
@@ -55,6 +57,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             name: reg_pid,
             label: reg.name.clone().unwrap_or_default(),
             body: reg.description.clone().unwrap_or_default(),
+            description: String::new(),
         });
         for (t, table) in r.tables.iter().enumerate() {
             // The implicit table has its register's pid and no row of its own.
@@ -72,6 +75,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 name: pid,
                 label: table.table.name.clone().unwrap_or_default(),
                 body: table.table.description.clone().unwrap_or_default(),
+                description: String::new(),
             });
         }
         for (v, variable) in r.variables.iter().enumerate() {
@@ -81,21 +85,13 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 name.push(' ');
                 name.push_str(spelling);
             }
-            let mut labels = vec![variable.label.as_str()];
-            let mut definitions = Vec::new();
-            for run in &variable.texts {
-                if !labels.contains(&run.label.as_str()) {
-                    labels.push(&run.label);
-                }
-                // A term may live only in the operational definition.
-                for d in [&run.definition, &run.operational_definition] {
-                    if let Some(d) = d.as_deref().filter(|d| !d.is_empty())
-                        && !definitions.contains(&d)
-                    {
-                        definitions.push(d);
-                    }
-                }
-            }
+            let (label, definitions) = variable_texts(variable);
+            let description = variable
+                .description
+                .as_deref()
+                .filter(|description| !description.is_empty() && !definitions.contains(description))
+                .unwrap_or_default()
+                .to_owned();
             items.push(Item {
                 kind: "variable",
                 entity_id: Some(ids.variable[&(ri, v)]),
@@ -104,8 +100,9 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 pair: None,
                 sort_key: pid,
                 name,
-                label: labels.join("\n"),
+                label,
                 body: definitions.join("\n"),
+                description,
             });
         }
     }
@@ -124,6 +121,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             name: String::new(),
             label: doc.title.clone(),
             body: text.join("\n").chars().take(DOC_BODY_CHARS).collect(),
+            description: String::new(),
         });
     }
     items.sort_by(|a, b| a.sort_key.cmp(&b.sort_key));
@@ -131,6 +129,26 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
         return Err(format!("duplicate search key: {:?}", w[0].sort_key));
     }
     Ok(items)
+}
+
+fn variable_texts(variable: &reg_resolve::Variable) -> (String, Vec<&str>) {
+    let mut labels = vec![variable.label.as_str()];
+    labels.extend(variable.synonyms.iter().map(String::as_str));
+    let mut definitions = Vec::new();
+    for run in &variable.texts {
+        if !labels.contains(&run.label.as_str()) {
+            labels.push(&run.label);
+        }
+        // A term may live only in the operational definition.
+        for d in [&run.definition, &run.operational_definition] {
+            if let Some(d) = d.as_deref().filter(|d| !d.is_empty())
+                && !definitions.contains(&d)
+            {
+                definitions.push(d);
+            }
+        }
+    }
+    (labels.join("\n"), definitions)
 }
 
 /// Code rows: one per distinct (code, label) of the value sets some segment states.
@@ -173,6 +191,7 @@ fn code_items(catalog: &Catalog) -> Vec<Item> {
                 name: code.to_owned(),
                 label: label.unwrap_or_default().to_owned(),
                 body: String::new(),
+                description: String::new(),
             }
         })
         .collect()

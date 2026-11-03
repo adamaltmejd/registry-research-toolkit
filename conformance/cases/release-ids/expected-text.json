@@ -1,0 +1,15 @@
+{
+  "variable": [
+    "demo/implicit/dated (variable): demo/implicit:z [2018-01-01, 2018-07-01), demo/implicit:z [2018-07-01, 2019-01-01) → demo/implicit:z [2021-01-01, 2022-01-01)",
+    "demo/implicit/later (variable): demo/implicit:z [2021-01-01, 2022-01-01) → demo/implicit:z [2018-01-01, 2018-07-01), demo/implicit:z [2018-07-01, 2019-01-01)",
+    "demo/implicit/one (variable): demo/implicit:a [2018-01-01, 2019-01-01) → demo/implicit:b [2018-01-01, 2019-01-01)",
+    "demo/implicit/two (variable): demo/implicit:b [2018-01-01, 2019-01-01) → demo/implicit:a [2018-01-01, 2019-01-01)",
+    "demo/r/other (variable): demo/r/u:x [2018-01-01, 2019-01-01) → demo/r/t:x [2018-01-01, 2019-01-01)",
+    "demo/r/published (variable): demo/r/t:x [2018-01-01, 2019-01-01) → demo/r/u:x [2018-01-01, 2019-01-01)"
+  ],
+  "table": [
+    "demo/r/t (table): First → Second",
+    "demo/r/u (table): Second → First"
+  ],
+  "grown": []
+}

@@ -503,3 +503,3391 @@ kind = "set"
 subject = "taxeringsenheter: sni @1998-01-01,1999-01-01,2000-01-01,2001-01-01,2002-01-01"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:administrativ-status"
+fields = { "sets" = [] }
+evidence = "Statusen avser juridiska enheters verksamhet.\ncatalog:valueset:2348\ncatalog:variable_text:21165:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:administrativ-status"
+fields = { "tags" = ["business"] }
+evidence = "Statusen avser juridiska enheters verksamhet.\ncatalog:valueset:2348\ncatalog:variable_text:21165:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad1"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21166:15706:15707"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad2"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21167:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad3"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21168:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad4"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21169:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad5"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21170:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad6"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Adressraderna är delar av samma adressfält.\ncatalog:register:121\ncatalog:variable_text:21171:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "var:adresstyp"
+fields = { "sets" = ["adresstyp"] }
+evidence = "Samma adressklassificering är uppdelad mellan perioder med adresstypagare.\ncatalog:occurrence:192756\ncatalog:occurrence:192782\ncatalog:valueset:12394"
+
+[[statement]]
+kind = "set"
+subject = "var:adresstyp"
+fields = { "tags" = [] }
+evidence = "Samma adressklassificering är uppdelad mellan perioder med adresstypagare.\ncatalog:occurrence:192756\ncatalog:occurrence:192782\ncatalog:valueset:12394"
+
+[[statement]]
+kind = "set"
+subject = "var:adresstypagare"
+fields = { "sets" = ["adresstyp"] }
+evidence = "Samma adressklassificering är uppdelad mellan perioder med adresstyp.\ncatalog:occurrence:192756\ncatalog:occurrence:192782\ncatalog:valueset:12394"
+
+[[statement]]
+kind = "set"
+subject = "var:adresstypagare"
+fields = { "tags" = [] }
+evidence = "Samma adressklassificering är uppdelad mellan perioder med adresstyp.\ncatalog:occurrence:192756\ncatalog:occurrence:192782\ncatalog:valueset:12394"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-grupperad"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Grupperad ägarkategori hör till samma begreppsgrupp som ägarkontroll.\ncatalog:variable_text:21175:19358:19359\ncatalog:variable_text:21176:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-grupperad"
+fields = { "tags" = ["property"] }
+evidence = "Grupperad ägarkategori hör till samma begreppsgrupp som ägarkontroll.\ncatalog:variable_text:21175:19358:19359\ncatalog:variable_text:21176:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Ägarkontroll och grupperad ägarkategori är klassificeringar av ägande.\ncatalog:variable_text:21175:19358:19359\ncatalog:variable_text:21176:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["property"] }
+evidence = "Ägarkontroll och grupperad ägarkategori är klassificeringar av ägande.\ncatalog:variable_text:21175:19358:19359\ncatalog:variable_text:21176:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antalet lägenheter grupperas med antalet i hyreshus.\ncatalog:variable_text:21177:19358:19359\ncatalog:variable_text:21178:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet lägenheter grupperas med antalet i hyreshus.\ncatalog:variable_text:21177:19358:19359\ncatalog:variable_text:21178:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-hyreshus"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antalet lägenheter i hyreshus grupperas med det totala antalet.\ncatalog:variable_text:21177:19358:19359\ncatalog:variable_text:21178:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-hyreshus"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet lägenheter i hyreshus grupperas med det totala antalet.\ncatalog:variable_text:21177:19358:19359\ncatalog:variable_text:21178:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mantalsskrivna-personer-pa-fastigheten"
+fields = { "sets" = [] }
+evidence = "Variabeln räknar personer på fastigheten.\ncatalog:variable_text:21179:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mantalsskrivna-personer-pa-fastigheten"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln räknar personer på fastigheten.\ncatalog:variable_text:21179:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-taxeringsenheter"
+fields = { "sets" = [] }
+evidence = "Antalet avser fastighetens taxeringsenheter.\ncatalog:variable_text:21180:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-taxeringsenheter"
+fields = { "tags" = ["property"] }
+evidence = "Antalet avser fastighetens taxeringsenheter.\ncatalog:variable_text:21180:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsimpediment"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Samma begrepp är uppdelat mellan observerade perioder. Gruppen omfattar antal värderingsenheter efter slag.\ncatalog:occurrence:196844\ncatalog:occurrence:196904"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsimpediment"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Samma begrepp är uppdelat mellan observerade perioder. Gruppen omfattar antal värderingsenheter efter slag.\ncatalog:occurrence:196844\ncatalog:occurrence:196904"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsmark"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Källkolumnen har olika ägare och skogsmarkens avgränsning behöver jämföras.\ncatalog:occurrence:196843\ncatalog:occurrence:196903"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-varderingsenheter-skogsmark"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Källkolumnen har olika ägare och skogsmarkens avgränsning behöver jämföras.\ncatalog:occurrence:196843\ncatalog:occurrence:196903"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve-produktiv-skog"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Källkolumnen har olika ägare och skogsmarkens avgränsning behöver jämföras.\ncatalog:occurrence:196843\ncatalog:occurrence:196903"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve-produktiv-skog"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Källkolumnen har olika ägare och skogsmarkens avgränsning behöver jämföras.\ncatalog:occurrence:196843\ncatalog:occurrence:196903"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve-skogsimp"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Samma begrepp är uppdelat mellan observerade perioder. Gruppen omfattar antal värderingsenheter efter slag.\ncatalog:occurrence:196844\ncatalog:occurrence:196904"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve-skogsimp"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Samma begrepp är uppdelat mellan observerade perioder. Gruppen omfattar antal värderingsenheter efter slag.\ncatalog:occurrence:196844\ncatalog:occurrence:196904"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-smahus-som-tillhor-varderingsenheten"
+fields = { "sets" = [] }
+evidence = "Antlika är en källmnemonik vars delar inte återger etikettens betydelse.\ncatalog:variable_text:21185:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-smahus-som-tillhor-varderingsenheten"
+fields = { "tags" = ["housing"] }
+evidence = "Antlika är en källmnemonik vars delar inte återger etikettens betydelse.\ncatalog:variable_text:21185:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:antveaker"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197642"
+
+[[statement]]
+kind = "set"
+subject = "var:antveaker"
+fields = { "tags" = ["agriculture", "property"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197642"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebete"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197643"
+
+[[statement]]
+kind = "set"
+subject = "var:antvebete"
+fields = { "tags" = ["agriculture", "property"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197643"
+
+[[statement]]
+kind = "set"
+subject = "var:antveekbygg"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197644"
+
+[[statement]]
+kind = "set"
+subject = "var:antveekbygg"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197644"
+
+[[statement]]
+kind = "set"
+subject = "var:antveskogavverkr"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter med skogsmark efter slag.\ncatalog:occurrence:197646"
+
+[[statement]]
+kind = "set"
+subject = "var:antveskogavverkr"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Antal värderingsenheter med skogsmark efter slag.\ncatalog:occurrence:197646"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabygg"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197648"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabygg"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197648"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabyggl"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197649"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmabyggl"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter efter byggnadsslag.\ncatalog:occurrence:197649"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamark"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197650"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamark"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197650"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamarkl"
+fields = { "sets" = ["antal-varderingsenheter"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197651"
+
+[[statement]]
+kind = "set"
+subject = "var:antvesmamarkl"
+fields = { "tags" = ["property"] }
+evidence = "Antal värderingsenheter efter markslag.\ncatalog:occurrence:197651"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "sets" = ["markareal"] }
+evidence = "Åkermark är ett markslag och en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21194:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akermark"
+fields = { "tags" = ["agriculture", "property"] }
+evidence = "Åkermark är ett markslag och en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21194:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "sets" = ["markareal"] }
+evidence = "Betesmark är ett markslag och en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21195:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-betesmark"
+fields = { "tags" = ["agriculture", "property"] }
+evidence = "Betesmark är ett markslag och en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21195:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "sets" = ["markareal"] }
+evidence = "Övrig mark är en markslagskomponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21196:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-ovrig-mark"
+fields = { "tags" = ["property"] }
+evidence = "Övrig mark är en markslagskomponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21196:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-produktiv-skogsmark"
+fields = { "sets" = ["markareal"] }
+evidence = "Källkolumnen har en annan ägare under tidigare perioder; produktiv skogsmark är en markslagsareal.\ncatalog:occurrence:194549\ncatalog:occurrence:194668\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-produktiv-skogsmark"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Källkolumnen har en annan ägare under tidigare perioder; produktiv skogsmark är en markslagsareal.\ncatalog:occurrence:194549\ncatalog:occurrence:194668\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogligt-impediment"
+fields = { "sets" = ["markareal"] }
+evidence = "Skogligt impediment och skogsimpediment är samma begrepp uppdelat efter period; arealen är en markslagskomponent.\ncatalog:occurrence:194550\ncatalog:occurrence:194669\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogligt-impediment"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Skogligt impediment och skogsimpediment är samma begrepp uppdelat efter period; arealen är en markslagskomponent.\ncatalog:occurrence:194550\ncatalog:occurrence:194669\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsimpediment"
+fields = { "sets" = ["markareal"] }
+evidence = "Skogsimpediment och skogligt impediment är samma begrepp uppdelat efter period; arealen är en markslagskomponent.\ncatalog:occurrence:194550\ncatalog:occurrence:194669\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsimpediment"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Skogsimpediment och skogligt impediment är samma begrepp uppdelat efter period; arealen är en markslagskomponent.\ncatalog:occurrence:194550\ncatalog:occurrence:194669\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "sets" = ["markareal"] }
+evidence = "Källkolumnen har en annan ägare under senare perioder; skogsmark är en markslagsareal.\ncatalog:occurrence:194549\ncatalog:occurrence:194668\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skogsmark"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Källkolumnen har en annan ägare under senare perioder; skogsmark är en markslagsareal.\ncatalog:occurrence:194549\ncatalog:occurrence:194668\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-taxeringsenhet"
+fields = { "sets" = ["markareal"] }
+evidence = "Total areal hör till markareal tillsammans med markslagskomponenterna.\ncatalog:register:121\ncatalog:variable_text:21201:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-taxeringsenhet"
+fields = { "tags" = ["property"] }
+evidence = "Total areal hör till markareal tillsammans med markslagskomponenterna.\ncatalog:register:121\ncatalog:variable_text:21201:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-total-for-taxeringsenheten"
+fields = { "sets" = ["markareal"] }
+evidence = "Total areal hör till markareal tillsammans med markslagskomponenterna.\ncatalog:register:121\ncatalog:variable_text:21202:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-total-for-taxeringsenheten"
+fields = { "tags" = ["property"] }
+evidence = "Total areal hör till markareal tillsammans med markslagskomponenterna.\ncatalog:register:121\ncatalog:variable_text:21202:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealskogavverkr"
+fields = { "sets" = ["markareal"] }
+evidence = "Areal med avverkningsrestriktioner är en namngiven del av skogsmarksarealen.\ncatalog:register:121\ncatalog:variable_text:21203:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealskogavverkr"
+fields = { "tags" = ["forestry-fishing", "property"] }
+evidence = "Areal med avverkningsrestriktioner är en namngiven del av skogsmarksarealen.\ncatalog:register:121\ncatalog:variable_text:21203:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealtomtlant"
+fields = { "sets" = ["markareal"] }
+evidence = "Tomtmark på lantbruk är en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21204:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealtomtlant"
+fields = { "tags" = ["agriculture", "property"] }
+evidence = "Tomtmark på lantbruk är en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21204:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealtomtsma"
+fields = { "sets" = ["markareal"] }
+evidence = "Tomtmark för småhus är en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21205:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arealtomtsma"
+fields = { "tags" = ["property"] }
+evidence = "Tomtmark för småhus är en komponent i markareal.\ncatalog:register:121\ncatalog:variable_text:21205:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arfrom"
+fields = { "sets" = ["taxeringsar"] }
+evidence = "Årsuppgiften grupperas med taxeringsår för taxeringsenheten.\ncatalog:variable_text:21206:19358:19359\ncatalog:variable_text:21210:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arfrom"
+fields = { "tags" = [] }
+evidence = "Årsuppgiften grupperas med taxeringsår för taxeringsenheten.\ncatalog:variable_text:21206:19358:19359\ncatalog:variable_text:21210:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
+fields = { "sets" = ["om-och-tillbyggnadsar"] }
+evidence = "Årsangivelser för om- och tillbyggnad hör till samma grupp.\ncatalog:variable_text:21207:19358:19359\ncatalog:variable_text:21209:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
+fields = { "tags" = [] }
+evidence = "Årsangivelser för om- och tillbyggnad hör till samma grupp.\ncatalog:variable_text:21207:19358:19359\ncatalog:variable_text:21209:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
+fields = { "sets" = ["om-och-tillbyggnadsar"] }
+evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-tillbyggnad"
+fields = { "sets" = ["om-och-tillbyggnadsar"] }
+evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
+
+[[statement]]
+kind = "set"
+subject = "var:arsangivelse-for-tillbyggnad"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
+
+[[statement]]
+kind = "set"
+subject = "var:artaxfrom"
+fields = { "sets" = ["taxeringsar"] }
+evidence = "Årsuppgiften grupperas med senaste taxeringsår.\ncatalog:variable_text:21206:19358:19359\ncatalog:variable_text:21210:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:artaxfrom"
+fields = { "tags" = [] }
+evidence = "Årsuppgiften grupperas med senaste taxeringsår.\ncatalog:variable_text:21206:19358:19359\ncatalog:variable_text:21210:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-byggnader"
+fields = { "sets" = ["basvarde"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193109\ncatalog:occurrence:193110"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-byggnader"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193109\ncatalog:occurrence:193110"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-mark"
+fields = { "sets" = ["basvarde"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193115\ncatalog:occurrence:193116"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-mark"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193115\ncatalog:occurrence:193116"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-smahusbyggnader"
+fields = { "sets" = ["basvarde"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193109\ncatalog:occurrence:193110"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-smahusbyggnader"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193109\ncatalog:occurrence:193110"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-smahusmark"
+fields = { "sets" = ["basvarde"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193115\ncatalog:occurrence:193116"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-for-smahusmark"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har överlappande ägare; basvärde är en fastighetsvärdering.\ncatalog:occurrence:193115\ncatalog:occurrence:193116"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-totalt"
+fields = { "sets" = ["basvarde"] }
+evidence = "Totalvärdet hör ihop med basvärdets mark- och byggnadskomponenter.\ncatalog:occurrence:193104\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:basvarde-totalt"
+fields = { "tags" = ["property"] }
+evidence = "Totalvärdet hör ihop med basvärdets mark- och byggnadskomponenter.\ncatalog:occurrence:193104\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:bebyggd"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver bebyggelse på taxeringsenheten.\ncatalog:variable_text:21216:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:bebyggd"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen beskriver bebyggelse på taxeringsenheten.\ncatalog:variable_text:21216:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "sets" = ["biyta"] }
+evidence = "Biutrymmesyta i småhus och total biyta är mått på biyta.\ncatalog:variable_text:21217:19358:19359\ncatalog:variable_text:21421:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Biutrymmesyta i småhus och total biyta är mått på biyta.\ncatalog:variable_text:21217:19358:19359\ncatalog:variable_text:21421:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-hyreshusenhet"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Bostadsyta efter hustyp.\ncatalog:occurrence:196076"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-hyreshusenhet"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsyta efter hustyp.\ncatalog:occurrence:196076"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-i-smahus"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Bostadsyta efter hustyp.\ncatalog:occurrence:197695"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-i-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsyta efter hustyp.\ncatalog:occurrence:197695"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-smahus-lantbruk"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma bostadsyta för värderingsenheten är uppdelad mellan observerade perioder.\ncatalog:occurrence:195329\ncatalog:occurrence:195449"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-smahus-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma bostadsyta för värderingsenheten är uppdelad mellan observerade perioder.\ncatalog:occurrence:195329\ncatalog:occurrence:195449"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsytavakant"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Källkolumnens ägare och angiven aggregering skiljer sig mellan perioder.\ncatalog:occurrence:196974\ncatalog:occurrence:197034"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsytavakant"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnens ägare och angiven aggregering skiljer sig mellan perioder.\ncatalog:occurrence:196974\ncatalog:occurrence:197034"
+
+[[statement]]
+kind = "set"
+subject = "var:bruksar-eller-vardear"
+fields = { "sets" = ["byggnadens-bruks-och-vardear"] }
+evidence = "Årsuppgiften är byggnadsår eller värdeår.\ncatalog:occurrence:196068"
+
+[[statement]]
+kind = "set"
+subject = "var:bruksar-eller-vardear"
+fields = { "tags" = ["property"] }
+evidence = "Årsuppgiften är byggnadsår eller värdeår.\ncatalog:occurrence:196068"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsar"
+fields = { "sets" = ["byggnadens-bruks-och-vardear"] }
+evidence = "Byggnadsåret hör ihop med byggnadens värdeår.\ncatalog:occurrence:196059"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsar"
+fields = { "tags" = ["property"] }
+evidence = "Byggnadsåret hör ihop med byggnadens värdeår.\ncatalog:occurrence:196059"
+
+[[statement]]
+kind = "set"
+subject = "var:deklansv"
+fields = { "sets" = [] }
+evidence = "Markeringen avser deklarationsansvar för taxeringsenhetens ägare.\ncatalog:variable_text:21226:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:deklansv"
+fields = { "tags" = ["property"] }
+evidence = "Markeringen avser deklarationsansvar för taxeringsenhetens ägare.\ncatalog:variable_text:21226:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:delareal"
+fields = { "sets" = ["markareal"] }
+evidence = "Summan av delarealer hör till markareal.\ncatalog:register:121\ncatalog:variable_text:21227:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:delareal"
+fields = { "tags" = ["property"] }
+evidence = "Summan av delarealer hör till markareal.\ncatalog:register:121\ncatalog:variable_text:21227:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "sets" = [] }
+evidence = "Statistikområdet är en geografisk indelning.\ncatalog:variable_text:21228:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "tags" = ["geography"] }
+evidence = "Statistikområdet är en geografisk indelning.\ncatalog:variable_text:21228:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:21229:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distrikt är en geografisk indelning.\ncatalog:variable_text:21229:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Egendisponerad bostadsyta är en delmängd av bostadsyta.\ncatalog:occurrence:196165"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Egendisponerad bostadsyta är en delmängd av bostadsyta.\ncatalog:occurrence:196165"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-lokalyta"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Egendisponerad lokalyta är en delmängd av lokalytan.\ncatalog:occurrence:196166"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-lokalyta"
+fields = { "tags" = ["property"] }
+evidence = "Egendisponerad lokalyta är en delmängd av lokalytan.\ncatalog:occurrence:196166"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-bostader-bostadsytaegen"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Egendisponerad bostadsyta är en delmängd av bostadsyta.\ncatalog:occurrence:197657"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-bostader-bostadsytaegen"
+fields = { "tags" = ["housing"] }
+evidence = "Egendisponerad bostadsyta är en delmängd av bostadsyta.\ncatalog:occurrence:197657"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-lokaler-lokalytaegen"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Egendisponerad lokalyta är en delmängd av lokalytan.\ncatalog:occurrence:197670"
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-lokaler-lokalytaegen"
+fields = { "tags" = ["property"] }
+evidence = "Egendisponerad lokalyta är en delmängd av lokalytan.\ncatalog:occurrence:197670"
+
+[[statement]]
+kind = "set"
+subject = "var:eneel"
+fields = { "sets" = ["elstandard"] }
+evidence = "Elkodningarna avser byggnadens elstandard.\ncatalog:variable_text:21234:19358:19359\ncatalog:variable_text:21237:12418:12419\ncatalog:variable_text:21238:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:eneel"
+fields = { "tags" = ["property"] }
+evidence = "Elkodningarna avser byggnadens elstandard.\ncatalog:variable_text:21234:19358:19359\ncatalog:variable_text:21237:12418:12419\ncatalog:variable_text:21238:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:eneelbytt89"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Kodning av elsystemsbyte hör till den angivna gruppen.\ncatalog:register:121\ncatalog:variable_text:21235:11688:11689"
+
+[[statement]]
+kind = "set"
+subject = "var:eneelbytt89"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Kodning av elsystemsbyte hör till den angivna gruppen.\ncatalog:register:121\ncatalog:variable_text:21235:11688:11689"
+
+[[statement]]
+kind = "set"
+subject = "var:eneelbytt91"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har olika perioddefinitioner; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193557\ncatalog:occurrence:193688\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:eneelbytt91"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har olika perioddefinitioner; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193557\ncatalog:occurrence:193688\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-el-lantbruksenheter"
+fields = { "sets" = ["elstandard"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21237:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-el-lantbruksenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21237:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-el-smahusenheter"
+fields = { "sets" = ["elstandard"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21238:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-el-smahusenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21238:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:enefonster"
+fields = { "sets" = ["fonsterstandard"] }
+evidence = "Fönsterkodningarna beskriver fönsterstandard.\ncatalog:variable_text:21239:19358:19359\ncatalog:variable_text:21240:12418:12419\ncatalog:variable_text:21241:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:enefonster"
+fields = { "tags" = ["property"] }
+evidence = "Fönsterkodningarna beskriver fönsterstandard.\ncatalog:variable_text:21239:19358:19359\ncatalog:variable_text:21240:12418:12419\ncatalog:variable_text:21241:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-fonster-lantbruksenheter"
+fields = { "sets" = ["fonsterstandard"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21240:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-fonster-lantbruksenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21240:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-fonster-smahusenheter"
+fields = { "sets" = ["fonsterstandard"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21241:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-fonster-smahusenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21241:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:eneisolering"
+fields = { "sets" = ["isolering"] }
+evidence = "Kodningarna beskriver isolering för olika enhetstyper.\ncatalog:variable_text:21242:14610:14611\ncatalog:variable_text:21243:12418:12419\ncatalog:variable_text:21244:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:eneisolering"
+fields = { "tags" = ["property"] }
+evidence = "Kodningarna beskriver isolering för olika enhetstyper.\ncatalog:variable_text:21242:14610:14611\ncatalog:variable_text:21243:12418:12419\ncatalog:variable_text:21244:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-isolering-lantbruksenheter"
+fields = { "sets" = ["isolering"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21243:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-isolering-lantbruksenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma L är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21243:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-isolering-smahusenheter"
+fields = { "sets" = ["isolering"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21244:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-isolering-smahusenheter"
+fields = { "tags" = ["property"] }
+evidence = "Det ensamma S är en källkolumnskod för enhetstypen.\ncatalog:variable_text:21244:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:enejamkning"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21245:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:enejamkning"
+fields = { "tags" = ["property"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21245:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-1989-lantbruk"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har olika etiketter vid periodskiftet; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193558\ncatalog:occurrence:193689\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-1989-lantbruk"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har olika etiketter vid periodskiftet; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193558\ncatalog:occurrence:193689\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-1989-smahus"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har flera periodägare; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193556\ncatalog:occurrence:193687\ncatalog:occurrence:193827\ncatalog:occurrence:194086\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-1989-smahus"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har flera periodägare; variabeln kodar elsystemsbyte.\ncatalog:occurrence:193556\ncatalog:occurrence:193687\ncatalog:occurrence:193827\ncatalog:occurrence:194086\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1989"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har en senare periodägare och definitionen ger inte periodens innebörd.\ncatalog:occurrence:193556\ncatalog:occurrence:193687\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1989"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har en senare periodägare och definitionen ger inte periodens innebörd.\ncatalog:occurrence:193556\ncatalog:occurrence:193687\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1990"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Två källkolumner har andra periodägare med andra periodetiketter.\ncatalog:occurrence:193557\ncatalog:occurrence:193688\ncatalog:occurrence:193827\ncatalog:occurrence:194086\ncatalog:occurrence:194327\ncatalog:occurrence:194446\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1990"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Två källkolumner har andra periodägare med andra periodetiketter.\ncatalog:occurrence:193557\ncatalog:occurrence:193688\ncatalog:occurrence:193827\ncatalog:occurrence:194086\ncatalog:occurrence:194327\ncatalog:occurrence:194446\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1991"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har en senare periodägare med en annan periodetikett.\ncatalog:occurrence:193558\ncatalog:occurrence:193689\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elbyte-efter-1991"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har en senare periodägare med en annan periodetikett.\ncatalog:occurrence:193558\ncatalog:occurrence:193689\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elsystemsbyte-2003-eller-senare"
+fields = { "sets" = ["elsystemsbyte"] }
+evidence = "Samma källkolumn har en tidigare periodägare med en annan periodetikett.\ncatalog:occurrence:194327\ncatalog:occurrence:194446\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:energi-elsystemsbyte-2003-eller-senare"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Samma källkolumn har en tidigare periodägare med en annan periodetikett.\ncatalog:occurrence:194327\ncatalog:occurrence:194446\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:eneuppvarm"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver uppvärmningssystem.\ncatalog:variable_text:21252:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:eneuppvarm"
+fields = { "tags" = ["energy", "property"] }
+evidence = "Variabeln beskriver uppvärmningssystem.\ncatalog:variable_text:21252:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ext-garage-ga-lantbruk"
+fields = { "sets" = ["garage"] }
+evidence = "Samma garagekodning är uppdelad mellan observerade perioder.\ncatalog:occurrence:193570\ncatalog:occurrence:193705"
+
+[[statement]]
+kind = "set"
+subject = "var:ext-garage-ga-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma garagekodning är uppdelad mellan observerade perioder.\ncatalog:occurrence:193570\ncatalog:occurrence:193705"
+
+[[statement]]
+kind = "set"
+subject = "var:extcarport"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver en egenskap hos byggnaden.\ncatalog:variable_text:21254:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:extcarport"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver en egenskap hos byggnaden.\ncatalog:variable_text:21254:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasad"
+fields = { "sets" = ["fasadstandard"] }
+evidence = "Fasadmaterialet är samma koncept som den äldre periodens fasadstandard i scb/ftr/standard-exterior, korrekt uppdelat per period.\ncatalog:occurrence:193564\ncatalog:occurrence:193972\ncatalog:valueset:12878"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasad"
+fields = { "tags" = ["property"] }
+evidence = "Fasadmaterialet är samma koncept som den äldre periodens fasadstandard i scb/ftr/standard-exterior, korrekt uppdelat per period.\ncatalog:occurrence:193564\ncatalog:occurrence:193972\ncatalog:valueset:12878"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1976-89-lantbruk"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Definition och värdemängd motsäger varandra för samma kolumn.\ncatalog:occurrence:193567\ncatalog:occurrence:193700\ncatalog:valueset:768"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1976-89-lantbruk"
+fields = { "tags" = ["property"] }
+evidence = "Definition och värdemängd motsäger varandra för samma kolumn.\ncatalog:occurrence:193567\ncatalog:occurrence:193700\ncatalog:valueset:768"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1989-lantbruk"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Källkolumnens perioddefinition och population ändras.\ncatalog:occurrence:193568\ncatalog:occurrence:193701"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1989-lantbruk"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnens perioddefinition och population ändras.\ncatalog:occurrence:193568\ncatalog:occurrence:193701"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1989-smahus"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Samma fasadbyte efter 1989 är perioduppdelat mot scb/ftr/exterior-fasadbyte-efter-1989; den senare uppgiften för 2003 eller senare har annan tidsgräns.\ncatalog:occurrence:193566\ncatalog:occurrence:193699\ncatalog:occurrence:193973\ncatalog:occurrence:194093"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-1989-smahus"
+fields = { "tags" = ["property"] }
+evidence = "Samma fasadbyte efter 1989 är perioduppdelat mot scb/ftr/exterior-fasadbyte-efter-1989; den senare uppgiften för 2003 eller senare har annan tidsgräns.\ncatalog:occurrence:193566\ncatalog:occurrence:193699\ncatalog:occurrence:193973\ncatalog:occurrence:194093"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-2003-eller-senare"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Källkolumnens tidsgräns ändras.\ncatalog:occurrence:194334\ncatalog:occurrence:194453"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-2003-eller-senare"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnens tidsgräns ändras.\ncatalog:occurrence:194334\ncatalog:occurrence:194453"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1989"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Källkolumnen återkommer med särskild population och senare tidsgräns.\ncatalog:occurrence:193566\ncatalog:occurrence:193699\ncatalog:occurrence:194334\ncatalog:occurrence:194453"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1989"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnen återkommer med särskild population och senare tidsgräns.\ncatalog:occurrence:193566\ncatalog:occurrence:193699\ncatalog:occurrence:194334\ncatalog:occurrence:194453"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1990"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193567\ncatalog:occurrence:193700\ncatalog:valueset:768"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1990"
+fields = { "tags" = ["property"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193567\ncatalog:occurrence:193700\ncatalog:valueset:768"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1991"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Källkolumnens perioddefinition och population ändras.\ncatalog:occurrence:193568\ncatalog:occurrence:193701"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-fasadbyte-efter-1991"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnens perioddefinition och population ändras.\ncatalog:occurrence:193568\ncatalog:occurrence:193701"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-garage-gemensamhetsanlaggning"
+fields = { "sets" = ["garage"] }
+evidence = "Samma garagekodning är uppdelad mellan observerade perioder.\ncatalog:occurrence:193570\ncatalog:occurrence:193705"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-garage-gemensamhetsanlaggning"
+fields = { "tags" = ["housing"] }
+evidence = "Samma garagekodning är uppdelad mellan observerade perioder.\ncatalog:occurrence:193570\ncatalog:occurrence:193705"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-1989-lantbruk"
+fields = { "sets" = ["takbyte"] }
+evidence = "Källkolumnen har olika årströsklar i perioderna.\ncatalog:occurrence:193575\ncatalog:occurrence:193710"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-1989-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnen har olika årströsklar i perioderna.\ncatalog:occurrence:193575\ncatalog:occurrence:193710"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-1990"
+fields = { "sets" = ["takbyte"] }
+evidence = "Källkolumnens tröskel och kodning ändras mellan ägarna.\ncatalog:occurrence:193574\ncatalog:occurrence:193979\ncatalog:occurrence:194340\ncatalog:occurrence:194457"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-1990"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnens tröskel och kodning ändras mellan ägarna.\ncatalog:occurrence:193574\ncatalog:occurrence:193979\ncatalog:occurrence:194340\ncatalog:occurrence:194457"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-2003-eller-senare"
+fields = { "sets" = ["takbyte"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194340\ncatalog:occurrence:194457"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-2003-eller-senare"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194340\ncatalog:occurrence:194457"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-efter-1975"
+fields = { "sets" = ["takbyte"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193574\ncatalog:occurrence:193979"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-efter-1975"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193574\ncatalog:occurrence:193979"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-efter-1991"
+fields = { "sets" = ["takbyte"] }
+evidence = "Källkolumnen har olika årströsklar i perioderna.\ncatalog:occurrence:193575\ncatalog:occurrence:193710"
+
+[[statement]]
+kind = "set"
+subject = "var:exterior-takbyte-efter-1991"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnen har olika årströsklar i perioderna.\ncatalog:occurrence:193575\ncatalog:occurrence:193710"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasadbytt89"
+fields = { "sets" = ["fasadbyte"] }
+evidence = "Id:t är läsbart. Gruppen avser kodningar av fasadbyte och taggen fastighetens egenskaper.\ncatalog:valueset:8564\ncatalog:variable_text:21269:11688:11689"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasadbytt89"
+fields = { "tags" = ["property"] }
+evidence = "Id:t är läsbart. Gruppen avser kodningar av fasadbyte och taggen fastighetens egenskaper.\ncatalog:valueset:8564\ncatalog:variable_text:21269:11688:11689"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasadl"
+fields = { "sets" = ["fasadstandard"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser fasadens egenskaper.\ncatalog:valueset:12878\ncatalog:variable_text:21270:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasadl"
+fields = { "tags" = ["property"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser fasadens egenskaper.\ncatalog:valueset:12878\ncatalog:variable_text:21270:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasads"
+fields = { "sets" = ["fasadstandard"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser fasadens egenskaper.\ncatalog:valueset:8686\ncatalog:variable_text:21271:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:extfasads"
+fields = { "tags" = ["property"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser fasadens egenskaper.\ncatalog:valueset:8686\ncatalog:variable_text:21271:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:extgarage"
+fields = { "sets" = ["garage"] }
+evidence = "Garagekodning för värderingsenheten.\ncatalog:occurrence:196088"
+
+[[statement]]
+kind = "set"
+subject = "var:extgarage"
+fields = { "tags" = ["housing"] }
+evidence = "Garagekodning för värderingsenheten.\ncatalog:occurrence:196088"
+
+[[statement]]
+kind = "set"
+subject = "var:extgarkallare"
+fields = { "sets" = ["garage"] }
+evidence = "Garagekodning för värderingsenheten.\ncatalog:occurrence:194572"
+
+[[statement]]
+kind = "set"
+subject = "var:extgarkallare"
+fields = { "tags" = ["housing"] }
+evidence = "Garagekodning för värderingsenheten.\ncatalog:occurrence:194572"
+
+[[statement]]
+kind = "set"
+subject = "var:extjamkning"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21274:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:extjamkning"
+fields = { "tags" = ["property"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21274:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:extstomme"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver byggnadens stomme.\ncatalog:variable_text:21275:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:extstomme"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver byggnadens stomme.\ncatalog:variable_text:21275:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:exttak"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver byggnadens takbeläggning.\ncatalog:variable_text:21276:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:exttak"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln beskriver byggnadens takbeläggning.\ncatalog:variable_text:21276:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:exttakbyttl"
+fields = { "sets" = ["takbyte"] }
+evidence = "Takbyteskodning för lantbruksenheter.\ncatalog:occurrence:193851"
+
+[[statement]]
+kind = "set"
+subject = "var:exttakbyttl"
+fields = { "tags" = ["housing"] }
+evidence = "Takbyteskodning för lantbruksenheter.\ncatalog:occurrence:193851"
+
+[[statement]]
+kind = "set"
+subject = "var:exttakbytts"
+fields = { "sets" = ["takbyte"] }
+evidence = "Takbyteskodning för småhusenheter.\ncatalog:occurrence:193852"
+
+[[statement]]
+kind = "set"
+subject = "var:exttakbytts"
+fields = { "tags" = ["housing"] }
+evidence = "Takbyteskodning för småhusenheter.\ncatalog:occurrence:193852"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-areal"
+fields = { "sets" = ["markareal"] }
+evidence = "Fastighetsareal hör till markareal.\ncatalog:register:121\ncatalog:variable_text:21279:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighet-areal"
+fields = { "tags" = ["property"] }
+evidence = "Fastighetsareal hör till markareal.\ncatalog:register:121\ncatalog:variable_text:21279:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-postnummer"
+fields = { "sets" = ["postnummer"] }
+evidence = "Postnummer anger fastighetens geografiska tillhörighet.\ncatalog:occurrence:196126"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-postnummer"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger fastighetens geografiska tillhörighet.\ncatalog:occurrence:196126"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:occurrence:196091"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:occurrence:196091"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetstyp"
+fields = { "sets" = ["fastighetstyp"] }
+evidence = "Första siffran i typkoden är samma klassificering som scb/ftr/typkod-niva-1, korrekt uppdelad per period.\ncatalog:occurrence:195201\ncatalog:occurrence:195315"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetstyp"
+fields = { "tags" = ["property"] }
+evidence = "Första siffran i typkoden är samma klassificering som scb/ftr/typkod-niva-1, korrekt uppdelad per period.\ncatalog:occurrence:195201\ncatalog:occurrence:195315"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:21285:19358:19359\ncatalog:variable_text:21335:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:21285:19358:19359\ncatalog:variable_text:21335:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["forsamling"] }
+evidence = "Församling är en geografisk indelning och grupperas med Stockholmsvarianten.\ncatalog:variable_text:21286:16436:16437\ncatalog:variable_text:21287:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning och grupperas med Stockholmsvarianten.\ncatalog:variable_text:21286:16436:16437\ncatalog:variable_text:21287:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "sets" = ["forsamling"] }
+evidence = "Stockholms församlingar är en geografisk indelning.\ncatalog:variable_text:21286:16436:16437\ncatalog:variable_text:21287:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "tags" = ["geography"] }
+evidence = "Stockholms församlingar är en geografisk indelning.\ncatalog:variable_text:21286:16436:16437\ncatalog:variable_text:21287:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstatus"
+fields = { "sets" = [] }
+evidence = "Fstat är en opak källmnemonik.\ncatalog:variable_text:21288:17897:17898"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Fstat är en opak källmnemonik.\ncatalog:variable_text:21288:17897:17898"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor"
+fields = { "sets" = ["h-nivafaktor"] }
+evidence = "Samma H-nivåfaktor för bostäder är uppdelad mellan observerade perioder.\ncatalog:occurrence:194831\ncatalog:occurrence:194945\ncatalog:occurrence:195056\ncatalog:occurrence:195521\ncatalog:occurrence:195643"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor"
+fields = { "tags" = ["property"] }
+evidence = "Samma H-nivåfaktor för bostäder är uppdelad mellan observerade perioder.\ncatalog:occurrence:194831\ncatalog:occurrence:194945\ncatalog:occurrence:195056\ncatalog:occurrence:195521\ncatalog:occurrence:195643"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-for-bostader"
+fields = { "sets" = ["h-nivafaktor"] }
+evidence = "Samma H-nivåfaktor för bostäder är uppdelad mellan observerade perioder.\ncatalog:occurrence:194831\ncatalog:occurrence:194945\ncatalog:occurrence:195056\ncatalog:occurrence:195521\ncatalog:occurrence:195643"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-for-bostader"
+fields = { "tags" = ["property"] }
+evidence = "Samma H-nivåfaktor för bostäder är uppdelad mellan observerade perioder.\ncatalog:occurrence:194831\ncatalog:occurrence:194945\ncatalog:occurrence:195056\ncatalog:occurrence:195521\ncatalog:occurrence:195643"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-literal-nivafaktlokal"
+fields = { "sets" = ["h-nivafaktor"] }
+evidence = "Samma H-nivåfaktor för lokaler är uppdelad mellan observerade perioder.\ncatalog:occurrence:194832\ncatalog:occurrence:194946\ncatalog:occurrence:195057\ncatalog:occurrence:195522\ncatalog:occurrence:195644"
+
+[[statement]]
+kind = "set"
+subject = "var:h-nivafaktor-literal-nivafaktlokal"
+fields = { "tags" = ["property"] }
+evidence = "Samma H-nivåfaktor för lokaler är uppdelad mellan observerade perioder.\ncatalog:occurrence:194832\ncatalog:occurrence:194946\ncatalog:occurrence:195057\ncatalog:occurrence:195522\ncatalog:occurrence:195644"
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskod-literal-typhyraovriglok"
+fields = { "sets" = ["hyreskod"] }
+evidence = "Kodningen beskriver beräkning av lokalhyra.\ncatalog:occurrence:194160\ncatalog:valueset:8161"
+
+[[statement]]
+kind = "set"
+subject = "var:hyreskod-literal-typhyraovriglok"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen beskriver beräkning av lokalhyra.\ncatalog:occurrence:194160\ncatalog:valueset:8161"
+
+[[statement]]
+kind = "set"
+subject = "var:indytatot"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Industriyta är lokalyta efter användning.\ncatalog:occurrence:197664\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:indytatot"
+fields = { "tags" = ["property"] }
+evidence = "Industriyta är lokalyta efter användning.\ncatalog:occurrence:197664\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-allrum-kallarplan"
+fields = { "sets" = ["allrum-i-kallare"] }
+evidence = "Samma källkolumn har olika kodningsinnehåll i perioderna.\ncatalog:occurrence:194354\ncatalog:occurrence:194471\ncatalog:valueset:4977"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-allrum-kallarplan"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har olika kodningsinnehåll i perioderna.\ncatalog:occurrence:194354\ncatalog:occurrence:194471\ncatalog:valueset:4977"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-brasa"
+fields = { "sets" = ["oppen-spis"] }
+evidence = "Samma förekomst av öppen spis, kakelugn eller braskamin är uppdelad mellan perioder med interior-oppen-spis.\ncatalog:occurrence:194353\ncatalog:occurrence:194470"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-brasa"
+fields = { "tags" = ["property"] }
+evidence = "Samma förekomst av öppen spis, kakelugn eller braskamin är uppdelad mellan perioder med interior-oppen-spis.\ncatalog:occurrence:194353\ncatalog:occurrence:194470"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-gillestuga"
+fields = { "sets" = ["allrum-i-kallare"] }
+evidence = "Samma källkolumn har olika kodningsinnehåll i perioderna.\ncatalog:occurrence:194354\ncatalog:occurrence:194471\ncatalog:valueset:4977"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-gillestuga"
+fields = { "tags" = ["property"] }
+evidence = "Samma källkolumn har olika kodningsinnehåll i perioderna.\ncatalog:occurrence:194354\ncatalog:occurrence:194471\ncatalog:valueset:4977"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-oppen-spis"
+fields = { "sets" = ["oppen-spis"] }
+evidence = "Samma förekomst av öppen spis, kakelugn eller braskamin är uppdelad mellan perioder med interior-brasa.\ncatalog:occurrence:194353\ncatalog:occurrence:194470"
+
+[[statement]]
+kind = "set"
+subject = "var:interior-oppen-spis"
+fields = { "tags" = ["property"] }
+evidence = "Samma förekomst av öppen spis, kakelugn eller braskamin är uppdelad mellan perioder med interior-brasa.\ncatalog:occurrence:194353\ncatalog:occurrence:194470"
+
+[[statement]]
+kind = "set"
+subject = "var:intjamkning"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21305:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:intjamkning"
+fields = { "tags" = ["property"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21305:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form klassificerar en juridisk enhet.\ncatalog:variable_text:21306:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form klassificerar en juridisk enhet.\ncatalog:variable_text:21306:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:klfastraett"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar fastighetsrättsliga förhållanden.\ncatalog:variable_text:21307:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:klfastraett"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar fastighetsrättsliga förhållanden.\ncatalog:variable_text:21307:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodadress"
+fields = { "sets" = ["adresstyp"] }
+evidence = "Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0161: Samtliga klassificerar adressens typ; även Adresskod beskrivs uttryckligen som adresstyp. membership-0162: Ingen variabel i denna sektion kodar adressens typ eller funktion. membership-0163: Ingen vald variabel i denna sektion kodar adresstyp.\ncatalog:variable_text:21172:17532:17533\ncatalog:variable_text:21173:19358:19359\ncatalog:variable_text:21308:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodadress"
+fields = { "tags" = [] }
+evidence = "Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0161: Samtliga klassificerar adressens typ; även Adresskod beskrivs uttryckligen som adresstyp. membership-0162: Ingen variabel i denna sektion kodar adressens typ eller funktion. membership-0163: Ingen vald variabel i denna sektion kodar adresstyp.\ncatalog:variable_text:21172:17532:17533\ncatalog:variable_text:21173:19358:19359\ncatalog:variable_text:21308:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodfastsamf"
+fields = { "sets" = [] }
+evidence = "Kodningen avser fastigheter och samfälligheter.\ncatalog:variable_text:21309:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodfastsamf"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen avser fastigheter och samfälligheter.\ncatalog:variable_text:21309:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjust"
+fields = { "sets" = ["justeringskod"] }
+evidence = "Allmän justeringskod hör med bostäders och lokalers justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21310:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjust"
+fields = { "tags" = ["property"] }
+evidence = "Allmän justeringskod hör med bostäders och lokalers justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21310:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjustbost"
+fields = { "sets" = ["justeringskod"] }
+evidence = "Justeringskod för bostäder hör med övriga justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21311:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjustbost"
+fields = { "tags" = ["property"] }
+evidence = "Justeringskod för bostäder hör med övriga justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21311:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjustlokal"
+fields = { "sets" = ["justeringskod"] }
+evidence = "Justeringskod för lokaler hör med övriga justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21312:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kodjustlokal"
+fields = { "tags" = ["property"] }
+evidence = "Justeringskod för lokaler hör med övriga justeringskoder.\ncatalog:register:121\ncatalog:variable_text:21312:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-diskmaskin"
+fields = { "sets" = ["diskmaskin"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193595\ncatalog:occurrence:193732"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-diskmaskin"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193595\ncatalog:occurrence:193732"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-diskmaskin-lantbruk"
+fields = { "sets" = ["diskmaskin"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193595\ncatalog:occurrence:193732"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-diskmaskin-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193595\ncatalog:occurrence:193732"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-frysskap"
+fields = { "sets" = ["frysskap"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193596\ncatalog:occurrence:193733"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-frysskap"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193596\ncatalog:occurrence:193733"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-frysskap-lantbruk"
+fields = { "sets" = ["frysskap"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193596\ncatalog:occurrence:193733"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-frysskap-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193596\ncatalog:occurrence:193733"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-inredningsbyte-1989-lantbruk"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Samma källkolumn har motstridiga årströsklar.\ncatalog:occurrence:193598\ncatalog:occurrence:193734\ncatalog:valueset:5836"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-inredningsbyte-1989-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har motstridiga årströsklar.\ncatalog:occurrence:193598\ncatalog:occurrence:193734\ncatalog:valueset:5836"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-inredningsbyte-1991"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Samma källkolumn har motstridiga årströsklar.\ncatalog:occurrence:193598\ncatalog:occurrence:193734\ncatalog:valueset:5836"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-inredningsbyte-1991"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har motstridiga årströsklar.\ncatalog:occurrence:193598\ncatalog:occurrence:193734\ncatalog:valueset:5836"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-2003-eller-senare"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194363\ncatalog:occurrence:194480"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-2003-eller-senare"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194363\ncatalog:occurrence:194480"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-efter-1985"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193597\ncatalog:occurrence:194002"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-efter-1985"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193597\ncatalog:occurrence:194002"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-efter-1990"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193597\ncatalog:occurrence:194002\ncatalog:occurrence:194363\ncatalog:occurrence:194480"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-koksinredningsbyte-efter-1990"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:193597\ncatalog:occurrence:194002\ncatalog:occurrence:194363\ncatalog:occurrence:194480"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-kokso"
+fields = { "sets" = ["kokso"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193600\ncatalog:occurrence:193738"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-kokso"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193600\ncatalog:occurrence:193738"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-kokso-lantbruk"
+fields = { "sets" = ["kokso"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193600\ncatalog:occurrence:193738"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-kokso-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193600\ncatalog:occurrence:193738"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spis"
+fields = { "sets" = ["koksspis"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193601\ncatalog:occurrence:193739"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spis"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193601\ncatalog:occurrence:193739"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spis-lantbruk"
+fields = { "sets" = ["koksspis"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193601\ncatalog:occurrence:193739"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spis-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193601\ncatalog:occurrence:193739"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spishall"
+fields = { "sets" = ["spishall"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193602\ncatalog:occurrence:193740"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spishall"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; den senare avser lantbruksenheter.\ncatalog:occurrence:193602\ncatalog:occurrence:193740"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spishall-lantbruk"
+fields = { "sets" = ["spishall"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193602\ncatalog:occurrence:193740"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-spishall-lantbruk"
+fields = { "tags" = ["housing"] }
+evidence = "Samma utrustningskod är uppdelad mellan perioder; denna period avser lantbruksenheter.\ncatalog:occurrence:193602\ncatalog:occurrence:193740"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-typ"
+fields = { "sets" = ["koksstandard"] }
+evidence = "Källkolumnens kodning förändras mellan perioderna.\ncatalog:occurrence:194365\ncatalog:occurrence:194482\ncatalog:valueset:11656\ncatalog:valueset:8618"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-typ"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnens kodning förändras mellan perioderna.\ncatalog:occurrence:194365\ncatalog:occurrence:194482\ncatalog:valueset:11656\ncatalog:valueset:8618"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-utrustning-och-inredning"
+fields = { "sets" = ["koksstandard"] }
+evidence = "Källkolumnens kodning förändras mellan perioderna.\ncatalog:occurrence:194365\ncatalog:occurrence:194482\ncatalog:valueset:5548"
+
+[[statement]]
+kind = "set"
+subject = "var:kok-utrustning-och-inredning"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnens kodning förändras mellan perioderna.\ncatalog:occurrence:194365\ncatalog:occurrence:194482\ncatalog:valueset:5548"
+
+[[statement]]
+kind = "set"
+subject = "var:kokinrednl"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Kodning av köksinredningsbyte.\ncatalog:occurrence:193875"
+
+[[statement]]
+kind = "set"
+subject = "var:kokinrednl"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av köksinredningsbyte.\ncatalog:occurrence:193875"
+
+[[statement]]
+kind = "set"
+subject = "var:kokinredns"
+fields = { "sets" = ["koksinredningsbyte"] }
+evidence = "Kodning av köksinredningsbyte.\ncatalog:occurrence:193876"
+
+[[statement]]
+kind = "set"
+subject = "var:kokinredns"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av köksinredningsbyte.\ncatalog:occurrence:193876"
+
+[[statement]]
+kind = "set"
+subject = "var:kokjamkning"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21332:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kokjamkning"
+fields = { "tags" = ["property"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21332:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypl"
+fields = { "sets" = ["koksstandard"] }
+evidence = "Kodning av kökstyp.\ncatalog:occurrence:193881"
+
+[[statement]]
+kind = "set"
+subject = "var:koktypl"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av kökstyp.\ncatalog:occurrence:193881"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyps"
+fields = { "sets" = ["koksstandard"] }
+evidence = "Kodning av kökstyp.\ncatalog:occurrence:193882"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyps"
+fields = { "tags" = ["housing"] }
+evidence = "Kodning av kökstyp.\ncatalog:occurrence:193882"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommun är en geografisk indelning och grupperas med folkbokföringskommun.\ncatalog:variable_text:21285:19358:19359\ncatalog:variable_text:21335:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning och grupperas med folkbokföringskommun.\ncatalog:variable_text:21285:19358:19359\ncatalog:variable_text:21335:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-ost"
+fields = { "sets" = ["fastighetskoordinater"] }
+evidence = "Öst- och nordkoordinat är komponenter av fastighetens läge.\ncatalog:register:121\ncatalog:variable_text:21336:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:koordinat-ost"
+fields = { "tags" = ["geography"] }
+evidence = "Öst- och nordkoordinat är komponenter av fastighetens läge.\ncatalog:register:121\ncatalog:variable_text:21336:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län anger geografisk indelning.\ncatalog:variable_text:21337:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografisk indelning.\ncatalog:variable_text:21337:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:land-korr"
+fields = { "sets" = ["adressland"] }
+evidence = "Samma kolumn har alternerande ägare; uppgiften avser land för adress.\ncatalog:occurrence:192727\ncatalog:occurrence:192752\ncatalog:occurrence:192778\ncatalog:occurrence:192802\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:land-korr"
+fields = { "tags" = ["geography"] }
+evidence = "Samma kolumn har alternerande ägare; uppgiften avser land för adress.\ncatalog:occurrence:192727\ncatalog:occurrence:192752\ncatalog:occurrence:192778\ncatalog:occurrence:192802\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:landsnamn-utland"
+fields = { "sets" = ["adressland"] }
+evidence = "Två källkolumner har andra periodägare och uppgifterna beskrivs som landsnamn respektive landkod.\ncatalog:occurrence:192474\ncatalog:occurrence:192502\ncatalog:occurrence:192727\ncatalog:occurrence:192752\ncatalog:occurrence:192778\ncatalog:occurrence:192802\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:landsnamn-utland"
+fields = { "tags" = ["geography"] }
+evidence = "Två källkolumner har andra periodägare och uppgifterna beskrivs som landsnamn respektive landkod.\ncatalog:occurrence:192474\ncatalog:occurrence:192502\ncatalog:occurrence:192727\ncatalog:occurrence:192752\ncatalog:occurrence:192778\ncatalog:occurrence:192802\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Vakant lokalarea är samma koncept som scb/ftr/vakant-lokalyta, korrekt uppdelat per period.\ncatalog:occurrence:194882\ncatalog:occurrence:195339"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant"
+fields = { "tags" = ["property"] }
+evidence = "Vakant lokalarea är samma koncept som scb/ftr/vakant-lokalyta, korrekt uppdelat per period.\ncatalog:occurrence:194882\ncatalog:occurrence:195339"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant-lokalytavakant"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Vakant lokalarea är samma koncept som scb/ftr/vakant-lokalyta-lokalytavakant, korrekt uppdelat per period.\ncatalog:occurrence:196988\ncatalog:occurrence:197227"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant-lokalytavakant"
+fields = { "tags" = ["property"] }
+evidence = "Vakant lokalarea är samma koncept som scb/ftr/vakant-lokalyta-lokalytavakant, korrekt uppdelat per period.\ncatalog:occurrence:196988\ncatalog:occurrence:197227"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalytaundermark"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Ytan är en delmängd av total lokalyta.\ncatalog:occurrence:197672"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalytaundermark"
+fields = { "tags" = ["property"] }
+evidence = "Ytan är en delmängd av total lokalyta.\ncatalog:occurrence:197672"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare"
+fields = { "sets" = ["agarandel"] }
+evidence = "Nämnaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21344:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare"
+fields = { "tags" = ["property"] }
+evidence = "Nämnaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21344:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare-talnamnare"
+fields = { "sets" = ["agarandel"] }
+evidence = "Nämnaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21345:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare-talnamnare"
+fields = { "tags" = ["property"] }
+evidence = "Nämnaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21345:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:namnland"
+fields = { "sets" = ["adressland"] }
+evidence = "Samma källkolumn har en annan periodägare vars definition avser landsnamn.\ncatalog:occurrence:192474\ncatalog:occurrence:192502\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:namnland"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har en annan periodägare vars definition avser landsnamn.\ncatalog:occurrence:192474\ncatalog:occurrence:192502\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodningen hör med den särskilda SNI 2002-varianten.\ncatalog:register:121\ncatalog:variable_text:21347:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen hör med den särskilda SNI 2002-varianten.\ncatalog:register:121\ncatalog:variable_text:21347:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-literal-sni2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI 2002-varianten hör med den allmänna näringsgrenskodningen.\ncatalog:register:121\ncatalog:variable_text:21348:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-literal-sni2002"
+fields = { "tags" = ["business"] }
+evidence = "SNI 2002-varianten hör med den allmänna näringsgrenskodningen.\ncatalog:register:121\ncatalog:variable_text:21348:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:nivafaktlokal"
+fields = { "sets" = ["h-nivafaktor"] }
+evidence = "Samma H-nivåfaktor för lokaler är uppdelad mellan observerade perioder.\ncatalog:occurrence:194832\ncatalog:occurrence:194946\ncatalog:occurrence:195057\ncatalog:occurrence:195522\ncatalog:occurrence:195644"
+
+[[statement]]
+kind = "set"
+subject = "var:nivafaktlokal"
+fields = { "tags" = ["property"] }
+evidence = "Samma H-nivåfaktor för lokaler är uppdelad mellan observerade perioder.\ncatalog:occurrence:194832\ncatalog:occurrence:194946\ncatalog:occurrence:195057\ncatalog:occurrence:195522\ncatalog:occurrence:195644"
+
+[[statement]]
+kind = "set"
+subject = "var:nivafaktor"
+fields = { "sets" = [] }
+evidence = "S-nivåfaktor är en värderingsfaktor och omfattas inte av gruppen för H-nivåfaktorer.\ncatalog:occurrence:196120"
+
+[[statement]]
+kind = "set"
+subject = "var:nivafaktor"
+fields = { "tags" = ["property"] }
+evidence = "S-nivåfaktor är en värderingsfaktor och omfattas inte av gruppen för H-nivåfaktorer.\ncatalog:occurrence:196120"
+
+[[statement]]
+kind = "set"
+subject = "var:nordkoordinat"
+fields = { "sets" = ["fastighetskoordinater"] }
+evidence = "Nord- och östkoordinat är komponenter av fastighetens läge.\ncatalog:register:121\ncatalog:variable_text:21351:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nordkoordinat"
+fields = { "tags" = ["geography"] }
+evidence = "Nord- och östkoordinat är komponenter av fastighetens läge.\ncatalog:register:121\ncatalog:variable_text:21351:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "sets" = [] }
+evidence = "Nyckelkodsområde är en geografisk indelning.\ncatalog:variable_text:21355:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "tags" = ["geography"] }
+evidence = "Nyckelkodsområde är en geografisk indelning.\ncatalog:variable_text:21355:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Övrig bostadsyta är en namngiven delmängd.\ncatalog:occurrence:197658"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Övrig bostadsyta är en namngiven delmängd.\ncatalog:occurrence:197658"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta-ytaovrigbost"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har olika beskrivningar mellan ägarna.\ncatalog:occurrence:194536\ncatalog:occurrence:194991"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta-ytaovrigbost"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika beskrivningar mellan ägarna.\ncatalog:occurrence:194536\ncatalog:occurrence:194991"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Övrig lokalyta är en namngiven delmängd av lokalytan.\ncatalog:occurrence:197671"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta"
+fields = { "tags" = ["property"] }
+evidence = "Övrig lokalyta är en namngiven delmängd av lokalytan.\ncatalog:occurrence:197671"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta-ytaovriglok"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Definitionerna för samma källkolumn skiljer sig mellan perioder.\ncatalog:occurrence:194879\ncatalog:occurrence:194992"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta-ytaovriglok"
+fields = { "tags" = ["property"] }
+evidence = "Definitionerna för samma källkolumn skiljer sig mellan perioder.\ncatalog:occurrence:194879\ncatalog:occurrence:194992"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Postadress är en namngiven adressdel.\ncatalog:occurrence:196413"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postnummer"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:occurrence:192476"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:occurrence:192476"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Postort är en namngiven adressdel och ett geografiskt område.\ncatalog:occurrence:192475"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort är en namngiven adressdel och ett geografiskt område.\ncatalog:occurrence:192475"
+
+[[statement]]
+kind = "set"
+subject = "var:sams"
+fields = { "sets" = [] }
+evidence = "SAMS anger geografisk områdestillhörighet.\ncatalog:occurrence:195534"
+
+[[statement]]
+kind = "set"
+subject = "var:sams"
+fields = { "tags" = ["geography"] }
+evidence = "SAMS anger geografisk områdestillhörighet.\ncatalog:occurrence:195534"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostad"
+fields = { "sets" = ["bad-och-duschutrymme"] }
+evidence = "Gruppen avser kodningar av bad- och duschutrymme; taggen avser bostadens egenskaper.\ncatalog:valueset:9209\ncatalog:variable_text:21366:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostad"
+fields = { "tags" = ["housing"] }
+evidence = "Gruppen avser kodningar av bad- och duschutrymme; taggen avser bostadens egenskaper.\ncatalog:valueset:9209\ncatalog:variable_text:21366:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostadl"
+fields = { "sets" = ["bad-och-duschutrymme"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser bad- och duschutrymme.\ncatalog:valueset:6429\ncatalog:variable_text:21367:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostadl"
+fields = { "tags" = ["housing"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser bad- och duschutrymme.\ncatalog:valueset:6429\ncatalog:variable_text:21367:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostads"
+fields = { "sets" = ["bad-och-duschutrymme"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser bad- och duschutrymme.\ncatalog:valueset:1011\ncatalog:variable_text:21368:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadbostads"
+fields = { "tags" = ["housing"] }
+evidence = "Familjens gemensamma läsbarhetsbedömning är att behålla id:t. Gruppen avser bad- och duschutrymme.\ncatalog:valueset:1011\ncatalog:variable_text:21368:12418:12419"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadkallare"
+fields = { "sets" = ["bad-och-duschutrymme"] }
+evidence = "Gruppen avser även bad- och duschutrymme i källarvåning.\ncatalog:valueset:10571\ncatalog:variable_text:21369:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbadkallare"
+fields = { "tags" = ["housing"] }
+evidence = "Gruppen avser även bad- och duschutrymme i källarvåning.\ncatalog:valueset:10571\ncatalog:variable_text:21369:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbastu"
+fields = { "sets" = [] }
+evidence = "Taggen avser bostadens utrustning. Ingen gruppkandidat omfattar bastu.\ncatalog:valueset:8396\ncatalog:variable_text:21370:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbastu"
+fields = { "tags" = ["housing"] }
+evidence = "Taggen avser bostadens utrustning. Ingen gruppkandidat omfattar bastu.\ncatalog:valueset:8396\ncatalog:variable_text:21370:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbytt92"
+fields = { "sets" = ["sanitetsutrustningsbyte"] }
+evidence = "Källkolumnen har en perioduppdelad identitet mot en variabel för småhus; uppgiften avser sanitetsutrustningsbyte på lantbruksenheter.\ncatalog:occurrence:193484\ncatalog:occurrence:193618\ncatalog:occurrence:193897"
+
+[[statement]]
+kind = "set"
+subject = "var:sanbytt92"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnen har en perioduppdelad identitet mot en variabel för småhus; uppgiften avser sanitetsutrustningsbyte på lantbruksenheter.\ncatalog:occurrence:193484\ncatalog:occurrence:193618\ncatalog:occurrence:193897"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-inredningsbyte-1990-eller-senare"
+fields = { "sets" = ["sanitetsutrustningsbyte"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:194020\ncatalog:occurrence:194141\ncatalog:occurrence:194383\ncatalog:occurrence:194500"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-inredningsbyte-1990-eller-senare"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar och kodning.\ncatalog:occurrence:194020\ncatalog:occurrence:194141\ncatalog:occurrence:194383\ncatalog:occurrence:194500"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1966-89-lantbruk"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Definition och värdemängd motsäger varandra.\ncatalog:occurrence:193624\ncatalog:occurrence:193764\ncatalog:valueset:3993"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1966-89-lantbruk"
+fields = { "tags" = ["property"] }
+evidence = "Definition och värdemängd motsäger varandra.\ncatalog:occurrence:193624\ncatalog:occurrence:193764\ncatalog:valueset:3993"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Stambyte efter 1989 är samma koncept som scb/ftr/sanitet-stambyte-1989-smahus, korrekt uppdelat per period.\ncatalog:occurrence:193623\ncatalog:occurrence:193763"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989"
+fields = { "tags" = ["property"] }
+evidence = "Stambyte efter 1989 är samma koncept som scb/ftr/sanitet-stambyte-1989-smahus, korrekt uppdelat per period.\ncatalog:occurrence:193623\ncatalog:occurrence:193763"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989-lantbruk"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Definition och värdemängd motsäger varandra.\ncatalog:occurrence:193625\ncatalog:occurrence:193765\ncatalog:valueset:6415"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989-lantbruk"
+fields = { "tags" = ["property"] }
+evidence = "Definition och värdemängd motsäger varandra.\ncatalog:occurrence:193625\ncatalog:occurrence:193765\ncatalog:valueset:6415"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989-smahus"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Källkolumnen får en senare tidsgräns.\ncatalog:occurrence:193623\ncatalog:occurrence:193763\ncatalog:occurrence:194387\ncatalog:occurrence:194504"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1989-smahus"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnen får en senare tidsgräns.\ncatalog:occurrence:193623\ncatalog:occurrence:193763\ncatalog:occurrence:194387\ncatalog:occurrence:194504"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1990"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193624\ncatalog:occurrence:193764\ncatalog:valueset:3993"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1990"
+fields = { "tags" = ["property"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193624\ncatalog:occurrence:193764\ncatalog:valueset:3993"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1991"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193625\ncatalog:occurrence:193765\ncatalog:valueset:6415"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-1991"
+fields = { "tags" = ["property"] }
+evidence = "Motpartens definition avviker från värdemängden.\ncatalog:occurrence:193625\ncatalog:occurrence:193765\ncatalog:valueset:6415"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-2003"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Källkolumnens tidsgräns ändras.\ncatalog:occurrence:194387\ncatalog:occurrence:194504"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-stambyte-2003"
+fields = { "tags" = ["property"] }
+evidence = "Källkolumnens tidsgräns ändras.\ncatalog:occurrence:194387\ncatalog:occurrence:194504"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-1980"
+fields = { "sets" = ["sanitetsutrustningsbyte"] }
+evidence = "Samma källkolumn används för olika periodavgränsningar.\ncatalog:occurrence:193617\ncatalog:occurrence:194020"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-1980"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn används för olika periodavgränsningar.\ncatalog:occurrence:193617\ncatalog:occurrence:194020"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-1989-smahus"
+fields = { "sets" = ["sanitetsutrustningsbyte"] }
+evidence = "Två källkolumner har perioduppdelning med andra ägare.\ncatalog:occurrence:193484\ncatalog:occurrence:193617\ncatalog:occurrence:193618\ncatalog:occurrence:194020\ncatalog:occurrence:194141"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-1989-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Två källkolumner har perioduppdelning med andra ägare.\ncatalog:occurrence:193484\ncatalog:occurrence:193617\ncatalog:occurrence:193618\ncatalog:occurrence:194020\ncatalog:occurrence:194141"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-2003"
+fields = { "sets" = ["sanitetsutrustningsbyte"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194383\ncatalog:occurrence:194500"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-utrustningsbyte-2003"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika årströsklar.\ncatalog:occurrence:194383\ncatalog:occurrence:194500"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-wc"
+fields = { "sets" = ["wc-standard"] }
+evidence = "Den äldre etiketten är bredare än WC och samma kolumn har olika ägare.\ncatalog:occurrence:193628\ncatalog:occurrence:194027"
+
+[[statement]]
+kind = "set"
+subject = "var:sanitet-wc"
+fields = { "tags" = ["housing"] }
+evidence = "Den äldre etiketten är bredare än WC och samma kolumn har olika ägare.\ncatalog:occurrence:193628\ncatalog:occurrence:194027"
+
+[[statement]]
+kind = "set"
+subject = "var:sanjamkning"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21384:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanjamkning"
+fields = { "tags" = ["property"] }
+evidence = "Jämkningspoängen är en namngiven komponent i standardpoängsgruppen.\ncatalog:variable_text:21384:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sankakel"
+fields = { "sets" = [] }
+evidence = "Kakelförekomst är en egenskap hos byggnaden.\ncatalog:variable_text:21385:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sankakel"
+fields = { "tags" = ["property"] }
+evidence = "Kakelförekomst är en egenskap hos byggnaden.\ncatalog:variable_text:21385:14610:14611"
+
+[[statement]]
+kind = "set"
+subject = "var:sanmogen"
+fields = { "sets" = [] }
+evidence = "Saneringsmognad är en byggnadsegenskap.\ncatalog:variable_text:21386:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanmogen"
+fields = { "tags" = ["property"] }
+evidence = "Saneringsmognad är en byggnadsegenskap.\ncatalog:variable_text:21386:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanstambytt89"
+fields = { "sets" = ["vatten-och-avloppsstambyte"] }
+evidence = "Kodningen gäller vatten- och avloppsstambyte.\ncatalog:occurrence:193622\ncatalog:valueset:3352"
+
+[[statement]]
+kind = "set"
+subject = "var:sanstambytt89"
+fields = { "tags" = ["property"] }
+evidence = "Kodningen gäller vatten- och avloppsstambyte.\ncatalog:occurrence:193622\ncatalog:valueset:3352"
+
+[[statement]]
+kind = "set"
+subject = "var:santvatt"
+fields = { "sets" = [] }
+evidence = "Tvättutrymme är en byggnadsegenskap.\ncatalog:variable_text:21388:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:santvatt"
+fields = { "tags" = ["property"] }
+evidence = "Tvättutrymme är en byggnadsegenskap.\ncatalog:variable_text:21388:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanvatten"
+fields = { "sets" = [] }
+evidence = "Indraget vatten är en byggnadsegenskap.\ncatalog:variable_text:21389:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanvatten"
+fields = { "tags" = ["property"] }
+evidence = "Indraget vatten är en byggnadsegenskap.\ncatalog:variable_text:21389:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sanwcl"
+fields = { "sets" = ["wc-standard"] }
+evidence = "WC-kodning för lantbruksenheter.\ncatalog:occurrence:193908"
+
+[[statement]]
+kind = "set"
+subject = "var:sanwcl"
+fields = { "tags" = ["housing"] }
+evidence = "WC-kodning för lantbruksenheter.\ncatalog:occurrence:193908"
+
+[[statement]]
+kind = "set"
+subject = "var:sanwcs"
+fields = { "sets" = ["wc-standard"] }
+evidence = "WC-kodning för småhusenheter.\ncatalog:occurrence:193909"
+
+[[statement]]
+kind = "set"
+subject = "var:sanwcs"
+fields = { "tags" = ["housing"] }
+evidence = "WC-kodning för småhusenheter.\ncatalog:occurrence:193909"
+
+[[statement]]
+kind = "set"
+subject = "var:skalytaovrigbost"
+fields = { "sets" = ["skal-till-avvikande-uthyrning"] }
+evidence = "Kodade skäl för bostäders avvikande uthyrning.\ncatalog:occurrence:194149\ncatalog:valueset:10174"
+
+[[statement]]
+kind = "set"
+subject = "var:skalytaovrigbost"
+fields = { "tags" = ["housing"] }
+evidence = "Kodade skäl för bostäders avvikande uthyrning.\ncatalog:occurrence:194149\ncatalog:valueset:10174"
+
+[[statement]]
+kind = "set"
+subject = "var:skalytaovriglok"
+fields = { "sets" = ["skal-till-avvikande-uthyrning"] }
+evidence = "Kodade skäl för lokalers avvikande uthyrning.\ncatalog:occurrence:194150\ncatalog:valueset:3468"
+
+[[statement]]
+kind = "set"
+subject = "var:skalytaovriglok"
+fields = { "tags" = ["property"] }
+evidence = "Kodade skäl för lokalers avvikande uthyrning.\ncatalog:occurrence:194150\ncatalog:valueset:3468"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "sets" = [] }
+evidence = "Småort är en geografisk indelning.\ncatalog:variable_text:21395:17532:17533"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "tags" = ["geography"] }
+evidence = "Småort är en geografisk indelning.\ncatalog:variable_text:21395:17532:17533"
+
+[[statement]]
+kind = "set"
+subject = "var:standard-exterior"
+fields = { "sets" = ["fasadstandard"] }
+evidence = "Värdemängden anger fasadmaterial, samma koncept som scb/ftr/exterior-fasad, korrekt uppdelat per period.\ncatalog:occurrence:193564\ncatalog:occurrence:193972\ncatalog:valueset:12878"
+
+[[statement]]
+kind = "set"
+subject = "var:standard-exterior"
+fields = { "tags" = ["property"] }
+evidence = "Värdemängden anger fasadmaterial, samma koncept som scb/ftr/exterior-fasad, korrekt uppdelat per period.\ncatalog:occurrence:193564\ncatalog:occurrence:193972\ncatalog:valueset:12878"
+
+[[statement]]
+kind = "set"
+subject = "var:standard-sanitet"
+fields = { "sets" = ["wc-standard"] }
+evidence = "Den äldre etiketten är bredare än WC och samma kolumn har olika ägare.\ncatalog:occurrence:193628\ncatalog:occurrence:194027"
+
+[[statement]]
+kind = "set"
+subject = "var:standard-sanitet"
+fields = { "tags" = ["housing"] }
+evidence = "Den äldre etiketten är bredare än WC och samma kolumn har olika ägare.\ncatalog:occurrence:193628\ncatalog:occurrence:194027"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-standardpoang"
+fields = { "sets" = ["standardpoang"] }
+evidence = "Summan och namngivna jämkningspoäng hör till standardpoängsgruppen.\ncatalog:variable_text:21384:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-standardpoang"
+fields = { "tags" = ["property"] }
+evidence = "Summan och namngivna jämkningspoäng hör till standardpoängsgruppen.\ncatalog:variable_text:21384:19358:19359\ncatalog:variable_text:21398:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytakont"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Kontorsyta är en namngiven lokalytedel.\ncatalog:occurrence:196138"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytakont"
+fields = { "tags" = ["property"] }
+evidence = "Kontorsyta är en namngiven lokalytedel.\ncatalog:occurrence:196138"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytalager"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Lageryta är en namngiven lokalytedel.\ncatalog:occurrence:196139"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytalager"
+fields = { "tags" = ["property"] }
+evidence = "Lageryta är en namngiven lokalytedel.\ncatalog:occurrence:196139"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytaprod"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Produktionsyta är en namngiven lokalytedel.\ncatalog:occurrence:196140"
+
+[[statement]]
+kind = "set"
+subject = "var:sumytaprod"
+fields = { "tags" = ["property"] }
+evidence = "Produktionsyta är en namngiven lokalytedel.\ncatalog:occurrence:196140"
+
+[[statement]]
+kind = "set"
+subject = "var:taljare"
+fields = { "sets" = ["agarandel"] }
+evidence = "Täljaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21402:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:taljare"
+fields = { "tags" = ["property"] }
+evidence = "Täljaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21402:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:taljare-taltaljare"
+fields = { "sets" = ["agarandel"] }
+evidence = "Täljaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21403:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:taljare-taltaljare"
+fields = { "tags" = ["property"] }
+evidence = "Täljaren är en komponent av ägarandelen.\ncatalog:register:121\ncatalog:variable_text:21403:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "sets" = [] }
+evidence = "Tätort är en geografisk indelning.\ncatalog:variable_text:21404:17532:17533"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "tags" = ["geography"] }
+evidence = "Tätort är en geografisk indelning.\ncatalog:variable_text:21404:17532:17533"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-akermark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Åkermarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196149\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-akermark"
+fields = { "tags" = ["property"] }
+evidence = "Åkermarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196149\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Samma tabellkolumn är överlappande mappad till byggnadsvärde och småhusbyggnadsvärde.\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "tags" = ["property"] }
+evidence = "Samma tabellkolumn är överlappande mappad till byggnadsvärde och småhusbyggnadsvärde.\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-akermark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Åkermarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197683\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-akermark"
+fields = { "tags" = ["property"] }
+evidence = "Åkermarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197683\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-bostader"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Bostadsvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197685\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-bostader"
+fields = { "tags" = ["property"] }
+evidence = "Bostadsvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197685\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-produktiv-skogsmark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Skogsmarksvärdet är samma begrepp som före perioduppdelningen, med en mer specifik senare benämning.\ncatalog:occurrence:194648\ncatalog:occurrence:194760\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-produktiv-skogsmark"
+fields = { "tags" = ["property"] }
+evidence = "Skogsmarksvärdet är samma begrepp som före perioduppdelningen, med en mer specifik senare benämning.\ncatalog:occurrence:194648\ncatalog:occurrence:194760\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogligt-impediment"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Skogligt impediment är samma begrepp som skogsimpediment före perioduppdelningen.\ncatalog:occurrence:194649\ncatalog:occurrence:194761\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogligt-impediment"
+fields = { "tags" = ["property"] }
+evidence = "Skogligt impediment är samma begrepp som skogsimpediment före perioduppdelningen.\ncatalog:occurrence:194649\ncatalog:occurrence:194761\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Skogsimpediment är samma begrepp som skogligt impediment efter perioduppdelningen.\ncatalog:occurrence:194649\ncatalog:occurrence:194761\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsimpediment"
+fields = { "tags" = ["property"] }
+evidence = "Skogsimpediment är samma begrepp som skogligt impediment efter perioduppdelningen.\ncatalog:occurrence:194649\ncatalog:occurrence:194761\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Skogsmarksvärdet är samma begrepp som efter perioduppdelningen, där benämningen är mer specifik.\ncatalog:occurrence:194648\ncatalog:occurrence:194760\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-skogsmark"
+fields = { "tags" = ["property"] }
+evidence = "Skogsmarksvärdet är samma begrepp som efter perioduppdelningen, där benämningen är mer specifik.\ncatalog:occurrence:194648\ncatalog:occurrence:194760\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-smahusbyggnader"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Samma tabellkolumner är överlappande mappade till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-smahusbyggnader"
+fields = { "tags" = ["property"] }
+evidence = "Samma tabellkolumner är överlappande mappade till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-smahusmark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Samma tabellkolumn är överlappande mappad till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-smahusmark"
+fields = { "tags" = ["property"] }
+evidence = "Samma tabellkolumn är överlappande mappad till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-mark"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Samma tabellkolumn är överlappande mappad till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-mark"
+fields = { "tags" = ["property"] }
+evidence = "Samma tabellkolumn är överlappande mappad till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-skog-avverkr"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Värdet för skog med avverkningsrestriktioner är en namngiven taxeringsvärdekomponent.\ncatalog:occurrence:196157\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-skog-avverkr"
+fields = { "tags" = ["property"] }
+evidence = "Värdet för skog med avverkningsrestriktioner är en namngiven taxeringsvärdekomponent.\ncatalog:occurrence:196157\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-skogsmark-avverkr"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Värdet för skogsmark med avverkningsrestriktioner är en namngiven taxeringsvärdekomponent.\ncatalog:occurrence:197691\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-skogsmark-avverkr"
+fields = { "tags" = ["property"] }
+evidence = "Värdet för skogsmark med avverkningsrestriktioner är en namngiven taxeringsvärdekomponent.\ncatalog:occurrence:197691\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-totalt"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Totalt taxeringsvärde och dess namngivna komponenter hör till samma begrepp.\ncatalog:occurrence:197682\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-totalt"
+fields = { "tags" = ["property"] }
+evidence = "Totalt taxeringsvärde och dess namngivna komponenter hör till samma begrepp.\ncatalog:occurrence:197682\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-ovrigt"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Dödsbo anges inte som variabelns betydelse; källan beskriver kompletterande adress- eller namnfält.\ncatalog:occurrence:192480\ncatalog:variable_text:21420:11688:11689"
+
+[[statement]]
+kind = "set"
+subject = "var:total-biyta"
+fields = { "sets" = ["biyta"] }
+evidence = "Total biyta och biutrymmesyta i småhus är mått på biyta.\ncatalog:variable_text:21217:19358:19359\ncatalog:variable_text:21421:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-biyta"
+fields = { "tags" = ["housing"] }
+evidence = "Total biyta och biutrymmesyta i småhus är mått på biyta.\ncatalog:variable_text:21217:19358:19359\ncatalog:variable_text:21421:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har olika ägare och källhistoriken omfattar flera tabeller.\ncatalog:occurrence:195328\ncatalog:occurrence:195448\ncatalog:occurrence:197066"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika ägare och källhistoriken omfattar flera tabeller.\ncatalog:occurrence:195328\ncatalog:occurrence:195448\ncatalog:occurrence:197066"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-literal-ytabosts"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma bostadsyta för värderingsenheten är uppdelad mellan observerade perioder.\ncatalog:occurrence:195329\ncatalog:occurrence:195449"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-literal-ytabosts"
+fields = { "tags" = ["housing"] }
+evidence = "Samma bostadsyta för värderingsenheten är uppdelad mellan observerade perioder.\ncatalog:occurrence:195329\ncatalog:occurrence:195449"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-smahus"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Total bostadsyta för småhus.\ncatalog:occurrence:196077"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Total bostadsyta för småhus.\ncatalog:occurrence:196077"
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta"
+fields = { "sets" = ["byggnadsyta"] }
+evidence = "Total byggnadsyta hör med den andra källkolumnen för total byggnadsyta.\ncatalog:register:121\ncatalog:variable_text:21425:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta"
+fields = { "tags" = ["property"] }
+evidence = "Total byggnadsyta hör med den andra källkolumnen för total byggnadsyta.\ncatalog:register:121\ncatalog:variable_text:21425:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta-literal-ytabyggtot"
+fields = { "sets" = ["byggnadsyta"] }
+evidence = "Total byggnadsyta hör med den andra källkolumnen för total byggnadsyta.\ncatalog:register:121\ncatalog:variable_text:21426:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-byggnadsyta-literal-ytabyggtot"
+fields = { "tags" = ["property"] }
+evidence = "Total byggnadsyta hör med den andra källkolumnen för total byggnadsyta.\ncatalog:register:121\ncatalog:variable_text:21426:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Total lokalyta hör ihop med namngivna lokalytedelar.\ncatalog:occurrence:196167"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta"
+fields = { "tags" = ["property"] }
+evidence = "Total lokalyta hör ihop med namngivna lokalytedelar.\ncatalog:occurrence:196167"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-ytalokaltot"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Total lokalyta hör ihop med namngivna lokalytedelar.\ncatalog:occurrence:197696"
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-ytalokaltot"
+fields = { "tags" = ["property"] }
+evidence = "Total lokalyta hör ihop med namngivna lokalytedelar.\ncatalog:occurrence:197696"
+
+[[statement]]
+kind = "set"
+subject = "var:total-vardegrundande-yta"
+fields = { "sets" = ["vardegrundande-yta"] }
+evidence = "Total värdegrundande yta hör med värdegrundande yta i småhus.\ncatalog:register:121\ncatalog:variable_text:21429:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:total-vardegrundande-yta"
+fields = { "tags" = ["property"] }
+evidence = "Total värdegrundande yta hör med värdegrundande yta i småhus.\ncatalog:register:121\ncatalog:variable_text:21429:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-taxeringsvarde"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Totalt taxeringsvärde och dess namngivna komponenter hör till samma begrepp.\ncatalog:occurrence:196148\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-taxeringsvarde"
+fields = { "tags" = ["property"] }
+evidence = "Totalt taxeringsvärde och dess namngivna komponenter hör till samma begrepp.\ncatalog:occurrence:196148\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-bebyggelse"
+fields = { "sets" = ["bebyggelsetyp"] }
+evidence = "Bebyggelsetyp hör med motsvarande kodning för småhus.\ncatalog:register:121\ncatalog:variable_text:21431:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-bebyggelse"
+fields = { "tags" = ["housing", "property"] }
+evidence = "Bebyggelsetyp hör med motsvarande kodning för småhus.\ncatalog:register:121\ncatalog:variable_text:21431:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse"
+fields = { "sets" = ["bebyggelsetyp"] }
+evidence = "Småhusbebyggelsens typ hör med den allmänna bebyggelsetypen.\ncatalog:register:121\ncatalog:variable_text:21432:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-smahusbebyggelse"
+fields = { "tags" = ["housing", "property"] }
+evidence = "Småhusbebyggelsens typ hör med den allmänna bebyggelsetypen.\ncatalog:register:121\ncatalog:variable_text:21432:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typegendom"
+fields = { "sets" = [] }
+evidence = "Egendomsslaget beskriver fastigheten.\ncatalog:variable_text:21433:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typegendom"
+fields = { "tags" = ["property"] }
+evidence = "Egendomsslaget beskriver fastigheten.\ncatalog:variable_text:21433:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyraovrigbost"
+fields = { "sets" = ["hyreskod"] }
+evidence = "Variabeln kodar beräkningen av bostadshyra.\ncatalog:occurrence:194159\ncatalog:valueset:8161"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyraovrigbost"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln kodar beräkningen av bostadshyra.\ncatalog:occurrence:194159\ncatalog:valueset:8161"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyrauthyrdbost"
+fields = { "sets" = ["hyresar"] }
+evidence = "Årsangivelsen hör ihop med motsvarande hyresår för lokaler.\ncatalog:occurrence:194161\ncatalog:occurrence:194162"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyrauthyrdbost"
+fields = { "tags" = [] }
+evidence = "Årsangivelsen hör ihop med motsvarande hyresår för lokaler.\ncatalog:occurrence:194161\ncatalog:occurrence:194162"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyrauthyrdlok"
+fields = { "sets" = ["hyresar"] }
+evidence = "Årsangivelsen hör ihop med motsvarande hyresår för bostäder.\ncatalog:occurrence:194161\ncatalog:occurrence:194162"
+
+[[statement]]
+kind = "set"
+subject = "var:typhyrauthyrdlok"
+fields = { "tags" = [] }
+evidence = "Årsangivelsen hör ihop med motsvarande hyresår för bostäder.\ncatalog:occurrence:194161\ncatalog:occurrence:194162"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "sets" = ["fastighetstyp"] }
+evidence = "Typkoden klassificerar taxeringsenheter.\ncatalog:occurrence:192991"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "tags" = ["property"] }
+evidence = "Typkoden klassificerar taxeringsenheter.\ncatalog:occurrence:192991"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-niva-1"
+fields = { "sets" = ["fastighetstyp"] }
+evidence = "Första siffran i typkoden är samma klassificering som scb/ftr/fastighetstyp, korrekt uppdelad per period.\ncatalog:occurrence:195201\ncatalog:occurrence:195315"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-niva-1"
+fields = { "tags" = ["property"] }
+evidence = "Första siffran i typkoden är samma klassificering som scb/ftr/fastighetstyp, korrekt uppdelad per period.\ncatalog:occurrence:195201\ncatalog:occurrence:195315"
+
+[[statement]]
+kind = "set"
+subject = "var:under-byggnation"
+fields = { "sets" = [] }
+evidence = "UB är en bokstavskod för under byggnation.\ncatalog:variable_text:21439:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:under-byggnation"
+fields = { "tags" = ["property"] }
+evidence = "UB är en bokstavskod för under byggnation.\ncatalog:variable_text:21439:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "sets" = ["adressuppgifter"] }
+evidence = "Utdelningsadress är en namngiven adressdel.\ncatalog:occurrence:192461"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Uthyrd bostadsyta är en namngiven delmängd.\ncatalog:occurrence:197659"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Uthyrd bostadsyta är en namngiven delmängd.\ncatalog:occurrence:197659"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta-ytauthyrdbost"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma uthyrda bostadsyta är uppdelad mellan observerade perioder.\ncatalog:occurrence:194880\ncatalog:occurrence:194993"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta-ytauthyrdbost"
+fields = { "tags" = ["housing"] }
+evidence = "Samma uthyrda bostadsyta är uppdelad mellan observerade perioder.\ncatalog:occurrence:194880\ncatalog:occurrence:194993"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Uthyrd lokalyta är en namngiven lokalytedel.\ncatalog:occurrence:196171"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta"
+fields = { "tags" = ["property"] }
+evidence = "Uthyrd lokalyta är en namngiven lokalytedel.\ncatalog:occurrence:196171"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta-lokalytauthyrd"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Uthyrd lokalyta är en namngiven lokalytedel.\ncatalog:occurrence:197673"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta-lokalytauthyrd"
+fields = { "tags" = ["property"] }
+evidence = "Uthyrd lokalyta är en namngiven lokalytedel.\ncatalog:occurrence:197673"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Vakant bostadsyta är en namngiven delmängd.\ncatalog:occurrence:196172"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Vakant bostadsyta är en namngiven delmängd.\ncatalog:occurrence:196172"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta-bostadsytavakant"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Källkolumnens ägare och angiven aggregering skiljer sig mellan perioder.\ncatalog:occurrence:196974\ncatalog:occurrence:197034"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta-bostadsytavakant"
+fields = { "tags" = ["housing"] }
+evidence = "Källkolumnens ägare och angiven aggregering skiljer sig mellan perioder.\ncatalog:occurrence:196974\ncatalog:occurrence:197034"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Vakant lokalyta är samma koncept som scb/ftr/lokalarea-vakant, korrekt uppdelat per period.\ncatalog:occurrence:194882\ncatalog:occurrence:195339"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta"
+fields = { "tags" = ["property"] }
+evidence = "Vakant lokalyta är samma koncept som scb/ftr/lokalarea-vakant, korrekt uppdelat per period.\ncatalog:occurrence:194882\ncatalog:occurrence:195339"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta-lokalytavakant"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Vakant lokalyta är samma koncept som scb/ftr/lokalarea-vakant-lokalytavakant, korrekt uppdelat per period.\ncatalog:occurrence:196988\ncatalog:occurrence:197227"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta-lokalytavakant"
+fields = { "tags" = ["property"] }
+evidence = "Vakant lokalyta är samma koncept som scb/ftr/lokalarea-vakant-lokalytavakant, korrekt uppdelat per period.\ncatalog:occurrence:196988\ncatalog:occurrence:197227"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeakerbas"
+fields = { "sets" = ["basvarde"] }
+evidence = "Åkermarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193922"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeakerbas"
+fields = { "tags" = ["property"] }
+evidence = "Åkermarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193922"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = ["byggnadens-bruks-och-vardear"] }
+evidence = "Värdeår hör ihop med byggnadens bruksår.\ncatalog:occurrence:196072"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Värdeår hör ihop med byggnadens bruksår.\ncatalog:occurrence:196072"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebete"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Betesmarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196150\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebete"
+fields = { "tags" = ["property"] }
+evidence = "Betesmarksvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196150\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebetebas"
+fields = { "sets" = ["basvarde"] }
+evidence = "Betesmarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193925"
+
+[[statement]]
+kind = "set"
+subject = "var:vardebetebas"
+fields = { "tags" = ["property"] }
+evidence = "Betesmarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193925"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbygg"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Ekonomibyggnadsvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196153\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbygg"
+fields = { "tags" = ["property"] }
+evidence = "Ekonomibyggnadsvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:196153\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbyggbas"
+fields = { "sets" = ["basvarde"] }
+evidence = "Ekonomibyggnadernas basvärde är en värderingskomponent.\ncatalog:occurrence:193931"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeekbyggbas"
+fields = { "tags" = ["property"] }
+evidence = "Ekonomibyggnadernas basvärde är en värderingskomponent.\ncatalog:occurrence:193931"
+
+[[statement]]
+kind = "set"
+subject = "var:vardegrundande-yta-i-smahus"
+fields = { "sets" = ["vardegrundande-yta"] }
+evidence = "Värdegrundande yta i småhus hör med total värdegrundande yta.\ncatalog:register:121\ncatalog:variable_text:21455:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:vardegrundande-yta-i-smahus"
+fields = { "tags" = ["property"] }
+evidence = "Värdegrundande yta i småhus hör med total värdegrundande yta.\ncatalog:register:121\ncatalog:variable_text:21455:19358:19359"
+
+[[statement]]
+kind = "set"
+subject = "var:vardelok"
+fields = { "sets" = ["taxeringsvarde"] }
+evidence = "Lokalvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197688\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardelok"
+fields = { "tags" = ["property"] }
+evidence = "Lokalvärdet är en namngiven komponent av taxeringsvärdet.\ncatalog:occurrence:197688\ncatalog:register:121"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeskogbas"
+fields = { "sets" = ["basvarde"] }
+evidence = "Skogsmarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193937"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeskogbas"
+fields = { "tags" = ["property"] }
+evidence = "Skogsmarkens basvärde är en värderingskomponent.\ncatalog:occurrence:193937"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeskogsimpbas"
+fields = { "sets" = ["basvarde"] }
+evidence = "Skogsimpedimentets basvärde är en värderingskomponent.\ncatalog:occurrence:193939"
+
+[[statement]]
+kind = "set"
+subject = "var:vardeskogsimpbas"
+fields = { "tags" = ["property"] }
+evidence = "Skogsimpedimentets basvärde är en värderingskomponent.\ncatalog:occurrence:193939"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabosth"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har olika ägare och motpartens historik omfattar flera tabeller.\ncatalog:occurrence:195328\ncatalog:occurrence:195448\ncatalog:occurrence:197066"
+
+[[statement]]
+kind = "set"
+subject = "var:ytabosth"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika ägare och motpartens historik omfattar flera tabeller.\ncatalog:occurrence:195328\ncatalog:occurrence:195448\ncatalog:occurrence:197066"
+
+[[statement]]
+kind = "set"
+subject = "var:ytaovrigbost"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma källkolumn har olika beskrivningar mellan ägarna.\ncatalog:occurrence:194536\ncatalog:occurrence:194991"
+
+[[statement]]
+kind = "set"
+subject = "var:ytaovrigbost"
+fields = { "tags" = ["housing"] }
+evidence = "Samma källkolumn har olika beskrivningar mellan ägarna.\ncatalog:occurrence:194536\ncatalog:occurrence:194991"
+
+[[statement]]
+kind = "set"
+subject = "var:ytaovriglok"
+fields = { "sets" = ["lokalyta"] }
+evidence = "Definitionerna för samma källkolumn skiljer sig mellan perioder.\ncatalog:occurrence:194879\ncatalog:occurrence:194992"
+
+[[statement]]
+kind = "set"
+subject = "var:ytaovriglok"
+fields = { "tags" = ["property"] }
+evidence = "Definitionerna för samma källkolumn skiljer sig mellan perioder.\ncatalog:occurrence:194879\ncatalog:occurrence:194992"
+
+[[statement]]
+kind = "set"
+subject = "var:ytauthyrdbost"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Samma uthyrda bostadsyta är uppdelad mellan observerade perioder.\ncatalog:occurrence:194880\ncatalog:occurrence:194993"
+
+[[statement]]
+kind = "set"
+subject = "var:ytauthyrdbost"
+fields = { "tags" = ["housing"] }
+evidence = "Samma uthyrda bostadsyta är uppdelad mellan observerade perioder.\ncatalog:occurrence:194880\ncatalog:occurrence:194993"
+
+[[statement]]
+kind = "link"
+subject = "var:antal-ve-produktiv-skog"
+relation = "continues"
+object = "scb/ftr/antal-varderingsenheter-skogsmark"
+at = "2011-01-01.."
+evidence = "FTR: valuation units with woodland (1998-2010) -> with productive woodland (2011+), Antal; narrowed definition."
+
+[[statement]]
+kind = "link"
+subject = "var:energi-elsystemsbyte-2003-eller-senare"
+relation = "continues"
+object = "scb/ftr/energi-elbyte-efter-1990"
+at = "2009-01-01.."
+evidence = "FTR: electrical system replaced after 1990 (1998-2008) -> 2003 or later (2009+), same value set vs10696; reference window moved."
+
+[[statement]]
+kind = "link"
+subject = "var:exterior-fasadbyte-2003-eller-senare"
+relation = "continues"
+object = "scb/ftr/exterior-fasadbyte-efter-1989"
+at = "2009-01-01.."
+evidence = "FTR: facade replaced after 1989 -> 2003 or later; reference window moved."
+
+[[statement]]
+kind = "link"
+subject = "var:kok-koksinredningsbyte-2003-eller-senare"
+relation = "continues"
+object = "scb/ftr/kok-koksinredningsbyte-efter-1990"
+at = "2009-01-01.."
+evidence = "FTR: kitchen fittings replaced after 1990 (2005-08) -> 2003 or later (2009+); reference window moved."
+
+[[statement]]
+kind = "link"
+subject = "var:kok-koksinredningsbyte-efter-1990"
+relation = "continues"
+object = "scb/ftr/kok-koksinredningsbyte-efter-1985"
+at = "2005-01-01.."
+evidence = "FTR: kitchen fittings replaced after 1985 (1998-2002) -> after 1990 (2005-08); reference window moved."
+
+[[statement]]
+kind = "set"
+subject = "var:skattekontor"
+fields = { "tags" = ["taxation"] }
+evidence = "Coordinator-approved audit correction: Valueset: Skattekontoret i Norrtälje/Södertälje/... — tax-office code. Row 33 (scb/iot/handlaggande-skattemyndighet, same kind of variable) got taxation; the two must agree.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:14\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21314\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:192388\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12939\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21395"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-ovrigt"
+fields = { "tags" = ["geography"] }
+evidence = "r289 defines supplementary address text, including c/o and foreign addresses. The geography-tagged postal-area sibling (r298) supports the address battery's geography theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21085\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad1"
+fields = { "tags" = ["geography"] }
+evidence = "r77 defines this as the first part of the owner's address, usually containing the owner's name. Its battery role supports geography alongside the postal-area sibling (r298).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:192732\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad2"
+fields = { "tags" = ["geography"] }
+evidence = "r291 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21087\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad3"
+fields = { "tags" = ["geography"] }
+evidence = "r292 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21088\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad4"
+fields = { "tags" = ["geography"] }
+evidence = "r293 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21089\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad5"
+fields = { "tags" = ["geography"] }
+evidence = "r294 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21090\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:adressrad6"
+fields = { "tags" = ["geography"] }
+evidence = "r295 identifies a component of the address field. Its address role and geography-tagged postal-area sibling (r298) support geography.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21091\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-uppgiftslamnare"
+fields = { "tags" = ["property"] }
+evidence = "r296 records the respondent's name in owner and property-assessment records (r3, r144). This administrative role supports the register's property theme (r300).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:192390\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:196200\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21263\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "r297 defines the enterprise's postal address. The geography-tagged postal-area sibling (r298) supports geography for this address battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21281\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "tags" = ["geography"] }
+evidence = "r299 defines an address variable used as the delivery address. The geography-tagged postal-area sibling (r298) supports geography for this address battery.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21283\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:21359"

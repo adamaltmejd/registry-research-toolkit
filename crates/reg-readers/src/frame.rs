@@ -49,8 +49,10 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
             if object.contains_key("locator") || object.contains_key("also") {
                 return Err(located("locator is assigned by the reader"));
             }
-            if object.contains_key("classification") {
-                return Err(located("classification is curated; use set classification"));
+            for field in ["classification", "role", "unit_type"] {
+                if object.contains_key(field) {
+                    return Err(located(&format!("{field} is curated; use set {field}")));
+                }
             }
             let locator = Locator {
                 input: path.clone(),

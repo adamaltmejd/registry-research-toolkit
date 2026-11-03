@@ -1,0 +1,31 @@
+{
+  "note": "Fails if a tag is ignored, applies to non-variable hits, or its published fqid cannot filter. Same-name income variants are deliberately untagged. Oracle is the single authored income tag membership in webapp-dev. An unknown tag must refuse with the same not_found code as an unknown register, beside the allowed membership filter.",
+  "fixture": "webapp-dev",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "inkomst",
+        "tag": "income"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "inkomst",
+        "tag": "tag/income",
+        "register": "demo/bas"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "inkomst",
+        "tag": "absent"
+      }
+    }
+  ]
+}

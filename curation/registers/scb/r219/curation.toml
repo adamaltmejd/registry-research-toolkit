@@ -101,3 +101,259 @@ kind = "set"
 subject = "befolkade-oar-utan-fastlandsforbindelse: {kommun,lan} @2015-12-31"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bostader"
+fields = { "sets" = [] }
+evidence = "Variabeln avser bostadsbebyggelse.\ncatalog:variable_text:35039:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bostader"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln avser bostadsbebyggelse.\ncatalog:variable_text:35039:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-byggnader"
+fields = { "sets" = [] }
+evidence = "Variabeln avser byggnader.\ncatalog:variable_text:35040:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-byggnader"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln avser byggnader.\ncatalog:variable_text:35040:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter landareal.\ncatalog:variable_text:35041:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln mäter landareal.\ncatalog:variable_text:35041:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:befadr"
+fields = { "sets" = ["befolkningsantal"] }
+evidence = "Antalet personer hör ihop med motsvarande antal efter fastighetskoordinat.\ncatalog:variable_text:35042:18627:18628\ncatalog:variable_text:35043:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:befadr"
+fields = { "tags" = ["demographics"] }
+evidence = "Antalet personer hör ihop med motsvarande antal efter fastighetskoordinat.\ncatalog:variable_text:35042:18627:18628\ncatalog:variable_text:35043:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beffast"
+fields = { "sets" = ["befolkningsantal"] }
+evidence = "Antalet personer hör ihop med motsvarande antal efter adresskoordinat.\ncatalog:variable_text:35042:18627:18628\ncatalog:variable_text:35043:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:beffast"
+fields = { "tags" = ["demographics"] }
+evidence = "Antalet personer hör ihop med motsvarande antal efter adresskoordinat.\ncatalog:variable_text:35042:18627:18628\ncatalog:variable_text:35043:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar havsöstrand.\ncatalog:variable_text:35046:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln klassificerar havsöstrand.\ncatalog:variable_text:35046:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "sets" = [] }
+evidence = "Havsvatten är en av de angivna vattentyperna.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "tags" = ["geography"] }
+evidence = "Havsvatten är en av de angivna vattentyperna.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:hstrand"
+fields = { "sets" = ["strandtyp"] }
+evidence = "Havsstrand är en kodning av strandtyp.\ncatalog:variable_text:35048:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hstrand"
+fields = { "tags" = ["geography"] }
+evidence = "Havsstrand är en kodning av strandtyp.\ncatalog:variable_text:35048:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:istrand"
+fields = { "sets" = ["strandtyp"] }
+evidence = "Inlandsstrand är en kodning av strandtyp.\ncatalog:variable_text:35049:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:istrand"
+fields = { "tags" = ["geography"] }
+evidence = "Inlandsstrand är en kodning av strandtyp.\ncatalog:variable_text:35049:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunangivelsen hör ihop med kommunnamnet.\ncatalog:variable_text:35050:19723:20089\ncatalog:variable_text:35051:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunangivelsen hör ihop med kommunnamnet.\ncatalog:variable_text:35050:19723:20089\ncatalog:variable_text:35051:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunnamnet hör ihop med kommunkoden.\ncatalog:variable_text:35050:19723:20089\ncatalog:variable_text:35051:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamnet hör ihop med kommunkoden.\ncatalog:variable_text:35050:19723:20089\ncatalog:variable_text:35051:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger länstillhörighet.\ncatalog:variable_text:35052:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger länstillhörighet.\ncatalog:variable_text:35052:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:langdm"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter geografisk strandlängd.\ncatalog:variable_text:35053:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:langdm"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln mäter geografisk strandlängd.\ncatalog:variable_text:35053:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-geografiskt-objekt"
+fields = { "sets" = [] }
+evidence = "Variabeln anger namn på geografiska objekt.\ncatalog:variable_text:35054:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-geografiskt-objekt"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger namn på geografiska objekt.\ncatalog:variable_text:35054:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Identitetsfakten visar växlande ägare för båda koordinatkolumnerna.\ncatalog:occurrence:321628\ncatalog:occurrence:321629\ncatalog:occurrence:321644\ncatalog:occurrence:321645\ncatalog:occurrence:321660\ncatalog:occurrence:321661"
+
+[[statement]]
+kind = "set"
+subject = "var:nordlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfakten visar växlande ägare för båda koordinatkolumnerna.\ncatalog:occurrence:321628\ncatalog:occurrence:321629\ncatalog:occurrence:321644\ncatalog:occurrence:321645\ncatalog:occurrence:321660\ncatalog:occurrence:321661"
+
+[[statement]]
+kind = "set"
+subject = "var:okod-bef10"
+fields = { "sets" = [] }
+evidence = "Koden anger ett geografiskt öområde.\ncatalog:variable_text:35059:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:okod-bef10"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger ett geografiskt öområde.\ncatalog:variable_text:35059:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "sets" = ["geografiska-koordinater"] }
+evidence = "Identitetsfakten visar växlande ägare för båda koordinatkolumnerna.\ncatalog:occurrence:321628\ncatalog:occurrence:321629\ncatalog:occurrence:321644\ncatalog:occurrence:321645\ncatalog:occurrence:321660\ncatalog:occurrence:321661"
+
+[[statement]]
+kind = "set"
+subject = "var:ostlig-koordinat-sweref"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfakten visar växlande ägare för båda koordinatkolumnerna.\ncatalog:occurrence:321628\ncatalog:occurrence:321629\ncatalog:occurrence:321644\ncatalog:occurrence:321645\ncatalog:occurrence:321660\ncatalog:occurrence:321661"
+
+[[statement]]
+kind = "set"
+subject = "var:storasjostrand"
+fields = { "sets" = ["strandtyp"] }
+evidence = "Värdemängden ändras från sjökoder till en ja/nej-markering.\ncatalog:valueset:10571\ncatalog:valueset:2908\ncatalog:variable_text:35062:17897:18262\ncatalog:variable_text:35062:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storasjostrand"
+fields = { "tags" = ["geography"] }
+evidence = "Värdemängden ändras från sjökoder till en ja/nej-markering.\ncatalog:valueset:10571\ncatalog:valueset:2908\ncatalog:variable_text:35062:17897:18262\ncatalog:variable_text:35062:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tatorter"
+fields = { "sets" = [] }
+evidence = "To är en källmnemonik som inte är en igenkännbar stam av tätorter.\ncatalog:variable_text:35063:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tatorter"
+fields = { "tags" = ["geography"] }
+evidence = "To är en källmnemonik som inte är en igenkännbar stam av tätorter.\ncatalog:variable_text:35063:18627:18628"
+
+
+[[statement]]
+kind = "set"
+subject = "var:befadr"
+fields = { "description" = "Antal folkbokförda personer. Uppgiften hämtas från RTB den 31 december referensåret och kopplas till Lantmäteriets adresskoordinater." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen om familjen beskriver en annan population än de folkbokförda vid adresskoordinater.\ncatalog:occurrence:321678\ncatalog:variable_text:35042:18627:18628\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:321590:opdef_text; rel070-base/reg_meta.db:occurrence:321678:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:beffast"
+fields = { "description" = "Antal folkbokförda personer vid fastighetskoordinater. Uppgiften hämtas från RTB den 31 december referensåret och kopplas till Lantmäteriets fastighetskoordinater." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen om familjen beskriver en annan population än de folkbokförda vid fastighetskoordinater.\ncatalog:variable_text:35043:16070:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:321605:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "description" = "Anger om ö-objektet är beläget i havsvatten eller inlandsvatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKoderna och den operationella definitionen anger vattentyp för ett ö-objekt, inte havsvattnets areal.\ncatalog:valueset:1355\ncatalog:variable_text:35047:18627:18628"
+
+
+[[statement]]
+kind = "set"
+subject = "var:langdm"
+fields = { "description" = "Kust- och strandlängd i meter. Havs- och inlandsstrandlängd beräknas genom GIS-bearbetning av Lantmäteriets data." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en vattenmask, medan variabeln mäter kust- och strandlängd i meter.\ncatalog:variable_text:35053:17897:18262\ncatalog:variable_text:35053:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:321574:opdef_text; rel070-base/reg_meta.db:occurrence:321582:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The processing/data-source recipe occurs only in 2024, not in the 2019 occurrence. Evidence: rel070-base/reg_meta.db occurrences 321574, 321582.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 321574, 321582."

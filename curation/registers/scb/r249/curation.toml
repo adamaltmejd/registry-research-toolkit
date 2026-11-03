@@ -3223,3 +3223,1137 @@ kind = "set"
 subject = "nationella-prov-vartermin: jurform @2022..2024"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "Provpoäng på betygsnivå A hör till gruppen för provpoäng per betygsnivå.\ncatalog:variable_text:34643:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "tags" = ["education"] }
+evidence = "Provpoäng på betygsnivå A hör till gruppen för provpoäng per betygsnivå.\ncatalog:variable_text:34643:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:34644:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:34644:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antejkvxkurs"
+fields = { "sets" = ["antal-kurser-i-betyget"] }
+evidence = "Antalet andra kurser ingår i betyget.\ncatalog:variable_text:34645:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antejkvxkurs"
+fields = { "tags" = ["education"] }
+evidence = "Antalet andra kurser ingår i betyget.\ncatalog:variable_text:34645:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs"
+fields = { "sets" = ["antal-kurser-i-betyget"] }
+evidence = "Antalet avser kurser i betyget.\ncatalog:variable_text:34646:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs"
+fields = { "tags" = ["education"] }
+evidence = "Antalet avser kurser i betyget.\ncatalog:variable_text:34646:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs1"
+fields = { "sets" = ["antal-kurser-per-utbildningsniva"] }
+evidence = "Antalet avser kurser på grundläggande nivå.\ncatalog:variable_text:34647:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs1"
+fields = { "tags" = ["education"] }
+evidence = "Antalet avser kurser på grundläggande nivå.\ncatalog:variable_text:34647:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs2"
+fields = { "sets" = ["antal-kurser-per-utbildningsniva"] }
+evidence = "Antalet avser kurser på gymnasial nivå.\ncatalog:variable_text:34648:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs2"
+fields = { "tags" = ["education"] }
+evidence = "Antalet avser kurser på gymnasial nivå.\ncatalog:variable_text:34648:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs3"
+fields = { "sets" = ["antal-kurser-per-utbildningsniva"] }
+evidence = "Antalet avser kurser på påbyggnadsnivå.\ncatalog:variable_text:34649:16252:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs3"
+fields = { "tags" = ["education"] }
+evidence = "Antalet avser kurser på påbyggnadsnivå.\ncatalog:variable_text:34649:16252:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antkvxkurs"
+fields = { "sets" = ["antal-kurser-i-betyget"] }
+evidence = "Antalet avser komvuxkurser i betyget.\ncatalog:variable_text:34650:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antkvxkurs"
+fields = { "tags" = ["education"] }
+evidence = "Antalet avser komvuxkurser i betyget.\ncatalog:variable_text:34650:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim1"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Måttet avser undervisningstimmar på grundläggande nivå.\ncatalog:variable_text:34651:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim1"
+fields = { "tags" = ["education"] }
+evidence = "Måttet avser undervisningstimmar på grundläggande nivå.\ncatalog:variable_text:34651:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim2"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Måttet avser undervisningstimmar på gymnasial nivå.\ncatalog:variable_text:34652:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim2"
+fields = { "tags" = ["education"] }
+evidence = "Måttet avser undervisningstimmar på gymnasial nivå.\ncatalog:variable_text:34652:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim3"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Måttet avser undervisningstimmar på påbyggnadskurser.\ncatalog:variable_text:34653:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anttim3"
+fields = { "tags" = ["education"] }
+evidence = "Måttet avser undervisningstimmar på påbyggnadskurser.\ncatalog:variable_text:34653:14245:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:avb"
+fields = { "sets" = ["kursens-avslutsstatus"] }
+evidence = "Avb är en källförkortning för avbrott. Variabeln kodar kursens avslutsstatus.\ncatalog:valueset:11714\ncatalog:variable_text:34656:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avb"
+fields = { "tags" = ["education"] }
+evidence = "Avb är en källförkortning för avbrott. Variabeln kodar kursens avslutsstatus.\ncatalog:valueset:11714\ncatalog:variable_text:34656:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Måttet avser genomförda undervisningstimmar.\ncatalog:variable_text:34657:12418:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:avklarade-undervisningstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Måttet avser genomförda undervisningstimmar.\ncatalog:variable_text:34657:12418:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutad-kurs"
+fields = { "sets" = ["kursens-avslutsstatus"] }
+evidence = "Variabeln kodar kursens avslutsstatus.\ncatalog:variable_text:34658:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutad-kurs"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar kursens avslutsstatus.\ncatalog:variable_text:34658:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betmu"
+fields = { "sets" = ["betyg-pa-nationella-prov"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:12281\ncatalog:variable_text:34659:15887:18628\ncatalog:variable_text:34659:19905:20089\n\nDefinition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314330\nrel070-base/reg_meta.db:occurrence:314361\nrel070-base/reg_meta.db:occurrence:314386\nrel070-base/reg_meta.db:occurrence:314411\nrel070-base/reg_meta.db:occurrence:314439\nrel070-base/reg_meta.db:occurrence:314466\nrel070-base/reg_meta.db:occurrence:314493\nrel070-base/reg_meta.db:occurrence:314520\nrel070-base/reg_meta.db:occurrence:314521\nrel070-base/reg_meta.db:occurrence:314574\nrel070-base/reg_meta.db:occurrence:314601\nrel070-base/reg_meta.db:occurrence:314602\nrel070-base/reg_meta.db:occurrence:314655\nrel070-base/reg_meta.db:occurrence:314682\nrel070-base/reg_meta.db:occurrence:314683\nrel070-base/reg_meta.db:occurrence:314736\nrel070-base/reg_meta.db:occurrence:314763\nrel070-base/reg_meta.db:occurrence:314791\nrel070-base/reg_meta.db:occurrence:314819\nrel070-base/reg_meta.db:occurrence:314847\nrel070-base/reg_meta.db:occurrence:314875\nrel070-base/reg_meta.db:occurrence:314876\nrel070-base/reg_meta.db:occurrence:314931\nrel070-base/reg_meta.db:occurrence:314959\nrel070-base/reg_meta.db:occurrence:314960\nrel070-base/reg_meta.db:occurrence:315015\nrel070-base/reg_meta.db:occurrence:315043\nrel070-base/reg_meta.db:occurrence:315044\nrel070-base/reg_meta.db:occurrence:315099"
+
+[[statement]]
+kind = "set"
+subject = "var:betmu"
+fields = { "tags" = ["education"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:12281\ncatalog:variable_text:34659:15887:18628\ncatalog:variable_text:34659:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betrl"
+fields = { "sets" = ["betyg-pa-nationella-prov"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:1110\ncatalog:variable_text:34660:15887:18628\ncatalog:variable_text:34660:19905:20089\n\nDefinition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314331\nrel070-base/reg_meta.db:occurrence:314362\nrel070-base/reg_meta.db:occurrence:314387\nrel070-base/reg_meta.db:occurrence:314412\nrel070-base/reg_meta.db:occurrence:314440\nrel070-base/reg_meta.db:occurrence:314467\nrel070-base/reg_meta.db:occurrence:314494\nrel070-base/reg_meta.db:occurrence:314522\nrel070-base/reg_meta.db:occurrence:314523\nrel070-base/reg_meta.db:occurrence:314575\nrel070-base/reg_meta.db:occurrence:314603\nrel070-base/reg_meta.db:occurrence:314604\nrel070-base/reg_meta.db:occurrence:314656\nrel070-base/reg_meta.db:occurrence:314684\nrel070-base/reg_meta.db:occurrence:314685\nrel070-base/reg_meta.db:occurrence:314737\nrel070-base/reg_meta.db:occurrence:314764\nrel070-base/reg_meta.db:occurrence:314792\nrel070-base/reg_meta.db:occurrence:314820\nrel070-base/reg_meta.db:occurrence:314848\nrel070-base/reg_meta.db:occurrence:314877\nrel070-base/reg_meta.db:occurrence:314878\nrel070-base/reg_meta.db:occurrence:314932\nrel070-base/reg_meta.db:occurrence:314961\nrel070-base/reg_meta.db:occurrence:314962\nrel070-base/reg_meta.db:occurrence:315016\nrel070-base/reg_meta.db:occurrence:315045\nrel070-base/reg_meta.db:occurrence:315046\nrel070-base/reg_meta.db:occurrence:315100"
+
+[[statement]]
+kind = "set"
+subject = "var:betrl"
+fields = { "tags" = ["education"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:1110\ncatalog:variable_text:34660:15887:18628\ncatalog:variable_text:34660:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bets"
+fields = { "sets" = ["betyg-pa-nationella-prov"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:4544\ncatalog:variable_text:34661:15887:18628\ncatalog:variable_text:34661:19905:20089\n\nDefinition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314332\nrel070-base/reg_meta.db:occurrence:314363\nrel070-base/reg_meta.db:occurrence:314388\nrel070-base/reg_meta.db:occurrence:314413\nrel070-base/reg_meta.db:occurrence:314441\nrel070-base/reg_meta.db:occurrence:314468\nrel070-base/reg_meta.db:occurrence:314495\nrel070-base/reg_meta.db:occurrence:314524\nrel070-base/reg_meta.db:occurrence:314525\nrel070-base/reg_meta.db:occurrence:314576\nrel070-base/reg_meta.db:occurrence:314605\nrel070-base/reg_meta.db:occurrence:314606\nrel070-base/reg_meta.db:occurrence:314657\nrel070-base/reg_meta.db:occurrence:314686\nrel070-base/reg_meta.db:occurrence:314687\nrel070-base/reg_meta.db:occurrence:314738\nrel070-base/reg_meta.db:occurrence:314765\nrel070-base/reg_meta.db:occurrence:314793\nrel070-base/reg_meta.db:occurrence:314821\nrel070-base/reg_meta.db:occurrence:314849\nrel070-base/reg_meta.db:occurrence:314879\nrel070-base/reg_meta.db:occurrence:314880\nrel070-base/reg_meta.db:occurrence:314933\nrel070-base/reg_meta.db:occurrence:314963\nrel070-base/reg_meta.db:occurrence:314964\nrel070-base/reg_meta.db:occurrence:315017\nrel070-base/reg_meta.db:occurrence:315047\nrel070-base/reg_meta.db:occurrence:315048\nrel070-base/reg_meta.db:occurrence:315101"
+
+[[statement]]
+kind = "set"
+subject = "var:bets"
+fields = { "tags" = ["education"] }
+evidence = "Senare värdemängder innehåller både betyg och delprovspoäng.\ncatalog:valueset:4544\ncatalog:variable_text:34661:15887:18628\ncatalog:variable_text:34661:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "sets" = ["kursbetyg"] }
+evidence = "Variabeln anger betyg på kursen.\ncatalog:variable_text:34662:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger betyg på kursen.\ncatalog:variable_text:34662:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-kursbet"
+fields = { "sets" = ["kursbetyg"] }
+evidence = "Variabeln anger betyg på kursen i provuppgifterna.\ncatalog:variable_text:34663:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-kursbet"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger betyg på kursen i provuppgifterna.\ncatalog:variable_text:34663:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:csnpoang"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "CSN-poäng ingår i kandidatens utbildningspoäng.\ncatalog:variable_text:34664:10043:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:csnpoang"
+fields = { "tags" = ["education"] }
+evidence = "CSN-poäng ingår i kandidatens utbildningspoäng.\ncatalog:variable_text:34664:10043:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:delkurs"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver en utbildningskurs.\ncatalog:variable_text:34667:15156:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:delkurs"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver en utbildningskurs.\ncatalog:variable_text:34667:15156:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:34668:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:34668:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:34669:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:34669:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb-fland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:34670:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb-fland"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:34670:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["hemkommun"] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet och ingår i hemkommungruppen.\ncatalog:variable_text:34671:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet och ingår i hemkommungruppen.\ncatalog:variable_text:34671:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "sets" = [] }
+evidence = "Gymnasieprogram är en utbildningsinriktning.\ncatalog:variable_text:34674:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "tags" = ["education"] }
+evidence = "Gymnasieprogram är en utbildningsinriktning.\ncatalog:variable_text:34674:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "sets" = ["hemkommun"] }
+evidence = "Den operativa definitionen avser folkbokföringskommun.\ncatalog:variable_text:34675:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Den operativa definitionen avser folkbokföringskommun.\ncatalog:variable_text:34675:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "sets" = ["hemkommun"] }
+evidence = "HKOM är en ogenomskinlig källkod. Den operativa definitionen avser folkbokföringskommun.\ncatalog:variable_text:34676:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "tags" = ["geography"] }
+evidence = "HKOM är en ogenomskinlig källkod. Den operativa definitionen avser folkbokföringskommun.\ncatalog:variable_text:34676:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-kod"
+fields = { "sets" = ["huvudkurs"] }
+evidence = "Variabeln är huvudkursens kod.\ncatalog:valueset:11634\ncatalog:variable_text:34677:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-kod"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln är huvudkursens kod.\ncatalog:valueset:11634\ncatalog:variable_text:34677:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-text"
+fields = { "sets" = ["huvudkurs"] }
+evidence = "Variabeln är huvudkursens text.\ncatalog:variable_text:34678:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hkurs-text"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln är huvudkursens text.\ncatalog:variable_text:34678:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver huvudman för utbildning.\ncatalog:variable_text:34679:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver huvudman för utbildning.\ncatalog:variable_text:34679:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver organisationsstruktur.\ncatalog:variable_text:34680:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver organisationsstruktur.\ncatalog:variable_text:34680:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "Variabeln kodar skolans kommungrupp.\ncatalog:variable_text:34685:17532:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar skolans kommungrupp.\ncatalog:variable_text:34685:17532:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "Variabeln kodar skolans kommungrupp.\ncatalog:variable_text:34686:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar skolans kommungrupp.\ncatalog:variable_text:34686:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-text"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "Variabeln anger skolans kommungrupp i klartext.\ncatalog:variable_text:34687:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-text"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger skolans kommungrupp i klartext.\ncatalog:variable_text:34687:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:34688:19174:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:34688:19174:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kopt-utbildning-i-komvux"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver köpt utbildning.\ncatalog:variable_text:34689:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kopt-utbildning-i-komvux"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver köpt utbildning.\ncatalog:variable_text:34689:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs"
+fields = { "sets" = ["kurs"] }
+evidence = "Variabeln kodar vilken kurs provet avser.\ncatalog:valueset:12312\ncatalog:variable_text:34690:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar vilken kurs provet avser.\ncatalog:valueset:12312\ncatalog:variable_text:34690:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-i-komvux"
+fields = { "sets" = ["kurs"] }
+evidence = "Variabeln kodar vilken kurs eleven läst.\ncatalog:variable_text:34691:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-i-komvux"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar vilken kurs eleven läst.\ncatalog:variable_text:34691:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kurstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver kursens utbildningsform.\ncatalog:variable_text:34696:15340:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kurstyp"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver kursens utbildningsform.\ncatalog:variable_text:34696:15340:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kvxkurs"
+fields = { "sets" = [] }
+evidence = "KVX är en ogenomskinlig källförkortning för komvux. Variabeln anger om kursen är en komvuxkurs.\ncatalog:valueset:2884\ncatalog:variable_text:34697:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kvxkurs"
+fields = { "tags" = ["education"] }
+evidence = "KVX är en ogenomskinlig källförkortning för komvux. Variabeln anger om kursen är en komvuxkurs.\ncatalog:valueset:2884\ncatalog:variable_text:34697:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:linje"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver linje inom komvux.\ncatalog:variable_text:34699:9678:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:linje"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver linje inom komvux.\ncatalog:variable_text:34699:9678:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:lokal-kurs"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver en lokal utbildningskurs.\ncatalog:variable_text:34700:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lokal-kurs"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver en lokal utbildningskurs.\ncatalog:variable_text:34700:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-a-poang-totalt"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar med en annan variabel och målet kräver R6-prövning.\ncatalog:variable_text:34703:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-a-poang-totalt"
+fields = { "tags" = ["education"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar med en annan variabel och målet kräver R6-prövning.\ncatalog:variable_text:34703:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-muntlig-del"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34704:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-muntlig-del"
+fields = { "tags" = ["education"] }
+evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34704:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-totalt-gy-2011"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34705:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-c-poang-totalt-gy-2011"
+fields = { "tags" = ["education"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34705:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-muntlig-del-gy-2011"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34706:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-muntlig-del-gy-2011"
+fields = { "tags" = ["education"] }
+evidence = "MA och POM är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34706:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-totalt"
+fields = { "sets" = ["provpoang-per-betygsniva"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34707:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:matematik-betygsniva-e-poang-totalt"
+fields = { "tags" = ["education"] }
+evidence = "MA och POT är källkoder som inte är läsbara ordstammar i etiketten. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34707:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:minpoang"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver ett poängkrav för utbildning.\ncatalog:variable_text:34708:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:minpoang"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver ett poängkrav för utbildning.\ncatalog:variable_text:34708:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger nivån på studier i vuxenutbildning.\ncatalog:variable_text:34710:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger nivån på studier i vuxenutbildning.\ncatalog:variable_text:34710:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev"
+fields = { "sets" = ["nyinskriven-elev"] }
+evidence = "Kodning av nyinskriven elev, med en motsvarande variabel för kursdeltagare.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av nyinskriven elev, med en motsvarande variabel för kursdeltagare.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev-nyelev"
+fields = { "sets" = ["nyinskriven-elev"] }
+evidence = "Kodning av nyinskriven elev, med en motsvarande elevvariabel.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinskriven-elev-nyelev"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av nyinskriven elev, med en motsvarande elevvariabel.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-ej-inrapporterat-betyg"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver rapportering av kursbetyg.\ncatalog:valueset:9766\ncatalog:variable_text:34715:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-ej-inrapporterat-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver rapportering av kursbetyg.\ncatalog:valueset:9766\ncatalog:variable_text:34715:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger utbildningens poängomfattning; de olika operationaliseringarna behålls i källhistoriken.\ncatalog:variable_text:34718:10227:10592\ncatalog:variable_text:34718:16436:16617\ncatalog:variable_text:34718:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningens poängomfattning; de olika operationaliseringarna behålls i källhistoriken.\ncatalog:variable_text:34718:10227:10592\ncatalog:variable_text:34718:16436:16617\ncatalog:variable_text:34718:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs1"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger poängomfattning på grundläggande nivå.\ncatalog:variable_text:34719:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs1"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger poängomfattning på grundläggande nivå.\ncatalog:variable_text:34719:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs2"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger poängomfattning på gymnasial nivå.\ncatalog:variable_text:34720:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-kurs2"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger poängomfattning på gymnasial nivå.\ncatalog:variable_text:34720:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:poang3"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger poängomfattning i påbyggnadsutbildning.\ncatalog:variable_text:34721:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:poang3"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger poängomfattning i påbyggnadsutbildning.\ncatalog:variable_text:34721:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-grundlaggande"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger poängomfattning på grundläggande nivå.\ncatalog:variable_text:34722:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-grundlaggande"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger poängomfattning på grundläggande nivå.\ncatalog:variable_text:34722:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-gymnasial"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger poängomfattning på gymnasial nivå.\ncatalog:variable_text:34723:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-gymnasial"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger poängomfattning på gymnasial nivå.\ncatalog:variable_text:34723:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:proval"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen omfattar både prövning och validering.\ncatalog:valueset:4170\ncatalog:valueset:4755\ncatalog:variable_text:34724:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:provbet"
+fields = { "sets" = [] }
+evidence = "Variabeln anger betyg på nationellt prov.\ncatalog:variable_text:34725:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:provbet"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger betyg på nationellt prov.\ncatalog:variable_text:34725:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:provn"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser prövning, inklusive prövning efter validering.\ncatalog:valueset:11080\ncatalog:variable_text:34726:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhet-kommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "Källans operationalisering anger skolenhetens kommun.\ncatalog:variable_text:34729:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhet-kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Källans operationalisering anger skolenhetens kommun.\ncatalog:variable_text:34729:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Skolform beskriver utbildningens skolform.\ncatalog:valueset:5750\ncatalog:variable_text:34732:10043:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Skolform beskriver utbildningens skolform.\ncatalog:valueset:5750\ncatalog:variable_text:34732:10043:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["skolkommun"] }
+evidence = "Skolkommun är läsbart och förenligt med familjens skol-förkortningar. Variabeln hör till gruppen för skolkommun och mäter geografisk tillhörighet.\ncatalog:register:179\ncatalog:variable_text:34734:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Skolkommun är läsbart och förenligt med familjens skol-förkortningar. Variabeln hör till gruppen för skolkommun och mäter geografisk tillhörighet.\ncatalog:register:179\ncatalog:variable_text:34734:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "sets" = ["skolkommun"] }
+evidence = "Variabeln anger skolenhetens kommun i klartext.\ncatalog:variable_text:34735:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun-text"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger skolenhetens kommun i klartext.\ncatalog:variable_text:34735:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "sets" = ["skollan"] }
+evidence = "Länskoden och skollan-text beskriver samma geografiska begrepp i kod respektive klartext.\ncatalog:variable_text:34736:19358:20089\ncatalog:variable_text:34737:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden och skollan-text beskriver samma geografiska begrepp i kod respektive klartext.\ncatalog:variable_text:34736:19358:20089\ncatalog:variable_text:34737:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text"
+fields = { "sets" = ["skollan"] }
+evidence = "Län i klartext och länskoden beskriver samma geografiska begrepp.\ncatalog:variable_text:34736:19358:20089\ncatalog:variable_text:34737:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skollan-text"
+fields = { "tags" = ["geography"] }
+evidence = "Län i klartext och länskoden beskriver samma geografiska begrepp.\ncatalog:variable_text:34736:19358:20089\ncatalog:variable_text:34737:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "sets" = ["skolkommun"] }
+evidence = "SKOM är en källmnemonik som inte är en läsbar stam av etiketten Kommun. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34738:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "tags" = ["geography"] }
+evidence = "SKOM är en källmnemonik som inte är en läsbar stam av etiketten Kommun. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:34738:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:statsbidrag"
+fields = { "sets" = [] }
+evidence = "Kodningen avser statsbidragsfinansiering av utbildning.\ncatalog:valueset:11854\ncatalog:variable_text:34739:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:statsbidrag"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kodningen avser statsbidragsfinansiering av utbildning.\ncatalog:valueset:11854\ncatalog:variable_text:34739:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:34740:13879:16436\ncatalog:variable_text:34740:17167:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:34740:13879:16436\ncatalog:variable_text:34740:17167:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:34741:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:34741:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-2"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:34742:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-2"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger personens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:34742:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln anger personens utbildningsnivå med jämförbar nivåindelning.\ncatalog:variable_text:34743:10043:16436\ncatalog:variable_text:34743:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger personens utbildningsnivå med jämförbar nivåindelning.\ncatalog:variable_text:34743:10043:16436\ncatalog:variable_text:34743:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:suppg"
+fields = { "sets" = [] }
+evidence = "Kodningen avser vald skriftlig uppgift i ett delprov.\ncatalog:variable_text:34744:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:suppg"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser vald skriftlig uppgift i ett delprov.\ncatalog:variable_text:34744:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-utbildning"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln klassificerar utbildning före komvuxstudierna.\ncatalog:valueset:4396\ncatalog:variable_text:34749:9312:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln klassificerar utbildning före komvuxstudierna.\ncatalog:valueset:4396\ncatalog:variable_text:34749:9312:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-utbildning-tutb"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln klassificerar utbildning före komvuxstudierna.\ncatalog:valueset:4396\ncatalog:variable_text:34750:9678:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-utbildning-tutb"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln klassificerar utbildning före komvuxstudierna.\ncatalog:valueset:4396\ncatalog:variable_text:34750:9678:10043"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "sets" = ["tidigaste-invandringsdatum"] }
+evidence = "Källan anger datum men en förekomst anger enheten år.\ncatalog:occurrence:307728\ncatalog:variable_text:34751:16617:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Källan anger datum men en förekomst anger enheten år.\ncatalog:occurrence:307728\ncatalog:variable_text:34751:16617:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum-fidatum"
+fields = { "sets" = ["tidigaste-invandringsdatum"] }
+evidence = "Datumet har motsvarande kodningar i andra tabeller.\ncatalog:variable_text:34751:16617:17167\ncatalog:variable_text:34752:15887:17532\ncatalog:variable_text:34753:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum-fidatum"
+fields = { "tags" = [] }
+evidence = "Datumet har motsvarande kodningar i andra tabeller.\ncatalog:variable_text:34751:16617:17167\ncatalog:variable_text:34752:15887:17532\ncatalog:variable_text:34753:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum-tiddatinv"
+fields = { "sets" = ["tidigaste-invandringsdatum"] }
+evidence = "Datumet har motsvarande kodningar i andra tabeller.\ncatalog:variable_text:34751:16617:17167\ncatalog:variable_text:34752:15887:17532\ncatalog:variable_text:34753:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum-tiddatinv"
+fields = { "tags" = [] }
+evidence = "Datumet har motsvarande kodningar i andra tabeller.\ncatalog:variable_text:34751:16617:17167\ncatalog:variable_text:34752:15887:17532\ncatalog:variable_text:34753:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-poang-slutbetyg"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger elevens poäng enligt slutbetyget.\ncatalog:variable_text:34754:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-poang-slutbetyg"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger elevens poäng enligt slutbetyget.\ncatalog:variable_text:34754:16983:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "sets" = ["utbildningens-poangomfattning"] }
+evidence = "Variabeln anger utbildningens poängomfattning; tidsperioder och operationaliseringar behålls i källhistoriken.\ncatalog:variable_text:34755:10227:10592\ncatalog:variable_text:34755:16436:16617\ncatalog:variable_text:34755:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tpoang"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningens poängomfattning; tidsperioder och operationaliseringar behålls i källhistoriken.\ncatalog:variable_text:34755:10227:10592\ncatalog:variable_text:34755:16436:16617\ncatalog:variable_text:34755:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieexamen"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av gymnasieexamen.\ncatalog:valueset:3671\ncatalog:variable_text:34756:15522:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieexamen"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger typ av gymnasieexamen.\ncatalog:valueset:3671\ncatalog:variable_text:34756:15522:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger undervisningens förläggning.\ncatalog:valueset:10765\ncatalog:variable_text:34757:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger undervisningens förläggning.\ncatalog:valueset:10765\ncatalog:variable_text:34757:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-utbildningsanordnare-utbano"
+fields = { "sets" = ["typ-av-utbildningsanordnare"] }
+evidence = "Kodning av anordnartyp med motsvarande variabel i elev- och kursdeltagaruppgifter.\ncatalog:variable_text:34758:18628:20089\ncatalog:variable_text:34760:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-utbildningsanordnare-utbano"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av anordnartyp med motsvarande variabel i elev- och kursdeltagaruppgifter.\ncatalog:variable_text:34758:18628:20089\ncatalog:variable_text:34760:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningstimmar"
+fields = { "sets" = ["undervisningstimmar"] }
+evidence = "Variabeln anger kursens undervisningstimmar.\ncatalog:variable_text:34759:3468:6390"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger kursens undervisningstimmar.\ncatalog:variable_text:34759:3468:6390"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "sets" = ["typ-av-utbildningsanordnare"] }
+evidence = "Kodning av anordnartyp med motsvarande variabel i provuppgifter.\ncatalog:variable_text:34758:18628:20089\ncatalog:variable_text:34760:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av anordnartyp med motsvarande variabel i provuppgifter.\ncatalog:variable_text:34758:18628:20089\ncatalog:variable_text:34760:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-vux"
+fields = { "sets" = [] }
+evidence = "Kodningen avser utbildningsåtgärd inom vuxenutbildning.\ncatalog:valueset:3162\ncatalog:variable_text:34761:10592:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-vux"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser utbildningsåtgärd inom vuxenutbildning.\ncatalog:valueset:3162\ncatalog:variable_text:34761:10592:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbsun"
+fields = { "sets" = ["tidigare-utbildningsniva"] }
+evidence = "Variabeln anger personens högsta utbildningsnivå.\ncatalog:variable_text:34762:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utbsun"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger personens högsta utbildningsnivå.\ncatalog:variable_text:34762:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:valid"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser validering av del av eller hel kurs.\ncatalog:valueset:3865\ncatalog:variable_text:34764:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsform-skolvasendet"
+fields = { "sets" = [] }
+evidence = "Kodningen anger skolväsendets verksamhetsform.\ncatalog:valueset:1108\ncatalog:variable_text:34765:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsform-skolvasendet"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen anger skolväsendets verksamhetsform.\ncatalog:valueset:1108\ncatalog:variable_text:34765:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaket-klartext"
+fields = { "sets" = ["yrkespaket"] }
+evidence = "Id:t anger yrkeskod medan källan beskriver yrkespaket i klartext under hela perioden.\ncatalog:variable_text:34766:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaket-klartext"
+fields = { "tags" = ["education"] }
+evidence = "Id:t anger yrkeskod medan källan beskriver yrkespaket i klartext under hela perioden.\ncatalog:variable_text:34766:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaketkod"
+fields = { "sets" = ["yrkespaket"] }
+evidence = "Kodning av yrkespaket med en motsvarande klartextvariabel.\ncatalog:variable_text:34766:19905:20089\ncatalog:variable_text:34767:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkespaketkod"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av yrkespaket med en motsvarande klartextvariabel.\ncatalog:variable_text:34766:19905:20089\ncatalog:variable_text:34767:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r62 identifies the current term of Komvux studies; r164 identifies the test-result term using spring/autumn and year. Both fit the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34618\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:314006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:314842"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r239 defines the course's term and explicitly links it to the specified Komvux course, supporting the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34619\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34746"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen-utl"
+fields = { "sets" = ["utbildningstermin"] }
+evidence = "r240 defines the course's term and explicitly links it to the specified Komvux course, supporting the fixed term-indication concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34620\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34747"
+
+[[statement]]
+kind = "set"
+subject = "var:betmu"
+fields = { "description" = "Betyg i det nationella provets delprov för muntlig framställning. Från 2023 redovisas för vissa kurser delprovspoäng i stället för betyg. Uppgiften hämtas från insamlingen av nationella prov under vår- eller höstterminen." }
+evidence = "Definition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314330\nrel070-base/reg_meta.db:occurrence:314361\nrel070-base/reg_meta.db:occurrence:314386\nrel070-base/reg_meta.db:occurrence:314411\nrel070-base/reg_meta.db:occurrence:314439\nrel070-base/reg_meta.db:occurrence:314466\nrel070-base/reg_meta.db:occurrence:314493\nrel070-base/reg_meta.db:occurrence:314520\nrel070-base/reg_meta.db:occurrence:314521\nrel070-base/reg_meta.db:occurrence:314574\nrel070-base/reg_meta.db:occurrence:314601\nrel070-base/reg_meta.db:occurrence:314602\nrel070-base/reg_meta.db:occurrence:314655\nrel070-base/reg_meta.db:occurrence:314682\nrel070-base/reg_meta.db:occurrence:314683\nrel070-base/reg_meta.db:occurrence:314736\nrel070-base/reg_meta.db:occurrence:314763\nrel070-base/reg_meta.db:occurrence:314791\nrel070-base/reg_meta.db:occurrence:314819\nrel070-base/reg_meta.db:occurrence:314847\nrel070-base/reg_meta.db:occurrence:314875\nrel070-base/reg_meta.db:occurrence:314876\nrel070-base/reg_meta.db:occurrence:314931\nrel070-base/reg_meta.db:occurrence:314959\nrel070-base/reg_meta.db:occurrence:314960\nrel070-base/reg_meta.db:occurrence:315015\nrel070-base/reg_meta.db:occurrence:315043\nrel070-base/reg_meta.db:occurrence:315044\nrel070-base/reg_meta.db:occurrence:315099\n\nDefinition-pass audit follow-up 2026-11-02: Valueset 10562 contains grades through 2022; the 2023 sets contain labelled point values alongside grades. This is a documented measurement change, not a timeless grade/point alternative.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:314330\nrel070-base/reg_meta.db:occurrence:314361\nrel070-base/reg_meta.db:occurrence:314386\nrel070-base/reg_meta.db:occurrence:314411\nrel070-base/reg_meta.db:occurrence:314439\nrel070-base/reg_meta.db:occurrence:314466\nrel070-base/reg_meta.db:occurrence:314493\nrel070-base/reg_meta.db:occurrence:314520\nrel070-base/reg_meta.db:occurrence:314521\nrel070-base/reg_meta.db:occurrence:314574\nrel070-base/reg_meta.db:occurrence:314601\nrel070-base/reg_meta.db:occurrence:314602\nrel070-base/reg_meta.db:occurrence:314655\nrel070-base/reg_meta.db:occurrence:314682\nrel070-base/reg_meta.db:occurrence:314683\nrel070-base/reg_meta.db:occurrence:314736\nrel070-base/reg_meta.db:occurrence:314763\nrel070-base/reg_meta.db:occurrence:314791\nrel070-base/reg_meta.db:occurrence:314819\nrel070-base/reg_meta.db:occurrence:314847\nrel070-base/reg_meta.db:occurrence:314875\nrel070-base/reg_meta.db:occurrence:314876\nrel070-base/reg_meta.db:occurrence:314931\nrel070-base/reg_meta.db:occurrence:314959\nrel070-base/reg_meta.db:occurrence:314960\nrel070-base/reg_meta.db:occurrence:315015\nrel070-base/reg_meta.db:occurrence:315043\nrel070-base/reg_meta.db:occurrence:315044\nrel070-base/reg_meta.db:occurrence:315099\nrel070-base/reg_meta.db:valueset:10562; 2023 valuesets 815, 1110 and 1134; 2024 valuesets 12281, 12709 and 4544"
+
+[[statement]]
+kind = "set"
+subject = "var:betrl"
+fields = { "description" = "Betyg i det nationella provets delprov för läsförståelse och hörförståelse. Från 2023 redovisas för vissa kurser delprovspoäng i stället för betyg. Uppgiften hämtas från insamlingen av nationella prov under vår- eller höstterminen." }
+evidence = "Definition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314331\nrel070-base/reg_meta.db:occurrence:314362\nrel070-base/reg_meta.db:occurrence:314387\nrel070-base/reg_meta.db:occurrence:314412\nrel070-base/reg_meta.db:occurrence:314440\nrel070-base/reg_meta.db:occurrence:314467\nrel070-base/reg_meta.db:occurrence:314494\nrel070-base/reg_meta.db:occurrence:314522\nrel070-base/reg_meta.db:occurrence:314523\nrel070-base/reg_meta.db:occurrence:314575\nrel070-base/reg_meta.db:occurrence:314603\nrel070-base/reg_meta.db:occurrence:314604\nrel070-base/reg_meta.db:occurrence:314656\nrel070-base/reg_meta.db:occurrence:314684\nrel070-base/reg_meta.db:occurrence:314685\nrel070-base/reg_meta.db:occurrence:314737\nrel070-base/reg_meta.db:occurrence:314764\nrel070-base/reg_meta.db:occurrence:314792\nrel070-base/reg_meta.db:occurrence:314820\nrel070-base/reg_meta.db:occurrence:314848\nrel070-base/reg_meta.db:occurrence:314877\nrel070-base/reg_meta.db:occurrence:314878\nrel070-base/reg_meta.db:occurrence:314932\nrel070-base/reg_meta.db:occurrence:314961\nrel070-base/reg_meta.db:occurrence:314962\nrel070-base/reg_meta.db:occurrence:315016\nrel070-base/reg_meta.db:occurrence:315045\nrel070-base/reg_meta.db:occurrence:315046\nrel070-base/reg_meta.db:occurrence:315100\n\nDefinition-pass audit follow-up 2026-11-02: Valueset 10562 contains grades through 2022; the 2023 sets contain labelled point values alongside grades. This is a documented measurement change, not a timeless grade/point alternative.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:314331\nrel070-base/reg_meta.db:occurrence:314362\nrel070-base/reg_meta.db:occurrence:314387\nrel070-base/reg_meta.db:occurrence:314412\nrel070-base/reg_meta.db:occurrence:314440\nrel070-base/reg_meta.db:occurrence:314467\nrel070-base/reg_meta.db:occurrence:314494\nrel070-base/reg_meta.db:occurrence:314522\nrel070-base/reg_meta.db:occurrence:314523\nrel070-base/reg_meta.db:occurrence:314575\nrel070-base/reg_meta.db:occurrence:314603\nrel070-base/reg_meta.db:occurrence:314604\nrel070-base/reg_meta.db:occurrence:314656\nrel070-base/reg_meta.db:occurrence:314684\nrel070-base/reg_meta.db:occurrence:314685\nrel070-base/reg_meta.db:occurrence:314737\nrel070-base/reg_meta.db:occurrence:314764\nrel070-base/reg_meta.db:occurrence:314792\nrel070-base/reg_meta.db:occurrence:314820\nrel070-base/reg_meta.db:occurrence:314848\nrel070-base/reg_meta.db:occurrence:314877\nrel070-base/reg_meta.db:occurrence:314878\nrel070-base/reg_meta.db:occurrence:314932\nrel070-base/reg_meta.db:occurrence:314961\nrel070-base/reg_meta.db:occurrence:314962\nrel070-base/reg_meta.db:occurrence:315016\nrel070-base/reg_meta.db:occurrence:315045\nrel070-base/reg_meta.db:occurrence:315046\nrel070-base/reg_meta.db:occurrence:315100\nrel070-base/reg_meta.db:valueset:10562; 2023 valuesets 815, 1110 and 1134; 2024 valuesets 12281, 12709 and 4544"
+
+[[statement]]
+kind = "set"
+subject = "var:bets"
+fields = { "description" = "Betyg i det nationella provets delprov för skriftlig framställning. Från 2023 redovisas för vissa kurser delprovspoäng i stället för betyg. Uppgiften hämtas från insamlingen av nationella prov under vår- eller höstterminen." }
+evidence = "Definition pass 2026-11-02: The source explicitly allows either a grade or subtest points depending on the course.\nrel070-base/reg_meta.db:occurrence:314332\nrel070-base/reg_meta.db:occurrence:314363\nrel070-base/reg_meta.db:occurrence:314388\nrel070-base/reg_meta.db:occurrence:314413\nrel070-base/reg_meta.db:occurrence:314441\nrel070-base/reg_meta.db:occurrence:314468\nrel070-base/reg_meta.db:occurrence:314495\nrel070-base/reg_meta.db:occurrence:314524\nrel070-base/reg_meta.db:occurrence:314525\nrel070-base/reg_meta.db:occurrence:314576\nrel070-base/reg_meta.db:occurrence:314605\nrel070-base/reg_meta.db:occurrence:314606\nrel070-base/reg_meta.db:occurrence:314657\nrel070-base/reg_meta.db:occurrence:314686\nrel070-base/reg_meta.db:occurrence:314687\nrel070-base/reg_meta.db:occurrence:314738\nrel070-base/reg_meta.db:occurrence:314765\nrel070-base/reg_meta.db:occurrence:314793\nrel070-base/reg_meta.db:occurrence:314821\nrel070-base/reg_meta.db:occurrence:314849\nrel070-base/reg_meta.db:occurrence:314879\nrel070-base/reg_meta.db:occurrence:314880\nrel070-base/reg_meta.db:occurrence:314933\nrel070-base/reg_meta.db:occurrence:314963\nrel070-base/reg_meta.db:occurrence:314964\nrel070-base/reg_meta.db:occurrence:315017\nrel070-base/reg_meta.db:occurrence:315047\nrel070-base/reg_meta.db:occurrence:315048\nrel070-base/reg_meta.db:occurrence:315101\n\nDefinition-pass audit follow-up 2026-11-02: Valueset 10562 contains grades through 2022; the 2023 sets contain labelled point values alongside grades. This is a documented measurement change, not a timeless grade/point alternative.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:314332\nrel070-base/reg_meta.db:occurrence:314363\nrel070-base/reg_meta.db:occurrence:314388\nrel070-base/reg_meta.db:occurrence:314413\nrel070-base/reg_meta.db:occurrence:314441\nrel070-base/reg_meta.db:occurrence:314468\nrel070-base/reg_meta.db:occurrence:314495\nrel070-base/reg_meta.db:occurrence:314524\nrel070-base/reg_meta.db:occurrence:314525\nrel070-base/reg_meta.db:occurrence:314576\nrel070-base/reg_meta.db:occurrence:314605\nrel070-base/reg_meta.db:occurrence:314606\nrel070-base/reg_meta.db:occurrence:314657\nrel070-base/reg_meta.db:occurrence:314686\nrel070-base/reg_meta.db:occurrence:314687\nrel070-base/reg_meta.db:occurrence:314738\nrel070-base/reg_meta.db:occurrence:314765\nrel070-base/reg_meta.db:occurrence:314793\nrel070-base/reg_meta.db:occurrence:314821\nrel070-base/reg_meta.db:occurrence:314849\nrel070-base/reg_meta.db:occurrence:314879\nrel070-base/reg_meta.db:occurrence:314880\nrel070-base/reg_meta.db:occurrence:314933\nrel070-base/reg_meta.db:occurrence:314963\nrel070-base/reg_meta.db:occurrence:314964\nrel070-base/reg_meta.db:occurrence:315017\nrel070-base/reg_meta.db:occurrence:315047\nrel070-base/reg_meta.db:occurrence:315048\nrel070-base/reg_meta.db:occurrence:315101\nrel070-base/reg_meta.db:valueset:10562; 2023 valuesets 815, 1110 and 1134; 2024 valuesets 12281, 12709 and 4544"

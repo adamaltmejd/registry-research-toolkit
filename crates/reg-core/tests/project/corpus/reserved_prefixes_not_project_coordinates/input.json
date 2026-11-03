@@ -1,0 +1,52 @@
+{
+  "schema_version": "5.1.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "table": "class/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/lopnr",
+          "display_name": "LopNr_PersonNr",
+          "type": "id",
+          "id_subtype": "integer"
+        },
+        {
+          "variable": "scb/lisa/kon",
+          "display_name": "Kon",
+          "type": "categorical",
+          "classification": "class/sun/2020"
+        }
+      ]
+    },
+    {
+      "name": "set_table",
+      "table": "set/demo/bas",
+      "period": 2022,
+      "bindings": [
+        {
+          "variable": "demo/bas/inkomst",
+          "type": "numeric"
+        }
+      ]
+    },
+    {
+      "name": "set_bindings",
+      "table": "demo/bas",
+      "period": 2022,
+      "bindings": [
+        {
+          "variable": "set/demo/bas",
+          "type": "numeric"
+        },
+        {
+          "variable": "set/demo/bas/inkomst",
+          "type": "numeric"
+        }
+      ]
+    }
+  ]
+}

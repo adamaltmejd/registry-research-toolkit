@@ -754,3 +754,2331 @@ kind = "set"
 subject = "traktorer: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Kodningen hör till ägarkategori.\ncatalog:occurrence-locators:variable:11761"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen hör till ägarkategori.\ncatalog:occurrence-locators:variable:11761"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-2"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Kodningen hör till ägarkategori.\ncatalog:occurrence-locators:variable:11762"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-2"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen hör till ägarkategori.\ncatalog:occurrence-locators:variable:11762"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-3"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Kodningen gäller ägarkategori; källans ägarposition varierar mellan perioder och tabeller.\ncatalog:occurrence-locators:variable:11763\ncatalog:valueset:534"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-agkat-3"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen gäller ägarkategori; källans ägarposition varierar mellan perioder och tabeller.\ncatalog:occurrence-locators:variable:11763\ncatalog:valueset:534"
+
+[[statement]]
+kind = "set"
+subject = "var:agkat-ag"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Variabeln kodar den administrativa fordonsägarens ägarkategori och hör till gruppen för ägarkategori samt temat transporter.\ncatalog:occurrence-locators:variable:11768\ncatalog:register:103\ncatalog:valueset:534\ncatalog:variable_text:11768:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:agkat-ag"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln kodar den administrativa fordonsägarens ägarkategori och hör till gruppen för ägarkategori samt temat transporter.\ncatalog:occurrence-locators:variable:11768\ncatalog:register:103\ncatalog:valueset:534\ncatalog:variable_text:11768:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått på fordonsägaren.\ncatalog:occurrence:106277"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått på fordonsägaren.\ncatalog:occurrence:106277"
+
+[[statement]]
+kind = "set"
+subject = "var:alkolas"
+fields = { "sets" = [] }
+evidence = "Alkolås är fordonsutrustning.\ncatalog:occurrence:105073"
+
+[[statement]]
+kind = "set"
+subject = "var:alkolas"
+fields = { "tags" = ["transport"] }
+evidence = "Alkolås är fordonsutrustning.\ncatalog:occurrence:105073"
+
+[[statement]]
+kind = "set"
+subject = "var:antag"
+fields = { "sets" = [] }
+evidence = "Antal ägare är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11771"
+
+[[statement]]
+kind = "set"
+subject = "var:antag"
+fields = { "tags" = ["transport"] }
+evidence = "Antal ägare är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11771"
+
+[[statement]]
+kind = "set"
+subject = "var:antax"
+fields = { "sets" = [] }
+evidence = "Antal axlar är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11772"
+
+[[statement]]
+kind = "set"
+subject = "var:antax"
+fields = { "tags" = ["transport"] }
+evidence = "Antal axlar är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11772"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "sets" = ["passagerarkapacitet"] }
+evidence = "Passagerarantal och sittande passagerare mäter passagerarkapacitet.\ncatalog:occurrence-locators:variable:11773\ncatalog:occurrence-locators:variable:11931"
+
+[[statement]]
+kind = "set"
+subject = "var:antpass"
+fields = { "tags" = ["transport"] }
+evidence = "Passagerarantal och sittande passagerare mäter passagerarkapacitet.\ncatalog:occurrence-locators:variable:11773\ncatalog:occurrence-locators:variable:11931"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmod"
+fields = { "sets" = [] }
+evidence = "Årsmodell är en fordonsuppgift.\ncatalog:occurrence:105077"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmod"
+fields = { "tags" = ["transport"] }
+evidence = "Årsmodell är en fordonsuppgift.\ncatalog:occurrence:105077"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmodell-imputerad"
+fields = { "sets" = ["arsmodell-imputerad"] }
+evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:103316"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmodell-imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:103316"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmodell-imputerad-arsmod-imp"
+fields = { "sets" = ["arsmodell-imputerad"] }
+evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmodell-imputerad-arsmod-imp"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsmarkör för årsmodell.\ncatalog:occurrence:105078"
+
+[[statement]]
+kind = "set"
+subject = "var:avregorsak"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:avregorsak"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs1"
+fields = { "sets" = ["axelavstand"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11780"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs1"
+fields = { "tags" = ["transport"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11780"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs2"
+fields = { "sets" = ["axelavstand"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11780"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs2"
+fields = { "tags" = ["transport"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11780"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs3"
+fields = { "sets" = ["axelavstand"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11781"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs3"
+fields = { "tags" = ["transport"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11781"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs4"
+fields = { "sets" = ["axelavstand"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11782"
+
+[[statement]]
+kind = "set"
+subject = "var:axavs4"
+fields = { "tags" = ["transport"] }
+evidence = "Axelavstånd vid olika positioner hör ihop.\ncatalog:occurrence-locators:variable:11779\ncatalog:occurrence-locators:variable:11782"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Bränsleförbrukning hör till den gemensamma gruppen och energitemat.\ncatalog:variable_text:11783:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Bränsleförbrukning hör till den gemensamma gruppen och energitemat.\ncatalog:variable_text:11783:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-brforbr2"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Måttet gäller bränsleförbrukning för drivmedel 2.\ncatalog:variable_text:11784:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-brforbr2"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet gäller bränsleförbrukning för drivmedel 2.\ncatalog:variable_text:11784:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-literal-brforbr3"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Måttet gäller bränsleförbrukning för drivmedel 3.\ncatalog:variable_text:11785:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-literal-brforbr3"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet gäller bränsleförbrukning för drivmedel 3.\ncatalog:variable_text:11785:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-viktad"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Viktad bränsleförbrukning ingår i gruppen.\ncatalog:variable_text:11786:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-viktad"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Viktad bränsleförbrukning ingår i gruppen.\ncatalog:variable_text:11786:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv2"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105086\ncatalog:variable_text:11787:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv2"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105086\ncatalog:variable_text:11787:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv3"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105087\ncatalog:variable_text:11788:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-literal-brforblwltpdriv3"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105087\ncatalog:variable_text:11788:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv2"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Viktad bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105093\ncatalog:variable_text:11789:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv2"
+fields = { "tags" = ["energy"] }
+evidence = "Viktad bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105093\ncatalog:variable_text:11789:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv3"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Viktad bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105094\ncatalog:variable_text:11790:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv3"
+fields = { "tags" = ["energy"] }
+evidence = "Viktad bränsleförbrukning hör till den fastställda gruppen och energitemat.\ncatalog:occurrence:105094\ncatalog:variable_text:11790:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bredd"
+fields = { "sets" = [] }
+evidence = "Bredden är en fordonsuppgift.\ncatalog:occurrence:105084"
+
+[[statement]]
+kind = "set"
+subject = "var:bredd"
+fields = { "tags" = ["transport"] }
+evidence = "Bredden är en fordonsuppgift.\ncatalog:occurrence:105084"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-liter-per-100-km-drivmedel-1"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11792:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-liter-per-100-km-drivmedel-1"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11792:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branslemangd-per-korstracka-blandad-nedc-drivmedel-1"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Suffixet 2 kommer inte från källkolumnen BrForbr1; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11793:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branslemangd-per-korstracka-blandad-nedc-drivmedel-1"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Suffixet 2 kommer inte från källkolumnen BrForbr1; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11793:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-liter-per-100-km-drivmedel-1"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11794:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-wltp-viktad-liter-per-100-km-drivmedel-1"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Källans sammansatta kod är ett opakt id; etiketten delas och målnamnet behöver disambiguering.\ncatalog:variable_text:11794:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:buller"
+fields = { "sets" = ["bullerniva"] }
+evidence = "Bullernivå grupperas med motsvarande mått för andra drivmedel.\ncatalog:variable_text:11795:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:buller"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Bullernivå grupperas med motsvarande mått för andra drivmedel.\ncatalog:variable_text:11795:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bussklass"
+fields = { "sets" = [] }
+evidence = "Bussklass beskriver fordonets utformning.\ncatalog:occurrence:105098\ncatalog:valueset:4936"
+
+[[statement]]
+kind = "set"
+subject = "var:bussklass"
+fields = { "tags" = ["transport"] }
+evidence = "Bussklass beskriver fordonets utformning.\ncatalog:occurrence:105098\ncatalog:valueset:4936"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-blandad-wltp-gram-per-km-drivmedel-1"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11798:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-blandad-wltp-gram-per-km-drivmedel-1"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11798:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-gram-per-km-drivmedel-1"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11799:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-gram-per-km-drivmedel-1"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11799:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-gram-per-km-drivmedel-1"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11800:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-gram-per-km-drivmedel-1"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källans sammansatta kod är opak och etiketten delas med andra drivmedel.\ncatalog:variable_text:11800:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2varde"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat; id:t är läsbart i familjen.\ncatalog:occurrence-locators:variable:11801\ncatalog:variable_text:11801:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2varde"
+fields = { "tags" = ["environment"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat; id:t är läsbart i familjen.\ncatalog:occurrence-locators:variable:11801\ncatalog:variable_text:11801:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2vardeviktad"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat; den allmänna beskrivningen bevarar periodernas skillnader.\ncatalog:occurrence-locators:variable:11802\ncatalog:variable_text:11802:15705:15706\ncatalog:variable_text:11802:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2vardeviktad"
+fields = { "tags" = ["environment"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat; den allmänna beskrivningen bevarar periodernas skillnader.\ncatalog:occurrence-locators:variable:11802\ncatalog:variable_text:11802:15705:15706\ncatalog:variable_text:11802:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2vikblwltpdriv"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Familjens förkortningar är läsbara; måttet hör till koldioxidutsläpp och miljö.\ncatalog:occurrence-locators:variable:11803\ncatalog:variable_text:11803:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:co2vikblwltpdriv"
+fields = { "tags" = ["environment"] }
+evidence = "Familjens förkortningar är läsbara; måttet hör till koldioxidutsläpp och miljö.\ncatalog:occurrence-locators:variable:11803\ncatalog:variable_text:11803:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:cylvol"
+fields = { "sets" = [] }
+evidence = "Enhetsuppgifterna för vissa perioder står i konflikt.\ncatalog:occurrence:106288\ncatalog:occurrence:121770\ncatalog:occurrence:121831\ncatalog:occurrence:121894"
+
+[[statement]]
+kind = "set"
+subject = "var:cylvol"
+fields = { "tags" = ["transport"] }
+evidence = "Enhetsuppgifterna för vissa perioder står i konflikt.\ncatalog:occurrence:106288\ncatalog:occurrence:121770\ncatalog:occurrence:121831\ncatalog:occurrence:121894"
+
+[[statement]]
+kind = "set"
+subject = "var:datovl"
+fields = { "sets" = ["agarbytesdatum"] }
+evidence = "Datovl är en opak källmnemonik; variabeln hör till datum för ägarbyten.\ncatalog:variable_text:11806:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datovl"
+fields = { "tags" = [] }
+evidence = "Datovl är en opak källmnemonik; variabeln hör till datum för ägarbyten.\ncatalog:variable_text:11806:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datovlagare"
+fields = { "sets" = ["agarbytesdatum"] }
+evidence = "Datumvariabeln hör till gruppen för ägarbyten och har ingen tematisk tagg enligt regeln för händelsedatum.\ncatalog:occurrence:105119\ncatalog:variable_text:11807:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datovlagare"
+fields = { "tags" = [] }
+evidence = "Datumvariabeln hör till gruppen för ägarbyten och har ingen tematisk tagg enligt regeln för händelsedatum.\ncatalog:occurrence:105119\ncatalog:variable_text:11807:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-datovl-3"
+fields = { "sets" = ["agarbytesdatum"] }
+evidence = "Variabeln anger datum för ägarbyte.\ncatalog:occurrence:109583"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-datovl-3"
+fields = { "tags" = [] }
+evidence = "Variabeln anger datum för ägarbyte.\ncatalog:occurrence:109583"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-literal-datovl-2-472a8fd9"
+fields = { "sets" = ["agarbytesdatum"] }
+evidence = "Variabeln anger datum för ägarbyte.\ncatalog:occurrence:106292"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-agarbyte-literal-datovl-2-472a8fd9"
+fields = { "tags" = [] }
+evidence = "Variabeln anger datum för ägarbyte.\ncatalog:occurrence:106292"
+
+[[statement]]
+kind = "set"
+subject = "var:dirimp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger direktimport av fordon.\ncatalog:occurrence:105120"
+
+[[statement]]
+kind = "set"
+subject = "var:dirimp"
+fields = { "tags" = ["trade", "transport"] }
+evidence = "Variabeln anger direktimport av fordon.\ncatalog:occurrence:105120"
+
+[[statement]]
+kind = "set"
+subject = "var:drivm2"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Sekundärt drivmedel är en drivmedelskodning.\ncatalog:occurrence-locators:variable:11814"
+
+[[statement]]
+kind = "set"
+subject = "var:drivm2"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Sekundärt drivmedel är en drivmedelskodning.\ncatalog:occurrence-locators:variable:11814"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Drivmedelskodningen hör till drivmedelsgruppen; den breda beteckningen är sann för de dokumenterade drivmedelspositionerna.\ncatalog:occurrence-locators:variable:11815\ncatalog:occurrence:105545\ncatalog:variable_text:11815:6208:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Drivmedelskodningen hör till drivmedelsgruppen; den breda beteckningen är sann för de dokumenterade drivmedelspositionerna.\ncatalog:occurrence-locators:variable:11815\ncatalog:occurrence:105545\ncatalog:variable_text:11815:6208:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Suffixet 2 är en tillagd räknare och ingår inte i källkolumnen.\ncatalog:occurrence-locators:variable:11816\ncatalog:variable_text:11816:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-officiell-statistik-terrangskotrar"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Suffixet 2 är en tillagd räknare och ingår inte i källkolumnen.\ncatalog:occurrence-locators:variable:11816\ncatalog:variable_text:11816:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-drivm2"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Variabeln kodar drivmedel trots variation i operativ definition.\ncatalog:occurrence-locators:variable:11817\ncatalog:occurrence:103723\ncatalog:occurrence:107837"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-drivm2"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Variabeln kodar drivmedel trots variation i operativ definition.\ncatalog:occurrence-locators:variable:11817\ncatalog:occurrence:103723\ncatalog:occurrence:107837"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-grupperad"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Grupperade drivmedel är en drivmedelskodning.\ncatalog:occurrence-locators:variable:11818"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-grupperad"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Grupperade drivmedel är en drivmedelskodning.\ncatalog:occurrence-locators:variable:11818"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-literal-drivm3"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Variabeln kodar drivmedel trots variation i operativ definition.\ncatalog:occurrence-locators:variable:11819\ncatalog:occurrence:104101\ncatalog:occurrence:108065"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-literal-drivm3"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Variabeln kodar drivmedel trots variation i operativ definition.\ncatalog:occurrence-locators:variable:11819\ncatalog:occurrence:104101\ncatalog:occurrence:108065"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmkomb"
+fields = { "sets" = ["drivmedel"] }
+evidence = "Kombinationskodningen hör till drivmedelsgruppen.\ncatalog:occurrence-locators:variable:11820\ncatalog:valueset:9791"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmkomb"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Kombinationskodningen hör till drivmedelsgruppen.\ncatalog:occurrence-locators:variable:11820\ncatalog:valueset:9791"
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh"
+fields = { "sets" = ["effektnorm"] }
+evidence = "Källan anger normen för uppmätt motoreffekt; id:t behålls enligt familjens läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:11821\ncatalog:variable_text:11821:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh"
+fields = { "tags" = ["transport"] }
+evidence = "Källan anger normen för uppmätt motoreffekt; id:t behålls enligt familjens läsbarhetsbedömning.\ncatalog:occurrence-locators:variable:11821\ncatalog:variable_text:11821:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh-2"
+fields = { "sets" = ["effektnorm"] }
+evidence = "Suffixet 2 är inte källkolumnens 1 och etiketten delas.\ncatalog:variable_text:11822:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektenh-2"
+fields = { "tags" = ["transport"] }
+evidence = "Suffixet 2 är inte källkolumnens 1 och etiketten delas.\ncatalog:variable_text:11822:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmaxelfordon"
+fields = { "sets" = ["motoreffekt"] }
+evidence = "Effektbeloppet hör till gruppen motoreffekt och temat transporter.\ncatalog:occurrence-locators:variable:11823\ncatalog:variable_text:11823:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmaxelfordon"
+fields = { "tags" = ["transport"] }
+evidence = "Effektbeloppet hör till gruppen motoreffekt och temat transporter.\ncatalog:occurrence-locators:variable:11823\ncatalog:variable_text:11823:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effekt3"
+fields = { "sets" = ["effektnorm"] }
+evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effekt3"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh2"
+fields = { "sets" = ["effektnorm"] }
+evidence = "Variabeln anger norm för motoreffekt.\ncatalog:variable_text:11825:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh2"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger norm för motoreffekt.\ncatalog:variable_text:11825:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh3"
+fields = { "sets" = ["effektnorm"] }
+evidence = "Variabeln anger norm för motoreffekt.\ncatalog:variable_text:11826:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:effektnorm-effektenh3"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger norm för motoreffekt.\ncatalog:variable_text:11826:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-literal-energik-wltp-driv2"
+fields = { "sets" = ["elenergiforbrukning"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11827\ncatalog:variable_text:11827:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-literal-energik-wltp-driv2"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11827\ncatalog:variable_text:11827:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-viktad-literal-energik-vikt-wltp-driv2"
+fields = { "sets" = ["elenergiforbrukning"] }
+evidence = "Id:t överstiger 60 tecken. Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11828\ncatalog:variable_text:11828:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elenergiforbrukning-wltp-viktad-literal-energik-vikt-wltp-driv2"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Id:t överstiger 60 tecken. Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11828\ncatalog:variable_text:11828:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elfordon"
+fields = { "sets" = [] }
+evidence = "Elkonfiguration beskriver fordonets drivning.\ncatalog:occurrence-locators:variable:11829\ncatalog:valueset:11494"
+
+[[statement]]
+kind = "set"
+subject = "var:elfordon"
+fields = { "tags" = ["transport"] }
+evidence = "Elkonfiguration beskriver fordonets drivning.\ncatalog:occurrence-locators:variable:11829\ncatalog:valueset:11494"
+
+[[statement]]
+kind = "set"
+subject = "var:energik"
+fields = { "sets" = ["elenergiforbrukning"] }
+evidence = "Måttet hör till elenergiförbrukning och gäller ett fordons energianvändning.\ncatalog:occurrence:105134\ncatalog:variable_text:11831:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:energik"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet hör till elenergiförbrukning och gäller ett fordons energianvändning.\ncatalog:occurrence:105134\ncatalog:variable_text:11831:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:energik-vikt-wltp-driv"
+fields = { "sets" = ["elenergiforbrukning"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11832\ncatalog:variable_text:11832:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:energik-vikt-wltp-driv"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11832\ncatalog:variable_text:11832:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:energik-wltp-driv"
+fields = { "sets" = ["elenergiforbrukning"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11833\ncatalog:variable_text:11833:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:energik-wltp-driv"
+fields = { "tags" = ["energy", "transport"] }
+evidence = "Måttet ingår i gruppen för elenergiförbrukning och avser energi och fordon.\ncatalog:occurrence-locators:variable:11833\ncatalog:variable_text:11833:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:epa"
+fields = { "sets" = [] }
+evidence = "Epa anger en typ av fordon.\ncatalog:occurrence:122221"
+
+[[statement]]
+kind = "set"
+subject = "var:epa"
+fields = { "tags" = ["transport"] }
+evidence = "Epa anger en typ av fordon.\ncatalog:occurrence:122221"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat"
+fields = { "sets" = ["fordonsfabrikat"] }
+evidence = "Fabrikat och fabrikat-moped-klass-i avser samma begrepp i EU-mopedtabellen i olika perioder.\ncatalog:occurrence:105666\ncatalog:occurrence:105715"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat"
+fields = { "tags" = ["transport"] }
+evidence = "Fabrikat och fabrikat-moped-klass-i avser samma begrepp i EU-mopedtabellen i olika perioder.\ncatalog:occurrence:105666\ncatalog:occurrence:105715"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat-moped-klass-i"
+fields = { "sets" = ["fordonsfabrikat"] }
+evidence = "Fabrikat och fabrikat-moped-klass-i avser samma begrepp i EU-mopedtabellen i olika perioder.\ncatalog:occurrence:105666\ncatalog:occurrence:105715"
+
+[[statement]]
+kind = "set"
+subject = "var:fabrikat-moped-klass-i"
+fields = { "tags" = ["transport"] }
+evidence = "Fabrikat och fabrikat-moped-klass-i avser samma begrepp i EU-mopedtabellen i olika perioder.\ncatalog:occurrence:105666\ncatalog:occurrence:105715"
+
+[[statement]]
+kind = "set"
+subject = "var:farg"
+fields = { "sets" = [] }
+evidence = "Färgen är en fordonsuppgift.\ncatalog:occurrence:109606"
+
+[[statement]]
+kind = "set"
+subject = "var:farg"
+fields = { "tags" = ["transport"] }
+evidence = "Färgen är en fordonsuppgift.\ncatalog:occurrence:109606"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning"
+fields = { "sets" = ["fordonsbenamning"] }
+evidence = "Variabeln anger fordonets benämning.\ncatalog:occurrence:105083"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger fordonets benämning.\ncatalog:occurrence:105083"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning-avrors"
+fields = { "sets" = ["fordonsbenamning"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-benamning-avrors"
+fields = { "tags" = ["transport"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller2"
+fields = { "sets" = ["bullerniva"] }
+evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11840:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11840:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller3"
+fields = { "sets" = ["bullerniva"] }
+evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11841:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-bullerniva-literal-buller3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11841:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-handelsbeteckning-avrors"
+fields = { "sets" = ["handelsbeteckning"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonets-handelsbeteckning-avrors"
+fields = { "tags" = ["transport"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori"
+fields = { "sets" = ["fordonskategori"] }
+evidence = "EU-kategorin delar kategorikodverk med fordonskategori-hjul.\ncatalog:variable_text:11843:20453:20454\ncatalog:variable_text:11845:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori"
+fields = { "tags" = ["transport"] }
+evidence = "EU-kategorin delar kategorikodverk med fordonskategori-hjul.\ncatalog:variable_text:11843:20453:20454\ncatalog:variable_text:11845:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-fslag"
+fields = { "sets" = ["fordonsslag"] }
+evidence = "Källkolumnen och kodverket är samma begrepp som scb/fordonsreg/fslag i en senare period.\ncatalog:occurrence:111920\ncatalog:occurrence:111954\ncatalog:valueset:10570"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-fslag"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen och kodverket är samma begrepp som scb/fordonsreg/fslag i en senare period.\ncatalog:occurrence:111920\ncatalog:occurrence:111954\ncatalog:valueset:10570"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-hjul"
+fields = { "sets" = ["fordonskategori"] }
+evidence = "Kategorikodverket delas med fordonskategori.\ncatalog:variable_text:11843:20453:20454\ncatalog:variable_text:11845:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonskategori-hjul"
+fields = { "tags" = ["transport"] }
+evidence = "Kategorikodverket delas med fordonskategori.\ncatalog:variable_text:11843:20453:20454\ncatalog:variable_text:11845:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonsslagsklass"
+fields = { "sets" = ["fordonsslag"] }
+evidence = "Fordonsslagsklass ingår i kandidatens avgränsning.\ncatalog:variable_text:11846:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fordonsslagsklass"
+fields = { "tags" = ["transport"] }
+evidence = "Fordonsslagsklass ingår i kandidatens avgränsning.\ncatalog:variable_text:11846:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fslag"
+fields = { "sets" = ["fordonsslag"] }
+evidence = "Samma källkolumn och kodverk fortsätter som scb/fordonsreg/fordonskategori-fslag i senare perioder.\ncatalog:occurrence:111920\ncatalog:occurrence:111954\ncatalog:valueset:10570"
+
+[[statement]]
+kind = "set"
+subject = "var:fslag"
+fields = { "tags" = ["transport"] }
+evidence = "Samma källkolumn och kodverk fortsätter som scb/fordonsreg/fordonskategori-fslag i senare perioder.\ncatalog:occurrence:111920\ncatalog:occurrence:111954\ncatalog:valueset:10570"
+
+[[statement]]
+kind = "set"
+subject = "var:fyrhjulsdrift"
+fields = { "sets" = [] }
+evidence = "Fwd är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11854:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fyrhjulsdrift"
+fields = { "tags" = ["transport"] }
+evidence = "Fwd är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:11854:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-2"
+fields = { "sets" = ["fysisk-juridisk-agare"] }
+evidence = "Kodningen gäller föregående ägares personstatus.\ncatalog:variable_text:11849:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-2"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen gäller föregående ägares personstatus.\ncatalog:variable_text:11849:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-3"
+fields = { "sets" = ["fysisk-juridisk-agare"] }
+evidence = "Kodningen gäller nästföregående ägares personstatus.\ncatalog:variable_text:11850:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-juridisk-agare-fysjur-3"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen gäller nästföregående ägares personstatus.\ncatalog:variable_text:11850:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur"
+fields = { "sets" = ["fysisk-juridisk-agare"] }
+evidence = "Kodningen gäller ägarens personstatus.\ncatalog:variable_text:11851:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen gäller ägarens personstatus.\ncatalog:variable_text:11851:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur-ag"
+fields = { "sets" = ["fysisk-juridisk-agare"] }
+evidence = "Kodningen hör till gruppen för ägarens personstatus och avser fordonsägande.\ncatalog:occurrence-locators:variable:11852\ncatalog:valueset:6891\ncatalog:variable_text:11852:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fysjur-ag"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen hör till gruppen för ägarens personstatus och avser fordonsägande.\ncatalog:occurrence-locators:variable:11852\ncatalog:valueset:6891\ncatalog:variable_text:11852:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:genomsnittlignyttolast"
+fields = { "sets" = ["lastvikt"] }
+evidence = "Genomsnittlig nyttolast och maximal lastvikt mäter lastens vikt.\ncatalog:occurrence-locators:variable:11853\ncatalog:occurrence-locators:variable:11899"
+
+[[statement]]
+kind = "set"
+subject = "var:genomsnittlignyttolast"
+fields = { "tags" = ["transport"] }
+evidence = "Genomsnittlig nyttolast och maximal lastvikt mäter lastens vikt.\ncatalog:occurrence-locators:variable:11853\ncatalog:occurrence-locators:variable:11899"
+
+[[statement]]
+kind = "set"
+subject = "var:modellgruppkod"
+fields = { "sets" = [] }
+evidence = "Grpkod är en opak källmnemonik för modellgruppkod.\ncatalog:variable_text:11855:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:modellgruppkod"
+fields = { "tags" = ["transport"] }
+evidence = "Grpkod är en opak källmnemonik för modellgruppkod.\ncatalog:variable_text:11855:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsbeteckning"
+fields = { "sets" = ["handelsbeteckning"] }
+evidence = "Variabeln anger fordonets handelsbeteckning.\ncatalog:occurrence:105142"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsbeteckning"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger fordonets handelsbeteckning.\ncatalog:occurrence:105142"
+
+[[statement]]
+kind = "set"
+subject = "var:inst-2"
+fields = { "sets" = ["institutionell-kod"] }
+evidence = "Identitetsfaktum och motstridig operativ definition kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
+
+[[statement]]
+kind = "set"
+subject = "var:inst-2"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktum och motstridig operativ definition kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
+
+[[statement]]
+kind = "set"
+subject = "var:inst-ag"
+fields = { "sets" = ["institutionell-kod"] }
+evidence = "Institutionell kod för fordonsägaren hör till den fastställda gruppen och temat transporter.\ncatalog:occurrence-locators:variable:11857\ncatalog:variable_text:11857:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inst-ag"
+fields = { "tags" = ["transport"] }
+evidence = "Institutionell kod för fordonsägaren hör till den fastställda gruppen och temat transporter.\ncatalog:occurrence-locators:variable:11857\ncatalog:variable_text:11857:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod"
+fields = { "sets" = ["institutionell-kod"] }
+evidence = "Institutionella ägarkoder hör till kandidatgruppen.\ncatalog:valueset:3914\ncatalog:variable_text:11858:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod"
+fields = { "tags" = ["business"] }
+evidence = "Institutionella ägarkoder hör till kandidatgruppen.\ncatalog:valueset:3914\ncatalog:variable_text:11858:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-2"
+fields = { "sets" = ["institutionell-kod"] }
+evidence = "Identitetsfaktum och den motstridiga definitionen kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-2"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfaktum och den motstridiga definitionen kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-3"
+fields = { "sets" = ["institutionell-kod"] }
+evidence = "Institutionell kod för ägare hör till kandidatgruppen.\ncatalog:valueset:3914\ncatalog:variable_text:11860:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-3"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell kod för ägare hör till kandidatgruppen.\ncatalog:valueset:3914\ncatalog:variable_text:11860:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Periodsplittet har en identitetsfakt och de avgörande kodernas innehåll saknas.\ncatalog:occurrence:105481\ncatalog:occurrence:105517\ncatalog:valueset:6125"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod"
+fields = { "tags" = ["transport"] }
+evidence = "Periodsplittet har en identitetsfakt och de avgörande kodernas innehåll saknas.\ncatalog:occurrence:105481\ncatalog:occurrence:105517\ncatalog:valueset:6125"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-2"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Suffixet 2 återges inte i källkolumnen Karosserikod1 och är en tilldelad räknare.\ncatalog:occurrence:105144\ncatalog:variable_text:11862:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-2"
+fields = { "tags" = ["transport"] }
+evidence = "Suffixet 2 återges inte i källkolumnen Karosserikod1 och är en tilldelad räknare.\ncatalog:occurrence:105144\ncatalog:variable_text:11862:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-kaross2"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Variabeln anger en karosserikod.\ncatalog:occurrence:103679"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-kaross2"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger en karosserikod.\ncatalog:occurrence:103679"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-karosserikod2"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Variabeln anger en karosserikod.\ncatalog:occurrence:105145"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-literal-karosserikod2"
+fields = { "tags" = ["transport"] }
+evidence = "Variabeln anger en karosserikod.\ncatalog:occurrence:105145"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-moped"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Periodsplittet har en identitetsfakt och kodernas innehåll saknas.\ncatalog:occurrence:105481\ncatalog:occurrence:105517\ncatalog:valueset:6125"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikod-moped"
+fields = { "tags" = ["transport"] }
+evidence = "Periodsplittet har en identitetsfakt och kodernas innehåll saknas.\ncatalog:occurrence:105481\ncatalog:occurrence:105517\ncatalog:valueset:6125"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikodtillagg"
+fields = { "sets" = ["karosserikod"] }
+evidence = "Tillägget kompletterar karosserikoden.\ncatalog:occurrence:105146"
+
+[[statement]]
+kind = "set"
+subject = "var:karosserikodtillagg"
+fields = { "tags" = ["transport"] }
+evidence = "Tillägget kompletterar karosserikoden.\ncatalog:occurrence:105146"
+
+[[statement]]
+kind = "set"
+subject = "var:klimatbonusbil"
+fields = { "sets" = ["miljobilsklassning"] }
+evidence = "KB_SCB är en opak bokstavskod för klimatbonusbil.\ncatalog:variable_text:11867:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:klimatbonusbil"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "KB_SCB är en opak bokstavskod för klimatbonusbil.\ncatalog:variable_text:11867:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Landsvägsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11868:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Landsvägsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11868:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv3"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Landsvägsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11869:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Landsvägsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11869:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Måttet gäller koldioxidutsläpp.\ncatalog:variable_text:11870:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet gäller koldioxidutsläpp.\ncatalog:variable_text:11870:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde3"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Måttet gäller koldioxidutsläpp.\ncatalog:variable_text:11871:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-literal-co2varde3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet gäller koldioxidutsläpp.\ncatalog:variable_text:11871:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Stadskörningsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11872:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Stadskörningsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11872:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv3"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Stadskörningsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11873:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Stadskörningsmåttet gäller koldioxidutsläpp.\ncatalog:variable_text:11873:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105101\ncatalog:variable_text:11874:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv2"
+fields = { "tags" = ["environment"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105101\ncatalog:variable_text:11874:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv3"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105102\ncatalog:variable_text:11875:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-literal-co2blwltpdriv3"
+fields = { "tags" = ["environment"] }
+evidence = "Koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105102\ncatalog:variable_text:11875:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Viktat koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105114\ncatalog:variable_text:11876:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv2"
+fields = { "tags" = ["environment"] }
+evidence = "Viktat koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105114\ncatalog:variable_text:11876:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv3"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Viktat koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105115\ncatalog:variable_text:11877:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv3"
+fields = { "tags" = ["environment"] }
+evidence = "Viktat koldioxidutsläpp hör till utsläppsgruppen och miljötemat.\ncatalog:occurrence:105115\ncatalog:variable_text:11877:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Ägarens folkbokföringskommun är en geografisk uppgift.\ncatalog:occurrence-locators:variable:11878"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Ägarens folkbokföringskommun är en geografisk uppgift.\ncatalog:occurrence-locators:variable:11878"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Ägarens kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:11879"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Ägarens kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:11879"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Koppling till släp hör till gruppen kopplingsanordning.\ncatalog:variable_text:11880:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling"
+fields = { "tags" = ["transport"] }
+evidence = "Koppling till släp hör till gruppen kopplingsanordning.\ncatalog:variable_text:11880:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-1"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Källans etikett anger koppling 1.\ncatalog:variable_text:11881:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-1"
+fields = { "tags" = ["transport"] }
+evidence = "Källans etikett anger koppling 1.\ncatalog:variable_text:11881:13878:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-2"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Källans etikett anger koppling 2.\ncatalog:variable_text:11882:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-2"
+fields = { "tags" = ["transport"] }
+evidence = "Källans etikett anger koppling 2.\ncatalog:variable_text:11882:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-2-koppling2"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Den andra kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11883:12052:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-2-koppling2"
+fields = { "tags" = ["transport"] }
+evidence = "Den andra kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11883:12052:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppl1"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11884:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppl1"
+fields = { "tags" = ["transport"] }
+evidence = "Kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11884:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppling1"
+fields = { "sets" = ["kopplingsanordning"] }
+evidence = "Kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11885:12052:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:koppling-koppling1"
+fields = { "tags" = ["transport"] }
+evidence = "Kopplingsanordningen hör till gruppen.\ncatalog:variable_text:11885:12052:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kran"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11886"
+
+[[statement]]
+kind = "set"
+subject = "var:kran"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11886"
+
+[[statement]]
+kind = "set"
+subject = "var:krockkudde"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11887"
+
+[[statement]]
+kind = "set"
+subject = "var:krockkudde"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11887"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-och-kolvateutslapp-literal-noxhcdrivm2"
+fields = { "sets" = ["kvaveoxid-och-kolvateutslapp"] }
+evidence = "Måttet gäller kombinerade utsläpp för drivmedel 2.\ncatalog:occurrence-locators:variable:11888"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-och-kolvateutslapp-literal-noxhcdrivm2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet gäller kombinerade utsläpp för drivmedel 2.\ncatalog:occurrence-locators:variable:11888"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-nox4drivm2"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "Måttet hör till kväveoxidutsläpp.\ncatalog:occurrence-locators:variable:11889"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-nox4drivm2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet hör till kväveoxidutsläpp.\ncatalog:occurrence-locators:variable:11889"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-noxdrivm2"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "Måttet hör till kväveoxidutsläpp.\ncatalog:occurrence-locators:variable:11890"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-literal-noxdrivm2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet hör till kväveoxidutsläpp.\ncatalog:occurrence-locators:variable:11890"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv2"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "Måttet gäller kväveoxidutsläpp för ett drivmedel och tillhör utsläppsgruppen.\ncatalog:occurrence-locators:variable:11891\ncatalog:variable_text:11891:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet gäller kväveoxidutsläpp för ett drivmedel och tillhör utsläppsgruppen.\ncatalog:occurrence-locators:variable:11891\ncatalog:variable_text:11891:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv3"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "Måttet gäller kväveoxidutsläpp för ett drivmedel och tillhör utsläppsgruppen.\ncatalog:occurrence-locators:variable:11892\ncatalog:variable_text:11892:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxidutslapp-wltp-literal-noxwltpdriv3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Måttet gäller kväveoxidutsläpp för ett drivmedel och tillhör utsläppsgruppen.\ncatalog:occurrence-locators:variable:11892\ncatalog:variable_text:11892:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "sets" = [] }
+evidence = "Måttet avser fordonets längd.\ncatalog:occurrence-locators:variable:11893"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet avser fordonets längd.\ncatalog:occurrence-locators:variable:11893"
+
+[[statement]]
+kind = "set"
+subject = "var:larm"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11894"
+
+[[statement]]
+kind = "set"
+subject = "var:larm"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11894"
+
+[[statement]]
+kind = "set"
+subject = "var:lastlgd"
+fields = { "sets" = [] }
+evidence = "Måttet avser fordonets lastlängd.\ncatalog:occurrence-locators:variable:11895"
+
+[[statement]]
+kind = "set"
+subject = "var:lastlgd"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet avser fordonets lastlängd.\ncatalog:occurrence-locators:variable:11895"
+
+[[statement]]
+kind = "set"
+subject = "var:leas"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser leasing av fordon.\ncatalog:occurrence-locators:variable:11896"
+
+[[statement]]
+kind = "set"
+subject = "var:leas"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser leasing av fordon.\ncatalog:occurrence-locators:variable:11896"
+
+[[statement]]
+kind = "set"
+subject = "var:lyft"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11897"
+
+[[statement]]
+kind = "set"
+subject = "var:lyft"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11897"
+
+[[statement]]
+kind = "set"
+subject = "var:maxhast"
+fields = { "sets" = [] }
+evidence = "Max och hast är läsbara stammar, liksom övriga max-familjens beteckningar. Måttet gäller fordonets hastighet.\ncatalog:occurrence-locators:variable:11898\ncatalog:variable_text:11898:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:maxhast"
+fields = { "tags" = ["transport"] }
+evidence = "Max och hast är läsbara stammar, liksom övriga max-familjens beteckningar. Måttet gäller fordonets hastighet.\ncatalog:occurrence-locators:variable:11898\ncatalog:variable_text:11898:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:maxlv"
+fields = { "sets" = ["lastvikt"] }
+evidence = "Id:t följer max-familjens läsbara förkortningsmönster. Måttet tillhör gruppen för lastvikt.\ncatalog:occurrence-locators:variable:11899\ncatalog:variable_text:11899:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:maxlv"
+fields = { "tags" = ["transport"] }
+evidence = "Id:t följer max-familjens läsbara förkortningsmönster. Måttet tillhör gruppen för lastvikt.\ncatalog:occurrence-locators:variable:11899\ncatalog:variable_text:11899:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:maxsv"
+fields = { "sets" = [] }
+evidence = "Id:t följer max-familjens förkortningsmönster. Måttet gäller tillåten släpvagnsvikt, som är undantagen från lastviktsgruppen.\ncatalog:occurrence-locators:variable:11900\ncatalog:variable_text:11900:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:maxsv"
+fields = { "tags" = ["transport"] }
+evidence = "Id:t följer max-familjens förkortningsmönster. Måttet gäller tillåten släpvagnsvikt, som är undantagen från lastviktsgruppen.\ncatalog:occurrence-locators:variable:11900\ncatalog:variable_text:11900:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:miljobil"
+fields = { "sets" = ["miljobilsklassning"] }
+evidence = "Variabeln klassar fordon som miljöbil.\ncatalog:occurrence:105152\ncatalog:valueset:8509"
+
+[[statement]]
+kind = "set"
+subject = "var:miljobil"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Variabeln klassar fordon som miljöbil.\ncatalog:occurrence:105152\ncatalog:valueset:8509"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoklass"
+fields = { "sets" = ["utslappsklass"] }
+evidence = "M är en bokstavskod för miljö i källmnemoniken.\ncatalog:occurrence-locators:variable:11902"
+
+[[statement]]
+kind = "set"
+subject = "var:miljoklass"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "M är en bokstavskod för miljö i källmnemoniken.\ncatalog:occurrence-locators:variable:11902"
+
+[[statement]]
+kind = "set"
+subject = "var:mklasseuro"
+fields = { "sets" = ["utslappsklass"] }
+evidence = "M är en bokstavskod för miljö i källmnemoniken; källetiketten kräver målgranskning.\ncatalog:occurrence-locators:variable:11903"
+
+[[statement]]
+kind = "set"
+subject = "var:mklasseuro"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "M är en bokstavskod för miljö i källmnemoniken; källetiketten kräver målgranskning.\ncatalog:occurrence-locators:variable:11903"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt"
+fields = { "sets" = ["motoreffekt"] }
+evidence = "Motorstyrka är ett effektbelopp.\ncatalog:variable_text:11904:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt"
+fields = { "tags" = ["transport"] }
+evidence = "Motorstyrka är ett effektbelopp.\ncatalog:variable_text:11904:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt1"
+fields = { "sets" = ["motoreffekt"] }
+evidence = "Motorstyrka är ett effektbelopp; drivmedelstillhörigheten varierar i historiken.\ncatalog:variable_text:11905:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt1"
+fields = { "tags" = ["transport"] }
+evidence = "Motorstyrka är ett effektbelopp; drivmedelstillhörigheten varierar i historiken.\ncatalog:variable_text:11905:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt2"
+fields = { "sets" = ["motoreffekt"] }
+evidence = "Motorstyrka är ett effektbelopp.\ncatalog:variable_text:11906:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt2"
+fields = { "tags" = ["transport"] }
+evidence = "Motorstyrka är ett effektbelopp.\ncatalog:variable_text:11906:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt3"
+fields = { "sets" = ["motoreffekt"] }
+evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
+
+[[statement]]
+kind = "set"
+subject = "var:motorstyrka-effekt3"
+fields = { "tags" = ["transport"] }
+evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Identitetsfakten och varierande ägarpositioner kräver samordning.\ncatalog:occurrence:104057\ncatalog:occurrence:121433\ncatalog:occurrence:121475"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Identitetsfakten och varierande ägarpositioner kräver samordning.\ncatalog:occurrence:104057\ncatalog:occurrence:121433\ncatalog:occurrence:121475"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-foregaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Ägarpositionen varierar i källan.\ncatalog:occurrence-locators:variable:11909\ncatalog:occurrence:114289"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-foregaende"
+fields = { "tags" = ["business"] }
+evidence = "Ägarpositionen varierar i källan.\ncatalog:occurrence-locators:variable:11909\ncatalog:occurrence:114289"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-nastforegaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Nästföregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11910"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2002-nastforegaende"
+fields = { "tags" = ["business"] }
+evidence = "Nästföregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11910"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11911"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11911"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-administrativ"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Administrativ ägares näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11912"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-administrativ"
+fields = { "tags" = ["business"] }
+evidence = "Administrativ ägares näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11912"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-foregaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Föregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11913"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-foregaende"
+fields = { "tags" = ["business"] }
+evidence = "Föregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11913"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-nastforegaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Ägarpositionen varierar mellan källor och perioder.\ncatalog:occurrence:108103\ncatalog:occurrence:109655\ncatalog:occurrence:114292"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-nastforegaende"
+fields = { "tags" = ["business"] }
+evidence = "Ägarpositionen varierar mellan källor och perioder.\ncatalog:occurrence:108103\ncatalog:occurrence:109655\ncatalog:occurrence:114292"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Klassifikationsversionen varierar över historiken.\ncatalog:occurrence:102992\ncatalog:occurrence:103030"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92"
+fields = { "tags" = ["business"] }
+evidence = "Klassifikationsversionen varierar över historiken.\ncatalog:occurrence:102992\ncatalog:occurrence:103030"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-foregaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Föregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11916"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-foregaende"
+fields = { "tags" = ["business"] }
+evidence = "Föregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11916"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-nastforegaende"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Nästföregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11917"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni92-nastforegaende"
+fields = { "tags" = ["business"] }
+evidence = "Nästföregående ägarens näringsgren hör till gruppen.\ncatalog:occurrence-locators:variable:11917"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrenskod-sni-2002"
+fields = { "sets" = ["agarens-naringsgren"] }
+evidence = "Samma SNI 2002-begrepp är fördelat mellan perioder för traktorer och delas med naringsgren; näringsgrenskoden hör till gruppen.\ncatalog:occurrence-locators:variable:11918\ncatalog:occurrence:121433\ncatalog:occurrence:121475"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrenskod-sni-2002"
+fields = { "tags" = ["business"] }
+evidence = "Samma SNI 2002-begrepp är fördelat mellan perioder för traktorer och delas med naringsgren; näringsgrenskoden hör till gruppen.\ncatalog:occurrence-locators:variable:11918\ncatalog:occurrence:121433\ncatalog:occurrence:121475"
+
+[[statement]]
+kind = "set"
+subject = "var:nox4drivm"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11919\ncatalog:variable_text:11919:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nox4drivm"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11919\ncatalog:variable_text:11919:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:noxdrivm"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11920\ncatalog:variable_text:11920:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:noxdrivm"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11920\ncatalog:variable_text:11920:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-kolvateutslapp-massa-per-km-eller-kwh-drivmedel-1"
+fields = { "sets" = ["kvaveoxid-och-kolvateutslapp"] }
+evidence = "NOxHC är en källkod och etiketten kolliderar med måttet för drivmedel 2; målet kräver granskning.\ncatalog:occurrence-locators:variable:11921"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveoxid-kolvateutslapp-massa-per-km-eller-kwh-drivmedel-1"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "NOxHC är en källkod och etiketten kolliderar med måttet för drivmedel 2; målet kräver granskning.\ncatalog:occurrence-locators:variable:11921"
+
+[[statement]]
+kind = "set"
+subject = "var:noxwltpdriv"
+fields = { "sets" = ["kvaveoxidutslapp"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11922\ncatalog:variable_text:11922:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:noxwltpdriv"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "NOx är en kod som inte förekommer i etiketten; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11922\ncatalog:variable_text:11922:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:part4drivm"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Partikelvärdet hör till partikelutsläpp.\ncatalog:occurrence-locators:variable:11923\ncatalog:occurrence:105164\ncatalog:occurrence:108391"
+
+[[statement]]
+kind = "set"
+subject = "var:part4drivm"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Partikelvärdet hör till partikelutsläpp.\ncatalog:occurrence-locators:variable:11923\ncatalog:occurrence:105164\ncatalog:occurrence:108391"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-part4drivm2"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11924\ncatalog:occurrence:105165\ncatalog:occurrence:108392"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-part4drivm2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11924\ncatalog:occurrence:105165\ncatalog:occurrence:108392"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde2"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11925\ncatalog:occurrence:105167\ncatalog:occurrence:108393"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11925\ncatalog:occurrence:105167\ncatalog:occurrence:108393"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde3"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11926\ncatalog:occurrence:105168\ncatalog:occurrence:108394"
+
+[[statement]]
+kind = "set"
+subject = "var:partikelvarde-literal-partvarde3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11926\ncatalog:occurrence:105168\ncatalog:occurrence:108394"
+
+[[statement]]
+kind = "set"
+subject = "var:partvarde"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11927\ncatalog:occurrence:105166\ncatalog:occurrence:108288"
+
+[[statement]]
+kind = "set"
+subject = "var:partvarde"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Partikelvärdet hör till partikelutsläpp; historiken behåller varierande definitioner.\ncatalog:occurrence-locators:variable:11927\ncatalog:occurrence:105166\ncatalog:occurrence:108288"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm1"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11928\ncatalog:occurrence:105677"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm1"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11928\ncatalog:occurrence:105677"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm2"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11929\ncatalog:occurrence:105678"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11929\ncatalog:occurrence:105678"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm3"
+fields = { "sets" = ["partikelutslapp"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11930\ncatalog:occurrence:105679"
+
+[[statement]]
+kind = "set"
+subject = "var:partvardeenhdrivm3"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Källan beskriver ett partikelvärde, inte en fristående enhetsbeteckning.\ncatalog:occurrence-locators:variable:11930\ncatalog:occurrence:105679"
+
+[[statement]]
+kind = "set"
+subject = "var:passit"
+fields = { "sets" = ["passagerarkapacitet"] }
+evidence = "Sittande passagerare är en del av passagerarkapaciteten.\ncatalog:occurrence-locators:variable:11773\ncatalog:occurrence-locators:variable:11931"
+
+[[statement]]
+kind = "set"
+subject = "var:passit"
+fields = { "tags" = ["transport"] }
+evidence = "Sittande passagerare är en del av passagerarkapaciteten.\ncatalog:occurrence-locators:variable:11773\ncatalog:occurrence-locators:variable:11931"
+
+[[statement]]
+kind = "set"
+subject = "var:plog"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11932"
+
+[[statement]]
+kind = "set"
+subject = "var:plog"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11932"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade"
+fields = { "sets" = [] }
+evidence = "Ägarens postnummer anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:11933"
+
+[[statement]]
+kind = "set"
+subject = "var:postnromrade"
+fields = { "tags" = ["geography"] }
+evidence = "Ägarens postnummer anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:11933"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Ägarens postort anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:11934"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Ägarens postort anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:11934"
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-driv"
+fields = { "sets" = ["rackvidd-wltp"] }
+evidence = "Måttet ingår i gruppen för WLTP-räckvidd och avser fordon.\ncatalog:occurrence-locators:variable:11935\ncatalog:variable_text:11935:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-driv"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet ingår i gruppen för WLTP-räckvidd och avser fordon.\ncatalog:occurrence-locators:variable:11935\ncatalog:variable_text:11935:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-literal-rackvidd-wltp-driv2"
+fields = { "sets" = ["rackvidd-wltp"] }
+evidence = "Måttet ingår i gruppen för WLTP-räckvidd och avser fordon.\ncatalog:occurrence-locators:variable:11936\ncatalog:variable_text:11936:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rackvidd-wltp-literal-rackvidd-wltp-driv2"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet ingår i gruppen för WLTP-räckvidd och avser fordon.\ncatalog:occurrence-locators:variable:11936\ncatalog:variable_text:11936:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sidovagn"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11939"
+
+[[statement]]
+kind = "set"
+subject = "var:sidovagn"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11939"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteklass"
+fields = { "sets" = [] }
+evidence = "S är en bokstavskod för skatte i källmnemoniken.\ncatalog:occurrence-locators:variable:11940"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteklass"
+fields = { "tags" = ["taxation"] }
+evidence = "S är en bokstavskod för skatte i källmnemoniken.\ncatalog:occurrence-locators:variable:11940"
+
+[[statement]]
+kind = "set"
+subject = "var:specifiktco2"
+fields = { "sets" = ["koldioxidutslapp"] }
+evidence = "Specifikt CO2-utsläpp ingår i kandidatgruppen.\ncatalog:variable_text:11942:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:specifiktco2"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Specifikt CO2-utsläpp ingår i kandidatgruppen.\ncatalog:variable_text:11942:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statkod"
+fields = { "sets" = ["fordonsmodell"] }
+evidence = "Statkod är en källkod utan läsbar koppling till etikettens ord; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11943\ncatalog:variable_text:11943:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statkod"
+fields = { "tags" = ["transport"] }
+evidence = "Statkod är en källkod utan läsbar koppling till etikettens ord; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11943\ncatalog:variable_text:11943:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Registreringsstatus är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11944\ncatalog:valueset:391"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["transport"] }
+evidence = "Registreringsstatus är en fordonsuppgift.\ncatalog:occurrence-locators:variable:11944\ncatalog:valueset:391"
+
+[[statement]]
+kind = "set"
+subject = "var:supermiljobil"
+fields = { "sets" = ["miljobilsklassning"] }
+evidence = "Variabeln anger status som supermiljöbil.\ncatalog:occurrence:109659\ncatalog:valueset:5218"
+
+[[statement]]
+kind = "set"
+subject = "var:supermiljobil"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Variabeln anger status som supermiljöbil.\ncatalog:occurrence:109659\ncatalog:valueset:5218"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvol"
+fields = { "sets" = ["tankvolym"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop; historiken behåller varierande positioner.\ncatalog:occurrence-locators:variable:11946\ncatalog:occurrence:105179\ncatalog:occurrence:108406"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvol"
+fields = { "tags" = ["transport"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop; historiken behåller varierande positioner.\ncatalog:occurrence-locators:variable:11946\ncatalog:occurrence:105179\ncatalog:occurrence:108406"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol2"
+fields = { "sets" = ["tankvolym"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop.\ncatalog:occurrence-locators:variable:11947"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol2"
+fields = { "tags" = ["transport"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop.\ncatalog:occurrence-locators:variable:11947"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol3"
+fields = { "sets" = ["tankvolym"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop; historiken behåller varierande positioner.\ncatalog:occurrence-locators:variable:11948\ncatalog:occurrence:105181\ncatalog:occurrence:108408"
+
+[[statement]]
+kind = "set"
+subject = "var:tankvolym-literal-tankvol3"
+fields = { "tags" = ["transport"] }
+evidence = "Tankvolymer för olika drivmedel hör ihop; historiken behåller varierande positioner.\ncatalog:occurrence-locators:variable:11948\ncatalog:occurrence:105181\ncatalog:occurrence:108408"
+
+[[statement]]
+kind = "set"
+subject = "var:tipp"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonets utrustning och funktion.\ncatalog:occurrence-locators:variable:11950"
+
+[[statement]]
+kind = "set"
+subject = "var:tipp"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonets utrustning och funktion.\ncatalog:occurrence-locators:variable:11950"
+
+[[statement]]
+kind = "set"
+subject = "var:tjvikt"
+fields = { "sets" = [] }
+evidence = "Måttet avser fordonets tjänstevikt.\ncatalog:occurrence-locators:variable:11951"
+
+[[statement]]
+kind = "set"
+subject = "var:tjvikt"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet avser fordonets tjänstevikt.\ncatalog:occurrence-locators:variable:11951"
+
+[[statement]]
+kind = "set"
+subject = "var:topkod"
+fields = { "sets" = ["fordonsmodell"] }
+evidence = "Topkod är en källkod utan läsbar koppling till etikettens ord; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11952\ncatalog:variable_text:11952:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:topkod"
+fields = { "tags" = ["transport"] }
+evidence = "Topkod är en källkod utan läsbar koppling till etikettens ord; etiketten kolliderar och målformen behöver hanteras enligt R6.\ncatalog:occurrence-locators:variable:11952\ncatalog:variable_text:11952:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totvikt"
+fields = { "sets" = [] }
+evidence = "Måttet avser fordonets totalvikt.\ncatalog:occurrence-locators:variable:11953"
+
+[[statement]]
+kind = "set"
+subject = "var:totvikt"
+fields = { "tags" = ["transport"] }
+evidence = "Måttet avser fordonets totalvikt.\ncatalog:occurrence-locators:variable:11953"
+
+[[statement]]
+kind = "set"
+subject = "var:utryckningsfordon"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har olika ägare efter period och definitionerna skiljer sig.\ncatalog:occurrence:103700\ncatalog:occurrence:104828"
+
+[[statement]]
+kind = "set"
+subject = "var:utryckningsfordon"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen har olika ägare efter period och definitionerna skiljer sig.\ncatalog:occurrence:103700\ncatalog:occurrence:104828"
+
+[[statement]]
+kind = "set"
+subject = "var:utslappklass"
+fields = { "sets" = ["utslappsklass"] }
+evidence = "Kodningen ingår i fordonets emissionsklass.\ncatalog:occurrence-locators:variable:11955"
+
+[[statement]]
+kind = "set"
+subject = "var:utslappklass"
+fields = { "tags" = ["environment", "transport"] }
+evidence = "Kodningen ingår i fordonets emissionsklass.\ncatalog:occurrence-locators:variable:11955"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxel"
+fields = { "sets" = [] }
+evidence = "Kodningen avser fordonets växellåda.\ncatalog:occurrence-locators:variable:11956"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxel"
+fields = { "tags" = ["transport"] }
+evidence = "Kodningen avser fordonets växellåda.\ncatalog:occurrence-locators:variable:11956"
+
+[[statement]]
+kind = "set"
+subject = "var:vinsch"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11957"
+
+[[statement]]
+kind = "set"
+subject = "var:vinsch"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften avser fordonsutrustning.\ncatalog:occurrence-locators:variable:11957"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-gods"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11958"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-gods"
+fields = { "tags" = ["transport"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11958"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-busstrafik"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Bussverksamheten är samma begrepp som yrkesmassig-trafik-buss, uppdelat efter period i busstabellen.\ncatalog:occurrence:103695\ncatalog:occurrence:104823"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-busstrafik"
+fields = { "tags" = ["transport"] }
+evidence = "Bussverksamheten är samma begrepp som yrkesmassig-trafik-buss, uppdelat efter period i busstabellen.\ncatalog:occurrence:103695\ncatalog:occurrence:104823"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-linjetrafik"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Linjetrafiken är samma begrepp som yrkesmassig-trafik-linje, uppdelat efter period i busstabellen.\ncatalog:occurrence:103697\ncatalog:occurrence:104825"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-linjetrafik"
+fields = { "tags" = ["transport"] }
+evidence = "Linjetrafiken är samma begrepp som yrkesmassig-trafik-linje, uppdelat efter period i busstabellen.\ncatalog:occurrence:103697\ncatalog:occurrence:104825"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-buss"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Bussverksamheten är samma begrepp som yrkesmassig-busstrafik, uppdelat efter period i busstabellen.\ncatalog:occurrence:103695\ncatalog:occurrence:104823"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-buss"
+fields = { "tags" = ["transport"] }
+evidence = "Bussverksamheten är samma begrepp som yrkesmassig-busstrafik, uppdelat efter period i busstabellen.\ncatalog:occurrence:103695\ncatalog:occurrence:104823"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-linje"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Linjetrafiken är samma begrepp som yrkesmassig-linjetrafik, uppdelat efter period i busstabellen.\ncatalog:occurrence:103697\ncatalog:occurrence:104825"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-linje"
+fields = { "tags" = ["transport"] }
+evidence = "Linjetrafiken är samma begrepp som yrkesmassig-linjetrafik, uppdelat efter period i busstabellen.\ncatalog:occurrence:103697\ncatalog:occurrence:104825"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-utryckning"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Källkolumnen har olika ägare efter period och definitionerna skiljer sig.\ncatalog:occurrence:103700\ncatalog:occurrence:104828"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-utryckning"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen har olika ägare efter period och definitionerna skiljer sig.\ncatalog:occurrence:103700\ncatalog:occurrence:104828"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-trafikskola"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11964"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-trafikskola"
+fields = { "tags" = ["transport"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11964"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-taxi"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11965"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-taxi"
+fields = { "tags" = ["transport"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11965"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-formedling"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Y och T är bokstavskoder för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11966"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-formedling"
+fields = { "tags" = ["transport"] }
+evidence = "Y och T är bokstavskoder för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11966"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-uthyrning"
+fields = { "sets" = ["yrkesmassig-trafik"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11967"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesmassig-trafik-uthyrning"
+fields = { "tags" = ["transport"] }
+evidence = "Y är en bokstavskod för yrkesmässig trafik.\ncatalog:occurrence-locators:variable:11967"
+
+[[statement]]
+kind = "set"
+subject = "bussar: avrors @2009-12-31..2009-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: avrors @2008-12-31..2008-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: avrors @2009-12-31..2009-12-31 where key = 'v19640'"
+fields = { "variable" = "avregorsak" }
+evidence = "Both describe the reason for deregistration and use the identical complete nine-code list 3949. Their AvrOrs observations occupy separate periods within the bus and motorcycle tables. Coverage across unobserved gaps is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:datutl"
+fields = { "description" = "Datum för registrering av uppgiften. För fordon som var i bruk före registreringen i Vägtrafikregistret anges datum då fordonet först togs i bruk." }
+evidence = "Definition-pass audit follow-up 2026-11-02: The own definition and operational exception jointly settle the description. The group question remains open.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:113734\nrel070-base/reg_meta.db:occurrence:113810\nrel070-base/reg_meta.db:occurrence:113890\nrel070-base/reg_meta.db:occurrence:113971\nrel070-base/reg_meta.db:occurrence:114056\nrel070-base/reg_meta.db:occurrence:114147\nrel070-base/reg_meta.db:occurrence:114246\nrel070-base/reg_meta.db:occurrence:114346\nrel070-base/reg_meta.db:occurrence:114461\nrel070-base/reg_meta.db:occurrence:114596\nrel070-base/reg_meta.db:occurrence:114742\nrel070-base/reg_meta.db:occurrence:114889\nrel070-base/reg_meta.db:occurrence:115037\nrel070-base/reg_meta.db:occurrence:115185\nrel070-base/reg_meta.db:occurrence:115333\nrel070-base/reg_meta.db:occurrence:115481\nrel070-base/reg_meta.db:occurrence:115629\nrel070-base/reg_meta.db:occurrence:115778"

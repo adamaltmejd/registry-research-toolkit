@@ -72,3 +72,531 @@ kind = "set"
 subject = "elever: jurform @2022-10-15,2023-10-15,2024-10-15"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-grundskola-kursplan"
+fields = { "sets" = [] }
+evidence = "Variabeln avser undervisning enligt grundskolans kursplan.\ncatalog:variable_text:3104:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-grundskola-kursplan"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser undervisning enligt grundskolans kursplan.\ncatalog:variable_text:3104:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "sets" = [] }
+evidence = "Variabeln avser anpassad studiegång.\ncatalog:variable_text:3105:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser anpassad studiegång.\ncatalog:variable_text:3105:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "sets" = [] }
+evidence = "Variabeln anger elevens årskurs.\ncatalog:variable_text:3107:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger elevens årskurs.\ncatalog:variable_text:3107:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "sets" = [] }
+evidence = "Variabeln avser pedagogiskt stöd.\ncatalog:variable_text:3108:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser pedagogiskt stöd.\ncatalog:variable_text:3108:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:central-insamlingsenhet"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver insamlingsenhetens roll.\ncatalog:variable_text:3109:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:central-insamlingsenhet"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen beskriver insamlingsenhetens roll.\ncatalog:variable_text:3109:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
+fields = { "sets" = [] }
+evidence = "SVA är en bokstavsförkortning som saknas i etiketten.\ncatalog:variable_text:3110:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
+fields = { "tags" = ["education"] }
+evidence = "SVA är en bokstavsförkortning som saknas i etiketten.\ncatalog:variable_text:3110:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser undervisningsform.\ncatalog:variable_text:3111:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser undervisningsform.\ncatalog:variable_text:3111:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland ingår med elevens och moderns födelseland.\ncatalog:variable_text:3112:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland ingår med elevens och moderns födelseland.\ncatalog:variable_text:3112:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Elevens födelseland ingår med föräldrarnas födelseländer.\ncatalog:variable_text:3113:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Elevens födelseland ingår med föräldrarnas födelseländer.\ncatalog:variable_text:3113:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:3114:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:3114:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Koderna beskriver typ av skolhuvudman.\ncatalog:valueset:9553\ncatalog:variable_text:3115:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Koderna beskriver typ av skolhuvudman.\ncatalog:valueset:9553\ncatalog:variable_text:3115:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "sets" = [] }
+evidence = "Koderna beskriver skolans inriktning.\ncatalog:variable_text:3117:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "tags" = ["education"] }
+evidence = "Koderna beskriver skolans inriktning.\ncatalog:variable_text:3117:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:integrerad-sarskolelev"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver elevens skolgång.\ncatalog:variable_text:3118:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:integrerad-sarskolelev"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln beskriver elevens skolgång.\ncatalog:variable_text:3118:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar huvudmannens juridiska form.\ncatalog:variable_text:3119:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar huvudmannens juridiska form.\ncatalog:variable_text:3119:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfth"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Kommunen anger fritidshemmets läge.\ncatalog:variable_text:3121:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfth"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger fritidshemmets läge.\ncatalog:variable_text:3121:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:3122:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:3122:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland ingår med elevens och faderns födelseland.\ncatalog:variable_text:3124:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland ingår med elevens och faderns födelseland.\ncatalog:variable_text:3124:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "sets" = [] }
+evidence = "Variabeln avser nylig invandring.\ncatalog:variable_text:3125:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln avser nylig invandring.\ncatalog:variable_text:3125:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:overar"
+fields = { "sets" = ["relativ-elev-alder"] }
+evidence = "Indikatorn hör ihop med underårig elev.\ncatalog:variable_text:3126:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:overar"
+fields = { "tags" = ["demographics"] }
+evidence = "Indikatorn hör ihop med underårig elev.\ncatalog:variable_text:3126:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-ensk"
+fields = { "sets" = [] }
+evidence = "Variabeln avser individuellt pedagogiskt stöd.\ncatalog:variable_text:3131:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-ensk"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser individuellt pedagogiskt stöd.\ncatalog:variable_text:3131:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-undergrp"
+fields = { "sets" = [] }
+evidence = "Variabeln avser särskild undervisningsgrupp.\ncatalog:variable_text:3132:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-undergrp"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser särskild undervisningsgrupp.\ncatalog:variable_text:3132:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Senaste och tidigaste invandringsdatum är relaterade datum.\ncatalog:variable_text:3133:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Senaste och tidigaste invandringsdatum är relaterade datum.\ncatalog:variable_text:3133:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Koderna anger skolform.\ncatalog:variable_text:3136:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Koderna anger skolform.\ncatalog:variable_text:3136:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Variabeln anger kommun för skolans läge.\ncatalog:variable_text:3137:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommun för skolans läge.\ncatalog:variable_text:3137:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser stödundervisning.\ncatalog:variable_text:3138:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser stödundervisning.\ncatalog:variable_text:3138:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stud-handl-ml"
+fields = { "sets" = [] }
+evidence = "Variabeln avser studiehandledning.\ncatalog:variable_text:3139:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stud-handl-ml"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser studiehandledning.\ncatalog:variable_text:3139:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en bokstavskod som saknas i etiketten. Familjens medlemmar får samma läsbarhetsbedömning. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3140\ncatalog:variable_text:3140:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en bokstavskod som saknas i etiketten. Familjens medlemmar får samma läsbarhetsbedömning. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3140\ncatalog:variable_text:3140:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3141\ncatalog:variable_text:3141:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3141\ncatalog:variable_text:3141:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en bokstavskod som saknas i etiketten. Familjens medlemmar får samma läsbarhetsbedömning. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3142\ncatalog:variable_text:3142:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en bokstavskod som saknas i etiketten. Familjens medlemmar får samma läsbarhetsbedömning. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3142\ncatalog:variable_text:3142:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3143\ncatalog:variable_text:3143:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Källkolumnen skiljer variabeln från variabler med samma etikett.\ncatalog:occurrence-locators:variable:3143\ncatalog:variable_text:3143:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:3144:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:3144:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för fadern.\ncatalog:variable_text:3145:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för fadern.\ncatalog:variable_text:3145:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:3146:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:3146:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för föräldrarna.\ncatalog:variable_text:3147:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för föräldrarna.\ncatalog:variable_text:3147:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:3148:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:3148:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för fadern.\ncatalog:variable_text:3149:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för fadern.\ncatalog:variable_text:3149:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:3150:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:3150:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för föräldrarna.\ncatalog:variable_text:3151:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar grupperad utbildningsnivå för föräldrarna.\ncatalog:variable_text:3151:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Tidigaste och senaste invandringsdatum är relaterade datum.\ncatalog:variable_text:3152:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Tidigaste och senaste invandringsdatum är relaterade datum.\ncatalog:variable_text:3152:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:traningsskola"
+fields = { "sets" = [] }
+evidence = "Variabeln avser utbildningens inriktning.\ncatalog:variable_text:3153:19280:19281"
+
+[[statement]]
+kind = "set"
+subject = "var:traningsskola"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser utbildningens inriktning.\ncatalog:variable_text:3153:19280:19281"
+
+[[statement]]
+kind = "set"
+subject = "var:underar"
+fields = { "sets" = ["relativ-elev-alder"] }
+evidence = "Indikatorn hör ihop med överårig elev.\ncatalog:variable_text:3154:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:underar"
+fields = { "tags" = ["demographics"] }
+evidence = "Indikatorn hör ihop med överårig elev.\ncatalog:variable_text:3154:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsform"
+fields = { "sets" = [] }
+evidence = "Variabeln anger utbildningsform.\ncatalog:variable_text:3155:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsform"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningsform.\ncatalog:variable_text:3155:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Variabeln är en kodning av svensk eller utländsk bakgrund.\ncatalog:variable_text:3156:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln är en kodning av svensk eller utländsk bakgrund.\ncatalog:variable_text:3156:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Variabeln är en kodning av svensk eller utländsk bakgrund.\ncatalog:variable_text:3157:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln är en kodning av svensk eller utländsk bakgrund.\ncatalog:variable_text:3157:20011:20012"

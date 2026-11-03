@@ -277,6 +277,8 @@ impl Context<'_> {
             let (lo, hi) = self.bounds(row, from, to, &at);
             let cadence = self.cadence(cell(row, cadence), &at);
             self.records.push(Record::Table(Table {
+                role: None,
+                unit_type: None,
                 provider: self.provider.to_owned(),
                 register: self.register.to_owned(),
                 table: handle,
@@ -439,6 +441,7 @@ impl Context<'_> {
                 (hash, link_text)
             };
             self.records.push(Record::Occurrence(Occurrence {
+                role: None,
                 provider: self.provider.to_owned(),
                 register: self.register.to_owned(),
                 table,

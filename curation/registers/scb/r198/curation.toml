@@ -106,3 +106,552 @@ kind = "set"
 subject = "avgifter-hyror-for-nybyggda-lagenheter: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "sets" = ["postadress"] }
+evidence = "Adress ingår i postadressgruppen och anger geografisk tillhörighet.\ncatalog:occurrence:34203\ncatalog:register:54"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "tags" = ["geography"] }
+evidence = "Adress ingår i postadressgruppen och anger geografisk tillhörighet.\ncatalog:occurrence:34203\ncatalog:register:54"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal lägenheter ingår i antalgruppen.\ncatalog:occurrence:34191"
+
+[[statement]]
+kind = "set"
+subject = "var:ant"
+fields = { "tags" = ["housing"] }
+evidence = "Antal lägenheter ingår i antalgruppen.\ncatalog:occurrence:34191"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-bygglov"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Samma antal enligt bygglov är korrekt uppdelat mellan perioder; senare operativ definition bekräftar betydelsen. Antalet hör till antalgruppen.\ncatalog:occurrence:34068\ncatalog:occurrence:34097"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-bygglov"
+fields = { "tags" = ["housing"] }
+evidence = "Samma antal enligt bygglov är korrekt uppdelat mellan perioder; senare operativ definition bekräftar betydelsen. Antalet hör till antalgruppen.\ncatalog:occurrence:34068\ncatalog:occurrence:34097"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Samma antal enligt bygglov är korrekt uppdelat mellan perioder; den senare operativa definitionen bekräftar betydelsen. Antalet hör till antalgruppen.\ncatalog:occurrence:34068\ncatalog:occurrence:34097"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "tags" = ["housing"] }
+evidence = "Samma antal enligt bygglov är korrekt uppdelat mellan perioder; den senare operativa definitionen bekräftar betydelsen. Antalet hör till antalgruppen.\ncatalog:occurrence:34068\ncatalog:occurrence:34097"
+
+[[statement]]
+kind = "set"
+subject = "var:arhyfranvarde"
+fields = { "sets" = ["hyra-och-arsavgift"] }
+evidence = "Ursprunglig årshyra eller årsavgift hör till beloppsgruppen.\ncatalog:variable_text:5153:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arhyfranvarde"
+fields = { "tags" = ["housing"] }
+evidence = "Ursprunglig årshyra eller årsavgift hör till beloppsgruppen.\ncatalog:variable_text:5153:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arshyra-arsavgift"
+fields = { "sets" = ["hyra-och-arsavgift"] }
+evidence = "Samma årshyra eller årsavgift är korrekt uppdelad mellan perioder; den operativa definitionen är densamma. Beloppet hör till hyresgruppen.\ncatalog:occurrence:34046\ncatalog:occurrence:34074"
+
+[[statement]]
+kind = "set"
+subject = "var:arshyra-arsavgift"
+fields = { "tags" = ["housing"] }
+evidence = "Samma årshyra eller årsavgift är korrekt uppdelad mellan perioder; den operativa definitionen är densamma. Beloppet hör till hyresgruppen.\ncatalog:occurrence:34046\ncatalog:occurrence:34074"
+
+[[statement]]
+kind = "set"
+subject = "var:bokod"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Den intilliggande mappningen till kategoribostad kräver identitetsgranskning; etiketten omfattar lägenhetstyp och boendeform.\ncatalog:occurrence:34047\ncatalog:occurrence:34075\n\nSingle-group ruling 2026-11-02: The definition distinguishes normal, special and other dwellings, not rental versus ownership tenure."
+
+[[statement]]
+kind = "set"
+subject = "var:bokod"
+fields = { "tags" = ["housing"] }
+evidence = "Den intilliggande mappningen till kategoribostad kräver identitetsgranskning; etiketten omfattar lägenhetstyp och boendeform.\ncatalog:occurrence:34047\ncatalog:occurrence:34075"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Samma bostadsarea enligt bygglov är korrekt uppdelad mellan perioder; senare operativ definition bekräftar betydelsen.\ncatalog:occurrence:34061\ncatalog:occurrence:34089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea"
+fields = { "tags" = ["housing"] }
+evidence = "Samma bostadsarea enligt bygglov är korrekt uppdelad mellan perioder; senare operativ definition bekräftar betydelsen.\ncatalog:occurrence:34061\ncatalog:occurrence:34089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-bygglov"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Samma bostadsarea enligt bygglov är korrekt uppdelad mellan perioder; senare operativ definition bekräftar betydelsen.\ncatalog:occurrence:34061\ncatalog:occurrence:34089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea-bygglov"
+fields = { "tags" = ["housing"] }
+evidence = "Samma bostadsarea enligt bygglov är korrekt uppdelad mellan perioder; senare operativ definition bekräftar betydelsen.\ncatalog:occurrence:34061\ncatalog:occurrence:34089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Bostadslägenhetsarea ingår i areagruppen.\ncatalog:occurrence:34048"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadslägenhetsarea ingår i areagruppen.\ncatalog:occurrence:34048"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "sets" = ["hyrans-kostnadsinnehall"] }
+evidence = "Bränslekodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34415\ncatalog:register:54\ncatalog:valueset:3407"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "tags" = ["housing"] }
+evidence = "Bränslekodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34415\ncatalog:register:54\ncatalog:valueset:3407"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherre"
+fields = { "sets" = [] }
+evidence = "Byggherren är den för vars räkning byggnadsarbetet bedrivs.\ncatalog:occurrence:34211"
+
+[[statement]]
+kind = "set"
+subject = "var:byggherre"
+fields = { "tags" = ["housing"] }
+evidence = "Byggherren är den för vars räkning byggnadsarbetet bedrivs.\ncatalog:occurrence:34211"
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Detaljerad klassificering av byggherrens ägarkategori ingår i ägarkategorigruppen.\ncatalog:occurrence:34416\ncatalog:valueset:5416"
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp"
+fields = { "tags" = ["property"] }
+evidence = "Detaljerad klassificering av byggherrens ägarkategori ingår i ägarkategorigruppen.\ncatalog:occurrence:34416\ncatalog:valueset:5416"
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp2"
+fields = { "sets" = ["agarkategori"] }
+evidence = "Grov klassificering av byggherrens ägarkategori ingår i ägarkategorigruppen.\ncatalog:occurrence:34417\ncatalog:valueset:9948"
+
+[[statement]]
+kind = "set"
+subject = "var:bygghtyp2"
+fields = { "tags" = ["property"] }
+evidence = "Grov klassificering av byggherrens ägarkategori ingår i ägarkategorigruppen.\ncatalog:occurrence:34417\ncatalog:valueset:9948"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear"
+fields = { "sets" = ["fardigstallandetidpunkt"] }
+evidence = "Färdigställandeår ingår tillsammans med färdigställandemånad.\ncatalog:occurrence:34421\ncatalog:variable_text:5171:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallandear"
+fields = { "tags" = [] }
+evidence = "Färdigställandeår ingår tillsammans med färdigställandemånad.\ncatalog:occurrence:34421\ncatalog:variable_text:5171:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallda-hus"
+fields = { "sets" = [] }
+evidence = "Variabeln avser färdigställda hus.\ncatalog:occurrence:34052"
+
+[[statement]]
+kind = "set"
+subject = "var:fardigstallda-hus"
+fields = { "tags" = ["housing"] }
+evidence = "Variabeln avser färdigställda hus.\ncatalog:occurrence:34052"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:occurrence:34210"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk lägesnyckel.\ncatalog:occurrence:34210"
+
+[[statement]]
+kind = "set"
+subject = "var:garage"
+fields = { "sets" = ["hyrans-kostnadsinnehall"] }
+evidence = "Garagekodningen ingår i hyrans kostnadsinnehåll.\ncatalog:valueset:11649\ncatalog:valueset:8240"
+
+[[statement]]
+kind = "set"
+subject = "var:garage"
+fields = { "tags" = ["housing"] }
+evidence = "Garagekodningen ingår i hyrans kostnadsinnehåll.\ncatalog:valueset:11649\ncatalog:valueset:8240"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "sets" = [] }
+evidence = "Hustyp klassificerar bostadshus.\ncatalog:occurrence:34419"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "tags" = ["housing"] }
+evidence = "Hustyp klassificerar bostadshus.\ncatalog:occurrence:34419"
+
+[[statement]]
+kind = "set"
+subject = "var:hyra-avgift"
+fields = { "sets" = ["hyra-och-arsavgift"] }
+evidence = "Samma årshyra eller årsavgift är korrekt uppdelad mellan perioder; den operativa definitionen är densamma. Beloppet hör till hyresgruppen.\ncatalog:occurrence:34046\ncatalog:occurrence:34074"
+
+[[statement]]
+kind = "set"
+subject = "var:hyra-avgift"
+fields = { "tags" = ["housing"] }
+evidence = "Samma årshyra eller årsavgift är korrekt uppdelad mellan perioder; den operativa definitionen är densamma. Beloppet hör till hyresgruppen.\ncatalog:occurrence:34046\ncatalog:occurrence:34074"
+
+[[statement]]
+kind = "set"
+subject = "var:hyressattning"
+fields = { "sets" = ["hyressattningsmodell"] }
+evidence = "Hyressättningsmodell och presumtionshyra är kodningar av hyressättning.\ncatalog:valueset:7290\ncatalog:valueset:9406"
+
+[[statement]]
+kind = "set"
+subject = "var:hyressattning"
+fields = { "tags" = ["housing"] }
+evidence = "Hyressättningsmodell och presumtionshyra är kodningar av hyressättning.\ncatalog:valueset:7290\ncatalog:valueset:9406"
+
+[[statement]]
+kind = "set"
+subject = "var:inflman"
+fields = { "sets" = ["fardigstallandetidpunkt"] }
+evidence = "Färdigställandemånad ingår tillsammans med färdigställandeår.\ncatalog:occurrence:34215\ncatalog:occurrence:34421"
+
+[[statement]]
+kind = "set"
+subject = "var:inflman"
+fields = { "tags" = [] }
+evidence = "Färdigställandemånad ingår tillsammans med färdigställandeår.\ncatalog:occurrence:34215\ncatalog:occurrence:34421"
+
+[[statement]]
+kind = "set"
+subject = "var:ins"
+fields = { "sets" = [] }
+evidence = "Insats avser erlagt belopp för bostadsrättslägenheter.\ncatalog:occurrence:34422"
+
+[[statement]]
+kind = "set"
+subject = "var:ins"
+fields = { "tags" = ["housing"] }
+evidence = "Insats avser erlagt belopp för bostadsrättslägenheter.\ncatalog:occurrence:34422"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsstod"
+fields = { "sets" = [] }
+evidence = "Investeringsstöd avser stöd till bostadsbyggande.\ncatalog:occurrence:34423\ncatalog:register:54"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsstod"
+fields = { "tags" = ["housing", "transfers"] }
+evidence = "Investeringsstöd avser stöd till bostadsbyggande.\ncatalog:occurrence:34423\ncatalog:register:54"
+
+[[statement]]
+kind = "set"
+subject = "var:kategoribostad"
+fields = { "sets" = [] }
+evidence = "Den intilliggande mappningen till bokod kräver identitetsgranskning; klassificeringen avser kategoribostad.\ncatalog:occurrence:34047\ncatalog:occurrence:34075\ncatalog:valueset:6931"
+
+[[statement]]
+kind = "set"
+subject = "var:kategoribostad"
+fields = { "tags" = ["housing"] }
+evidence = "Den intilliggande mappningen till bokod kräver identitetsgranskning; klassificeringen avser kategoribostad.\ncatalog:occurrence:34047\ncatalog:occurrence:34075\ncatalog:valueset:6931"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "Kommun anger regional områdestillhörighet.\ncatalog:occurrence:34424"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun anger regional områdestillhörighet.\ncatalog:occurrence:34424"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenheter-per-typ"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antalet och klassificeringen har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenheter-per-typ"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet och klassificeringen har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "sets" = ["lagenhetstyp"] }
+evidence = "Klassificeringen och antalet har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Klassificeringen och antalet har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "Län anger regional områdestillhörighet.\ncatalog:occurrence:34088"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger regional områdestillhörighet.\ncatalog:occurrence:34088"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts01"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34426\ncatalog:valueset:10882"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts01"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34426\ncatalog:valueset:10882"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts02"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34427\ncatalog:valueset:6840"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts02"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34427\ncatalog:valueset:6840"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts03"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34428\ncatalog:valueset:10645"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts03"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS-koden anger regional områdestillhörighet.\ncatalog:occurrence:34428\ncatalog:valueset:10645"
+
+[[statement]]
+kind = "set"
+subject = "var:omr"
+fields = { "sets" = [] }
+evidence = "Klassificeringen avser exploaterings- eller saneringsområdets markanvändning.\ncatalog:occurrence:34064\ncatalog:valueset:5373"
+
+[[statement]]
+kind = "set"
+subject = "var:omr"
+fields = { "tags" = ["property"] }
+evidence = "Klassificeringen avser exploaterings- eller saneringsområdets markanvändning.\ncatalog:occurrence:34064\ncatalog:valueset:5373"
+
+[[statement]]
+kind = "set"
+subject = "var:outhyrda-lagenheter"
+fields = { "sets" = ["antal-lagenheter"] }
+evidence = "Antal outhyrda eller osålda lägenheter ingår i antalgruppen.\ncatalog:occurrence:34429"
+
+[[statement]]
+kind = "set"
+subject = "var:outhyrda-lagenheter"
+fields = { "tags" = ["housing"] }
+evidence = "Antal outhyrda eller osålda lägenheter ingår i antalgruppen.\ncatalog:occurrence:34429"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postadress"] }
+evidence = "Utdelningspostnummer är en postadresskomponent.\ncatalog:occurrence:34221"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Utdelningspostnummer är en postadresskomponent.\ncatalog:occurrence:34221"
+
+[[statement]]
+kind = "set"
+subject = "var:preshyra"
+fields = { "sets" = ["hyressattningsmodell"] }
+evidence = "Presumtionshyra och hyressättningsmodell är kodningar av hyressättning.\ncatalog:occurrence:34278\ncatalog:valueset:7290"
+
+[[statement]]
+kind = "set"
+subject = "var:preshyra"
+fields = { "tags" = ["housing"] }
+evidence = "Presumtionshyra och hyressättningsmodell är kodningar av hyressättning.\ncatalog:occurrence:34278\ncatalog:valueset:7290"
+
+[[statement]]
+kind = "set"
+subject = "var:region-fem-regioner"
+fields = { "sets" = ["regional-omradestillhorighet"] }
+evidence = "Femregionsindelningen anger regional områdestillhörighet.\ncatalog:occurrence:34430\ncatalog:valueset:54"
+
+[[statement]]
+kind = "set"
+subject = "var:region-fem-regioner"
+fields = { "tags" = ["geography"] }
+evidence = "Femregionsindelningen anger regional områdestillhörighet.\ncatalog:occurrence:34430\ncatalog:valueset:54"
+
+[[statement]]
+kind = "set"
+subject = "var:strom"
+fields = { "sets" = ["hyrans-kostnadsinnehall"] }
+evidence = "Elkodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34431\ncatalog:register:54\ncatalog:valueset:3407"
+
+[[statement]]
+kind = "set"
+subject = "var:strom"
+fields = { "tags" = ["housing"] }
+evidence = "Elkodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34431\ncatalog:register:54\ncatalog:valueset:3407"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Den intilliggande mappningen till upplform kräver granskning av skillnaden i innehåll.\ncatalog:occurrence:34070\ncatalog:occurrence:34098\ncatalog:valueset:12101"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "tags" = ["housing"] }
+evidence = "Den intilliggande mappningen till upplform kräver granskning av skillnaden i innehåll.\ncatalog:occurrence:34070\ncatalog:occurrence:34098\ncatalog:valueset:12101"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-7785"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Suffixet 7785 är en räknare som inte kommer från källkolumnen. Variabeln ingår i upplåtelseformsgruppen.\ncatalog:occurrence:34069\ncatalog:variable_text:5190:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-7785"
+fields = { "tags" = ["housing"] }
+evidence = "Suffixet 7785 är en räknare som inte kommer från källkolumnen. Variabeln ingår i upplåtelseformsgruppen.\ncatalog:occurrence:34069\ncatalog:variable_text:5190:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:upplform"
+fields = { "sets" = ["upplatelseform"] }
+evidence = "Den intilliggande mappningen till upplatelseform kräver granskning av skillnaden i innehåll.\ncatalog:occurrence:34070\ncatalog:occurrence:34098\ncatalog:valueset:12101"
+
+[[statement]]
+kind = "set"
+subject = "var:upplform"
+fields = { "tags" = ["housing"] }
+evidence = "Den intilliggande mappningen till upplatelseform kräver granskning av skillnaden i innehåll.\ncatalog:occurrence:34070\ncatalog:occurrence:34098\ncatalog:valueset:12101"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningspostort"
+fields = { "sets" = ["postadress"] }
+evidence = "Utdelningspostort är en postadresskomponent.\ncatalog:occurrence:34222"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningspostort"
+fields = { "tags" = ["geography"] }
+evidence = "Utdelningspostort är en postadresskomponent.\ncatalog:occurrence:34222"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "sets" = ["hyrans-kostnadsinnehall"] }
+evidence = "Vattenkodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34433\ncatalog:valueset:10953"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "tags" = ["housing"] }
+evidence = "Vattenkodningen ingår i hyrans kostnadsinnehåll.\ncatalog:occurrence:34433\ncatalog:valueset:10953"
+
+[[statement]]
+kind = "set"
+subject = "var:yta"
+fields = { "sets" = ["bostadsarea"] }
+evidence = "Bostadsarean i byggnadsprojektet ingår i areagruppen.\ncatalog:occurrence:34434"
+
+[[statement]]
+kind = "set"
+subject = "var:yta"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarean i byggnadsprojektet ingår i areagruppen.\ncatalog:occurrence:34434"
+
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "description" = "Anger om kostnad för bränsle ingår i hyran." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa- och nejvärdena visar en kodning av kostnadsinnehåll snarare än ett kostnadsbelopp.\ncatalog:occurrence:34415\ncatalog:valueset:3407"
+
+
+[[statement]]
+kind = "set"
+subject = "var:garage"
+fields = { "description" = "Anger om och vilken kostnad för garage- eller bilplats som ingår i de redovisade hyresbeloppen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdekoderna beskriver garage- eller bilplatsens behandling i hyresbeloppet, inte ett kostnadsbelopp.\ncatalog:valueset:11649\ncatalog:valueset:8240"
+
+
+[[statement]]
+kind = "set"
+subject = "var:strom"
+fields = { "description" = "Anger om kostnad för hushållsel ingår i hyran." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa- och nejvärdena visar en kodning av kostnadsinnehåll snarare än ett kostnadsbelopp.\ncatalog:occurrence:34431\ncatalog:valueset:3407"

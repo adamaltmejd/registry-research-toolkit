@@ -1,0 +1,26 @@
+{
+  "registers": {
+    "demo/a": {
+      "split_keys": 0,
+      "unminted": ["fresh"],
+      "unplaced_ids": ["u-missing-one", "u-missing-two"],
+      "merged_ids": ["z-split-one", "z-split-two"],
+      "split_ids": ["z-split-one", "z-split-two"]
+    },
+    "demo/b": {
+      "split_keys": 0,
+      "unminted": ["fresh"],
+      "unplaced_ids": ["u-missing-one", "u-missing-two"],
+      "merged_ids": ["z-split-one", "z-split-two"],
+      "split_ids": ["z-split-one", "z-split-two"]
+    }
+  },
+  "refusal_counts": {
+    "demo/a": {"curation": 1, "ledger-id-unplaced": 2, "ledger-id-split": 2, "unminted-variable": 1},
+    "demo/b": {"curation": 1, "ledger-id-unplaced": 2, "ledger-id-split": 2, "unminted-variable": 1}
+  },
+  "curation_refusals": {
+    "demo/a": "curation/registers/demo/a/curation.toml:1: premise-missing:",
+    "demo/b": "curation/registers/demo/b/curation.toml:1: premise-missing:"
+  }
+}

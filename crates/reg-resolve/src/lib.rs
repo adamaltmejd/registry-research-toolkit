@@ -248,6 +248,11 @@ pub struct Variable {
     pub slug: String,
     pub sets: BTreeSet<String>,
     pub tags: BTreeSet<String>,
+    pub facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
+    pub facets_at: Option<Locator>,
+    pub synonyms: BTreeSet<String>,
+    /// One curated account of the variable's meaning, independent of source wording.
+    pub description: Option<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -366,6 +371,25 @@ pub fn resolve(
     assignments: &BTreeMap<OccurrenceKey, String>,
     classifications: &[curation::apply::Classification],
 ) -> Result<Resolved, String> {
+    resolve_located(
+        records,
+        ledger,
+        valuesets,
+        assignments,
+        classifications,
+        &mut BTreeSet::new(),
+    )
+}
+
+#[allow(clippy::too_many_lines)]
+pub(crate) fn resolve_located(
+    records: &[Record],
+    ledger: &Ledger,
+    valuesets: &BTreeMap<&str, &ValueSet>,
+    assignments: &BTreeMap<OccurrenceKey, String>,
+    classifications: &[curation::apply::Classification],
+    affected: &mut BTreeSet<OccurrenceKey>,
+) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
         .filter_map(|r| match r {
@@ -452,6 +476,8 @@ pub fn resolve(
     for handle in handles {
         let mut table = stated.get(handle).map_or_else(
             || Table {
+                role: None,
+                unit_type: None,
                 provider: register.provider.clone(),
                 register: register.register.clone(),
                 table: handle.to_owned(),
@@ -809,6 +835,43 @@ pub fn resolve(
         };
         (key, sub)
     };
+    // Re-derive ids only for partially selected default groups: an assignment can
+    // remove the anchor that won in the default pass. A dated anchor still
+    // identifies the remaining group beyond the anchor day.
+    let mut inherited_ids = BTreeMap::new();
+    if let Some(defaults) = &defaults {
+        let mut selected_groups = BTreeSet::new();
+        for (i, row) in defaults.occurrences.iter().enumerate() {
+            if assignment(&resolved[i].occurrence)?.is_some()
+                && let Some(v) = row.variable
+            {
+                selected_groups.insert(v);
+            }
+        }
+        for (id, targets) in
+            ledger::anchor_targets(&defaults.occurrences, &defaults.tables, ledger)?
+        {
+            // An id spanning several default groups is a ledger split, not an
+            // instruction to merge those groups through an unrelated assignment.
+            if targets
+                .iter()
+                .filter_map(|&i| defaults.occurrences[i].variable)
+                .collect::<BTreeSet<_>>()
+                .len()
+                > 1
+            {
+                continue;
+            }
+            for i in targets {
+                if assignment(&resolved[i].occurrence)?.is_none()
+                    && let Some(v) = defaults.occurrences[i].variable
+                    && selected_groups.contains(&v)
+                {
+                    inherited_ids.entry(v).or_insert(id);
+                }
+            }
+        }
+    }
     let mut variable_keys: BTreeMap<(String, String, bool), Vec<usize>> = BTreeMap::new();
     for (i, r) in resolved.iter_mut().enumerate() {
         let chosen = assignment(&r.occurrence)?;
@@ -831,7 +894,15 @@ pub fn resolve(
                     let Some(v) = defaults.occurrences[i].variable else {
                         continue;
                     };
-                    (defaults.variables[v].slug.clone(), String::new(), true)
+                    (
+                        inherited_ids
+                            .get(&v)
+                            .copied()
+                            .unwrap_or(&defaults.variables[v].slug)
+                            .to_owned(),
+                        String::new(),
+                        true,
+                    )
                 }
             }
         } else {
@@ -945,6 +1016,41 @@ pub fn resolve(
             let mut runs: Vec<Segment> = Vec::new();
             let mut last_same_family = true;
             for (period, covering) in components {
+                if defaults.is_some()
+                    && covering
+                        .iter()
+                        .map(|&i| fold_identity(&resolved[i].occurrence.column))
+                        .collect::<BTreeSet<_>>()
+                        .len()
+                        > 1
+                {
+                    // simplify: quadratic within an overlap component; use an interval
+                    // sweep if a component grows past a few thousand occurrences.
+                    let overlap = covering.iter().enumerate().find_map(|(at, &a)| {
+                        covering[at + 1..].iter().find_map(|&b| {
+                            let left = fold_identity(&resolved[a].occurrence.column);
+                            let right = fold_identity(&resolved[b].occurrence.column);
+                            (left != right)
+                                .then(|| intersect(span(&resolved[a]), span(&resolved[b])))
+                                .flatten()
+                                .map(|period| (left, right, period))
+                        })
+                    });
+                    let (left, right, overlap) = overlap
+                        .expect("a connected overlap component with different folds has an overlapping different-fold pair");
+                    for &i in &covering {
+                        if intersect(span(&resolved[i]), &overlap).is_some() {
+                            let row = &resolved[i].occurrence;
+                            affected.extend(std::iter::once(&row.locator).chain(&row.also).map(
+                                |at| OccurrenceKey::new(occurrence_context.identity(row), at),
+                            ));
+                        }
+                    }
+                    return Err(format!(
+                        "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in table {:?} over {}..{} into variable {key:?}; retain separate variables",
+                        tables[t].table.table, overlap.0, overlap.1
+                    ));
+                }
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
                 let o = &resolved[top].occurrence;
@@ -952,7 +1058,14 @@ pub fn resolve(
                     .iter()
                     .map(|&i| resolved[i].occurrence.classification.clone())
                     .collect();
-                let agree = forms.len() == 1 && classifications.len() == 1;
+                let roles: BTreeSet<_> = covering
+                    .iter()
+                    .filter_map(|&i| resolved[i].occurrence.role.as_deref())
+                    .collect();
+                if roles.len() > 1 {
+                    conflicts.insert("role".into());
+                }
+                let agree = forms.len() == 1 && classifications.len() == 1 && roles.len() <= 1;
                 // A form field is stated only where every occurrence agrees on it.
                 let agreed = |field: fn(&Form) -> &Option<String>| {
                     let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
@@ -1039,7 +1152,13 @@ pub fn resolve(
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
-                    role: role(o, identifier),
+                    role: covering
+                        .iter()
+                        .find(|&&i| resolved[i].occurrence.role.is_some())
+                        .map_or_else(
+                            || role(o, identifier),
+                            |&i| role(&resolved[i].occurrence, identifier),
+                        ),
                     state,
                 };
                 let index = match runs.last_mut() {
@@ -1144,7 +1263,11 @@ pub fn resolve(
         );
         variables.push(Variable {
             sets: BTreeSet::new(),
+            facets: BTreeMap::new(),
+            facets_at: None,
             tags: BTreeSet::new(),
+            synonyms: BTreeSet::new(),
+            description: None,
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1415,10 +1538,40 @@ pub fn coded(o: &Occurrence) -> &'static str {
     }
 }
 
+/// The published table and occurrence role vocabularies.
+///
+/// # Errors
+/// The entity kind or role is outside the published vocabulary.
+pub fn role_value(kind: &str, value: &str) -> Result<&'static str, String> {
+    let allowed: &[&str] = match kind {
+        "table" => &["data", "codelist"],
+        "occurrence" => &[
+            "row_key",
+            "time_start",
+            "time_stop",
+            "time_point",
+            "measure",
+            "code",
+            "label",
+        ],
+        _ => return Err(format!("role is unsupported on {kind}")),
+    };
+    allowed
+        .iter()
+        .copied()
+        .find(|&role| role == value)
+        .ok_or_else(|| format!("set role requires one of {} on {kind}", allowed.join(", ")))
+}
+
 /// The default role: identifiers are row keys, coded columns codes, the rest measures.
+///
+/// # Panics
+/// A curated role bypassed validation at the application boundary.
 #[must_use]
 pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
-    if identifier == Some(true) {
+    if let Some(role) = o.role.as_deref() {
+        role_value("occurrence", role).expect("curated role was validated at application")
+    } else if identifier == Some(true) {
         "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {
         "code"

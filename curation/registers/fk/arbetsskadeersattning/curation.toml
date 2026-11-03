@@ -4,3 +4,195 @@ kind = "set"
 subject = "beslut: diagnoskod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:231\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk variabel.\ncatalog:variable_text:6:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk variabel.\ncatalog:variable_text:6:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutsanledning"
+fields = { "sets" = [] }
+evidence = "Avslutsanledningen beskriver beslut om arbetsskadeersättning.\ncatalog:variable_text:8:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslutsanledning"
+fields = { "tags" = ["transfers"] }
+evidence = "Avslutsanledningen beskriver beslut om arbetsskadeersättning.\ncatalog:variable_text:8:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "sets" = [] }
+evidence = "Diagnoskoden beskriver hälsa.\ncatalog:variable_text:10:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "tags" = ["health"] }
+evidence = "Diagnoskoden beskriver hälsa.\ncatalog:variable_text:10:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsslag"
+fields = { "sets" = [] }
+evidence = "Variabeln anger slag av arbetsskadeersättning.\ncatalog:variable_text:11:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsslag"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger slag av arbetsskadeersättning.\ncatalog:variable_text:11:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-efter-1937"
+fields = { "sets" = [] }
+evidence = "Variabeln anger födelsekohort.\ncatalog:variable_text:12:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodd-efter-1937"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelsekohort.\ncatalog:variable_text:12:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger personens kommun.\ncatalog:variable_text:13:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger personens kommun.\ncatalog:variable_text:13:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk variabel.\ncatalog:variable_text:14:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk variabel.\ncatalog:variable_text:14:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lag"
+fields = { "sets" = [] }
+evidence = "Lagvariabeln anger rättslig grund för beslut om arbetsskadeersättning.\ncatalog:variable_text:15:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lag"
+fields = { "tags" = ["transfers"] }
+evidence = "Lagvariabeln anger rättslig grund för beslut om arbetsskadeersättning.\ncatalog:variable_text:15:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger personens län.\ncatalog:variable_text:16:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger personens län.\ncatalog:variable_text:16:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:livranteorsak"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver orsaken till livränta efter arbetsskada.\ncatalog:variable_text:17:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:livranteorsak"
+fields = { "tags" = ["health", "transfers"] }
+evidence = "Variabeln beskriver orsaken till livränta efter arbetsskada.\ncatalog:variable_text:17:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:livrantetyp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av livränta.\ncatalog:variable_text:18:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:livrantetyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger typ av livränta.\ncatalog:variable_text:18:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-asl-es"
+fields = { "sets" = [] }
+evidence = "Beloppet avser livränta efter samordning.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-asl-es"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser livränta efter samordning.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-asl-fs"
+fields = { "sets" = [] }
+evidence = "Beloppet avser livränta före samordning.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-asl-fs"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser livränta före samordning.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-yfl"
+fields = { "sets" = [] }
+evidence = "Beloppet avser utbetald livränta före skatt.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsbelopp-yfl"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser utbetald livränta före skatt.\ncatalog:variable_text:20:10592:2932897\ncatalog:variable_text:21:10592:2932897\ncatalog:variable_text:22:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skadetyp"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av arbetsskada.\ncatalog:variable_text:24:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skadetyp"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger typ av arbetsskada.\ncatalog:variable_text:24:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skadlig-inverkan"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver skadliga faktorer i arbetsmiljön.\ncatalog:variable_text:25:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skadlig-inverkan"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln beskriver skadliga faktorer i arbetsmiljön.\ncatalog:variable_text:25:15706:2932897"

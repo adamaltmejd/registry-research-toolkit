@@ -96,3 +96,928 @@ subject = "statliga-anslag-till-forskning-och-utveckling: utgiftsomrade"
 fields = { "variable" = "utgiftsomrade-25227" }
 evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:68\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "var:anslag"
+fields = { "sets" = ["anslagsbelopp"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44549:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anslag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44549:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anslag-ar"
+fields = { "sets" = ["anslagsbelopp"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44550:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anslag-ar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44550:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anslagsnamn-25190"
+fields = { "sets" = ["anslagsnamn"] }
+evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44551:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anslagsnamn-25190"
+fields = { "tags" = ["public-finance"] }
+evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44551:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anslagsnr"
+fields = { "sets" = ["anslagsnummer"] }
+evidence = "Kod för budgetanslag.\ncatalog:variable_text:44552:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:anslagsnr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kod för budgetanslag.\ncatalog:variable_text:44552:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:appropriation"
+fields = { "sets" = ["anslagsbelopp"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44553:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:appropriation"
+fields = { "tags" = ["public-finance"] }
+evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44553:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:budgetitem"
+fields = { "sets" = ["anslagsnummer"] }
+evidence = "Kod för budgetanslag.\ncatalog:variable_text:44554:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:budgetitem"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kod för budgetanslag.\ncatalog:variable_text:44554:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:budgetitem-name"
+fields = { "sets" = ["anslagsnamn"] }
+evidence = "Budgetanslagets namn.\ncatalog:variable_text:44555:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:budgetitem-name"
+fields = { "tags" = ["public-finance"] }
+evidence = "Budgetanslagets namn.\ncatalog:variable_text:44555:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:dep-kod"
+fields = { "sets" = ["departement"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44556:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:dep-kod"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44556:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:departement"
+fields = { "sets" = ["departement"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44557:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:departement"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44557:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:expenditure-area"
+fields = { "sets" = ["utgiftsomrade"] }
+evidence = "Statsbudgetens utgiftsområde.\ncatalog:variable_text:44558:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:expenditure-area"
+fields = { "tags" = ["public-finance"] }
+evidence = "Statsbudgetens utgiftsområde.\ncatalog:variable_text:44558:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-2007"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44559:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-2007"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44559:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-anslag"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44560:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-anslag"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44560:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-ar"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44561:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-ar"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Preliminärt FoU-belopp.\ncatalog:variable_text:44561:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gbard"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "GBARD är en kod som inte återges i etiketten.\ncatalog:variable_text:44562:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:gbard"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "GBARD är en kod som inte återges i etiketten.\ncatalog:variable_text:44562:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ministry"
+fields = { "sets" = ["departement"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44563:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ministry"
+fields = { "tags" = ["public-finance"] }
+evidence = "Kod för ansvarigt departement.\ncatalog:variable_text:44563:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagarekod"
+fields = { "sets" = [] }
+evidence = "M är en opak bokstavskod för mottagare.\ncatalog:variable_text:44564:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagarekod"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "M är en opak bokstavskod för mottagare.\ncatalog:variable_text:44564:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs01"
+fields = { "sets" = ["fou-anslag-jorden-och-atmosfaren"] }
+evidence = "FoU-anslag för jorden och atmosfären.\ncatalog:variable_text:44565:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs01"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för jorden och atmosfären.\ncatalog:variable_text:44565:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs02"
+fields = { "sets" = ["fou-anslag-miljo-och-naturvard"] }
+evidence = "NABS02 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44566:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs02"
+fields = { "tags" = ["environment", "research"] }
+evidence = "NABS02 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44566:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs03"
+fields = { "sets" = ["fou-anslag-rymdverksamhet"] }
+evidence = "NABS03 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44567:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs04"
+fields = { "sets" = ["fou-anslag-transport-och-telekommunikationer"] }
+evidence = "NABS04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44568:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs04"
+fields = { "tags" = ["research", "transport"] }
+evidence = "NABS04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44568:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs05"
+fields = { "sets" = ["fou-anslag-energi-och-vattenforsorjning"] }
+evidence = "NABS05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44569:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs05"
+fields = { "tags" = ["energy", "environment", "research"] }
+evidence = "NABS05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44569:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs06"
+fields = { "sets" = ["fou-anslag-industriell-verksamhet"] }
+evidence = "NABS06 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44570:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs06"
+fields = { "tags" = ["business", "research"] }
+evidence = "NABS06 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44570:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs07"
+fields = { "sets" = ["fou-anslag-halso-och-sjukvard"] }
+evidence = "NABS07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44571:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs07"
+fields = { "tags" = ["healthcare", "research"] }
+evidence = "NABS07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44571:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs08"
+fields = { "sets" = ["fou-anslag-jordbruk-skogsbruk-jakt-och-fiske"] }
+evidence = "NABS08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44572:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs08"
+fields = { "tags" = ["agriculture", "forestry-fishing", "research"] }
+evidence = "NABS08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44572:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs09"
+fields = { "sets" = ["fou-anslag-utbildning"] }
+evidence = "NABS09 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44573:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs09"
+fields = { "tags" = ["education", "research"] }
+evidence = "NABS09 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44573:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs10"
+fields = { "sets" = ["fou-anslag-kultur-fritid-och-massmedia"] }
+evidence = "NABS10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44574:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs10"
+fields = { "tags" = ["culture", "research"] }
+evidence = "NABS10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44574:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs11"
+fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
+evidence = "NABS11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44575:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12"
+fields = { "sets" = ["fou-anslag-allman-vetenskaplig-utveckling"] }
+evidence = "NABS12 är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44576:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12"
+fields = { "tags" = ["research"] }
+evidence = "NABS12 är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44576:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs121"
+fields = { "sets" = ["fou-anslag-naturvetenskap"] }
+evidence = "FoU-anslag för naturvetenskap.\ncatalog:variable_text:44577:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs121"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för naturvetenskap.\ncatalog:variable_text:44577:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs122"
+fields = { "sets" = ["fou-anslag-teknik"] }
+evidence = "FoU-anslag för teknik.\ncatalog:variable_text:44578:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs122"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för teknik.\ncatalog:variable_text:44578:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs123"
+fields = { "sets" = ["fou-anslag-medicin-och-halsovetenskap"] }
+evidence = "FoU-anslag för medicin och hälsovetenskap.\ncatalog:variable_text:44579:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs123"
+fields = { "tags" = ["health", "public-finance", "research"] }
+evidence = "FoU-anslag för medicin och hälsovetenskap.\ncatalog:variable_text:44579:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs124"
+fields = { "sets" = ["fou-anslag-lantbruksvetenskap-och-veterinarmedicin"] }
+evidence = "FoU-anslag för lantbruksvetenskap och veterinärmedicin.\ncatalog:variable_text:44580:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs124"
+fields = { "tags" = ["agriculture", "public-finance", "research"] }
+evidence = "FoU-anslag för lantbruksvetenskap och veterinärmedicin.\ncatalog:variable_text:44580:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs125"
+fields = { "sets" = ["fou-anslag-samhallsvetenskap"] }
+evidence = "FoU-anslag för samhällsvetenskap.\ncatalog:variable_text:44581:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs125"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för samhällsvetenskap.\ncatalog:variable_text:44581:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs126"
+fields = { "sets" = ["fou-anslag-humaniora-och-konst"] }
+evidence = "FoU-anslag för humaniora och konst.\ncatalog:variable_text:44582:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs126"
+fields = { "tags" = ["culture", "public-finance", "research"] }
+evidence = "FoU-anslag för humaniora och konst.\ncatalog:variable_text:44582:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12x"
+fields = { "sets" = ["fou-anslag-ej-fordelade-pa-forskningsamne"] }
+evidence = "NABS12X är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44583:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12x"
+fields = { "tags" = ["research"] }
+evidence = "NABS12X är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44583:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13"
+fields = { "sets" = ["fou-anslag-allman-vetenskaplig-utveckling"] }
+evidence = "NABS13 är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44584:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13"
+fields = { "tags" = ["research"] }
+evidence = "NABS13 är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44584:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs131"
+fields = { "sets" = ["fou-anslag-naturvetenskap"] }
+evidence = "FoU-anslag för naturvetenskap.\ncatalog:variable_text:44585:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs131"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för naturvetenskap.\ncatalog:variable_text:44585:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs132"
+fields = { "sets" = ["fou-anslag-teknik"] }
+evidence = "FoU-anslag för teknik.\ncatalog:variable_text:44586:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs132"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för teknik.\ncatalog:variable_text:44586:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs133"
+fields = { "sets" = ["fou-anslag-medicin-och-halsovetenskap"] }
+evidence = "FoU-anslag för medicin och hälsovetenskap.\ncatalog:variable_text:44587:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs133"
+fields = { "tags" = ["health", "public-finance", "research"] }
+evidence = "FoU-anslag för medicin och hälsovetenskap.\ncatalog:variable_text:44587:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs134"
+fields = { "sets" = ["fou-anslag-lantbruksvetenskap-och-veterinarmedicin"] }
+evidence = "FoU-anslag för lantbruksvetenskap och veterinärmedicin.\ncatalog:variable_text:44588:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs134"
+fields = { "tags" = ["agriculture", "public-finance", "research"] }
+evidence = "FoU-anslag för lantbruksvetenskap och veterinärmedicin.\ncatalog:variable_text:44588:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs135"
+fields = { "sets" = ["fou-anslag-samhallsvetenskap"] }
+evidence = "FoU-anslag för samhällsvetenskap.\ncatalog:variable_text:44589:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs135"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "FoU-anslag för samhällsvetenskap.\ncatalog:variable_text:44589:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs136"
+fields = { "sets" = ["fou-anslag-humaniora-och-konst"] }
+evidence = "FoU-anslag för humaniora och konst.\ncatalog:variable_text:44590:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs136"
+fields = { "tags" = ["culture", "public-finance", "research"] }
+evidence = "FoU-anslag för humaniora och konst.\ncatalog:variable_text:44590:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13x"
+fields = { "sets" = ["fou-anslag-ej-fordelade-pa-forskningsamne"] }
+evidence = "NABS13X är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44591:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13x"
+fields = { "tags" = ["research"] }
+evidence = "NABS13X är en kod; etiketten anger ändamål och finansieringsväg.\ncatalog:variable_text:44591:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs14"
+fields = { "sets" = ["fou-anslag-forsvar"] }
+evidence = "NABS14 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44592:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs14"
+fields = { "tags" = ["defence", "research"] }
+evidence = "NABS14 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44592:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nr2007"
+fields = { "sets" = ["anslagsnummer"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44593:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nr2007"
+fields = { "tags" = ["public-finance"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44593:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nr2010"
+fields = { "sets" = ["anslagsnummer"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44594:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:nr2010"
+fields = { "tags" = ["public-finance"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44594:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:nrar"
+fields = { "sets" = ["anslagsnummer"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44595:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:nrar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Budgetanslagets nummer.\ncatalog:variable_text:44595:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:slutliga-statliga-budgetanslag-for-fou"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "Observationsvärdets F-suffix är en opak kod.\ncatalog:variable_text:44596:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:slutliga-statliga-budgetanslag-for-fou"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Observationsvärdets F-suffix är en opak kod.\ncatalog:variable_text:44596:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:obs-value-p"
+fields = { "sets" = ["statliga-budgetanslag-till-fou"] }
+evidence = "Observationsvärdets P-suffix är en opak kod.\ncatalog:variable_text:44597:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:obs-value-p"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Observationsvärdets P-suffix är en opak kod.\ncatalog:variable_text:44597:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:s01"
+fields = { "sets" = ["fou-anslag-jordbruk-skogsbruk-jakt-och-fiske"] }
+evidence = "S01 är en opak källkod.\ncatalog:variable_text:44599:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s01"
+fields = { "tags" = ["agriculture", "forestry-fishing", "public-finance", "research"] }
+evidence = "S01 är en opak källkod.\ncatalog:variable_text:44599:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s02"
+fields = { "sets" = ["fou-anslag-industriell-verksamhet"] }
+evidence = "s02 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44600:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s02"
+fields = { "tags" = ["business", "research"] }
+evidence = "s02 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44600:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s03"
+fields = { "sets" = ["fou-anslag-energi-och-vattenforsorjning"] }
+evidence = "s03 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44601:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s03"
+fields = { "tags" = ["energy", "environment", "research"] }
+evidence = "s03 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44601:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s04"
+fields = { "sets" = ["fou-anslag-transport-och-telekommunikationer"] }
+evidence = "s04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44602:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s04"
+fields = { "tags" = ["research", "transport"] }
+evidence = "s04 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44602:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-boendemiljo-samhallsplanering"
+fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
+evidence = "s05 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44603:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s06"
+fields = { "sets" = ["fou-anslag-miljo-och-naturvard"] }
+evidence = "s06 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44604:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s06"
+fields = { "tags" = ["environment", "research"] }
+evidence = "s06 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44604:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s07"
+fields = { "sets" = ["fou-anslag-halso-och-sjukvard"] }
+evidence = "s07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44605:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s07"
+fields = { "tags" = ["healthcare", "research"] }
+evidence = "s07 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44605:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-socialvard-social-miljo-trygghet"
+fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
+evidence = "s08 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44606:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s09"
+fields = { "sets" = ["fou-anslag-kultur-fritid-och-massmedia"] }
+evidence = "s09 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44607:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s09"
+fields = { "tags" = ["culture", "research"] }
+evidence = "s09 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44607:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-undervisning"
+fields = { "sets" = ["fou-anslag-utbildning"] }
+evidence = "s10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44608:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-undervisning"
+fields = { "tags" = ["education", "research"] }
+evidence = "s10 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44608:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-arbetsmiljo-personalskydd"
+fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
+evidence = "s11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44609:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-arbetsmiljo-personalskydd"
+fields = { "tags" = ["employment", "research"] }
+evidence = "s11 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44609:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
+fields = { "sets" = ["fou-anslag-politiska-och-sociala-system"] }
+evidence = "s12 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44610:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s13"
+fields = { "sets" = ["fou-anslag-jorden-och-atmosfaren"] }
+evidence = "s13 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44611:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s14"
+fields = { "sets" = ["fou-anslag-allman-vetenskaplig-utveckling"] }
+evidence = "s14 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44612:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s14"
+fields = { "tags" = ["research"] }
+evidence = "s14 är en kod; etiketten anger ändamålet.\ncatalog:variable_text:44612:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s141"
+fields = { "sets" = ["fou-anslag-naturvetenskap"] }
+evidence = "S141 är en opak källkod.\ncatalog:variable_text:44613:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s141"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S141 är en opak källkod.\ncatalog:variable_text:44613:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s142"
+fields = { "sets" = ["fou-anslag-teknik"] }
+evidence = "S142 är en opak källkod.\ncatalog:variable_text:44614:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s142"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S142 är en opak källkod.\ncatalog:variable_text:44614:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s143"
+fields = { "sets" = ["fou-anslag-medicin-och-halsovetenskap"] }
+evidence = "S143 är en opak källkod.\ncatalog:variable_text:44615:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s143"
+fields = { "tags" = ["health", "public-finance", "research"] }
+evidence = "S143 är en opak källkod.\ncatalog:variable_text:44615:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s144"
+fields = { "sets" = ["fou-anslag-lantbruksvetenskap-och-veterinarmedicin"] }
+evidence = "S144 är en opak källkod.\ncatalog:variable_text:44616:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s144"
+fields = { "tags" = ["agriculture", "public-finance", "research"] }
+evidence = "S144 är en opak källkod.\ncatalog:variable_text:44616:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s145"
+fields = { "sets" = ["fou-anslag-samhallsvetenskap"] }
+evidence = "S145 är en opak källkod.\ncatalog:variable_text:44617:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s145"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S145 är en opak källkod.\ncatalog:variable_text:44617:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s146"
+fields = { "sets" = ["fou-anslag-humaniora-och-konst"] }
+evidence = "S146 är en opak källkod.\ncatalog:variable_text:44618:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s146"
+fields = { "tags" = ["culture", "public-finance", "research"] }
+evidence = "S146 är en opak källkod.\ncatalog:variable_text:44618:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s147"
+fields = { "sets" = [] }
+evidence = "S147 är en ogenomskinlig kod, men källans etikett är avkortad och ger inte en säker fullständig benämning.\ncatalog:variable_text:44619:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:s147"
+fields = { "tags" = ["research"] }
+evidence = "S147 är en ogenomskinlig kod, men källans etikett är avkortad och ger inte en säker fullständig benämning.\ncatalog:variable_text:44619:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:s148"
+fields = { "sets" = ["fou-anslag-ej-fordelade-pa-forskningsamne"] }
+evidence = "S148 är en opak källkod.\ncatalog:variable_text:44620:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s148"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S148 är en opak källkod.\ncatalog:variable_text:44620:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s15"
+fields = { "sets" = ["fou-anslag-rymdverksamhet"] }
+evidence = "S15 är en opak källkod.\ncatalog:variable_text:44621:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s15"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S15 är en opak källkod.\ncatalog:variable_text:44621:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s16"
+fields = { "sets" = ["fou-anslag-forsvar"] }
+evidence = "S16 är en opak källkod.\ncatalog:variable_text:44622:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:s16"
+fields = { "tags" = ["defence", "public-finance", "research"] }
+evidence = "S16 är en opak källkod.\ncatalog:variable_text:44622:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-ej-fordelat-utan-andamalsindelning"
+fields = { "sets" = [] }
+evidence = "S17 är en opak källkod; ofördelat socioekonomiskt ändamål är inte ofördelat forskningsämne.\ncatalog:variable_text:44623:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-ej-fordelat-utan-andamalsindelning"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "S17 är en opak källkod; ofördelat socioekonomiskt ändamål är inte ofördelat forskningsämne.\ncatalog:variable_text:44623:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:socioeconomics"
+fields = { "sets" = [] }
+evidence = "Klassificerar FoU-anslagens ändamål.\ncatalog:variable_text:44624:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:socioeconomics"
+fields = { "tags" = ["public-finance", "research"] }
+evidence = "Klassificerar FoU-anslagens ändamål.\ncatalog:variable_text:44624:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utgiftsomrade-25227"
+fields = { "sets" = ["utgiftsomrade"] }
+evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44625:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:utgiftsomrade-25227"
+fields = { "tags" = ["public-finance"] }
+evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44625:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltning-ekonomisk-planering-ovrig-samhallsplanering"
+fields = { "tags" = ["research"] }
+evidence = "r63 defines forecast R&D funding for public administration, economic planning and other community planning, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44609"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-boendemiljo-samhallsplanering"
+fields = { "tags" = ["research"] }
+evidence = "r61 defines forecast R&D funding for housing environment and community planning, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44417\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44602"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-medel-socialvard-social-miljo-trygghet"
+fields = { "tags" = ["research"] }
+evidence = "r62 defines forecast R&D funding for social care, social environment and security, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44605"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs03"
+fields = { "tags" = ["research"] }
+evidence = "r59 defines the estimated R&D appropriation for space exploration and exploitation, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44426\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44567"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs11"
+fields = { "tags" = ["research"] }
+evidence = "r60 defines the estimated R&D appropriation for political and social systems, structures and processes, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44434\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44575"
+
+[[statement]]
+kind = "set"
+subject = "var:s13"
+fields = { "tags" = ["research"] }
+evidence = "r64 defines forecast R&D funding for exploring and exploiting Earth and the atmosphere, directly supporting research financing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44464\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44610"
+
+[[statement]]
+kind = "set"
+subject = "var:nabs12x"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av statliga anslag till universitet och högskolor. Skattningen använder en fördelningsnyckel från den senaste mätningen av FoU inom statliga myndigheter samt universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44583:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:461468:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:nabs13x"
+fields = { "description" = "Delmängd av det socioekonomiska målet Allmän vetenskaplig utveckling: FoU som inte fördelats på forskningsämne och som finansieras av andra medel än statliga anslag till universitet och högskolor. Skattningen använder en fördelningsnyckel från den senaste mätningen av FoU inom statliga myndigheter samt universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger att delmängden inte är fördelad på forskningsämne.\ncatalog:variable_text:44591:18628:18993\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:461476:opdef_text. One variable, one description."

@@ -234,18 +234,21 @@ fn fqid_segment(s: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
-/// `<provider>/<register>/<name>`, the provider not `class`.
+/// `<provider>/<register>/<name>`, the provider neither `class` nor `set`.
 fn three_part(s: &str) -> Option<Vec<&str>> {
     let segs: Vec<&str> = s.split('/').collect();
-    (segs.len() == 3 && segs[0] != "class" && segs.iter().all(|s| fqid_segment(s))).then_some(segs)
+    (segs.len() == 3 && !matches!(segs[0], "class" | "set") && segs.iter().all(|s| fqid_segment(s)))
+        .then_some(segs)
 }
 
 /// A table's public id: `<provider>/<register>` or `<provider>/<register>/<table>`,
-/// the provider not `class`.
+/// the provider neither `class` nor `set`.
 fn table_parts(s: &str) -> Option<Vec<&str>> {
     let segs: Vec<&str> = s.split('/').collect();
-    ((2..=3).contains(&segs.len()) && segs[0] != "class" && segs.iter().all(|s| fqid_segment(s)))
-        .then_some(segs)
+    ((2..=3).contains(&segs.len())
+        && !matches!(segs[0], "class" | "set")
+        && segs.iter().all(|s| fqid_segment(s)))
+    .then_some(segs)
 }
 
 fn classification_fqid(s: &str) -> bool {
@@ -281,6 +284,16 @@ fn segment(v: &Value) -> Option<(Date, Date)> {
     endpoint(v)
         .map(PeriodToken::bounds)
         .or_else(|| period_range(v))
+}
+
+/// The structural rules of one `Source.period` on its own, with paths relative to
+/// the period (`""`, `/0`): what the project check applies at
+/// `/sources/<i>/period`. [`crate::project::SourcePeriod::from_value`] runs it.
+#[must_use]
+pub(crate) fn validate_source_period(period: &Value) -> ValidationResult {
+    let mut issues = Issues::default();
+    check_period(period, String::new(), &mut issues);
+    ValidationResult { issues: issues.0 }
 }
 
 fn check_period(period: &Value, path: String, issues: &mut Issues) {

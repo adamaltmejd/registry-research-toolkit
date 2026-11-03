@@ -1,0 +1,48 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-anlaggningsverksamhet"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar inom anläggningsverksamhet.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-anlaggningsverksamhet"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar inom anläggningsverksamhet.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-byggnadsverksamhet"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar inom byggnadsverksamhet.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-byggnadsverksamhet"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar inom byggnadsverksamhet.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:produktivitetsfaktor"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak källkod. Källan anger produktivitetsfaktor som benämning.\ncatalog:variable_text:6772:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:produktivitetsfaktor"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är en opak källkod. Källan anger produktivitetsfaktor som benämning.\ncatalog:variable_text:6772:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-klp"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar enligt KLP.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-klp"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källkod. Variabeln mäter arbetade timmar enligt KLP.\ncatalog:variable_text:6769:15340:16071\ncatalog:variable_text:6770:15340:16071\ncatalog:variable_text:6773:15340:16071"

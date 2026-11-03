@@ -10,3 +10,195 @@ kind = "set"
 subject = "fasta-bruttoinvesteringar: ngs1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp"
+fields = { "sets" = [] }
+evidence = "Branschgruppering beskriver näringslivets struktur.\ncatalog:variable_text:7941:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Branschgruppering beskriver näringslivets struktur.\ncatalog:variable_text:7941:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-klartext"
+fields = { "sets" = [] }
+evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7942\ncatalog:variable_text:7942:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod-klartext"
+fields = { "tags" = ["methods"] }
+evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7942\ncatalog:variable_text:7942:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
+fields = { "sets" = [] }
+evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7943\ncatalog:variable_text:7943:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
+fields = { "tags" = ["methods"] }
+evidence = "CU är en ogenomskinlig källkod; etiketten anger status. Den delade etiketten kräver målnamn med disambiguering.\ncatalog:occurrence-locators:variable:7943\ncatalog:variable_text:7943:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "sets" = [] }
+evidence = "Imputeringsstatus är en statistisk kvalitetsmarkör.\ncatalog:variable_text:7946:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsstatus är en statistisk kvalitetsmarkör.\ncatalog:variable_text:7946:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lagervarde"
+fields = { "sets" = [] }
+evidence = "Lagervärde är ett företagsmått.\ncatalog:variable_text:7949:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lagervarde"
+fields = { "tags" = ["business"] }
+evidence = "Lagervärde är ett företagsmått.\ncatalog:variable_text:7949:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Antalet utvalda företag i stratum är ett urvalsmått och har StoraN som begreppslig motsvarighet.\ncatalog:variable_text:7950:18628:20454\ncatalog:variable_text:7956:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet utvalda företag i stratum är ett urvalsmått och har StoraN som begreppslig motsvarighet.\ncatalog:variable_text:7950:18628:20454\ncatalog:variable_text:7956:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren beskriver företagsstruktur.\ncatalog:variable_text:7952:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren beskriver företagsstruktur.\ncatalog:variable_text:7952:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Statuskoden kommer från insamlingsverktyget och avser objektets status.\ncatalog:variable_text:7955:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Statuskoden kommer från insamlingsverktyget och avser objektets status.\ncatalog:variable_text:7955:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Totalt antal företag i stratum är ett urvalsmått och har LillaN som begreppslig motsvarighet.\ncatalog:variable_text:7950:18628:20454\ncatalog:variable_text:7956:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Totalt antal företag i stratum är ett urvalsmått och har LillaN som begreppslig motsvarighet.\ncatalog:variable_text:7950:18628:20454\ncatalog:variable_text:7956:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp"
+fields = { "sets" = [] }
+evidence = "Storleksgruppen klassificerar företag.\ncatalog:valueset:7398\ncatalog:variable_text:7957:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Storleksgruppen klassificerar företag.\ncatalog:valueset:7398\ncatalog:variable_text:7957:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum används vid stratifierat urval.\ncatalog:variable_text:7958:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum används vid stratifierat urval.\ncatalog:variable_text:7958:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "sets" = [] }
+evidence = "Uppräkningsfaktorn är en statistisk vikt; de daterade operativa definitionerna bevaras.\ncatalog:variable_text:7960:18628:19723\ncatalog:variable_text:7960:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsfaktorn är en statistisk vikt; de daterade operativa definitionerna bevaras.\ncatalog:variable_text:7960:18628:19723\ncatalog:variable_text:7960:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "sets" = [] }
+evidence = "Urvalsversion anger vilken urvalsversion som används.\ncatalog:variable_text:7961:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsversion anger vilken urvalsversion som används.\ncatalog:variable_text:7961:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-investeringar"
+fields = { "sets" = [] }
+evidence = "Investeringsvärdet och variabelnummer beskriver värde respektive slag av investering.\ncatalog:variable_text:7962:19723:20454\ncatalog:variable_text:7964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-investeringar"
+fields = { "tags" = ["business"] }
+evidence = "Investeringsvärdet och variabelnummer beskriver värde respektive slag av investering.\ncatalog:variable_text:7962:19723:20454\ncatalog:variable_text:7964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelnamn"
+fields = { "sets" = [] }
+evidence = "Klartexten identifierar vilken lagervariabel företaget rapporterat.\ncatalog:variable_text:7963:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelnamn"
+fields = { "tags" = ["business"] }
+evidence = "Klartexten identifierar vilken lagervariabel företaget rapporterat.\ncatalog:variable_text:7963:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelnummer"
+fields = { "sets" = [] }
+evidence = "Koderna anger investeringsslag som hör till investeringsvärdet.\ncatalog:valueset:4946\ncatalog:variable_text:7964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelnummer"
+fields = { "tags" = ["business"] }
+evidence = "Koderna anger investeringsslag som hör till investeringsvärdet.\ncatalog:valueset:4946\ncatalog:variable_text:7964:19723:20454"

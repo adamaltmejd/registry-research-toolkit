@@ -1,501 +1,44 @@
 
+
 [[statement]]
 kind = "set"
 subject = "bu-plac: andrat_beslut_datum_insats"
-fields = { "label" = "Indikator ändrat beslutsdatum", "description" = "Indikator för om det ursprungliga beslutsdatumet för insatsen är ändrat vid senare inrapportering" }
+fields = { "label" = "Indikator ändrat beslutsdatum" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:319\n\nComplete accepted BU native family: ANDRAT_BESLUT_DATUM_INSATS. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
+
 
 [[statement]]
 kind = "set"
 subject = "bu-insats: andrat_beslut_datum_insats"
-fields = { "label" = "Insatsens beslutsdatum är korrigerat av Socialstyrelsen", "description" = "Om kommunen har skickat in rättningar på variabeln BESLUT_DATUM_INSATS" }
+fields = { "label" = "Insatsens beslutsdatum är korrigerat av Socialstyrelsen" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:319\n\nComplete accepted BU native family: ANDRAT_BESLUT_DATUM_INSATS. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
 
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: avsldat"
-fields = { "label" = "Datum för slut av insats", "description" = "Dag då den sista placeringen upphörde." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: avsldat"
-fields = { "label" = "Datum för slut av insats", "description" = "Dag då den sista placeringen upphörde." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: avsldat"
-fields = { "label" = "Datum för slut av insats", "description" = "Dag då den sista placeringen upphörde." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "bu-plac-19602013: avsldat"
-fields = { "label" = "Datum då placeringen avslutades/upphörde", "description" = "Dag då placeringen avslutades." }
+fields = { "label" = "Datum då placeringen avslutades/upphörde" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
+
 
 [[statement]]
 kind = "set"
 subject = "bu-plac-endastxnr: avsldat"
-fields = { "label" = "Datum då placeringen avslutades/upphörde", "description" = "Dag då placeringen avslutades." }
+fields = { "label" = "Datum då placeringen avslutades/upphörde" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
+
 
 [[statement]]
 kind = "set"
 subject = "bu-plac-pnrq0: avsldat"
-fields = { "label" = "Datum då placeringen avslutades/upphörde", "description" = "Dag då placeringen avslutades." }
+fields = { "label" = "Datum då placeringen avslutades/upphörde" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:328\n\nComplete accepted BU native family: AVSLDAT. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet/ den unga fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet/den unga fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet/den unga fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet/den unga fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: besldat"
-fields = { "description" = "Dag då beslut om insats för barnet/den unga fattades i socialnämnden." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: debutar"
-fields = { "description" = "Första året då beslut fattades om någon insats för barnet." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:346\n\nComplete accepted BU native family: DEBUTAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: debutar"
-fields = { "description" = "Första året då beslut fattades om någon insats för barnet/den unga." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:346\n\nComplete accepted BU native family: DEBUTAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: debutar"
-fields = { "description" = "Första året då beslut fattades om någon insats för barnet/den unga." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:346\n\nComplete accepted BU native family: DEBUTAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: foddatn"
-fields = { "description" = "Barnets födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: foddatn"
-fields = { "description" = "Barnets/ den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: foddatn"
-fields = { "description" = "Barnets/ den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: foddatn"
-fields = { "description" = "Barnets/den ungas födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: kon"
-fields = { "description" = "Barnets kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: kon"
-fields = { "description" = "Barnets/ den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: kon"
-fields = { "description" = "Barnets/den ungas kön" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats: lk"
-fields = { "description" = "Den kommun där beslut om insatsen fattats.\nSka registreras enligt Statistiska centralbyråns\nförteckning över läns- och kommunkoder." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac: lk"
-fields = { "description" = "Den kommun där beslut om insatsen fattats.\nSka registreras enligt Statistiska centralbyråns\nförteckning över läns- och kommunkoder." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: lk"
-fields = { "description" = "Fyrsiffrig kommunkod" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: lk"
-fields = { "description" = "Fyrsiffrig kommunkod" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: lk"
-fields = { "description" = "Fyrsiffrig kommunkod" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: pagins"
-fields = { "description" = "Pågående insats för barnet. Blankt om ingen insats pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:382\n\nComplete accepted BU native family: PAGINS. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: pagins"
-fields = { "description" = "Pågående insats för barnet. Blankt om ingen insats pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:382\n\nComplete accepted BU native family: PAGINS. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: pagins"
-fields = { "description" = "Pågående insats för barnet/den unga. Blankt om ingen insats pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:382\n\nComplete accepted BU native family: PAGINS. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: placform"
-fields = { "description" = "Anger i vilken typ av hem barnet placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:391\n\nComplete accepted BU native family: PLACFORM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: placform"
-fields = { "description" = "Anger i vilken typ av hem barnet/den unga placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:391\n\nComplete accepted BU native family: PLACFORM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: placform"
-fields = { "description" = "Anger i vilken typ av hem barnet/den unga placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:391\n\nComplete accepted BU native family: PLACFORM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: plackom"
-fields = { "description" = "Anger i vilken kommun barnet placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:400\n\nComplete accepted BU native family: PLACKOM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: plackom"
-fields = { "description" = "Anger i vilken kommun barnet/den unga placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:400\n\nComplete accepted BU native family: PLACKOM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: plackom"
-fields = { "description" = "Anger i vilken kommun barnet/den unga placerades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:400\n\nComplete accepted BU native family: PLACKOM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: pnr"
-fields = { "description" = "Barnets personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: pnr"
-fields = { "description" = "Barnets/ den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: pnr"
-fields = { "description" = "Barnets/den ungas personnummer" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac: pnr"
-fields = { "description" = "Barnets/den ungas personnummer. Om personnummer inte finns, ska samordningsnummer anges. Om inget av dessa finns, ska\nutrymmet för uppgiften lämnas tomt." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats: pnr"
-fields = { "description" = "Barnets/den ungas personnummer. Om personnummer inte finns, ska samordningsnummer\nanges. Om inget av dessa finns, ska\nutrymmet för uppgiften lämnas tomt." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-endastxnr: senar"
-fields = { "description" = "Senaste året då barnet var föremål för någon insats. Blankt om insats fortfarande pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:418\n\nComplete accepted BU native family: SENAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: senar"
-fields = { "description" = "Senaste året då barnet var föremål för någon insats. Blankt om insats fortfarande pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:418\n\nComplete accepted BU native family: SENAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: senar"
-fields = { "description" = "Senaste året då barnet/den unga var föremål för någon insats. Blankt om insats fortfarande pågår." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:418\n\nComplete accepted BU native family: SENAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-pnrq0: seninv"
-fields = { "description" = "Senaste år då barnet beviljades uppehållstillstånd." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:427\n\nComplete accepted BU native family: SENINV. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: seninv"
-fields = { "description" = "Senaste år då barnet/den unga beviljades uppehållstillstånd." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:427\n\nComplete accepted BU native family: SENINV. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: vardslut"
-fields = { "description" = "Barnets vårdnadshavare  när insatsen slutar. Här avgavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a framför." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:436\n\nComplete accepted BU native family: VARDSLUT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: vardslut"
-fields = { "description" = "Barnets vårdnadshavare när insatsen slutar. Här avgavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a framför." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:436\n\nComplete accepted BU native family: VARDSLUT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: vardslut"
-fields = { "description" = "Vårdnadshavare  när insatsen slutar. Här avgavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a framför." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:436\n\nComplete accepted BU native family: VARDSLUT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: vardst"
-fields = { "description" = "Barnets vårdnadshavare när insatsen börjar. Här angavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a före." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:445\n\nComplete accepted BU native family: VARDST. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: vardst"
-fields = { "description" = "Barnets vårdnadshavare när insatsen börjar. Här angavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a före." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:445\n\nComplete accepted BU native family: VARDST. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: vardst"
-fields = { "description" = "Vårdnadshavare när insatsen börjar. Här angavs före 1998 i stället familjeställning. Dessa värden har kompletterats med en 1:a före." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:445\n\nComplete accepted BU native family: VARDST. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: vartbarn"
-fields = { "description" = "Tvåsiffrig kod som anger vart barnet tog vägen efter insatsen." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:454\n\nComplete accepted BU native family: VARTBARN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: vartbarn"
-fields = { "description" = "Tvåsiffrig kod som anger vart barnet tog vägen efter insatsen." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:454\n\nComplete accepted BU native family: VARTBARN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: vartbarn"
-fields = { "description" = "Tvåsiffrig kod som anger vart barnet/ den unga tog vägen efter insatsen." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:454\n\nComplete accepted BU native family: VARTBARN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "bu-insats-endastxnr: placdat1"
 fields = { "identifier" = false }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:522\n\nPLACDAT1 is the start date of the intervention's first placement (Datum för start av placering), not a linkage key. Five of the six SoS BU deliveries that document it (bu_insats_19602013, bu_insats_pnrq0, bu_plac_19602013, bu_plac_endastxnr, bu_plac_pnrq0) state it is not an identifier; bu_insats_endastxnr is the single outlier. Sensitivity is unchanged (all six state sensitive). Maintainer approval 2026-10-17 (#1662; #1603 batch-e)."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-19602013: placdat1"
-fields = { "description" = "Dag då den första placeringen för insatsen påbörjades" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-endastxnr: placdat1"
-fields = { "description" = "Dag då den första placeringen för insatsen påbörjades" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-insats-pnrq0: placdat1"
-fields = { "description" = "Dag då den första placeringen för insatsen påbörjades" }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-19602013: placdat1"
-fields = { "description" = "Dag då placeringen påbörjades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-endastxnr: placdat1"
-fields = { "description" = "Dag då placeringen påbörjades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-plac-pnrq0: placdat1"
-fields = { "description" = "Dag då placeringen påbörjades." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:311\n\nThe six explicit BU source tables distinguish the date the first placement for an intervention started (bu_insats variants) from the date a placement started (bu_plac variants). Preserve each literal description only on its own native table and supplied period. Do not select a shared description, change the date encoding, extend availability or collapse native variants. Complete original fields, parent observations and coding references are guarded."
-
-[[statement]]
-kind = "set"
-subject = "bu-barn-19602013: ffodland_kod"
-fields = { "description" = "Faderns födelseland, kod med två bokstäver enligt RTB." }
-evidence = "reg_meta_build/curation/registers/sos/bu.toml:483\n\nTwo supplied BU rows share the exact native field, table and period. Their description differs only by terminal punctuation; their reference prose differs only by the already supplied Skatteverket country-code URL. Select the fuller existing source literals after guarding both complete original alternatives. Retain both physical rows, original classification declaration, every source cell and all coding facts; no country-code list or modern edition is substituted. Proof Batch48-BU-FFODLAND-source-alternatives-proof.json."
 
 [[statement]]
 kind = "set"
@@ -586,3 +129,780 @@ kind = "set"
 subject = "bu-plac-pnrq0: pnrq"
 fields = { value_set = "db864fff94aabf1c766453d38085ae4050f27ecadf7a1f1b956ad315ff46154b" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!142. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-avslut-datum-insats"
+fields = { "sets" = ["korrigering-av-insatsdatum"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:variable_text:55729:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-avslut-datum-insats"
+fields = { "tags" = ["methods"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:variable_text:55729:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-beslut-datum-insats"
+fields = { "sets" = ["korrigering-av-insatsdatum"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:valueset:6902\ncatalog:variable_text:55730:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-beslut-datum-insats"
+fields = { "tags" = ["methods"] }
+evidence = "Indikator för korrigering av insatsdatum.\ncatalog:valueset:6902\ncatalog:variable_text:55730:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avsldat"
+fields = { "sets" = ["placeringens-avslutsdatum"] }
+evidence = "Avslutsdatum för placering, inklusive sista placeringen.\ncatalog:variable_text:55731:-2557:11323\ncatalog:variable_text:55731:11323:16436\ncatalog:variable_text:55731:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avsldat"
+fields = { "tags" = [] }
+evidence = "Avslutsdatum för placering, inklusive sista placeringen.\ncatalog:variable_text:55731:-2557:11323\ncatalog:variable_text:55731:11323:16436\ncatalog:variable_text:55731:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55732:-3653:11323\ncatalog:variable_text:55732:11323:16436\ncatalog:variable_text:55732:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "tags" = [] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55732:-3653:11323\ncatalog:variable_text:55732:11323:16436\ncatalog:variable_text:55732:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-start-placering"
+fields = { "sets" = ["placeringens-startdatum"] }
+evidence = "Datum för placeringsstart.\ncatalog:variable_text:55733:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-start-placering"
+fields = { "tags" = [] }
+evidence = "Datum för placeringsstart.\ncatalog:variable_text:55733:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distriktskod beskriver geografisk indelning.\ncatalog:variable_text:55735:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktskod beskriver geografisk indelning.\ncatalog:variable_text:55735:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-insats"
+fields = { "sets" = ["situation-efter-insats"] }
+evidence = "Kodning av situation efter insatsen.\ncatalog:valueset:635\ncatalog:variable_text:55736:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-insats"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av situation efter insatsen.\ncatalog:valueset:635\ncatalog:variable_text:55736:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "sets" = [] }
+evidence = "Avser barn som anlänt från ett annat land utan förälder eller motsvarande vuxen.\ncatalog:variable_text:55737:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "tags" = ["migration"] }
+evidence = "Avser barn som anlänt från ett annat land utan förälder eller motsvarande vuxen.\ncatalog:variable_text:55737:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55738:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ffodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55738:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland-kod"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "F är en enskild bokstavskod för faderns.\ncatalog:variable_text:55739:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodla"
+fields = { "sets" = ["foraldrarnas-fodelseland"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55740:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodla"
+fields = { "tags" = ["demographics"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55740:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodland"
+fields = { "sets" = ["foraldrarnas-fodelseland"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55741:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fmfodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Sammanfattande kodning av föräldrarnas födelseländer.\ncatalog:valueset:5646\ncatalog:variable_text:55741:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-fod-datumn"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55742:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-fod-datumn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55742:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55743:-3653:11323\ncatalog:variable_text:55743:11323:16436\ncatalog:variable_text:55743:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelsedatum.\ncatalog:variable_text:55743:-3653:11323\ncatalog:variable_text:55743:11323:16436\ncatalog:variable_text:55743:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55744:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55744:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-namn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-namn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["faderns-fodelseland"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmor"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "Moderns födelseland i namnform.\ncatalog:variable_text:55747:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland i namnform.\ncatalog:variable_text:55747:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland-kod"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets eller den ungas födelseland i kodform.\ncatalog:variable_text:55748:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas födelseland i kodform.\ncatalog:variable_text:55748:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-avslut-datumn"
+fields = { "sets" = ["insatsens-avslutsdatum"] }
+evidence = "Datum för insatsens avslut, definierat som sista placeringens slut.\ncatalog:variable_text:55751:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Datum för insatsens avslut, definierat som sista placeringens slut.\ncatalog:variable_text:55751:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-beslut-datumn"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55752:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-beslut-datumn"
+fields = { "tags" = [] }
+evidence = "Beslutsdatum för insatsen.\ncatalog:variable_text:55752:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "sets" = ["insatsform"] }
+evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167\n\nDefinition pass 2026-11-02: The three codes give the same intervention types as INSTYP.\nrel070-base/reg_meta.db:occurrence:520875"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av insatsens form. Coordinator group membership: Typ och specifikation omfattas uttryckligen av definitionen. Insats-form beskriver lagrum och hålls utanför enligt undantaget för rättslig grund; insats-grund beskriver också rättslig grund.\ncatalog:valueset:6376\ncatalog:variable_text:55753:17532:2932897\ncatalog:variable_text:55754:17532:2932897\ncatalog:variable_text:55755:-3653:17167\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-grund"
+fields = { "sets" = [] }
+evidence = "Grund för omhändertagande eller vård enligt LVU.\ncatalog:variable_text:55754:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-grund"
+fields = { "tags" = ["social-care"] }
+evidence = "Grund för omhändertagande eller vård enligt LVU.\ncatalog:variable_text:55754:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "sets" = ["insatsform"] }
+evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167\n\nDefinition pass 2026-11-02: The intervention type is coded by its legal basis, as shown by valueset 3282.\nrel070-base/reg_meta.db:occurrence:520891\nrel070-base/reg_meta.db:occurrence:520920\nrel070-base/reg_meta.db:occurrence:520948\nrel070-base/reg_meta.db:occurrence:520970\nrel070-base/reg_meta.db:occurrence:520906\nrel070-base/reg_meta.db:occurrence:520960"
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av insatsens typ.\ncatalog:valueset:3282\ncatalog:variable_text:55755:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunindelning.\ncatalog:variable_text:55756:-3653:17167\ncatalog:variable_text:55756:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunindelning.\ncatalog:variable_text:55756:-3653:17167\ncatalog:variable_text:55756:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Barnets eller den ungas kön.\ncatalog:variable_text:55757:-3653:11323\ncatalog:variable_text:55757:11323:16436\ncatalog:variable_text:55757:16436:17167\ncatalog:variable_text:55757:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets eller den ungas kön.\ncatalog:variable_text:55757:-3653:11323\ncatalog:variable_text:55757:11323:16436\ncatalog:variable_text:55757:16436:17167\ncatalog:variable_text:55757:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mfodland"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland-kod"
+fields = { "sets" = ["moderns-fodelseland"] }
+evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland-kod"
+fields = { "tags" = ["demographics"] }
+evidence = "M är en enskild bokstavskod för moderns.\ncatalog:variable_text:55759:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-avslut-datumn"
+fields = { "sets" = ["insatsens-avslutsdatum"] }
+evidence = "Originaldatum för insatsens avslut.\ncatalog:variable_text:55760:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Originaldatum för insatsens avslut.\ncatalog:variable_text:55760:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-beslut-datumn"
+fields = { "sets" = ["insatsens-beslutsdatum"] }
+evidence = "Originaldatum för beslut om insatsen.\ncatalog:variable_text:55761:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:orig-insats-beslut-datumn"
+fields = { "tags" = [] }
+evidence = "Originaldatum för beslut om insatsen.\ncatalog:variable_text:55761:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pagins"
+fields = { "sets" = [] }
+evidence = "Uppgift om pågående insats.\ncatalog:variable_text:55762:3652:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:pagins"
+fields = { "tags" = ["social-care"] }
+evidence = "Uppgift om pågående insats.\ncatalog:variable_text:55762:3652:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55764:-3653:17167\ncatalog:variable_text:55764:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Kvalitetsmarkör för personnummer.\ncatalog:variable_text:55764:-3653:17167\ncatalog:variable_text:55764:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-avslut-datumn"
+fields = { "sets" = ["placeringens-avslutsdatum"] }
+evidence = "Datum då placeringen avslutades.\ncatalog:variable_text:55765:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-avslut-datumn"
+fields = { "tags" = [] }
+evidence = "Datum då placeringen avslutades.\ncatalog:variable_text:55765:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-form"
+fields = { "sets" = ["placeringsform"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55766:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-form"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55766:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placeringskommun"
+fields = { "sets" = ["placeringskommun"] }
+evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placeringskommun"
+fields = { "tags" = ["geography"] }
+evidence = "LK är en källkod som inte är en läsbar stam av etiketten.\ncatalog:variable_text:55767:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-start-datumn"
+fields = { "sets" = ["placeringens-startdatum"] }
+evidence = "Datum då placeringen påbörjades.\ncatalog:variable_text:55768:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:plac-start-datumn"
+fields = { "tags" = [] }
+evidence = "Datum då placeringen påbörjades.\ncatalog:variable_text:55768:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:placform"
+fields = { "sets" = ["placeringsform"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55769:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:placform"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodning av placeringsform.\ncatalog:variable_text:55769:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:plackom"
+fields = { "sets" = ["placeringskommun"] }
+evidence = "Kommun där barnet eller den unga placerades.\ncatalog:variable_text:55770:-3653:3652\ncatalog:variable_text:55770:11323:17167\ncatalog:variable_text:55770:3652:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:plackom"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun där barnet eller den unga placerades.\ncatalog:variable_text:55770:-3653:3652\ncatalog:variable_text:55770:11323:17167\ncatalog:variable_text:55770:3652:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "sets" = ["insatsform"] }
+evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167\n\nDefinition pass 2026-11-02: The variable specifies the intervention through LVU environment/behaviour grounds.\nrel070-base/reg_meta.db:occurrence:520897\nrel070-base/reg_meta.db:occurrence:520926\nrel070-base/reg_meta.db:occurrence:520977\nrel070-base/reg_meta.db:occurrence:520912"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "tags" = ["social-care"] }
+evidence = "Specifikation av insatsen enligt LVU.\ncatalog:variable_text:55773:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:stadsdel"
+fields = { "sets" = [] }
+evidence = "Stadsdelsnämndens geografiska indelning.\ncatalog:variable_text:55774:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stadsdel"
+fields = { "tags" = ["geography"] }
+evidence = "Stadsdelsnämndens geografiska indelning.\ncatalog:variable_text:55774:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-insats"
+fields = { "sets" = ["varddagar"] }
+evidence = "Antal vårddagar för insatsen.\ncatalog:variable_text:55776:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-insats"
+fields = { "tags" = ["social-care"] }
+evidence = "Antal vårddagar för insatsen.\ncatalog:variable_text:55776:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-placering"
+fields = { "sets" = ["varddagar"] }
+evidence = "Antal vårddagar för placeringen.\ncatalog:variable_text:55777:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:varddag-placering"
+fields = { "tags" = ["social-care"] }
+evidence = "Antal vårddagar för placeringen.\ncatalog:variable_text:55777:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-efter"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare efter insatsens avslut.\ncatalog:variable_text:55778:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-efter"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare efter insatsens avslut.\ncatalog:variable_text:55778:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-fore"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare före beslut om insatsen.\ncatalog:variable_text:55779:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardn-fore"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare före beslut om insatsen.\ncatalog:variable_text:55779:17532:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare vid insatsens slut; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55780:-3653:11323\ncatalog:variable_text:55780:11323:16436\ncatalog:variable_text:55780:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare vid insatsens slut; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55780:-3653:11323\ncatalog:variable_text:55780:11323:16436\ncatalog:variable_text:55780:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "sets" = ["vardnadshavare-vid-insats"] }
+evidence = "Vårdnadshavare vid insatsens början; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55781:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "tags" = ["family-household"] }
+evidence = "Vårdnadshavare vid insatsens början; äldre uppgifter avser familjeställning.\ncatalog:variable_text:55781:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vartbarn"
+fields = { "sets" = ["situation-efter-insats"] }
+evidence = "Barnets eller den ungas situation efter insatsen.\ncatalog:valueset:3439\ncatalog:variable_text:55782:-3287:16436\ncatalog:variable_text:55782:-3653:-3287\ncatalog:variable_text:55782:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vartbarn"
+fields = { "tags" = ["social-care"] }
+evidence = "Barnets eller den ungas situation efter insatsen.\ncatalog:valueset:3439\ncatalog:variable_text:55782:-3287:16436\ncatalog:variable_text:55782:-3653:-3287\ncatalog:variable_text:55782:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:andrat-beslut-datum-insats"
+fields = { "description" = "Indikator för att kommunen vid senare inrapportering har rättat insatsens ursprungliga beslutsdatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:319\n\nComplete accepted BU native family: ANDRAT_BESLUT_DATUM_INSATS. Exact named tables provide their own name, description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/andrat-beslut-datum-insats"
+
+
+[[statement]]
+kind = "set"
+subject = "var:avsldat"
+fields = { "description" = "Dag då placeringen avslutades." }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150"
+
+[[statement]]
+kind = "set"
+subject = "var:besldat"
+fields = { "description" = "Dag då beslut om insats för barnet eller den unga fattades i socialnämnden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:337\n\nComplete accepted BU native family: BESLDAT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/besldat"
+
+
+[[statement]]
+kind = "set"
+subject = "var:datum-start-placering"
+fields = { "description" = "Dag då placeringen påbörjades." }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148"
+
+[[statement]]
+kind = "set"
+subject = "var:debutar"
+fields = { "description" = "Första året då beslut fattades om någon insats för barnet eller den unga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:346\n\nComplete accepted BU native family: DEBUTAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/debutar"
+
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland-kod"
+fields = { "description" = "Faderns födelseland, kod med två bokstäver enligt RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:483\n\nTwo supplied BU rows share the exact native field, table and period. Their description differs only by terminal punctuation; their reference prose differs only by the already supplied Skatteverket country-code URL. Select the fuller existing source literals after guarding both complete original alternatives. Retain both physical rows, original classification declaration, every source cell and all coding facts; no country-code list or modern edition is substituted. Proof Batch48-BU-FFODLAND-source-alternatives-proof.json."
+
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "description" = "Barnets eller den ungas födelsedatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:355\n\nComplete accepted BU native family: FODDATN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/fodelsedatum-numerisk"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommun där beslut om insatsen fattades, angiven med SCB:s fyrsiffriga kommunkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:373\n\nComplete accepted BU native family: LK. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/kommun"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Barnets eller den ungas kön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:364\n\nComplete accepted BU native family: KON. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/kon"
+
+
+[[statement]]
+kind = "set"
+subject = "var:pagins"
+fields = { "description" = "Pågående insats för barnet eller den unga; blankt om ingen insats pågår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:382\n\nComplete accepted BU native family: PAGINS. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/pagins"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Barnets eller den ungas personnummer; från 2018 anges samordningsnummer om personnummer saknas. Om även samordningsnummer saknas lämnas uppgiften tom." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:409\n\nComplete accepted BU native family: PNR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/personnr"
+
+
+[[statement]]
+kind = "set"
+subject = "var:placform"
+fields = { "description" = "Typ av hem där barnet eller den unga placerades." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:391\n\nComplete accepted BU native family: PLACFORM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/placform"
+
+
+[[statement]]
+kind = "set"
+subject = "var:plackom"
+fields = { "description" = "Kommun där barnet eller den unga placerades." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:400\n\nComplete accepted BU native family: PLACKOM. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/plackom"
+
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-ar-med-insats"
+fields = { "description" = "Senaste året då barnet eller den unga var föremål för någon insats; blankt om insats fortfarande pågår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:418\n\nComplete accepted BU native family: SENAR. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/senaste-ar-med-insats"
+
+
+[[statement]]
+kind = "set"
+subject = "var:seninv"
+fields = { "description" = "Senaste år då barnet eller den unga beviljades uppehållstillstånd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:427\n\nComplete accepted BU native family: SENINV. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/seninv"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "description" = "Barnets eller den ungas vårdnadshavare när insatsen slutar. Före 1998 angavs i stället familjeställning; dessa värden har kompletterats med en inledande 1:a." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:436\n\nComplete accepted BU native family: VARDSLUT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/vardslut"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "description" = "Barnets eller den ungas vårdnadshavare när insatsen börjar. Före 1998 angavs i stället familjeställning; dessa värden har kompletterats med en inledande 1:a." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:445\n\nComplete accepted BU native family: VARDST. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/vardst"
+
+
+[[statement]]
+kind = "set"
+subject = "var:vartbarn"
+fields = { "description" = "Tvåsiffrig kod som anger vart barnet eller den unga tog vägen efter insatsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/bu.toml:454\n\nComplete accepted BU native family: VARTBARN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/vartbarn"
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-19602013: avsldat"
+fields = { "variable" = "datum-slut-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150"
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: avsldat"
+fields = { "variable" = "datum-slut-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150"
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: avsldat"
+fields = { "variable" = "datum-slut-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-slut-insats"
+fields = { "label" = "Datum för slut av insats", "description" = "Dag då den sista placeringen för insatsen upphörde." }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-slut-insats"
+fields = { "sets" = ["placeringens-avslutsdatum"] }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-slut-insats"
+fields = { "tags" = [] }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!72; sos/bu/bu-insats-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!84; sos/bu/bu-insats-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!100; sos/bu/bu-plac-19602013: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!128; sos/bu/bu-plac-endastxnr: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!139; sos/bu/bu-plac-pnrq0: AVSLDAT (n:avsldat), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!150 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-19602013: placdat1"
+fields = { "variable" = "datum-forsta-placering-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148"
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: placdat1"
+fields = { "variable" = "datum-forsta-placering-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148"
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: placdat1"
+fields = { "variable" = "datum-forsta-placering-insats" }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-forsta-placering-insats"
+fields = { "label" = "Datum för första placering i insatsen", "description" = "Dag då den första placeringen för insatsen påbörjades." }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-forsta-placering-insats"
+fields = { "sets" = ["placeringens-startdatum"] }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:datum-forsta-placering-insats"
+fields = { "tags" = [] }
+evidence = "Identity review 2026-11-02: The insats date is the last/first placement in a care episode; the placement date refers to this placement. Concurrent tables over overlapping years require separate parallel variables, with no continues edge. Source: sos/bu/bu-insats-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!66; sos/bu/bu-insats-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!85; sos/bu/bu-insats-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!97; sos/bu/bu-plac-19602013: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!125; sos/bu/bu-plac-endastxnr: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!137; sos/bu/bu-plac-pnrq0: PLACDAT1 (n:placdat1), catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx:Metadata - Variabelnivå!148 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:instyp"
+fields = { "description" = "Typ av insats enligt SoL eller LVU: SoL-vård, omedelbart omhändertagande enligt 6 § LVU eller LVU-vård enligt 2 och 3 §§ LVU." }
+evidence = "Definition pass 2026-11-02: The intervention type is coded by its legal basis, as shown by valueset 3282.\nrel070-base/reg_meta.db:occurrence:520891\nrel070-base/reg_meta.db:occurrence:520920\nrel070-base/reg_meta.db:occurrence:520948\nrel070-base/reg_meta.db:occurrence:520970\nrel070-base/reg_meta.db:occurrence:520906\nrel070-base/reg_meta.db:occurrence:520960"
+
+[[statement]]
+kind = "set"
+subject = "var:specifikation-insatsen"
+fields = { "description" = "Grund för LVU-insatsen: brister i hemmiljön enligt 2 § LVU, den ungas beteende enligt 3 § LVU eller båda grunderna. Miljö avser 0–17-åringar och beteende 10–20-åringar; fältet är blankt för SoL-vård." }
+evidence = "Definition pass 2026-11-02: The variable specifies the intervention through LVU environment/behaviour grounds.\nrel070-base/reg_meta.db:occurrence:520897\nrel070-base/reg_meta.db:occurrence:520926\nrel070-base/reg_meta.db:occurrence:520977\nrel070-base/reg_meta.db:occurrence:520912"
+
+[[statement]]
+kind = "set"
+subject = "var:insats-form"
+fields = { "description" = "Insatsens lagrum: placering enligt 4 kap. 1 § SoL, omedelbart omhändertagande enligt 6 § LVU eller vård enligt 2 eller 3 § LVU." }
+evidence = "Definition pass 2026-11-02: The coded legal basis is BU intervention form, not a separate placement form.\nrel070-base/reg_meta.db:occurrence:520875\n\nDefinition-pass audit follow-up 2026-11-02: Use the actual 2018 INSATS_FORM code labels, not the older INSTYP wording.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:520875\nrel070-base/reg_meta.db:valueset:6376:codes:02,05,26"

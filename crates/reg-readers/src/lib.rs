@@ -17,6 +17,7 @@ pub mod classification;
 pub mod curation;
 pub mod docs;
 pub mod frame;
+pub mod holdings;
 pub mod lisa;
 pub mod names;
 pub mod scb;

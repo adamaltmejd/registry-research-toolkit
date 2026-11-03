@@ -44,14 +44,14 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
 
 ## Milestones
 
-  | M   | Content                                                                                            | Proves                                                                                            | Status      |
-  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
-  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done        |
-  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done        |
-  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done        |
-  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | in progress |
-  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —           |
-  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —           |
+  | M   | Content                                                                                            | Proves                                                                                            | Status  |
+  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
+  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done    |
+  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done    |
+  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done    |
+  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | done    |
+  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | stopped |
+  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —       |
 
 The hosted global catalog switches in C, uncurated, and curation in D happens against
 it. There are no users to protect yet, and one live pipeline is simpler than two.
@@ -279,9 +279,12 @@ The full SCB read is a heavy run.
   - B4: when C or D next changes `crates/reg-resolve/src/lib.rs` (1,569 lines), move
     gaps, cadence and stretch into `gaps.rs` and `assign_ids` and `Anchor` into
     `ledger.rs`. Code move only, no behaviour change, not a standalone PR;
-  - for `reg-catalog` and the SPA: a blank code (`""`, SCB's "Uppgift saknas") is a real
-    item until D marks it a sentinel. It must render and be searchable, and never be
-    confused with "no value set".
+  - for `reg-catalog` and the SPA: a blank code (`""`, SCB's "Uppgift saknas") remains a
+    real item unless explicitly curated. Current sentinel lists declare the literal
+    `[BLANK]` for LKF2016, SSYK1996, SUN2000-inriktning and SUN2000-niva when present in
+    their bound sets; `[BLANK]` is not translated to `""`, and no converted list or
+    local setter currently marks `""`. Elsewhere a blank stays a real item. It must
+    render and be searchable, and never be confused with "no value set".
 - **The link stage:**
   - cross-register `continues` and `derived-from` links;
   - the SCB export's `Timeseries` events (series breaks, ends, replacements) and release
@@ -535,13 +538,13 @@ exit and peak RSS were not captured. Independent `reg-build verify` passed (exit
 - F1 counts: definition-change 20,677; domain-change 16,040; label-differs 47;
   label-drift 181; type-change 6,713; unit-change 5,977; population-change zero.
 - Source disposition evidence remains in `scripts/rebuild_convert_report.md`,
-  `scripts/rebuild_convert_classifications_report.md` and
-  `scripts/rebuild_convert_sets_tags_report.md`. These are overlapping stage reports,
-  not additive final counts: base conversion 5,603 converted / 12,538 named drops / zero
-  refused; classification conversion 288 / 218 / six; set/tag report 551 converted
-  membership rows, 115 missing-ID refusals, 11 deferred rows and 729 drops. The reports
-  retain source locations and reasons; later D work supersedes some early deferrals. The
-  converters were not rerun.
+  `scripts/rebuild_convert_classifications_report.md`,
+  `scripts/rebuild_convert_sets_tags_report.md` and `scripts/rebuild_recover_report.md`.
+  These are overlapping stage reports, not additive final counts: base conversion 5,603
+  converted / 12,538 named drops / zero refused; classification conversion 288 / 218 /
+  six; set/tag report 551 converted membership rows, 115 missing-ID refusals, 11
+  deferred rows and 729 drops. The reports retain source locations and reasons; later D
+  work supersedes some early deferrals. The converters were not rerun.
 - Rust `reg-build diff` against the downloaded 0.65.0 asset exited 1 (differences), with
   no schema change. It reports 28 changed table counts, 6,687 added and 5,149 removed
   public ids, 29 shared table changes, 5,411 shared variable changes and eight added
@@ -629,7 +632,86 @@ catalog remains for a later release decision.
   affected occurrences, leave unresolved cases uncurated for quieter notices; N1 general
   logical-type inference stays at E.
 
+#### Post-D order
+
+Done: the identity batches, 0.68.0, and the id sprint (#2053–#2063, released in 0.70.0).
+What the sprint left open is in #2073 (review queue) and #2074 (named identity cases).
+The text below is the plan as it was run.
+
+1. **Mechanical triage of the §D rows** into the maintainer's two groups (2026-10-29):
+   before the id sprint, only work that changes which occurrences a variable id covers:
+   identity/endpoint claims, recovered identity setters, keyless-default alignment,
+   identity lock refusals, coverage-adding recovery proposals, and edition/source
+   placement that splits or merges variables. Work that does not change ids
+   (descriptions/labels, coding, sentinels, delivered-value facts, lineage links,
+   document keys) goes after the sprint or serves as sprint evidence. The Home column
+   below records that triage. Before the sprint, also measure the full-catalog effects
+   of editions and qualifiers; review source placement and identity separation before
+   naming more families.
+
+   **Identity batches.** Batch 1 (A1, 44 registers, 954 claims) adopted 35 partitions,
+   retired 73 ids (64 merged, 9 split), minted 44 and deferred 145 claims to batches
+   3/4. Batch 2 reviewed 156 claims in fordonsreg and RTB without identity edits; its
+   RTB holds continued in batch 3. Batch 3 reviewed 93 claims and applied one Operator
+   partition (LOVA INVARN8/9): 17 partitions adopted, 12 ids retired (4 merged, 8
+   split), 25 minted and 23 claims deferred; it also corrected the LOVA INVARN9
+   spelling. Batch 4 reviewed 454 claims: 12 adopted claims yielded 10 partitions, 12
+   retired ids (4 merged, 8 split) and 18 minted; 238 were rejected and 204 deferred.
+   The Pris/pris split remains deferred: its two targets differ only by operational
+   definition, which curation selectors cannot address. The 211 coordinator holds and
+   the deferred claims keep their current ids and do not block 0.68.0. Then finish
+   keyless defaults/setters and release 0.68.0 as the sprint baseline.
+
+   **Ruling (2026-10-30):** retirements are optional before v1; the 5,302 ledger entries
+   were cleared.
+
+2. **Id sprint:** after that review, make one full-catalog pass over id names,
+   descriptions, concept groups and tags. This includes SNI-edition variables and
+   evidenced deferred endpoints; refresh locks and have the Operator verify the real
+   catalog against its predecessor. Naming review includes "CIS2002 2000-2002 vs native
+   ids: naming": 30 legacy names collide with published native IDs.
+
+3. **SWECOV curation in E:** use that reviewed catalog for holdings and the real MONA
+   exit order.
+
+#### D deferrals
+
+A changes ids and belongs before the sprint. B belongs after the sprint or supplies
+sprint evidence. A3 stays parked for holdings/MONA evidence. Counts overlap across
+source inventories; per-entry reasons stay in the F-deleted conversion reports.
+
+  | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                                             |
+  | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+  | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | A 170 (167 A2, 3 A3 parked), B 0: source/edition review before the sprint.                       |
+  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU setters would move published stratum-strat coverage.                        | A 23 (A1), B 0: pre-sprint identity batches.                                                     |
+  | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | A 1,218 (930 A1, 282 A2, 6 A3 parked): pre-sprint review; B 369: after sprint/evidence.          |
+  | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | A 1 (A1): LOVA prerequisite before sprint; B 124: groups/tags sprint evidence.                   |
+  | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | A 22 (A1): pre-sprint defaults; B 25: equivalent anchor rewrites after sprint.                   |
+  | Order-time release selection          |                                         1 capability | Optional editions remain explicit.                                                                                                 | B: E, e-order, when the exit order requires selection.                                           |
+  | F4 same-text proposals                |                                         1 capability | No request yet.                                                                                                                    | B: on demand, when a curator asks.                                                               |
+  | Successor choice/reject syntax        |                                         1 capability | Existing conflicts already refuse.                                                                                                 | B: explicit syntax on demand; identity decisions need A review.                                  |
+  | Presentation and register tags        |                         811 payloads, 12 memberships | Metadata views and register tag storage are absent.                                                                                | B: E, e-spa, metadata views and register tag navigation.                                         |
+  | Delivery mappings and donor metadata  |                                          288 entries | Headers, donor editions or whole endpoints need review.                                                                            | B: E, e-holdings; coverage-changing endpoints need A review.                                     |
+  | Classification versions and timelines |                                           18 entries | Version ambiguity or partial occurrences.                                                                                          | B: exact classification binding; any identity split needs separate A review.                     |
+  | Numeric corrections and N1 inference  |                        4,066 variables, 1 capability | No adopted logical-type evidence.                                                                                                  | B: E, e-types; 76 held targets in the E exit MONA round, others on a real case.                  |
+  | Occurrence-scoped sentinels           |                                            6 entries | Hash identity is wider than the stated scope.                                                                                      | B: sentinel-aware value-set identity when a real case needs it.                                  |
+  | Source-attribution corrections        |                                           12 entries | No four-kind provenance field.                                                                                                     | B: source-attribution curation on request.                                                       |
+  | Sentinel meanings                     |                        845 version/code/label claims | Flags have no separate meaning field.                                                                                              | B: when a real case needs more than source labels.                                               |
+  | Source coding evidence                |                                          261 entries | No reviewed value-set selection or translation.                                                                                    | B: exact source/value-set evidence from a curator.                                               |
+  | Documentary metadata                  |                                           37 entries | No reviewed translation.                                                                                                           | B: source-backed documentary metadata on request.                                                |
+  | Support, periods, links and clearing  |                                           57 entries | Whole-occurrence evidence or explicit clearing is missing.                                                                         | A: coverage-changing periods before sprint; B: other support, links and clearing after/evidence. |
+  | Located recovery-lock refusals        |                                          158 outputs | Empty, overlapping, ambiguous, partial or orphaning claims.                                                                        | A 2 (A1): pre-sprint identity review; B 156: satisfied periods and metadata after/evidence.      |
+  | Dropped: nothing left to do           |                              9,949 accounted entries | Satisfied claims, obsolete findings, folded aliases, no-op clears, bookkeeping, panel presentation (750) and case-only splits (8). | B: dropped; details stay in the conversion reports.                                              |
+
 ### E: the holdings layer
+
+**Status (maintainer, 2026-11-02): stopped after e-holdings.** The real run on the
+pinned steward repo is green (44,970 census columns: 35,592 offered, 982 held, 940
+unmatched) on draft #2052; whether it merges is the maintainer's call. Steps 4–9 and the
+exit below are not started and live in issues: e-order #2068, e-compare and e-release
+#2070, e-runner #2069, e-types #2071, the held and unmatched columns #2072, and the SPA
+#2066 (with #2067). F's SWECOV deletions wait on #2068, #2069 and #2070; SWECOV is
+served at 0.64.0 from the old stack until then.
 
 - **Design first, for the maintainer's review.** The design covers:
   - steward and project holdings, and the three questions holdings answer: what is in my
@@ -665,7 +747,10 @@ catalog remains for a later release decision.
      branding, series/mappings/slots and the inputs repo's `swecov/` with private inputs
      and own provider sources there; pin selected document evidence. Preserve provenance
      and protect private inputs. The toolkit keeps only generic code and pin/config
-     selection. F deletes leftovers after the move is verified;
+     selection. F deletes leftovers after the move is verified; *Status:* done. Private
+     repository `adamaltmejd/swecov-steward` at `755ce7aa5`: byte-identical copies with
+     `MOVED.md` provenance, pinned in `curation/stewards.toml`. Nothing reads the pin
+     until e-holdings;
   3. **e-holdings:** inputs and schema/reader/compiler together from the pinned steward
      repo: one-shot TOML → pinned transcription CSV; reconcile slugs, reviewed and
      auto-mapped targets, including the 27 supplemental providers; add steward slots,

@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Utbetald ersättning är en transferering.\ncatalog:register:9\ncatalog:variable_text:150:18332:19083"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetald ersättning är en transferering.\ncatalog:register:9\ncatalog:variable_text:150:18332:19083"

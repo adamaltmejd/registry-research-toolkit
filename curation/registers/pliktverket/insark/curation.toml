@@ -1,0 +1,1098 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fellasta-tavlor"
+fields = { "sets" = [] }
+evidence = "Måttet avser färgseende.\ncatalog:variable_text:638:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fellasta-tavlor"
+fields = { "tags" = ["health"] }
+evidence = "Måttet avser färgseende.\ncatalog:variable_text:638:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetspuls"
+fields = { "sets" = ["puls"] }
+evidence = "Arbetspuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:639:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetspuls"
+fields = { "tags" = ["health"] }
+evidence = "Arbetspuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:639:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "sets" = [] }
+evidence = "Orsakskoden gäller mönstring.\ncatalog:variable_text:641:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "tags" = ["defence"] }
+evidence = "Orsakskoden gäller mönstring.\ncatalog:variable_text:641:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befalslamplighet"
+fields = { "sets" = [] }
+evidence = "Bedömningen avser befälslämplighet.\ncatalog:variable_text:642:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befalslamplighet"
+fields = { "tags" = ["defence"] }
+evidence = "Bedömningen avser befälslämplighet.\ncatalog:variable_text:642:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-efter-monstring"
+fields = { "sets" = ["befattning"] }
+evidence = "Koden anger befattning efter mönstring.\ncatalog:variable_text:643:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-efter-monstring"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger befattning efter mönstring.\ncatalog:variable_text:643:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:bodymass"
+fields = { "sets" = [] }
+evidence = "BMI är ett kroppsmått.\ncatalog:variable_text:644:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:bodymass"
+fields = { "tags" = ["health"] }
+evidence = "BMI är ett kroppsmått.\ncatalog:variable_text:644:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cellskr"
+fields = { "sets" = [] }
+evidence = "Variabeln anger cellskräck.\ncatalog:variable_text:645:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cellskr"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger cellskräck.\ncatalog:variable_text:645:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-hoger-oga"
+fields = { "sets" = ["optisk-synkorrektion"] }
+evidence = "Cylindervärdet avser höger ögas synkorrektion.\ncatalog:variable_text:646:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Cylindervärdet avser höger ögas synkorrektion.\ncatalog:variable_text:646:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-vanster-oga"
+fields = { "sets" = ["optisk-synkorrektion"] }
+evidence = "Cylindervärdet avser vänster ögas synkorrektion.\ncatalog:variable_text:647:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Cylindervärdet avser vänster ögas synkorrektion.\ncatalog:variable_text:647:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:diastoliskt-blodtryck"
+fields = { "sets" = ["blodtryck"] }
+evidence = "Måttet anger diastoliskt blodtryck.\ncatalog:variable_text:648:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:diastoliskt-blodtryck"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger diastoliskt blodtryck.\ncatalog:variable_text:648:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ekgklass"
+fields = { "sets" = [] }
+evidence = "Koden klassar ett EKG-resultat.\ncatalog:variable_text:649:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ekgklass"
+fields = { "tags" = ["health"] }
+evidence = "Koden klassar ett EKG-resultat.\ncatalog:variable_text:649:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fargkap"
+fields = { "sets" = [] }
+evidence = "Måttet avser färgseende.\ncatalog:variable_text:650:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fargkap"
+fields = { "tags" = ["health"] }
+evidence = "Måttet avser färgseende.\ncatalog:variable_text:650:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fingerrakning-hoger-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Fingerräkning mäter synförmåga för höger öga.\ncatalog:variable_text:651:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fingerrakning-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Fingerräkning mäter synförmåga för höger öga.\ncatalog:variable_text:651:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fingerrakning-vanster-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Fingerräkning mäter synförmåga för vänster öga.\ncatalog:variable_text:652:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fingerrakning-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Fingerräkning mäter synförmåga för vänster öga.\ncatalog:variable_text:652:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingskod"
+fields = { "sets" = [] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:variable_text:653:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingskod"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingskoden anger geografisk tillhörighet.\ncatalog:variable_text:653:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyskap"
+fields = { "sets" = ["fysisk-arbetsformaga"] }
+evidence = "Måttet anger fysisk kapacitet.\ncatalog:variable_text:654:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyskap"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger fysisk kapacitet.\ncatalog:variable_text:654:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:g-faktor"
+fields = { "sets" = ["kognitiv-formaga"] }
+evidence = "Inskrivningsprovet mäter kognitiv förmåga vid mönstring.\ncatalog:variable_text:655:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:g-faktor"
+fields = { "tags" = ["defence"] }
+evidence = "Inskrivningsprovet mäter kognitiv förmåga vid mönstring.\ncatalog:variable_text:655:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:halsotillstandskod"
+fields = { "sets" = [] }
+evidence = "Koden avser hälsotillstånd och tjänstbarhet.\ncatalog:variable_text:656:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:halsotillstandskod"
+fields = { "tags" = ["defence", "health"] }
+evidence = "Koden avser hälsotillstånd och tjänstbarhet.\ncatalog:variable_text:656:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:horskap"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Koden anger hörselkapacitet.\ncatalog:variable_text:657:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:horskap"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger hörselkapacitet.\ncatalog:variable_text:657:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inrdag"
+fields = { "sets" = ["inryckningstidpunkt"] }
+evidence = "Dagen är en del av inryckningstidpunkten.\ncatalog:variable_text:658:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inrdag"
+fields = { "tags" = [] }
+evidence = "Dagen är en del av inryckningstidpunkten.\ncatalog:variable_text:658:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inrman"
+fields = { "sets" = ["inryckningstidpunkt"] }
+evidence = "Månaden är en del av inryckningstidpunkten.\ncatalog:variable_text:659:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inrman"
+fields = { "tags" = [] }
+evidence = "Månaden är en del av inryckningstidpunkten.\ncatalog:variable_text:659:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inryckningsar"
+fields = { "sets" = ["inryckningstidpunkt"] }
+evidence = "Året är en del av inryckningstidpunkten.\ncatalog:variable_text:660:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inryckningsar"
+fields = { "tags" = [] }
+evidence = "Året är en del av inryckningstidpunkten.\ncatalog:variable_text:660:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivande-regionkontor"
+fields = { "sets" = ["regionkontor"] }
+evidence = "Koden anger inskrivande regionkontor.\ncatalog:variable_text:662:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivande-regionkontor"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger inskrivande regionkontor.\ncatalog:variable_text:662:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:intrkod"
+fields = { "sets" = ["varnpliktsvilja"] }
+evidence = "Koden anger intresse av plikt.\ncatalog:variable_text:663:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:intrkod"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger intresse av plikt.\ncatalog:variable_text:663:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:664:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:664:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerad-synskarpa-hoger-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Måttet anger korrigerad synskärpa för höger öga.\ncatalog:variable_text:665:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerad-synskarpa-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger korrigerad synskärpa för höger öga.\ncatalog:variable_text:665:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerad-synskarpa-vanster-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Måttet anger korrigerad synskärpa för vänster öga.\ncatalog:variable_text:666:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerad-synskarpa-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger korrigerad synskärpa för vänster öga.\ncatalog:variable_text:666:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kroppsvikt"
+fields = { "sets" = [] }
+evidence = "Kroppsvikt är ett kroppsmått.\ncatalog:variable_text:667:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:kroppsvikt"
+fields = { "tags" = ["health"] }
+evidence = "Kroppsvikt är ett kroppsmått.\ncatalog:variable_text:667:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "sets" = ["kroppslangd"] }
+evidence = "Måttet anger kroppslängd.\ncatalog:variable_text:668:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger kroppslängd.\ncatalog:variable_text:668:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:lngdkap"
+fields = { "sets" = ["kroppslangd"] }
+evidence = "Koden anger längdkapacitet.\ncatalog:variable_text:669:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:lngdkap"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger längdkapacitet.\ncatalog:variable_text:669:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-1000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:670:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-1000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:670:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-1000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:671:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-1000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:671:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-2000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:672:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-2000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:672:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-2000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:673:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-2000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:673:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-250hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:674:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-250hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:674:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-250hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:675:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-250hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:675:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-3000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:676:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-3000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:676:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-3000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:677:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-3000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:677:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-4000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:678:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-4000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:678:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-4000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:679:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-4000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:679:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-500hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:680:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-500hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:680:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-500hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:681:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-500hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:681:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-6000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:682:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-6000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:682:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-6000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:683:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-6000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:683:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-8000hz-hoger-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:684:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-8000hz-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:684:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-8000hz-vanster-ora"
+fields = { "sets" = ["horselformaga"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:685:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:matfrekvens-8000hz-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Mätvärdet avser hörsel vid angiven frekvens och öra.\ncatalog:variable_text:685:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:maximal-effekt-cykelprov"
+fields = { "sets" = ["cykelprovseffekt"] }
+evidence = "Måttet anger maximal effekt vid cykelprov.\ncatalog:variable_text:686:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:maximal-effekt-cykelprov"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger maximal effekt vid cykelprov.\ncatalog:variable_text:686:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-vid-monstring"
+fields = { "sets" = ["befattning"] }
+evidence = "Källmnemoniken är en opak kod för befattningskod vid mönstring.\ncatalog:variable_text:687:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:befattningskod-vid-monstring"
+fields = { "tags" = ["defence"] }
+evidence = "Källmnemoniken är en opak kod för befattningskod vid mönstring.\ncatalog:variable_text:687:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:status-vid-monstring"
+fields = { "sets" = ["monstringsstatus"] }
+evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:689:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:status-vid-monstring"
+fields = { "tags" = ["defence"] }
+evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:689:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vapenfri-efter-monstring"
+fields = { "sets" = ["vapenfrihet"] }
+evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:690:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vapenfri-efter-monstring"
+fields = { "tags" = ["defence"] }
+evidence = "Mof är en opak källmnemonik för mönstring.\ncatalog:variable_text:690:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:monstringstatus"
+fields = { "sets" = ["monstringsstatus"] }
+evidence = "Koden anger status efter mönstring.\ncatalog:variable_text:691:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:monstringstatus"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger status efter mönstring.\ncatalog:variable_text:691:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:muskelfaktor"
+fields = { "sets" = ["muskelstyrka"] }
+evidence = "Muskelfaktorn är ett styrkemått.\ncatalog:variable_text:692:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:muskelfaktor"
+fields = { "tags" = ["health"] }
+evidence = "Muskelfaktorn är ett styrkemått.\ncatalog:variable_text:692:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:muskkap"
+fields = { "sets" = ["muskelstyrka"] }
+evidence = "Måttet anger muskelkraft.\ncatalog:variable_text:693:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:muskkap"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger muskelkraft.\ncatalog:variable_text:693:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:psykisk-funktionsformaga"
+fields = { "sets" = ["psykisk-funktionsformaga"] }
+evidence = "Bedömningen avser psykisk funktionsförmåga vid mönstring.\ncatalog:variable_text:696:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:psykisk-funktionsformaga"
+fields = { "tags" = ["defence"] }
+evidence = "Bedömningen avser psykisk funktionsförmåga vid mönstring.\ncatalog:variable_text:696:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisande-regionkontor"
+fields = { "sets" = ["regionkontor"] }
+evidence = "Koden anger redovisande regionkontor.\ncatalog:variable_text:698:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisande-regionkontor"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger redovisande regionkontor.\ncatalog:variable_text:698:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:rokvan"
+fields = { "sets" = ["tobaksbruk"] }
+evidence = "Koden anger rökning och mängd.\ncatalog:variable_text:699:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:rokvan"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger rökning och mängd.\ncatalog:variable_text:699:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-a"
+fields = { "sets" = [] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:700:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-a"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:700:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-e"
+fields = { "sets" = [] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:701:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-e"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:701:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-f"
+fields = { "sets" = [] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:702:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-f"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:702:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-h"
+fields = { "sets" = [] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:703:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-h"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:703:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-s"
+fields = { "sets" = [] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:704:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:safhe-s"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologens skattning görs vid mönstring.\ncatalog:variable_text:704:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sfarisk-korrektion-hoger-oga"
+fields = { "sets" = ["optisk-synkorrektion"] }
+evidence = "Måttet anger sfärisk korrektion för höger öga.\ncatalog:variable_text:705:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sfarisk-korrektion-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger sfärisk korrektion för höger öga.\ncatalog:variable_text:705:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sfarisk-korrektion-vanster-oga"
+fields = { "sets" = ["optisk-synkorrektion"] }
+evidence = "Måttet anger sfärisk korrektion för vänster öga.\ncatalog:variable_text:706:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sfarisk-korrektion-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger sfärisk korrektion för vänster öga.\ncatalog:variable_text:706:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-emotionell-stabilitet"
+fields = { "sets" = ["psykisk-funktionsformaga"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:707:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-emotionell-stabilitet"
+fields = { "tags" = ["defence"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:707:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-intensitet"
+fields = { "sets" = ["psykisk-funktionsformaga"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:708:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-intensitet"
+fields = { "tags" = ["defence"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:708:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-psykisk-energi"
+fields = { "sets" = ["psykisk-funktionsformaga"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:709:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-psykisk-energi"
+fields = { "tags" = ["defence"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:709:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-social-mognad"
+fields = { "sets" = ["psykisk-funktionsformaga"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:710:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sipe-social-mognad"
+fields = { "tags" = ["defence"] }
+evidence = "SIPE-komponenten är en psykologisk bedömning vid mönstring.\ncatalog:variable_text:710:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:skattfy"
+fields = { "sets" = ["fysisk-arbetsformaga"] }
+evidence = "Markören anger skattning av fysisk arbetsförmåga.\ncatalog:variable_text:711:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:skattfy"
+fields = { "tags" = ["health"] }
+evidence = "Markören anger skattning av fysisk arbetsförmåga.\ncatalog:variable_text:711:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:skattmu"
+fields = { "sets" = ["muskelstyrka"] }
+evidence = "Markören anger skattning av muskelkapacitet.\ncatalog:variable_text:712:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:skattmu"
+fields = { "tags" = ["health"] }
+evidence = "Markören anger skattning av muskelkapacitet.\ncatalog:variable_text:712:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:slutpuls"
+fields = { "sets" = ["puls"] }
+evidence = "Slutpuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:713:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:slutpuls"
+fields = { "tags" = ["health"] }
+evidence = "Slutpuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:713:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:snusvan"
+fields = { "sets" = ["tobaksbruk"] }
+evidence = "Koden anger snusbruk.\ncatalog:variable_text:714:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:snusvan"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger snusbruk.\ncatalog:variable_text:714:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:spatial-formaga"
+fields = { "sets" = ["kognitiv-formaga"] }
+evidence = "Inskrivningsprovet mäter spatial förmåga vid mönstring.\ncatalog:variable_text:715:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:spatial-formaga"
+fields = { "tags" = ["defence"] }
+evidence = "Inskrivningsprovet mäter spatial förmåga vid mönstring.\ncatalog:variable_text:715:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stegtest-hoger-ben"
+fields = { "sets" = ["stepresultat"] }
+evidence = "Resultatet avser step i jägartest för höger ben.\ncatalog:variable_text:717:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stegtest-hoger-ben"
+fields = { "tags" = ["defence"] }
+evidence = "Resultatet avser step i jägartest för höger ben.\ncatalog:variable_text:717:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stegtest-vanster-ben"
+fields = { "sets" = ["stepresultat"] }
+evidence = "Resultatet avser step i jägartest för vänster ben.\ncatalog:variable_text:718:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stegtest-vanster-ben"
+fields = { "tags" = ["defence"] }
+evidence = "Resultatet avser step i jägartest för vänster ben.\ncatalog:variable_text:718:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stepgod"
+fields = { "sets" = ["stepresultat"] }
+evidence = "Markören anger godkänd step i jägartest.\ncatalog:variable_text:719:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:stepgod"
+fields = { "tags" = ["defence"] }
+evidence = "Markören anger godkänd step i jägartest.\ncatalog:variable_text:719:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:svindel"
+fields = { "sets" = [] }
+evidence = "Variabeln anger svindel.\ncatalog:variable_text:720:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:svindel"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln anger svindel.\ncatalog:variable_text:720:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synkap"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Koden anger sammanfattande synkapacitet.\ncatalog:variable_text:721:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synkap"
+fields = { "tags" = ["health"] }
+evidence = "Koden anger sammanfattande synkapacitet.\ncatalog:variable_text:721:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synskarpa-hoger-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Måttet anger synskärpa för höger öga.\ncatalog:variable_text:722:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synskarpa-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger synskärpa för höger öga.\ncatalog:variable_text:722:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synskarpa-vanster-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Måttet anger synskärpa för vänster öga.\ncatalog:variable_text:723:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:synskarpa-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger synskärpa för vänster öga.\ncatalog:variable_text:723:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga-liter-syre-i-liter-per-minut"
+fields = { "sets" = ["syreupptagningsformaga"] }
+evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:724:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga-liter-syre-i-liter-per-minut"
+fields = { "tags" = ["health"] }
+evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:724:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga-kilo-syre-i-kg-per-minut"
+fields = { "sets" = ["syreupptagningsformaga"] }
+evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:725:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga-kilo-syre-i-kg-per-minut"
+fields = { "tags" = ["health"] }
+evidence = "Enhetsbokstäverna i källans mnemonic är ogenomskinliga.\ncatalog:variable_text:725:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:systoliskt-blodtryck"
+fields = { "sets" = ["blodtryck"] }
+evidence = "Måttet anger systoliskt blodtryck.\ncatalog:variable_text:726:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:systoliskt-blodtryck"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger systoliskt blodtryck.\ncatalog:variable_text:726:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:uppresning-hoger-ben-jagartest"
+fields = { "sets" = ["uppresningsresultat"] }
+evidence = "Resultatet avser uppresning i jägartest för höger ben.\ncatalog:variable_text:727:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:uppresning-hoger-ben-jagartest"
+fields = { "tags" = ["defence"] }
+evidence = "Resultatet avser uppresning i jägartest för höger ben.\ncatalog:variable_text:727:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:uppresning-vanster-ben-jagartest"
+fields = { "sets" = ["uppresningsresultat"] }
+evidence = "Resultatet avser uppresning i jägartest för vänster ben.\ncatalog:variable_text:728:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:uppresning-vanster-ben-jagartest"
+fields = { "tags" = ["defence"] }
+evidence = "Resultatet avser uppresning i jägartest för vänster ben.\ncatalog:variable_text:728:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:upprgod"
+fields = { "sets" = ["uppresningsresultat"] }
+evidence = "Markören anger godkänd uppresning i jägartest.\ncatalog:variable_text:729:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:upprgod"
+fields = { "tags" = ["defence"] }
+evidence = "Markören anger godkänd uppresning i jägartest.\ncatalog:variable_text:729:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsansvarig-enhet"
+fields = { "sets" = [] }
+evidence = "Koden anger ansvarig enhet i mönstringsregistret.\ncatalog:variable_text:730:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsansvarig-enhet"
+fields = { "tags" = ["defence"] }
+evidence = "Koden anger ansvarig enhet i mönstringsregistret.\ncatalog:variable_text:730:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vapenfri"
+fields = { "sets" = ["vapenfrihet"] }
+evidence = "Markören anger vapenfrihet.\ncatalog:variable_text:731:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vapenfri"
+fields = { "tags" = ["defence"] }
+evidence = "Markören anger vapenfrihet.\ncatalog:variable_text:731:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-formaga"
+fields = { "sets" = ["kognitiv-formaga"] }
+evidence = "Inskrivningsprovet mäter verbal förmåga vid mönstring.\ncatalog:variable_text:732:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:verbal-formaga"
+fields = { "tags" = ["defence"] }
+evidence = "Inskrivningsprovet mäter verbal förmåga vid mönstring.\ncatalog:variable_text:732:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vilja-varnplikt"
+fields = { "sets" = ["varnpliktsvilja"] }
+evidence = "Poängen sammanfattar vilja att göra värnplikt.\ncatalog:variable_text:733:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vilja-varnplikt"
+fields = { "tags" = ["defence"] }
+evidence = "Poängen sammanfattar vilja att göra värnplikt.\ncatalog:variable_text:733:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vilopuls"
+fields = { "sets" = ["puls"] }
+evidence = "Vilopuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:734:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vilopuls"
+fields = { "tags" = ["health"] }
+evidence = "Vilopuls är ett fysiologiskt pulsmått.\ncatalog:variable_text:734:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:wattkg"
+fields = { "sets" = ["cykelprovseffekt"] }
+evidence = "Måttet anger kroppsviktsrelaterad effekt.\ncatalog:variable_text:735:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:wattkg"
+fields = { "tags" = ["health"] }
+evidence = "Måttet anger kroppsviktsrelaterad effekt.\ncatalog:variable_text:735:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:startbel"
+fields = { "tags" = ["defence"] }
+evidence = "The starting-load test parameter (r3) fits the enlistment register's conscription-assessment theme, supported by its defence context (r1, r4).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:714\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

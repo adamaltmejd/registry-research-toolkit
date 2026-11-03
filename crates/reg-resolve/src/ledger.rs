@@ -61,35 +61,23 @@ impl<'a> Anchor<'a> {
     }
 }
 
-/// Ledger ids onto variables by anchor; proposed ids for the rest.
-pub(crate) fn assign_ids(
-    variables: &mut [Variable],
+/// Ledger ids to the occurrence indices their anchors reach. Matching and anchor
+/// validation are shared by inherited identity and final id assignment.
+pub(crate) fn anchor_targets<'a>(
     resolved: &[ResolvedOccurrence],
     tables: &[ResolvedTable],
-    ledger: &Ledger,
-    report: &mut Report,
-) -> Result<(), String> {
-    // Tables and variables share the register's namespace, and a ledger id stays
-    // reserved even where it anchors nothing.
-    let table_ids: BTreeSet<String> = tables.iter().filter_map(|t| t.slug.clone()).collect();
-    for id in table_ids.iter().chain(ledger.variables.keys()) {
-        if !reg_core::is_slug(id) {
-            return Err(format!("id {id:?} is not a slug"));
-        }
-    }
-    let mut taken = table_ids.clone();
-    for id in ledger.variables.keys() {
-        if !taken.insert(id.clone()) {
-            return Err(format!("ledger id {id:?} is also a table id"));
-        }
-    }
-    taken.extend(ledger.retired.iter().cloned());
+    ledger: &'a Ledger,
+) -> Result<BTreeMap<&'a str, BTreeSet<usize>>, String> {
     // Anchors match the folded spellings of each table's placed columns; a keyed anchor
     // only that source key's variables, a dated one only those placed there that day.
     // A spelling's source keys count every occurrence, placed or not.
     let mut by_anchor: BTreeMap<(&str, String), Vec<_>> = BTreeMap::new();
     let mut keys: BTreeMap<(&str, String), BTreeSet<&str>> = BTreeMap::new();
-    for r in resolved.iter().filter(|r| !r.occurrence.column.is_empty()) {
+    for (i, r) in resolved
+        .iter()
+        .enumerate()
+        .filter(|(_, r)| !r.occurrence.column.is_empty())
+    {
         let at = (
             tables[r.table].table.table.as_str(),
             fold_identity(&r.occurrence.column),
@@ -97,9 +85,9 @@ pub(crate) fn assign_ids(
         keys.entry(at.clone())
             .or_default()
             .insert(r.occurrence.source_key.as_str());
-        if let Some(v) = r.variable {
+        if r.variable.is_some() {
             by_anchor.entry(at).or_default().push((
-                v,
+                i,
                 r.period.as_ref(),
                 r.occurrence.source_key.as_str(),
             ));
@@ -108,6 +96,7 @@ pub(crate) fn assign_ids(
     // Two ids on one anchor would leave the id to key order: refused, as is a key where
     // the spelling has only one.
     let mut anchored: BTreeMap<Anchor, &str> = BTreeMap::new();
+    let mut result = BTreeMap::new();
     for (id, anchors) in &ledger.variables {
         let mut targets = BTreeSet::new();
         for text in anchors {
@@ -139,24 +128,57 @@ pub(crate) fn assign_ids(
                     .map(|&(v, _, _)| v),
             );
         }
+        result.insert(id.as_str(), targets);
+    }
+    Ok(result)
+}
+
+/// Ledger ids onto variables by anchor; proposed ids for the rest.
+pub(crate) fn assign_ids(
+    variables: &mut [Variable],
+    resolved: &[ResolvedOccurrence],
+    tables: &[ResolvedTable],
+    ledger: &Ledger,
+    report: &mut Report,
+) -> Result<(), String> {
+    // Tables and variables share the register's namespace, and a ledger id stays
+    // reserved even where it anchors nothing.
+    let table_ids: BTreeSet<String> = tables.iter().filter_map(|t| t.slug.clone()).collect();
+    for id in table_ids.iter().chain(ledger.variables.keys()) {
+        if !reg_core::is_slug(id) {
+            return Err(format!("id {id:?} is not a slug"));
+        }
+    }
+    let mut taken = table_ids.clone();
+    for id in ledger.variables.keys() {
+        if !taken.insert(id.clone()) {
+            return Err(format!("ledger id {id:?} is also a table id"));
+        }
+    }
+    taken.extend(ledger.retired.iter().cloned());
+    for (id, occurrences) in anchor_targets(resolved, tables, ledger)? {
+        let targets: BTreeSet<_> = occurrences
+            .into_iter()
+            .filter_map(|i| resolved[i].variable)
+            .collect();
         if variables
             .iter()
-            .any(|variable| variable.pinned && variable.slug == *id)
+            .any(|variable| variable.pinned && variable.slug == id)
         {
             continue;
         }
         if targets.len() > 1 {
-            report.split_ids.push(id.clone());
+            report.split_ids.push(id.to_owned());
         }
         let Some(&target) = targets.iter().find(|&&v| !variables[v].pinned) else {
             if targets.is_empty() {
-                report.unplaced_ids.push(id.clone());
+                report.unplaced_ids.push(id.to_owned());
             } else {
-                report.merged_ids.push(id.clone());
+                report.merged_ids.push(id.to_owned());
             }
             continue;
         };
-        variables[target].slug.clone_from(id);
+        id.clone_into(&mut variables[target].slug);
         variables[target].pinned = true;
     }
     for v in variables.iter_mut().filter(|v| !v.pinned) {

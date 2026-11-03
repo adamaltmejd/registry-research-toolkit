@@ -1,4 +1,4 @@
-//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two v4 catalogs
+//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two catalogs
 //! (`crates/DESIGN.md`, "Release diff").
 //!
 //! Everything is compared by natural key (pid, table name, meta key), never by row id:
@@ -343,13 +343,24 @@ fn ids(p: &Pair) -> Res<Section> {
             .map(|(pid, kind)| item(pid, kind, String::new()))
             .collect()
     };
+    let moved = crate::id_targets::moved(&p.old, "main", &p.new, "main")?
+        .into_iter()
+        .map(|m| {
+            Item::new(
+                json!({"pid": m.pid, "kind": m.kind, "old": m.old, "new": m.new}),
+                m.text(),
+            )
+        })
+        .collect();
     Ok(Section {
         key: "ids",
         title: "ids",
+        // The breaking groups come first: they share one line budget with additions.
         groups: vec![
-            ("added", added),
             ("removed", removed),
             ("kind_changed", kind_changed),
+            ("moved", moved),
+            ("added", added),
             ("retired_added", retired(&new_retired, &old_retired)),
             ("retired_removed", retired(&old_retired, &new_retired)),
         ],
@@ -372,7 +383,7 @@ fn iso(day: i64) -> String {
     format!("{y:04}-{m:02}-{d:02}")
 }
 
-fn span(start: i64, end: i64) -> String {
+pub(super) fn span(start: i64, end: i64) -> String {
     format!("[{}, {})", iso(start), iso(end))
 }
 
@@ -381,6 +392,7 @@ struct TableInfo {
     name: String,
     description: Option<String>,
     role: String,
+    unit_type: Option<String>,
     timeless: i64,
     cadence: Option<String>,
     spans: Vec<(i64, i64)>,
@@ -389,16 +401,17 @@ struct TableInfo {
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
-               "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
+               "role": self.role, "unit_type": self.unit_type, "timeless": self.timeless, "cadence": self.cadence,
                "spans": self.spans.iter().map(|&(s, e)| json!([iso(s), iso(e)])).collect::<Vec<_>>()})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} timeless={} cadence={} spans={}",
+            "name={:?} description={:?} role={} unit_type={} timeless={} cadence={} spans={}",
             self.name,
             self.description,
             self.role,
+            self.unit_type.as_deref().unwrap_or("-"),
             self.timeless,
             self.cadence.as_deref().unwrap_or("-"),
             self.spans
@@ -412,10 +425,11 @@ impl TableInfo {
 fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
     let mut infos: BTreeMap<String, TableInfo> = query(
         conn,
-        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence
+        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence, u.slug
                      FROM tbl t
                      JOIN text n ON n.id = t.name_text
-                     LEFT JOIN text d ON d.id = t.description_text",
+                     LEFT JOIN text d ON d.id = t.description_text
+                     LEFT JOIN unit_type u ON u.id = t.unit_type_id",
         |r| {
             Ok((
                 r.get::<_, String>(0)?,
@@ -423,6 +437,7 @@ fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
                     name: r.get(1)?,
                     description: r.get(2)?,
                     role: r.get(3)?,
+                    unit_type: r.get(6)?,
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
                     spans: Vec::new(),
@@ -638,6 +653,10 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
         "SELECT v.pid, t.body FROM variable v JOIN text t ON t.id = v.label_text",
         |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
     )?;
+    let (old_descriptions, new_descriptions) = p.maps(
+        "SELECT v.pid, d.body FROM variable v LEFT JOIN text d ON d.id = v.description_text",
+        |r| Ok((r.get::<_, String>(0)?, r.get::<_, Option<String>>(1)?)),
+    )?;
     let (no_segs, no_runs) = (BTreeSet::new(), BTreeSet::new());
     let (mut items, mut changes) = (Vec::new(), Vec::new());
     for pid in old_pids.intersection(&new_pids) {
@@ -675,6 +694,21 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
                 show(label_new)
             ));
         }
+        let (description_old, description_new) = (
+            old_descriptions.get(pid).and_then(Option::as_ref),
+            new_descriptions.get(pid).and_then(Option::as_ref),
+        );
+        if description_old != description_new {
+            facets.insert(
+                "description".into(),
+                json!({"old": description_old, "new": description_new}),
+            );
+            lines.push(format!(
+                "  description: {} → {}",
+                show(description_old),
+                show(description_new)
+            ));
+        }
         if !run_old.is_empty() || !run_new.is_empty() {
             let n = run_old.len().max(run_new.len());
             facets.insert(
@@ -695,6 +729,17 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
 
 fn short(hash: &str) -> &str {
     hash.get(..12).unwrap_or(hash)
+}
+
+/// Set-valued metadata, compared by its published entity key and member string.
+fn memberships(conn: &Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<String>>> {
+    let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for (key, member) in query(conn, sql, |r| {
+        Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
+    })? {
+        out.entry(key).or_default().insert(member);
+    }
+    Ok(out)
 }
 
 /// The codes of the wanted value sets, in one pass over `vs_item`.
@@ -723,6 +768,22 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
     let (old, new) = p.maps("SELECT hash, n_items FROM valueset", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
     })?;
+    let sentinel_codes = "SELECT v.hash, t.body FROM vs_item i
+                          JOIN valueset v ON v.id = i.valueset_id
+                          JOIN text t ON t.id = i.code_text WHERE i.sentinel = 1";
+    let (old_sentinels, new_sentinels) = (
+        memberships(&p.old, sentinel_codes)?,
+        memberships(&p.new, sentinel_codes)?,
+    );
+    let sentinels = changed(&old_sentinels, &new_sentinels)
+        .into_iter()
+        .map(|(hash, old, new)| {
+            Item::new(
+                json!({"hash": hash, "old": old, "new": new}),
+                format!("{} sentinels: {old:?} → {new:?}", short(hash)),
+            )
+        })
+        .collect();
     let only = |from: &BTreeMap<String, i64>, other: &BTreeMap<String, i64>| -> Vec<Item> {
         from.iter()
             .filter(|(h, _)| !other.contains_key(*h))
@@ -783,6 +844,7 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
             ("removed", only(&old, &new)),
             ("added", only(&new, &old)),
             ("codes", code_items),
+            ("sentinels", sentinels),
         ],
     })
 }

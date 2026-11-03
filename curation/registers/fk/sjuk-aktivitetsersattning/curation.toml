@@ -22,3 +22,339 @@ kind = "set"
 subject = "delfall-2-1: diagnos2_kod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:1674\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-brutto"
+fields = { "sets" = [] }
+evidence = "Utbetalt ersättningsbelopp hör till transfereringar; beloppsvariablerna har ett gemensamt begrepp.\ncatalog:register:21\ncatalog:variable_text:294:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetalt ersättningsbelopp hör till transfereringar; beloppsvariablerna har ett gemensamt begrepp.\ncatalog:register:21\ncatalog:variable_text:294:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-gar-brutto"
+fields = { "sets" = [] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:295:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-gar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:295:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-ink-brutto"
+fields = { "sets" = [] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:296:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-ink-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:296:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-brutto"
+fields = { "sets" = [] }
+evidence = "Antalet ersatta dagar beskriver en ersättningsperiod.\ncatalog:register:21\ncatalog:variable_text:297:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet ersatta dagar beskriver en ersättningsperiod.\ncatalog:register:21\ncatalog:variable_text:297:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-netto"
+fields = { "sets" = [] }
+evidence = "Nettodagar är ett härlett mått på ersatta dagar.\ncatalog:register:21\ncatalog:variable_text:298:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "Nettodagar är ett härlett mått på ersatta dagar.\ncatalog:register:21\ncatalog:variable_text:298:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman"
+fields = { "sets" = [] }
+evidence = "Delförmånen är en kodning av ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:301:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman"
+fields = { "tags" = ["transfers"] }
+evidence = "Delförmånen är en kodning av ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:301:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod"
+fields = { "sets" = [] }
+evidence = "Delförmånskoden beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:302:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman-kod"
+fields = { "tags" = ["transfers"] }
+evidence = "Delförmånskoden beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:302:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos1"
+fields = { "sets" = [] }
+evidence = "Huvuddiagnosen är ett hälsomått.\ncatalog:variable_text:303:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos1"
+fields = { "tags" = ["health"] }
+evidence = "Huvuddiagnosen är ett hälsomått.\ncatalog:variable_text:303:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos1-kod"
+fields = { "sets" = [] }
+evidence = "Huvuddiagnosens kod är ett hälsomått.\ncatalog:variable_text:304:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos1-kod"
+fields = { "tags" = ["health"] }
+evidence = "Huvuddiagnosens kod är ett hälsomått.\ncatalog:variable_text:304:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos2"
+fields = { "sets" = [] }
+evidence = "Bidiagnosen är ett hälsomått.\ncatalog:variable_text:305:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos2"
+fields = { "tags" = ["health"] }
+evidence = "Bidiagnosen är ett hälsomått.\ncatalog:variable_text:305:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos2-kod"
+fields = { "sets" = [] }
+evidence = "Bidiagnosens kod är ett hälsomått.\ncatalog:variable_text:306:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos2-kod"
+fields = { "tags" = ["health"] }
+evidence = "Bidiagnosens kod är ett hälsomått.\ncatalog:variable_text:306:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-brutto"
+fields = { "sets" = [] }
+evidence = "Utbetalt ersättningsbelopp hör till transfereringar.\ncatalog:register:21\ncatalog:variable_text:307:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetalt ersättningsbelopp hör till transfereringar.\ncatalog:register:21\ncatalog:variable_text:307:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-gar-brutto"
+fields = { "sets" = [] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:308:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-gar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:308:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-ink-brutto"
+fields = { "sets" = [] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:309:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-ink-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet är en komponent av utbetald ersättning.\ncatalog:register:21\ncatalog:variable_text:309:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-brutto"
+fields = { "sets" = [] }
+evidence = "Antalet ersatta dagar beskriver en ersättningsperiod.\ncatalog:register:21\ncatalog:variable_text:310:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet ersatta dagar beskriver en ersättningsperiod.\ncatalog:register:21\ncatalog:variable_text:310:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-netto"
+fields = { "sets" = [] }
+evidence = "Nettodagar är ett härlett mått på ersatta dagar.\ncatalog:register:21\ncatalog:variable_text:311:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "Nettodagar är ett härlett mått på ersatta dagar.\ncatalog:register:21\ncatalog:variable_text:311:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-tot"
+fields = { "sets" = [] }
+evidence = "Antalet dagar beskriver ersättningsfallets längd, även dagar utan ersättning.\ncatalog:register:21\ncatalog:variable_text:312:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet dagar beskriver ersättningsfallets längd, även dagar utan ersättning.\ncatalog:register:21\ncatalog:variable_text:312:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "sets" = [] }
+evidence = "Förmånen beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:315:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman"
+fields = { "tags" = ["transfers"] }
+evidence = "Förmånen beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:315:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-kod"
+fields = { "sets" = [] }
+evidence = "Förmånskoden beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:316:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-kod"
+fields = { "tags" = ["transfers"] }
+evidence = "Förmånskoden beskriver ersättningens typ.\ncatalog:register:21\ncatalog:variable_text:316:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidspension"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger om fallet innehåller förtidspension.\ncatalog:variable_text:317:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidspension"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn anger om fallet innehåller förtidspension.\ncatalog:variable_text:317:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:har-aktivitetsersattning"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger om fallet innehåller aktivitetsersättning.\ncatalog:variable_text:318:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:har-aktivitetsersattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn anger om fallet innehåller aktivitetsersättning.\ncatalog:variable_text:318:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manader"
+fields = { "sets" = [] }
+evidence = "Antalet månader beskriver ersättningsfallets längd.\ncatalog:register:21\ncatalog:variable_text:320:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manader"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet månader beskriver ersättningsfallets längd.\ncatalog:register:21\ncatalog:variable_text:320:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manbelopp"
+fields = { "sets" = [] }
+evidence = "Månadsbeloppet är utbetald ersättning.\ncatalog:variable_text:321:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:manbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Månadsbeloppet är utbetald ersättning.\ncatalog:variable_text:321:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-from"
+fields = { "sets" = [] }
+evidence = "Omfattningen avser ersättningsfallet.\ncatalog:register:21\ncatalog:variable_text:322:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-from"
+fields = { "tags" = ["transfers"] }
+evidence = "Omfattningen avser ersättningsfallet.\ncatalog:register:21\ncatalog:variable_text:322:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-tom"
+fields = { "sets" = [] }
+evidence = "Omfattningen avser ersättningsfallet.\ncatalog:register:21\ncatalog:variable_text:323:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omf-tom"
+fields = { "tags" = ["transfers"] }
+evidence = "Omfattningen avser ersättningsfallet.\ncatalog:register:21\ncatalog:variable_text:323:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "sets" = [] }
+evidence = "Omfattningen avser ersättning under delfallet.\ncatalog:register:21\ncatalog:variable_text:324:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Omfattningen avser ersättning under delfallet.\ncatalog:register:21\ncatalog:variable_text:324:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukbidrag"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger om fallet innehåller sjukbidrag.\ncatalog:variable_text:325:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukbidrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn anger om fallet innehåller sjukbidrag.\ncatalog:variable_text:325:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukersattning"
+fields = { "sets" = [] }
+evidence = "Indikatorn anger om fallet innehåller sjukersättning.\ncatalog:variable_text:326:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukersattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Indikatorn anger om fallet innehåller sjukersättning.\ncatalog:variable_text:326:8766:2932897"

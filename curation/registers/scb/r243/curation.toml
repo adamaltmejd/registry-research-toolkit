@@ -1,12 +1,5 @@
 
 [[statement]]
-kind = "set"
-subject = "var:giltig-antrost"
-fields = { "sets" = ["legacy-giltig-antrost"] }
-evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:194\nreg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:231\n\nComplete accepted native/source-member/operational-text/own-domain review: Batch52-election-complete-source-review.json. Independently present case variants are retained separately where their source roles differ; code and names are never combined.\n\nEvery complete own source member explicitly includes both literal forms of the same reviewed quantity; underlying operation/definition agrees. Retain per-column physical facts and own domain, without claiming equal stored values or collapsing independently present vote/mandate roles. Batch52-election-complete-source-review.json."
-caveat = "Identity follows the complete own native question, explicitly distinct code versus cleartext fields, and independently co-present literal source roles. Vote, mandate and eligible-person contexts remain in each original operational definition. RI/KO prefixed voter-name fields retain their established owners; the additional literal valkretsnamn fields include independently present mandate/eligible-name members and some partly shared voter members. Their detailed source-context routing remains unverified; no equivalence is inferred from that partial relation. No election-type/geographic-level alias, source-value equivalence, new code conversion or physical routing is inferred. Every original field, source scope and own code association is retained."
-
-[[statement]]
 kind = "link"
 subject = "var:partinamn"
 relation = "label_of"
@@ -225,36 +218,1184 @@ evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLega
 
 [[statement]]
 kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:2946:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:2946:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avgivna-roster"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avgivna-roster"
+fields = { "tags" = ["democracy"] }
+evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-antrost"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-antrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-apk"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:variable_text:2949:4383:4748"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-apk"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:variable_text:2949:4383:4748"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-folkpartiet"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20469\ncatalog:occurrence:20512"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-folkpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20469\ncatalog:occurrence:20512"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-kristdemokraterna"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2951"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-kristdemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2951"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-kristdemokraterna-kds-antrost"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2952"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-kristdemokraterna-kds-antrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2952"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-liberalerna"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20469\ncatalog:occurrence:20512"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-liberalerna"
+fields = { "tags" = ["democracy"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20469\ncatalog:occurrence:20512"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-vansterpartiet"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2954"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-vansterpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:occurrence-locators:variable:2954"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-folkpartiet"
+fields = { "sets" = ["mandatantal"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20468\ncatalog:occurrence:20511"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-folkpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20468\ncatalog:occurrence:20511"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-liberalerna"
+fields = { "sets" = ["mandatantal"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20468\ncatalog:occurrence:20511"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-liberalerna"
+fields = { "tags" = ["democracy"] }
+evidence = "Folkpartiet och Liberalerna är samma parti med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:20468\ncatalog:occurrence:20511"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-ovriga"
+fields = { "sets" = ["mandatantal"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20927\ncatalog:occurrence:20928"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-ovriga"
+fields = { "tags" = ["democracy"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20927\ncatalog:occurrence:20928"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ogiltiga-roster"
+fields = { "sets" = [] }
+evidence = "Ogiltiga röster är ett valresultat och ingår inte i gruppen giltiga röster.\ncatalog:occurrence-locators:variable:2958"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ogiltiga-roster"
+fields = { "tags" = ["democracy"] }
+evidence = "Ogiltiga röster är ett valresultat och ingår inte i gruppen giltiga röster.\ncatalog:occurrence-locators:variable:2958"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rostberattigade"
+fields = { "sets" = ["rostberattigande"] }
+evidence = "Antal röstberättigade hör till rösträtt.\ncatalog:variable_text:2959:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rostberattigade"
+fields = { "tags" = ["democracy"] }
+evidence = "Antal röstberättigade hör till rösträtt.\ncatalog:variable_text:2959:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antmand"
+fields = { "sets" = ["mandatantal"] }
+evidence = "Variabeln mäter antal mandat.\ncatalog:variable_text:2960:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antmand"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter antal mandat.\ncatalog:variable_text:2960:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:blanka-antrost"
+fields = { "sets" = [] }
+evidence = "Blanka röster är ett valresultat.\ncatalog:occurrence-locators:variable:2961"
+
+[[statement]]
+kind = "set"
+subject = "var:blanka-antrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Blanka röster är ett valresultat.\ncatalog:occurrence-locators:variable:2961"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-disponibel-inkomst"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:2962:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-disponibel-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:2962:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-centerpartiet"
+fields = { "sets" = ["mandatantal"] }
+evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2963:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-centerpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2963:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-centerpartiet"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2964:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-centerpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "C är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2964:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd beskriver familjeförhållanden.\ncatalog:valueset:12759"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd beskriver familjeförhållanden.\ncatalog:valueset:12759"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland och dess gruppering mäter samma begrepp.\ncatalog:variable_text:2966:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland och dess gruppering mäter samma begrepp.\ncatalog:variable_text:2966:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln grupperar födelseland.\ncatalog:variable_text:2967:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar födelseland.\ncatalog:variable_text:2967:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Kvintilgruppen härleds från sammanräknad förvärvsinkomst.\ncatalog:variable_text:2968:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "tags" = ["income"] }
+evidence = "Kvintilgruppen härleds från sammanräknad förvärvsinkomst.\ncatalog:variable_text:2968:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:giltig-antrost"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster.\ncatalog:variable_text:2969:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:giltig-antrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster.\ncatalog:variable_text:2969:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-kristdemokraterna"
+fields = { "sets" = ["mandatantal"] }
+evidence = "KD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2970:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-kristdemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "KD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2970:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-llkk"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln anger kommun som kod.\ncatalog:variable_text:2971:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-llkk"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommun som kod.\ncatalog:variable_text:2971:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln anger kommun som namn.\ncatalog:variable_text:2972:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommun som namn.\ncatalog:variable_text:2972:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "sets" = ["kommunvalkretsnamn"] }
+evidence = "Koden hör till kommunvalkretsarnas namn och koder.\ncatalog:variable_text:2973:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden hör till kommunvalkretsarnas namn och koder.\ncatalog:variable_text:2973:18993:19358"
+
+[[statement]]
+kind = "set"
 subject = "var:kommunvalkrets-namn"
 fields = { "sets" = ["kommunvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:24"
+evidence = "Variabeln anger kommunvalkrets som namn.\ncatalog:variable_text:2974:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunvalkrets som namn.\ncatalog:variable_text:2974:18993:19358"
 
 [[statement]]
 kind = "set"
 subject = "var:kommunvalkrets-valkretsnamn"
 fields = { "sets" = ["kommunvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:24"
+evidence = "Variabeln anger kommunvalkrets som namn.\ncatalog:variable_text:2975:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-valkretsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger kommunvalkrets som namn.\ncatalog:variable_text:2975:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:2976:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:2976:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20033\ncatalog:occurrence:20034"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20033\ncatalog:occurrence:20034"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-2"
+fields = { "sets" = ["lan"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20035\ncatalog:occurrence:20036"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-2"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20035\ncatalog:occurrence:20036"
+
+[[statement]]
+kind = "set"
+subject = "var:landsting"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Överlappande ägare till samma källkolumn kräver samordning.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
+
+[[statement]]
+kind = "set"
+subject = "var:landsting"
+fields = { "tags" = ["geography"] }
+evidence = "Överlappande ägare till samma källkolumn kräver samordning.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Perioduppdelningen mot ltnamn följer övergången från landsting till region.\ncatalog:occurrence:21098\ncatalog:occurrence:21143"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot ltnamn följer övergången från landsting till region.\ncatalog:occurrence:21098\ncatalog:occurrence:21143"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn-lansnamn"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20033\ncatalog:occurrence:20034"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingets-namn-lansnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20033\ncatalog:occurrence:20034"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod-lan"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20035\ncatalog:occurrence:20036"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod-lan"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20035\ncatalog:occurrence:20036"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod-lk"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingskod-lk"
+fields = { "tags" = ["geography"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot regionvalkrets-kod följer namnbytet på valkretsen.\ncatalog:occurrence:21096\ncatalog:occurrence:21141"
 
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-namn"
 fields = { "sets" = ["landstingsvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:31"
+evidence = "Perioduppdelningen mot regionvalkrets-namn följer namnbytet på valkretsen.\ncatalog:occurrence:21097\ncatalog:occurrence:21142"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot regionvalkrets-namn följer namnbytet på valkretsen.\ncatalog:occurrence:21097\ncatalog:occurrence:21142"
+
+[[statement]]
+kind = "set"
+subject = "var:lanssnamn"
+fields = { "sets" = ["lan"] }
+evidence = "Källan anger län med kod.\ncatalog:occurrence:21692"
+
+[[statement]]
+kind = "set"
+subject = "var:lanssnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Källan anger län med kod.\ncatalog:occurrence:21692"
 
 [[statement]]
 kind = "set"
 subject = "var:lt-valkretsnamn"
-fields = { "sets" = ["landstingsvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:31"
+fields = { "tags" = ["geography"] }
+evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot regionvalkrets-valkretsnamn följer namnbytet.\ncatalog:occurrence:21118\ncatalog:occurrence:21163\ncatalog:variable_text:2988:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ltnamn"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot landstingets-namn följer övergången till region.\ncatalog:occurrence:21098\ncatalog:occurrence:21143\ncatalog:variable_text:2989:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ltnamn"
+fields = { "tags" = ["geography"] }
+evidence = "LT är en ogenomskinlig förkortning. Perioduppdelningen mot landstingets-namn följer övergången till region.\ncatalog:occurrence:21098\ncatalog:occurrence:21143\ncatalog:variable_text:2989:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-moderaterna"
+fields = { "sets" = ["mandatantal"] }
+evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2990:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-moderaterna"
+fields = { "tags" = ["democracy"] }
+evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2990:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-moderaterna"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2991:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-moderaterna"
+fields = { "tags" = ["democracy"] }
+evidence = "M är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:2991:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:mandatparti"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om ett parti har mandat.\ncatalog:valueset:6743"
+
+[[statement]]
+kind = "set"
+subject = "var:mandatparti"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger om ett parti har mandat.\ncatalog:valueset:6743"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Variabeln grupperar medborgarskapsland.\ncatalog:occurrence-locators:variable:2993"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar medborgarskapsland.\ncatalog:occurrence-locators:variable:2993"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Variabeln anger medborgarskapsland.\ncatalog:variable_text:2995:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger medborgarskapsland.\ncatalog:variable_text:2995:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-miljopartiet"
+fields = { "sets" = ["mandatantal"] }
+evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2996:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-miljopartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2996:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-miljopartiet"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2997:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-miljopartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "MP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2997:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-ny-demokrati"
+fields = { "sets" = ["mandatantal"] }
+evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2999:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-ny-demokrati"
+fields = { "tags" = ["democracy"] }
+evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:2999:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-ny-demokrati"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3000:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-ny-demokrati"
+fields = { "tags" = ["democracy"] }
+evidence = "NyD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3000:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr-antrost"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "Variabeln mäter giltiga röster för övriga partier.\ncatalog:variable_text:3001:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr-antrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter giltiga röster för övriga partier.\ncatalog:variable_text:3001:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "sets" = ["parti"] }
+evidence = "Variabeln anger parti som kod.\ncatalog:variable_text:3002:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partikod"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger parti som kod.\ncatalog:variable_text:3002:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "sets" = ["parti"] }
+evidence = "Variabeln anger parti som namn.\ncatalog:variable_text:3003:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:partinamn"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger parti som namn.\ncatalog:variable_text:3003:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-kvinnor"
+fields = { "sets" = ["personroster"] }
+evidence = "Variabeln mäter personröster för kvinnor.\ncatalog:occurrence:20590"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-kvinnor"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter personröster för kvinnor.\ncatalog:occurrence:20590"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-man"
+fields = { "sets" = ["personroster"] }
+evidence = "Variabeln mäter personröster för män.\ncatalog:occurrence:20591"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-man"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter personröster för män.\ncatalog:occurrence:20591"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-totalt"
+fields = { "sets" = ["personroster"] }
+evidence = "Variabeln mäter totalt antal personröster.\ncatalog:variable_text:3007:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:personroster-totalt"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter totalt antal personröster.\ncatalog:variable_text:3007:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:pnamn-kort"
+fields = { "sets" = ["parti"] }
+evidence = "Variabeln anger parti i förkortad form.\ncatalog:variable_text:3008:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:pnamn-kort"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger parti i förkortad form.\ncatalog:variable_text:3008:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:region-lk"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Perioduppdelningen mot landstingskod-lk följer övergången till region.\ncatalog:occurrence:21092\ncatalog:occurrence:21136\ncatalog:occurrence:21137"
+
+[[statement]]
+kind = "set"
+subject = "var:region-lk"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot landstingskod-lk följer övergången till region.\ncatalog:occurrence:21092\ncatalog:occurrence:21136\ncatalog:occurrence:21137"
+
+[[statement]]
+kind = "set"
+subject = "var:region-ll"
+fields = { "sets" = ["landsting-och-region"] }
+evidence = "Perioduppdelningen mot landstingskod-lan följer övergången till region.\ncatalog:occurrence:21093\ncatalog:occurrence:21138"
+
+[[statement]]
+kind = "set"
+subject = "var:region-ll"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot landstingskod-lan följer övergången till region.\ncatalog:occurrence:21093\ncatalog:occurrence:21138"
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-kod"
+fields = { "sets" = ["regionvalkretsnamn"] }
+evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21096\ncatalog:occurrence:21141"
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21096\ncatalog:occurrence:21141"
 
 [[statement]]
 kind = "set"
 subject = "var:regionvalkrets-namn"
 fields = { "sets" = ["regionvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:38"
+evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21097\ncatalog:occurrence:21142"
 
 [[statement]]
 kind = "set"
-subject = "var:regionvalkrets-valkretsnamn"
-fields = { "sets" = ["regionvalkretsnamn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:38"
+subject = "var:regionvalkrets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Regionvalkrets och tidigare landstingsvalkrets är samma begrepp med periodvis namnbyte; uppdelningen följer källans perioder.\ncatalog:occurrence:21097\ncatalog:occurrence:21142"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-namn"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:variable_text:3014:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:variable_text:3014:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-ri-valkretskod"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln anger riksdagsvalkretsens kod.\ncatalog:variable_text:3015:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-ri-valkretskod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger riksdagsvalkretsens kod.\ncatalog:variable_text:3015:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-valkretsnamn"
+fields = { "sets" = ["riksdagsvalkrets"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:variable_text:3016:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-valkretsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger riksdagsvalkretsens namn.\ncatalog:variable_text:3016:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rostberattigade-svenska"
+fields = { "sets" = ["rostberattigande"] }
+evidence = "Variabeln mäter antal röstberättigade.\ncatalog:variable_text:3017:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rostberattigade-svenska"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter antal röstberättigade.\ncatalog:variable_text:3017:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "sets" = ["rostberattigande"] }
+evidence = "Variabeln kodar rösträtt.\ncatalog:valueset:9721"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln kodar rösträtt.\ncatalog:valueset:9721"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-socialdemokraterna"
+fields = { "sets" = ["mandatantal"] }
+evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3019:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-socialdemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3019:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3020:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-socialdemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "S är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3020:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Variabeln mäter sammanräknad förvärvsinkomst.\ncatalog:variable_text:3021:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter sammanräknad förvärvsinkomst.\ncatalog:variable_text:3021:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-sverigedemokraterna"
+fields = { "sets" = ["mandatantal"] }
+evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3022:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-sverigedemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3022:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3023:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-sverigedemokraterna"
+fields = { "tags" = ["democracy"] }
+evidence = "SD är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3023:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-sveriges-kommunistiska-parti"
+fields = { "sets" = ["giltiga-roster"] }
+evidence = "SKP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3025:3287:3652"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-sveriges-kommunistiska-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "SKP är en partibokstavskod och id är en källmnemonik.\ncatalog:variable_text:3025:3287:3652"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:3026:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:3026:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inrtext"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Variabeln anger utbildningsinriktning i text.\ncatalog:variable_text:3027:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inrtext"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningsinriktning i text.\ncatalog:variable_text:3027:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger utbildningsnivå.\ncatalog:occurrence:21704\ncatalog:variable_text:3028:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningsnivå.\ncatalog:occurrence:21704\ncatalog:variable_text:3028:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkolumn och klassifikation anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21731\ncatalog:valueset:5052\ncatalog:variable_text:3029:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumn och klassifikation anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21731\ncatalog:valueset:5052\ncatalog:variable_text:3029:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger utbildningsnivå i text.\ncatalog:occurrence:21707\ncatalog:variable_text:3030:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningsnivå i text.\ncatalog:occurrence:21707\ncatalog:variable_text:3030:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext-2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkolumnen anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21734\ncatalog:variable_text:3031:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000nivatext-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21734\ncatalog:variable_text:3031:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:3032:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar utbildningsinriktning.\ncatalog:variable_text:3032:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inrtext"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Variabeln anger utbildningsinriktning i text.\ncatalog:variable_text:3033:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inrtext"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger utbildningsinriktning i text.\ncatalog:variable_text:3033:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger grovt aggregerad utbildningsnivå.\ncatalog:occurrence:21705\ncatalog:variable_text:3034:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger grovt aggregerad utbildningsnivå.\ncatalog:occurrence:21705\ncatalog:variable_text:3034:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkolumnen står i konflikt med definitionen.\ncatalog:occurrence:21732\ncatalog:variable_text:3035:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen står i konflikt med definitionen.\ncatalog:occurrence:21732\ncatalog:variable_text:3035:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger grovt aggregerad utbildningsnivå i text.\ncatalog:occurrence:21706\ncatalog:variable_text:3036:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger grovt aggregerad utbildningsnivå i text.\ncatalog:occurrence:21706\ncatalog:variable_text:3036:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text-2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Källkolumnen står i konflikt med definitionen.\ncatalog:occurrence:21733\ncatalog:variable_text:3037:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen står i konflikt med definitionen.\ncatalog:occurrence:21733\ncatalog:variable_text:3037:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger grov utbildningsnivå.\ncatalog:occurrence:21656\ncatalog:variable_text:3038:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger grov utbildningsnivå.\ncatalog:occurrence:21656\ncatalog:variable_text:3038:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-text"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln anger grov utbildningsnivå i text.\ncatalog:occurrence:21678\ncatalog:variable_text:3039:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grov-text"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger grov utbildningsnivå i text.\ncatalog:occurrence:21678\ncatalog:variable_text:3039:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["svensk-och-utlandsk-bakgrund"] }
+evidence = "Variabeln klassificerar svensk och utländsk bakgrund.\ncatalog:valueset:8386"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln klassificerar svensk och utländsk bakgrund.\ncatalog:valueset:8386"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgtext"
+fields = { "sets" = ["svensk-och-utlandsk-bakgrund"] }
+evidence = "Variabeln anger svensk och utländsk bakgrund i text.\ncatalog:variable_text:3041:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgtext"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger svensk och utländsk bakgrund i text.\ncatalog:variable_text:3041:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-vansterpartiet"
+fields = { "sets" = ["mandatantal"] }
+evidence = "V är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3042:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-mandat-vansterpartiet"
+fields = { "tags" = ["democracy"] }
+evidence = "V är en partibokstav och id är en källmnemonik.\ncatalog:variable_text:3042:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "sets" = ["valdistrikt"] }
+evidence = "Perioduppdelningen mot valdistriktskod gäller samma geografiska indelning.\ncatalog:occurrence:20205\ncatalog:occurrence:20238"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot valdistriktskod gäller samma geografiska indelning.\ncatalog:occurrence:20205\ncatalog:occurrence:20238"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktskod"
+fields = { "sets" = ["valdistrikt"] }
+evidence = "Perioduppdelningen mot valdistrikt gäller samma geografiska indelning.\ncatalog:occurrence:20205\ncatalog:occurrence:20238"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Perioduppdelningen mot valdistrikt gäller samma geografiska indelning.\ncatalog:occurrence:20205\ncatalog:occurrence:20238"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktsnamn"
+fields = { "sets" = ["valdistrikt"] }
+evidence = "Variabeln anger valdistriktets namn.\ncatalog:occurrence:20542\ncatalog:variable_text:3045:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger valdistriktets namn.\ncatalog:occurrence:20542\ncatalog:variable_text:3045:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktsnamn-2"
+fields = { "sets" = ["valdistrikt"] }
+evidence = "Suffixet är en räknare som inte kommer från källkolumnen.\ncatalog:occurrence:20630\ncatalog:variable_text:3046:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistriktsnamn-2"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet är en räknare som inte kommer från källkolumnen.\ncatalog:occurrence:20630\ncatalog:variable_text:3046:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: valkretsnamn @2022-01-01..2022-12-31 where key = 'v22871'"
+fields = { "variable" = "lt-valkretsnamn" }
+evidence = "Both define constituency names for seats awarded in the regional council election table, using character column valkretsnamn. County council constituency becomes regional constituency with the same operational meaning. The last earlier observation is [17532,17897), followed by [18993,19358); coverage of the gap is not asserted."
+
+[[statement]]
+kind = "link"
+subject = "var:ltnamn"
+relation = "continues"
+object = "scb/allmanna-val-valresultat/landstingets-namn"
+at = "2022-01-01.."
+evidence = "Election ltnamn: county council name (1973-2018) -> Region name (2022); landsting renamed to regions, char name column."
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-kod"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "r5 and r31 explicitly define a landstingsvalkrets code, qualified by county code. This matches the fixed group's inclusion of constituency codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2994\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20635\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:20919"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Regional indelning i län, angiven som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger kod men källkolumnen innehåller länsnamn.\ncatalog:variable_text:2977:16071:16436\ncatalog:variable_text:2977:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-ovr-antmand"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "Despite the Ovr_antmand column name, both occurrences explicitly define a landsting constituency code requiring a county-code prefix (r15, r17). This meets the fixed inclusion.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20927\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20971"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-valkretsnamn"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "Historical occurrences explicitly measure landsting constituency names for mandates (r6, r21), satisfying inclusion. The later explicitly regional occurrence (r22) is excluded from that support. Single-group shipping guard: retain the approved group and remove the other membership: regionvalkretsnamn\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20642\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21118\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21163"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunvalkretsnamn"
+fields = { "label" = "Kommunvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:19; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:landstingsvalkretsnamn"
+fields = { "label" = "Landstingsvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:26; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:regionvalkretsnamn"
+fields = { "label" = "Regionvalkrets (namn)" }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:33; existing set membership and current id ledger determine the targets."

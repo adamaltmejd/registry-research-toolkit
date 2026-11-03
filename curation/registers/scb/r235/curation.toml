@@ -1,14 +1,14 @@
 
 [[statement]]
 kind = "link"
-subject = "var:glyfosat-namn"
+subject = "var:vaxtskyddsmedelsnamn"
 relation = "label_of"
 object = "scb/vaxtskyddsmedel/glyfosat-id"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:6\n\nLegacy code_label_pair declaration"
 
 [[statement]]
 kind = "link"
-subject = "var:glyfosat-namn"
+subject = "var:vaxtskyddsmedelsnamn"
 relation = "label_of"
 object = "scb/vaxtskyddsmedel/glyfosat-id-2006"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:10\n\nLegacy code_label_pair declaration"
@@ -38,7 +38,7 @@ evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:22\n\nLeg
 kind = "link"
 subject = "var:vsnamn"
 relation = "label_of"
-object = "scb/vaxtskyddsmedel/vsid"
+object = "scb/vaxtskyddsmedel/vaxtskyddsmedelsid-2006"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:26\n\nLegacy code_label_pair declaration"
 
 [[statement]]
@@ -88,3 +88,1967 @@ kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:andakt"
+fields = { "sets" = [] }
+evidence = "Andel aktiv substans avser växtskyddsmedel.\ncatalog:occurrence:515489"
+
+[[statement]]
+kind = "set"
+subject = "var:andakt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Andel aktiv substans avser växtskyddsmedel.\ncatalog:occurrence:515489"
+
+[[statement]]
+kind = "set"
+subject = "var:andrad"
+fields = { "sets" = [] }
+evidence = "Ändringen avser växtskyddsmedel.\ncatalog:occurrence:515490"
+
+[[statement]]
+kind = "set"
+subject = "var:andrad"
+fields = { "tags" = ["agriculture"] }
+evidence = "Ändringen avser växtskyddsmedel.\ncatalog:occurrence:515490"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Anger annat användningsområde för glyfosat.\ncatalog:occurrence:515601"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger annat användningsområde för glyfosat.\ncatalog:occurrence:515601"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomrade"
+fields = { "sets" = ["vaxtskyddsmedlens-anvandningsomrade"] }
+evidence = "Anger medlens användningsområde.\ncatalog:occurrence:515603"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomrade"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger medlens användningsområde.\ncatalog:occurrence:515603"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomrade-preparat"
+fields = { "sets" = ["vaxtskyddsmedlens-anvandningsomrade"] }
+evidence = "Källkolumnen Typ återanvänds för undersökningstillhörighet.\ncatalog:occurrence:515573\ncatalog:occurrence:515668"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomrade-preparat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnen Typ återanvänds för undersökningstillhörighet.\ncatalog:occurrence:515573\ncatalog:occurrence:515668"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomradetext"
+fields = { "sets" = ["vaxtskyddsmedlens-anvandningsomrade"] }
+evidence = "Text för medlens användningsområde.\ncatalog:occurrence:515604"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandningsomradetext"
+fields = { "tags" = ["agriculture"] }
+evidence = "Text för medlens användningsområde.\ncatalog:occurrence:515604"
+
+[[statement]]
+kind = "set"
+subject = "var:anvbek"
+fields = { "sets" = ["vaxtskyddsmedelsanvandning"] }
+evidence = "Anger användning av bekämpningsmedel.\ncatalog:occurrence:515605"
+
+[[statement]]
+kind = "set"
+subject = "var:anvbek"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger användning av bekämpningsmedel.\ncatalog:occurrence:515605"
+
+[[statement]]
+kind = "set"
+subject = "var:anvgly"
+fields = { "sets" = ["glyfosatmedelsanvandning"] }
+evidence = "Anger glyfosatanvändning.\ncatalog:occurrence:515606"
+
+[[statement]]
+kind = "set"
+subject = "var:anvgly"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger glyfosatanvändning.\ncatalog:occurrence:515606"
+
+[[statement]]
+kind = "set"
+subject = "var:anvglyhost"
+fields = { "sets" = ["glyfosatmedelsanvandning"] }
+evidence = "Anger planerad glyfosatanvändning på hösten.\ncatalog:occurrence:515493"
+
+[[statement]]
+kind = "set"
+subject = "var:anvglyhost"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger planerad glyfosatanvändning på hösten.\ncatalog:occurrence:515493"
+
+[[statement]]
+kind = "set"
+subject = "var:anvglysom"
+fields = { "sets" = ["glyfosatmedelsanvandning"] }
+evidence = "Anger glyfosatanvändning under året.\ncatalog:occurrence:515494"
+
+[[statement]]
+kind = "set"
+subject = "var:anvglysom"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger glyfosatanvändning under året.\ncatalog:occurrence:515494"
+
+[[statement]]
+kind = "set"
+subject = "var:anvvaxt"
+fields = { "sets" = ["vaxtskyddsmedelsanvandning"] }
+evidence = "Anger användning av växtskyddsmedel.\ncatalog:occurrence:515495"
+
+[[statement]]
+kind = "set"
+subject = "var:anvvaxt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger användning av växtskyddsmedel.\ncatalog:occurrence:515495"
+
+[[statement]]
+kind = "set"
+subject = "var:area"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Konventionellt odlad areal för trädgårdsgröda.\ncatalog:occurrence:515496"
+
+[[statement]]
+kind = "set"
+subject = "var:area"
+fields = { "tags" = ["agriculture"] }
+evidence = "Konventionellt odlad areal för trädgårdsgröda.\ncatalog:occurrence:515496"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-fran-lbr"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Källorna för arealen skiljer sig mellan perioderna.\ncatalog:occurrence:515607\ncatalog:occurrence:515691"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-fran-lbr"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källorna för arealen skiljer sig mellan perioderna.\ncatalog:occurrence:515607\ncatalog:occurrence:515691"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-sam-blankett"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Källorna för arealen skiljer sig mellan perioderna.\ncatalog:occurrence:515607\ncatalog:occurrence:515691"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-sam-blankett"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källorna för arealen skiljer sig mellan perioderna.\ncatalog:occurrence:515607\ncatalog:occurrence:515691"
+
+[[statement]]
+kind = "set"
+subject = "var:bandspruta"
+fields = { "sets" = ["spruttyp"] }
+evidence = "Anger användning av bandspruta.\ncatalog:occurrence:515692"
+
+[[statement]]
+kind = "set"
+subject = "var:bandspruta"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger användning av bandspruta.\ncatalog:occurrence:515692"
+
+[[statement]]
+kind = "set"
+subject = "var:bandsprutabredd"
+fields = { "sets" = [] }
+evidence = "Mäter bandbredd vid användning av bandspruta.\ncatalog:occurrence:515693"
+
+[[statement]]
+kind = "set"
+subject = "var:bandsprutabredd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Mäter bandbredd vid användning av bandspruta.\ncatalog:occurrence:515693"
+
+[[statement]]
+kind = "set"
+subject = "var:bareal"
+fields = { "sets" = ["behandlad-areal"] }
+evidence = "Behandlad areal.\ncatalog:occurrence:515497"
+
+[[statement]]
+kind = "set"
+subject = "var:bareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Behandlad areal.\ncatalog:occurrence:515497"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlad-areal"
+fields = { "sets" = ["behandlad-areal"] }
+evidence = "Samma begrepp som glyfosat-behandlad-areal i olika perioder; operationaliseringen anger glyfosat.\ncatalog:occurrence:515608\ncatalog:occurrence:515694"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlad-areal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma begrepp som glyfosat-behandlad-areal i olika perioder; operationaliseringen anger glyfosat.\ncatalog:occurrence:515608\ncatalog:occurrence:515694"
+
+[[statement]]
+kind = "set"
+subject = "var:besprutningar-storsta-falt"
+fields = { "sets" = ["antal-sprutningstillfallen"] }
+evidence = "Samma antal för största fältet som sprutningstillfallen i senare period.\ncatalog:occurrence:515492\ncatalog:occurrence:515602"
+
+[[statement]]
+kind = "set"
+subject = "var:besprutningar-storsta-falt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma antal för största fältet som sprutningstillfallen i senare period.\ncatalog:occurrence:515492\ncatalog:occurrence:515602"
+
+[[statement]]
+kind = "set"
+subject = "var:bet"
+fields = { "sets" = ["behandlad-areal"] }
+evidence = "Betad areal.\ncatalog:occurrence:515499"
+
+[[statement]]
+kind = "set"
+subject = "var:bet"
+fields = { "tags" = ["agriculture"] }
+evidence = "Betad areal.\ncatalog:occurrence:515499"
+
+[[statement]]
+kind = "set"
+subject = "var:betat"
+fields = { "sets" = [] }
+evidence = "Anger om utsädet betats.\ncatalog:occurrence:515500"
+
+[[statement]]
+kind = "set"
+subject = "var:betat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger om utsädet betats.\ncatalog:occurrence:515500"
+
+[[statement]]
+kind = "set"
+subject = "var:bforsak"
+fields = { "sets" = ["bortfallsorsak"] }
+evidence = "Fritext om annan bortfallsorsak.\ncatalog:occurrence:515609"
+
+[[statement]]
+kind = "set"
+subject = "var:bforsak"
+fields = { "tags" = ["methods"] }
+evidence = "Fritext om annan bortfallsorsak.\ncatalog:occurrence:515609"
+
+[[statement]]
+kind = "set"
+subject = "var:blastpot"
+fields = { "sets" = [] }
+evidence = "Användning av blastdödningsmedel.\ncatalog:occurrence:515502"
+
+[[statement]]
+kind = "set"
+subject = "var:blastpot"
+fields = { "tags" = ["agriculture"] }
+evidence = "Användning av blastdödningsmedel.\ncatalog:occurrence:515502"
+
+[[statement]]
+kind = "set"
+subject = "var:bombredd"
+fields = { "sets" = [] }
+evidence = "Sprutans bombredd.\ncatalog:occurrence:515610"
+
+[[statement]]
+kind = "set"
+subject = "var:bombredd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sprutans bombredd.\ncatalog:occurrence:515610"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall"
+fields = { "sets" = ["bortfallsorsak"] }
+evidence = "Kod för bortfall och övertäckning.\ncatalog:occurrence:515611\ncatalog:valueset:4878"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfall"
+fields = { "tags" = ["methods"] }
+evidence = "Kod för bortfall och övertäckning.\ncatalog:occurrence:515611\ncatalog:valueset:4878"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "sets" = ["bortfallsorsak"] }
+evidence = "Kod för objektsbortfall.\ncatalog:occurrence:515695"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Kod för objektsbortfall.\ncatalog:occurrence:515695"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskodtext"
+fields = { "sets" = ["bortfallsorsak"] }
+evidence = "Bortfallsorsak i klartext.\ncatalog:occurrence:515696"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskodtext"
+fields = { "tags" = ["methods"] }
+evidence = "Bortfallsorsak i klartext.\ncatalog:occurrence:515696"
+
+[[statement]]
+kind = "set"
+subject = "var:delekol"
+fields = { "sets" = ["ekologisk-odling"] }
+evidence = "Anger delvis ekologisk odling.\ncatalog:occurrence:515612"
+
+[[statement]]
+kind = "set"
+subject = "var:delekol"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger delvis ekologisk odling.\ncatalog:occurrence:515612"
+
+[[statement]]
+kind = "set"
+subject = "var:dos"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "Dos av växtskyddsmedel.\ncatalog:occurrence:515613"
+
+[[statement]]
+kind = "set"
+subject = "var:dos"
+fields = { "tags" = ["agriculture"] }
+evidence = "Dos av växtskyddsmedel.\ncatalog:occurrence:515613"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-vaxtskyddsmedel"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "Samma glyfosatdos som glyfosat-dos-per-hektar i olika perioder.\ncatalog:occurrence:515614\ncatalog:occurrence:515699"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-vaxtskyddsmedel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma glyfosatdos som glyfosat-dos-per-hektar i olika perioder.\ncatalog:occurrence:515614\ncatalog:occurrence:515699"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-aktiv-substans-kilogram-per-hektar"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "AS är en bokstavskod för aktiv substans.\ncatalog:occurrence:515506\ncatalog:variable_text:55276:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:dos-aktiv-substans-kilogram-per-hektar"
+fields = { "tags" = ["agriculture"] }
+evidence = "AS är en bokstavskod för aktiv substans.\ncatalog:occurrence:515506\ncatalog:variable_text:55276:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:endasteko"
+fields = { "sets" = ["ekologisk-odling"] }
+evidence = "Anger ekologisk odling av grödan.\ncatalog:occurrence:515700"
+
+[[statement]]
+kind = "set"
+subject = "var:endasteko"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger ekologisk odling av grödan.\ncatalog:occurrence:515700"
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kod för fruktodlingsgröda.\ncatalog:occurrence:515703\ncatalog:valueset:11583"
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgrodatext"
+fields = { "tags" = ["agriculture"] }
+evidence = "Namn på fruktodlingsgröda.\ncatalog:occurrence:515704"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllaktiv"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55281:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllaktiv"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55281:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllannat"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55282:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllannat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55282:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllbio"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55283:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllbio"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55283:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllfalt"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55284:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllfalt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55284:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllgard"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55285:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllgard"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55285:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllplatta"
+fields = { "sets" = [] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55286:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:fyllplatta"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett alternativ för sprutans påfyllningsplats.\ncatalog:variable_text:55286:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-behandlad-areal-2"
+fields = { "sets" = ["behandlad-areal"] }
+evidence = "Sifferändelsen är en tillagd räknare; samma begrepp som glyfosat-behandlad-areal i senare period.\ncatalog:occurrence:515498\ncatalog:occurrence:515608\ncatalog:variable_text:55288:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-behandlad-areal-2"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sifferändelsen är en tillagd räknare; samma begrepp som glyfosat-behandlad-areal i senare period.\ncatalog:occurrence:515498\ncatalog:occurrence:515608\ncatalog:variable_text:55288:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-dos-per-hektar"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "Samma glyfosatdos som dos-vaxtskyddsmedel i senare period.\ncatalog:occurrence:515614\ncatalog:occurrence:515699"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-dos-per-hektar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma glyfosatdos som dos-vaxtskyddsmedel i senare period.\ncatalog:occurrence:515614\ncatalog:occurrence:515699"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-fanggroda"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-omrade-fanggroda i senare period.\ncatalog:occurrence:515616\ncatalog:occurrence:515702"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-fanggroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-omrade-fanggroda i senare period.\ncatalog:occurrence:515616\ncatalog:occurrence:515702"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-id"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-id"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-id-2006"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "Senare ägare av samma kolumn överlappar.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-id-2006"
+fields = { "tags" = ["agriculture"] }
+evidence = "Senare ägare av samma kolumn överlappar.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-fanggroda"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-fanggroda i tidigare period.\ncatalog:occurrence:515616\ncatalog:occurrence:515702"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-fanggroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-fanggroda i tidigare period.\ncatalog:occurrence:515616\ncatalog:occurrence:515702"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-stubb"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-stubb i tidigare period.\ncatalog:occurrence:515663\ncatalog:occurrence:515720"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-stubb"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-stubb i tidigare period.\ncatalog:occurrence:515663\ncatalog:occurrence:515720"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-trada"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-trada i tidigare period.\ncatalog:occurrence:515667\ncatalog:occurrence:515722"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-trada"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-trada i tidigare period.\ncatalog:occurrence:515667\ncatalog:occurrence:515722"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-vallbrott"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-vallbrott i tidigare period.\ncatalog:occurrence:515678\ncatalog:occurrence:515723"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-omrade-vallbrott"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-vallbrott i tidigare period.\ncatalog:occurrence:515678\ncatalog:occurrence:515723"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-stubb"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-omrade-stubb i senare period.\ncatalog:occurrence:515663\ncatalog:occurrence:515720"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-stubb"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-omrade-stubb i senare period.\ncatalog:occurrence:515663\ncatalog:occurrence:515720"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-totalmangd"
+fields = { "sets" = [] }
+evidence = "Beskrivningens enhet strider mot totalmängd och angivna enheter.\ncatalog:occurrence:515571\ncatalog:occurrence:515666"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-totalmangd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Beskrivningens enhet strider mot totalmängd och angivna enheter.\ncatalog:occurrence:515571\ncatalog:occurrence:515666"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-trada"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-omrade-trada i senare period.\ncatalog:occurrence:515667\ncatalog:occurrence:515722"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-trada"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-omrade-trada i senare period.\ncatalog:occurrence:515667\ncatalog:occurrence:515722"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-vallbrott"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Samma användningsområde som glyfosat-omrade-vallbrott i senare period.\ncatalog:occurrence:515678\ncatalog:occurrence:515723"
+
+[[statement]]
+kind = "set"
+subject = "var:glyfosat-vallbrott"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma användningsområde som glyfosat-omrade-vallbrott i senare period.\ncatalog:occurrence:515678\ncatalog:occurrence:515723"
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning i gröda.\ncatalog:occurrence:515705"
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning i gröda.\ncatalog:occurrence:515705"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödkod.\ncatalog:occurrence:515706"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-2006"
+fields = { "tags" = ["agriculture"] }
+evidence = "Överlappande mappning av Gid.\ncatalog:occurrence:515514\ncatalog:occurrence:515515"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-glyfosat-2006"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Överlappande mappning av Gid. Coordinator group membership: Variablerna kodar glyfosatbehandlingens områden eller tidpunkter. GrödID glyfosat 2006 kodar uttryckligen även stubb, annan behandling och områden utanför åker och hör därför hit. Medlemmarna anger odlade grödor med kod eller namn. GrödID glyfosat 2006 utesluts eftersom dess redovisade kodning avser behandlingsområden och även omfattar annat än grödor.\ncatalog:occurrence:515514\ncatalog:occurrence:515515\ncatalog:variable_text:55247:14610:14975\ncatalog:variable_text:55279:18628:18993\ncatalog:variable_text:55280:18628:18993\ncatalog:variable_text:55290:14610:14975\ncatalog:variable_text:55294:18628:18993\ncatalog:variable_text:55295:17167:17532\ncatalog:variable_text:55296:18628:18993\ncatalog:variable_text:55297:18628:18993\ncatalog:variable_text:55298:14610:14975\ncatalog:variable_text:55300:14610:14975\ncatalog:variable_text:55301:14610:14975\ncatalog:variable_text:55302:17167:17532\ncatalog:variable_text:55303:18628:18993\ncatalog:variable_text:55304:13149:13514\ncatalog:variable_text:55305:13149:13514\ncatalog:variable_text:55306:18628:18993\ncatalog:variable_text:55307:18628:18993\ncatalog:variable_text:55308:18628:18993\ncatalog:variable_text:55329:14610:14975\ncatalog:variable_text:55337:17167:17532\ncatalog:variable_text:55344:18628:18993\ncatalog:variable_text:55345:18628:18993\ncatalog:variable_text:55355:18628:18993\ncatalog:variable_text:55356:18628:18993\ncatalog:variable_text:55390:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-glyfosat-2006"
+fields = { "tags" = ["agriculture"] }
+evidence = "Överlappande mappning av Gid. Coordinator group membership: Variablerna kodar glyfosatbehandlingens områden eller tidpunkter. GrödID glyfosat 2006 kodar uttryckligen även stubb, annan behandling och områden utanför åker och hör därför hit. Medlemmarna anger odlade grödor med kod eller namn. GrödID glyfosat 2006 utesluts eftersom dess redovisade kodning avser behandlingsområden och även omfattar annat än grödor.\ncatalog:occurrence:515514\ncatalog:occurrence:515515\ncatalog:variable_text:55247:14610:14975\ncatalog:variable_text:55279:18628:18993\ncatalog:variable_text:55280:18628:18993\ncatalog:variable_text:55290:14610:14975\ncatalog:variable_text:55294:18628:18993\ncatalog:variable_text:55295:17167:17532\ncatalog:variable_text:55296:18628:18993\ncatalog:variable_text:55297:18628:18993\ncatalog:variable_text:55298:14610:14975\ncatalog:variable_text:55300:14610:14975\ncatalog:variable_text:55301:14610:14975\ncatalog:variable_text:55302:17167:17532\ncatalog:variable_text:55303:18628:18993\ncatalog:variable_text:55304:13149:13514\ncatalog:variable_text:55305:13149:13514\ncatalog:variable_text:55306:18628:18993\ncatalog:variable_text:55307:18628:18993\ncatalog:variable_text:55308:18628:18993\ncatalog:variable_text:55329:14610:14975\ncatalog:variable_text:55337:17167:17532\ncatalog:variable_text:55344:18628:18993\ncatalog:variable_text:55345:18628:18993\ncatalog:variable_text:55355:18628:18993\ncatalog:variable_text:55356:18628:18993\ncatalog:variable_text:55390:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödnamn i klartext.\ncatalog:occurrence:515707"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kod för grönsaksgröda.\ncatalog:occurrence:515708"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgrodatext"
+fields = { "tags" = ["agriculture"] }
+evidence = "Namn på grönsaksgröda.\ncatalog:occurrence:515709"
+
+[[statement]]
+kind = "set"
+subject = "var:haranvantglyfosat"
+fields = { "sets" = ["glyfosatmedelsanvandning"] }
+evidence = "Anger glyfosatanvändning.\ncatalog:occurrence:515710"
+
+[[statement]]
+kind = "set"
+subject = "var:haranvantglyfosat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger glyfosatanvändning.\ncatalog:occurrence:515710"
+
+[[statement]]
+kind = "set"
+subject = "var:hjannan"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Annan metod för beslut om bekämpningsbehov.\ncatalog:occurrence:515625"
+
+[[statement]]
+kind = "set"
+subject = "var:hjannan"
+fields = { "tags" = ["agriculture"] }
+evidence = "Annan metod för beslut om bekämpningsbehov.\ncatalog:occurrence:515625"
+
+[[statement]]
+kind = "set"
+subject = "var:hjdator"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Datormodell som beslutsstöd.\ncatalog:occurrence:515626"
+
+[[statement]]
+kind = "set"
+subject = "var:hjdator"
+fields = { "tags" = ["agriculture"] }
+evidence = "Datormodell som beslutsstöd.\ncatalog:occurrence:515626"
+
+[[statement]]
+kind = "set"
+subject = "var:hjdos"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Dosnycklar som beslutsstöd.\ncatalog:occurrence:515627"
+
+[[statement]]
+kind = "set"
+subject = "var:hjdos"
+fields = { "tags" = ["agriculture"] }
+evidence = "Dosnycklar som beslutsstöd.\ncatalog:occurrence:515627"
+
+[[statement]]
+kind = "set"
+subject = "var:hjinfo"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Internetinformation som beslutsstöd.\ncatalog:occurrence:515628"
+
+[[statement]]
+kind = "set"
+subject = "var:hjinfo"
+fields = { "tags" = ["agriculture"] }
+evidence = "Internetinformation som beslutsstöd.\ncatalog:occurrence:515628"
+
+[[statement]]
+kind = "set"
+subject = "var:hjinsp"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Fältinspektion som beslutsstöd.\ncatalog:occurrence:515629"
+
+[[statement]]
+kind = "set"
+subject = "var:hjinsp"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fältinspektion som beslutsstöd.\ncatalog:occurrence:515629"
+
+[[statement]]
+kind = "set"
+subject = "var:hjrad"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Rådgivare som beslutsstöd.\ncatalog:occurrence:515630"
+
+[[statement]]
+kind = "set"
+subject = "var:hjrad"
+fields = { "tags" = ["agriculture"] }
+evidence = "Rådgivare som beslutsstöd.\ncatalog:occurrence:515630"
+
+[[statement]]
+kind = "set"
+subject = "var:hjreklam"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Reklam som beslutsstöd.\ncatalog:occurrence:515631"
+
+[[statement]]
+kind = "set"
+subject = "var:hjreklam"
+fields = { "tags" = ["agriculture"] }
+evidence = "Reklam som beslutsstöd.\ncatalog:occurrence:515631"
+
+[[statement]]
+kind = "set"
+subject = "var:hjrutor"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Sprutfria rutor som beslutsstöd.\ncatalog:occurrence:515632"
+
+[[statement]]
+kind = "set"
+subject = "var:hjrutor"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sprutfria rutor som beslutsstöd.\ncatalog:occurrence:515632"
+
+[[statement]]
+kind = "set"
+subject = "var:hjsalj"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Säljare som beslutsstöd.\ncatalog:occurrence:515633"
+
+[[statement]]
+kind = "set"
+subject = "var:hjsalj"
+fields = { "tags" = ["agriculture"] }
+evidence = "Säljare som beslutsstöd.\ncatalog:occurrence:515633"
+
+[[statement]]
+kind = "set"
+subject = "var:hjtext"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Fritext om annan metod.\ncatalog:occurrence:515634"
+
+[[statement]]
+kind = "set"
+subject = "var:hjtext"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fritext om annan metod.\ncatalog:occurrence:515634"
+
+[[statement]]
+kind = "set"
+subject = "var:hjvaxt"
+fields = { "sets" = ["radgivning-och-beslutsstod-for-vaxtskydd"] }
+evidence = "Växtskyddsbrev som beslutsstöd.\ncatalog:occurrence:515635"
+
+[[statement]]
+kind = "set"
+subject = "var:hjvaxt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Växtskyddsbrev som beslutsstöd.\ncatalog:occurrence:515635"
+
+[[statement]]
+kind = "set"
+subject = "var:info"
+fields = { "sets" = [] }
+evidence = "Bedömning av förpackningsinformation för bekämpningsmedel.\ncatalog:occurrence:515636"
+
+[[statement]]
+kind = "set"
+subject = "var:info"
+fields = { "tags" = ["agriculture"] }
+evidence = "Bedömning av förpackningsinformation för bekämpningsmedel.\ncatalog:occurrence:515636"
+
+[[statement]]
+kind = "set"
+subject = "var:ingavaxtskyddsmedel"
+fields = { "sets" = ["vaxtskyddsmedelsanvandning"] }
+evidence = "Anger att växtskyddsmedel inte använts.\ncatalog:occurrence:515711"
+
+[[statement]]
+kind = "set"
+subject = "var:ingavaxtskyddsmedel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger att växtskyddsmedel inte använts.\ncatalog:occurrence:515711"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen"
+fields = { "sets" = ["vaxtskyddsmedelsanvandning"] }
+evidence = "Anger att fältet inte sprutats.\ncatalog:occurrence:515527"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger att fältet inte sprutats.\ncatalog:occurrence:515527"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "sets" = [] }
+evidence = "Anger källtabell för behandlingsuppgifter.\ncatalog:occurrence:515528"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "tags" = ["methods"] }
+evidence = "Anger källtabell för behandlingsuppgifter.\ncatalog:occurrence:515528"
+
+[[statement]]
+kind = "set"
+subject = "var:kantzon"
+fields = { "sets" = [] }
+evidence = "Sprutfria kantzoner i jordbruksgrödor.\ncatalog:occurrence:515637"
+
+[[statement]]
+kind = "set"
+subject = "var:kantzon"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sprutfria kantzoner i jordbruksgrödor.\ncatalog:occurrence:515637"
+
+[[statement]]
+kind = "set"
+subject = "var:kemivolym"
+fields = { "sets" = [] }
+evidence = "Andel kemikalier i växtskyddsmedel.\ncatalog:occurrence:515530"
+
+[[statement]]
+kind = "set"
+subject = "var:kemivolym"
+fields = { "tags" = ["agriculture"] }
+evidence = "Andel kemikalier i växtskyddsmedel.\ncatalog:occurrence:515530"
+
+[[statement]]
+kind = "set"
+subject = "var:konv-arl"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Konventionell areal för specialgröda.\ncatalog:occurrence:515531"
+
+[[statement]]
+kind = "set"
+subject = "var:konv-arl"
+fields = { "tags" = ["agriculture"] }
+evidence = "Konventionell areal för specialgröda.\ncatalog:occurrence:515531"
+
+[[statement]]
+kind = "set"
+subject = "var:konvareal"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Konventionell odlingsareal.\ncatalog:occurrence:515638"
+
+[[statement]]
+kind = "set"
+subject = "var:konvareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Konventionell odlingsareal.\ncatalog:occurrence:515638"
+
+[[statement]]
+kind = "set"
+subject = "var:konvgroda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Grödgrupper som odlas konventionellt.\ncatalog:occurrence:515639"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "sets" = [] }
+evidence = "Objektets inklusionssannolikhet.\ncatalog:occurrence:515640"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "tags" = ["methods"] }
+evidence = "Objektets inklusionssannolikhet.\ncatalog:occurrence:515640"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Jordbruksföretagets länstillhörighet.\ncatalog:occurrence:515712"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Jordbruksföretagets länstillhörighet.\ncatalog:occurrence:515712"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Antalet utvalda företag är ett urvalsmått.\ncatalog:variable_text:55332:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet utvalda företag är ett urvalsmått.\ncatalog:variable_text:55332:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-svar"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har en senare ägare vars definition och operationella definition skiljer sig åt.\ncatalog:occurrence:515643\ncatalog:occurrence:515714"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-svar"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn har en senare ägare vars definition och operationella definition skiljer sig åt.\ncatalog:occurrence:515643\ncatalog:occurrence:515714"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-svar-alt"
+fields = { "sets" = [] }
+evidence = "Definitionen och den operationella definitionen anger olika antal; identitetsfaktens motpart är lillan-svar.\ncatalog:occurrence:515643\ncatalog:occurrence:515714"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-svar-alt"
+fields = { "tags" = ["methods"] }
+evidence = "Definitionen och den operationella definitionen anger olika antal; identitetsfaktens motpart är lillan-svar.\ncatalog:occurrence:515643\ncatalog:occurrence:515714"
+
+[[statement]]
+kind = "set"
+subject = "var:mangd-glyfosatmedel"
+fields = { "sets" = [] }
+evidence = "Den tidigare ägarens angivna enhet kräver kontroll.\ncatalog:occurrence:515571\ncatalog:occurrence:515666"
+
+[[statement]]
+kind = "set"
+subject = "var:mangd-glyfosatmedel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Den tidigare ägarens angivna enhet kräver kontroll.\ncatalog:occurrence:515571\ncatalog:occurrence:515666"
+
+[[statement]]
+kind = "set"
+subject = "var:markannat"
+fields = { "sets" = ["markanpassat-skyddsavstand"] }
+evidence = "Annat sätt att bestämma markanpassat skyddsavstånd.\ncatalog:occurrence:515644"
+
+[[statement]]
+kind = "set"
+subject = "var:markannat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Annat sätt att bestämma markanpassat skyddsavstånd.\ncatalog:occurrence:515644"
+
+[[statement]]
+kind = "set"
+subject = "var:markejakermark"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning utanför åkermark.\ncatalog:occurrence:515715"
+
+[[statement]]
+kind = "set"
+subject = "var:markejakermark"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning utanför åkermark.\ncatalog:occurrence:515715"
+
+[[statement]]
+kind = "set"
+subject = "var:markfast"
+fields = { "sets" = ["markanpassat-skyddsavstand"] }
+evidence = "Fast markanpassat skyddsavstånd.\ncatalog:occurrence:515645"
+
+[[statement]]
+kind = "set"
+subject = "var:markfast"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fast markanpassat skyddsavstånd.\ncatalog:occurrence:515645"
+
+[[statement]]
+kind = "set"
+subject = "var:marknatur"
+fields = { "sets" = ["markanpassat-skyddsavstand"] }
+evidence = "Markanpassat skyddsavstånd enligt Naturvårdsverkets rekommendationer.\ncatalog:occurrence:515647"
+
+[[statement]]
+kind = "set"
+subject = "var:marknatur"
+fields = { "tags" = ["agriculture"] }
+evidence = "Markanpassat skyddsavstånd enligt Naturvårdsverkets rekommendationer.\ncatalog:occurrence:515647"
+
+[[statement]]
+kind = "set"
+subject = "var:markobjekt"
+fields = { "sets" = ["markanpassat-skyddsavstand"] }
+evidence = "Avsaknad av skyddsobjekt.\ncatalog:occurrence:515648"
+
+[[statement]]
+kind = "set"
+subject = "var:markobjekt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avsaknad av skyddsobjekt.\ncatalog:occurrence:515648"
+
+[[statement]]
+kind = "set"
+subject = "var:medel"
+fields = { "sets" = ["vaxtskyddsmedlens-anvandningsomrade"] }
+evidence = "Användningsområde för växtskyddsmedel.\ncatalog:occurrence:515541"
+
+[[statement]]
+kind = "set"
+subject = "var:medel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Användningsområde för växtskyddsmedel.\ncatalog:occurrence:515541"
+
+[[statement]]
+kind = "set"
+subject = "var:ngrans"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "N är en enskild bokstavskod för nedre gräns.\ncatalog:occurrence:515542\ncatalog:variable_text:55342:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ngrans"
+fields = { "tags" = ["agriculture"] }
+evidence = "N är en enskild bokstavskod för nedre gräns.\ncatalog:occurrence:515542\ncatalog:variable_text:55342:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ograns"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "O är en enskild bokstavskod för övre gräns.\ncatalog:occurrence:515543\ncatalog:variable_text:55343:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ograns"
+fields = { "tags" = ["agriculture"] }
+evidence = "O är en enskild bokstavskod för övre gräns.\ncatalog:occurrence:515543\ncatalog:variable_text:55343:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:peribearb"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning mellan bearbetning och höstsådd.\ncatalog:occurrence:515753"
+
+[[statement]]
+kind = "set"
+subject = "var:peribearb"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning mellan bearbetning och höstsådd.\ncatalog:occurrence:515753"
+
+[[statement]]
+kind = "set"
+subject = "var:perisadd"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning mellan sådd och uppkomst.\ncatalog:occurrence:515754"
+
+[[statement]]
+kind = "set"
+subject = "var:perisadd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning mellan sådd och uppkomst.\ncatalog:occurrence:515754"
+
+[[statement]]
+kind = "set"
+subject = "var:persandning"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55346:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persandning"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55346:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persannan"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55347:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persannan"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55347:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persen"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55348:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persen"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55348:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persfler"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55349:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persfler"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55349:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persingen"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser avsaknad av personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55350:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persingen"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser avsaknad av personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55350:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persoverall"
+fields = { "sets" = ["personlig-skyddsutrustning"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55352:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:persoverall"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser personlig skyddsutrustning vid växtskydd.\ncatalog:variable_text:55352:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18-omraden"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "PO är en bokstavskod för produktionsområde; 18 är källans indelning.\ncatalog:occurrence:515717\ncatalog:variable_text:55353:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-18-omraden"
+fields = { "tags" = ["geography"] }
+evidence = "PO är en bokstavskod för produktionsområde; 18 är källans indelning.\ncatalog:occurrence:515717\ncatalog:variable_text:55353:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-omraden"
+fields = { "sets" = ["produktionsomrade"] }
+evidence = "PO är en bokstavskod för produktionsområde; 8 är källans indelning.\ncatalog:occurrence:515755\ncatalog:variable_text:55354:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-omraden"
+fields = { "tags" = ["geography"] }
+evidence = "PO är en bokstavskod för produktionsområde; 8 är källans indelning.\ncatalog:occurrence:515755\ncatalog:variable_text:55354:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:postskord"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning efter skörd på stubb.\ncatalog:occurrence:515756"
+
+[[statement]]
+kind = "set"
+subject = "var:postskord"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning efter skörd på stubb.\ncatalog:occurrence:515756"
+
+[[statement]]
+kind = "set"
+subject = "var:prevarsadd"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning före vårsådd.\ncatalog:occurrence:515757"
+
+[[statement]]
+kind = "set"
+subject = "var:prevarsadd"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning före vårsådd.\ncatalog:occurrence:515757"
+
+[[statement]]
+kind = "set"
+subject = "var:rekdos"
+fields = { "sets" = ["vaxtskyddsmedelsdos"] }
+evidence = "Rekommenderad dos.\ncatalog:occurrence:515551"
+
+[[statement]]
+kind = "set"
+subject = "var:rekdos"
+fields = { "tags" = ["agriculture"] }
+evidence = "Rekommenderad dos.\ncatalog:occurrence:515551"
+
+[[statement]]
+kind = "set"
+subject = "var:saknas"
+fields = { "sets" = [] }
+evidence = "Anger om undersökningsgrödan saknas.\ncatalog:occurrence:515552"
+
+[[statement]]
+kind = "set"
+subject = "var:saknas"
+fields = { "tags" = ["agriculture"] }
+evidence = "Anger om undersökningsgrödan saknas.\ncatalog:occurrence:515552"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsavstand-inga"
+fields = { "sets" = ["markanpassat-skyddsavstand"] }
+evidence = "Inga markanpassade skyddsavstånd.\ncatalog:occurrence:515646"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsavstand-inga"
+fields = { "tags" = ["agriculture"] }
+evidence = "Inga markanpassade skyddsavstånd.\ncatalog:occurrence:515646"
+
+[[statement]]
+kind = "set"
+subject = "var:sparea"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Summan av spannmålsarealen.\ncatalog:occurrence:515553"
+
+[[statement]]
+kind = "set"
+subject = "var:sparea"
+fields = { "tags" = ["agriculture"] }
+evidence = "Summan av spannmålsarealen.\ncatalog:occurrence:515553"
+
+[[statement]]
+kind = "set"
+subject = "var:spill"
+fields = { "sets" = ["spill-och-lackage"] }
+evidence = "Spill eller läckage av växtskyddsmedel.\ncatalog:occurrence:515554"
+
+[[statement]]
+kind = "set"
+subject = "var:spill"
+fields = { "tags" = ["agriculture", "environment"] }
+evidence = "Spill eller läckage av växtskyddsmedel.\ncatalog:occurrence:515554"
+
+[[statement]]
+kind = "set"
+subject = "var:spillannan"
+fields = { "sets" = ["spill-och-lackage"] }
+evidence = "Spill på annan mark.\ncatalog:occurrence:515555"
+
+[[statement]]
+kind = "set"
+subject = "var:spillannan"
+fields = { "tags" = ["agriculture", "environment"] }
+evidence = "Spill på annan mark.\ncatalog:occurrence:515555"
+
+[[statement]]
+kind = "set"
+subject = "var:spillpafyll"
+fields = { "sets" = ["spill-och-lackage"] }
+evidence = "Spill på påfyllningsplan.\ncatalog:occurrence:515556"
+
+[[statement]]
+kind = "set"
+subject = "var:spillpafyll"
+fields = { "tags" = ["agriculture", "environment"] }
+evidence = "Spill på påfyllningsplan.\ncatalog:occurrence:515556"
+
+[[statement]]
+kind = "set"
+subject = "var:spillperson"
+fields = { "sets" = ["spill-och-lackage"] }
+evidence = "Spill på person.\ncatalog:occurrence:515557"
+
+[[statement]]
+kind = "set"
+subject = "var:spillperson"
+fields = { "tags" = ["agriculture"] }
+evidence = "Spill på person.\ncatalog:occurrence:515557"
+
+[[statement]]
+kind = "set"
+subject = "var:spillvatten"
+fields = { "sets" = ["spill-och-lackage"] }
+evidence = "Spill på vatten.\ncatalog:occurrence:515558"
+
+[[statement]]
+kind = "set"
+subject = "var:spillvatten"
+fields = { "tags" = ["agriculture", "environment"] }
+evidence = "Spill på vatten.\ncatalog:occurrence:515558"
+
+[[statement]]
+kind = "set"
+subject = "var:sprut"
+fields = { "sets" = ["vaxtskyddsmedelsanvandning"] }
+evidence = "Sprutningsstatus för grödan.\ncatalog:occurrence:515656"
+
+[[statement]]
+kind = "set"
+subject = "var:sprut"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sprutningsstatus för grödan.\ncatalog:occurrence:515656"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutalder"
+fields = { "sets" = [] }
+evidence = "Sprutans ålder.\ncatalog:occurrence:515657"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutalder"
+fields = { "tags" = ["agriculture"] }
+evidence = "Sprutans ålder.\ncatalog:occurrence:515657"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutare"
+fields = { "sets" = ["sprutningens-utforare"] }
+evidence = "Vem som utförde sprutningen.\ncatalog:occurrence:515658"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Vem som utförde sprutningen.\ncatalog:occurrence:515658"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutareal"
+fields = { "sets" = ["behandlad-areal"] }
+evidence = "Kodad besprutad areal.\ncatalog:occurrence:515561\ncatalog:valueset:3262"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kodad besprutad areal.\ncatalog:occurrence:515561\ncatalog:valueset:3262"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutbrukare"
+fields = { "sets" = ["sprutningens-utforare"] }
+evidence = "Brukare eller anställd utförde sprutningen.\ncatalog:occurrence:515562"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutbrukare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Brukare eller anställd utförde sprutningen.\ncatalog:occurrence:515562"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutgranne"
+fields = { "sets" = ["sprutningens-utforare"] }
+evidence = "Granne eller annan utförde sprutningen.\ncatalog:occurrence:515563"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutgranne"
+fields = { "tags" = ["agriculture"] }
+evidence = "Granne eller annan utförde sprutningen.\ncatalog:occurrence:515563"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutmaskin"
+fields = { "sets" = ["sprutningens-utforare"] }
+evidence = "Maskinstation utförde sprutningen.\ncatalog:occurrence:515564"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutmaskin"
+fields = { "tags" = ["agriculture"] }
+evidence = "Maskinstation utförde sprutningen.\ncatalog:occurrence:515564"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutningstillfallen"
+fields = { "sets" = ["antal-sprutningstillfallen"] }
+evidence = "Samma antal för största fältet som besprutningar-storsta-falt i tidigare period.\ncatalog:occurrence:515492\ncatalog:occurrence:515602"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutningstillfallen"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma antal för största fältet som besprutningar-storsta-falt i tidigare period.\ncatalog:occurrence:515492\ncatalog:occurrence:515602"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutsvar"
+fields = { "sets" = ["sprutningens-utforare"] }
+evidence = "Utförare i textform.\ncatalog:occurrence:515659"
+
+[[statement]]
+kind = "set"
+subject = "var:sprutsvar"
+fields = { "tags" = ["agriculture"] }
+evidence = "Utförare i textform.\ncatalog:occurrence:515659"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Blankettens mottagnings- och granskningsstatus.\ncatalog:occurrence:515661"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["methods"] }
+evidence = "Blankettens mottagnings- och granskningsstatus.\ncatalog:occurrence:515661"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Antal företag i urvalsstratum.\ncatalog:occurrence:515662"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antal företag i urvalsstratum.\ncatalog:occurrence:515662"
+
+[[statement]]
+kind = "set"
+subject = "var:strafro"
+fields = { "sets" = ["stra-forkortning"] }
+evidence = "Stråförkortning i frövall.\ncatalog:occurrence:515566"
+
+[[statement]]
+kind = "set"
+subject = "var:strafro"
+fields = { "tags" = ["agriculture"] }
+evidence = "Stråförkortning i frövall.\ncatalog:occurrence:515566"
+
+[[statement]]
+kind = "set"
+subject = "var:strarag"
+fields = { "sets" = ["stra-forkortning"] }
+evidence = "Stråförkortning i råg.\ncatalog:occurrence:515567"
+
+[[statement]]
+kind = "set"
+subject = "var:strarag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Stråförkortning i råg.\ncatalog:occurrence:515567"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsprut"
+fields = { "sets" = [] }
+evidence = "Vem som kan svara på frågor om sprutning.\ncatalog:occurrence:515664"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsprut"
+fields = { "tags" = ["methods"] }
+evidence = "Vem som kan svara på frågor om sprutning.\ncatalog:occurrence:515664"
+
+[[statement]]
+kind = "set"
+subject = "var:test"
+fields = { "sets" = [] }
+evidence = "Funktionstest av spruta.\ncatalog:occurrence:515665"
+
+[[statement]]
+kind = "set"
+subject = "var:test"
+fields = { "tags" = ["agriculture"] }
+evidence = "Funktionstest av spruta.\ncatalog:occurrence:515665"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-arl"
+fields = { "sets" = ["odlingsareal"] }
+evidence = "Total odlad areal för trädgårdsgröda.\ncatalog:occurrence:515570"
+
+[[statement]]
+kind = "set"
+subject = "var:tot-arl"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total odlad areal för trädgårdsgröda.\ncatalog:occurrence:515570"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-spruta"
+fields = { "sets" = ["spruttyp"] }
+evidence = "Typ av spruta.\ncatalog:occurrence:515660"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-spruta"
+fields = { "tags" = ["agriculture"] }
+evidence = "Typ av spruta.\ncatalog:occurrence:515660"
+
+[[statement]]
+kind = "set"
+subject = "var:und-groda"
+fields = { "sets" = [] }
+evidence = "Förekomst av undersökningsgröda.\ncatalog:occurrence:515574"
+
+[[statement]]
+kind = "set"
+subject = "var:und-groda"
+fields = { "tags" = ["agriculture"] }
+evidence = "Förekomst av undersökningsgröda.\ncatalog:occurrence:515574"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningar"
+fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
+evidence = "Källkolumnen Typ återanvänds för preparatets användningsområde.\ncatalog:occurrence:515573\ncatalog:occurrence:515668"
+
+[[statement]]
+kind = "set"
+subject = "var:undersokningar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnen Typ återanvänds för preparatets användningsområde.\ncatalog:occurrence:515573\ncatalog:occurrence:515668"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Statistisk vikt för uppräkning.\ncatalog:occurrence:515591"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Statistisk vikt för uppräkning.\ncatalog:occurrence:515591"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-vaxtskyddsmedel"
+fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
+evidence = "Undersökningens urval.\ncatalog:occurrence:515575"
+
+[[statement]]
+kind = "set"
+subject = "var:urval-vaxtskyddsmedel"
+fields = { "tags" = ["methods"] }
+evidence = "Undersökningens urval.\ncatalog:occurrence:515575"
+
+[[statement]]
+kind = "set"
+subject = "var:urvareal"
+fields = { "sets" = [] }
+evidence = "Areal som ingår i urvalet.\ncatalog:occurrence:515576"
+
+[[statement]]
+kind = "set"
+subject = "var:urvareal"
+fields = { "tags" = ["methods"] }
+evidence = "Areal som ingår i urvalet.\ncatalog:occurrence:515576"
+
+[[statement]]
+kind = "set"
+subject = "var:urvnr-ordinarie"
+fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
+evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
+
+[[statement]]
+kind = "set"
+subject = "var:urvnr-ordinarie"
+fields = { "tags" = ["methods"] }
+evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
+
+[[statement]]
+kind = "set"
+subject = "var:urvnr-undersokningar"
+fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
+evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
+
+[[statement]]
+kind = "set"
+subject = "var:urvnr-undersokningar"
+fields = { "tags" = ["methods"] }
+evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-aker"
+fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
+evidence = "Glyfosatanvändning utanför åker.\ncatalog:occurrence:515669"
+
+[[statement]]
+kind = "set"
+subject = "var:utanfor-aker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Glyfosatanvändning utanför åker.\ncatalog:occurrence:515669"
+
+[[statement]]
+kind = "set"
+subject = "var:utravdrift"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55391:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utravdrift"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55391:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrdropp"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55392:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrdropp"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55392:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrfjarr"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55393:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrfjarr"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55393:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrprep"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55394:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrprep"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55394:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrslap"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55395:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrslap"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55395:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrsug"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55396:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrsug"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55396:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrtank"
+fields = { "sets" = [] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55397:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrtank"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser en utrustningskomponent på sprutan.\ncatalog:variable_text:55397:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:utrustning-skoljvattentank"
+fields = { "sets" = [] }
+evidence = "Samma begrepp är uppdelat efter period mellan denna variabel och utrustning-skoljvattentank-2006.\ncatalog:occurrence:515584\ncatalog:occurrence:515674"
+
+[[statement]]
+kind = "set"
+subject = "var:utrustning-skoljvattentank"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma begrepp är uppdelat efter period mellan denna variabel och utrustning-skoljvattentank-2006.\ncatalog:occurrence:515584\ncatalog:occurrence:515674"
+
+[[statement]]
+kind = "set"
+subject = "var:utrustning-skoljvattentank-2006"
+fields = { "sets" = [] }
+evidence = "Samma begrepp är uppdelat efter period mellan denna variabel och utrustning-skoljvattentank.\ncatalog:occurrence:515584\ncatalog:occurrence:515674"
+
+[[statement]]
+kind = "set"
+subject = "var:utrustning-skoljvattentank-2006"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma begrepp är uppdelat efter period mellan denna variabel och utrustning-skoljvattentank.\ncatalog:occurrence:515584\ncatalog:occurrence:515674"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-id"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-id"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-namn"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "Källkolumnens omfattning kan skilja sig mellan perioderna.\ncatalog:occurrence:515681\ncatalog:occurrence:515725"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-namn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Källkolumnens omfattning kan skilja sig mellan perioderna.\ncatalog:occurrence:515681\ncatalog:occurrence:515725"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsnamn"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "Samma glyfosatmedelsnamn som glyfosat-namn i senare period.\ncatalog:occurrence:515590\ncatalog:occurrence:515681"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsnamn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma glyfosatmedelsnamn som glyfosat-namn i senare period.\ncatalog:occurrence:515590\ncatalog:occurrence:515681"
+
+[[statement]]
+kind = "set"
+subject = "var:vindannat"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser ett sätt att beräkna vindanpassat skyddsavstånd.\ncatalog:variable_text:55403:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindannat"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett sätt att beräkna vindanpassat skyddsavstånd.\ncatalog:variable_text:55403:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindinte"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser avsaknad av beräkning av vindanpassat skyddsavstånd.\ncatalog:variable_text:55404:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindinte"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser avsaknad av beräkning av vindanpassat skyddsavstånd.\ncatalog:variable_text:55404:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindmatare"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55405:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindmatare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55405:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindtabell"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55406:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindtabell"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55406:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindtermo"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55407:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindtermo"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55407:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindvisare"
+fields = { "sets" = ["vindanpassat-skyddsavstand"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55408:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vindvisare"
+fields = { "tags" = ["agriculture"] }
+evidence = "Avser ett hjälpmedel för vindanpassat skyddsavstånd.\ncatalog:variable_text:55408:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsid-2006"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515598\ncatalog:variable_text:55409:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsid-2006"
+fields = { "tags" = ["agriculture"] }
+evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515598\ncatalog:variable_text:55409:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vsnamn"
+fields = { "sets" = ["vaxtskyddspreparat"] }
+evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515599\ncatalog:variable_text:55410:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:vsnamn"
+fields = { "tags" = ["agriculture"] }
+evidence = "VS är en bokstavskod för växtskyddsmedel.\ncatalog:occurrence:515599\ncatalog:variable_text:55410:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: behandladareal @2010-01-01..2010-12-31 where key = 'v48824'"
+fields = { "variable" = "glyfosat-behandlad-areal-2" }
+evidence = "Both explicitly define area treated with glyphosate products, measured in hectares in BehandladAreal. Their observations occupy nonoverlapping periods [13149,13514] and [14610,14975]; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: vaxtskyddsmedelnamn @2010-01-01..2010-12-31 where key = 'v48830'"
+fields = { "variable" = "vaxtskyddsmedelsnamn" }
+evidence = "Both describe glyphosate product names: one explicitly defines glyphosate names, and the other specifies glyphosate products operationally. Both are character fields in VaxtskyddsmedelNamn, observed in nonoverlapping periods [13149,13514] and [14610,14975]."
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r18/r25 define fruit crops represented by codes; r32 lists cherries, plums, pears and apples. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55099\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515741\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11583"
+
+[[statement]]
+kind = "set"
+subject = "var:fruktodlingsgrodatext"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r19/r26 explicitly define fruit-crop names in plain text. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55100\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515704\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515742"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r14/r20/r27 explicitly define crops represented by codes, including crop categories merged or split for the agricultural system.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55121\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515623\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515743"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-2006"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r12/r41 define crop identity from farmers' SAM applications. The operational text describes which crop IDs the survey covers, rather than a selection-status marker.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55122\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515514\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:55304"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r15/r21/r28 explicitly define crop names in plain text, meeting the fixed group's inclusion of cultivated-crop names.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515624\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515707\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515744"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r22/r29 define vegetable crops represented by codes; r36 supplies vegetable categories. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9384"
+
+[[statement]]
+kind = "set"
+subject = "var:gronsaksodlingsgrodatext"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r23/r30 explicitly define vegetable crop names in plain text. These identify cultivated crops.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515746"
+
+[[statement]]
+kind = "set"
+subject = "var:konvgroda"
+fields = { "sets" = ["odlad-groda"] }
+evidence = "r16/r46 define selectable crop groups within the question about conventionally cultivated area. The variable represents crop groups, which the definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:55147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:515639\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:55329"
+
+[[statement]]
+kind = "set"
+subject = "var:bandsprutabredd"
+fields = { "description" = "Bredd i centimeter på banden när bandspruta har använts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger användning men variabeln mäter bandbredd.\ncatalog:occurrence:515693"
+
+
+[[statement]]
+kind = "set"
+subject = "var:mangd-glyfosatmedel"
+fields = { "description" = "Total mängd glyfosatmedel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:515721:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Occurrences 515666 (2010), 515721 (2017), and 515759 (2021) cannot share a 2017-specific reporting sentence; preserve total quantity meaning. Evidence: rel070-base/reg_meta.db occurrences 515666, 515721."
+
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedelsnamn"
+fields = { "description" = "Glyfosatmedlens namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar förkortning och stavning utan att ändra betydelsen.\ncatalog:occurrence:515681"

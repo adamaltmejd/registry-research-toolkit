@@ -2038,3 +2038,3606 @@ kind = "set"
 subject = "arbetsorsakade-besvar-2018: {hsssyk1,hsssyk2,hsssyk3,hsssyk4,hussyk1,hussyk2,hussyk3,hussyk4}"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "var:grad-av-arbete-hemifran"
+fields = { "sets" = [] }
+evidence = "Källkoden är en opak förkortning.\ncatalog:variable_text:3938:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:grad-av-arbete-hemifran"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är en opak förkortning.\ncatalog:variable_text:3938:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaren-kanner-till-besvar-till-foljd-av-arbete"
+fields = { "sets" = ["arbetsgivarens-kannedom-om-besvar"] }
+evidence = "AG är en opak bokstavskod.\ncatalog:variable_text:3939:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaren-kanner-till-besvar-till-foljd-av-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AG är en opak bokstavskod.\ncatalog:variable_text:3939:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivarens-kannedom-arbetet-orsakar-besvar"
+fields = { "sets" = ["arbetsgivarens-kannedom-om-besvar"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:3940:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivarens-kannedom-arbetet-orsakar-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Källkoden är opak.\ncatalog:variable_text:3940:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:3941:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:3941:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:allergib"
+fields = { "sets" = ["allergi-astma-och-hudbesvar"] }
+evidence = "Allergibesvär ingår i gruppen och avser hälsa och arbetsmiljö.\ncatalog:variable_text:3942:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:allergib"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Allergibesvär ingår i gruppen och avser hälsa och arbetsmiljö.\ncatalog:variable_text:3942:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:angstbesv"
+fields = { "sets" = ["psykiska-besvar"] }
+evidence = "Besvären hör till psykiska besvär och arbetsrelaterad hälsa.\ncatalog:variable_text:3943:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:angstbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvären hör till psykiska besvär och arbetsrelaterad hälsa.\ncatalog:variable_text:3943:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "sets" = [] }
+evidence = "Arbetsmarknadsanknytning hör till sysselsättning.\ncatalog:variable_text:3944:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetsmarknadsanknytning hör till sysselsättning.\ncatalog:variable_text:3944:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anma"
+fields = { "tags" = ["employment"] }
+evidence = "Frågan gäller tidpunkten för arbetsskadeanmälan.\ncatalog:variable_text:3945:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-forsakringskassan"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:27552\ncatalog:occurrence:27553"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-senaste-12-manader"
+fields = { "tags" = ["employment"] }
+evidence = "Samma kolumn har överlappande ägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälningsförekomst eller kombinerad kodning av anmälan och skäl till utebliven anmälan. Tolvmånadersindikatorn hör enligt fast definition till anmälningstidpunkt. membership-0031: Variablerna anger förekomst av arbetsskadeanmälan, generellt eller för respektive arbetsolycka. Den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälan efter årsskiftet respektive under de senaste tolv månaderna och omfattas därmed av den fasta tidsdefinitionen. membership-0031: Variablerna anger anmälningstidpunkt, tidsavgränsade indikatorer eller svarskoder om när anmälan gjordes. Olyckans inträffandeår ingår inte.\ncatalog:occurrence:27552\ncatalog:occurrence:27553\ncatalog:variable_text:3945:16801:17167\ncatalog:variable_text:3946:16801:17167\ncatalog:variable_text:3947:16801:17167\ncatalog:variable_text:3948:12053:12418\ncatalog:variable_text:3950:11323:12053\ncatalog:variable_text:4034:18993:19358\ncatalog:variable_text:4043:18993:19358\ncatalog:variable_text:4044:18993:19358\ncatalog:variable_text:4046:18993:19358\ncatalog:variable_text:4052:18993:19358\ncatalog:variable_text:4060:18993:19358\ncatalog:variable_text:4064:18993:19358\ncatalog:variable_text:4126:18993:19358\ncatalog:variable_text:4127:18993:19358\ncatalog:variable_text:4128:18993:19358\ncatalog:variable_text:4129:18993:19358\ncatalog:variable_text:4130:18993:19358\ncatalog:variable_text:4131:18993:19358\ncatalog:variable_text:4132:18993:19358\ncatalog:variable_text:4133:18993:19358\ncatalog:variable_text:4134:18993:19358\ncatalog:variable_text:4145:18993:19358\ncatalog:variable_text:4146:18993:19358\ncatalog:variable_text:4147:18993:19358\ncatalog:variable_text:4148:18993:19358\ncatalog:variable_text:4149:18993:19358\ncatalog:variable_text:4150:18993:19358\ncatalog:variable_text:4151:18993:19358\ncatalog:variable_text:4152:18993:19358\ncatalog:variable_text:4153:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan1"
+fields = { "tags" = ["employment"] }
+evidence = "Avser arbetsskadeanmälan.\ncatalog:variable_text:3948:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan7"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Avser okänt skäl till utebliven anmälan.\ncatalog:variable_text:3949:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan7"
+fields = { "tags" = ["employment"] }
+evidence = "Avser okänt skäl till utebliven anmälan.\ncatalog:variable_text:3949:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-till-forsakringskassan-har-gjorts-eller-om-nej-orsak"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Den enskilda bokstaven i källkolumnen är en ogenomskinlig kod. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Variablerna anger anmälningsförekomst eller kombinerad kodning av anmälan och skäl till utebliven anmälan. Tolvmånadersindikatorn hör enligt fast definition till anmälningstidpunkt. membership-0031: Variablerna anger förekomst av arbetsskadeanmälan, generellt eller för respektive arbetsolycka. Den skyddade medlemskapen behålls. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0030: Etiketter och granskade beskrivningar stöder skäl, huvudskäl, kombinationer och svarskoder för utebliven anmälan. anmalana inkluderar uttryckligen sådana skäl i sin kombinerade kodning. membership-0031: Ingen vald variabel anger skäl till utebliven anmälan. De valda anmälningsvariablerna gäller gjord anmälan eller dess tidpunkt.\ncatalog:variable_text:3946:16801:17167\ncatalog:variable_text:3947:16801:17167\ncatalog:variable_text:3948:12053:12418\ncatalog:variable_text:3949:12053:12418\ncatalog:variable_text:3950:11323:12053\ncatalog:variable_text:3951:16801:17167\ncatalog:variable_text:3952:16801:17167\ncatalog:variable_text:3953:16801:17167\ncatalog:variable_text:3954:16801:17167\ncatalog:variable_text:3955:16801:17167\ncatalog:variable_text:3956:16801:17167\ncatalog:variable_text:4034:18993:19358\ncatalog:variable_text:4043:18993:19358\ncatalog:variable_text:4064:18993:19358\ncatalog:variable_text:4070:12053:12784\ncatalog:variable_text:4071:16801:17167\ncatalog:variable_text:4072:12418:12784\ncatalog:variable_text:4073:12053:12784\ncatalog:variable_text:4074:12053:12784\ncatalog:variable_text:4075:12053:12784\ncatalog:variable_text:4076:12053:12784\ncatalog:variable_text:4126:18993:19358\ncatalog:variable_text:4127:18993:19358\ncatalog:variable_text:4128:18993:19358\ncatalog:variable_text:4129:18993:19358\ncatalog:variable_text:4130:18993:19358\ncatalog:variable_text:4131:18993:19358\ncatalog:variable_text:4132:18993:19358\ncatalog:variable_text:4133:18993:19358\ncatalog:variable_text:4134:18993:19358\ncatalog:variable_text:4145:18993:19358\ncatalog:variable_text:4192:16801:17167\ncatalog:variable_text:4193:16801:17167\ncatalog:variable_text:4194:16801:17167\ncatalog:variable_text:4195:16801:17167\ncatalog:variable_text:4196:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano1"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan observerade perioder och ej-anmalt-okand-skyldighet.\ncatalog:occurrence:27267\ncatalog:occurrence:27643"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano1"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan observerade perioder och ej-anmalt-okand-skyldighet.\ncatalog:occurrence:27267\ncatalog:occurrence:27643"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano3"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-inte-allvarliga.\ncatalog:occurrence:27269\ncatalog:occurrence:27645"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano3"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-inte-allvarliga.\ncatalog:occurrence:27269\ncatalog:occurrence:27645"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano4"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-ingen-ersattning.\ncatalog:occurrence:27270\ncatalog:occurrence:27646"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano4"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-ingen-ersattning.\ncatalog:occurrence:27270\ncatalog:occurrence:27646"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano5"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-radd-arbetsgivare.\ncatalog:occurrence:27271\ncatalog:occurrence:27647"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano5"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-radd-arbetsgivare.\ncatalog:occurrence:27271\ncatalog:occurrence:27647"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano6"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-andra-skal.\ncatalog:occurrence:27272\ncatalog:occurrence:27648"
+
+[[statement]]
+kind = "set"
+subject = "var:anmano6"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och ej-anmalt-andra-skal.\ncatalog:occurrence:27272\ncatalog:occurrence:27648"
+
+[[statement]]
+kind = "set"
+subject = "var:anmaro"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Värdena anger skäl till utebliven anmälan.\ncatalog:valueset:11914\ncatalog:variable_text:3956:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anmaro"
+fields = { "tags" = ["employment"] }
+evidence = "Värdena anger skäl till utebliven anmälan.\ncatalog:valueset:11914\ncatalog:variable_text:3956:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:annantyp"
+fields = { "sets" = [] }
+evidence = "Andra än fysiska arbetsrelaterade besvär.\ncatalog:variable_text:3957:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:annantyp"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Andra än fysiska arbetsrelaterade besvär.\ncatalog:variable_text:3957:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:annators"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "Kodning av annan orsak till besvär.\ncatalog:variable_text:3958:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:annators"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Kodning av annan orsak till besvär.\ncatalog:variable_text:3958:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-arbetsplats"
+fields = { "sets" = ["anstallningstid"] }
+evidence = "Mäter anställningstid på arbetsplatsen.\ncatalog:variable_text:3959:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-arbetsplats"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter anställningstid på arbetsplatsen.\ncatalog:variable_text:3959:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-harledd"
+fields = { "sets" = ["anstallningstid"] }
+evidence = "Härledd anställningstid i huvudsysslan.\ncatalog:variable_text:3960:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-harledd"
+fields = { "tags" = ["employment"] }
+evidence = "Härledd anställningstid i huvudsysslan.\ncatalog:variable_text:3960:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-huvudsysslan"
+fields = { "sets" = ["anstallningstid"] }
+evidence = "Startår för anställning i huvudsysslan.\ncatalog:variable_text:3961:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsar-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Startår för anställning i huvudsysslan.\ncatalog:variable_text:3961:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsplatsen"
+fields = { "sets" = [] }
+evidence = "Antal anställda på arbetsplatsen.\ncatalog:variable_text:3962:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsplatsen"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda på arbetsplatsen.\ncatalog:variable_text:3962:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobange"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3963:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobange"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3963:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-besvar-besvar-till-fojd-av-arbete"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3964:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-besvar-besvar-till-fojd-av-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3964:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:allergi-astma-eller-hudbesvar-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["allergi-astma-och-hudbesvar"] }
+evidence = "AOB är en ogenomskinlig källkod; etiketten anger besvärstypen.\ncatalog:variable_text:3965:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:allergi-astma-eller-hudbesvar-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig källkod; etiketten anger besvärstypen.\ncatalog:variable_text:3965:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning-annat-besvar-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB is an opaque source mnemonic. The variable describes other work-related complaints.\ncatalog:occurrence:28291\ncatalog:variable_text:3966:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning-annat-besvar-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB is an opaque source mnemonic. The variable describes other work-related complaints.\ncatalog:occurrence:28291\ncatalog:variable_text:3966:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:blod-blodbildande-organ-besvar-av-arbetet"
+fields = { "sets" = ["blodbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade blodbesvär.\ncatalog:register:51\ncatalog:variable_text:3967:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:blod-blodbildande-organ-besvar-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade blodbesvär.\ncatalog:register:51\ncatalog:variable_text:3967:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:brost-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["brostbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bröstbesvär.\ncatalog:register:51\ncatalog:variable_text:3968:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:brost-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bröstbesvär.\ncatalog:register:51\ncatalog:variable_text:3968:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:buk-mage-tarmar-ovriga-bukorgan-besvar-av-arbetet"
+fields = { "sets" = ["buk-och-backenbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bukbesvär.\ncatalog:register:51\ncatalog:variable_text:3969:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:buk-mage-tarmar-ovriga-bukorgan-besvar-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade bukbesvär.\ncatalog:register:51\ncatalog:variable_text:3969:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:cancer-besvar-till-foljd-av-arbetet"
+fields = { "sets" = [] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3970:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:cancer-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3970:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vill-ej-svara-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3971:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vill-ej-svara-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3971:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fingrar-hand-eller-handled-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["handbesvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3972:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fingrar-hand-eller-handled-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3972:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhes"
+fields = { "sets" = [] }
+evidence = "AOB är en ogenomskinlig kod. Taggarna beskriver arbetsrelaterade röstbesvär.\ncatalog:variable_text:3973:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhes"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Taggarna beskriver arbetsrelaterade röstbesvär.\ncatalog:variable_text:3973:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhjarta"
+fields = { "sets" = ["hjart-och-karlbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade hjärt- och kärlbesvär.\ncatalog:register:51\ncatalog:variable_text:3974:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhjarta"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade hjärt- och kärlbesvär.\ncatalog:register:51\ncatalog:variable_text:3974:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhoft"
+fields = { "sets" = ["hoft-ben-och-fotbesvar"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen omfattar den samlade lokaliseringen och taggarna avser arbetsrelaterade besvär.\ncatalog:occurrence:28300\ncatalog:register:51"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhoft"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen omfattar den samlade lokaliseringen och taggarna avser arbetsrelaterade besvär.\ncatalog:occurrence:28300\ncatalog:register:51"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhorsel"
+fields = { "sets" = ["horselbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade hörselbesvär.\ncatalog:register:51\ncatalog:variable_text:3976:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhorsel"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade hörselbesvär.\ncatalog:register:51\ncatalog:variable_text:3976:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhuvud"
+fields = { "sets" = ["huvud-och-ansiktsbesvar"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade huvud- och ansiktsbesvär.\ncatalog:register:51\ncatalog:variable_text:3977:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhuvud"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig kod. Gruppen och taggarna beskriver arbetsrelaterade huvud- och ansiktsbesvär.\ncatalog:register:51\ncatalog:variable_text:3977:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhvdvrk"
+fields = { "sets" = ["huvud-och-ansiktsbesvar"] }
+evidence = "AOB och HVDVRK är ogenomskinliga koder. Gruppen och taggarna beskriver arbetsrelaterad huvudvärk.\ncatalog:register:51\ncatalog:variable_text:3978:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aobhvdvrk"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB och HVDVRK är ogenomskinliga koder. Gruppen och taggarna beskriver arbetsrelaterad huvudvärk.\ncatalog:register:51\ncatalog:variable_text:3978:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hela-eller-storre-delen-av-kroppen-besvar-till-foljd"
+fields = { "sets" = ["besvar-i-hela-kroppen"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3979:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hela-eller-storre-delen-av-kroppen-besvar-till-foljd"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3979:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lungor-luftvagar-besvar-av-arbetet"
+fields = { "sets" = ["lung-och-luftvagsbesvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3980:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lungor-luftvagar-besvar-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3980:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:problem-med-minne-koncentration-eller-tankformaga-besvar"
+fields = { "sets" = [] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3981:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:problem-med-minne-koncentration-eller-tankformaga-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3981:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nacke-axel-arm-besvar-till-flojd-av-arbetet"
+fields = { "sets" = ["nack-axel-och-armbesvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3982:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nacke-axel-arm-besvar-till-flojd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3982:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inga-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3983:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inga-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3983:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-eller-angest-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["psykiska-besvar"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3984:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:oro-eller-angest-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3984:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rygg-utom-nacke-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["ryggbesvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3985:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rygg-utom-nacke-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3985:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:somnstorningar-till-foljd-av-arbetet"
+fields = { "sets" = ["somnbesvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3986:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:somnstorningar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3986:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ogon-eller-syn-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["ogon-och-synbesvar"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3987:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ogon-eller-syn-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3987:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:trotthet-besvar-till-foljd-av-arbetet"
+fields = { "sets" = [] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3988:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:trotthet-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3988:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:symtom-pa-depression-eller-utmattningssyndrom-besvar"
+fields = { "sets" = ["psykiska-besvar"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3989:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:symtom-pa-depression-eller-utmattningssyndrom-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3989:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-smarta-eller-vark-besvar-till-foljd-av-arbetet"
+fields = { "sets" = ["fysiska-besvar"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3990:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-smarta-eller-vark-besvar-till-foljd-av-arbetet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en ogenomskinlig källkod.\ncatalog:variable_text:3990:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3991:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-andra-besvar-besvar-till-fojd-av-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOB är en opak källförkortning.\ncatalog:variable_text:3991:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsolycka-tidigare-an-aret-fore-mattillfallet"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "AOF är en källkod. Etiketten anger äldre arbetsolyckor; gruppen och taggarna följer besvärens orsak.\ncatalog:variable_text:3992:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsolycka-tidigare-an-aret-fore-mattillfallet"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOF är en källkod. Etiketten anger äldre arbetsolyckor; gruppen och taggarna följer besvärens orsak.\ncatalog:variable_text:3992:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsolycksfall-aret-fore-mattillfallet-eller-senare"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "AOU är en källkod. Etiketten anger arbetsolycksfall året före mättillfället eller senare.\ncatalog:variable_text:3993:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsolycksfall-aret-fore-mattillfallet-eller-senare"
+fields = { "tags" = ["employment", "health"] }
+evidence = "AOU är en källkod. Etiketten anger arbetsolycksfall året före mättillfället eller senare.\ncatalog:variable_text:3993:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:aproblem"
+fields = { "sets" = ["fysiska-besvar"] }
+evidence = "Frågan gäller fysiska arbetsrelaterade besvär.\ncatalog:variable_text:3994:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:aproblem"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Frågan gäller fysiska arbetsrelaterade besvär.\ncatalog:variable_text:3994:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-pa-helgen"
+fields = { "sets" = ["helgarbete"] }
+evidence = "Helgarbete och dess komponenter hör samman.\ncatalog:variable_text:3996:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-pa-helgen"
+fields = { "tags" = ["employment"] }
+evidence = "Helgarbete och dess komponenter hör samman.\ncatalog:variable_text:3996:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-dagtid"
+fields = { "sets" = ["dagtidsarbete"] }
+evidence = "Avser arbete enbart dagtid.\ncatalog:variable_text:3997:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-dagtid"
+fields = { "tags" = ["employment"] }
+evidence = "Avser arbete enbart dagtid.\ncatalog:variable_text:3997:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-vardagar"
+fields = { "sets" = ["helgarbete"] }
+evidence = "Vardagskodningen hör till helgarbete.\ncatalog:variable_text:3998:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-vardagar"
+fields = { "tags" = ["employment"] }
+evidence = "Vardagskodningen hör till helgarbete.\ncatalog:variable_text:3998:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsst"
+fields = { "sets" = ["arbetsstallningar-som-besvarsorsak"] }
+evidence = "Arbetsställningar är en angiven orsak till arbetsrelaterade besvär.\ncatalog:variable_text:3999:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsst"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Arbetsställningar är en angiven orsak till arbetsrelaterade besvär.\ncatalog:variable_text:3999:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arolycka"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etiketterna anger olika mått.\ncatalog:occurrence:27200\ncatalog:occurrence:27658"
+
+[[statement]]
+kind = "set"
+subject = "var:arolycka"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etiketterna anger olika mått.\ncatalog:occurrence:27200\ncatalog:occurrence:27658"
+
+[[statement]]
+kind = "set"
+subject = "var:asf"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "Källkolumnen har olika ägare och kodning över perioderna.\ncatalog:occurrence:27561\ncatalog:occurrence:27659"
+
+[[statement]]
+kind = "set"
+subject = "var:asf"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Källkolumnen har olika ägare och kodning över perioderna.\ncatalog:occurrence:27561\ncatalog:occurrence:27659"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda1"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27841\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda1"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27841\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda2"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27842\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda2"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27842\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda3"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid besvär efter färdolycka.\ncatalog:occurrence:27843\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukda3"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln mäter sjukfrånvarons längd vid besvär efter färdolycka.\ncatalog:occurrence:27843\ncatalog:valueset:12802"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukdag"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Källhistoriken avser frånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27844\ncatalog:variable_text:4005:11323:12784\ncatalog:variable_text:4005:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukdag"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Källhistoriken avser frånvarons längd vid arbetsrelaterade besvär.\ncatalog:occurrence:27844\ncatalog:variable_text:4005:11323:12784\ncatalog:variable_text:4005:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukskr"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln avser sjukfrånvaro eller sjukrelaterad ersättning till följd av besvär.\ncatalog:occurrence:27846\ncatalog:valueset:10885\ncatalog:variable_text:4006:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:asjukskr"
+fields = { "tags" = ["employment", "health", "transfers"] }
+evidence = "Id:t är en läsbar förkortning. Variabeln avser sjukfrånvaro eller sjukrelaterad ersättning till följd av besvär.\ncatalog:occurrence:27846\ncatalog:valueset:10885\ncatalog:variable_text:4006:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:asjumatv"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Familjen behandlas som läsbara förkortningar. Värdekoderna beskriver sjukfrånvaro och arbetsrelaterade besvär.\ncatalog:valueset:12804\ncatalog:variable_text:4007:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:asjumatv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Familjen behandlas som läsbara förkortningar. Värdekoderna beskriver sjukfrånvaro och arbetsrelaterade besvär.\ncatalog:valueset:12804\ncatalog:variable_text:4007:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Frågan gäller vidtagna arbetsplatsåtgärder.\ncatalog:variable_text:4008:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder"
+fields = { "tags" = ["employment"] }
+evidence = "Frågan gäller vidtagna arbetsplatsåtgärder.\ncatalog:variable_text:4008:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:atgavlast"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Avlastning är en arbetsplatsåtgärd mot besvär.\ncatalog:variable_text:4009:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:atgavlast"
+fields = { "tags" = ["employment"] }
+evidence = "Avlastning är en arbetsplatsåtgärd mot besvär.\ncatalog:variable_text:4009:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:atgpers"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Personlig stöttning är en arbetsplatsåtgärd.\ncatalog:variable_text:4010:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:atgpers"
+fields = { "tags" = ["employment"] }
+evidence = "Personlig stöttning är en arbetsplatsåtgärd.\ncatalog:variable_text:4010:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:atgverktyg"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Nya verktyg är en arbetsplatsåtgärd.\ncatalog:variable_text:4011:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:atgverktyg"
+fields = { "tags" = ["employment"] }
+evidence = "Nya verktyg är en arbetsplatsåtgärd.\ncatalog:variable_text:4011:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:axelarmb"
+fields = { "sets" = ["nack-axel-och-armbesvar"] }
+evidence = "Avser besvär i axel eller arm.\ncatalog:variable_text:4012:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:axelarmb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Avser besvär i axel eller arm.\ncatalog:variable_text:4012:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:badeoch"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Kombinerar ändrade uppgifter och minskad tid.\ncatalog:variable_text:4013:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:badeoch"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Kombinerar ändrade uppgifter och minskad tid.\ncatalog:variable_text:4013:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:belastbe"
+fields = { "sets" = ["fysiska-besvar"] }
+evidence = "Den samlade kodningen avser fysiska besvär.\ncatalog:variable_text:4014:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:belastbe"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Den samlade kodningen avser fysiska besvär.\ncatalog:variable_text:4014:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:benbesva"
+fields = { "sets" = ["hoft-ben-och-fotbesvar"] }
+evidence = "Variabeln gäller besvär i höft, ben eller knä.\ncatalog:variable_text:4015:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:benbesva"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller besvär i höft, ben eller knä.\ncatalog:variable_text:4015:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "Identitetsfakta visar andra ägare till två av källkolumnerna.\ncatalog:occurrence:27203\ncatalog:occurrence:27561\ncatalog:occurrence:27659\ncatalog:occurrence:27664"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Identitetsfakta visar andra ägare till två av källkolumnerna.\ncatalog:occurrence:27203\ncatalog:occurrence:27561\ncatalog:occurrence:27659\ncatalog:occurrence:27664"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden-aret"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "ASU har olika ägare i följande observerade perioder.\ncatalog:occurrence:27564\ncatalog:occurrence:27668"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden-aret"
+fields = { "tags" = ["employment", "health"] }
+evidence = "ASU har olika ägare i följande observerade perioder.\ncatalog:occurrence:27564\ncatalog:occurrence:27668"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden-fore-aret"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "ASU har olika ägare och den senare etiketten anger året före mättillfället eller senare.\ncatalog:occurrence:27564\ncatalog:occurrence:27668"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-andra-forhallanden-fore-aret"
+fields = { "tags" = ["employment", "health"] }
+evidence = "ASU har olika ägare och den senare etiketten anger året före mättillfället eller senare.\ncatalog:occurrence:27564\ncatalog:occurrence:27668"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-blivit-omplacerad"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Omplacering på grund av besvär.\ncatalog:variable_text:4019:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-blivit-omplacerad"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Omplacering på grund av besvär.\ncatalog:variable_text:4019:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-buk-och-backen"
+fields = { "sets" = ["buk-och-backenbesvar"] }
+evidence = "Samma begrepp är uppdelat mellan perioder tillsammans med besvar-i-buk-backen; kodningen och etiketten stöder uppdelningen.\ncatalog:occurrence:27573\ncatalog:occurrence:27678\ncatalog:valueset:11849"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-buk-och-backen"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma begrepp är uppdelat mellan perioder tillsammans med besvar-i-buk-backen; kodningen och etiketten stöder uppdelningen.\ncatalog:occurrence:27573\ncatalog:occurrence:27678\ncatalog:valueset:11849"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-fardvag-olycka-fore-aret"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "Samma kolumn har olika ägare och tidsavgränsningar.\ncatalog:occurrence:27613\ncatalog:occurrence:27793"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-fardvag-olycka-fore-aret"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "Samma kolumn har olika ägare och tidsavgränsningar.\ncatalog:occurrence:27613\ncatalog:occurrence:27793"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-gatt-ned-tid"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Minskad arbetstid på grund av besvär.\ncatalog:variable_text:4022:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-gatt-ned-tid"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Minskad arbetstid på grund av besvär.\ncatalog:variable_text:4022:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-buk-backen"
+fields = { "sets" = ["buk-och-backenbesvar"] }
+evidence = "Samma begrepp är uppdelat mellan perioder tillsammans med besvar-buk-och-backen; kodningen och etiketten stöder uppdelningen.\ncatalog:occurrence:27573\ncatalog:occurrence:27678\ncatalog:valueset:11849"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-buk-backen"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma begrepp är uppdelat mellan perioder tillsammans med besvar-buk-och-backen; kodningen och etiketten stöder uppdelningen.\ncatalog:occurrence:27573\ncatalog:occurrence:27678\ncatalog:valueset:11849"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-andrade-uppg"
+fields = { "sets" = ["minskade-besvar-efter-forandring"] }
+evidence = "Samma kolumn har ägare med olika avgränsningar.\ncatalog:occurrence:27210\ncatalog:occurrence:27286\ncatalog:occurrence:27568\ncatalog:occurrence:27673"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-andrade-uppg"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma kolumn har ägare med olika avgränsningar.\ncatalog:occurrence:27210\ncatalog:occurrence:27286\ncatalog:occurrence:27568\ncatalog:occurrence:27673"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-forandring"
+fields = { "sets" = ["minskade-besvar-efter-forandring"] }
+evidence = "Källkolumnen har olika avgränsning hos dess andra ägare.\ncatalog:occurrence:27568\ncatalog:occurrence:27673"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-forandring"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Källkolumnen har olika avgränsning hos dess andra ägare.\ncatalog:occurrence:27568\ncatalog:occurrence:27673"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-uppg-eller-tid"
+fields = { "sets" = ["minskade-besvar-efter-forandring"] }
+evidence = "Källkolumnen har olika avgränsning hos dess andra ägare.\ncatalog:occurrence:27210\ncatalog:occurrence:27286"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-minskat-uppg-eller-tid"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Källkolumnen har olika avgränsning hos dess andra ägare.\ncatalog:occurrence:27210\ncatalog:occurrence:27286"
+
+[[statement]]
+kind = "set"
+subject = "var:bildskar"
+fields = { "sets" = ["bildskarmsarbete-som-besvarsorsak"] }
+evidence = "Variabeln gäller bildskärmsarbete som besvärsorsak.\ncatalog:variable_text:4027:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:bildskar"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller bildskärmsarbete som besvärsorsak.\ncatalog:variable_text:4027:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxter-djur-orsak-besvar"
+fields = { "sets" = [] }
+evidence = "Biologis är inte en igenkännbar stam av källans ord.\ncatalog:variable_text:4028:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxter-djur-orsak-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Biologis är inte en igenkännbar stam av källans ord.\ncatalog:variable_text:4028:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:blodbesv"
+fields = { "sets" = ["blodbesvar"] }
+evidence = "Variabeln mäter blodbesvär kopplade till arbetet.\ncatalog:variable_text:4029:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:blodbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln mäter blodbesvär kopplade till arbetet.\ncatalog:variable_text:4029:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:brostbes"
+fields = { "sets" = ["brostbesvar"] }
+evidence = "Variabeln mäter bröstbesvär kopplade till arbetet.\ncatalog:variable_text:4030:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:brostbes"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln mäter bröstbesvär kopplade till arbetet.\ncatalog:variable_text:4030:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-av-andra-forhallanden-i-arbetet-an-olyckshandelse"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "BSV är en källmnemonik för besvär; etiketten anger arbetsförhållanden som orsak.\ncatalog:variable_text:4031:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-av-andra-forhallanden-i-arbetet-an-olyckshandelse"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en källmnemonik för besvär; etiketten anger arbetsförhållanden som orsak.\ncatalog:variable_text:4031:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvange"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "The variable records an explanation when no other cause of work-related complaints is given.\ncatalog:occurrence:28324\ncatalog:variable_text:4032:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvange"
+fields = { "tags" = ["employment", "health"] }
+evidence = "The variable records an explanation when no other cause of work-related complaints is given.\ncatalog:occurrence:28324\ncatalog:variable_text:4032:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvanled"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "The variable records an explanation of another cause of work-related complaints.\ncatalog:occurrence:28325\ncatalog:variable_text:4033:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvanled"
+fields = { "tags" = ["employment", "health"] }
+evidence = "The variable records an explanation of another cause of work-related complaints.\ncatalog:occurrence:28325\ncatalog:variable_text:4033:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvanm"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records whether an occupational injury report was made.\ncatalog:occurrence:28326\ncatalog:variable_text:4034:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvannat"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "The variable records another cause of work-related complaints.\ncatalog:occurrence:28327\ncatalog:variable_text:4035:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvannat"
+fields = { "tags" = ["employment", "health"] }
+evidence = "The variable records another cause of work-related complaints.\ncatalog:occurrence:28327\ncatalog:variable_text:4035:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvarbupp"
+fields = { "sets" = [] }
+evidence = "BSV är en ogenomskinlig kod. Variabeln gäller arbetsuppgifter som orsak till besvär.\ncatalog:variable_text:4036:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvarbupp"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en ogenomskinlig kod. Variabeln gäller arbetsuppgifter som orsak till besvär.\ncatalog:variable_text:4036:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbegarb"
+fields = { "sets" = ["begransning-i-arbetet-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen avser begränsning i arbetet till följd av besvär.\ncatalog:register:51\ncatalog:variable_text:4037:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbegarb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen avser begränsning i arbetet till följd av besvär.\ncatalog:register:51\ncatalog:variable_text:4037:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbeguarb"
+fields = { "sets" = ["begransning-utanfor-arbetet-av-besvar"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen avser begränsning utanför arbetet till följd av besvär.\ncatalog:register:51\ncatalog:variable_text:4038:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbeguarb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Id:t är en läsbar förkortning. Gruppen avser begränsning utanför arbetet till följd av besvär.\ncatalog:register:51\ncatalog:variable_text:4038:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbelast"
+fields = { "sets" = [] }
+evidence = "BSV är en ogenomskinlig kod. Variabeln gäller arbetsbelastning som orsak till besvär.\ncatalog:variable_text:4039:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbelast"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en ogenomskinlig kod. Variabeln gäller arbetsbelastning som orsak till besvär.\ncatalog:variable_text:4039:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbuller"
+fields = { "sets" = ["buller-som-besvarsorsak"] }
+evidence = "BSV är en ogenomskinlig kod. Gruppen och taggarna beskriver buller som orsak till besvär.\ncatalog:register:51\ncatalog:variable_text:4040:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvbuller"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en ogenomskinlig kod. Gruppen och taggarna beskriver buller som orsak till besvär.\ncatalog:register:51\ncatalog:variable_text:4040:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:damm-att-utsattas-for-dammiga-miljoer-orsak-till-besvar"
+fields = { "sets" = [] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar damm.\ncatalog:variable_text:4041:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:damm-att-utsattas-for-dammiga-miljoer-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar damm.\ncatalog:variable_text:4041:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-vid-dator-eller-bildskarm-orsak-till-besvar-av-andra"
+fields = { "sets" = ["bildskarmsarbete-som-besvarsorsak"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4042:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-vid-dator-eller-bildskarm-orsak-till-besvar-av-andra"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4042:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvejsv"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4043:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-fore"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4044:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hot-eller-vald-orsak-till-besvar"
+fields = { "sets" = ["hot-och-vald-som-besvarsorsak"] }
+evidence = "BSV är en opak källförkortning.\ncatalog:variable_text:4045:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hot-eller-vald-orsak-till-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en opak källförkortning.\ncatalog:variable_text:4045:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-under"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4046:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkemtek"
+fields = { "sets" = ["kemiska-produkter-som-besvarsorsak"] }
+evidence = "Måttet avser kemiska och tekniska produkter som orsak till besvär.\ncatalog:variable_text:4047:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkemtek"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser kemiska och tekniska produkter som orsak till besvär.\ncatalog:variable_text:4047:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrav"
+fields = { "sets" = [] }
+evidence = "Måttet avser krav i arbetet som orsak till besvär.\ncatalog:variable_text:4048:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrav"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser krav i arbetet som orsak till besvär.\ncatalog:variable_text:4048:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrkchef"
+fields = { "sets" = ["krankande-sarbehandling-som-besvarsorsak"] }
+evidence = "Måttet avser kränkande särbehandling från chef som orsak till besvär.\ncatalog:variable_text:4049:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrkchef"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser kränkande särbehandling från chef som orsak till besvär.\ncatalog:variable_text:4049:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrkkam"
+fields = { "sets" = ["krankande-sarbehandling-som-besvarsorsak"] }
+evidence = "Måttet avser kränkande särbehandling från arbetskamrater som orsak till besvär.\ncatalog:variable_text:4050:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkrkkam"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser kränkande särbehandling från arbetskamrater som orsak till besvär.\ncatalog:variable_text:4050:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkund"
+fields = { "sets" = [] }
+evidence = "Måttet avser krävande kunder och motsvarande som orsak till besvär.\ncatalog:variable_text:4051:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvkund"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser krävande kunder och motsvarande som orsak till besvär.\ncatalog:variable_text:4051:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-efter"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4052:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forlaggningen-av-arbetstiden-orsak-till-besvar"
+fields = { "sets" = [] }
+evidence = "Källkoden är ogenomskinlig; ingen kandidat omfattar arbetstidens förläggning som orsak.\ncatalog:variable_text:4053:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forlaggningen-av-arbetstiden-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "Källkoden är ogenomskinlig; ingen kandidat omfattar arbetstidens förläggning som orsak.\ncatalog:variable_text:4053:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:osaker-anstallning-orsak-till-besvar"
+fields = { "sets" = [] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar osäker anställning som orsak.\ncatalog:variable_text:4054:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:osaker-anstallning-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar osäker anställning som orsak.\ncatalog:variable_text:4054:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvsmitta"
+fields = { "sets" = ["smitta-som-besvarsorsak"] }
+evidence = "Måttet avser smittämnen som orsak till besvär.\ncatalog:variable_text:4055:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvsmitta"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser smittämnen som orsak till besvär.\ncatalog:variable_text:4055:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstdchef"
+fields = { "sets" = ["bristande-stod-som-besvarsorsak"] }
+evidence = "Måttet avser bristande stöd från chef som orsak till besvär.\ncatalog:variable_text:4056:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstdchef"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser bristande stöd från chef som orsak till besvär.\ncatalog:variable_text:4056:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstdkam"
+fields = { "sets" = ["bristande-stod-som-besvarsorsak"] }
+evidence = "Måttet avser bristande stöd från arbetskamrater som orsak till besvär.\ncatalog:variable_text:4057:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstdkam"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser bristande stöd från arbetskamrater som orsak till besvär.\ncatalog:variable_text:4057:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstill"
+fields = { "sets" = ["arbetsstallningar-som-besvarsorsak"] }
+evidence = "Måttet kombinerar arbetsställningar och stillasittande som orsak till besvär.\ncatalog:variable_text:4058:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvstill"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet kombinerar arbetsställningar och stillasittande som orsak till besvär.\ncatalog:variable_text:4058:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvarliga-temperaturforhallanden-drag-eller-liknande-orsak"
+fields = { "sets" = ["temperaturforhallanden-som-besvarsorsak"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4059:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:besvarliga-temperaturforhallanden-drag-eller-liknande-orsak"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4059:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvtidig"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4060:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tung-manuell-hantering-orsak-till-besvar"
+fields = { "sets" = ["tung-hantering-som-besvarsorsak"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4061:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tung-manuell-hantering-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4061:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-upprepade-arbetsmoment-orsak-till-besvar"
+fields = { "sets" = ["upprepade-arbetsmoment-som-besvarsorsak"] }
+evidence = "BSV är en opak källförkortning.\ncatalog:variable_text:4062:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-upprepade-arbetsmoment-orsak-till-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "BSV är en opak källförkortning.\ncatalog:variable_text:4062:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten-och-vatarbete-orsak-till-besvar"
+fields = { "sets" = [] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar våtarbete som orsak.\ncatalog:variable_text:4063:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten-och-vatarbete-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod; ingen kandidat omfattar våtarbete som orsak.\ncatalog:variable_text:4063:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-nar-arbetsskadan-anmaldes-till-forsakringskassan"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4064:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vibrationer-orsak-till-besvar"
+fields = { "sets" = ["vibrationer-som-besvarsorsak"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4065:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vibrationer-orsak-till-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "BSV är en ogenomskinlig källkod.\ncatalog:variable_text:4065:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bulleror"
+fields = { "sets" = ["buller-som-besvarsorsak"] }
+evidence = "Måttet avser buller som orsak till besvär.\ncatalog:variable_text:4066:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:bulleror"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser buller som orsak till besvär.\ncatalog:variable_text:4066:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:byttarbg"
+fields = { "sets" = ["arbetsgivarbyte-pa-grund-av-besvar"] }
+evidence = "Arbetsgivarbyte på grund av besvär.\ncatalog:variable_text:4067:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:byttarbg"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Arbetsgivarbyte på grund av besvär.\ncatalog:variable_text:4067:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:byttjobb"
+fields = { "sets" = ["arbetsgivarbyte-pa-grund-av-besvar"] }
+evidence = "Avser byte av arbetsgivare eller arbetsplats.\ncatalog:variable_text:4068:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:byttjobb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Avser byte av arbetsgivare eller arbetsplats.\ncatalog:variable_text:4068:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:dagvard"
+fields = { "sets" = ["dagtidsarbete"] }
+evidence = "Kombinerar dagtid och vardag.\ncatalog:variable_text:4069:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:dagvard"
+fields = { "tags" = ["employment"] }
+evidence = "Kombinerar dagtid och vardag.\ncatalog:variable_text:4069:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-andra-skal"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano6.\ncatalog:occurrence:27272\ncatalog:occurrence:27648"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-andra-skal"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano6.\ncatalog:occurrence:27272\ncatalog:occurrence:27648"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-avvaktar-besvar"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är uppdelat mellan perioder och ej-anmalt-avvaktar-utredning.\ncatalog:occurrence:27268\ncatalog:occurrence:27644"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-avvaktar-besvar"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är uppdelat mellan perioder och ej-anmalt-avvaktar-utredning.\ncatalog:occurrence:27268\ncatalog:occurrence:27644"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-avvaktar-utredning"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är uppdelat mellan perioder och ej-anmalt-avvaktar-besvar.\ncatalog:occurrence:27268\ncatalog:occurrence:27644"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-avvaktar-utredning"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är uppdelat mellan perioder och ej-anmalt-avvaktar-besvar.\ncatalog:occurrence:27268\ncatalog:occurrence:27644"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-ingen-ersattning"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano4.\ncatalog:occurrence:27270\ncatalog:occurrence:27646"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-ingen-ersattning"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano4.\ncatalog:occurrence:27270\ncatalog:occurrence:27646"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-inte-allvarliga"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano3.\ncatalog:occurrence:27269\ncatalog:occurrence:27645"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-inte-allvarliga"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano3.\ncatalog:occurrence:27269\ncatalog:occurrence:27645"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-okand-skyldighet"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano1.\ncatalog:occurrence:27267\ncatalog:occurrence:27643"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-okand-skyldighet"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano1.\ncatalog:occurrence:27267\ncatalog:occurrence:27643"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-radd-arbetsgivare"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano5.\ncatalog:occurrence:27271\ncatalog:occurrence:27647"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-anmalt-radd-arbetsgivare"
+fields = { "tags" = ["employment"] }
+evidence = "Samma skäl är korrekt uppdelat mellan perioder och anmano5.\ncatalog:occurrence:27271\ncatalog:occurrence:27647"
+
+[[statement]]
+kind = "set"
+subject = "var:fardolyc"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "Samma kolumn har olika begrepp i angränsande observerade perioder.\ncatalog:occurrence:27217\ncatalog:occurrence:27684"
+
+[[statement]]
+kind = "set"
+subject = "var:fardolyc"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "Samma kolumn har olika begrepp i angränsande observerade perioder.\ncatalog:occurrence:27217\ncatalog:occurrence:27684"
+
+[[statement]]
+kind = "set"
+subject = "var:fardvagsolycka"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "Samma kolumn har olika ägare och tidsavgränsningar.\ncatalog:occurrence:27613\ncatalog:occurrence:27793"
+
+[[statement]]
+kind = "set"
+subject = "var:fardvagsolycka"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "Samma kolumn har olika ägare och tidsavgränsningar.\ncatalog:occurrence:27613\ncatalog:occurrence:27793"
+
+[[statement]]
+kind = "set"
+subject = "var:fas2"
+fields = { "sets" = [] }
+evidence = "Deltagande i undersökningens andra fas är metodinformation.\ncatalog:variable_text:4079:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fas2"
+fields = { "tags" = ["methods"] }
+evidence = "Deltagande i undersökningens andra fas är metodinformation.\ncatalog:variable_text:4079:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:forandrade-arbetsuppg"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Innehållet växlar mellan kombinationskod och separat svar.\ncatalog:valueset:689\ncatalog:valueset:9672\ncatalog:variable_text:4080:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:forandrade-arbetsuppg"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Innehållet växlar mellan kombinationskod och separat svar.\ncatalog:valueset:689\ncatalog:valueset:9672\ncatalog:variable_text:4080:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fotbesva"
+fields = { "sets" = ["hoft-ben-och-fotbesvar"] }
+evidence = "Variabeln gäller fot- och tåbesvär.\ncatalog:variable_text:4081:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fotbesva"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller fot- och tåbesvär.\ncatalog:variable_text:4081:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-franvaro-fran-arbetet-till-foljd-av-besvar"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "FV är en ogenomskinlig källförkortning.\ncatalog:variable_text:4082:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-franvaro-fran-arbetet-till-foljd-av-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "FV är en ogenomskinlig källförkortning.\ncatalog:variable_text:4082:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:franvaro-under-referensveckan-beror-pa-besvar-till-fojd"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "FV är en ogenomskinlig källförkortning.\ncatalog:variable_text:4083:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:franvaro-under-referensveckan-beror-pa-besvar-till-fojd"
+fields = { "tags" = ["employment", "health"] }
+evidence = "FV är en ogenomskinlig källförkortning.\ncatalog:variable_text:4083:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fysiskaa"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Förändring av arbetsmiljön är en åtgärd.\ncatalog:variable_text:4084:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fysiskaa"
+fields = { "tags" = ["employment"] }
+evidence = "Förändring av arbetsmiljön är en åtgärd.\ncatalog:variable_text:4084:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:gattned"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Minskad arbetstid på grund av besvär.\ncatalog:variable_text:4085:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:gattned"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Minskad arbetstid på grund av besvär.\ncatalog:variable_text:4085:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:handbesv"
+fields = { "sets" = ["handbesvar"] }
+evidence = "Besvär i fingrar, hand eller handled.\ncatalog:variable_text:4086:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:handbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvär i fingrar, hand eller handled.\ncatalog:variable_text:4086:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:helakrop"
+fields = { "sets" = ["besvar-i-hela-kroppen"] }
+evidence = "Besvär i hela eller större delen av kroppen.\ncatalog:variable_text:4087:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:helakrop"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvär i hela eller större delen av kroppen.\ncatalog:variable_text:4087:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:heltid-deltid-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Avser arbetstid i huvudsysslan.\ncatalog:variable_text:4088:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:heltid-deltid-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Avser arbetstid i huvudsysslan.\ncatalog:variable_text:4088:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hjartbes"
+fields = { "sets" = ["hjart-och-karlbesvar"] }
+evidence = "Måttet avser hjärt- och kärlbesvär.\ncatalog:variable_text:4089:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hjartbes"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser hjärt- och kärlbesvär.\ncatalog:variable_text:4089:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:horselbe"
+fields = { "sets" = ["horselbesvar"] }
+evidence = "Måttet avser arbetsrelaterade hörselbesvär.\ncatalog:variable_text:4090:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:horselbe"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser arbetsrelaterade hörselbesvär.\ncatalog:variable_text:4090:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hotorsak"
+fields = { "sets" = ["hot-och-vald-som-besvarsorsak"] }
+evidence = "Hot eller våld som orsak till besvär.\ncatalog:variable_text:4091:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hotorsak"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Hot eller våld som orsak till besvär.\ncatalog:variable_text:4091:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-kvallar-halften-av-arbetsdagarna"
+fields = { "sets" = ["kvallsarbete"] }
+evidence = "HU är en opak källförkortning.\ncatalog:variable_text:4092:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-kvallar-halften-av-arbetsdagarna"
+fields = { "tags" = ["employment"] }
+evidence = "HU är en opak källförkortning.\ncatalog:variable_text:4092:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hudbesva"
+fields = { "sets" = ["allergi-astma-och-hudbesvar"] }
+evidence = "Variabeln gäller hudbesvär.\ncatalog:variable_text:4093:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hudbesva"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller hudbesvär.\ncatalog:variable_text:4093:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hudoverk"
+fields = { "sets" = ["allergi-astma-och-hudbesvar"] }
+evidence = "Variabeln gäller hudöverkänslighet.\ncatalog:variable_text:4094:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:hudoverk"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller hudöverkänslighet.\ncatalog:variable_text:4094:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-1-sifferniva-i-huvudsysslan"
+fields = { "sets" = ["yrke-i-huvudsysslan"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4095:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-1-sifferniva-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4095:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
+fields = { "sets" = ["yrke-i-huvudsysslan"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4096:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4096:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-3-sifferniva-i-huvudsysslan"
+fields = { "sets" = ["yrke-i-huvudsysslan"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4097:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-3-sifferniva-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "HUSSYK är en ogenomskinlig källförkortning; siffran är källans nivå.\ncatalog:variable_text:4097:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudetb"
+fields = { "sets" = ["huvud-och-ansiktsbesvar"] }
+evidence = "Måttet avser besvär i huvud eller ansikte.\ncatalog:variable_text:4098:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudetb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser besvär i huvud eller ansikte.\ncatalog:variable_text:4098:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:infoarbg"
+fields = { "sets" = ["arbetsgivarens-kannedom-om-besvar"] }
+evidence = "Avser information till arbetsgivaren om besvärens orsak.\ncatalog:variable_text:4099:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:infoarbg"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Avser information till arbetsgivaren om besvärens orsak.\ncatalog:variable_text:4099:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingaprob"
+fields = { "sets" = ["ovriga-besvar"] }
+evidence = "Svarskod för inga av de uppräknade problemen.\ncatalog:variable_text:4100:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingaprob"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Svarskod för inga av de uppräknade problemen.\ncatalog:variable_text:4100:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstgr"
+fields = { "sets" = [] }
+evidence = "Inkomstgrupp är ett inkomstmått.\ncatalog:variable_text:4101:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstgr"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstgrupp är ett inkomstmått.\ncatalog:variable_text:4101:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kemiskao"
+fields = { "sets" = ["kemiska-produkter-som-besvarsorsak"] }
+evidence = "Måttet avser kemiska och tekniska produkter som orsak till besvär.\ncatalog:variable_text:4102:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kemiskao"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser kemiska och tekniska produkter som orsak till besvär.\ncatalog:variable_text:4102:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:klimator"
+fields = { "sets" = ["temperaturforhallanden-som-besvarsorsak"] }
+evidence = "Variabeln gäller temperaturförhållanden som besvärsorsak.\ncatalog:variable_text:4103:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:klimator"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller temperaturförhållanden som besvärsorsak.\ncatalog:variable_text:4103:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:4104:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön är en demografisk uppgift.\ncatalog:variable_text:4104:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktl"
+fields = { "sets" = ["vardkontakt-for-arbetsrelaterade-besvar"] }
+evidence = "Källan anger läkarkontakt för besvär.\ncatalog:variable_text:4105:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktl"
+fields = { "tags" = ["employment", "healthcare"] }
+evidence = "Källan anger läkarkontakt för besvär.\ncatalog:variable_text:4105:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-frekvens"
+fields = { "sets" = ["kvallsarbete"] }
+evidence = "Mäter kvällsarbete i huvudsysslan.\ncatalog:variable_text:4106:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-frekvens"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter kvällsarbete i huvudsysslan.\ncatalog:variable_text:4106:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-harledd"
+fields = { "sets" = ["kvallsarbete"] }
+evidence = "Kodning av kvällsarbete i huvudsysslan.\ncatalog:variable_text:4107:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-harledd"
+fields = { "tags" = ["employment"] }
+evidence = "Kodning av kvällsarbete i huvudsysslan.\ncatalog:variable_text:4107:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-i-huvudsysslan"
+fields = { "sets" = ["kvallsarbete"] }
+evidence = "Avser kvällsarbete i huvudsysslan.\ncatalog:variable_text:4108:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Avser kvällsarbete i huvudsysslan.\ncatalog:variable_text:4108:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-minst-halvdag"
+fields = { "sets" = ["kvallsarbete"] }
+evidence = "Kodning av kvällsarbete med tröskeln hälften av arbetsdagarna.\ncatalog:valueset:2105\ncatalog:variable_text:4109:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-minst-halvdag"
+fields = { "tags" = ["employment"] }
+evidence = "Kodning av kvällsarbete med tröskeln hälften av arbetsdagarna.\ncatalog:valueset:2105\ncatalog:variable_text:4109:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:4110:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:4110:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lordagsarbete-i-huvudsysslan-harledd"
+fields = { "sets" = ["helgarbete"] }
+evidence = "Lördagsarbete är en komponent av helgarbete.\ncatalog:variable_text:4111:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lordagsarbete-i-huvudsysslan-harledd"
+fields = { "tags" = ["employment"] }
+evidence = "Lördagsarbete är en komponent av helgarbete.\ncatalog:variable_text:4111:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lungbesv"
+fields = { "sets" = ["lung-och-luftvagsbesvar"] }
+evidence = "Besvär i lungor eller luftvägar.\ncatalog:variable_text:4112:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:lungbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvär i lungor eller luftvägar.\ncatalog:variable_text:4112:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:magebesv"
+fields = { "sets" = ["buk-och-backenbesvar"] }
+evidence = "Måttet avser besvär i mage och andra bukorgan.\ncatalog:variable_text:4113:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:magebesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser besvär i mage och andra bukorgan.\ncatalog:variable_text:4113:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-och-sjukfranvarande"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Källförkortningen är ogenomskinlig.\ncatalog:variable_text:4114:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-och-sjukfranvarande"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Källförkortningen är ogenomskinlig.\ncatalog:variable_text:4114:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:metodisk"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Förändring av arbetsmetoder är en arbetsplatsåtgärd.\ncatalog:variable_text:4115:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:metodisk"
+fields = { "tags" = ["employment"] }
+evidence = "Förändring av arbetsmetoder är en arbetsplatsåtgärd.\ncatalog:variable_text:4115:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:minskbesv"
+fields = { "sets" = ["minskade-besvar-efter-forandring"] }
+evidence = "Minskning efter åtgärder på arbetsplatsen.\ncatalog:variable_text:4116:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:minskbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Minskning efter åtgärder på arbetsplatsen.\ncatalog:variable_text:4116:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mobbingo"
+fields = { "sets" = ["krankande-sarbehandling-som-besvarsorsak"] }
+evidence = "Måttet avser mobbning eller trakasserier som orsak till besvär.\ncatalog:variable_text:4117:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:mobbingo"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser mobbning eller trakasserier som orsak till besvär.\ncatalog:variable_text:4117:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nackebes"
+fields = { "sets" = ["nack-axel-och-armbesvar"] }
+evidence = "Besvär i hals eller nacke.\ncatalog:variable_text:4118:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nackebes"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvär i hals eller nacke.\ncatalog:variable_text:4118:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nagotann"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Variabeln gäller andra arbetsplatsåtgärder.\ncatalog:variable_text:4119:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nagotann"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller andra arbetsplatsåtgärder.\ncatalog:variable_text:4119:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-frekvens"
+fields = { "sets" = ["nattarbete"] }
+evidence = "Mäter nattarbete i huvudsysslan.\ncatalog:variable_text:4120:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-frekvens"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter nattarbete i huvudsysslan.\ncatalog:variable_text:4120:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-harledd"
+fields = { "sets" = ["nattarbete"] }
+evidence = "Härledd kodning av nattarbete.\ncatalog:variable_text:4121:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-harledd"
+fields = { "tags" = ["employment"] }
+evidence = "Härledd kodning av nattarbete.\ncatalog:variable_text:4121:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-huvudsysslan"
+fields = { "sets" = ["nattarbete"] }
+evidence = "Avser nattarbete.\ncatalog:variable_text:4122:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Avser nattarbete.\ncatalog:variable_text:4122:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-minst-halften"
+fields = { "sets" = ["nattarbete"] }
+evidence = "Kodning av nattarbete med tröskeln hälften av arbetsdagarna.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-minst-halften"
+fields = { "tags" = ["employment"] }
+evidence = "Kodning av nattarbete med tröskeln hälften av arbetsdagarna.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nejalla"
+fields = { "sets" = ["arbetsanpassning-pa-grund-av-besvar"] }
+evidence = "Varken ändrade arbetsuppgifter eller minskad tid.\ncatalog:variable_text:4124:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:nejalla"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Varken ändrade arbetsuppgifter eller minskad tid.\ncatalog:variable_text:4124:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:ogonenbe"
+fields = { "sets" = ["ogon-och-synbesvar"] }
+evidence = "Variabeln gäller ögonbesvär.\ncatalog:variable_text:4125:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ogonenbe"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller ögonbesvär.\ncatalog:variable_text:4125:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm1"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the most recent accident.\ncatalog:occurrence:28400\ncatalog:variable_text:4126:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm2"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the second most recent accident.\ncatalog:occurrence:28401\ncatalog:variable_text:4127:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm3"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the third most recent accident.\ncatalog:occurrence:28402\ncatalog:variable_text:4128:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm4"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the fourth accident.\ncatalog:occurrence:28403\ncatalog:variable_text:4129:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm5"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the fifth accident.\ncatalog:occurrence:28404\ncatalog:variable_text:4130:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm6"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the sixth accident.\ncatalog:occurrence:28405\ncatalog:variable_text:4131:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm7"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the seventh accident.\ncatalog:occurrence:28406\ncatalog:variable_text:4132:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm8"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the eighth accident.\ncatalog:occurrence:28407\ncatalog:variable_text:4133:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm9"
+fields = { "tags" = ["employment"] }
+evidence = "The variable records an occupational injury report for the ninth accident.\ncatalog:occurrence:28408\ncatalog:variable_text:4134:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olantal"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "OL är en ogenomskinlig källkod. Gruppen och taggarna beskriver arbetsolyckor bakom besvär.\ncatalog:register:51\ncatalog:variable_text:4135:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olantal"
+fields = { "tags" = ["employment", "health"] }
+evidence = "OL är en ogenomskinlig källkod. Gruppen och taggarna beskriver arbetsolyckor bakom besvär.\ncatalog:register:51\ncatalog:variable_text:4135:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar1"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4136:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar1"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4136:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar2"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4137:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar2"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4137:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar3"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4138:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar3"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4138:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar4"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4139:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar4"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4139:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar5"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4140:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar5"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4140:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar6"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4141:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar6"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4141:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar7"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4142:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar7"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4142:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar8"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4143:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar8"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4143:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar9"
+fields = { "sets" = ["arbetsolyckans-intraffandear"] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4144:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olar9"
+fields = { "tags" = [] }
+evidence = "OL är en ogenomskinlig källkod. Källkolumnen skiljer denna olyckas inträffandeår från övriga.\ncatalog:register:51\ncatalog:variable_text:4144:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:begransad-i-arbetet-till-foljd-av-besvar-till-foljd"
+fields = { "sets" = ["begransning-i-arbetet-av-besvar"] }
+evidence = "OL är en ogenomskinlig källkod.\ncatalog:variable_text:4154:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:begransad-i-arbetet-till-foljd-av-besvar-till-foljd"
+fields = { "tags" = ["employment", "health"] }
+evidence = "OL är en ogenomskinlig källkod.\ncatalog:variable_text:4154:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olbeguarb"
+fields = { "sets" = ["begransning-utanfor-arbetet-av-besvar"] }
+evidence = "OL är en ogenomskinlig källkod.\ncatalog:variable_text:4155:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olbeguarb"
+fields = { "tags" = ["employment", "health"] }
+evidence = "OL är en ogenomskinlig källkod.\ncatalog:variable_text:4155:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olenfler"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "Måttet skiljer en från flera arbetsolyckor bakom besvären.\ncatalog:valueset:2847\ncatalog:variable_text:4156:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olenfler"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet skiljer en från flera arbetsolyckor bakom besvären.\ncatalog:valueset:2847\ncatalog:variable_text:4156:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak1"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4157:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak1"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4157:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak2"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4158:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak2"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4158:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak3"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4159:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak3"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4159:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak4"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4160:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak4"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4160:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak5"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4161:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak5"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4161:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak6"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4162:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak6"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4162:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak7"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4163:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak7"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4163:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak8"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4164:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak8"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4164:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak9"
+fields = { "sets" = ["orsak-till-arbetsolycka"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4165:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olorsak9"
+fields = { "tags" = ["employment"] }
+evidence = "Måttet kodar orsaken till en arbetsolycka.\ncatalog:variable_text:4165:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olycka"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "Måttet avser besvär till följd av arbetsolycka.\ncatalog:variable_text:4166:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:olycka"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser besvär till följd av arbetsolycka.\ncatalog:variable_text:4166:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:organisa"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Organisationsförändring är en arbetsplatsåtgärd.\ncatalog:variable_text:4167:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:organisa"
+fields = { "tags" = ["employment"] }
+evidence = "Organisationsförändring är en arbetsplatsåtgärd.\ncatalog:variable_text:4167:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-enbart-med-ersattning"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln gäller ersatt övertid.\ncatalog:variable_text:4168:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-enbart-med-ersattning"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller ersatt övertid.\ncatalog:variable_text:4168:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-med-ersattning"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln gäller ersatt övertid; en senare operativ definition är snävare.\ncatalog:variable_text:4169:16071:16436\ncatalog:variable_text:4169:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-med-ersattning"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller ersatt övertid; en senare operativ definition är snävare.\ncatalog:variable_text:4169:16071:16436\ncatalog:variable_text:4169:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-10-timmar"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln kodar övertid kring tiotimmarströskeln.\ncatalog:variable_text:4170:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-10-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln kodar övertid kring tiotimmarströskeln.\ncatalog:variable_text:4170:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-5-timmar"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln kodar övertid kring femtimmarströskeln.\ncatalog:variable_text:4171:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-minst-5-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln kodar övertid kring femtimmarströskeln.\ncatalog:variable_text:4171:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-totalt"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln gäller förekomst av övertid.\ncatalog:variable_text:4172:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-totalt"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller förekomst av övertid.\ncatalog:variable_text:4172:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-utan-ersattning-anstallda"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln gäller oersatt övertid.\ncatalog:variable_text:4173:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-utan-ersattning-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller oersatt övertid.\ncatalog:variable_text:4173:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidstimmar-totalt-huvudsyssla"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Variabeln mäter övertidens omfattning.\ncatalog:variable_text:4174:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:overtidstimmar-totalt-huvudsyssla"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter övertidens omfattning.\ncatalog:variable_text:4174:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:personut"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Förändrad personalutbildning är en arbetsplatsåtgärd.\ncatalog:variable_text:4176:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:personut"
+fields = { "tags" = ["employment"] }
+evidence = "Förändrad personalutbildning är en arbetsplatsåtgärd.\ncatalog:variable_text:4176:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:probanna"
+fields = { "sets" = [] }
+evidence = "Kombinerar kroppsliga och andra arbetsrelaterade besvär.\ncatalog:variable_text:4177:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:probanna"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Kombinerar kroppsliga och andra arbetsrelaterade besvär.\ncatalog:variable_text:4177:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:psykbesv"
+fields = { "sets" = ["psykiska-besvar"] }
+evidence = "Variabeln gäller psykiska besvär.\ncatalog:variable_text:4178:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:psykbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller psykiska besvär.\ncatalog:variable_text:4178:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:psykiska"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller psykisk påfrestning som arbetsmiljöorsak; gruppen för psykiska besvär omfattar inte orsaker.\ncatalog:variable_text:4179:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:psykiska"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller psykisk påfrestning som arbetsmiljöorsak; gruppen för psykiska besvär omfattar inte orsaker.\ncatalog:variable_text:4179:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsutredning"
+fields = { "sets" = [] }
+evidence = "Utredning för återgång till arbetet.\ncatalog:variable_text:4180:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsutredning"
+fields = { "tags" = ["employment", "healthcare"] }
+evidence = "Utredning för återgång till arbetet.\ncatalog:variable_text:4180:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ryggbesv"
+fields = { "sets" = ["ryggbesvar"] }
+evidence = "Besvär i rygg utom nacke.\ncatalog:variable_text:4181:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ryggbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Besvär i rygg utom nacke.\ncatalog:variable_text:4181:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-kombinationer-av-svar-s10"
+fields = { "sets" = [] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4182:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-kombinationer-av-svar-s10"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4182:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-vill-ej-svara-s10"
+fields = { "sets" = [] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4183:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-vill-ej-svara-s10"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4183:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-vet-ej-s10"
+fields = { "sets" = [] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4184:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-vet-ej-s10"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S10 är en ogenomskinlig frågekod.\ncatalog:variable_text:4184:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-annat-fritext"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "S11A är en opak frågekod.\ncatalog:variable_text:4185:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-annat-fritext"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S11A är en opak frågekod.\ncatalog:variable_text:4185:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-kombinationer-av-svar"
+fields = { "sets" = [] }
+evidence = "S11 är en ogenomskinlig frågekod.\ncatalog:variable_text:4186:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-kombinationer-av-svar"
+fields = { "tags" = ["employment"] }
+evidence = "S11 är en ogenomskinlig frågekod.\ncatalog:variable_text:4186:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-vill-ej-svara"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "S11 är en opak frågekod.\ncatalog:variable_text:4187:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-till-besvar-vill-ej-svara"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S11 är en opak frågekod.\ncatalog:variable_text:4187:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-annat"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "S19A är en ogenomskinlig frågekod.\ncatalog:variable_text:4188:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-annat"
+fields = { "tags" = ["employment"] }
+evidence = "S19A är en ogenomskinlig frågekod.\ncatalog:variable_text:4188:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-kombinationer-av-svar"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4189:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-kombinationer-av-svar"
+fields = { "tags" = ["employment"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4189:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-vill-ej-svara"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4190:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-vill-ej-svara"
+fields = { "tags" = ["employment"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4190:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-vet-ej"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4191:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vilka-atgarder-har-vidtagits-vet-ej"
+fields = { "tags" = ["employment"] }
+evidence = "S19 är en ogenomskinlig frågekod.\ncatalog:variable_text:4191:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsakliga-skalet-till-att-ingen-arbetsskadeanmalan-gjorts"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "S222 är en ogenomskinlig frågekod.\ncatalog:variable_text:4192:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsakliga-skalet-till-att-ingen-arbetsskadeanmalan-gjorts"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S222 är en ogenomskinlig frågekod.\ncatalog:variable_text:4192:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:s22a"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "S22A är en opak frågekod.\ncatalog:variable_text:4193:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:s22a"
+fields = { "tags" = ["employment"] }
+evidence = "S22A är en opak frågekod.\ncatalog:variable_text:4193:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-arbetsskadeanmalan-gjorts-kombinationer-av-skal"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4194:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-arbetsskadeanmalan-gjorts-kombinationer-av-skal"
+fields = { "tags" = ["employment"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4194:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:s22vagrar"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4195:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:s22vagrar"
+fields = { "tags" = ["employment"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4195:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-arbetsskadeanmalan-gjorts-vet-ej"
+fields = { "sets" = ["skal-till-utebliven-arbetsskadeanmalan"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4196:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ingen-arbetsskadeanmalan-gjorts-vet-ej"
+fields = { "tags" = ["employment"] }
+evidence = "S22 är en opak frågekod.\ncatalog:variable_text:4196:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nej-ej-besvar-pga-arbetsolycksfall"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "S31 är en frågekod; etiketten anger ett nej-svar om arbetsolycksfall.\ncatalog:variable_text:4197:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nej-ej-besvar-pga-arbetsolycksfall"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S31 är en frågekod; etiketten anger ett nej-svar om arbetsolycksfall.\ncatalog:variable_text:4197:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-kombinationer-av-svar"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "S31Tot är en frågekod. Etiketten anger kombinationer av svar.\ncatalog:variable_text:4198:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-med-kombinationer-av-svar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S31Tot är en frågekod. Etiketten anger kombinationer av svar.\ncatalog:variable_text:4198:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-arbetsolycksfall-vill-ej-svara"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "S31 är en frågekod; etiketten anger svarsvägran för arbetsolycksfall.\ncatalog:variable_text:4199:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-arbetsolycksfall-vill-ej-svara"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S31 är en frågekod; etiketten anger svarsvägran för arbetsolycksfall.\ncatalog:variable_text:4199:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-arbetsolycksfall-vet-ej"
+fields = { "sets" = ["besvar-till-foljd-av-arbetsolycka"] }
+evidence = "S31 är en frågekod; etiketten anger vet ej för arbetsolycksfall.\ncatalog:variable_text:4200:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-arbetsolycksfall-vet-ej"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S31 är en frågekod; etiketten anger vet ej för arbetsolycksfall.\ncatalog:variable_text:4200:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-nej"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "S32 är en frågekod; etiketten anger ett nej-svar om andra förhållanden.\ncatalog:variable_text:4201:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-nej"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S32 är en frågekod; etiketten anger ett nej-svar om andra förhållanden.\ncatalog:variable_text:4201:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-kombinationer-av-svar"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "S32Tot är en frågekod. Etiketten anger kombinationer av svar.\ncatalog:variable_text:4202:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-kombinationer-av-svar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S32Tot är en frågekod. Etiketten anger kombinationer av svar.\ncatalog:variable_text:4202:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-vill-ej-svara"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "S32 är en frågekod; etiketten anger svarsvägran för andra förhållanden.\ncatalog:variable_text:4203:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-vill-ej-svara"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S32 är en frågekod; etiketten anger svarsvägran för andra förhållanden.\ncatalog:variable_text:4203:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-vet-ej"
+fields = { "sets" = ["besvar-av-andra-arbetsforhallanden"] }
+evidence = "S32 är en frågekod; etiketten anger vet ej för andra förhållanden.\ncatalog:variable_text:4204:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-andra-forhallanden-vet-ej"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S32 är en frågekod; etiketten anger vet ej för andra förhållanden.\ncatalog:variable_text:4204:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-nej"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4205:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-nej"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4205:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-kombinationer-av-svar"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4206:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-kombinationer-av-svar"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4206:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-vill-ej-svara"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4207:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-vill-ej-svara"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4207:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-vet-ej"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4208:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-pga-fardolycka-vet-ej"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "S33 är en ogenomskinlig frågekod.\ncatalog:variable_text:4208:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-kroppen-vill-ej-svara"
+fields = { "sets" = [] }
+evidence = "S9 är en ogenomskinlig frågekod.\ncatalog:variable_text:4209:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-kroppen-vill-ej-svara"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S9 är en ogenomskinlig frågekod.\ncatalog:variable_text:4209:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-kroppen-vet-ej-var"
+fields = { "sets" = [] }
+evidence = "S9 är en ogenomskinlig frågekod.\ncatalog:variable_text:4210:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-i-kroppen-vet-ej-var"
+fields = { "tags" = ["employment", "health"] }
+evidence = "S9 är en ogenomskinlig frågekod.\ncatalog:variable_text:4210:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sammayrk"
+fields = { "sets" = [] }
+evidence = "Avser yrke sedan besvären började.\ncatalog:variable_text:4211:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sammayrk"
+fields = { "tags" = ["employment"] }
+evidence = "Avser yrke sedan besvären började.\ncatalog:variable_text:4211:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Socioekonomisk indelning efter huvudsyssla.\ncatalog:valueset:745\ncatalog:variable_text:4212:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Socioekonomisk indelning efter huvudsyssla.\ncatalog:valueset:745\ncatalog:variable_text:4212:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Sektor i huvudsysslan.\ncatalog:variable_text:4213:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Sektor i huvudsysslan.\ncatalog:variable_text:4213:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:senast12"
+fields = { "sets" = [] }
+evidence = "Exponering för besvärsorsaken under senaste året.\ncatalog:variable_text:4214:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:senast12"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Exponering för besvärsorsaken under senaste året.\ncatalog:variable_text:4214:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-matveckan-besvar"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Samma begrepp är uppdelat mellan perioder med scb/arbetsorsakade-besvar/sjukskriven-matveckan-orsak; båda kodar orsaken till frånvaro.\ncatalog:occurrence:27184\ncatalog:occurrence:27263\ncatalog:valueset:10700"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-matveckan-besvar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma begrepp är uppdelat mellan perioder med scb/arbetsorsakade-besvar/sjukskriven-matveckan-orsak; båda kodar orsaken till frånvaro.\ncatalog:occurrence:27184\ncatalog:occurrence:27263\ncatalog:valueset:10700"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukmatv"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Frågan gäller frånvaro under referensveckan på grund av besvär.\ncatalog:variable_text:4216:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukmatv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Frågan gäller frånvaro under referensveckan på grund av besvär.\ncatalog:variable_text:4216:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskri"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Variabeln gäller långvarig eller återkommande sjukfrånvaro.\ncatalog:variable_text:4217:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskri"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln gäller långvarig eller återkommande sjukfrånvaro.\ncatalog:variable_text:4217:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-andra-forhallanden"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27203\ncatalog:occurrence:27664"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-andra-forhallanden"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27203\ncatalog:occurrence:27664"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-arbetsolycka"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27200\ncatalog:occurrence:27658"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-arbetsolycka"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27200\ncatalog:occurrence:27658"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-fardvag"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27217\ncatalog:occurrence:27684"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-fardvag"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma kolumn har olika begrepp och ägare.\ncatalog:occurrence:27217\ncatalog:occurrence:27684"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-orsak"
+fields = { "sets" = ["sjukfranvaro-vid-arbetsrelaterade-besvar"] }
+evidence = "Samma begrepp är uppdelat mellan perioder med scb/arbetsorsakade-besvar/sjukfranvaro-matveckan-besvar; båda kodar orsaken till frånvaro.\ncatalog:occurrence:27184\ncatalog:occurrence:27263\ncatalog:valueset:10700"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-matveckan-orsak"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Samma begrepp är uppdelat mellan perioder med scb/arbetsorsakade-besvar/sjukfranvaro-matveckan-besvar; båda kodar orsaken till frånvaro.\ncatalog:occurrence:27184\ncatalog:occurrence:27263\ncatalog:valueset:10700"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-tid-fore-rehab"
+fields = { "sets" = ["franvarotid-till-foljd-av-besvar"] }
+evidence = "Variabeln mäter sjukskrivningens längd före rehabiliteringsutredning.\ncatalog:variable_text:4222:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-tid-fore-rehab"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln mäter sjukskrivningens längd före rehabiliteringsutredning.\ncatalog:variable_text:4222:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skiftarbete-anstallda-huvudsyssla"
+fields = { "sets" = [] }
+evidence = "Skiftarbete i huvudsysslan.\ncatalog:variable_text:4223:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skiftarbete-anstallda-huvudsyssla"
+fields = { "tags" = ["employment"] }
+evidence = "Skiftarbete i huvudsysslan.\ncatalog:variable_text:4223:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsut"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Skyddsutrustning är en arbetsplatsåtgärd.\ncatalog:variable_text:4224:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddsut"
+fields = { "tags" = ["employment"] }
+evidence = "Skyddsutrustning är en arbetsplatsåtgärd.\ncatalog:variable_text:4224:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:smittors"
+fields = { "sets" = ["smitta-som-besvarsorsak"] }
+evidence = "Måttet avser smitta som orsak till besvär.\ncatalog:variable_text:4225:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:smittors"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Måttet avser smitta som orsak till besvär.\ncatalog:variable_text:4225:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-1bokstav"
+fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4226:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-1bokstav"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4226:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-2siffror"
+fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4227:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-2siffror"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4227:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-3siffror"
+fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4228:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-3siffror"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4228:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-4siffror"
+fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4229:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-4siffror"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4229:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-5siffror"
+fields = { "sets" = ["naringsgren-i-huvudsysslan"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4230:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-5siffror"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen anger näringsgren i huvudsysslan.\ncatalog:variable_text:4230:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:somnbesv"
+fields = { "sets" = ["somnbesvar"] }
+evidence = "Sömnbesvär till följd av arbetet.\ncatalog:variable_text:4231:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:somnbesv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Sömnbesvär till följd av arbetet.\ncatalog:variable_text:4231:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:sondagsarbete-i-huvudsysslan-harledd"
+fields = { "sets" = ["helgarbete"] }
+evidence = "Söndagsarbete är en komponent av helgarbete.\ncatalog:variable_text:4232:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sondagsarbete-i-huvudsysslan-harledd"
+fields = { "tags" = ["employment"] }
+evidence = "Söndagsarbete är en komponent av helgarbete.\ncatalog:variable_text:4232:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "sets" = ["yrke-i-huvudsysslan"] }
+evidence = "Variabeln kodar yrke på fyrsiffernivå.\ncatalog:variable_text:4233:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln kodar yrke på fyrsiffernivå.\ncatalog:variable_text:4233:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:stottning"
+fields = { "sets" = ["arbetsplatsatgarder-mot-besvar"] }
+evidence = "Personlig stöttning är en arbetsplatsåtgärd.\ncatalog:variable_text:4234:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:stottning"
+fields = { "tags" = ["employment"] }
+evidence = "Personlig stöttning är en arbetsplatsåtgärd.\ncatalog:variable_text:4234:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tfu"
+fields = { "sets" = ["fardolyckor-och-tillhorande-besvar"] }
+evidence = "TFU är en ogenomskinlig källkod; etiketten kolliderar och behöver disambiguering.\ncatalog:variable_text:4235:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tfu"
+fields = { "tags" = ["employment", "health", "transport"] }
+evidence = "TFU är en ogenomskinlig källkod; etiketten kolliderar och behöver disambiguering.\ncatalog:variable_text:4235:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tungmanu"
+fields = { "sets" = ["tung-hantering-som-besvarsorsak"] }
+evidence = "Variabeln gäller tung hantering som besvärsorsak.\ncatalog:variable_text:4236:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tungmanu"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller tung hantering som besvärsorsak.\ncatalog:variable_text:4236:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:upprepar"
+fields = { "sets" = ["upprepade-arbetsmoment-som-besvarsorsak"] }
+evidence = "Upprepade arbetsmoment som orsak till besvär.\ncatalog:variable_text:4238:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:upprepar"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Upprepade arbetsmoment som orsak till besvär.\ncatalog:variable_text:4238:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grupperad"
+fields = { "sets" = [] }
+evidence = "Grupperad utbildningsnivå.\ncatalog:variable_text:4239:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Grupperad utbildningsnivå.\ncatalog:variable_text:4239:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vardkont"
+fields = { "sets" = ["vardkontakt-for-arbetsrelaterade-besvar"] }
+evidence = "Kontakt med vårdpersonal för arbetsrelaterade besvär.\ncatalog:variable_text:4240:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vardkont"
+fields = { "tags" = ["employment", "healthcare"] }
+evidence = "Kontakt med vårdpersonal för arbetsrelaterade besvär.\ncatalog:variable_text:4240:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:vetejors"
+fields = { "sets" = ["ovrig-eller-okand-besvarsorsak"] }
+evidence = "Okänd orsak till besvär.\ncatalog:variable_text:4241:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vetejors"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Okänd orsak till besvär.\ncatalog:variable_text:4241:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vibratio"
+fields = { "sets" = ["vibrationer-som-besvarsorsak"] }
+evidence = "Variabeln gäller vibrationer som besvärsorsak.\ncatalog:variable_text:4242:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vibratio"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller vibrationer som besvärsorsak.\ncatalog:variable_text:4242:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:viktbesv"
+fields = { "sets" = [] }
+evidence = "Uppräkningsvikt för undersökningen.\ncatalog:variable_text:4243:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:viktbesv"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsvikt för undersökningen.\ncatalog:variable_text:4243:18993:19358"
+
+[[statement]]
+kind = "link"
+subject = "var:besvar-minskat-andrade-uppg"
+relation = "continues"
+object = "scb/arbetsorsakade-besvar/besvar-minskat-uppg-eller-tid"
+at = "2004-01-01.."
+evidence = "BESVARMI: complaints reduced after changed duties or reduced hours (2001-2003) -> after changed duties (2004-2010), same value set vs8772; narrowed question."
+
+[[statement]]
+kind = "set"
+subject = "var:anma"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Asks whether an existing report was made after the latest year-end; later instructions explicitly restrict respondents to recent reporters (r136, r55).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3937\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:27640\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3944"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-forsakringskassan"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Asks whether a work-injury report was submitted to Försäkringskassan; its code lists support reporting occurrence without a time restriction (r137, r127, r133, r125).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3938\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11035\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3945"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-senaste-12-manader"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Explicitly measures reporting within the last 12 months, which the fixed definition includes as a time-bounded indicator (r138).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3939\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3946"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan-till-forsakringskassan-har-gjorts-eller-om-nej-orsak"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Combines a report-made response with reasons for non-reporting, exactly matching the group's combined-coding inclusion (r139, r132).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3940\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8132\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3947"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalan1"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Asks whether a work-injury report was submitted to Försäkringskassan and uses a complete yes/no code list (r140, r124).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3941\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10571\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3948"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-efter"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made in the year after the survey year, directly measuring reporting time (r141, r103).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3983"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-aret-fore"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made in the year before the survey year, directly measuring reporting time (r142, r101).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28336\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3984"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskada-anmald-till-forsakringskassan-under"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates whether the report was made during the survey year, directly measuring reporting time (r143, r102).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3985"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvanm"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for complaints from work conditions other than accidents, with yes/no responses (r144, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4033\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4042"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvejsv"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates refusal to disclose when the report was made, an associated reporting-time response explicitly included by the group (r145, r100).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28335\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4049"
+
+[[statement]]
+kind = "set"
+subject = "var:bsvtidig"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates reporting earlier than the year before the survey year, directly measuring reporting time (r146, r104).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4050\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28352\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4059"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm1"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the most recent accident, with yes/no responses (r147, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4123\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4130"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm2"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the second most recent accident, with yes/no responses (r148, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4124\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4131"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm3"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the third most recent accident, with yes/no responses (r149, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4125\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4132"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm4"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the fourth accident, with yes/no responses (r150, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4126\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4133"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm5"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the fifth accident, with yes/no responses (r151, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4127\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4134"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm6"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the sixth accident, with yes/no responses (r152, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4128\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4135"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm7"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the seventh accident, with yes/no responses (r153, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4129\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4136"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm8"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the eighth accident, with yes/no responses (r154, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4130\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4137"
+
+[[statement]]
+kind = "set"
+subject = "var:olanm9"
+fields = { "sets" = ["arbetsskadeanmalan"] }
+evidence = "Measures whether a report was made for the ninth accident, with yes/no responses (r155, r126).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4131\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4138"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm1"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the most recent accident; both code sets describe reporting time (r156, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4142\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4149"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm2"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the second most recent accident; both code sets describe reporting time (r157, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4150"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm3"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the third most recent accident; both code sets describe reporting time (r158, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4144\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4151"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm4"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the fourth accident; both code sets describe reporting time (r159, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4145\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4152"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm5"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the fifth accident; both code sets describe reporting time (r160, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4146\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4153"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm6"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the sixth accident; both code sets describe reporting time (r161, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4154"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm7"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the seventh accident; both code sets describe reporting time (r162, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4155"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm8"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the eighth accident; both code sets describe reporting time (r163, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4149\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4156"
+
+[[statement]]
+kind = "set"
+subject = "var:olaranm9"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Records the reporting year for the ninth accident; both code sets describe reporting time (r164, r134, r131).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4150\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7923\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4157"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-nar-arbetsskadan-anmaldes-till-forsakringskassan"
+fields = { "sets" = ["tidpunkt-for-arbetsskadeanmalan"] }
+evidence = "Indicates that the respondent does not know when the report was made, an associated reporting-time response explicitly included by the group (r165, r105).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:4225\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:28356\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:4231"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-minst-halften"
+fields = { "description" = "Arbetar natt minst hälften av arbetsdagarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kväll trots att källan och värdena anger natt.\ncatalog:valueset:9952\ncatalog:variable_text:4123:18993:19358"
+
+
+[[statement]]
+kind = "set"
+subject = "var:olantal"
+fields = { "description" = "Antal arbetsolyckor som ligger bakom besvären" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:4135:18993:19358"

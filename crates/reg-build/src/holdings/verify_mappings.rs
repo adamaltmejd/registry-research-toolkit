@@ -1,0 +1,291 @@
+//! Source-derived mapping equality, independent of compiler candidate/placement logic.
+use std::collections::BTreeMap;
+
+use rusqlite::Connection;
+
+use super::{compile, input};
+
+type Span = (i64, i64);
+type Mappings = BTreeMap<Attributes, Vec<Span>>;
+
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct Attributes {
+    table: String,
+    variable: String,
+    role: String,
+    carried: bool,
+    caveat: Option<String>,
+    window: Option<String>,
+    locator: String,
+}
+
+struct Claim {
+    attributes: Attributes,
+    spans: Vec<Span>,
+    ambiguous: bool,
+}
+
+/// Projection key presence/uniqueness has already been checked by `keys::verify`.
+/// Here only the source declarations determine the required carried flag.
+fn projection_copy(
+    table: &input::Table,
+    tables: &BTreeMap<&str, &input::Table>,
+    variable: &str,
+    span: Span,
+) -> Result<bool, String> {
+    let Some(parent) = table.projection_of.as_deref().and_then(|p| tables.get(p)) else {
+        return Ok(false);
+    };
+    let mut shared = Vec::new();
+    for child in &table.key {
+        for parent in &parent.key {
+            if child.hold.is_some() || parent.hold.is_some() {
+                continue;
+            }
+            if child
+                .entity
+                .iter()
+                .any(|v| v == variable && parent.entity.contains(v))
+                || child
+                    .time
+                    .iter()
+                    .any(|v| v == variable && parent.time.contains(v))
+            {
+                let scope = |key: &input::RowKey| {
+                    key.period
+                        .as_deref()
+                        .map(compile::periods)
+                        .transpose()
+                        .map(|s| s.unwrap_or_else(|| vec![span]))
+                };
+                shared.extend(compile::overlap(&scope(child)?, &scope(parent)?));
+            }
+        }
+    }
+    Ok(compile::covered(&[span], &shared))
+}
+
+fn claims(
+    table: &input::Table,
+    column: &reg_readers::holdings::Column,
+    index: &BTreeMap<String, Vec<compile::Segment>>,
+) -> Result<Vec<Claim>, String> {
+    let decision = table.column.iter().find(|c| c.name == column.name);
+    let spans = compile::column_periods(decision, &compile::table_periods(table)?)?;
+    if spans.is_empty()
+        || decision.is_some_and(|c| c.hold.is_some() || c.unmap.is_some())
+        || table.key.iter().any(|k| k.hold.is_some())
+    {
+        return Ok(Vec::new());
+    }
+    let mut claims = Vec::new();
+    // Choose explicit versus automatic from the full authored list, before holds.
+    if let Some(decision) = decision.filter(|d| !d.mapping.is_empty()) {
+        for mapping in &decision.mapping {
+            if mapping.hold.is_some() {
+                continue;
+            }
+            if mapping.locator.trim().is_empty() {
+                return Err("stale_declared_mapping_target: evidence locator required".into());
+            }
+            let wanted = mapping
+                .delivery
+                .as_deref()
+                .map(compile::periods)
+                .transpose()?
+                .unwrap_or_else(|| spans.clone());
+            let segments = index
+                .get(&mapping.table_pid)
+                .ok_or("holdings_table_route_unresolved")?;
+            let variable: Vec<_> = segments
+                .iter()
+                .filter(|s| s.variable == mapping.variable_pid)
+                .collect();
+            if variable.is_empty() {
+                return Err(
+                    "stale_declared_mapping_target: variable absent from routed table".into(),
+                );
+            }
+            let documented: Vec<_> = variable
+                .iter()
+                .filter(|s| {
+                    s.state != "ambiguous" && s.timeless == (table.disposition == "timeless")
+                })
+                .map(|s| (s.start, s.end))
+                .collect();
+            if mapping.delivery.is_some()
+                && (!compile::covered(&wanted, &spans) || !compile::covered(&wanted, &documented))
+            {
+                return Err(
+                    "inventory_window_invalid: authored window escapes file or documented coverage"
+                        .into(),
+                );
+            }
+            for segment in segments.iter().filter(|s| {
+                s.variable == mapping.variable_pid
+                    && s.timeless == (table.disposition == "timeless")
+            }) {
+                claims.push(claim(
+                    segment,
+                    &wanted,
+                    mapping.carried,
+                    mapping.caveat.clone(),
+                    mapping.delivery.clone(),
+                    &mapping.locator,
+                ));
+            }
+        }
+    } else {
+        let spelling = reg_core::fold_identity(&column.match_name);
+        for route in &table.routes {
+            let segments = index.get(route).ok_or("holdings_table_route_unresolved")?;
+            for segment in segments.iter().filter(|s| {
+                reg_core::fold_identity(&s.spelling) == spelling
+                    && s.timeless == (table.disposition == "timeless")
+            }) {
+                claims.push(claim(segment, &spans, false, None, None, &table.locator));
+            }
+        }
+    }
+    claims.retain(|c| !c.spans.is_empty());
+    Ok(claims)
+}
+
+fn claim(
+    segment: &compile::Segment,
+    wanted: &[Span],
+    carried: bool,
+    caveat: Option<String>,
+    window: Option<String>,
+    locator: &str,
+) -> Claim {
+    Claim {
+        attributes: Attributes {
+            table: segment.table.clone(),
+            variable: segment.variable.clone(),
+            role: segment.role.clone(),
+            carried,
+            caveat,
+            window,
+            locator: locator.to_owned(),
+        },
+        spans: compile::overlap(wanted, &[(segment.start, segment.end)]),
+        ambiguous: segment.state == "ambiguous",
+    }
+}
+
+fn expected(
+    claims: &[Claim],
+    table: &input::Table,
+    tables: &BTreeMap<&str, &input::Table>,
+) -> Result<Mappings, String> {
+    let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
+    for claim in claims {
+        routes
+            .entry(&claim.attributes.table)
+            .or_default()
+            .push(claim);
+    }
+    let mut expected = Mappings::new();
+    for claims in routes.values() {
+        let mut cuts: Vec<_> = claims
+            .iter()
+            .flat_map(|c| c.spans.iter().flat_map(|(a, b)| [*a, *b]))
+            .collect();
+        cuts.sort_unstable();
+        cuts.dedup();
+        for bounds in cuts.windows(2) {
+            let span = (bounds[0], bounds[1]);
+            let active: Vec<_> = claims
+                .iter()
+                .filter(|c| compile::covered(&[span], &c.spans))
+                .collect();
+            let Some(first) = active.first() else {
+                continue;
+            };
+            // Preserve every rival, including ambiguous semantic segments, until
+            // ownership is decided for this logical table and interval.
+            if active
+                .iter()
+                .any(|c| c.ambiguous || c.attributes.variable != first.attributes.variable)
+            {
+                continue;
+            }
+            if active.iter().any(|c| {
+                c.attributes.carried != first.attributes.carried
+                    || c.attributes.caveat != first.attributes.caveat
+                    || c.attributes.window != first.attributes.window
+            }) {
+                return Err(
+                    "inventory_cell_conflict: incompatible admitted mapping attributes".into(),
+                );
+            }
+            let mut attributes = first.attributes.clone();
+            attributes.carried |= projection_copy(table, tables, &attributes.variable, span)?;
+            expected.entry(attributes).or_default().push(span);
+        }
+    }
+    Ok(expected)
+}
+
+pub(super) fn verify(
+    db: &Connection,
+    base: &Connection,
+    topology: &input::Topology,
+    census: &reg_readers::holdings::ReadOutput,
+) -> Result<(), String> {
+    // segment_index seeds from every tbl row, including segmentless tables.
+    let index = compile::segment_index(base, db)?;
+    let tables: BTreeMap<_, _> = topology
+        .table
+        .iter()
+        .map(|t| (t.physical_name.as_str(), t))
+        .collect();
+    let mut query = db.prepare(
+        "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.locator,m.start,m.end
+         FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2"
+    ).map_err(|e| e.to_string())?;
+    for table in &census.tables {
+        let authored = tables[table.name.as_str()];
+        for column in &table.columns {
+            let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
+            let mut compare = || -> Result<bool, String> {
+                let mut expected = expected(&claims(authored, column, &index)?, authored, &tables)?;
+                let mut stored = Mappings::new();
+                let rows = query
+                    .query_map(rusqlite::params![table.name, column.name], |r| {
+                        Ok((
+                            Attributes {
+                                table: r.get(0)?,
+                                variable: r.get(1)?,
+                                role: r.get(2)?,
+                                carried: r.get(3)?,
+                                caveat: r.get(4)?,
+                                window: r.get(5)?,
+                                locator: r.get(6)?,
+                            },
+                            (r.get(7)?, r.get(8)?),
+                        ))
+                    })
+                    .map_err(|e| e.to_string())?;
+                for row in rows {
+                    let (attributes, span) = row.map_err(|e| e.to_string())?;
+                    stored.entry(attributes).or_default().push(span);
+                }
+                for mappings in [&mut stored, &mut expected] {
+                    for spans in mappings.values_mut() {
+                        *spans = compile::merge(std::mem::take(spans));
+                    }
+                }
+                Ok(stored == expected)
+            };
+            if !compare().map_err(|e| format!("{location}: {e}"))? {
+                return Err(format!(
+                    "{location}: holdings_mapping_source_mismatch: complete intervals or admitted attributes differ"
+                ));
+            }
+        }
+    }
+    Ok(())
+}

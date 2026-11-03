@@ -1,0 +1,514 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-skolledare"
+fields = { "sets" = ["antal-ovriga-skolledare"] }
+evidence = "Samma kolumn har olika ägare och källans generella etikett motsägs av den operativa definitionen.\ncatalog:occurrence:463231\ncatalog:occurrence:463242\ncatalog:occurrence:463271\ncatalog:occurrence:463311"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ovriga-skolledare"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har olika ägare och källans generella etikett motsägs av den operativa definitionen.\ncatalog:occurrence:463231\ncatalog:occurrence:463242\ncatalog:occurrence:463271\ncatalog:occurrence:463311"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rektorer"
+fields = { "sets" = ["antal-rektorer"] }
+evidence = "Samma kolumn har olika ägare och källans generella etikett motsägs av den operativa definitionen.\ncatalog:occurrence:463229\ncatalog:occurrence:463240\ncatalog:occurrence:463269\ncatalog:occurrence:463309"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rektorer"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har olika ägare och källans generella etikett motsägs av den operativa definitionen.\ncatalog:occurrence:463229\ncatalog:occurrence:463240\ncatalog:occurrence:463269\ncatalog:occurrence:463309"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "sets" = [] }
+evidence = "Årskurs är ett utbildningsmått.\ncatalog:variable_text:44849:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "tags" = ["education"] }
+evidence = "Årskurs är ett utbildningsmått.\ncatalog:variable_text:44849:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:beh"
+fields = { "sets" = [] }
+evidence = "Behörigheten gäller deltagande i utlandsskola.\ncatalog:variable_text:44850:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:beh"
+fields = { "tags" = ["education"] }
+evidence = "Behörigheten gäller deltagande i utlandsskola.\ncatalog:variable_text:44850:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:dist-und"
+fields = { "sets" = ["skolform"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463505"
+
+[[statement]]
+kind = "set"
+subject = "var:dist-und"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463505"
+
+[[statement]]
+kind = "set"
+subject = "var:fkl-skola"
+fields = { "sets" = ["skolform"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463506"
+
+[[statement]]
+kind = "set"
+subject = "var:fkl-skola"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463506"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:44853:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:44853:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:gr-skola"
+fields = { "sets" = ["skolform"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463507"
+
+[[statement]]
+kind = "set"
+subject = "var:gr-skola"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463507"
+
+[[statement]]
+kind = "set"
+subject = "var:grbeh"
+fields = { "sets" = ["antal-elever"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462834\ncatalog:occurrence:463097"
+
+[[statement]]
+kind = "set"
+subject = "var:grbeh"
+fields = { "tags" = ["education"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462834\ncatalog:occurrence:463097"
+
+[[statement]]
+kind = "set"
+subject = "var:grovr"
+fields = { "sets" = ["antal-elever"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462835\ncatalog:occurrence:463098"
+
+[[statement]]
+kind = "set"
+subject = "var:grovr"
+fields = { "tags" = ["education"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462835\ncatalog:occurrence:463098"
+
+[[statement]]
+kind = "set"
+subject = "var:gy-skola"
+fields = { "sets" = ["skolform"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463508"
+
+[[statement]]
+kind = "set"
+subject = "var:gy-skola"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463508"
+
+[[statement]]
+kind = "set"
+subject = "var:gybeh"
+fields = { "sets" = ["antal-elever"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462836\ncatalog:occurrence:463099"
+
+[[statement]]
+kind = "set"
+subject = "var:gybeh"
+fields = { "tags" = ["education"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462836\ncatalog:occurrence:463099"
+
+[[statement]]
+kind = "set"
+subject = "var:gyovr"
+fields = { "sets" = ["antal-elever"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462837\ncatalog:occurrence:463100"
+
+[[statement]]
+kind = "set"
+subject = "var:gyovr"
+fields = { "tags" = ["education"] }
+evidence = "Elevantalet ingår i gruppen för elevantal och gäller utbildning.\ncatalog:occurrence:462837\ncatalog:occurrence:463100"
+
+[[statement]]
+kind = "set"
+subject = "var:komp-und"
+fields = { "sets" = ["skolform"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463510"
+
+[[statement]]
+kind = "set"
+subject = "var:komp-und"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn hör till skolform och utbildning.\ncatalog:occurrence:463510"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:valueset:12820\ncatalog:variable_text:44862:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:valueset:12820\ncatalog:variable_text:44862:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:landsnamn-utland"
+fields = { "sets" = [] }
+evidence = "Landet anger skolans geografiska läge.\ncatalog:occurrence:463511"
+
+[[statement]]
+kind = "set"
+subject = "var:landsnamn-utland"
+fields = { "tags" = ["geography"] }
+evidence = "Landet anger skolans geografiska läge.\ncatalog:occurrence:463511"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-dist"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463512\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-dist"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463512\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-fkl"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463513\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-fkl"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463513\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gr"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463514\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gr"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463514\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gy"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463515\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gy"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463515\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-komp"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463516\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-komp"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463516\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:larkat"
+fields = { "sets" = ["lararkategori"] }
+evidence = "Kodningen ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463187\ncatalog:valueset:6271"
+
+[[statement]]
+kind = "set"
+subject = "var:larkat"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen ingår i lärarkategorier och gäller utbildningsresurser.\ncatalog:occurrence:463187\ncatalog:valueset:6271"
+
+[[statement]]
+kind = "set"
+subject = "var:larutb"
+fields = { "sets" = [] }
+evidence = "Variabeln anger lärarutbildning.\ncatalog:occurrence:463188\ncatalog:valueset:4773"
+
+[[statement]]
+kind = "set"
+subject = "var:larutb"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger lärarutbildning.\ncatalog:occurrence:463188\ncatalog:valueset:4773"
+
+[[statement]]
+kind = "set"
+subject = "var:nat"
+fields = { "sets" = [] }
+evidence = "Nationalitet är en demografisk uppgift.\ncatalog:valueset:9374"
+
+[[statement]]
+kind = "set"
+subject = "var:nat"
+fields = { "tags" = ["demographics"] }
+evidence = "Nationalitet är en demografisk uppgift.\ncatalog:valueset:9374"
+
+[[statement]]
+kind = "set"
+subject = "var:ort"
+fields = { "sets" = [] }
+evidence = "Orten anger skolans geografiska läge.\ncatalog:occurrence:463517"
+
+[[statement]]
+kind = "set"
+subject = "var:ort"
+fields = { "tags" = ["geography"] }
+evidence = "Orten anger skolans geografiska läge.\ncatalog:occurrence:463517"
+
+[[statement]]
+kind = "set"
+subject = "var:rektkv"
+fields = { "sets" = ["antal-rektorer"] }
+evidence = "Antalet rektorer ingår i rektorsgruppen och gäller utbildningsresurser.\ncatalog:occurrence:463308\ncatalog:variable_text:44873:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:rektkv"
+fields = { "tags" = ["education"] }
+evidence = "Antalet rektorer ingår i rektorsgruppen och gäller utbildningsresurser.\ncatalog:occurrence:463308\ncatalog:variable_text:44873:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:skollkv"
+fields = { "sets" = ["antal-ovriga-skolledare"] }
+evidence = "Antalet övriga skolledare ingår i skolledargruppen och gäller utbildningsresurser.\ncatalog:occurrence:463310\ncatalog:variable_text:44876:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:skollkv"
+fields = { "tags" = ["education"] }
+evidence = "Antalet övriga skolledare ingår i skolledargruppen och gäller utbildningsresurser.\ncatalog:occurrence:463310\ncatalog:variable_text:44876:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan"
+fields = { "sets" = [] }
+evidence = "Studieväg är en utbildningsuppgift.\ncatalog:valueset:2035\ncatalog:variable_text:44877:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan"
+fields = { "tags" = ["education"] }
+evidence = "Studieväg är en utbildningsuppgift.\ncatalog:valueset:2035\ncatalog:variable_text:44877:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = [] }
+evidence = "Tjänstgöringens omfattning är ett arbetsmarknadsmått.\ncatalog:valueset:7208\ncatalog:variable_text:44878:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstgöringens omfattning är ett arbetsmarknadsmått.\ncatalog:valueset:7208\ncatalog:variable_text:44878:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:unddist"
+fields = { "sets" = ["undervisningsvolym"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463312"
+
+[[statement]]
+kind = "set"
+subject = "var:unddist"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463312"
+
+[[statement]]
+kind = "set"
+subject = "var:undfklass"
+fields = { "sets" = ["undervisningsvolym"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463313"
+
+[[statement]]
+kind = "set"
+subject = "var:undfklass"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463313"
+
+[[statement]]
+kind = "set"
+subject = "var:undgrund"
+fields = { "sets" = ["undervisningsvolym"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463314"
+
+[[statement]]
+kind = "set"
+subject = "var:undgrund"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463314"
+
+[[statement]]
+kind = "set"
+subject = "var:undgymn"
+fields = { "sets" = ["undervisningsvolym"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463315"
+
+[[statement]]
+kind = "set"
+subject = "var:undgymn"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463315"
+
+[[statement]]
+kind = "set"
+subject = "var:undkomp"
+fields = { "sets" = ["undervisningsvolym"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463316"
+
+[[statement]]
+kind = "set"
+subject = "var:undkomp"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningstimmarna ingår i undervisningsvolym och gäller utbildningsresurser.\ncatalog:occurrence:463316"
+
+[[statement]]
+kind = "set"
+subject = "var:utl-skola"
+fields = { "sets" = [] }
+evidence = "Indikatorn avser en svensk skola i utlandet.\ncatalog:occurrence:463518\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "var:utl-skola"
+fields = { "tags" = ["education"] }
+evidence = "Indikatorn avser en svensk skola i utlandet.\ncatalog:occurrence:463518\ncatalog:valueset:985"
+
+[[statement]]
+kind = "set"
+subject = "skolledning: rektman @2004-10-15..2004-10-15 where key = 'v7938'"
+fields = { "variable" = "antal-rektorer" }
+evidence = "The operational definition of 'Number of principals' explicitly counts male principals, matching 'Number of principals, men'. Both are integer counts of persons, with units stated as 'count' and 'number of persons', in the same school leadership table and column RektMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: rektman @2005-10-15..2005-10-15 where key = 'v7938'"
+fields = { "variable" = "antal-rektorer" }
+evidence = "The operational definition of 'Number of principals' explicitly counts male principals, matching 'Number of principals, men'. Both are integer counts of persons, with units stated as 'count' and 'number of persons', in the same school leadership table and column RektMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: rektman @2006-10-15..2006-10-15 where key = 'v7938'"
+fields = { "variable" = "antal-rektorer" }
+evidence = "The operational definition of 'Number of principals' explicitly counts male principals, matching 'Number of principals, men'. Both are integer counts of persons, with units stated as 'count' and 'number of persons', in the same school leadership table and column RektMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: rektman @2007-10-15..2007-10-15 where key = 'v7938'"
+fields = { "variable" = "antal-rektorer" }
+evidence = "The operational definition of 'Number of principals' explicitly counts male principals, matching 'Number of principals, men'. Both are integer counts of persons, with units stated as 'count' and 'number of persons', in the same school leadership table and column RektMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: rektman @2008-10-15..2008-10-15 where key = 'v7938'"
+fields = { "variable" = "antal-rektorer" }
+evidence = "The operational definition of 'Number of principals' explicitly counts male principals, matching 'Number of principals, men'. Both are integer counts of persons, with units stated as 'count' and 'number of persons', in the same school leadership table and column RektMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: skollman @2004-10-15..2004-10-15 where key = 'v7941'"
+fields = { "variable" = "antal-ovriga-skolledare" }
+evidence = "The operational definition of 'Number of other school leaders' specifies men, excluding principals, matching 'Number of other school leaders, men'. Both count persons in the same school leadership table and column SkollMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: skollman @2005-10-15..2005-10-15 where key = 'v7941'"
+fields = { "variable" = "antal-ovriga-skolledare" }
+evidence = "The operational definition of 'Number of other school leaders' specifies men, excluding principals, matching 'Number of other school leaders, men'. Both count persons in the same school leadership table and column SkollMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: skollman @2006-10-15..2006-10-15 where key = 'v7941'"
+fields = { "variable" = "antal-ovriga-skolledare" }
+evidence = "The operational definition of 'Number of other school leaders' specifies men, excluding principals, matching 'Number of other school leaders, men'. Both count persons in the same school leadership table and column SkollMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: skollman @2007-10-15..2007-10-15 where key = 'v7941'"
+fields = { "variable" = "antal-ovriga-skolledare" }
+evidence = "The operational definition of 'Number of other school leaders' specifies men, excluding principals, matching 'Number of other school leaders, men'. Both count persons in the same school leadership table and column SkollMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: skollman @2008-10-15..2008-10-15 where key = 'v7941'"
+fields = { "variable" = "antal-ovriga-skolledare" }
+evidence = "The operational definition of 'Number of other school leaders' specifies men, excluding principals, matching 'Number of other school leaders, men'. Both count persons in the same school leadership table and column SkollMan. Their observed periods do not overlap; gaps remain unasserted."
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-dist"
+fields = { "description" = "Anger om utlandsskolan har lärare i distansundervisning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i distansundervisning.\ncatalog:occurrence:463512\ncatalog:valueset:985"
+
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-fkl"
+fields = { "description" = "Anger om utlandsskolan har lärare i förskoleklass." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i förskoleklass.\ncatalog:occurrence:463513\ncatalog:valueset:985"
+
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gr"
+fields = { "description" = "Anger om utlandsskolan har lärare i grundskola." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i grundskola.\ncatalog:occurrence:463514\ncatalog:valueset:985"
+
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-gy"
+fields = { "description" = "Anger om utlandsskolan har lärare i gymnasieskola." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i gymnasieskola.\ncatalog:occurrence:463515\ncatalog:valueset:985"
+
+
+[[statement]]
+kind = "set"
+subject = "var:lararkategori-i-utlandsskola-larare-komp"
+fields = { "description" = "Anger om utlandsskolan har lärare i kompletterande svenskundervisning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en kategori men variabeln är en ja-nej-indikator för om skolan har lärare i kompletterande svenskundervisning.\ncatalog:occurrence:463516\ncatalog:valueset:985"

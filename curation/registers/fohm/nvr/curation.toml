@@ -4,3 +4,99 @@ kind = "set"
 subject = "nvr: vaccin"
 fields = { "classification" = "class/atc/atc" }
 evidence = "reg_meta_build/curation/providers/fohm.toml:239\n\nExplicit provider declaration: ATC"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = [] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:587:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:587:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsort"
+fields = { "sets" = [] }
+evidence = "Folkbokföringsort anger geografisk tillhörighet.\ncatalog:variable_text:588:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsort"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringsort anger geografisk tillhörighet.\ncatalog:variable_text:588:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:589:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:589:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nplid"
+fields = { "sets" = [] }
+evidence = "NPL-id identifierar vaccinpreparatet.\ncatalog:variable_text:590:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nplid"
+fields = { "tags" = ["medicines"] }
+evidence = "NPL-id identifierar vaccinpreparatet.\ncatalog:variable_text:590:18628:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccin"
+fields = { "sets" = [] }
+evidence = "Vaccinpreparat hör till läkemedel; flera variabler kodar vaccinet.\ncatalog:variable_text:590:18628:2932897\ncatalog:variable_text:593:15706:2932897\ncatalog:variable_text:595:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccin"
+fields = { "tags" = ["medicines"] }
+evidence = "Vaccinpreparat hör till läkemedel; flera variabler kodar vaccinet.\ncatalog:variable_text:590:18628:2932897\ncatalog:variable_text:593:15706:2932897\ncatalog:variable_text:595:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccintyp"
+fields = { "sets" = [] }
+evidence = "Vaccintyp hör till läkemedel; flera variabler kodar vaccinet.\ncatalog:variable_text:590:18628:2932897\ncatalog:variable_text:593:15706:2932897\ncatalog:variable_text:595:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vaccintyp"
+fields = { "tags" = ["medicines"] }
+evidence = "Vaccintyp hör till läkemedel; flera variabler kodar vaccinet.\ncatalog:variable_text:590:18628:2932897\ncatalog:variable_text:593:15706:2932897\ncatalog:variable_text:595:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardenhet"
+fields = { "sets" = [] }
+evidence = "Utförande vårdenhet avser vårdresurser.\ncatalog:variable_text:596:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardenhet"
+fields = { "tags" = ["healthcare"] }
+evidence = "Utförande vårdenhet avser vårdresurser.\ncatalog:variable_text:596:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivare"
+fields = { "sets" = [] }
+evidence = "Ansvarig vårdgivare avser vårdresurser.\ncatalog:variable_text:597:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivare"
+fields = { "tags" = ["healthcare"] }
+evidence = "Ansvarig vårdgivare avser vårdresurser.\ncatalog:variable_text:597:15706:2932897"

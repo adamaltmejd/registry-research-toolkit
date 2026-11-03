@@ -3,7 +3,7 @@
 
 [variables]
 "diagnosdatum" = ["diagdat"]
-"diahand" = ["diahand"]
+"handelsekod" = ["diahand"]
 "grader" = ["grader"]
 "kapitelnummer-sjukdom" = ["kap"]
 "personnr" = ["penr"]

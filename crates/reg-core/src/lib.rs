@@ -14,9 +14,12 @@
 //! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and
 //! `crates/reg-core/tests/project/corpus/`.
 
-/// The catalog file's schema version (schema v4 §3.2): `PRAGMA user_version` and
+/// The catalog file's schema version: `PRAGMA user_version` and
 /// `meta.schema_version` (as decimal text). Readers admit exactly this version.
-pub const CATALOG_SCHEMA_VERSION: u32 = 4;
+pub const CATALOG_SCHEMA_VERSION: u32 = 6;
+
+/// A holdings file's physical schema. Its semantic tables retain the catalog schema.
+pub const HOLDINGS_SCHEMA_VERSION: u32 = 4;
 
 mod case_folding;
 mod grammar;
@@ -77,6 +80,12 @@ fn py_isalnum(c: char) -> bool {
 #[must_use]
 pub fn is_letter(c: char) -> bool {
     c.general_category_group() == GeneralCategoryGroup::Letter
+}
+
+/// Whether a character belongs to a Unicode punctuation category.
+#[must_use]
+pub fn is_punctuation(c: char) -> bool {
+    c.general_category_group() == GeneralCategoryGroup::Punctuation
 }
 
 /// Python `str.casefold()`: full case folding (`CaseFolding.txt` statuses C and F).

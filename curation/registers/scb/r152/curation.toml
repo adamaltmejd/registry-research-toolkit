@@ -34,3 +34,267 @@ kind = "set"
 subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:cao"
+fields = { "sets" = [] }
+evidence = "CaO-halten beskriver kalkproduktens sammansättning.\ncatalog:variable_text:12774:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cao"
+fields = { "tags" = ["business"] }
+evidence = "CaO-halten beskriver kalkproduktens sammansättning.\ncatalog:variable_text:12774:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cd"
+fields = { "sets" = [] }
+evidence = "Kadmiumhalten beskriver kalkpartiets sammansättning.\ncatalog:variable_text:12775:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cd"
+fields = { "tags" = ["business"] }
+evidence = "Kadmiumhalten beskriver kalkpartiets sammansättning.\ncatalog:variable_text:12775:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cens"
+fields = { "sets" = [] }
+evidence = "Censurering är en kvalitetsmarkör för uppgiften.\ncatalog:valueset:11398\ncatalog:variable_text:12776:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:cens"
+fields = { "tags" = ["methods"] }
+evidence = "Censurering är en kvalitetsmarkör för uppgiften.\ncatalog:valueset:11398\ncatalog:variable_text:12776:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:forskvant"
+fields = { "sets" = [] }
+evidence = "Försåld kalkkvantitet har flera källbelagda uppdelningar.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12785:14610:15706\ncatalog:variable_text:12796:14610:15706\ncatalog:variable_text:12797:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:forskvant"
+fields = { "tags" = ["business"] }
+evidence = "Försåld kalkkvantitet har flera källbelagda uppdelningar.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12785:14610:15706\ncatalog:variable_text:12796:14610:15706\ncatalog:variable_text:12797:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:granskad"
+fields = { "sets" = [] }
+evidence = "Kommentarer om granskning och insamling är kvalitetsmetadata.\ncatalog:variable_text:12779:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:granskad"
+fields = { "tags" = ["methods"] }
+evidence = "Kommentarer om granskning och insamling är kvalitetsmetadata.\ncatalog:variable_text:12779:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-syraneutraliserande-verkan"
+fields = { "sets" = [] }
+evidence = "CaO är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12780:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-syraneutraliserande-verkan"
+fields = { "tags" = ["methods"] }
+evidence = "CaO är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12780:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-kadmiuminnehall"
+fields = { "sets" = [] }
+evidence = "Cd är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12781:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-kadmiuminnehall"
+fields = { "tags" = ["methods"] }
+evidence = "Cd är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12781:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:impkornstu"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12782:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:impkornstu"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12782:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-magnesiuminnehall"
+fields = { "sets" = [] }
+evidence = "Mg är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12783:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:imputering-av-uppgift-om-magnesiuminnehall"
+fields = { "tags" = ["methods"] }
+evidence = "Mg är en kemisk kod som saknas i etiketten; variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12783:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:impvatten"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12784:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:impvatten"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver uppgiftens källa eller imputering.\ncatalog:valueset:2398\ncatalog:variable_text:12784:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:jordbruk"
+fields = { "sets" = [] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen till jordbrukssektorn.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12785:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:jordbruk"
+fields = { "tags" = ["agriculture", "business"] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen till jordbrukssektorn.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12785:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kalkkod"
+fields = { "sets" = [] }
+evidence = "Koden och benämningen beskriver kalksorten.\ncatalog:variable_text:12786:14610:15706\ncatalog:variable_text:12787:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kalkkod"
+fields = { "tags" = ["business"] }
+evidence = "Koden och benämningen beskriver kalksorten.\ncatalog:variable_text:12786:14610:15706\ncatalog:variable_text:12787:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kalksort"
+fields = { "sets" = [] }
+evidence = "Benämningen och koden beskriver kalksorten.\ncatalog:variable_text:12786:14610:15706\ncatalog:variable_text:12787:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kalksort"
+fields = { "tags" = ["business"] }
+evidence = "Benämningen och koden beskriver kalksorten.\ncatalog:variable_text:12786:14610:15706\ncatalog:variable_text:12787:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kornstl"
+fields = { "sets" = [] }
+evidence = "Övre och undre gräns mäter kalkproduktens kornstorlek.\ncatalog:variable_text:12788:14610:15706\ncatalog:variable_text:12789:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kornstl"
+fields = { "tags" = ["business"] }
+evidence = "Övre och undre gräns mäter kalkproduktens kornstorlek.\ncatalog:variable_text:12788:14610:15706\ncatalog:variable_text:12789:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kornstu"
+fields = { "sets" = [] }
+evidence = "Övre och undre gräns mäter kalkproduktens kornstorlek.\ncatalog:variable_text:12788:14610:15706\ncatalog:variable_text:12789:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:kornstu"
+fields = { "tags" = ["business"] }
+evidence = "Övre och undre gräns mäter kalkproduktens kornstorlek.\ncatalog:variable_text:12788:14610:15706\ncatalog:variable_text:12789:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk indelning i län.\ncatalog:valueset:2748\ncatalog:valueset:7128\ncatalog:variable_text:12790:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk indelning i län.\ncatalog:valueset:2748\ncatalog:valueset:7128\ncatalog:variable_text:12790:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant"
+fields = { "sets" = [] }
+evidence = "Etiketten anger levererad kvantitet i ton; källans definition ger ingen ytterligare säker avgränsning.\ncatalog:variable_text:12791:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:levkvant"
+fields = { "tags" = ["business"] }
+evidence = "Etiketten anger levererad kvantitet i ton; källans definition ger ingen ytterligare säker avgränsning.\ncatalog:variable_text:12791:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:mg"
+fields = { "sets" = [] }
+evidence = "Magnesiumhalten beskriver kalkpartiets sammansättning.\ncatalog:variable_text:12793:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:mg"
+fields = { "tags" = ["business"] }
+evidence = "Magnesiumhalten beskriver kalkpartiets sammansättning.\ncatalog:variable_text:12793:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sackad"
+fields = { "sets" = [] }
+evidence = "Säckning beskriver kalkproduktens form.\ncatalog:valueset:573\ncatalog:variable_text:12795:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sackad"
+fields = { "tags" = ["business"] }
+evidence = "Säckning beskriver kalkproduktens form.\ncatalog:valueset:573\ncatalog:variable_text:12795:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoar"
+fields = { "sets" = [] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen för sjökalkning.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12796:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoar"
+fields = { "tags" = ["business", "environment"] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen för sjökalkning.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12796:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:skog"
+fields = { "sets" = [] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen för skogskalkning.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12797:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:skog"
+fields = { "tags" = ["business", "forestry-fishing"] }
+evidence = "Kvantiteten är en uppdelning av kalkförsäljningen för skogskalkning.\ncatalog:variable_text:12778:14610:15706\ncatalog:variable_text:12797:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "sets" = [] }
+evidence = "Vattenhalten beskriver kalkproduktens sammansättning.\ncatalog:variable_text:12799:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "tags" = ["business"] }
+evidence = "Vattenhalten beskriver kalkproduktens sammansättning.\ncatalog:variable_text:12799:14610:15706"

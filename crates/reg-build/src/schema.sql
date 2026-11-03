@@ -163,12 +163,14 @@ CREATE TABLE variable (
   pid             TEXT NOT NULL UNIQUE,   -- 'demo/hush/alder'
   label_text      INTEGER NOT NULL REFERENCES text(id),
   definition_text INTEGER REFERENCES text(id),
+  description_text INTEGER REFERENCES text(id),       -- one curated variable description
   start           INTEGER NOT NULL,       -- hull of its segments
   end             INTEGER NOT NULL,
   CHECK (start < end)
 ) STRICT;
 CREATE INDEX variable_register ON variable(register_id, pid);
 
+-- simplify: Unwritten since D (table-only unit types); delete with the next schema-major change.
 CREATE TABLE variable_unit_type (
   variable_id  INTEGER NOT NULL REFERENCES variable(id),
   unit_type_id INTEGER NOT NULL REFERENCES unit_type(id),
@@ -367,7 +369,7 @@ CREATE TABLE occurrence_locator (
 
 -- Non-source winners. subject_kind names the table subject_id points into.
 CREATE TABLE override (
-  subject_kind TEXT NOT NULL CHECK (subject_kind IN ('occurrence','table','release','variable','register','valueset','class_version')),
+  subject_kind TEXT NOT NULL CHECK (subject_kind IN ('occurrence','table','release','variable','register','valueset','class_version','set')),
   subject_id   INTEGER NOT NULL,
   field        TEXT NOT NULL,             -- the closed field schema of `set`
   prov         TEXT NOT NULL CHECK (prov IN ('curated','rule')),
@@ -377,7 +379,8 @@ CREATE TABLE override (
   source_value TEXT,                      -- losing source value; NULL = source silent
   PRIMARY KEY (subject_kind, subject_id, field),
   CHECK ((prov = 'curated') = (statement_id IS NOT NULL)),
-  CHECK ((prov = 'rule') = (rule_code IS NOT NULL))
+  CHECK ((prov = 'rule') = (rule_code IS NOT NULL)),
+  CHECK (subject_kind <> 'occurrence' OR field <> 'description')
 ) STRICT, WITHOUT ROWID;
 
 -- Gaps inside a coverage hull, with a reason (design T5).
@@ -417,7 +420,7 @@ CREATE INDEX relation_object  ON relation(object_kind, object_id, kind);
 CREATE TABLE var_set (
   id               INTEGER PRIMARY KEY,
   kind             TEXT NOT NULL CHECK (kind IN ('set','tag')),
-  pid              TEXT NOT NULL UNIQUE,  -- 'demo/hush/<set>' or 'tag/<slug>'
+  pid              TEXT NOT NULL UNIQUE,  -- 'set/<provider>/<register>/<slug>' or 'tag/<slug>'
   register_id      INTEGER REFERENCES register(id),
   name_text        INTEGER NOT NULL REFERENCES text(id),
   description_text INTEGER REFERENCES text(id),
@@ -432,6 +435,27 @@ CREATE TABLE var_set_member (
   PRIMARY KEY (set_id, variable_id)
 ) STRICT, WITHOUT ROWID;
 CREATE INDEX var_set_member_variable ON var_set_member(variable_id);
+
+-- Axis order belongs to the set; facet values are lexical presentation sort keys.
+CREATE TABLE var_set_axis (
+  set_id INTEGER NOT NULL REFERENCES var_set(id),
+  axis TEXT NOT NULL,
+  ord INTEGER NOT NULL,
+  label_text INTEGER NOT NULL REFERENCES text(id),
+  PRIMARY KEY (set_id, axis),
+  UNIQUE (set_id, ord)
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE var_set_member_facet (
+  set_id INTEGER NOT NULL,
+  variable_id INTEGER NOT NULL,
+  axis TEXT NOT NULL,
+  value TEXT NOT NULL,
+  label_text INTEGER NOT NULL REFERENCES text(id),
+  PRIMARY KEY (set_id, variable_id, axis),
+  FOREIGN KEY (set_id, variable_id) REFERENCES var_set_member(set_id, variable_id),
+  FOREIGN KEY (set_id, axis) REFERENCES var_set_axis(set_id, axis)
+) STRICT, WITHOUT ROWID;
 
 -- Findings shown to readers: open review items and notices (including acked caveats).
 -- code is a rule code plus its sub-kind: 'F1:type-change',
@@ -542,6 +566,15 @@ CREATE TABLE search_item (
 
 CREATE VIRTUAL TABLE search USING fts5(
   name, label, body,                      -- pid + spellings; labels + synonyms; definitions
+  content = '',
+  tokenize = 'unicode61 remove_diacritics 0',
+  prefix = '2 3'
+);
+
+-- Supplementary occurrence text with the primary row's name, label and body as
+-- context for AND queries. Keeping a separate corpus preserves primary BM25 scores.
+CREATE VIRTUAL TABLE search_description USING fts5(
+  name, label, body,
   content = '',
   tokenize = 'unicode61 remove_diacritics 0',
   prefix = '2 3'

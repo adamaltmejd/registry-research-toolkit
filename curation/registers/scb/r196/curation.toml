@@ -58,3 +58,561 @@ kind = "set"
 subject = "var:signal4"
 fields = { "sets" = ["signal-ordinal"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "sets" = [] }
+evidence = "Adress anger geografisk tillhörighet.\ncatalog:variable_text:7658:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "tags" = ["geography"] }
+evidence = "Adress anger geografisk tillhörighet.\ncatalog:variable_text:7658:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Förbrukning hör till bränsleförbrukningsgruppen och energi.\ncatalog:variable_text:7659:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "tags" = ["energy"] }
+evidence = "Förbrukning hör till bränsleförbrukningsgruppen och energi.\ncatalog:variable_text:7659:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-2"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Suffixet är en räknare som inte finns i källkolumnen. Etiketten delas med andra variabler och kräver disambiguering.\ncatalog:occurrence:56165\ncatalog:variable_text:7660:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-2"
+fields = { "tags" = ["energy"] }
+evidence = "Suffixet är en räknare som inte finns i källkolumnen. Etiketten delas med andra variabler och kräver disambiguering.\ncatalog:occurrence:56165\ncatalog:variable_text:7660:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-forbr-mwh"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Förbrukning i MWh tillhör bränsleförbrukning och energi.\ncatalog:occurrence:56203"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-forbr-mwh"
+fields = { "tags" = ["energy"] }
+evidence = "Förbrukning i MWh tillhör bränsleförbrukning och energi.\ncatalog:occurrence:56203"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-forbr-naturligt-matt"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Förbrukning i naturligt mått tillhör bränsleförbrukning och energi.\ncatalog:occurrence:56204"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-forbr-naturligt-matt"
+fields = { "tags" = ["energy"] }
+evidence = "Förbrukning i naturligt mått tillhör bränsleförbrukning och energi.\ncatalog:occurrence:56204"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "sets" = ["bransleslag"] }
+evidence = "Kod och text anger bränsleslag.\ncatalog:variable_text:7663:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "tags" = ["energy"] }
+evidence = "Kod och text anger bränsleslag.\ncatalog:variable_text:7663:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-text"
+fields = { "sets" = ["bransleslag"] }
+evidence = "Kod och text anger bränsleslag.\ncatalog:variable_text:7664:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-text"
+fields = { "tags" = ["energy"] }
+evidence = "Kod och text anger bränsleslag.\ncatalog:variable_text:7664:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-varmevarden"
+fields = { "sets" = [] }
+evidence = "Värmevärdet används för energiomräkning.\ncatalog:variable_text:7665:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag-varmevarden"
+fields = { "tags" = ["energy"] }
+evidence = "Värmevärdet används för energiomräkning.\ncatalog:variable_text:7665:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:enhet"
+fields = { "sets" = [] }
+evidence = "Bränsleenheten beskriver energimätning.\ncatalog:variable_text:7666:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:enhet"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleenheten beskriver energimätning.\ncatalog:variable_text:7666:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-1"
+fields = { "sets" = ["fartygsvikt"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56236\ncatalog:variable_text:7667:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-1"
+fields = { "tags" = ["transport"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56236\ncatalog:variable_text:7667:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-2"
+fields = { "sets" = ["fartygsvikt"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56237\ncatalog:variable_text:7668:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-2"
+fields = { "tags" = ["transport"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56237\ncatalog:variable_text:7668:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-3"
+fields = { "sets" = ["fartygsvikt"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56238\ncatalog:variable_text:7669:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-3"
+fields = { "tags" = ["transport"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56238\ncatalog:variable_text:7669:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-4"
+fields = { "sets" = ["fartygsvikt"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56239\ncatalog:variable_text:7670:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-4"
+fields = { "tags" = ["transport"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56239\ncatalog:variable_text:7670:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-5"
+fields = { "sets" = ["fartygsvikt"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56240\ncatalog:variable_text:7671:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fartygsvikt-fartyg-5"
+fields = { "tags" = ["transport"] }
+evidence = "EUton är ett källmnemonik och inte en läsbar stam av fartygsvikt; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56240\ncatalog:variable_text:7671:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fiskefartyg-antal"
+fields = { "sets" = [] }
+evidence = "Antalet avser fiskefartyg.\ncatalog:variable_text:7672:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:fiskefartyg-antal"
+fields = { "tags" = ["forestry-fishing", "transport"] }
+evidence = "Antalet avser fiskefartyg.\ncatalog:variable_text:7672:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7674:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7674:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringskod"
+fields = { "sets" = [] }
+evidence = "Imputeringsmetod är en statistisk kvalitetsuppgift.\ncatalog:variable_text:7676:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringskod"
+fields = { "tags" = ["methods"] }
+evidence = "Imputeringsmetod är en statistisk kvalitetsuppgift.\ncatalog:variable_text:7676:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:insjo"
+fields = { "sets" = [] }
+evidence = "Insjöns namn anger geografisk plats.\ncatalog:variable_text:7678:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:insjo"
+fields = { "tags" = ["geography"] }
+evidence = "Insjöns namn anger geografisk plats.\ncatalog:variable_text:7678:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7680:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7680:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-1"
+fields = { "sets" = ["motoreffektnorm"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56243\ncatalog:variable_text:7683:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-1"
+fields = { "tags" = ["transport"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56243\ncatalog:variable_text:7683:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-2"
+fields = { "sets" = ["motoreffektnorm"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56244\ncatalog:variable_text:7684:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-2"
+fields = { "tags" = ["transport"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56244\ncatalog:variable_text:7684:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-3"
+fields = { "sets" = ["motoreffektnorm"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56245\ncatalog:variable_text:7685:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-3"
+fields = { "tags" = ["transport"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56245\ncatalog:variable_text:7685:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-4"
+fields = { "sets" = ["motoreffektnorm"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56246\ncatalog:variable_text:7686:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-4"
+fields = { "tags" = ["transport"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56246\ncatalog:variable_text:7686:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-5"
+fields = { "sets" = ["motoreffektnorm"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56247\ncatalog:variable_text:7687:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:motoreffektnorm-fartyg-5"
+fields = { "tags" = ["transport"] }
+evidence = "kW är en enhet och källmnemonik, inte en läsbar stam av motoreffektnorm; etiketten kolliderar med andra fartygsfält.\ncatalog:occurrence:56247\ncatalog:variable_text:7687:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:7688:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:7688:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:langd1"
+fields = { "sets" = ["fartygslangd"] }
+evidence = "Fältet anger längden för fartyg 1.\ncatalog:occurrence:56248"
+
+[[statement]]
+kind = "set"
+subject = "var:langd1"
+fields = { "tags" = ["transport"] }
+evidence = "Fältet anger längden för fartyg 1.\ncatalog:occurrence:56248"
+
+[[statement]]
+kind = "set"
+subject = "var:langd2"
+fields = { "sets" = ["fartygslangd"] }
+evidence = "Fältet anger längden för fartyg 2.\ncatalog:occurrence:56249"
+
+[[statement]]
+kind = "set"
+subject = "var:langd2"
+fields = { "tags" = ["transport"] }
+evidence = "Fältet anger längden för fartyg 2.\ncatalog:occurrence:56249"
+
+[[statement]]
+kind = "set"
+subject = "var:langd3"
+fields = { "sets" = ["fartygslangd"] }
+evidence = "Fältet anger längden för fartyg 3.\ncatalog:occurrence:56250"
+
+[[statement]]
+kind = "set"
+subject = "var:langd3"
+fields = { "tags" = ["transport"] }
+evidence = "Fältet anger längden för fartyg 3.\ncatalog:occurrence:56250"
+
+[[statement]]
+kind = "set"
+subject = "var:langd4"
+fields = { "sets" = ["fartygslangd"] }
+evidence = "Fältet anger längden för fartyg 4.\ncatalog:occurrence:56251"
+
+[[statement]]
+kind = "set"
+subject = "var:langd4"
+fields = { "tags" = ["transport"] }
+evidence = "Fältet anger längden för fartyg 4.\ncatalog:occurrence:56251"
+
+[[statement]]
+kind = "set"
+subject = "var:langd5"
+fields = { "sets" = ["fartygslangd"] }
+evidence = "Fältet anger längden för fartyg 5.\ncatalog:occurrence:56252"
+
+[[statement]]
+kind = "set"
+subject = "var:langd5"
+fields = { "tags" = ["transport"] }
+evidence = "Fältet anger längden för fartyg 5.\ncatalog:occurrence:56252"
+
+[[statement]]
+kind = "set"
+subject = "var:licens"
+fields = { "sets" = [] }
+evidence = "Licensen avser yrkesfiske.\ncatalog:variable_text:7694:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:licens"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Licensen avser yrkesfiske.\ncatalog:variable_text:7694:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:7696:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:variable_text:7696:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:7697:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:7697:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:saltvatten-sotvatten"
+fields = { "sets" = [] }
+evidence = "Variabeln anger typ av fiske.\ncatalog:valueset:6694\ncatalog:variable_text:7698:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:saltvatten-sotvatten"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Variabeln anger typ av fiske.\ncatalog:valueset:6694\ncatalog:variable_text:7698:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:signal"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "Fältet anger fartygsidentitet och hör till signalfälten.\ncatalog:occurrence:56226\ncatalog:variable_text:7700:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:signal"
+fields = { "tags" = [] }
+evidence = "Fältet anger fartygsidentitet och hör till signalfälten.\ncatalog:occurrence:56226\ncatalog:variable_text:7700:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:signal1-2"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal1.\ncatalog:occurrence:56180\ncatalog:occurrence:56222"
+
+[[statement]]
+kind = "set"
+subject = "var:signal1-2"
+fields = { "tags" = [] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal1.\ncatalog:occurrence:56180\ncatalog:occurrence:56222"
+
+[[statement]]
+kind = "set"
+subject = "var:signal2-2"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal2.\ncatalog:occurrence:56181\ncatalog:occurrence:56223"
+
+[[statement]]
+kind = "set"
+subject = "var:signal2-2"
+fields = { "tags" = [] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal2.\ncatalog:occurrence:56181\ncatalog:occurrence:56223"
+
+[[statement]]
+kind = "set"
+subject = "var:signal3-2"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal3.\ncatalog:occurrence:56182\ncatalog:occurrence:56224"
+
+[[statement]]
+kind = "set"
+subject = "var:signal3-2"
+fields = { "tags" = [] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal3.\ncatalog:occurrence:56182\ncatalog:occurrence:56224"
+
+[[statement]]
+kind = "set"
+subject = "var:signal4-2"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal4.\ncatalog:occurrence:56183\ncatalog:occurrence:56225"
+
+[[statement]]
+kind = "set"
+subject = "var:signal4-2"
+fields = { "tags" = [] }
+evidence = "Samma fartygsidentitet är uppdelad mellan observerade perioder med signal4.\ncatalog:occurrence:56183\ncatalog:occurrence:56225"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:56261\ncatalog:occurrence:56262"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:56261\ncatalog:occurrence:56262"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:7710:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:7710:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:7714:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstalet är en statistisk vikt.\ncatalog:variable_text:7714:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-naturligt-matt"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Value är ett generiskt källord utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56264\ncatalog:variable_text:7715:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-naturligt-matt"
+fields = { "tags" = ["energy"] }
+evidence = "Value är ett generiskt källord utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56264\ncatalog:variable_text:7715:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-mwh"
+fields = { "sets" = ["bransleforbrukning"] }
+evidence = "Value_num är ett generiskt källmnemonik utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56265\ncatalog:variable_text:7716:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning-mwh"
+fields = { "tags" = ["energy"] }
+evidence = "Value_num är ett generiskt källmnemonik utan läsbar koppling till bränsleförbrukning; etiketten kolliderar med andra variabler.\ncatalog:occurrence:56265\ncatalog:variable_text:7716:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:signal-ordinal"
+fields = { "label" = "Fartygets identitetssnummer", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:signal1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:signal2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:signal3"
+fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:signal4"
+fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:8; existing set membership and current id ledger determine the targets."

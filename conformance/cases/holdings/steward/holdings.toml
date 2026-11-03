@@ -1,0 +1,167 @@
+# All names and facts in this fixture are synthetic.
+[[table]]
+physical_name = "Owners"
+disposition = "dated"
+delivery = "2017..2019"
+table_pids = ["demo/owners"]
+locator = "fixture:interval-local-owners"
+
+[[table.column]]
+name = "Shared"
+locator = "fixture:reviewed-two-owners"
+[[table.column.mapping]]
+table_pid = "demo/owners"
+variable_pid = "demo/owners/first"
+locator = "fixture:first-owner-association"
+[[table.column.mapping]]
+table_pid = "demo/owners"
+variable_pid = "demo/owners/second"
+locator = "fixture:second-owner-association"
+
+
+[[table.key]]
+entity = ["demo/owners/id"]
+time = []
+period = "2017..2018"
+locator = "fixture:declared-entity-time-key"
+
+[[table.key]]
+entity = ["demo/owners/id"]
+time = []
+period = "2019"
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Pool"
+disposition = "dated"
+delivery = "2017..2020"
+table_pids = ["demo/held", "demo/owners/empty"]
+period_column = "Year"
+period_encoding = "year"
+locator = "fixture:pooled"
+
+[[table.column]]
+name = "Late"
+slot_kind = "year"
+slot_index = 2010
+locator = "fixture:reference-year-index-is-topology-not-coverage"
+
+[[table.column]]
+name = "Slot2"
+slot_kind = "position"
+slot_index = 2
+locator = "fixture:slot"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/slot2"
+locator = "fixture:slot-route"
+
+[[table.column]]
+name = "Code"
+locator = "fixture:earlier-coding"
+[[table.column.mapping]]
+table_pid = "steward/slots"
+variable_pid = "steward/slots/code"
+delivery = "2017"
+caveat = "Earlier delivery uses the explicitly transcribed supplemental coding."
+locator = "fixture:earlier-coding"
+
+[[table.column]]
+name = "Held"
+hold = "Await reviewed association"
+follow_up = "https://example.invalid/issues/1"
+locator = "fixture:held"
+
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "column"
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Part A"
+disposition = "dated"
+delivery = "2021"
+partition = "a"
+table_pids = ["demo/held"]
+locator = "fixture:partition-a"
+
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "year"
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Part B"
+disposition = "dated"
+delivery = "2021"
+partition = "b"
+table_pids = ["demo/held"]
+locator = "fixture:partition-b"
+
+
+[[table.key]]
+entity = ["demo/held/id"]
+time = []
+period_key = "year"
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Parent"
+disposition = "dated"
+delivery = "2018"
+table_pids = ["demo/projected"]
+locator = "fixture:parent"
+
+
+[[table.key]]
+entity = ["demo/projected/id"]
+time = []
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Child"
+disposition = "dated"
+delivery = "2018"
+projection_of = "Parent"
+projection_token = "child"
+table_pids = ["demo/projected"]
+locator = "fixture:projection"
+
+
+[[table.key]]
+entity = ["demo/projected/id", "demo/projected/child-id"]
+time = []
+locator = "fixture:declared-entity-time-key"
+
+[[table]]
+physical_name = "Unknown"
+disposition = "unknown"
+table_pids = []
+reason = "Delivery period not documented"
+locator = "fixture:unknown"
+
+
+[[table]]
+physical_name = "Lookup"
+disposition = "lookup"
+table_pids = []
+reason = "Accounted lookup; not observation data"
+locator = "fixture:lookup"
+
+
+[[table]]
+physical_name = "Excluded"
+disposition = "excluded"
+table_pids = []
+reason = "Outside the authored observation scope"
+locator = "fixture:excluded"
+
+[[table.column]]
+name = "Secret"
+unmap = "Not observation data"
+locator = "fixture:unmap"
+

@@ -1,0 +1,4 @@
+{
+  "occurrence": {"exit_code": 1, "code": "description-subject", "located_lines": [1]},
+  "conflict": {"exit_code": 1, "code": "curation-overlap", "located_lines": [1, 7]}
+}

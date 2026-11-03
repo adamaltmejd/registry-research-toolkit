@@ -1,17 +1,5 @@
 
 [[statement]]
-kind = "set"
-subject = "landfordelad-extrastat: landskod where key = 'v45'"
-fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
-evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
-
-[[statement]]
-kind = "set"
-subject = "varu-landfordelat-intrastat: landskod where key = 'v45'"
-fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
-evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
-
-[[statement]]
 kind = "assert"
 subject = "varu-landfordelat-intrastat: SPIN2002 @1997..2011"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Produktgrupp enligt SPIN 2002", "definition" = "Produktgrupp enligt SPIN 2002." } }
@@ -34,3 +22,381 @@ kind = "assert"
 subject = "varu-landfordelat-intrastat: KN8 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)", "definition" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)" } }
 evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: InfUtf @1997-01-01..1997-12-31 where key = 'v18337' and release = '1997'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: InfUtf @1998-01-01..1998-12-31 where key = 'v18337' and release = '1998'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+
+[[statement]]
+kind = "set"
+subject = "var:annankvant"
+fields = { "sets" = ["varukvantitet"] }
+evidence = "Fysisk kvantitet i varuhandeln.\ncatalog:variable_text:54876:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:annankvant"
+fields = { "tags" = ["trade"] }
+evidence = "Fysisk kvantitet i varuhandeln.\ncatalog:variable_text:54876:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:fakturerat-varde"
+fields = { "sets" = ["handelsvarde"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika värdebegrepp.\ncatalog:occurrence:512691\ncatalog:occurrence:512692"
+
+[[statement]]
+kind = "set"
+subject = "var:fakturerat-varde"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika värdebegrepp.\ncatalog:occurrence:512691\ncatalog:occurrence:512692"
+
+[[statement]]
+kind = "set"
+subject = "var:flode"
+fields = { "sets" = ["handelsflode"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54879:9862:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:flode"
+fields = { "tags" = ["trade"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54879:9862:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:flode-extrastat"
+fields = { "sets" = ["handelsflode"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54880:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:flode-extrastat"
+fields = { "tags" = ["trade"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54880:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:flode-volym"
+fields = { "sets" = ["handelsflode"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54881:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:flode-volym"
+fields = { "tags" = ["trade"] }
+evidence = "Kod för varuhandelns flödesriktning.\ncatalog:variable_text:54881:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = ["handelsland"] }
+evidence = "Landkodningen beskriver samma handelsland som landskod-utrikeshandel i en senare period.\ncatalog:occurrence:512364\ncatalog:occurrence:512377\ncatalog:variable_text:54884:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Landkodningen beskriver samma handelsland som landskod-utrikeshandel i en senare period.\ncatalog:occurrence:512364\ncatalog:occurrence:512377\ncatalog:variable_text:54884:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-utrikeshandel"
+fields = { "sets" = ["handelsland"] }
+evidence = "Samma handelslandskodning som land, uppdelad efter period.\ncatalog:occurrence:512364\ncatalog:occurrence:512377\ncatalog:variable_text:54885:15340:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-utrikeshandel"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Samma handelslandskodning som land, uppdelad efter period.\ncatalog:occurrence:512364\ncatalog:occurrence:512377\ncatalog:variable_text:54885:15340:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "sets" = ["handelsmanad"] }
+evidence = "Månadskodningen fortsätter i de perioduppdelade Intrastat- och Extrastatvariablerna.\ncatalog:occurrence:512205\ncatalog:occurrence:512216\ncatalog:occurrence:512580\ncatalog:occurrence:512593"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "tags" = [] }
+evidence = "Månadskodningen fortsätter i de perioduppdelade Intrastat- och Extrastatvariablerna.\ncatalog:occurrence:512205\ncatalog:occurrence:512216\ncatalog:occurrence:512580\ncatalog:occurrence:512593"
+
+[[statement]]
+kind = "set"
+subject = "var:manad-extrastat"
+fields = { "sets" = ["handelsmanad"] }
+evidence = "Månadskodningen fortsätter från manad i en senare period.\ncatalog:occurrence:512205\ncatalog:occurrence:512216"
+
+[[statement]]
+kind = "set"
+subject = "var:manad-extrastat"
+fields = { "tags" = [] }
+evidence = "Månadskodningen fortsätter från manad i en senare period.\ncatalog:occurrence:512205\ncatalog:occurrence:512216"
+
+[[statement]]
+kind = "set"
+subject = "var:manad-intrastat"
+fields = { "sets" = ["handelsmanad"] }
+evidence = "Månadskodningen fortsätter från manad i en senare period.\ncatalog:occurrence:512580\ncatalog:occurrence:512593"
+
+[[statement]]
+kind = "set"
+subject = "var:manad-intrastat"
+fields = { "tags" = [] }
+evidence = "Månadskodningen fortsätter från manad i en senare period.\ncatalog:occurrence:512580\ncatalog:occurrence:512593"
+
+[[statement]]
+kind = "set"
+subject = "var:mig"
+fields = { "sets" = [] }
+evidence = "MIG klassificerar varor i utrikeshandeln.\ncatalog:variable_text:54889:10592:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:mig"
+fields = { "tags" = ["trade"] }
+evidence = "MIG klassificerar varor i utrikeshandeln.\ncatalog:variable_text:54889:10592:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-enligt-spin-2002"
+fields = { "sets" = ["produktgrupp-spin"] }
+evidence = "Produktgruppskodning enligt SPIN.\ncatalog:variable_text:54891:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-enligt-spin-2002"
+fields = { "tags" = ["trade"] }
+evidence = "Produktgruppskodning enligt SPIN.\ncatalog:variable_text:54891:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-spin-2007"
+fields = { "sets" = ["produktgrupp-spin"] }
+evidence = "SPIN 2007 är samma klassificeringsbegrepp som spin, uppdelat mellan perioder.\ncatalog:occurrence:512368\ncatalog:occurrence:512381\ncatalog:occurrence:512977\ncatalog:occurrence:512984\ncatalog:occurrence:513045\ncatalog:occurrence:513054"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-spin-2007"
+fields = { "tags" = ["trade"] }
+evidence = "SPIN 2007 är samma klassificeringsbegrepp som spin, uppdelat mellan perioder.\ncatalog:occurrence:512368\ncatalog:occurrence:512381\ncatalog:occurrence:512977\ncatalog:occurrence:512984\ncatalog:occurrence:513045\ncatalog:occurrence:513054"
+
+[[statement]]
+kind = "set"
+subject = "var:sitc"
+fields = { "sets" = ["varugrupp-sitc"] }
+evidence = "SITC-klassificeringen fortsätter som varugrupp-sitc-rev3-rev4 i en senare period.\ncatalog:occurrence:512367\ncatalog:occurrence:512380"
+
+[[statement]]
+kind = "set"
+subject = "var:sitc"
+fields = { "tags" = ["trade"] }
+evidence = "SITC-klassificeringen fortsätter som varugrupp-sitc-rev3-rev4 i en senare period.\ncatalog:occurrence:512367\ncatalog:occurrence:512380"
+
+[[statement]]
+kind = "set"
+subject = "var:sitc-sitc3"
+fields = { "sets" = ["varugrupp-sitc"] }
+evidence = "SITC-klassificeringen fortsätter som varugrupp-sitc-rev3-rev4-sitc3 i en senare period.\ncatalog:occurrence:513044\ncatalog:occurrence:513053"
+
+[[statement]]
+kind = "set"
+subject = "var:sitc-sitc3"
+fields = { "tags" = ["trade"] }
+evidence = "SITC-klassificeringen fortsätter som varugrupp-sitc-rev3-rev4-sitc3 i en senare period.\ncatalog:occurrence:513044\ncatalog:occurrence:513053"
+
+[[statement]]
+kind = "set"
+subject = "var:sni97-5"
+fields = { "sets" = ["produktgrupp-spin"] }
+evidence = "SNI97-5 är en källkod som inte är en läsbar stam av etiketten SPIN.\ncatalog:variable_text:54895:10592:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sni97-5"
+fields = { "tags" = ["trade"] }
+evidence = "SNI97-5 är en källkod som inte är en läsbar stam av etiketten SPIN.\ncatalog:variable_text:54895:10592:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:spin"
+fields = { "sets" = ["produktgrupp-spin"] }
+evidence = "SPIN 2007 är samma klassificeringsbegrepp som produktgrupp-spin-2007, uppdelat mellan perioder.\ncatalog:occurrence:512368\ncatalog:occurrence:512381\ncatalog:occurrence:512977\ncatalog:occurrence:512984\ncatalog:occurrence:513045\ncatalog:occurrence:513054"
+
+[[statement]]
+kind = "set"
+subject = "var:spin"
+fields = { "tags" = ["trade"] }
+evidence = "SPIN 2007 är samma klassificeringsbegrepp som produktgrupp-spin-2007, uppdelat mellan perioder.\ncatalog:occurrence:512368\ncatalog:occurrence:512381\ncatalog:occurrence:512977\ncatalog:occurrence:512984\ncatalog:occurrence:513045\ncatalog:occurrence:513054"
+
+[[statement]]
+kind = "set"
+subject = "var:spin2015"
+fields = { "sets" = ["produktgrupp-spin"] }
+evidence = "Produktgruppskodning enligt SPIN.\ncatalog:variable_text:54897:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:spin2015"
+fields = { "tags" = ["trade"] }
+evidence = "Produktgruppskodning enligt SPIN.\ncatalog:variable_text:54897:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:statistiskt-varde"
+fields = { "sets" = ["handelsvarde"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika värdebegrepp.\ncatalog:occurrence:512691\ncatalog:occurrence:512692"
+
+[[statement]]
+kind = "set"
+subject = "var:statistiskt-varde"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande mappningar till olika värdebegrepp.\ncatalog:occurrence:512691\ncatalog:occurrence:512692"
+
+[[statement]]
+kind = "set"
+subject = "var:transaktionstyp"
+fields = { "sets" = ["transaktionstyp"] }
+evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54900:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:transaktionstyp"
+fields = { "tags" = ["trade"] }
+evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54900:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:transaktionstyp-transtyp"
+fields = { "sets" = ["transaktionstyp"] }
+evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:transaktionstyp-transtyp"
+fields = { "tags" = ["trade"] }
+evidence = "Kodning av transaktionstyp i varuhandeln.\ncatalog:variable_text:54901:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ursland"
+fields = { "sets" = [] }
+evidence = "Ursprungsland anger varans geografiska ursprung i varuhandeln.\ncatalog:variable_text:54903:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ursland"
+fields = { "tags" = ["geography", "trade"] }
+evidence = "Ursprungsland anger varans geografiska ursprung i varuhandeln.\ncatalog:variable_text:54903:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:varans-varukod-enligt-den-kombinerade-nomenklaturen"
+fields = { "sets" = ["varuklassificering-kn"] }
+evidence = "Varukod enligt KN i utrikeshandeln.\ncatalog:variable_text:54904:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varans-varukod-enligt-den-kombinerade-nomenklaturen"
+fields = { "tags" = ["trade"] }
+evidence = "Varukod enligt KN i utrikeshandeln.\ncatalog:variable_text:54904:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-kn"
+fields = { "sets" = ["varuklassificering-kn"] }
+evidence = "KN-kodningen fortsätter från varukod-kn i en senare period.\ncatalog:occurrence:512372\ncatalog:occurrence:512386"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-kn"
+fields = { "tags" = ["trade"] }
+evidence = "KN-kodningen fortsätter från varukod-kn i en senare period.\ncatalog:occurrence:512372\ncatalog:occurrence:512386"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4"
+fields = { "sets" = ["varugrupp-sitc"] }
+evidence = "SITC-klassificeringen fortsätter från sitc i en senare period.\ncatalog:occurrence:512367\ncatalog:occurrence:512380"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4"
+fields = { "tags" = ["trade"] }
+evidence = "SITC-klassificeringen fortsätter från sitc i en senare period.\ncatalog:occurrence:512367\ncatalog:occurrence:512380"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4-sitc3"
+fields = { "sets" = ["varugrupp-sitc"] }
+evidence = "SITC-klassificeringen fortsätter från sitc-sitc3 i en senare period.\ncatalog:occurrence:513044\ncatalog:occurrence:513053"
+
+[[statement]]
+kind = "set"
+subject = "var:varugrupp-sitc-rev3-rev4-sitc3"
+fields = { "tags" = ["trade"] }
+evidence = "SITC-klassificeringen fortsätter från sitc-sitc3 i en senare period.\ncatalog:occurrence:513044\ncatalog:occurrence:513053"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "sets" = ["varuklassificering-kn"] }
+evidence = "Samma KN-kodning som varugrupp-kn, uppdelad efter period.\ncatalog:occurrence:512372\ncatalog:occurrence:512386"
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-kn"
+fields = { "tags" = ["trade"] }
+evidence = "Samma KN-kodning som varugrupp-kn, uppdelad efter period.\ncatalog:occurrence:512372\ncatalog:occurrence:512386"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-kg"
+fields = { "sets" = ["varukvantitet"] }
+evidence = "Fysisk kvantitet i varuhandeln.\ncatalog:variable_text:54910:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-kg"
+fields = { "tags" = ["trade"] }
+evidence = "Fysisk kvantitet i varuhandeln.\ncatalog:variable_text:54910:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:volymindex-ar-2000-100"
+fields = { "sets" = ["handelsvolymindex"] }
+evidence = "Samma källkolumn har överlappande mappningar till index med olika basår.\ncatalog:occurrence:512994\ncatalog:occurrence:512995"
+
+[[statement]]
+kind = "set"
+subject = "var:volymindex-ar-2000-100"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande mappningar till index med olika basår.\ncatalog:occurrence:512994\ncatalog:occurrence:512995"
+
+[[statement]]
+kind = "set"
+subject = "var:volymindex-ar-2015-100"
+fields = { "sets" = ["handelsvolymindex"] }
+evidence = "Samma källkolumn har överlappande mappningar till index med olika basår.\ncatalog:occurrence:512994\ncatalog:occurrence:512995"
+
+[[statement]]
+kind = "set"
+subject = "var:volymindex-ar-2015-100"
+fields = { "tags" = ["trade"] }
+evidence = "Samma källkolumn har överlappande mappningar till index med olika basår.\ncatalog:occurrence:512994\ncatalog:occurrence:512995"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470. Extrastat omfattar endast handel med länder utanför EU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19).\n\nreg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19).\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512377:opdef_text. One variable, one description."

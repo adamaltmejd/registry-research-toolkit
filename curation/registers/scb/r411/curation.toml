@@ -40,3 +40,843 @@ kind = "set"
 subject = "rekryteringserfarenheter: ngs1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda är en gemensam mätstorhet.\ncatalog:variable_text:38932:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda är en gemensam mätstorhet.\ncatalog:variable_text:38932:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:38933:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:38933:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-ramen"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal anställda enligt ramen.\ncatalog:variable_text:38934:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-ramen"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda enligt ramen.\ncatalog:variable_text:38934:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rampopulation-per-stratum"
+fields = { "sets" = [] }
+evidence = "Rampopulationen är ett urvalsmått.\ncatalog:variable_text:38935:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rampopulation-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Rampopulationen är ett urvalsmått.\ncatalog:variable_text:38935:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Antalet svarande är ett undersökningsmått.\ncatalog:variable_text:38936:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet svarande är ett undersökningsmått.\ncatalog:variable_text:38936:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesvisning"
+fields = { "sets" = [] }
+evidence = "Källkolumnens initial är en opak kod.\ncatalog:variable_text:38938:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesvisning"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnens initial är en opak kod.\ncatalog:variable_text:38938:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Kommunen anger arbetsställets läge.\ncatalog:variable_text:38939:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger arbetsställets läge.\ncatalog:variable_text:38939:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-arbetsstalle"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38940:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-arbetsstalle"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38940:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-obemannade"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38941:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-obemannade"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38941:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-vikarie"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38942:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lediga-jobb-vikarie"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter lediga jobb.\ncatalog:variable_text:38942:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillam-man"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Lillam är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38943:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillam-man"
+fields = { "tags" = ["methods"] }
+evidence = "Lillam är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38943:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-man"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "Lillan är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38944:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-man"
+fields = { "tags" = ["methods"] }
+evidence = "Lillan är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38944:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-annonserade-lediga-jobb-pa-ett-arbetsstalle"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38945:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-annonserade-lediga-jobb-pa-ett-arbetsstalle"
+fields = { "tags" = ["employment"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38945:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-ovriga"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38946:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-ovriga"
+fields = { "tags" = ["employment"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38946:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-exkl-vik"
+fields = { "sets" = ["lediga-jobb"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38947:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-lediga-jobb-pa-ett-arbetsstalle-exkl-vik"
+fields = { "tags" = ["employment"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38947:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-vikariefragan"
+fields = { "sets" = [] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38948:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-vikariefragan"
+fields = { "tags" = ["methods"] }
+evidence = "LJ är en opak bokstavskod.\ncatalog:variable_text:38948:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = [] }
+evidence = "Näringsgren beskriver företagsverksamhet.\ncatalog:variable_text:38950:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren beskriver företagsverksamhet.\ncatalog:variable_text:38950:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ranstplan"
+fields = { "sets" = [] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38952:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ranstplan"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38952:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-forlangde-rekryteringstiden"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38953:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-forlangde-rekryteringstiden"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38953:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryteringsproblem-sankte-eller-andrade-utbildningskrav"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38954:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryteringsproblem-sankte-eller-andrade-utbildningskrav"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38954:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryteringsproblem-sankte-eller-andrade-erfarenhetskrav"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38955:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryteringsproblem-sankte-eller-andrade-erfarenhetskrav"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38955:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-sankte-kraven-pa-personliga"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38956:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-sankte-kraven-pa-personliga"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38956:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ratg5"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38957:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ratg5"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38957:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-erbjod-andra-formaner-som-t"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38958:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-erbjod-andra-formaner-som-t"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38958:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-forsokte-rekrytera"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38959:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-forsokte-rekrytera"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger åtgärden.\ncatalog:variable_text:38959:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-annan-atgard"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38960:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-annan-atgard"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38960:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-ingen-atgard"
+fields = { "sets" = ["atgarder-vid-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38961:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:atgarder-vid-rekryteringsproblem-ingen-atgard"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38961:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-hyrde-in-personal"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38962:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-hyrde-in-personal"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38962:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-annan-konsekvens"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38963:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-annan-konsekvens"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38963:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-inga-konsekvenser"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-inga-konsekvenser"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38964:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-kopte-tjanster"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38965:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-kopte-tjanster"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38965:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-befintlig-personal"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38966:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-befintlig-personal"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38966:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-utbildning"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38967:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-utbildning"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38967:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-gora"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38968:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-gora"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38968:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-anstalla"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38969:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-fick-anstalla"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38969:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inte-lyckas-rekrytera-kunde-inte-ta-emot-uppdrag-order"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38970:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inte-lyckas-rekrytera-kunde-inte-ta-emot-uppdrag-order"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38970:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inte-lyckas-rekrytera-produktion-service-minskade"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38971:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inte-lyckas-rekrytera-produktion-service-minskade"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38971:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-planerad-expansion"
+fields = { "sets" = ["konsekvenser-av-misslyckad-rekrytering"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38972:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:konsekvenser-av-att-inte-lyckas-rekrytera-planerad-expansion"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38972:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:har-inte-lyckats-rekrytera-sa-manga-personer-som-sokts-under"
+fields = { "sets" = ["ej-tillgodosedda-rekryteringar"] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38973:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:har-inte-lyckats-rekrytera-sa-manga-personer-som-sokts-under"
+fields = { "tags" = ["employment"] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38973:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-inte-rekryterade-senaste-6-manader"
+fields = { "sets" = ["ej-tillgodosedda-rekryteringar"] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38974:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-inte-rekryterade-senaste-6-manader"
+fields = { "tags" = ["employment"] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38974:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-inte-kan-inte-svara-antal-personer-inte-rekryterade"
+fields = { "sets" = [] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38975:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vet-inte-kan-inte-svara-antal-personer-inte-rekryterade"
+fields = { "tags" = ["methods"] }
+evidence = "Rlir är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38975:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob1"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38976:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob1"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38976:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inga-eller-for-fa-sokande-tillracklig-yrkeserfarenhet"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38977:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inga-eller-for-fa-sokande-tillracklig-yrkeserfarenhet"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38977:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob3"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38978:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob3"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38978:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob4"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38979:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rprob4"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38979:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-inga-sokande-overhuvudtaget"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38980:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-inga-sokande-overhuvudtaget"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38980:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-de-sokande-hade-hogre-lonekrav-an"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38981:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-de-sokande-hade-hogre-lonekrav-an"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38981:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sokande-andra-krav-onskemal-inte-planerat"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38982:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sokande-andra-krav-onskemal-inte-planerat"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38982:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-annat-problem"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38983:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-annat-problem"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38983:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-upplevde-inga-problem"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38984:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-upplevde-inga-problem"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38984:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-har-inte-kommit-tillrackligt"
+fields = { "sets" = ["typer-av-rekryteringsproblem"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38985:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-rekryteringsproblem-har-inte-kommit-tillrackligt"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38985:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:har-rekryterat-eller-forsokt-rekrytera-personal-under-de"
+fields = { "sets" = ["rekryteringsaktivitet"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38986:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:har-rekryterat-eller-forsokt-rekrytera-personal-under-de"
+fields = { "tags" = ["employment"] }
+evidence = "Den inledande bokstaven är en opak källkod.\ncatalog:variable_text:38986:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor"
+fields = { "sets" = [] }
+evidence = "Sektorindelningen beskriver arbetsställets verksamhet.\ncatalog:variable_text:38988:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor"
+fields = { "tags" = ["business"] }
+evidence = "Sektorindelningen beskriver arbetsställets verksamhet.\ncatalog:variable_text:38988:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Statusen avser svar, bortfall och övertäckning.\ncatalog:variable_text:38989:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Statusen avser svar, bortfall och övertäckning.\ncatalog:variable_text:38989:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = ["stratumindelning"] }
+evidence = "Stratum är en urvalsindelning.\ncatalog:variable_text:38990:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum är en urvalsindelning.\ncatalog:variable_text:38990:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-man"
+fields = { "sets" = ["stratumindelning"] }
+evidence = "Variabeln kombinerar stratum och mätmånad.\ncatalog:variable_text:38991:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-man"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln kombinerar stratum och mätmånad.\ncatalog:variable_text:38991:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-besvara-blankett"
+fields = { "sets" = [] }
+evidence = "Tidsåtgången gäller undersökningens insamling.\ncatalog:variable_text:38992:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-besvara-blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Tidsåtgången gäller undersökningens insamling.\ncatalog:variable_text:38992:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsvar-svar"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar svar på en undersökningsfråga.\ncatalog:variable_text:38993:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsvar-svar"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar svar på en undersökningsfråga.\ncatalog:variable_text:38993:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Uppräkningstal är en undersökningsvikt.\ncatalog:variable_text:38994:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningstal är en undersökningsvikt.\ncatalog:variable_text:38994:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = ["urvalsstorlek"] }
+evidence = "Variabeln anger urvalsstorlek.\ncatalog:variable_text:38995:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstorlek.\ncatalog:variable_text:38995:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsvikt"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "W är en opak bokstavskod.\ncatalog:variable_text:38996:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "W är en opak bokstavskod.\ncatalog:variable_text:38996:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallenenheter-i-kombination-av-naringsgren"
+fields = { "sets" = [] }
+evidence = "Yantae är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38997:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallenenheter-i-kombination-av-naringsgren"
+fields = { "tags" = ["methods"] }
+evidence = "Yantae är ett opakt källmnemoniskt namn.\ncatalog:variable_text:38997:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:genomsnittligt-antal-anstallda-i-yrket"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Y är en opak bokstavskod och mean är inte en ordstam i etiketten.\ncatalog:variable_text:38998:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:genomsnittligt-antal-anstallda-i-yrket"
+fields = { "tags" = ["employment"] }
+evidence = "Y är en opak bokstavskod och mean är inte en ordstam i etiketten.\ncatalog:variable_text:38998:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-rekryteringsfraga-senaste-6-manader"
+fields = { "sets" = [] }
+evidence = "Yr är en opak källkod för en indikator.\ncatalog:variable_text:38999:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-rekryteringsfraga-senaste-6-manader"
+fields = { "tags" = ["methods"] }
+evidence = "Yr är en opak källkod för en indikator.\ncatalog:variable_text:38999:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryterat-eller-forsokt-rekrytera-personal-till-en-specifik"
+fields = { "sets" = ["rekryteringsaktivitet"] }
+evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39000:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rekryterat-eller-forsokt-rekrytera-personal-till-en-specifik"
+fields = { "tags" = ["employment"] }
+evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39000:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-lyckats-rekrytera-med-ratt-kvalifikationer-till-en"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger hur ofta rekrytering med rätt kvalifikationer lyckats.\ncatalog:variable_text:39001:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-ofta-lyckats-rekrytera-med-ratt-kvalifikationer-till-en"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak källmnemonik; etiketten anger hur ofta rekrytering med rätt kvalifikationer lyckats.\ncatalog:variable_text:39001:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "sets" = ["yrkesangivelse"] }
+evidence = "Variabeln anger yrket som svaret avser.\ncatalog:variable_text:39002:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger yrket som svaret avser.\ncatalog:variable_text:39002:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-fraga-antal-personer-saknas-inte-utfort-arbete"
+fields = { "sets" = [] }
+evidence = "Ys är en opak källkod för en indikator.\ncatalog:variable_text:39003:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-fraga-antal-personer-saknas-inte-utfort-arbete"
+fields = { "tags" = ["methods"] }
+evidence = "Ys är en opak källkod för en indikator.\ncatalog:variable_text:39003:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-saknas-per-yrke-inte-utfort-arbete"
+fields = { "sets" = [] }
+evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39004:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-personer-saknas-per-yrke-inte-utfort-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Y är en opak bokstavskod.\ncatalog:variable_text:39004:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrken-dar-personer-saknas"
+fields = { "sets" = ["yrkesangivelse"] }
+evidence = "Y och KT är opaka källkoder.\ncatalog:variable_text:39005:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrken-dar-personer-saknas"
+fields = { "tags" = ["employment"] }
+evidence = "Y och KT är opaka källkoder.\ncatalog:variable_text:39005:19723:20089"

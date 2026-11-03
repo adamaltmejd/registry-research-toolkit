@@ -1,0 +1,9 @@
+[tables]
+t = "t"
+u = "u"
+
+[variables]
+alpha = ["t: EARLY"]
+beta = ["t: LATER"]
+gamma = ["t: RIVAL"]
+delta = ["u: SIDE"]

@@ -1,0 +1,10 @@
+[tables]
+t = "t"
+
+[variables]
+a-x = ["t: X @ 2018-01-01"]
+a-y = ["t: Y @ 2018-01-01"]
+u-missing-one = ["t: MissingOne"]
+u-missing-two = ["t: MissingTwo"]
+z-split-one = ["t: X", "t: Y"]
+z-split-two = ["t: X @ 2019-01-01", "t: Y @ 2019-01-01"]

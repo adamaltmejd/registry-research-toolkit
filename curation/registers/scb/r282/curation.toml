@@ -221,3 +221,430 @@ kind = "set"
 subject = "bostadsbestand: {kommun,lan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomrade"
+fields = { "sets" = [] }
+evidence = "Adressområdet anger ett geografiskt läge.\ncatalog:variable_text:6246:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:adressomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Adressområdet anger ett geografiskt läge.\ncatalog:variable_text:6246:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "sets" = [] }
+evidence = "Adressplatsen anger ett geografiskt läge.\ncatalog:variable_text:6247:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:adressplats"
+fields = { "tags" = ["geography"] }
+evidence = "Adressplatsen anger ett geografiskt läge.\ncatalog:variable_text:6247:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-bostad"
+fields = { "sets" = [] }
+evidence = "Variabeln avser fastighetens ägarkategori.\ncatalog:variable_text:6248:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-bostad"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln avser fastighetens ägarkategori.\ncatalog:variable_text:6248:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antfolkb"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver bostadens boende.\ncatalog:variable_text:6249:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antfolkb"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet beskriver bostadens boende.\ncatalog:variable_text:6249:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "sets" = [] }
+evidence = "Antal rum beskriver bostadens utrymme.\ncatalog:variable_text:6250:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antrum"
+fields = { "tags" = ["housing"] }
+evidence = "Antal rum beskriver bostadens utrymme.\ncatalog:variable_text:6250:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "sets" = [] }
+evidence = "Bostadsarea beskriver bostadens utrymme.\ncatalog:variable_text:6251:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boarea"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarea beskriver bostadens utrymme.\ncatalog:variable_text:6251:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "sets" = ["bostadskategori"] }
+evidence = "Bostadskategori ingår i den definierade gruppen och beskriver bostadstyp.\ncatalog:valueset:9158\ncatalog:variable_text:6252:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadskategori"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadskategori ingår i den definierade gruppen och beskriver bostadstyp.\ncatalog:valueset:9158\ncatalog:variable_text:6252:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsperiod"
+fields = { "sets" = ["nybyggnadstid"] }
+evidence = "Byggnadsperiod är en gruppering av nybyggnadsår.\ncatalog:variable_text:6253:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsperiod"
+fields = { "tags" = ["housing"] }
+evidence = "Byggnadsperiod är en gruppering av nybyggnadsår.\ncatalog:variable_text:6253:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln klassificerar byggnadens typ.\ncatalog:variable_text:6254:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadstyp"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar byggnadens typ.\ncatalog:variable_text:6254:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "sets" = [] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:6255:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:deso"
+fields = { "tags" = ["geography"] }
+evidence = "DeSO är en geografisk områdesindelning.\ncatalog:variable_text:6255:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = ["distriktstillhorighet"] }
+evidence = "Distriktets kod ingår i distriktstillhörighet.\ncatalog:valueset:11366\ncatalog:variable_text:6256:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktets kod ingår i distriktstillhörighet.\ncatalog:valueset:11366\ncatalog:variable_text:6256:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "sets" = ["distriktstillhorighet"] }
+evidence = "Distriktets namn ingår i distriktstillhörighet.\ncatalog:variable_text:6257:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktsnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktets namn ingår i distriktstillhörighet.\ncatalog:variable_text:6257:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = [] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för bostadens läge.\ncatalog:variable_text:6258:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Fastighetsbeteckningen är en geografisk nyckel för bostadens läge.\ncatalog:variable_text:6258:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["forsamlingstillhorighet"] }
+evidence = "Församlingskodningen ingår i församlingstillhörighet.\ncatalog:variable_text:6261:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församlingskodningen ingår i församlingstillhörighet.\ncatalog:variable_text:6261:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "sets" = ["forsamlingstillhorighet"] }
+evidence = "Den särskilda Stockholmskodningen ingår i församlingstillhörighet.\ncatalog:valueset:8399\ncatalog:variable_text:6262:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-stockholm"
+fields = { "tags" = ["geography"] }
+evidence = "Den särskilda Stockholmskodningen ingår i församlingstillhörighet.\ncatalog:valueset:8399\ncatalog:variable_text:6262:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgem"
+fields = { "sets" = ["koksforhallanden"] }
+evidence = "Gemensamt kök ingår i köksförhållanden.\ncatalog:variable_text:6264:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kokgem"
+fields = { "tags" = ["housing"] }
+evidence = "Gemensamt kök ingår i köksförhållanden.\ncatalog:variable_text:6264:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "sets" = ["koksforhallanden"] }
+evidence = "Kökstyp ingår i köksförhållanden.\ncatalog:variable_text:6265:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:koktyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kökstyp ingår i köksförhållanden.\ncatalog:variable_text:6265:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:6266:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:6266:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "sets" = ["bostadskategori"] }
+evidence = "Lägenhetstyp ingår i den definierade bostadskategorigruppen.\ncatalog:valueset:6244\ncatalog:variable_text:6268:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Lägenhetstyp ingår i den definierade bostadskategorigruppen.\ncatalog:valueset:6244\ncatalog:variable_text:6268:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:6269:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:6269:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetskategori"
+fields = { "sets" = ["bostadskategori"] }
+evidence = "Lgh är en opak källförkortning för lägenhet; variabeln klassificerar lägenhetskategori.\ncatalog:valueset:394\ncatalog:variable_text:6270:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetskategori"
+fields = { "tags" = ["housing"] }
+evidence = "Lgh är en opak källförkortning för lägenhet; variabeln klassificerar lägenhetskategori.\ncatalog:valueset:394\ncatalog:variable_text:6270:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "sets" = ["nyckelkodsomradestillhorighet"] }
+evidence = "Samma NYKO-begrepp är uppdelat mellan perioder för nyko och nyko-variabler.\ncatalog:occurrence:43586\ncatalog:occurrence:43620\ncatalog:variable_text:6272:17167:17532\ncatalog:variable_text:6273:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "tags" = ["geography"] }
+evidence = "Samma NYKO-begrepp är uppdelat mellan perioder för nyko och nyko-variabler.\ncatalog:occurrence:43586\ncatalog:occurrence:43620\ncatalog:variable_text:6272:17167:17532\ncatalog:variable_text:6273:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko-variabler"
+fields = { "sets" = ["nyckelkodsomradestillhorighet"] }
+evidence = "Samma NYKO-begrepp är uppdelat mellan perioder för nyko och nyko-variabler.\ncatalog:occurrence:43586\ncatalog:occurrence:43620\ncatalog:variable_text:6272:17167:17532\ncatalog:variable_text:6273:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko-variabler"
+fields = { "tags" = ["geography"] }
+evidence = "Samma NYKO-begrepp är uppdelat mellan perioder för nyko och nyko-variabler.\ncatalog:occurrence:43586\ncatalog:occurrence:43620\ncatalog:variable_text:6272:17167:17532\ncatalog:variable_text:6273:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk postadress.\ncatalog:variable_text:6274:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk postadress.\ncatalog:variable_text:6274:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk postadress.\ncatalog:variable_text:6275:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk postadress.\ncatalog:variable_text:6275:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "sets" = [] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:6276:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "tags" = ["geography"] }
+evidence = "RegSO är en geografisk områdesindelning.\ncatalog:variable_text:6276:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "sets" = ["nybyggnadstid"] }
+evidence = "Nybyggnadsår och byggnadsperiod beskriver nybyggnadstid.\ncatalog:variable_text:6253:15706:16071\ncatalog:variable_text:6277:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-byggar"
+fields = { "tags" = ["housing"] }
+evidence = "Nybyggnadsår och byggnadsperiod beskriver nybyggnadstid.\ncatalog:variable_text:6253:15706:16071\ncatalog:variable_text:6277:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-fritidshus"
+fields = { "sets" = ["bostadskategori"] }
+evidence = "Fritidshusstatus ingår i den definierade bostadskategorigruppen.\ncatalog:valueset:2712\ncatalog:variable_text:6278:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-fritidshus"
+fields = { "tags" = ["housing"] }
+evidence = "Fritidshusstatus ingår i den definierade bostadskategorigruppen.\ncatalog:valueset:2712\ncatalog:variable_text:6278:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-upplatform"
+fields = { "sets" = [] }
+evidence = "Upplåtelseform beskriver bostadens boendeform.\ncatalog:variable_text:6279:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-upplatform"
+fields = { "tags" = ["housing"] }
+evidence = "Upplåtelseform beskriver bostadens boendeform.\ncatalog:variable_text:6279:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "sets" = [] }
+evidence = "Småort är en geografisk indelning.\ncatalog:variable_text:6280:15706:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort"
+fields = { "tags" = ["geography"] }
+evidence = "Småort är en geografisk indelning.\ncatalog:variable_text:6280:15706:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "sets" = ["tatortstillhorighet"] }
+evidence = "Tätortstillhörighet är uppdelad efter definition och årgång mellan tatort, tatort-2018 och tatort-tom-2010.\ncatalog:occurrence:43532\ncatalog:occurrence:43565\ncatalog:occurrence:43633\ncatalog:occurrence:43667\ncatalog:occurrence:43707\ncatalog:occurrence:43746"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortstillhörighet är uppdelad efter definition och årgång mellan tatort, tatort-2018 och tatort-tom-2010.\ncatalog:occurrence:43532\ncatalog:occurrence:43565\ncatalog:occurrence:43633\ncatalog:occurrence:43667\ncatalog:occurrence:43707\ncatalog:occurrence:43746"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-2018"
+fields = { "sets" = ["tatortstillhorighet"] }
+evidence = "Tätortstillhörighet är uppdelad efter årgång mellan tatort och tatort-2018.\ncatalog:occurrence:43633\ncatalog:occurrence:43667\ncatalog:occurrence:43707\ncatalog:occurrence:43746"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-2018"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortstillhörighet är uppdelad efter årgång mellan tatort och tatort-2018.\ncatalog:occurrence:43633\ncatalog:occurrence:43667\ncatalog:occurrence:43707\ncatalog:occurrence:43746"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "sets" = ["tatortstillhorighet"] }
+evidence = "Tätortstillhörighet är uppdelad efter definition mellan tatort och tatort-tom-2010.\ncatalog:occurrence:43532\ncatalog:occurrence:43565\ncatalog:variable_text:6283:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort-tom-2010"
+fields = { "tags" = ["geography"] }
+evidence = "Tätortstillhörighet är uppdelad efter definition mellan tatort och tatort-tom-2010.\ncatalog:occurrence:43532\ncatalog:occurrence:43565\ncatalog:variable_text:6283:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "sets" = ["byggnadstyp"] }
+evidence = "Variabeln klassificerar byggnadens typ.\ncatalog:valueset:12544\ncatalog:variable_text:6284:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typbebygg"
+fields = { "tags" = ["property"] }
+evidence = "Variabeln klassificerar byggnadens typ.\ncatalog:valueset:12544\ncatalog:variable_text:6284:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "sets" = [] }
+evidence = "Typkoden beskriver taxeringsenhetens typ.\ncatalog:variable_text:6285:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "tags" = ["property"] }
+evidence = "Typkoden beskriver taxeringsenhetens typ.\ncatalog:variable_text:6285:15706:20089"
+
+
+[[statement]]
+kind = "set"
+subject = "var:antfolkb"
+fields = { "description" = "Antal personer folkbokförda på bostaden eller lägenheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nAntalet avser personer folkbokförda på bostaden, inte nödvändigtvis personer i en familj.\ncatalog:variable_text:6249:15706:20089"

@@ -1,11 +1,983 @@
 [[statement]]
 kind = "set"
-subject = "var:personnrf1"
+subject = "var:personnummer-foralder-1"
 fields = { "sets" = ["personnrf"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/flergenreg.toml:13"
 
 [[statement]]
 kind = "set"
-subject = "var:personnrf2"
+subject = "var:personnummer-foralder-2"
 fields = { "sets" = ["personnrf"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/flergenreg.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:adopterad"
+fields = { "sets" = [] }
+evidence = "Adoptionsstatus beskriver en familjerelation.\ncatalog:variable_text:10912:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:adopterad"
+fields = { "tags" = ["family-household"] }
+evidence = "Adoptionsstatus beskriver en familjerelation.\ncatalog:variable_text:10912:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:aktenskapsnr"
+fields = { "sets" = [] }
+evidence = "Antal äktenskap avser familjeförhållanden.\ncatalog:variable_text:10913:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:aktenskapsnr"
+fields = { "tags" = ["family-household"] }
+evidence = "Antal äktenskap avser familjeförhållanden.\ncatalog:variable_text:10913:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-biologiska-barn-far"
+fields = { "sets" = ["antal-biologiska-barn"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10915:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-biologiska-barn-far"
+fields = { "tags" = ["family-household"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10915:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-biologiska-barn-mor"
+fields = { "sets" = ["antal-biologiska-barn"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10916:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-biologiska-barn-mor"
+fields = { "tags" = ["family-household"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10916:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ateranvant-personnr"
+fields = { "sets" = ["ateranvant-personnummer"] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:variable_text:10917:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ateranvant-personnr"
+fields = { "tags" = [] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:variable_text:10917:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnradfar"
+fields = { "sets" = ["ateranvant-personnummer"] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10918:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnradfar"
+fields = { "tags" = [] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10918:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnradmor"
+fields = { "sets" = ["ateranvant-personnummer"] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10919:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnradmor"
+fields = { "tags" = [] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10919:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnrfar"
+fields = { "sets" = ["ateranvant-personnummer"] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10920:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnrfar"
+fields = { "tags" = [] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10920:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnrmor"
+fields = { "sets" = ["ateranvant-personnummer"] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10921:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aterpnrmor"
+fields = { "tags" = [] }
+evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:valueset:3192\ncatalog:variable_text:10921:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bord"
+fields = { "sets" = [] }
+evidence = "Äktenskaplig börd avser föräldrarnas familjeförhållande.\ncatalog:variable_text:10922:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:bord"
+fields = { "tags" = ["family-household"] }
+evidence = "Äktenskaplig börd avser föräldrarnas familjeförhållande.\ncatalog:variable_text:10922:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dattilladfar"
+fields = { "sets" = ["adoptivrelationens-slutdatum"] }
+evidence = "Datumet ingår i gruppen för adoptivrelationens slut.\ncatalog:variable_text:10924:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dattilladfar"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i gruppen för adoptivrelationens slut.\ncatalog:variable_text:10924:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dattilladmor"
+fields = { "sets" = ["adoptivrelationens-slutdatum"] }
+evidence = "Datumet ingår i gruppen för adoptivrelationens slut.\ncatalog:variable_text:10925:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dattilladmor"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i gruppen för adoptivrelationens slut.\ncatalog:variable_text:10925:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivfar"
+fields = { "sets" = ["adoptionsdatum"] }
+evidence = "Datumet avser adoption av far.\ncatalog:variable_text:10926:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivfar"
+fields = { "tags" = [] }
+evidence = "Datumet avser adoption av far.\ncatalog:variable_text:10926:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivmor"
+fields = { "sets" = ["adoptionsdatum"] }
+evidence = "Datumet avser adoption av mor.\ncatalog:variable_text:10927:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivmor"
+fields = { "tags" = [] }
+evidence = "Datumet avser adoption av mor.\ncatalog:variable_text:10927:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dodslanland"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Län eller land för dödsfallet är en platsangivelse.\ncatalog:variable_text:10929:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dodslanland"
+fields = { "tags" = ["geography", "mortality"] }
+evidence = "Län eller land för dödsfallet är en platsangivelse.\ncatalog:variable_text:10929:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak"
+fields = { "sets" = [] }
+evidence = "Variabeln avser dödsorsak.\ncatalog:variable_text:10930:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak"
+fields = { "tags" = ["mortality"] }
+evidence = "Variabeln avser dödsorsak.\ncatalog:variable_text:10930:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsplats"
+fields = { "sets" = ["dodsplats"] }
+evidence = "Variabeln anger plats för dödsfallet.\ncatalog:variable_text:10931:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsplats"
+fields = { "tags" = ["geography", "mortality"] }
+evidence = "Variabeln anger plats för dödsfallet.\ncatalog:variable_text:10931:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields = { "sets" = ["efternamn"] }
+evidence = "Efternamn ingår i gruppen för personers och familjemedlemmars efternamn.\ncatalog:variable_text:10933:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields = { "tags" = [] }
+evidence = "Efternamn ingår i gruppen för personers och familjemedlemmars efternamn.\ncatalog:variable_text:10933:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-barn"
+fields = { "sets" = ["efternamn"] }
+evidence = "Barnets efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10934:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-barn"
+fields = { "tags" = [] }
+evidence = "Barnets efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10934:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-maka-make"
+fields = { "sets" = ["efternamn"] }
+evidence = "Makens eller makans efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10935:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-maka-make"
+fields = { "tags" = [] }
+evidence = "Makens eller makans efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10935:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnfar"
+fields = { "sets" = ["efternamn"] }
+evidence = "Faderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10936:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnfar"
+fields = { "tags" = [] }
+evidence = "Faderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10936:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnforalder1"
+fields = { "sets" = ["efternamn"] }
+evidence = "Förälderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10937:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnforalder1"
+fields = { "tags" = [] }
+evidence = "Förälderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10937:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnmor"
+fields = { "sets" = ["efternamn"] }
+evidence = "Moderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10938:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnmor"
+fields = { "tags" = [] }
+evidence = "Moderns efternamn ingår i efternamnsgruppen.\ncatalog:variable_text:10938:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10940:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10940:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-barn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Barnets födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10941:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Barnets födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10941:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-personakt"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10942:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-personakt"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10942:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10943:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10943:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-personakt"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10944:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-personakt"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10944:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10945:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10945:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadfar"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Adoptivfaderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10946:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Adoptivfaderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10946:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadmor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Adoptivmoderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10947:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnadmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Adoptivmoderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10947:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10948:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10948:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmake"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Makens eller makans födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10949:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnmake"
+fields = { "tags" = ["demographics"] }
+evidence = "Makens eller makans födelseland ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10949:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseort"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10950:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseort"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10950:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseort-maka-make"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Makens eller makans födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10951:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseort-maka-make"
+fields = { "tags" = ["demographics"] }
+evidence = "Makens eller makans födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10951:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortfar"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Faderns födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10952:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10952:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortmor"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Moderns födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10953:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseort ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10953:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidadfar"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Adoptivfaderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10954:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidadfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Adoptivfaderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10954:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidadmor"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Adoptivmoderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10955:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidadmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Adoptivmoderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10955:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidfar"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Faderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10956:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:variable_text:10956:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidmor"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Moderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelsedatum ingår i gruppen och är en födelseuppgift.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields = { "sets" = ["fornamn"] }
+evidence = "Förnamn ingår i gruppen för personers och familjemedlemmars förnamn.\ncatalog:variable_text:10958:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields = { "tags" = [] }
+evidence = "Förnamn ingår i gruppen för personers och familjemedlemmars förnamn.\ncatalog:variable_text:10958:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-barn"
+fields = { "sets" = ["fornamn"] }
+evidence = "Barnets förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10959:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-barn"
+fields = { "tags" = [] }
+evidence = "Barnets förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10959:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-maka-make"
+fields = { "sets" = ["fornamn"] }
+evidence = "Makens eller makans förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10960:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-maka-make"
+fields = { "tags" = [] }
+evidence = "Makens eller makans förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10960:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnfar"
+fields = { "sets" = ["fornamn"] }
+evidence = "Faderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10961:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnfar"
+fields = { "tags" = [] }
+evidence = "Faderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10961:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnforalder1"
+fields = { "sets" = ["fornamn"] }
+evidence = "Förälderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10962:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnforalder1"
+fields = { "tags" = [] }
+evidence = "Förälderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10962:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnmor"
+fields = { "sets" = ["fornamn"] }
+evidence = "Moderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10963:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnmor"
+fields = { "tags" = [] }
+evidence = "Moderns förnamn ingår i förnamnsgruppen.\ncatalog:variable_text:10963:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:forsin"
+fields = { "sets" = [] }
+evidence = "Inflyttningsförsamling anger geografisk tillhörighet vid flytt.\ncatalog:variable_text:10964:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:forsin"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Inflyttningsförsamling anger geografisk tillhörighet vid flytt.\ncatalog:variable_text:10964:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:inflyttland"
+fields = { "sets" = [] }
+evidence = "Landet anges i samband med flyttning.\ncatalog:variable_text:10966:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:inflyttland"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Landet anges i samband med flyttning.\ncatalog:variable_text:10966:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatfranadfar"
+fields = { "sets" = ["kalla-for-adoptionsdatum"] }
+evidence = "Källkoden ingår i gruppen för adoptionsdatum.\ncatalog:variable_text:10967:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatfranadfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för adoptionsdatum.\ncatalog:variable_text:10967:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatfranadmor"
+fields = { "sets" = ["kalla-for-adoptionsdatum"] }
+evidence = "Källkoden ingår i gruppen för adoptionsdatum.\ncatalog:variable_text:10968:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatfranadmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för adoptionsdatum.\ncatalog:variable_text:10968:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatinv"
+fields = { "sets" = [] }
+evidence = "Variabeln anger uppgiftens källa.\ncatalog:variable_text:10969:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladatinv"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger uppgiftens källa.\ncatalog:variable_text:10969:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladattilladfar"
+fields = { "sets" = ["kalla-for-adoptivrelationens-slutdatum"] }
+evidence = "Källkoden ingår i gruppen för adoptivrelationens slutdatum.\ncatalog:variable_text:10970:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladattilladfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för adoptivrelationens slutdatum.\ncatalog:variable_text:10970:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladattilladmor"
+fields = { "sets" = ["kalla-for-adoptivrelationens-slutdatum"] }
+evidence = "Källkoden ingår i gruppen för adoptivrelationens slutdatum.\ncatalog:variable_text:10971:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kalladattilladmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för adoptivrelationens slutdatum.\ncatalog:variable_text:10971:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamn"
+fields = { "sets" = ["kalla-for-fodelseland"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10972:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamn"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10972:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnadfar"
+fields = { "sets" = ["kalla-for-fodelseland"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10973:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnadfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10973:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnadmor"
+fields = { "sets" = ["kalla-for-fodelseland"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10974:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnadmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10974:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnfar"
+fields = { "sets" = ["kalla-for-fodelseland"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10975:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10975:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnmor"
+fields = { "sets" = ["kalla-for-fodelseland"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10976:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelselandnamnmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelseland.\ncatalog:variable_text:10976:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidadfar"
+fields = { "sets" = ["kalla-for-fodelsetid"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10977:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidadfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10977:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidadmor"
+fields = { "sets" = ["kalla-for-fodelsetid"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10978:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidadmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10978:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidfar"
+fields = { "sets" = ["kalla-for-fodelsetid"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10979:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10979:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidmor"
+fields = { "sets" = ["kalla-for-fodelsetid"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10980:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallafodelsetidmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för födelsetid.\ncatalog:variable_text:10980:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnr"
+fields = { "sets" = ["kalla-for-personnummer"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10981:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnr"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10981:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnradfar"
+fields = { "sets" = ["kalla-for-personnummer"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10982:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnradfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10982:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnradmor"
+fields = { "sets" = ["kalla-for-personnummer"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10983:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnradmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10983:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnrfar"
+fields = { "sets" = ["kalla-for-personnummer"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10984:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnrfar"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10984:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnrmor"
+fields = { "sets" = ["kalla-for-personnummer"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10985:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kallapersonnrmor"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden ingår i gruppen för personnummer.\ncatalog:variable_text:10985:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift i båda perioderna.\ncatalog:variable_text:10986:-3287:20454\ncatalog:variable_text:10986:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift i båda perioderna.\ncatalog:variable_text:10986:-3287:20454\ncatalog:variable_text:10986:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = [] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:10988:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:10988:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-adoptivfar"
+fields = { "sets" = ["personnrf"] }
+evidence = "Adoptivfaderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10991:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-adoptivfar"
+fields = { "tags" = [] }
+evidence = "Adoptivfaderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10991:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-adoptivmor"
+fields = { "sets" = ["personnrf"] }
+evidence = "Adoptivmoderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10992:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-adoptivmor"
+fields = { "tags" = [] }
+evidence = "Adoptivmoderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10992:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields = { "sets" = ["personnrf"] }
+evidence = "Faderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10995:-3287:20454\ncatalog:variable_text:10995:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields = { "tags" = [] }
+evidence = "Faderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10995:-3287:20454\ncatalog:variable_text:10995:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "sets" = ["personnrf"] }
+evidence = "Moderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10996:-3287:20454\ncatalog:variable_text:10996:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "tags" = [] }
+evidence = "Moderns personnummer hör till föräldrapersonnummergruppen.\ncatalog:variable_text:10996:-3287:20454\ncatalog:variable_text:10996:-8401:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr-far"
+fields = { "sets" = ["ordningsnummer-i-syskonskaran"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr-far"
+fields = { "tags" = [] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr-mor"
+fields = { "sets" = ["ordningsnummer-i-syskonskaran"] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr-mor"
+fields = { "tags" = [] }
+evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-personakt"
+fields = { "sets" = [] }
+evidence = "Landet anges i samband med utvandring.\ncatalog:variable_text:11005:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-personakt"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Landet anges i samband med utvandring.\ncatalog:variable_text:11005:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "sets" = [] }
+evidence = "Yrke är en arbetsmarknadsuppgift.\ncatalog:variable_text:11007:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke"
+fields = { "tags" = ["employment"] }
+evidence = "Yrke är en arbetsmarknadsuppgift.\ncatalog:variable_text:11007:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:dop"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:10915\ncatalog:variable_text:10915:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:konfirmation"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:10970\ncatalog:variable_text:10970:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsetidmor"
+fields = { "description" = "Datum för födelse för mor. Uppgiften avser biologisk mor och kan finnas även när ett fullständigt personnummer saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger far, medan etikett och operativ definition anger mor.\ncatalog:occurrence:96773\ncatalog:variable_text:10957:-3287:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:96773:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrf"
+fields = { "label" = "Personnummer förälder", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-foralder-1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-foralder-2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."

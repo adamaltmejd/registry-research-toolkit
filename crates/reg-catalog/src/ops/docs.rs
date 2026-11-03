@@ -186,7 +186,10 @@ fn invalid_ref(value: &str, entity: &Entity) -> Error {
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = match params.get("register") {
+        Some(value) => server.catalog.connect_for_ref(value)?,
+        None => server.catalog.connect()?,
+    };
     require_docs(&conn)?;
     let q = params.get("q").copied().filter(|q| !q.is_empty());
     let expression = q.map(fts::query).transpose()?.flatten();
@@ -332,9 +335,9 @@ fn not_found(doc: &str) -> Error {
 }
 
 fn get(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
-    require_docs(&conn)?;
     let doc = hash(params, "doc")?.expect("a required parameter");
+    let conn = server.catalog.connect_for_hash("doc", doc)?;
+    require_docs(&conn)?;
     let (id, kind, title, licence, url, bytes) = conn
         .query_row(
             "SELECT d.id, d.kind, t.body, d.licence, d.url, d.bytes
@@ -402,7 +405,7 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
 }
 
 fn related(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     require_docs(&conn)?;
     let value = params["ref"];
     let entity = refs::resolve(&conn, value)?;
@@ -412,9 +415,18 @@ fn related(server: &Server, params: &Params) -> Result<Value, Error> {
     ) {
         return Err(invalid_ref(value, &entity));
     }
+    Ok(serde_json::to_value(related_documents(&conn, &entity)?)
+        .expect("RelatedDocument serializes"))
+}
+
+/// Linked documents, allowing an empty catalog for an entity's evidence response.
+pub(super) fn related_documents(
+    conn: &Connection,
+    entity: &Entity,
+) -> Result<Vec<RelatedDocument>, Error> {
     // DISTINCT: a register's own link and its table's link to one page of one
     // document are one row to the reader.
-    let rows = conn
+    Ok(conn
         .prepare(&format!(
             "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page
              FROM doc_link l
@@ -435,15 +447,14 @@ fn related(server: &Server, params: &Params) -> Result<Value, Error> {
                 page: row.get(6)?,
             })
         })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    Ok(serde_json::to_value(rows).expect("RelatedDocument serializes"))
+        .collect::<rusqlite::Result<Vec<_>>>()?)
 }
 
 /// `docs_get`'s file: the stored bytes of a `pdf` document, shown inline.
 fn file(server: &Server, params: &Params) -> Result<Raw, Error> {
-    let conn = server.catalog.connect()?;
-    require_docs(&conn)?;
     let doc = hash(params, "doc")?.expect("a required parameter");
+    let conn = server.catalog.connect_for_hash("doc", doc)?;
+    require_docs(&conn)?;
     let bytes: Option<Vec<u8>> = conn
         .query_row(
             "SELECT content FROM doc WHERE hash = ? AND kind = 'pdf'",

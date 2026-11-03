@@ -8,6 +8,22 @@ validated on 2026-10-28; converter and generated locks committed as
 **The real lock passed with zero refusals. The curated dev build passed with zero
 skipped statements. Artifact verification and post-merge `g0 rust` passed.**
 
+## D close-out replay (2026-10-29)
+
+The counts below this section are historical validation at fix-02, before D-12. The
+close-out replay uses the minted ledgers and current source frames. It converts 529
+explicit set memberships and 23 variable tag memberships, refuses 114 missing-ID
+memberships (113 sets and one tag), and retains six set and 12 register-tag deferrals.
+The one recovered membership is IoT `familjetyp` in `family-household`. D-12 removed the
+four unplaced IoT ids; their reviewed source-coordinate checks remain placement
+deferrals rather than invented identities. Five sets remain undersized.
+
+The converter replay and focused Ruff check/format passed. It preserved every existing
+statement's content and restored unchanged statements to their original positions. No
+real build or artifact verification ran in this replay; the Operator validates the
+resulting catalog after push. Later locking and synthetic/gate checks are recorded in
+the close-out report, not inferred from the historical checks below.
+
 ## Inputs and execution
 
 - Inputs: clean worktree at `9186fcbceeb2283a50c7f684764869e4dda5765e`, matching
@@ -112,3 +128,16 @@ classification setter payload changed, and the dev build skipped none of them.
   baseline diff, release publication, `gate.py regen`, or PR merge.
 - Task-owned scratch frames, database, logs and raw report are deleted after their
   aggregate evidence is recorded here and in the PR. No row-level holdings were printed.
+
+The combined D recovery subsequently passed its whole-root lock, including the new
+`familjetyp` tag. The final locked curation and preservation checks are recorded in [the
+D recovery report](rebuild_recover_report.md). No new real catalog build, real-catalog
+verification or 0.66.0 diff ran in this close-out.
+
+## Fix-01 ledger-only recount
+
+Removing the IoT coordinate exception reclassifies four old placement deferrals as
+ordinary missing-ID refusals: 117 sets plus one tag (118), with two set and 12
+register-tag deferrals. An exact-current-ledger source-inventory count confirmed these
+missing-ID totals. The frame-based converter was not rerun; no membership statement
+changed in this fix. Earlier validation remains historical.

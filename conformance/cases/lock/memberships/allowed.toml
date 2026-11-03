@@ -1,0 +1,17 @@
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { sets = ["concept"] }
+evidence = "Two final variables measure the same concept in different tables."
+
+[[statement]]
+kind = "set"
+subject = "var:other"
+fields = { sets = ["concept"] }
+evidence = "The second final member belongs to the same register."
+
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { tags = ["income"] }
+evidence = "The concept describes income."

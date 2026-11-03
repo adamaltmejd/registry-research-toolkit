@@ -1,0 +1,84 @@
+.editor,
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.title {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--h1-tracking);
+  line-height: 1.1;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 100%;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+}
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.field textarea {
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+@media (max-width: 48rem) {
+  .field input,
+  .field textarea {
+    font-size: 1rem;
+  }
+}
+.pages a {
+  padding: var(--space-1) var(--space-2);
+}
+.pages a[aria-current="page"] {
+  background: var(--accent-bg);
+  color: var(--accent-ink);
+  font-weight: var(--heading-weight);
+}
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.checks:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.openActions {
+  margin-bottom: var(--space-3);
+}
+.sourcesHeading {
+  margin: 0;
+  font-size: var(--text-h2);
+}
+.sourcesHeading:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

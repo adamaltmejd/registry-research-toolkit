@@ -16,3 +16,675 @@ kind = "set"
 subject = "kostnader-for-skolvasendet: lan @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-elever-skelev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:41996:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-elever-skelev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:41996:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevavgiftmat"
+fields = { "sets" = ["elev-och-foraldraavgifter"] }
+evidence = "Elevavgift ingår i kandidatgruppen.\ncatalog:variable_text:41998:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevavgiftmat"
+fields = { "tags" = ["education"] }
+evidence = "Elevavgift ingår i kandidatgruppen.\ncatalog:variable_text:41998:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevbidrag"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Statsbidrag för elever ingår i kandidatgruppen.\ncatalog:variable_text:41999:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevfgar"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42000:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevfgar"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42000:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevhem"
+fields = { "sets" = [] }
+evidence = "Kostnad för elevhem avser utbildningsresurs.\ncatalog:variable_text:42001:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevhem"
+fields = { "tags" = ["education"] }
+evidence = "Kostnad för elevhem avser utbildningsresurs.\ncatalog:variable_text:42001:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvard"
+fields = { "sets" = [] }
+evidence = "Kostnaden avser elevhälsans vårdpersonal.\ncatalog:variable_text:42002:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:elevvard"
+fields = { "tags" = ["education", "healthcare"] }
+evidence = "Kostnaden avser elevhälsans vårdpersonal.\ncatalog:variable_text:42002:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldravgift"
+fields = { "sets" = ["elev-och-foraldraavgifter"] }
+evidence = "Föräldraavgift ingår i kandidatgruppen.\ncatalog:variable_text:42003:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldravgift"
+fields = { "tags" = ["education"] }
+evidence = "Föräldraavgift ingår i kandidatgruppen.\ncatalog:variable_text:42003:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsg-annan-kommun"
+fields = { "sets" = ["forsaljning-av-utbildningsverksamhet"] }
+evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsg-annan-kommun"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsg-till-kommun"
+fields = { "sets" = ["forsaljning-av-utbildningsverksamhet"] }
+evidence = "Samma källkolumn överlappar med fsg-annan-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42005:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsg-till-kommun"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Samma källkolumn överlappar med fsg-annan-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42005:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsgkomelev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42006:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fsgkomelev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42006:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hkelevalla"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42008:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hkelevalla"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42008:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hkelevkom"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42009:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hkelevkom"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42009:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hktotalt"
+fields = { "sets" = ["hemkommunskostnader"] }
+evidence = "Hemkommunens totalkostnad ingår i kandidatgruppen.\ncatalog:variable_text:42010:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hktotalt"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Hemkommunens totalkostnad ingår i kandidatgruppen.\ncatalog:variable_text:42010:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hktotaltkom"
+fields = { "sets" = ["hemkommunskostnader"] }
+evidence = "Hemkommunens kostnad för kommunal verksamhet ingår i kandidatgruppen.\ncatalog:variable_text:42011:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hktotaltkom"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Hemkommunens kostnad för kommunal verksamhet ingår i kandidatgruppen.\ncatalog:variable_text:42011:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Kodningen avser skolans huvudman.\ncatalog:variable_text:42012:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser skolans huvudman.\ncatalog:variable_text:42012:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-fristaende-gr"
+fields = { "sets" = ["inriktning-for-fristaende-skola"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42013:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-fristaende-gr"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42013:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-fristaende-gy"
+fields = { "sets" = ["inriktning-for-fristaende-skola"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42014:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-fristaende-gy"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42014:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler"
+fields = { "sets" = [] }
+evidence = "Intäkterna gäller lokaler i utbildningsverksamheten.\ncatalog:register:235\ncatalog:variable_text:42015:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-lokaler"
+fields = { "tags" = ["education"] }
+evidence = "Intäkterna gäller lokaler i utbildningsverksamheten.\ncatalog:register:235\ncatalog:variable_text:42015:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:42016:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:42016:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-annan-kommun"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Samma källkolumn överlappar med kop-fran-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42017:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-annan-kommun"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Samma källkolumn överlappar med kop-fran-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42017:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-fran-kommun"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Samma källkolumn överlappar med kop-annan-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42018:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-fran-kommun"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Samma källkolumn överlappar med kop-annan-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42018:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopannan"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42019:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopannan"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42019:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopannanelev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42020:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopannanelev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42020:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopensk"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42021:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopensk"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42021:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopfri"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42022:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopfri"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42022:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopfrielev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42023:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopfrielev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42023:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopkomelev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42024:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopkomelev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42024:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:koplan"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42025:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:koplan"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42025:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:koplanelev"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42026:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:koplanelev"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42026:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopstat"
+fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42027:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kopstat"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Kostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42027:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:komvuxform"
+fields = { "sets" = [] }
+evidence = "Kvx är en ogenomskinlig källförkortning för komvux.\ncatalog:variable_text:42028:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:komvuxform"
+fields = { "tags" = ["education"] }
+evidence = "Kvx är en ogenomskinlig källförkortning för komvux.\ncatalog:variable_text:42028:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:valueset:7128\ncatalog:variable_text:42029:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:valueset:7128\ncatalog:variable_text:42029:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:laromedel"
+fields = { "sets" = [] }
+evidence = "Kostnaden gäller utbildningsresurser.\ncatalog:variable_text:42030:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:laromedel"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaden gäller utbildningsresurser.\ncatalog:variable_text:42030:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalbidrag"
+fields = { "tags" = ["education", "public-finance"] }
+evidence = "Statsbidrag för lokaler ingår i kandidatgruppen.\ncatalog:variable_text:42031:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler"
+fields = { "sets" = [] }
+evidence = "Kostnaden gäller utbildningslokaler.\ncatalog:variable_text:42032:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lokaler"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaden gäller utbildningslokaler.\ncatalog:variable_text:42032:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nystart"
+fields = { "sets" = [] }
+evidence = "Statusen avser en skolas start eller avveckling.\ncatalog:valueset:1447\ncatalog:variable_text:42033:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:nystart"
+fields = { "tags" = ["education"] }
+evidence = "Statusen avser en skolas start eller avveckling.\ncatalog:valueset:1447\ncatalog:variable_text:42033:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-spec"
+fields = { "sets" = [] }
+evidence = "Intäkterna gäller utbildningsverksamheten.\ncatalog:variable_text:42034:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-spec"
+fields = { "tags" = ["education"] }
+evidence = "Intäkterna gäller utbildningsverksamheten.\ncatalog:variable_text:42034:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "sets" = [] }
+evidence = "Kostnaderna gäller utbildningsverksamheten.\ncatalog:register:235\ncatalog:variable_text:42035:15706:16436\ncatalog:variable_text:42035:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaderna gäller utbildningsverksamheten.\ncatalog:register:235\ncatalog:variable_text:42035:15706:16436\ncatalog:variable_text:42035:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:personal"
+fields = { "sets" = [] }
+evidence = "Kostnaden gäller personal i utbildningsverksamhet.\ncatalog:variable_text:42036:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:personal"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaden gäller personal i utbildningsverksamhet.\ncatalog:variable_text:42036:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:resurscentrum"
+fields = { "sets" = [] }
+evidence = "Kostnaden gäller specialskolans resurscentrum.\ncatalog:variable_text:42038:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:resurscentrum"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaden gäller specialskolans resurscentrum.\ncatalog:variable_text:42038:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform"
+fields = { "sets" = ["sarskoleform"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform-sform"
+fields = { "sets" = ["sarskoleform"] }
+evidence = "SForm överlappar med skolform; särskoleform ingår i kandidatgruppen.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42040:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskoleform-sform"
+fields = { "tags" = ["education"] }
+evidence = "SForm överlappar med skolform; särskoleform ingår i kandidatgruppen.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42040:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevensk"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42041:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevensk"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42041:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevhelt"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42042:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevhelt"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42042:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevintegr"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42043:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevintegr"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42043:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevpraktik"
+fields = { "sets" = ["elevantal"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42044:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skelevpraktik"
+fields = { "tags" = ["education"] }
+evidence = "Elevantal ingår i kandidatgruppen.\ncatalog:variable_text:42044:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "SForm överlappar med sarskoleform-sform; kodningen avser skolform.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42046:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "SForm överlappar med sarskoleform-sform; kodningen avser skolform.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42046:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolmaltid"
+fields = { "sets" = [] }
+evidence = "Kostnaden gäller skolmåltider.\ncatalog:variable_text:42047:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolmaltid"
+fields = { "tags" = ["education"] }
+evidence = "Kostnaden gäller skolmåltider.\ncatalog:variable_text:42047:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolskjuts"
+fields = { "sets" = [] }
+evidence = "Kostnaden avser skoltransporter och inackordering.\ncatalog:variable_text:42048:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:skolskjuts"
+fields = { "tags" = ["education", "transport"] }
+evidence = "Kostnaden avser skoltransporter och inackordering.\ncatalog:variable_text:42048:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sktotalt"
+fields = { "sets" = ["total-verksamhetskostnad"] }
+evidence = "Total verksamhetskostnad ingår i kandidatgruppen.\ncatalog:variable_text:42049:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sktotalt"
+fields = { "tags" = ["education"] }
+evidence = "Total verksamhetskostnad ingår i kandidatgruppen.\ncatalog:variable_text:42049:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sktotexlokal"
+fields = { "sets" = ["total-verksamhetskostnad"] }
+evidence = "Total verksamhetskostnad exklusive lokaler ingår i kandidatgruppen.\ncatalog:variable_text:42050:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sktotexlokal"
+fields = { "tags" = ["education"] }
+evidence = "Total verksamhetskostnad exklusive lokaler ingår i kandidatgruppen.\ncatalog:variable_text:42050:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram"
+fields = { "sets" = [] }
+evidence = "Kodningen avser gymnasieutbildning.\ncatalog:variable_text:42051:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram"
+fields = { "tags" = ["education"] }
+evidence = "Kodningen avser gymnasieutbildning.\ncatalog:variable_text:42051:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:undervfgar"
+fields = { "sets" = ["undervisningskostnader"] }
+evidence = "Undervisningskostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42052:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:undervfgar"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningskostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42052:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning"
+fields = { "sets" = ["undervisningskostnader"] }
+evidence = "Undervisningskostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42053:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisning"
+fields = { "tags" = ["education"] }
+evidence = "Undervisningskostnaden ingår i kandidatgruppen.\ncatalog:variable_text:42053:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:varldsdel"
+fields = { "sets" = [] }
+evidence = "Kodningen anger skolans geografiska läge.\ncatalog:variable_text:42054:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:varldsdel"
+fields = { "tags" = ["geography"] }
+evidence = "Kodningen anger skolans geografiska läge.\ncatalog:variable_text:42054:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:ytajust"
+fields = { "sets" = [] }
+evidence = "Måttet avser lokalers yta.\ncatalog:variable_text:42055:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ytajust"
+fields = { "tags" = ["property"] }
+evidence = "Måttet avser lokalers yta.\ncatalog:variable_text:42055:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:elevbidrag"
+fields = { "sets" = ["statsbidrag"] }
+evidence = "Despite the general funding-status description, r3, r5 and r7 explicitly measure pupil grant amounts in SEK. Premises grant amounts provide a distinct partner within the fixed definition (r4, r6, r8).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41856\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437172\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437204\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437326"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalbidrag"
+fields = { "sets" = ["statsbidrag"] }
+evidence = "Despite the general funding-status description, r4, r6 and r8 explicitly measure premises grant amounts in SEK. Pupil grant amounts provide a distinct partner within the fixed definition (r3, r5, r7).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41888\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437172\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437204\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437234\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437265\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437295\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:437326"

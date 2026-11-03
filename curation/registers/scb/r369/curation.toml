@@ -1,0 +1,108 @@
+
+[[statement]]
+kind = "set"
+subject = "var:ant-fe"
+fields = { "sets" = [] }
+evidence = "Antal företagsenheter är ett företagsstrukturmått; ett möjligt begreppssamband med antal företag behöver gruppgranskas.\ncatalog:variable_text:29308:17532:17897\ncatalog:variable_text:29310:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ant-fe"
+fields = { "tags" = ["business"] }
+evidence = "Antal företagsenheter är ett företagsstrukturmått; ett möjligt begreppssamband med antal företag behöver gruppgranskas.\ncatalog:variable_text:29308:17532:17897\ncatalog:variable_text:29310:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-per-land"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:29309:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-per-land"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:29309:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-foretag-per-land"
+fields = { "sets" = [] }
+evidence = "Antal företag är ett företagsstrukturmått; ett möjligt begreppssamband med antal företagsenheter behöver gruppgranskas.\ncatalog:variable_text:29308:17532:17897\ncatalog:variable_text:29310:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-foretag-per-land"
+fields = { "tags" = ["business"] }
+evidence = "Antal företag är ett företagsstrukturmått; ett möjligt begreppssamband med antal företagsenheter behöver gruppgranskas.\ncatalog:variable_text:29308:17532:17897\ncatalog:variable_text:29310:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "sets" = [] }
+evidence = "Branschbeteckningen beskriver företagets näringsgren.\ncatalog:variable_text:29311:13514:13879\ncatalog:variable_text:29315:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch"
+fields = { "tags" = ["business"] }
+evidence = "Branschbeteckningen beskriver företagets näringsgren.\ncatalog:variable_text:29311:13514:13879\ncatalog:variable_text:29315:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "sets" = [] }
+evidence = "Land anger geografisk tillhörighet.\ncatalog:variable_text:29313:13514:17897\ncatalog:variable_text:29314:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "tags" = ["geography"] }
+evidence = "Land anger geografisk tillhörighet.\ncatalog:variable_text:29313:13514:17897\ncatalog:variable_text:29314:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:land-text"
+fields = { "sets" = [] }
+evidence = "Landtext anger geografisk tillhörighet.\ncatalog:variable_text:29313:13514:17897\ncatalog:variable_text:29314:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:land-text"
+fields = { "tags" = ["geography"] }
+evidence = "Landtext anger geografisk tillhörighet.\ncatalog:variable_text:29313:13514:17897\ncatalog:variable_text:29314:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgrenskoden beskriver företagets verksamhet.\ncatalog:variable_text:29311:13514:13879\ncatalog:variable_text:29315:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskoden beskriver företagets verksamhet.\ncatalog:variable_text:29311:13514:13879\ncatalog:variable_text:29315:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:oms"
+fields = { "sets" = [] }
+evidence = "Omsättning är ett företagsmått.\ncatalog:variable_text:29316:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:oms"
+fields = { "tags" = ["business"] }
+evidence = "Omsättning är ett företagsmått.\ncatalog:variable_text:29316:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "sets" = [] }
+evidence = "Svarskoden beskriver undersökningens svar och bortfall.\ncatalog:valueset:5096\ncatalog:variable_text:29319:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:svarskod"
+fields = { "tags" = ["methods"] }
+evidence = "Svarskoden beskriver undersökningens svar och bortfall.\ncatalog:valueset:5096\ncatalog:variable_text:29319:14245:17897"

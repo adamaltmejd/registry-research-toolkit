@@ -17,7 +17,8 @@ use serde_json::Value;
 
 use crate::Ledger;
 
-/// The reviewed source facts, independent of statement layout and input row order.
+/// The full source facts used for application and conflict detection, independent
+/// of statement layout and input row order. Lock IO may record a narrower premise.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Premise {
@@ -29,7 +30,36 @@ pub struct Premise {
 #[serde(deny_unknown_fields)]
 pub struct SourcePremise {
     pub locator: Locator,
-    pub fields: BTreeMap<String, Value>,
+    pub fields: Arc<BTreeMap<String, Value>>,
+}
+
+/// Variable-wide metadata setters depend on membership, not occurrence field values.
+#[must_use]
+pub fn variable_level_setter(statement: &Statement) -> Option<&str> {
+    let Statement::Set {
+        subject: Address::Variable(variable),
+        fields,
+        ..
+    } = statement
+    else {
+        return None;
+    };
+    let fields = stated_fields(fields);
+    (!fields.is_empty()
+        && fields.keys().all(|field| {
+            matches!(
+                field.as_str(),
+                "sets"
+                    | "tags"
+                    | "facets"
+                    | "label"
+                    | "description"
+                    | "definition"
+                    | "operational_definition"
+                    | "synonyms"
+            )
+        }))
+    .then_some(variable)
 }
 
 #[derive(Debug)]
@@ -264,6 +294,7 @@ fn guard_name(field: GuardField) -> &'static str {
 struct SelectorIndex {
     addresses: BTreeMap<(String, String, String), Vec<usize>>,
     variables: BTreeMap<String, Vec<usize>>,
+    source_variables: Vec<Vec<String>>,
 }
 
 impl SelectorIndex {
@@ -276,6 +307,7 @@ impl SelectorIndex {
             }
         }
         let mut selected_variables = BTreeMap::<String, Vec<usize>>::new();
+        let mut source_variables = vec![Vec::new(); view.len()];
         for (index, source) in view.iter().enumerate() {
             let kind = source.text("kind").unwrap_or_default();
             let table = source.text("table_slug").unwrap_or_default();
@@ -303,6 +335,7 @@ impl SelectorIndex {
                     }
                 }
                 for name in names {
+                    source_variables[index].push(name.clone());
                     selected_variables
                         .entry(name.clone())
                         .or_default()
@@ -313,6 +346,7 @@ impl SelectorIndex {
         Self {
             addresses,
             variables: selected_variables,
+            source_variables,
         }
     }
 
@@ -339,6 +373,7 @@ impl SelectorIndex {
                     add("occurrence", table, spelling);
                 }
             }
+            Address::Set(slug) => add("set", slug, ""),
             Address::Table(table) => add("table", table, ""),
             Address::Release { table, handle } => add("release", table, handle),
             Address::Variable(id) => {
@@ -399,6 +434,9 @@ fn select_from(
                                 }
                             })
                         })
+                }
+                Address::Set(slug) => {
+                    source.text("kind") == Some("set") && source.text("table_slug") == Some(slug)
                 }
                 Address::Table(table) => {
                     source.text("kind") == Some("table") && source.text("table_slug") == Some(table)
@@ -589,29 +627,64 @@ fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
     }
 }
 
-fn premise(matches: &[Match], view: &[Source], fields: &BTreeSet<String>) -> Vec<SourcePremise> {
-    let mut out = Vec::new();
-    for selected in matches {
-        let source = &view[selected.source];
-        let fields = fields
-            .iter()
-            .map(|f| {
-                (
-                    f.clone(),
-                    source.fields.get(f).cloned().unwrap_or(Value::Null),
-                )
-            })
-            .collect::<BTreeMap<_, _>>();
-        for locator in &source.locators {
-            out.push(SourcePremise {
-                locator: locator.clone(),
-                fields: fields.clone(),
+type SourceSnapshots = BTreeMap<usize, Vec<(String, SourcePremise)>>;
+
+/// Each immutable view shares snapshots for the exact field projection consumed by
+/// a statement. Cache canonical ordering too: it includes potentially long source text.
+#[derive(Default)]
+struct PremiseSnapshots {
+    projections: BTreeMap<BTreeSet<String>, SourceSnapshots>,
+}
+
+impl PremiseSnapshots {
+    fn premise(
+        &mut self,
+        matches: &[Match],
+        view: &[Source],
+        fields: &BTreeSet<String>,
+    ) -> Vec<SourcePremise> {
+        if !self.projections.contains_key(fields) {
+            self.projections.insert(fields.clone(), BTreeMap::new());
+        }
+        let snapshots = self
+            .projections
+            .get_mut(fields)
+            .expect("projection inserted");
+        for selected in matches {
+            snapshots.entry(selected.source).or_insert_with(|| {
+                let source = &view[selected.source];
+                let fields = Arc::new(
+                    fields
+                        .iter()
+                        .map(|f| {
+                            (
+                                f.clone(),
+                                source.fields.get(f).cloned().unwrap_or(Value::Null),
+                            )
+                        })
+                        .collect(),
+                );
+                source
+                    .locators
+                    .iter()
+                    .map(|locator| {
+                        let row = SourcePremise {
+                            locator: locator.clone(),
+                            fields: Arc::clone(&fields),
+                        };
+                        (reg_frame::canonical_line(&row), row)
+                    })
+                    .collect()
             });
         }
+        let mut rows = matches
+            .iter()
+            .flat_map(|m| &snapshots[&m.source])
+            .collect::<Vec<_>>();
+        rows.sort_by(|a, b| a.0.cmp(&b.0));
+        rows.dedup_by(|a, b| a.1 == b.1);
+        rows.into_iter().map(|(_, row)| row.clone()).collect()
     }
-    out.sort_by_cached_key(reg_frame::canonical_line);
-    out.dedup();
-    out
 }
 
 fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
@@ -623,11 +696,17 @@ fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
 /// Capture raw evidence behind a curated field, including defaults derived from
 /// source facts. Keep derived values out of the source premise.
 fn field_dependencies(fields: &mut BTreeSet<String>) {
-    if fields.contains("coded") || fields.contains("value_set") || fields.contains("classification")
+    if fields.contains("coded")
+        || fields.contains("value_set")
+        || fields.contains("classification")
+        || fields.contains("sentinels")
     {
         fields.extend(
             ["type", "code_system", "value_set", "population_valuesets"].map(str::to_owned),
         );
+    }
+    if fields.contains("role") {
+        fields.extend(["identifier", "value_set", "population_valuesets"].map(str::to_owned));
     }
     if fields.contains("period") {
         fields.extend(["grain", "name", "from", "to"].map(str::to_owned));
@@ -727,9 +806,24 @@ fn premise_source(premise: &SourcePremise) -> Source {
                 .map(|(a, b)| (a.to_owned(), b.to_owned()))
         });
     Source {
-        fields: Arc::new(premise.fields.clone()),
+        fields: Arc::clone(&premise.fields),
         locators: vec![premise.locator.clone()],
         period,
+    }
+}
+
+fn variable_membership_field(statement: &Statement) -> Option<&'static str> {
+    let Statement::Set { fields, .. } = statement else {
+        return None;
+    };
+    if fields.sets.is_some() {
+        Some("sets")
+    } else if fields.tags.is_some() {
+        Some("tags")
+    } else if fields.synonyms.is_some() {
+        Some("synonyms")
+    } else {
+        None
     }
 }
 
@@ -738,8 +832,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         .period
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
-    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some() || fields.tags.is_some())
-    {
+    if variable_membership_field(statement).is_some() {
         return vec![span];
     }
     let mut selected = match subject(statement) {
@@ -837,6 +930,10 @@ pub fn applied_conflicts(
         }
     }
     for claim in claims {
+        // Set-wide sentinel conflicts are checked globally by value-set hash.
+        if claim.field == "sentinels" {
+            continue;
+        }
         let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
         for (field, value) in [
             ("provider", claim.provider),
@@ -959,6 +1056,27 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
     }
 }
 
+/// A resolver refusal and the source occurrences implicated in it. An empty set
+/// means the existing register-wide assignment invariant has no narrower location.
+pub struct AssignmentFailure {
+    pub message: String,
+    affected: BTreeSet<crate::OccurrenceKey>,
+}
+
+impl AssignmentFailure {
+    /// Match the same occurrence identity and evidence holder as assignment application.
+    #[must_use]
+    pub fn affects(&self, premise: &Premise) -> bool {
+        self.affected.is_empty()
+            || premise.subjects.iter().any(|subject| {
+                crate::OccurrenceIdentity::from_fields(&subject.fields).is_some_and(|identity| {
+                    self.affected
+                        .contains(&crate::OccurrenceKey::new(identity, &subject.locator))
+                })
+            })
+    }
+}
+
 /// Validate the complete assignment phase with the same rules as catalog resolution.
 ///
 /// # Errors
@@ -967,8 +1085,18 @@ pub fn validate_assignments(
     records: &[Record],
     ledger: &Ledger,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
-) -> Result<(), String> {
-    crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[]).map(|_| ())
+) -> Result<(), AssignmentFailure> {
+    let mut affected = BTreeSet::new();
+    crate::resolve_located(
+        records,
+        ledger,
+        &BTreeMap::new(),
+        assignments,
+        &[],
+        &mut affected,
+    )
+    .map(|_| ())
+    .map_err(|message| AssignmentFailure { message, affected })
 }
 
 /// Resolve pinned variable memberships without changing the frame.
@@ -1050,7 +1178,7 @@ pub fn reference(
                 .cloned()
         })
         .collect();
-    Ok(premise(&matches, &view, &fields))
+    Ok(PremiseSnapshots::default().premise(&matches, &view, &fields))
 }
 
 type DependencyCoordinate = (
@@ -1134,6 +1262,7 @@ fn application_dependencies(
     selected: &[Match],
     view: &[Source],
     index: &DependencyIndex,
+    snapshots: &mut PremiseSnapshots,
 ) -> Result<Vec<SourcePremise>, String> {
     if !matches!(statement, Statement::Assert { .. } | Statement::Set { .. }) {
         return Ok(Vec::new());
@@ -1215,7 +1344,7 @@ fn application_dependencies(
                     Address::Occurrence { table, .. }
                     | Address::Release { table, .. }
                     | Address::Table(table) => Some(apply::table_handle(records, ledger, table)?),
-                    Address::Variable(_) => None,
+                    Address::Variable(_) | Address::Set(_) => None,
                 };
                 let release = match subject {
                     Address::Release { handle, .. } => Some(handle.clone()),
@@ -1290,7 +1419,10 @@ fn application_dependencies(
     }
     let needs_codes = match statement {
         Statement::Set { fields, .. } => {
-            fields.table.is_some() || fields.value_set.is_some() || fields.coded.is_some()
+            fields.table.is_some()
+                || fields.value_set.is_some()
+                || fields.coded.is_some()
+                || fields.sentinels.is_some()
         }
         Statement::Assert { .. } => true,
         _ => false,
@@ -1334,10 +1466,7 @@ fn application_dependencies(
         .iter()
         .flat_map(|m| view[m.source].fields.keys().cloned())
         .collect();
-    let mut dependencies = premise(&matches, view, &fields);
-    dependencies.sort_by_cached_key(reg_frame::canonical_line);
-    dependencies.dedup();
-    Ok(dependencies)
+    Ok(snapshots.premise(&matches, view, &fields))
 }
 
 fn conflict_candidates(
@@ -1377,6 +1506,12 @@ fn conflict_candidates(
             Address::Release { table, handle } => {
                 assertions
                     .entry((2, table.as_str(), handle.as_str()))
+                    .or_default()
+                    .insert(index);
+            }
+            Address::Set(slug) => {
+                assertions
+                    .entry((4, slug.as_str(), ""))
                     .or_default()
                     .insert(index);
             }
@@ -1430,8 +1565,34 @@ pub fn resolve(
     }
     let mut view = sources(records, ledger);
     view.extend(shared.sources.iter().cloned());
+    // Sets are curated register-local entities. Their premise is the source register,
+    // with the set slug distinguishing subjects for ordinary overlap checks.
+    let set_names = statements
+        .iter()
+        .filter_map(|s| match subject(s) {
+            Address::Set(slug) => Some(slug),
+            _ => None,
+        })
+        .collect::<BTreeSet<_>>();
+    let register_source = view
+        .iter()
+        .find(|s| s.text("kind") == Some("register"))
+        .cloned();
+    if let Some(register) = register_source {
+        for slug in set_names {
+            let mut source = register.clone();
+            let fields = Arc::make_mut(&mut source.fields);
+            for field in ["label", "name", "description"] {
+                fields.remove(field);
+            }
+            fields.insert("kind".into(), Value::String("set".into()));
+            fields.insert("table_slug".into(), Value::String(slug.clone()));
+            fields.insert("table".into(), Value::String(slug.clone()));
+            view.push(source);
+        }
+    }
     let needs_variables = statements.iter().any(|statement| {
-        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some()) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        variable_membership_field(statement).is_some() || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
         variable_members(records, ledger, assignments)
@@ -1458,31 +1619,18 @@ pub fn resolve(
     let statement_effects: Vec<_> = statements.iter().map(|s| effects(s)).collect();
     let mut out = Vec::new();
     let mut selected = Vec::new();
+    let mut snapshots = PremiseSnapshots::default();
     for (statement_index, statement) in statements.iter().enumerate() {
         let address = subject(statement);
         let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
-        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some())
-        {
-            let names = variables
+        if variable_membership_field(statement).is_some() {
+            let names = matches
                 .iter()
-                .filter(|(_, members)| {
-                    matches.iter().any(|m| {
-                        let source = &view[m.source];
-                        crate::OccurrenceIdentity::from_fields(&source.fields).is_some_and(
-                            |identity| {
-                                source.locators.iter().any(|at| {
-                                    members
-                                        .contains(&crate::OccurrenceKey::new(identity.clone(), at))
-                                })
-                            },
-                        )
-                    })
-                })
-                .map(|(name, _)| name.clone())
-                .collect::<Vec<_>>();
+                .flat_map(|m| &index.source_variables[m.source])
+                .collect::<BTreeSet<_>>();
             matches = names
-                .iter()
+                .into_iter()
                 .flat_map(|name| index.select(&Address::Variable(name.clone()), &view, variables))
                 .collect();
             matches.sort_by_key(|m| m.source);
@@ -1508,7 +1656,7 @@ pub fn resolve(
             matches.retain(|m| !m.spans.is_empty());
         }
         selected.push(Premise {
-            subjects: premise(&matches, &view, &all_fields),
+            subjects: snapshots.premise(&matches, &view, &all_fields),
             objects: Vec::new(),
         });
         let result = (|| {
@@ -1572,31 +1720,17 @@ pub fn resolve(
                     if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
                         return Err("set coverage requires a table selector".into());
                     }
-                    if (values.sets.is_some() || values.tags.is_some())
+                    if let Some(field) = variable_membership_field(statement)
                         && stated_fields(values).len() != 1
                     {
-                        let field = if values.sets.is_some() {
-                            "sets"
-                        } else {
-                            "tags"
-                        };
                         return Err(format!(
                             "set {field} with other fields requires separate statements"
                         ));
                     }
-                    for field in stated_fields(values).keys() {
-                        let package = match field.as_str() {
-                            "sentinels" => Some("D (sentinels)"),
-                            "role" | "unit_type" => {
-                                Some("D (unit types and roles beyond defaults)")
-                            }
-                            "synonyms" => Some("D (search curation)"),
-                            "name" => Some("D (entity names)"),
-                            _ => None,
-                        };
-                        if let Some(package) = package {
-                            return Err(format!("set {field} is applied in {package}"));
-                        }
+                    if values.sentinels.is_some() && stated_fields(values).len() != 1 {
+                        return Err(
+                            "set sentinels with other fields requires separate statements".into(),
+                        );
                     }
                     if (values.table.is_some() || values.variable.is_some())
                         && stated_fields(values)
@@ -1706,7 +1840,7 @@ pub fn resolve(
                     }
                     whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);
-                    premise(&objects, &view, &fields)
+                    snapshots.premise(&objects, &view, &fields)
                 } else {
                     references
                         .get(object)
@@ -1724,6 +1858,7 @@ pub fn resolve(
                     &matches,
                     &view,
                     &dependencies,
+                    &mut snapshots,
                 )?
             };
             let mut objects = objects;
@@ -1740,7 +1875,7 @@ pub fn resolve(
             }
             Ok(ResolvedStatement {
                 premise: Premise {
-                    subjects: premise(&matches, &view, &fields),
+                    subjects: snapshots.premise(&matches, &view, &fields),
                     objects,
                 },
                 redundant,
@@ -1749,6 +1884,7 @@ pub fn resolve(
         })();
         out.push(result);
     }
+    drop(snapshots);
     let premises = out
         .iter()
         .zip(&selected)
@@ -1756,6 +1892,9 @@ pub fn resolve(
         .collect::<Vec<_>>();
     let candidates = conflict_candidates(statements, &premises);
     for (a, b) in candidates {
+        if [a, b].into_iter().all(|i| matches!(statements[i], Statement::Set { fields, .. } if fields.sentinels.is_some())) {
+            continue;
+        }
         if !effects_overlap(&statement_effects[a], &statement_effects[b])
             || [a, b]
                 .into_iter()
@@ -1798,7 +1937,13 @@ pub fn resolve(
 
 /// Resolve typed curation facts after occurrence identities and variable membership.
 /// Provenance records the evidence for these facts; it is never an input to them.
-pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadata]) {
+///
+/// # Errors
+/// Different descriptions reaching one final variable, naming both authoring locations.
+pub fn apply_metadata(
+    resolved: &mut crate::Resolved,
+    metadata: &[apply::Metadata],
+) -> Result<(), String> {
     let mut by_occurrence = BTreeMap::<_, Vec<_>>::new();
     for decision in metadata.iter().filter(|m| {
         m.key.identity.provider == resolved.register.provider
@@ -1810,8 +1955,9 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
             .push(&decision.value);
     }
     if by_occurrence.is_empty() {
-        return;
+        return Ok(());
     }
+    let mut descriptions = BTreeMap::<usize, (&str, &Locator)>::new();
     for (index, occurrence) in resolved.occurrences.iter().enumerate() {
         let row = &occurrence.occurrence;
         let identity = crate::OccurrenceIdentity::new(
@@ -1831,9 +1977,45 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
                             resolved.variables[variable].sets.clone_from(sets);
                         }
                     }
+                    apply::MetadataValue::Facets { facets, at } => {
+                        if let Some(variable) = occurrence.variable {
+                            let target = &mut resolved.variables[variable];
+                            if !target.facets.is_empty() && target.facets != *facets {
+                                return Err(format!(
+                                    "{}:{}: set-facet-conflict: different facets reach variable {:?}",
+                                    at.input, at.at, target.slug
+                                ));
+                            }
+                            target.facets.clone_from(facets);
+                            target.facets_at = Some(at.clone());
+                        }
+                    }
                     apply::MetadataValue::Tags(tags) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].tags.clone_from(tags);
+                        }
+                    }
+                    apply::MetadataValue::Synonyms(synonyms) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].synonyms.clone_from(synonyms);
+                        }
+                    }
+                    apply::MetadataValue::Description { text, at } => {
+                        if let Some(variable) = occurrence.variable {
+                            if let Some((previous, first_at)) =
+                                descriptions.insert(variable, (text, at))
+                                && previous != text.as_str()
+                            {
+                                return Err(format!(
+                                    "{}:{}: variable-description-conflict: variable {:?} has different descriptions; first at {}:{}; different meanings require separate variables",
+                                    at.input,
+                                    at.at,
+                                    resolved.variables[variable].slug,
+                                    first_at.input,
+                                    first_at.at
+                                ));
+                            }
+                            resolved.variables[variable].description = Some(text.clone());
                         }
                     }
                     apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),
@@ -1850,4 +2032,89 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
             });
         }
     }
+    Ok(())
+}
+
+/// A presentation statement that cannot apply to the final variable memberships.
+pub struct PresentationRefusal {
+    pub at: Locator,
+    pub message: String,
+}
+
+/// Check every presentation statement after all memberships and identities resolve.
+/// The build boundary removes refused statements and reevaluates the remaining curation.
+#[must_use]
+pub fn validate_set_presentation(
+    registers: &[crate::Resolved],
+    sets: &[apply::SetPresentation],
+) -> Vec<PresentationRefusal> {
+    let mut refusals = Vec::new();
+    for set in sets {
+        let exists = registers.iter().any(|r| {
+            r.register.provider == set.provider
+                && r.register.register == set.register
+                && r.variables.iter().any(|v| v.sets.contains(&set.slug))
+        });
+        if !exists {
+            refusals.push(PresentationRefusal {
+                at: set.at.clone(),
+                message: format!(
+                    "set-member-missing: set {:?} has no final members",
+                    set.slug
+                ),
+            });
+        }
+    }
+    for register in registers {
+        for variable in &register.variables {
+            let Some(at) = &variable.facets_at else {
+                continue;
+            };
+            let mut memberships = variable.sets.iter();
+            let name = match (memberships.next(), memberships.next()) {
+                (Some(name), None) => name,
+                (None, _) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-nonmember: variable {:?} is not a set member",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+                (_, Some(_)) => {
+                    refusals.push(PresentationRefusal {
+                        at: at.clone(),
+                        message: format!(
+                            "set-facet-multiple-sets: facets require one set for variable {:?}",
+                            variable.slug
+                        ),
+                    });
+                    continue;
+                }
+            };
+            let axes = sets
+                .iter()
+                .filter(|s| {
+                    s.provider == register.register.provider
+                        && s.register == register.register.register
+                        && s.slug == *name
+                })
+                .flat_map(|s| &s.axes)
+                .map(|a| a.id.as_str())
+                .collect::<BTreeSet<_>>();
+            if let Some(axis) = variable
+                .facets
+                .keys()
+                .find(|axis| !axes.contains(axis.as_str()))
+            {
+                refusals.push(PresentationRefusal {
+                    at: at.clone(),
+                    message: format!("set-axis-undeclared: set {:?} does not declare axis {:?} for variable {:?}", name, axis, variable.slug),
+                });
+            }
+        }
+    }
+    refusals
 }

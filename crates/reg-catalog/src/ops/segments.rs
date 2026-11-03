@@ -93,10 +93,10 @@ pub struct Occurrence {
     overrides: Vec<Override>,
 }
 
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct Locator {
-    input: String,
-    locator: String,
+    pub(super) input: String,
+    pub(super) locator: String,
 }
 
 /// A non-source winner over one field of an occurrence.
@@ -117,12 +117,12 @@ pub struct Override {
 
 #[derive(Serialize, ToSchema)]
 pub struct StatementLocation {
-    file: String,
-    line: i64,
+    pub(super) file: String,
+    pub(super) line: i64,
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let given = params["ref"];
     let variable = refs::resolve(&conn, given)?;
     if variable.kind != "variable" {

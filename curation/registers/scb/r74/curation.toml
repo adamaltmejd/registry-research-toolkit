@@ -64,3 +64,975 @@ kind = "set"
 subject = "energi-i-smahus: {församling,län} @2005..2006"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulatortank"
+fields = { "sets" = [] }
+evidence = "Ackumulatortanken är uppvärmningsutrustning.\ncatalog:variable_text:7555:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ackumulatortank"
+fields = { "tags" = ["energy"] }
+evidence = "Ackumulatortanken är uppvärmningsutrustning.\ncatalog:variable_text:7555:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "sets" = ["energibesparande-atgarder"] }
+evidence = "Kodad energibesparande åtgärd.\ncatalog:valueset:2029\ncatalog:variable_text:7556:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:annan"
+fields = { "tags" = ["energy"] }
+evidence = "Kodad energibesparande åtgärd.\ncatalog:valueset:2029\ncatalog:variable_text:7556:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-installation"
+fields = { "sets" = [] }
+evidence = "Annan energibesparande utrustning.\ncatalog:variable_text:7557:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-installation"
+fields = { "tags" = ["energy"] }
+evidence = "Annan energibesparande utrustning.\ncatalog:variable_text:7557:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:anvarm"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Klassificerat använt uppvärmningssätt.\ncatalog:valueset:6646\ncatalog:variable_text:7558:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anvarm"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerat använt uppvärmningssätt.\ncatalog:valueset:6646\ncatalog:variable_text:7558:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anvarm11"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Klassificerat använt uppvärmningssätt.\ncatalog:valueset:6646\ncatalog:variable_text:7559:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:anvarm11"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerat använt uppvärmningssätt.\ncatalog:valueset:6646\ncatalog:variable_text:7559:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar-vuxna-18-ar-och-aldre-i-huset-klass"
+fields = { "sets" = [] }
+evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar och målnamnet behöver därför hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7560\ncatalog:variable_text:7560:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar-vuxna-18-ar-och-aldre-i-huset-klass"
+fields = { "tags" = ["family-household"] }
+evidence = "Suffixet 262 finns inte i källkolumnen. Etiketten Antal kolliderar och målnamnet behöver därför hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7560\ncatalog:variable_text:7560:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:biobransleanvandning"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:biobransleanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7561:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "sets" = ["biutrymmesyta"] }
+evidence = "Direkt mått på biutrymmesyta.\ncatalog:variable_text:7562:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-i-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Direkt mått på biutrymmesyta.\ncatalog:variable_text:7562:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-klassificerat"
+fields = { "sets" = ["biutrymmesyta"] }
+evidence = "Klassificerat mått på biutrymmesyta.\ncatalog:valueset:3357\ncatalog:variable_text:7563:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:biutrymmesyta-klassificerat"
+fields = { "tags" = ["housing"] }
+evidence = "Klassificerat mått på biutrymmesyta.\ncatalog:valueset:3357\ncatalog:variable_text:7563:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:boklass"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser klassificerat antal boende.\ncatalog:variable_text:7564:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:boklass"
+fields = { "tags" = ["family-household"] }
+evidence = "Uppgiften avser klassificerat antal boende.\ncatalog:variable_text:7564:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-i-smahus"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Direkt mått på bostadsyta.\ncatalog:variable_text:7565:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsyta-i-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Direkt mått på bostadsyta.\ncatalog:variable_text:7565:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:boytklass"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Klassificerad uppvärmd boyta.\ncatalog:valueset:8056\ncatalog:variable_text:7566:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:boytklass"
+fields = { "tags" = ["housing"] }
+evidence = "Klassificerad uppvärmd boyta.\ncatalog:valueset:8056\ncatalog:variable_text:7566:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:befintligt-uppvarmningssatt"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "B är en bokstavskod för befintligt och varm är inte en läsbar återgivning av uppvärmningssätt.\ncatalog:variable_text:7567:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:befintligt-uppvarmningssatt"
+fields = { "tags" = ["energy"] }
+evidence = "B är en bokstavskod för befintligt och varm är inte en läsbar återgivning av uppvärmningssätt.\ncatalog:variable_text:7567:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:byggar"
+fields = { "sets" = ["byggnadens-ibruktagandear"] }
+evidence = "Klassificerat år då byggnaden togs i bruk.\ncatalog:valueset:10774\ncatalog:variable_text:7568:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:byggar"
+fields = { "tags" = [] }
+evidence = "Klassificerat år då byggnaden togs i bruk.\ncatalog:valueset:10774\ncatalog:variable_text:7568:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-fran-uppvarmningssatt"
+fields = { "sets" = ["byte-av-uppvarmningssatt"] }
+evidence = "Anger uppvärmningssättet före byte.\ncatalog:variable_text:7569:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-fran-uppvarmningssatt"
+fields = { "tags" = ["energy"] }
+evidence = "Anger uppvärmningssättet före byte.\ncatalog:variable_text:7569:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-till-uppvarmningssatt"
+fields = { "sets" = ["byte-av-uppvarmningssatt"] }
+evidence = "Anger uppvärmningssättet efter byte.\ncatalog:variable_text:7570:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-till-uppvarmningssatt"
+fields = { "tags" = ["energy"] }
+evidence = "Anger uppvärmningssättet efter byte.\ncatalog:variable_text:7570:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-uppvarmningssatt-kod"
+fields = { "sets" = ["byte-av-uppvarmningssatt"] }
+evidence = "Kod för byte av uppvärmningssätt.\ncatalog:valueset:9046\ncatalog:variable_text:7571:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bytt-uppvarmningssatt-kod"
+fields = { "tags" = ["energy"] }
+evidence = "Kod för byte av uppvärmningssätt.\ncatalog:valueset:9046\ncatalog:variable_text:7571:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:dusch"
+fields = { "sets" = [] }
+evidence = "Snålspolande dusch är en vattenbesparande installation.\ncatalog:variable_text:7572:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:dusch"
+fields = { "tags" = ["environment"] }
+evidence = "Snålspolande dusch är en vattenbesparande installation.\ncatalog:variable_text:7572:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandning"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Husets totala elanvändning.\ncatalog:variable_text:7573:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:elanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Husets totala elanvändning.\ncatalog:variable_text:7573:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:elklass"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Klassificerad elanvändning.\ncatalog:valueset:3619\ncatalog:variable_text:7574:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:elklass"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad elanvändning.\ncatalog:valueset:3619\ncatalog:variable_text:7574:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:elkvm"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Elanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7575:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:elkvm"
+fields = { "tags" = ["energy"] }
+evidence = "Elanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7575:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:elkvmklass"
+fields = { "sets" = ["elanvandning"] }
+evidence = "Klassificerad elanvändning per kvadratmeter.\ncatalog:valueset:7982\ncatalog:variable_text:7576:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to elanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:elkvmklass"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad elanvändning per kvadratmeter.\ncatalog:valueset:7982\ncatalog:variable_text:7576:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:fangarea"
+fields = { "sets" = [] }
+evidence = "Solfångarens area avser energiutrustning.\ncatalog:variable_text:7577:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fangarea"
+fields = { "tags" = ["energy"] }
+evidence = "Solfångarens area avser energiutrustning.\ncatalog:variable_text:7577:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:far"
+fields = { "sets" = ["byggnadens-ibruktagandear"] }
+evidence = "F är en enbokstavskod och etiketten kolliderar med byggar; målnamnet behöver hanteras enligt D-12 och R6.\ncatalog:variable_text:7578:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:far"
+fields = { "tags" = [] }
+evidence = "F är en enbokstavskod och etiketten kolliderar med byggar; målnamnet behöver hanteras enligt D-12 och R6.\ncatalog:variable_text:7578:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fjarrvarmeanvandning"
+fields = { "sets" = ["energianvandning"] }
+evidence = "Fjärrvärmeanvändning är ett energislag.\ncatalog:variable_text:7579:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:fjarrvarmeanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Fjärrvärmeanvändning är ett energislag.\ncatalog:variable_text:7579:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:flis-spananvandning"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad användning av flis och spån.\ncatalog:valueset:7052\ncatalog:variable_text:7580:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:flis-spananvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad användning av flis och spån.\ncatalog:valueset:7052\ncatalog:variable_text:7580:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7581:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7581:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:gasanvandning"
+fields = { "sets" = ["energianvandning"] }
+evidence = "Gasanvändning är ett energislag.\ncatalog:variable_text:7582:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:gasanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Gasanvändning är ett energislag.\ncatalog:variable_text:7582:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:glas"
+fields = { "sets" = ["energibesparande-atgarder"] }
+evidence = "Kodad åtgärd med isolerglas.\ncatalog:valueset:2029\ncatalog:variable_text:7583:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:glas"
+fields = { "tags" = ["energy"] }
+evidence = "Kodad åtgärd med isolerglas.\ncatalog:valueset:2029\ncatalog:variable_text:7583:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-bergvarmepump"
+fields = { "sets" = ["varmepumpens-installationsar"] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7585:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-bergvarmepump"
+fields = { "tags" = [] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7585:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-franluft-varmepump"
+fields = { "sets" = ["varmepumpens-installationsar"] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7586:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-franluft-varmepump"
+fields = { "tags" = [] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7586:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-luft-luftvarmepump"
+fields = { "sets" = ["varmepumpens-installationsar"] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7587:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:installationsar-luft-luftvarmepump"
+fields = { "tags" = [] }
+evidence = "Installationsår för en värmepump.\ncatalog:variable_text:7587:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "sets" = ["kommun"] }
+evidence = "Suffixet 36 finns inte i källkolumnen. Etiketten kolliderar och målnamnet behöver hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7588\ncatalog:variable_text:7588:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-36"
+fields = { "tags" = ["geography"] }
+evidence = "Suffixet 36 finns inte i källkolumnen. Etiketten kolliderar och målnamnet behöver hanteras enligt D-12 och R6.\ncatalog:occurrence-locators:variable:7588\ncatalog:variable_text:7588:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun1"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7589:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun1"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:7589:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-anvand-mangd-energi-i-mwh"
+fields = { "sets" = ["energianvandning"] }
+evidence = "Källförkortningen är en ogenomskinlig kod för etiketten.\ncatalog:variable_text:7590:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-anvand-mangd-energi-i-mwh"
+fields = { "tags" = ["energy"] }
+evidence = "Källförkortningen är en ogenomskinlig kod för etiketten.\ncatalog:variable_text:7590:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:kylfrys-kod"
+fields = { "sets" = [] }
+evidence = "Energisnål kyl och frys är en energiinstallation.\ncatalog:variable_text:7591:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kylfrys-kod"
+fields = { "tags" = ["energy"] }
+evidence = "Energisnål kyl och frys är en energiinstallation.\ncatalog:variable_text:7591:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:7592:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:variable_text:7592:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:narvarmeanvandning"
+fields = { "sets" = ["energianvandning"] }
+evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7593:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:narvarmeanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Källförkortningen innehåller koddelar som inte är läsbara stammar av etiketten.\ncatalog:variable_text:7593:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvar"
+fields = { "sets" = [] }
+evidence = "Antalet svar och övertäckning är ett undersökningsmått.\ncatalog:variable_text:7594:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:nsvar"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet svar och övertäckning är ett undersökningsmått.\ncatalog:variable_text:7594:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = [] }
+evidence = "NUTS anger geografisk indelning.\ncatalog:variable_text:7595:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS anger geografisk indelning.\ncatalog:variable_text:7595:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:oljeanvandning"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Husets oljeanvändning.\ncatalog:variable_text:7596:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:oljeanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Husets oljeanvändning.\ncatalog:variable_text:7596:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:oljeklass"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Klassificerad oljeanvändning.\ncatalog:valueset:9937\ncatalog:variable_text:7597:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:oljeklass"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad oljeanvändning.\ncatalog:valueset:9937\ncatalog:variable_text:7597:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvm"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Oljeanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7598:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvm"
+fields = { "tags" = ["energy"] }
+evidence = "Oljeanvändning per uppvärmd kvadratmeter.\ncatalog:variable_text:7598:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvmklass"
+fields = { "sets" = ["oljeanvandning"] }
+evidence = "Klassificerad oljeanvändning per kvadratmeter.\ncatalog:variable_text:7599:10957:11323\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to oljeanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvmklass"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad oljeanvändning per kvadratmeter.\ncatalog:variable_text:7599:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:pelletsanvandning"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad pelletsanvändning.\ncatalog:valueset:10819\ncatalog:variable_text:7600:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:pelletsanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad pelletsanvändning.\ncatalog:valueset:10819\ncatalog:variable_text:7600:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:regler"
+fields = { "sets" = ["energibesparande-atgarder"] }
+evidence = "Kodad åtgärd med reglersystem.\ncatalog:valueset:2029\ncatalog:variable_text:7602:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:regler"
+fields = { "tags" = ["energy"] }
+evidence = "Kodad åtgärd med reglersystem.\ncatalog:valueset:2029\ncatalog:variable_text:7602:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek"
+fields = { "sets" = [] }
+evidence = "Storan är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:7603:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:populationsstorlek"
+fields = { "tags" = ["methods"] }
+evidence = "Storan är en källmnemonik som inte består av etikettens ordstammar.\ncatalog:variable_text:7603:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:7604:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:7604:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg"
+fields = { "sets" = ["energibesparande-atgarder"] }
+evidence = "Kodad åtgärd med tilläggsisolering.\ncatalog:valueset:2029\ncatalog:variable_text:7605:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg"
+fields = { "tags" = ["energy"] }
+evidence = "Kodad åtgärd med tilläggsisolering.\ncatalog:valueset:2029\ncatalog:variable_text:7605:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-smahus"
+fields = { "sets" = ["bostadsyta"] }
+evidence = "Identitetsfaktet gäller en annan yta än bostadsyta.\ncatalog:occurrence:55799\ncatalog:occurrence:55842\ncatalog:occurrence:55898\ncatalog:variable_text:7606:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Identitetsfaktet gäller en annan yta än bostadsyta.\ncatalog:occurrence:55799\ncatalog:occurrence:55842\ncatalog:occurrence:55898\ncatalog:variable_text:7606:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning-kwh"
+fields = { "sets" = ["energianvandning"] }
+evidence = "Total energianvändning.\ncatalog:variable_text:7607:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning-kwh"
+fields = { "tags" = ["energy"] }
+evidence = "Total energianvändning.\ncatalog:variable_text:7607:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-uppvarmd-yta-smahus"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktet gäller en annan yta än total uppvärmd yta.\ncatalog:occurrence:55799\ncatalog:occurrence:55842\ncatalog:occurrence:55898\ncatalog:variable_text:7608:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:total-uppvarmd-yta-smahus"
+fields = { "tags" = ["housing"] }
+evidence = "Identitetsfaktet gäller en annan yta än total uppvärmd yta.\ncatalog:occurrence:55799\ncatalog:occurrence:55842\ncatalog:occurrence:55898\ncatalog:variable_text:7608:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "sets" = [] }
+evidence = "Typ av taxeringsenhet är en fastighetsegenskap.\ncatalog:variable_text:7609:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod"
+fields = { "tags" = ["property"] }
+evidence = "Typ av taxeringsenhet är en fastighetsegenskap.\ncatalog:variable_text:7609:11688:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:temperaturzon"
+fields = { "sets" = [] }
+evidence = "T är en bokstavskod för temperatur i källmnemoniken.\ncatalog:variable_text:7610:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:temperaturzon"
+fields = { "tags" = ["geography"] }
+evidence = "T är en bokstavskod för temperatur i källmnemoniken.\ncatalog:variable_text:7610:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-smahus"
+fields = { "sets" = [] }
+evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:7611:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-smahus"
+fields = { "tags" = ["methods"] }
+evidence = "Uppräkningsfaktorn är en undersökningsvikt.\ncatalog:variable_text:7611:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv11"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55782\ncatalog:occurrence:55829\ncatalog:variable_text:7612:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv11"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55782\ncatalog:occurrence:55829\ncatalog:variable_text:7612:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv12"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Uppvärmningssätt med kakelugn, braskamin eller vedspis.\ncatalog:variable_text:7613:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv12"
+fields = { "tags" = ["energy"] }
+evidence = "Uppvärmningssätt med kakelugn, braskamin eller vedspis.\ncatalog:variable_text:7613:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv13"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Uppvärmningssätt med öppen spis.\ncatalog:variable_text:7614:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv13"
+fields = { "tags" = ["energy"] }
+evidence = "Uppvärmningssätt med öppen spis.\ncatalog:variable_text:7614:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv14"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55674\ncatalog:occurrence:55726\ncatalog:variable_text:7615:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv14"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55674\ncatalog:occurrence:55726\ncatalog:variable_text:7615:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv4"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpar.\ncatalog:occurrence:56002\ncatalog:occurrence:56060\ncatalog:variable_text:7616:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv4"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpar.\ncatalog:occurrence:56002\ncatalog:occurrence:56060\ncatalog:variable_text:7616:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv4-2308"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpar.\ncatalog:occurrence:55944\ncatalog:occurrence:56002\ncatalog:occurrence:56060\ncatalog:variable_text:7617:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv4-2308"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpar.\ncatalog:occurrence:55944\ncatalog:occurrence:56002\ncatalog:occurrence:56060\ncatalog:variable_text:7617:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv5"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55790\ncatalog:occurrence:55837\ncatalog:occurrence:56003\ncatalog:occurrence:56061\ncatalog:variable_text:7618:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:uppv5"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55790\ncatalog:occurrence:55837\ncatalog:occurrence:56003\ncatalog:occurrence:56061\ncatalog:variable_text:7618:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-annat"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55674\ncatalog:occurrence:55726\ncatalog:variable_text:7619:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-annat"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55674\ncatalog:occurrence:55726\ncatalog:variable_text:7619:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-berg-jord-sjovarme"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55781\ncatalog:occurrence:55789\ncatalog:occurrence:55828\ncatalog:occurrence:55836\ncatalog:occurrence:55943\ncatalog:occurrence:55944\ncatalog:occurrence:56001\ncatalog:occurrence:56002\ncatalog:variable_text:7620:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-berg-jord-sjovarme"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55781\ncatalog:occurrence:55789\ncatalog:occurrence:55828\ncatalog:occurrence:55836\ncatalog:occurrence:55943\ncatalog:occurrence:55944\ncatalog:occurrence:56001\ncatalog:occurrence:56002\ncatalog:variable_text:7620:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-direktverkande-el"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55787\ncatalog:occurrence:55793\ncatalog:occurrence:55834\ncatalog:occurrence:55840\ncatalog:variable_text:7621:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-direktverkande-el"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55787\ncatalog:occurrence:55793\ncatalog:occurrence:55834\ncatalog:occurrence:55840\ncatalog:variable_text:7621:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-fjarrvarme"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55781\ncatalog:occurrence:55791\ncatalog:occurrence:55828\ncatalog:occurrence:55838\ncatalog:variable_text:7622:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-fjarrvarme"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55781\ncatalog:occurrence:55791\ncatalog:occurrence:55828\ncatalog:occurrence:55838\ncatalog:variable_text:7622:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-flis-span-pellets"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55789\ncatalog:occurrence:55793\ncatalog:occurrence:55836\ncatalog:occurrence:55840\ncatalog:variable_text:7623:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-flis-span-pellets"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55789\ncatalog:occurrence:55793\ncatalog:occurrence:55836\ncatalog:occurrence:55840\ncatalog:variable_text:7623:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-luft-luftvarmepump"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpsbeskrivningar.\ncatalog:occurrence:56003\ncatalog:occurrence:56061\ncatalog:variable_text:7624:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-luft-luftvarmepump"
+fields = { "tags" = ["energy"] }
+evidence = "Samma källkolumn har angränsande mappningar till olika värmepumpsbeskrivningar.\ncatalog:occurrence:56003\ncatalog:occurrence:56061\ncatalog:variable_text:7624:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-luftburen-el"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55788\ncatalog:occurrence:55794\ncatalog:occurrence:55835\ncatalog:occurrence:55841\ncatalog:occurrence:55943\ncatalog:occurrence:56001\ncatalog:variable_text:7625:10957:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-luftburen-el"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55788\ncatalog:occurrence:55794\ncatalog:occurrence:55835\ncatalog:occurrence:55841\ncatalog:occurrence:55943\ncatalog:occurrence:56001\ncatalog:variable_text:7625:10957:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-naturgas-stadsgas"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55790\ncatalog:occurrence:55794\ncatalog:occurrence:55837\ncatalog:occurrence:55841\ncatalog:variable_text:7626:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-naturgas-stadsgas"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55790\ncatalog:occurrence:55794\ncatalog:occurrence:55837\ncatalog:occurrence:55841\ncatalog:variable_text:7626:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-olja"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55787\ncatalog:occurrence:55791\ncatalog:occurrence:55834\ncatalog:occurrence:55838\ncatalog:variable_text:7627:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-olja"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55787\ncatalog:occurrence:55791\ncatalog:occurrence:55834\ncatalog:occurrence:55838\ncatalog:variable_text:7627:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-panncentral-narvarme"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55782\ncatalog:occurrence:55792\ncatalog:occurrence:55829\ncatalog:occurrence:55839\ncatalog:variable_text:7628:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-panncentral-narvarme"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55782\ncatalog:occurrence:55792\ncatalog:occurrence:55829\ncatalog:occurrence:55839\ncatalog:variable_text:7628:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-vattenburen-el"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Befintlig eller använd vattenburen elvärme.\ncatalog:variable_text:7629:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-vattenburen-el"
+fields = { "tags" = ["energy"] }
+evidence = "Befintlig eller använd vattenburen elvärme.\ncatalog:variable_text:7629:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-ved"
+fields = { "sets" = ["uppvarmningssatt"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55788\ncatalog:occurrence:55792\ncatalog:occurrence:55835\ncatalog:occurrence:55839\ncatalog:variable_text:7630:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:uppvarmningssatt-ved"
+fields = { "tags" = ["energy"] }
+evidence = "Källkolumnerna har angränsande mappningar till olika uppvärmningssätt.\ncatalog:occurrence:55788\ncatalog:occurrence:55792\ncatalog:occurrence:55835\ncatalog:occurrence:55839\ncatalog:variable_text:7630:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = [] }
+evidence = "Värdeår är en egenskap i fastighetstaxeringen.\ncatalog:variable_text:7631:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "tags" = ["property"] }
+evidence = "Värdeår är en egenskap i fastighetstaxeringen.\ncatalog:variable_text:7631:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-berg-jord-sjovarmepump"
+fields = { "sets" = ["varmepumpens-varmeeffekt"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7632:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-berg-jord-sjovarmepump"
+fields = { "tags" = ["energy"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7632:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-franluft-vattenvarmepump"
+fields = { "sets" = ["varmepumpens-varmeeffekt"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7633:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-franluft-vattenvarmepump"
+fields = { "tags" = ["energy"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7633:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-luft-luftvarmepump"
+fields = { "sets" = ["varmepumpens-varmeeffekt"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7634:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-luft-luftvarmepump"
+fields = { "tags" = ["energy"] }
+evidence = "Värmeeffekt för en värmepump.\ncatalog:variable_text:7634:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "sets" = [] }
+evidence = "Vattenförbrukning är ett vattenflöde.\ncatalog:variable_text:7635:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vatten"
+fields = { "tags" = ["environment"] }
+evidence = "Vattenförbrukning är ett vattenflöde.\ncatalog:variable_text:7635:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vedanvandning"
+fields = { "sets" = ["biobransleanvandning"] }
+evidence = "Klassificerad vedanvändning.\ncatalog:valueset:8689\ncatalog:variable_text:7636:10957:14245\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to biobransleanvandning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:vedanvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Klassificerad vedanvändning.\ncatalog:valueset:8689\ncatalog:variable_text:7636:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vent"
+fields = { "sets" = [] }
+evidence = "Ventilation är en byggnadsegenskap.\ncatalog:variable_text:7637:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vent"
+fields = { "tags" = ["housing"] }
+evidence = "Ventilation är en byggnadsegenskap.\ncatalog:variable_text:7637:12418:14245"

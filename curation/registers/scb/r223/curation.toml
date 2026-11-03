@@ -58,3 +58,814 @@ kind = "set"
 subject = "industrins-vattenanvandning: <none> @2005 where key = 'v4027'"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-arbetsstallet"
+fields = { "sets" = [] }
+evidence = "Antalet anställda avser arbetsmarknad.\ncatalog:variable_text:27651:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-arbetsstallet"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda avser arbetsmarknad.\ncatalog:variable_text:27651:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-geografiska-lage"] }
+evidence = "Kommunen anger arbetsställets geografiska läge.\ncatalog:variable_text:27653:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen anger arbetsställets geografiska läge.\ncatalog:variable_text:27653:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-geografiska-lage"] }
+evidence = "Länet anger arbetsställets geografiska läge.\ncatalog:variable_text:27654:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Länet anger arbetsställets geografiska läge.\ncatalog:variable_text:27654:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren beskriver produktionsenhetens verksamhet.\ncatalog:variable_text:27655:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren beskriver produktionsenhetens verksamhet.\ncatalog:variable_text:27655:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-draneringsvatten"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27656:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-draneringsvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27656:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-grundvatten"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27657:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-grundvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27657:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-havsvatten"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27658:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-havsvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27658:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-totalt-fran-egna-vattentakter"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27659:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-totalt-fran-egna-vattentakter"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27659:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-ytvatten"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27660:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-ytvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenuttag.\ncatalog:variable_text:27660:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-ateranvant"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27661:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-ateranvant"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27661:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-dricksvatten"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27662:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-dricksvatten"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27662:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-totalt"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27663:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-vatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter inköpt vatten.\ncatalog:variable_text:27663:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-och-inkopt-vatten-totalt"
+fields = { "sets" = ["vattentillforsel"] }
+evidence = "Källmnemoniken är opak; variabeln mäter total vattentillförsel.\ncatalog:variable_text:27664:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vattenuttag-och-inkopt-vatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter total vattentillförsel.\ncatalog:variable_text:27664:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27665:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27665:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27666:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27666:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27667:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27667:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27668:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27668:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27669:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27669:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27670:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ateranvant-vatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27670:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27671:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27671:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27672:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27672:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27673:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27673:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27674:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27674:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27675:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27675:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27676:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-draneringsvatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27676:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27677:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27677:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27678:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27678:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27679:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27679:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27680:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27680:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27681:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27681:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27682:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-dricksvatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27682:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27683:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27683:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27684:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27684:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27685:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27685:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27686:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27686:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27687:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27687:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27688:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-grundvatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27688:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27689:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27689:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27690:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27690:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27691:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27691:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27692:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27692:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27693:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27693:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27694:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-havsvatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27694:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27695:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27695:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27696:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27696:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27697:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27697:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27698:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27698:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27699:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27699:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27700:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27700:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-kylning-vid-elproduktion"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27701:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-kylning-vid-elproduktion"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27701:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-ovrigt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27702:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-ovrigt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27702:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-ovrig-kylning"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27703:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-ovrig-kylning"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27703:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-process"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27704:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-process"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27704:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-sanitart"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27705:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-sanitart"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27705:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-totalt"
+fields = { "sets" = ["vattenanvandning"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27706:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anvandning-av-ytvatten-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenanvändning.\ncatalog:variable_text:27706:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27707:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27707:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-totalt"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27708:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27708:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-utan-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27709:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-hav-utan-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27709:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27710:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27710:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-totalt"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27711:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27711:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-utan-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27712:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-kommun-utan-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27712:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27713:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27713:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-totalt"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27714:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-totalt"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27714:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-utan-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27715:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:utslapp-till-sjo-utan-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27715:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27716:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27716:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27717:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27717:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp-utan-egen-rening"
+fields = { "sets" = ["vattenutslapp"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27718:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utslapp-utan-egen-rening"
+fields = { "tags" = ["environment"] }
+evidence = "Källmnemoniken är opak; variabeln mäter vattenutsläpp.\ncatalog:variable_text:27718:18262:18628"
+
+
+[[statement]]
+kind = "set"
+subject = "var:summa-anvandning-sanitart"
+fields = { "description" = "Summan av arbetsställets vattenanvändning för sanitärt ändamål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett stavfel utan att ändra betydelsen.\ncatalog:variable_text:27699:18262:18628"

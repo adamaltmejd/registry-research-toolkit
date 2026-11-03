@@ -1,0 +1,86 @@
+/* A catalog page: the h1, then its sections, the gap owned here. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.prose {
+  max-width: 60ch;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.disclosure {
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+.disclosureHeading {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.disclosureButton {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.disclosureButton svg {
+  flex-shrink: 0;
+}
+.disclosure[data-expanded] > .disclosureHeading .disclosureButton svg {
+  transform: rotate(90deg);
+}
+.disclosureButton[data-hovered] {
+  background: var(--surface-hover);
+}
+.disclosureButton[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.findings,
+.plainList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+}
+.finding {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-wrap: anywhere;
+}
+.finding > a {
+  align-self: flex-start;
+  max-width: 100%;
+}
+.variableName {
+  display: flex;
+  flex-direction: column;
+}
+.period {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+  font-family: var(--font-mono);
+}

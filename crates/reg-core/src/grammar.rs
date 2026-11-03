@@ -32,7 +32,7 @@ impl fmt::Display for GrammarError {
         f.write_str(match self {
             Self::InvalidRef => {
                 "not an FQID: provider, provider/register, provider/register/variable or \
-                 class/classification, each slug lowercase ASCII kebab-case"
+                 set/provider/register/slug or class/classification, each slug lowercase ASCII kebab-case"
             }
             Self::InvalidPeriod => {
                 "not a period: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LAYYYY, YYYY-Q[1-4], \
@@ -51,8 +51,11 @@ const CLASSIFICATION_PREFIX: &str = "class";
 /// provider may take it.
 const GROUP_PREFIX: &str = "group";
 
+/// The reserved leading segment for register-local presentation sets.
+const SET_PREFIX: &str = "set";
+
 /// A fully qualified identifier. The kind follows from the segment count and the
-/// leading `class/`.
+/// leading `class/` or `set/`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Fqid {
     Provider {
@@ -66,6 +69,12 @@ pub enum Fqid {
         provider: String,
         register: String,
         variable: String,
+    },
+    /// A register-local presentation set, never a binding or order key.
+    Set {
+        provider: String,
+        register: String,
+        set: String,
     },
     Classification {
         classification: String,
@@ -119,6 +128,23 @@ impl FromStr for Fqid {
                 _ => Err(GrammarError::InvalidRef),
             };
         }
+        if segs[0] == SET_PREFIX {
+            return match segs[..] {
+                [_, provider, register, set]
+                    if is_slug(provider)
+                        && !matches!(provider, GROUP_PREFIX | SET_PREFIX)
+                        && is_slug(register)
+                        && is_slug(set) =>
+                {
+                    Ok(Self::Set {
+                        provider: provider.to_owned(),
+                        register: register.to_owned(),
+                        set: set.to_owned(),
+                    })
+                }
+                _ => Err(GrammarError::InvalidRef),
+            };
+        }
         if segs[0] == GROUP_PREFIX || !segs.iter().all(|seg| is_slug(seg)) {
             return Err(GrammarError::InvalidRef);
         }
@@ -150,6 +176,11 @@ impl fmt::Display for Fqid {
                 register,
                 variable,
             } => write!(f, "{provider}/{register}/{variable}"),
+            Self::Set {
+                provider,
+                register,
+                set,
+            } => write!(f, "{SET_PREFIX}/{provider}/{register}/{set}"),
             Self::Classification { classification } => {
                 write!(f, "{CLASSIFICATION_PREFIX}/{classification}")
             }

@@ -340,3 +340,1041 @@ kind = "set"
 subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120'"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgrupper och ålder hör till samma kandidatgrupp.\ncatalog:variable_text:42941:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgrupper och ålder hör till samma kandidatgrupp.\ncatalog:variable_text:42941:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp2"
+fields = { "sets" = ["alder"] }
+evidence = "Kodade åldersgrupper hör till åldersgruppen.\ncatalog:variable_text:42942:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:agrupp2"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodade åldersgrupper hör till åldersgruppen.\ncatalog:variable_text:42942:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder hör till kandidatgruppen.\ncatalog:variable_text:42943:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder hör till kandidatgruppen.\ncatalog:variable_text:42943:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "sets" = [] }
+evidence = "Källan och värdemängderna beskriver anställningsform, som omfattas av gruppen och taggen arbetsmarknad.\ncatalog:valueset:1542\ncatalog:valueset:682\ncatalog:variable_text:42944:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform"
+fields = { "tags" = ["employment"] }
+evidence = "Källan och värdemängderna beskriver anställningsform, som omfattas av gruppen och taggen arbetsmarknad.\ncatalog:valueset:1542\ncatalog:valueset:682\ncatalog:variable_text:42944:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "tags" = ["employment"] }
+evidence = "Samma kolumn har en efterföljande ägare med annan etikett och definition. Coordinator group membership: Båda variablerna kodar anställningsform; den fasta definitionen omfattar uttryckligen heltid, deltid och övrigt. Avtalad veckoarbetstid, överenskommen sysselsättningsgrad och omfattningsklasser omfattas. Skyddat medlemskap för osys behålls trots den dokumenterade definitionskonflikten. Tjänstgöringsomfattning utesluts eftersom den uttryckligen mäter faktisk tjänstgöringstid.\ncatalog:occurrence:446808\ncatalog:occurrence:446858\ncatalog:variable_text:42944:9496:20089\ncatalog:variable_text:42945:10592:15340\ncatalog:variable_text:42956:18628:20089\ncatalog:variable_text:42967:15706:20089\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089\ncatalog:variable_text:42985:18628:20089\ncatalog:variable_text:43006:15706:16801\ncatalog:variable_text:43007:19358:20089\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anstp"
+fields = { "sets" = [] }
+evidence = "Id:t behålls enligt familjens gemensamma läsbarhetsbedömning. Variabeln anger om den anställde ingår i ett poängsystem.\ncatalog:occurrence:446458\ncatalog:variable_text:42946:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:anstp"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t behålls enligt familjens gemensamma läsbarhetsbedömning. Variabeln anger om den anställde ingår i ett poängsystem.\ncatalog:occurrence:446458\ncatalog:variable_text:42946:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = [] }
+evidence = "Variabeln summerar tjänster.\ncatalog:variable_text:42947:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln summerar tjänster.\ncatalog:variable_text:42947:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Samma källkolumner har angränsande ägare med olika populationsetiketter.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumner har angränsande ägare med olika populationsetiketter.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446613\ncatalog:occurrence:446661"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-timavlonade"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Den angränsande ägaren har en annan populationsuppgift.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446414\ncatalog:occurrence:446460"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-timavlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Den angränsande ägaren har en annan populationsuppgift.\ncatalog:occurrence:446199\ncatalog:occurrence:446240\ncatalog:occurrence:446414\ncatalog:occurrence:446460"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "sets" = ["arbetade-timmar"] }
+evidence = "Övertidstimmar är en uttrycklig komponent av arbetade timmar.\ncatalog:variable_text:42951:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overtidstimmar"
+fields = { "tags" = ["employment"] }
+evidence = "Övertidstimmar är en uttrycklig komponent av arbetade timmar.\ncatalog:variable_text:42951:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "sets" = [] }
+evidence = "Semesterrätt är ett arbetsvillkor.\ncatalog:variable_text:42952:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-semesterdagar"
+fields = { "tags" = ["employment"] }
+evidence = "Semesterrätt är ett arbetsvillkor.\ncatalog:variable_text:42952:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstebeteckning"
+fields = { "sets" = ["yrke"] }
+evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstebeteckning"
+fields = { "tags" = ["employment"] }
+evidence = "Källmnemoniken anger inte läsbart tjänstebeteckning.\ncatalog:variable_text:42954:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "sets" = ["avtalstillhorighet"] }
+evidence = "Avtalskod hör till avtalstillhörighet.\ncatalog:variable_text:42955:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtal"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalskod hör till avtalstillhörighet.\ncatalog:variable_text:42955:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-veckoarbetstid"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalad arbetstid hör till kandidatgruppen.\ncatalog:variable_text:42956:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalsomrade"
+fields = { "sets" = ["avtalstillhorighet"] }
+evidence = "Avtalsområde hör till kandidatgruppen.\ncatalog:variable_text:42957:9496:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalsomrade"
+fields = { "tags" = ["employment"] }
+evidence = "Avtalsområde hör till kandidatgruppen.\ncatalog:variable_text:42957:9496:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:beredskapstillagg"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:beredskapstillagg"
+fields = { "tags" = ["income"] }
+evidence = "Beredskapstillägget är en lönekomponent och ingår i rörliga tillägg.\ncatalog:variable_text:42958:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civvar"
+fields = { "sets" = [] }
+evidence = "Ersättningen gäller tjänstgöring inom totalförsvaret.\ncatalog:variable_text:42959:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:civvar"
+fields = { "tags" = ["defence", "transfers"] }
+evidence = "Ersättningen gäller tjänstgöring inom totalförsvaret.\ncatalog:variable_text:42959:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vard-barn"
+fields = { "sets" = [] }
+evidence = "Ersättning för vård av sjukt barn är en transferering.\ncatalog:variable_text:42960:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-vard-barn"
+fields = { "tags" = ["transfers"] }
+evidence = "Ersättning för vård av sjukt barn är en transferering.\ncatalog:variable_text:42960:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardtid"
+fields = { "sets" = [] }
+evidence = "Ersättning för färdtid är arbetsinkomst.\ncatalog:variable_text:42961:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fardtid"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för färdtid är arbetsinkomst.\ncatalog:variable_text:42961:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fast-kontant-lon"
+fields = { "sets" = ["lon"] }
+evidence = "Fast kontant lön är ett lönebelopp.\ncatalog:variable_text:42962:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fast-kontant-lon"
+fields = { "tags" = ["income"] }
+evidence = "Fast kontant lön är ett lönebelopp.\ncatalog:variable_text:42962:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fasta-lonetillagg"
+fields = { "sets" = ["lon"] }
+evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:42963:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fasta-lonetillagg"
+fields = { "tags" = ["income"] }
+evidence = "Fasta lönetillägg är lönekomponenter.\ncatalog:variable_text:42963:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "sets" = ["loneformaner"] }
+evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to loneformaner; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner"
+fields = { "tags" = ["income"] }
+evidence = "Förmånsbelopp hör till kandidatgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fskarbtid"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:fskarbtid"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för förskjuten arbetstid är ett lönetillägg.\ncatalog:variable_text:42965:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlon"
+fields = { "sets" = ["lon"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42966:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlon"
+fields = { "tags" = ["income"] }
+evidence = "Grundlön är ett lönebelopp.\ncatalog:variable_text:42966:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "sets" = [] }
+evidence = "Omfattningsklassen hör till kandidatgruppen.\ncatalog:variable_text:42967:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:heldel"
+fields = { "tags" = ["employment"] }
+evidence = "Omfattningsklassen hör till kandidatgruppen.\ncatalog:variable_text:42967:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:timlon-for-timavlonade"
+fields = { "sets" = ["lon"] }
+evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:timlon-for-timavlonade"
+fields = { "tags" = ["income"] }
+evidence = "H är en enbokstavskod och inte en läsbar stam för timlön.\ncatalog:variable_text:42968:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:jourtillagg"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:jourtillagg"
+fields = { "tags" = ["income"] }
+evidence = "Jourtillägg är en namngiven rörlig lönekomponent.\ncatalog:variable_text:42969:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:42970:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:42970:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "Län är en regional tillhörighet.\ncatalog:variable_text:42971:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en regional tillhörighet.\ncatalog:variable_text:42971:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "sets" = [] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "tags" = ["employment"] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekod"
+fields = { "sets" = [] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonekod"
+fields = { "tags" = ["employment"] }
+evidence = "Lönekod och löneform kodar samma koncept i angränsande perioder.\ncatalog:occurrence:446618\ncatalog:occurrence:446665"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "sets" = [] }
+evidence = "Markeringen anger urval till statistikens lönepopulation.\ncatalog:variable_text:42974:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen anger urval till statistikens lönepopulation.\ncatalog:variable_text:42974:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "sets" = ["lon"] }
+evidence = "Definition och beräkningsbeskrivning skiljer sig om naturaförmåner ingår.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "tags" = ["income"] }
+evidence = "Definition och beräkningsbeskrivning skiljer sig om naturaförmåner ingår.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-grundlon-rorliga"
+fields = { "sets" = ["lon"] }
+evidence = "Angränsande perioders definitioner skiljer sig om naturaförmåner.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-grundlon-rorliga"
+fields = { "tags" = ["income"] }
+evidence = "Angränsande perioders definitioner skiljer sig om naturaförmåner.\ncatalog:occurrence:447031\ncatalog:occurrence:447083\ncatalog:variable_text:42976:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsloneintervall"
+fields = { "sets" = ["lon"] }
+evidence = "Månadslöneintervall är ett löneintervall.\ncatalog:variable_text:42978:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsloneintervall"
+fields = { "tags" = ["income"] }
+evidence = "Månadslöneintervall är ett löneintervall.\ncatalog:variable_text:42978:12418:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "sets" = ["loneformaner"] }
+evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to loneformaner; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "tags" = ["income"] }
+evidence = "Naturaförmåner hör till förmånsgruppen. Coordinator group membership: Variablerna mäter lönebelopp, löneintervall eller namngivna lönekomponenter. Naturaförmåner anges även som komponent i månadslön. Frånvaroersättningar, särskilda uppdrag, löneformskoder och arbetstidsmått utesluts. Båda variablerna mäter förmånsbelopp; bruttolöneavdrag för lånedator omfattas inte.\ncatalog:variable_text:42958:9496:20089\ncatalog:variable_text:42962:9496:20089\ncatalog:variable_text:42963:9496:20089\ncatalog:variable_text:42964:13879:20089\ncatalog:variable_text:42965:19358:20089\ncatalog:variable_text:42966:15706:20089\ncatalog:variable_text:42968:9496:20089\ncatalog:variable_text:42969:9496:20089\ncatalog:variable_text:42976:16801:20089\ncatalog:variable_text:42977:15706:16801\ncatalog:variable_text:42978:12418:15706\ncatalog:variable_text:42979:11323:13879\ncatalog:variable_text:42981:9496:20089\ncatalog:variable_text:42986:9496:13879\ncatalog:variable_text:42987:12418:13879\ncatalog:variable_text:42989:15706:20089\ncatalog:variable_text:42990:19358:20089\ncatalog:variable_text:43008:9496:12784\ncatalog:variable_text:43009:9496:20089\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = ["regional-tillhorighet"] }
+evidence = "NUTS-region är regional tillhörighet.\ncatalog:variable_text:42980:10592:15706\ncatalog:variable_text:42980:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS-region är regional tillhörighet.\ncatalog:variable_text:42980:10592:15706\ncatalog:variable_text:42980:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:obekvamtidstillagg"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:obekvamtidstillagg"
+fields = { "tags" = ["income"] }
+evidence = "OB-tillägg är en rörlig lönekomponent.\ncatalog:variable_text:42981:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:offupp"
+fields = { "sets" = [] }
+evidence = "Ersättning för förtroendemannauppdrag är inkomst.\ncatalog:variable_text:42982:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:offupp"
+fields = { "tags" = ["income"] }
+evidence = "Ersättning för förtroendemannauppdrag är inkomst.\ncatalog:variable_text:42982:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "sets" = [] }
+evidence = "Senare beräkning anger faktisk sysselsättningsgrad medan tidigare etikett anger överenskommen grad.\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "tags" = ["employment"] }
+evidence = "Senare beräkning anger faktisk sysselsättningsgrad medan tidigare etikett anger överenskommen grad.\ncatalog:variable_text:42984:15706:17532\ncatalog:variable_text:42984:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:ovr"
+fields = { "tags" = ["income"] }
+evidence = "Övriga rörliga tillägg är lönekomponenter.\ncatalog:variable_text:42986:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-lanedator"
+fields = { "sets" = [] }
+evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-lanedator"
+fields = { "tags" = ["income"] }
+evidence = "PC är en källkod snarare än en stam av etikettens lånedator.\ncatalog:variable_text:42987:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:rorliga-lonetillagg"
+fields = { "tags" = ["income"] }
+evidence = "Summan är ett rörligt lönetillägg.\ncatalog:variable_text:42989:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rortup"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:rortup"
+fields = { "tags" = ["income"] }
+evidence = "Heltidsuppräknade rörliga tillägg ingår i kandidatgruppen.\ncatalog:variable_text:42990:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-1"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-forsta-period.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-forsta-period.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-2"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-andra-period.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-andra-period.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-andra-period"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-2.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-andra-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma andra sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-2.\ncatalog:occurrence:447044\ncatalog:occurrence:447096"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "sets" = ["sjuklon"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-1.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "tags" = ["transfers"] }
+evidence = "Samma första sjuklöneperiod är uppdelad mellan angränsande perioder med scb/slr/sjuklon-1.\ncatalog:occurrence:447045\ncatalog:occurrence:447097"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:42995:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "sets" = ["yrke"] }
+evidence = "Den angränsande etiketten saknar huvudsysslebegränsningen.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Den angränsande etiketten saknar huvudsysslebegränsningen.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:sun"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42997:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sun"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42997:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42998:11323:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som saknas i etiketten.\ncatalog:variable_text:42998:11323:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr1"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:42999:12418:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr1"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:42999:12418:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43000:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43000:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr1"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:43001:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr1"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten; siffran är en källkolumn och inte en mintningsräknare.\ncatalog:variable_text:43001:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96fem"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43002:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96fem"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43002:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43003:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:sun96inr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43003:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningskod-person-skapad-fran-femsifferniva"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43004:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:suninr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43005:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:suninr"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en opak klassifikationskod som saknas i etiketten.\ncatalog:variable_text:43005:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "tags" = ["employment"] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-osysly i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "tags" = ["employment"] }
+evidence = "Samma överenskomna sysselsättningsgrad är uppdelad med scb/slr/sysselsattningsgrad-manadsavlonade i angränsande perioder.\ncatalog:occurrence:447036\ncatalog:occurrence:447088\ncatalog:variable_text:43007:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tant"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:tant"
+fields = { "tags" = ["income"] }
+evidence = "Tantiem är en uttrycklig komponent av rörliga tillägg.\ncatalog:variable_text:42989:9496:15706\ncatalog:variable_text:43008:9496:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-for-overtid"
+fields = { "sets" = ["rorliga-lonetillagg"] }
+evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to rorliga-lonetillagg; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:tillagg-for-overtid"
+fields = { "tags" = ["income"] }
+evidence = "Övertidstillägg är en lönekomponent.\ncatalog:variable_text:43009:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "sets" = [] }
+evidence = "Faktisk tjänstgöringstid ingår inte i kandidaten för överenskommen omfattning.\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Faktisk tjänstgöringstid ingår inte i kandidaten för överenskommen omfattning.\ncatalog:variable_text:43010:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighetskod i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighetskod i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet-scb"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighetskod-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet-scb"
+fields = { "tags" = ["employment"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighetskod-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighet i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod"
+fields = { "tags" = ["employment"] }
+evidence = "Samma tjänstledighetskod är uppdelad med scb/slr/tjanstledighet i angränsande perioder.\ncatalog:occurrence:447050\ncatalog:occurrence:447102"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod-scb"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighet-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetskod-scb"
+fields = { "tags" = ["employment"] }
+evidence = "Samma indikator är uppdelad med scb/slr/tjanstledighet-scb i angränsande perioder.\ncatalog:occurrence:447052\ncatalog:occurrence:447104"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetsomfattning"
+fields = { "sets" = ["tjanstledighet"] }
+evidence = "Tjänstledighetens omfattning ingår i kandidatgruppen.\ncatalog:variable_text:43015:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighetsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstledighetens omfattning ingår i kandidatgruppen.\ncatalog:variable_text:43015:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-utbetald-lon"
+fields = { "sets" = ["lon"] }
+evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-utbetald-lon"
+fields = { "tags" = ["income"] }
+evidence = "U är en enbokstavskod för utbetald.\ncatalog:variable_text:43016:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "sets" = [] }
+evidence = "Utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:43017:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-niva"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå är en utbildningsuppgift.\ncatalog:variable_text:43017:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "sets" = ["utbildningsklassificering"] }
+evidence = "Utbildningsgrupper hör till kandidatgruppen.\ncatalog:variable_text:43018:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsgrupper hör till kandidatgruppen.\ncatalog:variable_text:43018:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade"
+fields = { "sets" = [] }
+evidence = "Verksamhetsområde klassificerar verksamhet.\ncatalog:valueset:1169\ncatalog:variable_text:43019:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade"
+fields = { "tags" = ["business"] }
+evidence = "Verksamhetsområde klassificerar verksamhet.\ncatalog:valueset:1169\ncatalog:variable_text:43019:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "sets" = ["yrke"] }
+evidence = "Den tidigare ägarens etikett begränsar uppgiften till huvudsysslan.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift"
+fields = { "tags" = ["employment"] }
+evidence = "Den tidigare ägarens etikett begränsar uppgiften till huvudsysslan.\ncatalog:occurrence:447046\ncatalog:occurrence:447098"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift-isco"
+fields = { "sets" = ["yrke"] }
+evidence = "ISCO klassificerar yrke.\ncatalog:variable_text:43021:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesuppgift-isco"
+fields = { "tags" = ["employment"] }
+evidence = "ISCO klassificerar yrke.\ncatalog:variable_text:43021:9496:10592"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2012-01-01..2012-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2013-01-01..2013-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2014-01-01..2014-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2015-01-01..2015-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2016-01-01..2016-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2017-01-01..2017-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2018-01-01..2018-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2019-01-01..2019-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2020-01-01..2020-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2021-01-01..2021-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2022-01-01..2022-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2023-01-01..2023-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: anform @2024-01-01..2024-12-31 where key = 'v5717'"
+fields = { "variable" = "anstallningsform-hel-del-ovrig" }
+evidence = "Both use the complete three-code classification: full-time monthly-paid, part-time monthly-paid, and other. Despite the later label 'Agreed employment rate', its operational definitions explicitly derive these categories from employment rate and pay form. The same regional wage statistics column has adjacent, nonoverlapping periods at day 15340."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @1996-01-01..1996-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @1997-01-01..1997-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @1998-01-01..1998-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @2004-01-01..2004-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @2005-01-01..2005-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @2006-01-01..2006-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: arbhf @2007-01-01..2007-12-31 where key = 'v2522'"
+fields = { "variable" = "antal-arbetade-timmar" }
+evidence = "The early operational definition of 'Hours worked' exactly matches the definition of 'Hours worked, monthly-paid': actual hours in the survey month for monthly-paid employees. Both use hours in regional wage statistics, with no overlapping periods. The monthly-paid series ends at day 13879, where the generic series resumes through the arbhf mapping."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningsform-hel-del-ovrig"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The codes distinguish full-time and part-time monthly employment, and later rules classify agreed employment extent using 100-percent and below-100-percent thresholds (r135, r100, r115). | The codes distinguish full-time and part-time monthly employment, and later rules classify agreed employment extent using 100-percent and below-100-percent thresholds (r135, r100, r115).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42802\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447163\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447311\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3662"
+
+[[statement]]
+kind = "set"
+subject = "var:avtalad-veckoarbetstid"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definition specifies contractual weekly working hours, which the fixed group includes (r119).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42812\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447356"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-manadsavlonade"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definition measures employment extent according to the employment certificate for monthly-paid employees, with zeros for hourly-paid employees (r33).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42858\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:446483"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsgrad-osysly"
+fields = { "sets" = ["overenskommen-arbetstidsomfattning"] }
+evidence = "The operational definitions measure agreed employment extent without accounting for leave extent (r103, r128).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42859\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447190\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:447437"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuklon-forsta-period"
+fields = { "description" = "Sjuklön för första perioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning utan att ändra innebörden.\ncatalog:variable_text:42994:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2016-01-01..2016-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sjukl @2017-01-01..2017-12-31 where key = 'v36036'"
+fields = { "label" = "Sjuklön för första perioden" }
+evidence = "Part of #2040. scb/slr/sjuklon-forsta-period: Correct transposed letters in peroiden; preserve absence of final full stop. Two annual occurrences. Reviewed occurrence label: Sjuklön för första peroiden"

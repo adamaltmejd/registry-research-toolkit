@@ -86,12 +86,6 @@ evidence = "reg_meta_build/curation/registers/scb/rtb.toml:758\n\n2026-09-30: SC
 
 [[statement]]
 kind = "set"
-subject = "var:grund-for-bosattning"
-fields = { "sets" = ["legacy-2-8180"] }
-evidence = "reg_meta_build/curation/registers/scb/rtb.toml:763\n\n2026-09-30: SCB RTB VarId 8180: GFBKod and GrundForBosattning supply the same person-prioritized residence-basis classification. Preserve Nordic US/blank/null not-applicable versus non-Nordic missing meanings and all original member coding. Same literal GrundForBosattning on native2.15724 is a grouped construct outside this map. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
-
-[[statement]]
-kind = "set"
 subject = "doda-kvartal: doddat @2024"
 fields = { "spelling" = "DodDatum" }
 evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1489\n\nComplete accepted physical table header contains only DodDatum for this exact own native quantity; exported DodDat is absent. Preserve original source fields; no type/coding/role borrowing."
@@ -287,12 +281,6 @@ kind = "set"
 subject = "utvandringar-kvartal: distriktskod where release = 'r13818'"
 fields = { "period" = "2016-04-01.." }
 evidence = "reg_meta_build/curation/registers/scb/rtb.toml:841\n\nThe original operational definition explicitly supplies availability from 2016 quarter 2; this exact edition's register-wide start predates district availability. Retain its open end and all supplied prose/coding, and leave other editions unchanged."
-
-[[statement]]
-kind = "set"
-subject = "civilstandsandringar-skilda: lan"
-fields = { "description" = "Bostadslän" }
-evidence = "reg_meta_build/curation/registers/scb/rtb.toml:110\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -2759,3 +2747,3838 @@ kind = "set"
 subject = "var:personnrvard2"
 fields = { "sets" = ["personnrvard"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:123"
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'"
+fields = { sentinels = ["111183"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1317; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to d9772838ee6e4543c4b1421e357045b0f0072f6cfb6d90e64fdc9270155138c5 are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'"
+fields = { sentinels = ["048080", "202084"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1327; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to 67c8f982e7d06a3e3f88afa2a21df4b93718fee4ff7752d8f37ac3a0722003cf are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'"
+fields = { sentinels = ["2020"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1337; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to e703a6ccdb4ebb315f5141a846c021daea1a35384080a375691f183384bbcedd are inside this exact original entry scope."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1990-12-31 where release = 'r14565' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1991-12-31 where release = 'r14862' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1992-12-31 where release = 'r14863' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1993-12-31 where release = 'r14869' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1994-12-31 where release = 'r14870' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1995-12-31 where release = 'r14871' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1996-12-31 where release = 'r14872' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1997-12-31 where release = 'r14873' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @1998-12-31 where release = 'r770' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @1999-12-31 where release = 'r771' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2000-12-31 where release = 'r61' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2001-12-31 where release = 'r772' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2002-12-31 where release = 'r773' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2003-12-31 where release = 'r774' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2004-12-31 where release = 'r775' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2005-12-31 where release = 'r758' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2006-12-31 where release = 'r755' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2007-12-31 where release = 'r1279' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2008-12-31 where release = 'r2112' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2009-12-31 where release = 'r2856' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2010-12-31 where release = 'r3389' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2011-12-31 where release = 'r5878' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2012-12-31 where release = 'r5093' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2013-12-31 where release = 'r5258' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2014-12-31 where release = 'r5875' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2015-12-31 where release = 'r7391' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2016-12-31 where release = 'r10042' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2017-12-31 where release = 'r11810' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2018-12-31 where release = 'r13062' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2019-12-31 where release = 'r13919' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2020-12-31 where release = 'r16223' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2021-12-31 where release = 'r18080' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2022-12-31 where release = 'r18615' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2023-12-31 where release = 'r19111' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2024-12-31 where release = 'r19736' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "doda-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: civildatum"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "var:a-region"
+fields = { "sets" = ["a-region"] }
+evidence = "A-region är en geografisk indelning med en tidigare motsvarighet.\ncatalog:variable_text:41604:9862:10227\ncatalog:variable_text:41658:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:a-region"
+fields = { "tags" = ["geography"] }
+evidence = "A-region är en geografisk indelning med en tidigare motsvarighet.\ncatalog:variable_text:41604:9862:10227\ncatalog:variable_text:41658:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-under-asyltiden"
+fields = { "sets" = [] }
+evidence = "ABOEBO är en opak källkod; etiketten anger boende under asyltiden.\ncatalog:variable_text:41605:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:boende-under-asyltiden"
+fields = { "tags" = ["housing"] }
+evidence = "ABOEBO är en opak källkod; etiketten anger boende under asyltiden.\ncatalog:variable_text:41605:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktenskapsnr"
+fields = { "sets" = [] }
+evidence = "Variabeln anger äktenskapets ordningsnummer.\ncatalog:variable_text:41606:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:aktenskapsnr"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln anger äktenskapets ordningsnummer.\ncatalog:variable_text:41606:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:aktlgddag"
+fields = { "sets" = ["civilstandsvaraktighet"] }
+evidence = "Äktenskapslängd i dagar hör till civilståndets varaktighet.\ncatalog:variable_text:41607:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktlgddag"
+fields = { "tags" = ["family-household"] }
+evidence = "Äktenskapslängd i dagar hör till civilståndets varaktighet.\ncatalog:variable_text:41607:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ald90"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41608:7669:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:ald90"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41608:7669:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:ald91"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41609:8034:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:ald91"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41609:8034:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:ald92"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41610:8400:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:ald92"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41610:8400:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:ald93"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41611:8765:8766"
+
+[[statement]]
+kind = "set"
+subject = "var:ald93"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41611:8765:8766"
+
+[[statement]]
+kind = "set"
+subject = "var:ald94"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41612:9130:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ald94"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41612:9130:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:ald95"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41613:9495:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:ald95"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41613:9495:9496"
+
+[[statement]]
+kind = "set"
+subject = "var:ald96"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41614:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ald96"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41614:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:ald97"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41615:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:ald97"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41615:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:aldarslut"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41616:-365:10227\ncatalog:variable_text:41616:-731:-365"
+
+[[statement]]
+kind = "set"
+subject = "var:aldarslut"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41616:-365:10227\ncatalog:variable_text:41616:-731:-365"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41617:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41617:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-relationsperson"
+fields = { "sets" = ["alder"] }
+evidence = "Relationspersonens ålder är ett åldersmått.\ncatalog:variable_text:41618:10227:14245\ncatalog:variable_text:41618:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-relationsperson"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens ålder är ett åldersmått.\ncatalog:variable_text:41618:10227:14245\ncatalog:variable_text:41618:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-eu"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder ingår i kandidatgruppen för personålder och hör till demografi.\ncatalog:occurrence-locators:variable:41619\ncatalog:occurrence:430954"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder ingår i kandidatgruppen för personålder och hör till demografi.\ncatalog:occurrence-locators:variable:41619\ncatalog:occurrence:430954"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-samhorighet"
+fields = { "sets" = ["alder"] }
+evidence = "Samhörighetspersonens ålder hör till åldersgruppen.\ncatalog:variable_text:41620:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-samhorighet"
+fields = { "tags" = ["demographics"] }
+evidence = "Samhörighetspersonens ålder hör till åldersgruppen.\ncatalog:variable_text:41620:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-alder"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder.\ncatalog:variable_text:41621:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder.\ncatalog:variable_text:41621:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-alderh"
+fields = { "sets" = ["alder"] }
+evidence = "Källorna beskriver ålder vid olika händelser.\ncatalog:variable_text:41622:10227:11688\ncatalog:variable_text:41622:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-alderh"
+fields = { "tags" = ["demographics"] }
+evidence = "Källorna beskriver ålder vid olika händelser.\ncatalog:variable_text:41622:10227:11688\ncatalog:variable_text:41622:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-aldernatandr"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder vid medborgarskapsändring.\ncatalog:variable_text:41623:-731:1096\ncatalog:variable_text:41623:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-aldernatandr"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder vid medborgarskapsändring.\ncatalog:variable_text:41623:-731:1096\ncatalog:variable_text:41623:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-ankar"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder vid händelsen.\ncatalog:variable_text:41624:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-ankar"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder vid händelsen.\ncatalog:variable_text:41624:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-dalar"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder vid dödsfallet.\ncatalog:variable_text:41625:-731:730\ncatalog:variable_text:41625:730:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-dalar"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder vid dödsfallet.\ncatalog:variable_text:41625:-731:730\ncatalog:variable_text:41625:730:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-partneralder"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger partnerns ålder.\ncatalog:variable_text:41626:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-partneralder"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger partnerns ålder.\ncatalog:variable_text:41626:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-relationsperson"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger relationspersonens ålder.\ncatalog:variable_text:41627:-731:13879\ncatalog:variable_text:41627:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-relationsperson"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger relationspersonens ålder.\ncatalog:variable_text:41627:-731:13879\ncatalog:variable_text:41627:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-skilsalder"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder vid skilsmässa.\ncatalog:variable_text:41628:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-skilsalder"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder vid skilsmässa.\ncatalog:variable_text:41628:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-vigselalder"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln anger ålder vid vigsel.\ncatalog:variable_text:41629:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-handelsen-vigselalder"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger ålder vid vigsel.\ncatalog:variable_text:41629:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarh"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter faderns ålder.\ncatalog:variable_text:41630:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarh"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter faderns ålder.\ncatalog:variable_text:41630:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarhd"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter faderns ålder i dagar.\ncatalog:variable_text:41631:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarhd"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter faderns ålder i dagar.\ncatalog:variable_text:41631:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarslut"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter faderns ålder.\ncatalog:variable_text:41632:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderfarslut"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter faderns ålder.\ncatalog:variable_text:41632:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhd"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter ålder i dagar.\ncatalog:variable_text:41633:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhd"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder i dagar.\ncatalog:variable_text:41633:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhdrel"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter relationspersonens ålder i dagar.\ncatalog:variable_text:41634:10227:13879\ncatalog:variable_text:41634:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderhdrel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter relationspersonens ålder i dagar.\ncatalog:variable_text:41634:10227:13879\ncatalog:variable_text:41634:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorh"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter moderns ålder.\ncatalog:variable_text:41635:10227:10957\ncatalog:variable_text:41635:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorh"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter moderns ålder.\ncatalog:variable_text:41635:10227:10957\ncatalog:variable_text:41635:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorhd"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter moderns ålder i dagar.\ncatalog:variable_text:41636:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorhd"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter moderns ålder i dagar.\ncatalog:variable_text:41636:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorslut"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln avser ålder; en period har motstridig uppgift om förälder.\ncatalog:variable_text:41637:10227:10957\ncatalog:variable_text:41637:10957:11323\ncatalog:variable_text:41637:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorslut"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln avser ålder; en period har motstridig uppgift om förälder.\ncatalog:variable_text:41637:10227:10957\ncatalog:variable_text:41637:10957:11323\ncatalog:variable_text:41637:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgruppering-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln grupperar ålder vid årsslut.\ncatalog:variable_text:41638:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgruppering-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar ålder vid årsslut.\ncatalog:variable_text:41638:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41639:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderslut"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder vid årsslut.\ncatalog:variable_text:41639:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderslutd"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter ålder i dagar vid årsslut.\ncatalog:variable_text:41640:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:alderslutd"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter ålder i dagar vid årsslut.\ncatalog:variable_text:41640:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "sets" = ["antal-skyddssokande"] }
+evidence = "Antalet avser asylsökande.\ncatalog:variable_text:41641:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "tags" = ["migration"] }
+evidence = "Antalet avser asylsökande.\ncatalog:variable_text:41641:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Variabeln räknar barn i familj eller hushåll.\ncatalog:occurrence:427500\ncatalog:occurrence:432896"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln räknar barn i familj eller hushåll.\ncatalog:occurrence:427500\ncatalog:occurrence:432896"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Variabeln räknar barn under 18 år.\ncatalog:occurrence:427501\ncatalog:occurrence:432897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln räknar barn under 18 år.\ncatalog:occurrence:427501\ncatalog:occurrence:432897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-22-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Variabeln räknar barn under 22 år.\ncatalog:occurrence:427502"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-22-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln räknar barn under 22 år.\ncatalog:occurrence:427502"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-6-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Variabeln räknar barn under 6 år.\ncatalog:occurrence:427503\ncatalog:occurrence:432899"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-6-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln räknar barn under 6 år.\ncatalog:occurrence:427503\ncatalog:occurrence:432899"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda"
+fields = { "sets" = ["antal-fodda"] }
+evidence = "Dödfödda är en komponent i antalet födda.\ncatalog:variable_text:41646:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Dödfödda är en komponent i antalet födda.\ncatalog:variable_text:41646:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda-antdodfodd"
+fields = { "sets" = ["antal-fodda"] }
+evidence = "Dödfödda är en komponent i antalet födda.\ncatalog:variable_text:41647:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dodfodda-antdodfodd"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Dödfödda är en komponent i antalet födda.\ncatalog:variable_text:41647:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fodda"
+fields = { "sets" = ["antal-fodda"] }
+evidence = "Antalet födda omfattar levande födda och dödfödda.\ncatalog:variable_text:41648:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fodda"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Antalet födda omfattar levande födda och dödfödda.\ncatalog:variable_text:41648:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-massflyktssokande"
+fields = { "sets" = ["antal-skyddssokande"] }
+evidence = "Antalet avser sökande enligt massflyktsdirektivet.\ncatalog:variable_text:41649:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-massflyktssokande"
+fields = { "tags" = ["migration"] }
+evidence = "Antalet avser sökande enligt massflyktsdirektivet.\ncatalog:variable_text:41649:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbarnunder25"
+fields = { "sets" = ["antal-barn"] }
+evidence = "Variabeln räknar barn under 25 år.\ncatalog:variable_text:41650:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbarnunder25"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln räknar barn under 25 år.\ncatalog:variable_text:41650:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antalpersoner"
+fields = { "sets" = ["familje-och-hushallsstorlek"] }
+evidence = "Antal personer i familjen hör ihop med hushållsstorlek.\ncatalog:variable_text:41651:20453:20454\ncatalog:variable_text:41780:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:antalpersoner"
+fields = { "tags" = ["family-household"] }
+evidence = "Antal personer i familjen hör ihop med hushållsstorlek.\ncatalog:variable_text:41651:20453:20454\ncatalog:variable_text:41780:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:antalutanvardnadsh"
+fields = { "sets" = ["ensamkommande-barn"] }
+evidence = "Antalet avser ensamkommande asylsökande barn.\ncatalog:variable_text:41652:14245:16436\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ensamkommande-barn; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:antalutanvardnadsh"
+fields = { "tags" = ["migration"] }
+evidence = "Antalet avser ensamkommande asylsökande barn.\ncatalog:variable_text:41652:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antalutanvardnadsh-massflyktsdir"
+fields = { "sets" = ["ensamkommande-barn"] }
+evidence = "Antalet avser ensamkommande barn enligt massflyktsdirektivet.\ncatalog:variable_text:41653:18993:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ensamkommande-barn; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:antalutanvardnadsh-massflyktsdir"
+fields = { "tags" = ["migration"] }
+evidence = "Antalet avser ensamkommande barn enligt massflyktsdirektivet.\ncatalog:variable_text:41653:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antdagsenemi"
+fields = { "sets" = [] }
+evidence = "Antal dagar i utlandet är ett migrationsmått.\ncatalog:variable_text:41654:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antdagsenemi"
+fields = { "tags" = ["migration"] }
+evidence = "Antal dagar i utlandet är ett migrationsmått.\ncatalog:variable_text:41654:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antdagseninv"
+fields = { "sets" = [] }
+evidence = "Antal dagar i Sverige mellan migrationshändelser är ett migrationsmått.\ncatalog:variable_text:41655:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antdagseninv"
+fields = { "tags" = ["migration"] }
+evidence = "Antal dagar i Sverige mellan migrationshändelser är ett migrationsmått.\ncatalog:variable_text:41655:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antlevfodda"
+fields = { "sets" = ["antal-fodda"] }
+evidence = "Levande födda är en komponent i antalet födda.\ncatalog:variable_text:41656:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antlevfodda"
+fields = { "tags" = ["pregnancy-birth"] }
+evidence = "Levande födda är en komponent i antalet födda.\ncatalog:variable_text:41656:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:a-region-tidigare"
+fields = { "sets" = ["a-region"] }
+evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A-region.\ncatalog:variable_text:41658:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:a-region-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare A-region.\ncatalog:variable_text:41658:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:avsandlan"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41661:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:avslan"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger län för den levererande myndigheten och hör till länsgruppen.\ncatalog:variable_text:41662:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:barnforrel"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar barnets föräldrarelationer i hushållet.\ncatalog:variable_text:41663:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:barnforrel"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln kodar barnets föräldrarelationer i hushållet.\ncatalog:variable_text:41663:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsar-vecka"
+fields = { "sets" = ["bearbetningsvecka"] }
+evidence = "Kandidaten omfattar de två angivna bearbetningsveckovariablerna; tidsstruktur har ingen tematisk tagg.\ncatalog:variable_text:41666:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsar-vecka"
+fields = { "tags" = [] }
+evidence = "Kandidaten omfattar de två angivna bearbetningsveckovariablerna; tidsstruktur har ingen tematisk tagg.\ncatalog:variable_text:41666:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsvecka"
+fields = { "sets" = ["bearbetningsvecka"] }
+evidence = "Kandidaten omfattar de två angivna bearbetningsveckovariablerna; tidsstruktur har ingen tematisk tagg.\ncatalog:variable_text:41667:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbetningsvecka"
+fields = { "tags" = [] }
+evidence = "Kandidaten omfattar de två angivna bearbetningsveckovariablerna; tidsstruktur har ingen tematisk tagg.\ncatalog:variable_text:41667:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:besldatum"
+fields = { "sets" = ["beslutsdatum"] }
+evidence = "Datumet hör till beslutsunderlaget.\ncatalog:variable_text:41668:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besldatum"
+fields = { "tags" = [] }
+evidence = "Datumet hör till beslutsunderlaget.\ncatalog:variable_text:41668:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:beslfrandatum"
+fields = { "sets" = ["beslutsdatum"] }
+evidence = "Datumet anger när beslutet börjar gälla.\ncatalog:variable_text:41669:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:beslfrandatum"
+fields = { "tags" = [] }
+evidence = "Datumet anger när beslutet börjar gälla.\ncatalog:variable_text:41669:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besltilldatum"
+fields = { "sets" = ["beslutsdatum"] }
+evidence = "Datumet anger när beslutet slutar gälla.\ncatalog:variable_text:41670:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besltilldatum"
+fields = { "tags" = [] }
+evidence = "Datumet anger när beslutet slutar gälla.\ncatalog:variable_text:41670:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besluttyp"
+fields = { "sets" = [] }
+evidence = "Beslutstypen gäller uppehållstillstånd.\ncatalog:variable_text:41671:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besluttyp"
+fields = { "tags" = ["migration"] }
+evidence = "Beslutstypen gäller uppehållstillstånd.\ncatalog:variable_text:41671:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeland"
+fields = { "sets" = [] }
+evidence = "Boendeland anger personens geografiska tillhörighet.\ncatalog:variable_text:41672:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeland"
+fields = { "tags" = ["geography"] }
+evidence = "Boendeland anger personens geografiska tillhörighet.\ncatalog:variable_text:41672:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civdatrel"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Relationspersonens civilståndsdatum ingår i datumgruppen.\ncatalog:variable_text:41673:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civdatrel"
+fields = { "tags" = [] }
+evidence = "Relationspersonens civilståndsdatum ingår i datumgruppen.\ncatalog:variable_text:41673:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civildat-tidigare-rel"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Datumet hör till civilståndsdatum för relationspersonen.\ncatalog:variable_text:41674:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civildat-tidigare-rel"
+fields = { "tags" = [] }
+evidence = "Datumet hör till civilståndsdatum för relationspersonen.\ncatalog:variable_text:41674:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilfar"
+fields = { "sets" = ["civilstand"] }
+evidence = "Faderns civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41675:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilfar"
+fields = { "tags" = ["family-household"] }
+evidence = "Faderns civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41675:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilgrel"
+fields = { "sets" = ["civilstand"] }
+evidence = "Relationspersonens tidigare civilstånd ingår i gruppen.\ncatalog:variable_text:41676:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilgrel"
+fields = { "tags" = ["family-household"] }
+evidence = "Relationspersonens tidigare civilstånd ingår i gruppen.\ncatalog:variable_text:41676:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilgrupp-eu"
+fields = { "sets" = ["civilstand"] }
+evidence = "Variabeln kodar grupperat civilstånd.\ncatalog:valueset:1543\ncatalog:variable_text:41677:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilgrupp-eu"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln kodar grupperat civilstånd.\ncatalog:valueset:1543\ncatalog:variable_text:41677:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilmor"
+fields = { "sets" = ["civilstand"] }
+evidence = "Moderns civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41678:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilmor"
+fields = { "tags" = ["family-household"] }
+evidence = "Moderns civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41678:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilrel"
+fields = { "sets" = ["civilstand"] }
+evidence = "Relationspersonens civilstånd ingår i gruppen.\ncatalog:variable_text:41679:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilrel"
+fields = { "tags" = ["family-household"] }
+evidence = "Relationspersonens civilstånd ingår i gruppen.\ncatalog:variable_text:41679:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = ["civilstand"] }
+evidence = "Variabeln kodar civilstånd.\ncatalog:variable_text:41680:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln kodar civilstånd.\ncatalog:variable_text:41680:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-tidigare"
+fields = { "sets" = ["civilstand"] }
+evidence = "Tidigare civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41681:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-tidigare"
+fields = { "tags" = ["family-household"] }
+evidence = "Tidigare civilstånd ingår i civilståndsgruppen.\ncatalog:variable_text:41681:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-tidigare-varaktighet"
+fields = { "sets" = ["civilstandsvaraktighet"] }
+evidence = "Variabeln anger tidigare civilstånds varaktighet.\ncatalog:variable_text:41682:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-tidigare-varaktighet"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln anger tidigare civilstånds varaktighet.\ncatalog:variable_text:41682:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-civdat-2"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Suffixet 2 är en tillagd räknare och inte en del av källkolumnen.\ncatalog:variable_text:41683:17166:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-civdat-2"
+fields = { "tags" = [] }
+evidence = "Suffixet 2 är en tillagd räknare och inte en del av källkolumnen.\ncatalog:variable_text:41683:17166:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-civilandrdatum"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Datumet hör till civilståndsdatum.\ncatalog:variable_text:41684:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-civilandrdatum"
+fields = { "tags" = [] }
+evidence = "Datumet hör till civilståndsdatum.\ncatalog:variable_text:41684:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-far"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Faderns civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41685:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-far"
+fields = { "tags" = [] }
+evidence = "Faderns civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41685:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-mor"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Moderns civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41686:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-mor"
+fields = { "tags" = [] }
+evidence = "Moderns civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41686:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-partnerdatum"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Partnerskapsdatumet hör till civilståndsdatum.\ncatalog:variable_text:41687:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-partnerdatum"
+fields = { "tags" = [] }
+evidence = "Partnerskapsdatumet hör till civilståndsdatum.\ncatalog:variable_text:41687:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-skilsdatum"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Skilsmässodatumet hör till civilståndsdatum.\ncatalog:variable_text:41688:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-skilsdatum"
+fields = { "tags" = [] }
+evidence = "Skilsmässodatumet hör till civilståndsdatum.\ncatalog:variable_text:41688:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-tidcivilandrdatum"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Datumet hör till civilståndsdatum.\ncatalog:variable_text:41689:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-tidcivilandrdatum"
+fields = { "tags" = [] }
+evidence = "Datumet hör till civilståndsdatum.\ncatalog:variable_text:41689:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-tidigare"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Tidigare civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41690:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-tidigare"
+fields = { "tags" = [] }
+evidence = "Tidigare civilståndsdatum ingår i gruppen.\ncatalog:variable_text:41690:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-vigseldatum"
+fields = { "sets" = ["civilstandsdatum"] }
+evidence = "Vigseldatumet hör till civilståndsdatum.\ncatalog:variable_text:41691:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstandsdatum-vigseldatum"
+fields = { "tags" = [] }
+evidence = "Vigseldatumet hör till civilståndsdatum.\ncatalog:variable_text:41691:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivfar"
+fields = { "sets" = ["datum-adoptivforalder"] }
+evidence = "Datumet hör samman med motsvarande uppgift för adoptivmor.\ncatalog:variable_text:41693:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivfar"
+fields = { "tags" = [] }
+evidence = "Datumet hör samman med motsvarande uppgift för adoptivmor.\ncatalog:variable_text:41693:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivmor"
+fields = { "sets" = ["datum-adoptivforalder"] }
+evidence = "Datumet hör samman med motsvarande uppgift för adoptivfar.\ncatalog:variable_text:41694:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-adoptivmor"
+fields = { "tags" = [] }
+evidence = "Datumet hör samman med motsvarande uppgift för adoptivfar.\ncatalog:variable_text:41694:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-immigration"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Datumet avser immigration och hör till invandringsdatum.\ncatalog:variable_text:41695:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-immigration"
+fields = { "tags" = [] }
+evidence = "Datumet avser immigration och hör till invandringsdatum.\ncatalog:variable_text:41695:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-annan-person-1"
+fields = { "sets" = ["datum-annan-person"] }
+evidence = "AP är en bokstavskod för annan person; position 1 kommer från källkolumnen.\ncatalog:variable_text:41696:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-annan-person-1"
+fields = { "tags" = [] }
+evidence = "AP är en bokstavskod för annan person; position 1 kommer från källkolumnen.\ncatalog:variable_text:41696:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-annan-person-2"
+fields = { "sets" = ["datum-annan-person"] }
+evidence = "AP är en bokstavskod för annan person; position 2 kommer från källkolumnen.\ncatalog:variable_text:41697:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-annan-person-2"
+fields = { "tags" = [] }
+evidence = "AP är en bokstavskod för annan person; position 2 kommer från källkolumnen.\ncatalog:variable_text:41697:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datumvard1"
+fields = { "sets" = ["datum-vardnadshavare"] }
+evidence = "Datumvariablerna för vårdnadshavarnas två positioner hör ihop.\ncatalog:variable_text:41698:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datumvard1"
+fields = { "tags" = [] }
+evidence = "Datumvariablerna för vårdnadshavarnas två positioner hör ihop.\ncatalog:variable_text:41698:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datumvard2"
+fields = { "sets" = ["datum-vardnadshavare"] }
+evidence = "Datumvariablerna för vårdnadshavarnas två positioner hör ihop.\ncatalog:variable_text:41699:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datumvard2"
+fields = { "tags" = [] }
+evidence = "Datumvariablerna för vårdnadshavarnas två positioner hör ihop.\ncatalog:variable_text:41699:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "sets" = ["distrikt"] }
+evidence = "Variabeln anger distrikt och hör till distriktsgruppen.\ncatalog:variable_text:41700:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskod"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger distrikt och hör till distriktsgruppen.\ncatalog:variable_text:41700:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodfar"
+fields = { "sets" = ["distrikt"] }
+evidence = "Faderns distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41701:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodfar"
+fields = { "tags" = ["geography"] }
+evidence = "Faderns distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41701:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt-tidigare"
+fields = { "sets" = ["distrikt"] }
+evidence = "G är en enskild källbokstav för tidigare distrikt.\ncatalog:variable_text:41702:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "G är en enskild källbokstav för tidigare distrikt.\ncatalog:variable_text:41702:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodmor"
+fields = { "sets" = ["distrikt"] }
+evidence = "Moderns distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41703:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodmor"
+fields = { "tags" = ["geography"] }
+evidence = "Moderns distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41703:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodrel"
+fields = { "sets" = ["distrikt"] }
+evidence = "Relationspersonens distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41704:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distriktskodrel"
+fields = { "tags" = ["geography"] }
+evidence = "Relationspersonens distriktskod hör till distriktsgruppen.\ncatalog:variable_text:41704:20454:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "sets" = ["ensamkommande-barn"] }
+evidence = "Variabeln kodar ensamkommande barn bland skyddssökande.\ncatalog:variable_text:41707:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln kodar ensamkommande barn bland skyddssökande.\ncatalog:variable_text:41707:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "sets" = ["familjestallning"] }
+evidence = "Variabeln kodar personens familjeställning.\ncatalog:variable_text:41708:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln kodar personens familjeställning.\ncatalog:variable_text:41708:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-1990-1997"
+fields = { "sets" = ["familjestallning"] }
+evidence = "Den historiska variabeln kodar familjeställning.\ncatalog:variable_text:41711:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-1990-1997"
+fields = { "tags" = ["family-household"] }
+evidence = "Den historiska variabeln kodar familjeställning.\ncatalog:variable_text:41711:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar familjens sammansättning.\ncatalog:variable_text:41712:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln klassificerar familjens sammansättning.\ncatalog:variable_text:41712:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetfar"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Beteckningen anger faderns bostadsfastighet.\ncatalog:variable_text:41713:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetfar"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen anger faderns bostadsfastighet.\ncatalog:variable_text:41713:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetmor"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Beteckningen anger moderns bostadsfastighet.\ncatalog:variable_text:41714:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetmor"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen anger moderns bostadsfastighet.\ncatalog:variable_text:41714:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetrel"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Beteckningen anger relationspersonens bostadsfastighet.\ncatalog:variable_text:41715:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastbetrel"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen anger relationspersonens bostadsfastighet.\ncatalog:variable_text:41715:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-far"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Identiteten anger faderns bostadsfastighet.\ncatalog:variable_text:41716:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-far"
+fields = { "tags" = ["geography"] }
+evidence = "Identiteten anger faderns bostadsfastighet.\ncatalog:variable_text:41716:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-mor"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Identiteten anger moderns bostadsfastighet.\ncatalog:variable_text:41717:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-mor"
+fields = { "tags" = ["geography"] }
+evidence = "Identiteten anger moderns bostadsfastighet.\ncatalog:variable_text:41717:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-relationsperson"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Identiteten anger relationspersonens bostadsfastighet.\ncatalog:variable_text:41718:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-id-relationsperson"
+fields = { "tags" = ["geography"] }
+evidence = "Identiteten anger relationspersonens bostadsfastighet.\ncatalog:variable_text:41718:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Identiteten anger personens bostadsfastighet.\ncatalog:occurrence:431008"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer"
+fields = { "tags" = ["geography"] }
+evidence = "Identiteten anger personens bostadsfastighet.\ncatalog:occurrence:431008"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-officiella-nr"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Det officiella numret avser fastigheten där personen är folkbokförd.\ncatalog:variable_text:41720:4017:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-officiella-nr"
+fields = { "tags" = ["geography"] }
+evidence = "Det officiella numret avser fastigheten där personen är folkbokförd.\ncatalog:variable_text:41720:4017:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Beteckningen anger personens bostadsfastighet.\ncatalog:variable_text:41721:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen anger personens bostadsfastighet.\ncatalog:variable_text:41721:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning-tidigare"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Beteckningen anger den tidigare bostadsfastigheten.\ncatalog:variable_text:41722:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Beteckningen anger den tidigare bostadsfastigheten.\ncatalog:variable_text:41722:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastlopnr"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Löpnumret anger bostadsfastighet i de berörda tabellerna.\ncatalog:variable_text:41723:10226:10227\ncatalog:variable_text:41723:9862:10226"
+
+[[statement]]
+kind = "set"
+subject = "var:fastlopnr"
+fields = { "tags" = ["geography"] }
+evidence = "Löpnumret anger bostadsfastighet i de berörda tabellerna.\ncatalog:variable_text:41723:10226:10227\ncatalog:variable_text:41723:9862:10226"
+
+[[statement]]
+kind = "set"
+subject = "var:fastlopnrfg"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Löpnumret anger den fastighet personen flyttar från.\ncatalog:variable_text:41724:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fastlopnrfg"
+fields = { "tags" = ["geography"] }
+evidence = "Löpnumret anger den fastighet personen flyttar från.\ncatalog:variable_text:41724:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans"
+fields = { "sets" = ["flyttningsgrans"] }
+evidence = "Variabeln kodar vilken geografisk gräns flytten passerar.\ncatalog:variable_text:41726:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Variabeln kodar vilken geografisk gräns flytten passerar.\ncatalog:variable_text:41726:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans-forsamling"
+fields = { "sets" = ["flyttningsgrans"] }
+evidence = "Variabeln kodar flyttning inom eller över församlingsgräns.\ncatalog:variable_text:41727:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:flyttningsgrans-forsamling"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Variabeln kodar flyttning inom eller över församlingsgräns.\ncatalog:variable_text:41727:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "FNR är en opak bokstavskod; källan anger fastighetsnyckel. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41728:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr"
+fields = { "tags" = ["geography"] }
+evidence = "FNR är en opak bokstavskod; källan anger fastighetsnyckel. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41728:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-far"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "FNR är en opak bokstavskod. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41729:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-far"
+fields = { "tags" = ["geography"] }
+evidence = "FNR är en opak bokstavskod. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41729:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-g"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "FNR och G är opaka bokstavskoder. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41730:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-g"
+fields = { "tags" = ["geography"] }
+evidence = "FNR och G är opaka bokstavskoder. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41730:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-mor"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "FNR är en opak bokstavskod. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41731:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-mor"
+fields = { "tags" = ["geography"] }
+evidence = "FNR är en opak bokstavskod. Etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:41731:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-rel"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "FNR är en källmnemonik men relationssuffixet ingår i en familj av läsbara relationsvariabler; behåll familjens gemensamma läsbarhetsbedömning. Nyckeln avser relationspersonens bostadsfastighet.\ncatalog:occurrence-locators:variable:41732\ncatalog:occurrence:424412\ncatalog:variable_text:41732:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr-rel"
+fields = { "tags" = ["geography"] }
+evidence = "FNR är en källmnemonik men relationssuffixet ingår i en familj av läsbara relationsvariabler; behåll familjens gemensamma läsbarhetsbedömning. Nyckeln avser relationspersonens bostadsfastighet.\ncatalog:occurrence-locators:variable:41732\ncatalog:occurrence:424412\ncatalog:variable_text:41732:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Variabeln anger födelsedatum.\ncatalog:variable_text:41733:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelsedatum.\ncatalog:variable_text:41733:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-personnummer"
+fields = { "sets" = ["fodelsedatum"] }
+evidence = "Variabeln anger födelsedatum härlett ur personnummer.\ncatalog:variable_text:41734:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-personnummer"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelsedatum härlett ur personnummer.\ncatalog:variable_text:41734:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseforsnamn"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Födelseförsamling ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41735:14244:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseforsnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseförsamling ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41735:14244:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsehemort"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Födelsehemort ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41736:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsehemort"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsehemort ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41736:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Födelselän ingår i gruppen för födelselän.\ncatalog:variable_text:41737:14975:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselän ingår i gruppen för födelselän.\ncatalog:variable_text:41737:14975:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-eller-lan"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodningen omfattar födelseland eller födelselän.\ncatalog:variable_text:41738:9861:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-eller-lan-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodningen omfattar moderns födelseland eller födelselän.\ncatalog:variable_text:41739:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-enskilda-lander"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger enskilda födelseländer.\ncatalog:variable_text:41740:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-enskilda-lander"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger enskilda födelseländer.\ncatalog:variable_text:41740:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger moderns födelseland.\ncatalog:variable_text:41741:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger moderns födelseland.\ncatalog:variable_text:41741:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-eu"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger moderns födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430980\ncatalog:variable_text:41742:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger moderns födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430980\ncatalog:variable_text:41742:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:41743:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelseland enligt RTB.\ncatalog:variable_text:41743:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandgrupp-eu"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Värdena grupperar födelseland och variabeln tillhör gruppen för födelseland.\ncatalog:valueset:435\ncatalog:variable_text:41744:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandgrupp-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Värdena grupperar födelseland och variabeln tillhör gruppen för födelseland.\ncatalog:valueset:435\ncatalog:variable_text:41744:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn-eu"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430976\ncatalog:variable_text:41745:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430976\ncatalog:variable_text:41745:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger faderns födelseland.\ncatalog:variable_text:41746:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger faderns födelseland.\ncatalog:variable_text:41746:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar-eu"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger faderns födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430978\ncatalog:variable_text:41747:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger faderns födelseland och tillhör gruppen för födelseland.\ncatalog:occurrence:430978\ncatalog:variable_text:41747:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnrel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln anger relationspersonens födelseland.\ncatalog:variable_text:41748:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnrel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger relationspersonens födelseland.\ncatalog:variable_text:41748:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanfar"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Variabeln anger faderns födelselän.\ncatalog:variable_text:41749:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger faderns födelselän.\ncatalog:variable_text:41749:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanmor"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Variabeln anger moderns födelselän.\ncatalog:variable_text:41750:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger moderns födelselän.\ncatalog:variable_text:41750:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanrel"
+fields = { "sets" = ["fodelselan"] }
+evidence = "Variabeln anger relationspersonens födelselän.\ncatalog:variable_text:41751:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselanrel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger relationspersonens födelselän.\ncatalog:variable_text:41751:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortutl"
+fields = { "sets" = ["fodelseort"] }
+evidence = "Födelseort i utlandet ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41752:10227:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseortutl"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseort i utlandet ingår i födelseort; uppgiften gäller födelse och taggas demografiskt.\ncatalog:variable_text:41752:10227:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatfar"
+fields = { "sets" = ["folkbokforingsdatum"] }
+evidence = "Variabeln anger faderns folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41753:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatfar"
+fields = { "tags" = [] }
+evidence = "Variabeln anger faderns folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41753:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatg"
+fields = { "sets" = ["folkbokforingsdatum"] }
+evidence = "Variabeln anger tidigare folkbokföringsdatum och tillhör datumgruppen. Den gemensamma förkortningsfamiljen behålls.\ncatalog:variable_text:41754:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatg"
+fields = { "tags" = [] }
+evidence = "Variabeln anger tidigare folkbokföringsdatum och tillhör datumgruppen. Den gemensamma förkortningsfamiljen behålls.\ncatalog:variable_text:41754:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatmor"
+fields = { "sets" = ["folkbokforingsdatum"] }
+evidence = "Variabeln anger moderns folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41755:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbdatmor"
+fields = { "tags" = [] }
+evidence = "Variabeln anger moderns folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41755:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbddatrel"
+fields = { "sets" = ["folkbokforingsdatum"] }
+evidence = "Variabeln anger relationspersonens folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41756:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbddatrel"
+fields = { "tags" = [] }
+evidence = "Variabeln anger relationspersonens folkbokföringsdatum och tillhör datumgruppen.\ncatalog:variable_text:41756:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsadress-fortsattning-kan-ocksa-innehalla-ett"
+fields = { "sets" = ["folkbokforingsadress-fortsattning"] }
+evidence = "Fältet är en fortsättning av folkbokföringsadressen.\ncatalog:variable_text:41757:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsadress-fortsattning-kan-ocksa-innehalla-ett"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet är en fortsättning av folkbokföringsadressen.\ncatalog:variable_text:41757:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsdatum"
+fields = { "sets" = ["folkbokforingsdatum"] }
+evidence = "Variabeln anger folkbokföringsdatum och tillhör datumgruppen.\ncatalog:occurrence:432906\ncatalog:variable_text:41758:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingsdatum"
+fields = { "tags" = [] }
+evidence = "Variabeln anger folkbokföringsdatum och tillhör datumgruppen.\ncatalog:occurrence:432906\ncatalog:variable_text:41758:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forlangning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger förlängning av ett beslut om grund för bosättning.\ncatalog:variable_text:41759:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:forlangning"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger förlängning av ett beslut om grund för bosättning.\ncatalog:variable_text:41759:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger territoriell församling för folkbokföring.\ncatalog:variable_text:41761:-3287:-731\ncatalog:variable_text:41761:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger territoriell församling för folkbokföring.\ncatalog:variable_text:41761:-3287:-731\ncatalog:variable_text:41761:9861:9862"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-tidigare"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger tidigare bostadsförsamling.\ncatalog:variable_text:41762:-731:10227\ncatalog:variable_text:41762:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger tidigare bostadsförsamling.\ncatalog:variable_text:41762:-731:10227\ncatalog:variable_text:41762:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingfar"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger faderns folkbokföringsförsamling.\ncatalog:variable_text:41763:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingfar"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger faderns folkbokföringsförsamling.\ncatalog:variable_text:41763:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingmor"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger moderns folkbokföringsförsamling.\ncatalog:variable_text:41764:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingmor"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger moderns folkbokföringsförsamling.\ncatalog:variable_text:41764:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingrel"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger relationspersonens folkbokföringsförsamling.\ncatalog:variable_text:41765:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamlingrel"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger relationspersonens folkbokföringsförsamling.\ncatalog:variable_text:41765:10227:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-efter-folkbokforing"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41766:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-efter-folkbokforing"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41766:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-fore-folkbokforing"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41767:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-fore-folkbokforing"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41767:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-efb"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41768:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-efb"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41768:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-ffb"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41769:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-grupp-ffb"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41769:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-efb"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41770:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-efb"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och EFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41770:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-ffb"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41771:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gfb-klassgruppering-ffb"
+fields = { "tags" = ["migration"] }
+evidence = "GFB och FFB är källkoder utan läsbara ordstammar.\ncatalog:variable_text:41771:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Klassningskoden anger grund för bosättning.\ncatalog:variable_text:41772:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning"
+fields = { "tags" = ["migration"] }
+evidence = "Klassningskoden anger grund för bosättning.\ncatalog:variable_text:41772:13513:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grundforbosattning"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Identitetsfaktorn visar en angränsande mappning till en grupperad variabel med annan kodning.\ncatalog:occurrence:431268\ncatalog:occurrence:431277\ncatalog:occurrence:431285"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grundforbosattning"
+fields = { "tags" = ["migration"] }
+evidence = "Identitetsfaktorn visar en angränsande mappning till en grupperad variabel med annan kodning.\ncatalog:occurrence:431268\ncatalog:occurrence:431277\ncatalog:occurrence:431285"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-prioriterad"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Identitetsfaktorn visar en angränsande mappning till en detaljkodad variabel.\ncatalog:occurrence:431268\ncatalog:occurrence:431277\ncatalog:occurrence:431285"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-prioriterad"
+fields = { "tags" = ["migration"] }
+evidence = "Identitetsfaktorn visar en angränsande mappning till en detaljkodad variabel.\ncatalog:occurrence:431268\ncatalog:occurrence:431277\ncatalog:occurrence:431285"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-senaste"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Variabeln grupperar grund för bosättning.\ncatalog:variable_text:41775:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grupperad-senaste"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln grupperar grund för bosättning.\ncatalog:variable_text:41775:14974:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-klassgrupp"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Variabeln grupperar grund för bosättning.\ncatalog:variable_text:41776:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-klassgrupp"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln grupperar grund för bosättning.\ncatalog:variable_text:41776:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region"
+fields = { "sets" = ["h-region"] }
+evidence = "H-region är en geografisk indelning med en tidigare motsvarighet.\ncatalog:variable_text:41777:9862:10227\ncatalog:variable_text:41778:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region"
+fields = { "tags" = ["geography"] }
+evidence = "H-region är en geografisk indelning med en tidigare motsvarighet.\ncatalog:variable_text:41777:9862:10227\ncatalog:variable_text:41778:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region-tidigare"
+fields = { "sets" = ["h-region"] }
+evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare H-region.\ncatalog:variable_text:41778:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare H-region.\ncatalog:variable_text:41778:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "sets" = [] }
+evidence = "Hushållsställning beskriver personens relation till hushållet; ingen kandidat omfattar den.\ncatalog:valueset:12296\ncatalog:variable_text:41779:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "tags" = ["family-household"] }
+evidence = "Hushållsställning beskriver personens relation till hushållet; ingen kandidat omfattar den.\ncatalog:valueset:12296\ncatalog:variable_text:41779:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "sets" = ["familje-och-hushallsstorlek"] }
+evidence = "Antal personer i bostadshushållet hör ihop med familjestorlek.\ncatalog:variable_text:41651:20453:20454\ncatalog:variable_text:41780:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstorlek"
+fields = { "tags" = ["family-household"] }
+evidence = "Antal personer i bostadshushållet hör ihop med familjestorlek.\ncatalog:variable_text:41651:20453:20454\ncatalog:variable_text:41780:15339:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar bostadshushållets sammansättning.\ncatalog:variable_text:41781:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln klassificerar bostadshushållets sammansättning.\ncatalog:variable_text:41781:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "sets" = ["icke-territoriell-forsamling"] }
+evidence = "Variabeln och dess tidigare motsvarighet anger icke territoriell församling.\ncatalog:variable_text:41782:9862:10227\ncatalog:variable_text:41783:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:icketerrforsfg"
+fields = { "sets" = ["icke-territoriell-forsamling"] }
+evidence = "Fg är en opak bokstavskod för tidigare; etiketten anger tidigare icke territoriell församling.\ncatalog:variable_text:41783:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "sets" = [] }
+evidence = "Variabeln är en imputeringsmarkering.\ncatalog:variable_text:41784:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imp-hushall"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsmarkering.\ncatalog:variable_text:41784:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:infllandnamn"
+fields = { "sets" = ["migrationsland"] }
+evidence = "Variabeln anger invandringsland.\ncatalog:variable_text:41785:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:infllandnamn"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger invandringsland.\ncatalog:variable_text:41785:11323:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomdatum-fel"
+fields = { "sets" = ["inkommandedatum"] }
+evidence = "Variabeln innehåller inkommandedatum med kända felaktiga värden.\ncatalog:variable_text:41787:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomdatum-fel"
+fields = { "tags" = [] }
+evidence = "Variabeln innehåller inkommandedatum med kända felaktiga värden.\ncatalog:variable_text:41787:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommandedatum"
+fields = { "sets" = ["inkommandedatum"] }
+evidence = "Variabeln hör ihop med den separata uppgiften om felaktiga inkommandedatum.\ncatalog:variable_text:41787:19723:20089\ncatalog:variable_text:41788:19723:20088"
+
+[[statement]]
+kind = "set"
+subject = "var:inkommandedatum"
+fields = { "tags" = [] }
+evidence = "Variabeln hör ihop med den separata uppgiften om felaktiga inkommandedatum.\ncatalog:variable_text:41787:19723:20089\ncatalog:variable_text:41788:19723:20088"
+
+[[statement]]
+kind = "set"
+subject = "var:komblock"
+fields = { "sets" = [] }
+evidence = "Kommunblock är en geografisk indelning.\ncatalog:variable_text:41789:-731:1096"
+
+[[statement]]
+kind = "set"
+subject = "var:komblock"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunblock är en geografisk indelning.\ncatalog:variable_text:41789:-731:1096"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunuppgifter hör till kommungruppen och mäter geografisk tillhörighet.\ncatalog:register:231\ncatalog:variable_text:41790:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunuppgifter hör till kommungruppen och mäter geografisk tillhörighet.\ncatalog:register:231\ncatalog:variable_text:41790:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-tidigare"
+fields = { "sets" = ["kommun"] }
+evidence = "Tidigare bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41791:-731:10227\ncatalog:variable_text:41791:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Tidigare bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41791:-731:10227\ncatalog:variable_text:41791:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfar"
+fields = { "sets" = ["kommun"] }
+evidence = "Faderns bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41792:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfar"
+fields = { "tags" = ["geography"] }
+evidence = "Faderns bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41792:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunmor"
+fields = { "sets" = ["kommun"] }
+evidence = "Moderns bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41793:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunmor"
+fields = { "tags" = ["geography"] }
+evidence = "Moderns bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41793:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunrel"
+fields = { "sets" = ["kommun"] }
+evidence = "Relationspersonens bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41794:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunrel"
+fields = { "tags" = ["geography"] }
+evidence = "Relationspersonens bostadskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41794:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["kon"] }
+evidence = "Kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41795:20362:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41795:20362:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-make-maka-partner"
+fields = { "sets" = ["kon"] }
+evidence = "Relationspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41796:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-make-maka-partner"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41796:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-relationsperson"
+fields = { "sets" = ["kon"] }
+evidence = "Relationspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41797:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-relationsperson"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41797:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-samhorighet"
+fields = { "sets" = ["kon"] }
+evidence = "Samhörighetspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41798:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kon-samhorighet"
+fields = { "tags" = ["demographics"] }
+evidence = "Samhörighetspersonens kön ingår i kandidatgruppen och är ett demografiskt mått.\ncatalog:register:231\ncatalog:variable_text:41798:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Nyckeln identifierar bostadslägenhet.\ncatalog:variable_text:41799:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel"
+fields = { "tags" = [] }
+evidence = "Nyckeln identifierar bostadslägenhet.\ncatalog:variable_text:41799:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-far"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Nyckeln identifierar faderns bostadslägenhet.\ncatalog:variable_text:41800:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-far"
+fields = { "tags" = [] }
+evidence = "Nyckeln identifierar faderns bostadslägenhet.\ncatalog:variable_text:41800:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-mor"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Nyckeln identifierar moderns bostadslägenhet.\ncatalog:variable_text:41801:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-mor"
+fields = { "tags" = [] }
+evidence = "Nyckeln identifierar moderns bostadslägenhet.\ncatalog:variable_text:41801:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-rel"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Nyckeln anger relationspersonens bostadslägenhet.\ncatalog:variable_text:41802:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-rel"
+fields = { "tags" = [] }
+evidence = "Nyckeln anger relationspersonens bostadslägenhet.\ncatalog:variable_text:41802:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger bostadslän i flera tabeller.\nregisters/scb/r2/curation.toml:291"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-tidigare"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger tidigare bostadslän.\ncatalog:variable_text:41804:-731:10227\ncatalog:variable_text:41804:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lanfar"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger faderns bostadslän.\ncatalog:variable_text:41805:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lanmor"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger moderns bostadslän.\ncatalog:variable_text:41806:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lanrel"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger relationspersonens bostadslän.\ncatalog:variable_text:41807:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningsforsamling"
+fields = { "sets" = ["forsamling"] }
+evidence = "Variabeln anger församling för aktuell mantalsskrivning.\ncatalog:occurrence:429683"
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningsforsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger församling för aktuell mantalsskrivning.\ncatalog:occurrence:429683"
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningskommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Mantalsskrivningskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41810:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivningskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Mantalsskrivningskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41810:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastlopnr"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Löpnumret anger fastigheten för aktuell mantalsskrivning.\ncatalog:occurrence:429682"
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastlopnr"
+fields = { "tags" = ["geography"] }
+evidence = "Löpnumret anger fastigheten för aktuell mantalsskrivning.\ncatalog:occurrence:429682"
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastnr"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "Numret anger fastigheten för aktuell mantalsskrivning.\ncatalog:occurrence:429180"
+
+[[statement]]
+kind = "set"
+subject = "var:mantfastnr"
+fields = { "tags" = ["geography"] }
+evidence = "Numret anger fastigheten för aktuell mantalsskrivning.\ncatalog:occurrence:429180"
+
+[[statement]]
+kind = "set"
+subject = "var:mantkommunfg"
+fields = { "sets" = ["kommun"] }
+evidence = "Föregående mantalsskrivningskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41815:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:mantkommunfg"
+fields = { "tags" = ["geography"] }
+evidence = "Föregående mantalsskrivningskommun hör till kommungruppen och geografi.\ncatalog:variable_text:41815:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger län för aktuell mantalsskrivning.\ncatalog:occurrence:429686"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlanfg"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger län för föregående mantalsskrivning.\ncatalog:occurrence:429687"
+
+[[statement]]
+kind = "set"
+subject = "var:manttaxdist"
+fields = { "sets" = ["taxeringsdistrikt"] }
+evidence = "Variabeln anger taxeringsdistrikt.\ncatalog:variable_text:41818:2921:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:manttaxdist"
+fields = { "tags" = ["geography", "taxation"] }
+evidence = "Variabeln anger taxeringsdistrikt.\ncatalog:variable_text:41818:2921:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:medb"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Medborgarskap och äldre kombinationskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41819:9130:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medb"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap och äldre kombinationskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41819:9130:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatfar"
+fields = { "sets" = ["medborgarskapsdatum"] }
+evidence = "Datum för faderns medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41820:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatfar"
+fields = { "tags" = [] }
+evidence = "Datum för faderns medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41820:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatg"
+fields = { "sets" = ["medborgarskapsdatum"] }
+evidence = "Datum för tidigare medborgarskap ingår i datumgruppen; förkortningsfamiljen behålls samlat.\ncatalog:variable_text:41821:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatg"
+fields = { "tags" = [] }
+evidence = "Datum för tidigare medborgarskap ingår i datumgruppen; förkortningsfamiljen behålls samlat.\ncatalog:variable_text:41821:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatmor"
+fields = { "sets" = ["medborgarskapsdatum"] }
+evidence = "Datum för moderns medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41822:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatmor"
+fields = { "tags" = [] }
+evidence = "Datum för moderns medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41822:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatrel"
+fields = { "sets" = ["medborgarskapsdatum"] }
+evidence = "Datum för relationspersonens medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41823:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbdatrel"
+fields = { "tags" = [] }
+evidence = "Datum för relationspersonens medborgarskap ingår i datumgruppen.\ncatalog:variable_text:41823:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbfar"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Faderns äldre medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41824:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medbfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns äldre medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41824:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgruppmor-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Moderns grupperade medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:occurrence:428780\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgruppmor-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns grupperade medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:occurrence:428780\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgrupprel-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Relationspersonens grupperade medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:occurrence:424727\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgrupprel-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens grupperade medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:occurrence:424727\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamn-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Prioriterat medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41827:20089:20453\ncatalog:variable_text:41827:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamn-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Prioriterat medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41827:20089:20453\ncatalog:variable_text:41827:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnfar"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Faderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41828:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41828:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamng"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Tidigare medborgarskapsland ingår i medborgarskapsgruppen; förkortningsfamiljen behålls samlat.\ncatalog:variable_text:41829:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamng"
+fields = { "tags" = ["demographics"] }
+evidence = "Tidigare medborgarskapsland ingår i medborgarskapsgruppen; förkortningsfamiljen behålls samlat.\ncatalog:variable_text:41829:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamng-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Tidigare medborgarskapsland ingår i medborgarskapsgruppen; förkortningsfamiljerna behålls samlat.\ncatalog:variable_text:41830:19723:20089\ncatalog:variable_text:41830:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamng-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Tidigare medborgarskapsland ingår i medborgarskapsgruppen; förkortningsfamiljerna behålls samlat.\ncatalog:variable_text:41830:19723:20089\ncatalog:variable_text:41830:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Moderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41831:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41831:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Moderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41832:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41832:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Relationspersonens medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41833:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41833:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Relationspersonens medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41834:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Relationspersonens medborgarskapsland ingår i medborgarskapsgruppen.\ncatalog:variable_text:41834:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medbmor"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Moderns äldre medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41835:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medbmor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns äldre medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41835:-3287:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Medborgarskap hör till kandidatgruppen och demografi.\ncatalog:variable_text:41836:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap hör till kandidatgruppen och demografi.\ncatalog:variable_text:41836:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsdatum"
+fields = { "sets" = ["medborgarskapsdatum"] }
+evidence = "Medborgarskapsdatum hör till datumgruppen; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41837:17166:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsdatum"
+fields = { "tags" = [] }
+evidence = "Medborgarskapsdatum hör till datumgruppen; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41837:17166:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Medborgarskapsland hör till kandidatgruppen och demografi.\ncatalog:variable_text:41838:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland hör till kandidatgruppen och demografi.\ncatalog:variable_text:41838:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; grupperat medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:425831\ncatalog:occurrence:425853"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; grupperat medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:425831\ncatalog:occurrence:425853"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-gg-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; tidigare medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:436286\ncatalog:occurrence:436312"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-gg-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; tidigare medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:436286\ncatalog:occurrence:436312"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-grupp-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; grupperat medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:425831\ncatalog:occurrence:425853"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-grupp-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; grupperat medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:425831\ncatalog:occurrence:425853"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-tidigare-eu"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; tidigare medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:436286\ncatalog:occurrence:436312"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-tidigare-eu"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma källkolumn har olika ägare i efterföljande perioder; tidigare medborgarskap hör till medborgarskapsgruppen.\ncatalog:occurrence:436286\ncatalog:occurrence:436312"
+
+[[statement]]
+kind = "set"
+subject = "var:naraanhorig"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver hushållssammansättning.\ncatalog:valueset:4277\ncatalog:variable_text:41808:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naraanhorig"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver hushållssammansättning.\ncatalog:valueset:4277\ncatalog:variable_text:41808:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2-eu"
+fields = { "sets" = ["boenderegion"] }
+evidence = "NUTS2 stämmer för vissa perioder, medan senare perioder avser NUTS3. Variabeln avser boenderegion och geografisk tillhörighet.\ncatalog:valueset:10645\ncatalog:valueset:3895\ncatalog:variable_text:41844:18627:18628\ncatalog:variable_text:41844:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2-eu"
+fields = { "tags" = ["geography"] }
+evidence = "NUTS2 stämmer för vissa perioder, medan senare perioder avser NUTS3. Variabeln avser boenderegion och geografisk tillhörighet.\ncatalog:valueset:10645\ncatalog:valueset:3895\ncatalog:variable_text:41844:18627:18628\ncatalog:variable_text:41844:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordningsnummer-dodfodd-mor"
+fields = { "sets" = ["fodelseordning"] }
+evidence = "Moderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41846:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordningsnummer-dodfodd-mor"
+fields = { "tags" = [] }
+evidence = "Moderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41846:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordningsnummer-mor"
+fields = { "sets" = ["fodelseordning"] }
+evidence = "Moderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41847:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordningsnummer-mor"
+fields = { "tags" = [] }
+evidence = "Moderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41847:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordnrlevfoddaf"
+fields = { "sets" = ["fodelseordning"] }
+evidence = "Faderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41848:13514:13879\ncatalog:variable_text:41848:13879:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ordnrlevfoddaf"
+fields = { "tags" = [] }
+evidence = "Faderns födelseordning ingår i kandidatgruppen. Ordningsnummer saknar tematisk tagg enligt R12.\ncatalog:register:231\ncatalog:variable_text:41848:13514:13879\ncatalog:variable_text:41848:13879:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postnummer"] }
+evidence = "Variabeln anger postnummer.\ncatalog:variable_text:41866:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger postnummer.\ncatalog:variable_text:41866:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:41867:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger geografisk tillhörighet.\ncatalog:variable_text:41867:10226:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:posttyp"
+fields = { "sets" = [] }
+evidence = "Posttypen skiljer invandring från utvandring.\ncatalog:variable_text:41868:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:posttyp"
+fields = { "tags" = ["migration"] }
+evidence = "Posttypen skiljer invandring från utvandring.\ncatalog:variable_text:41868:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrfg"
+fields = { "sets" = ["boenderegion"] }
+evidence = "Tidigare riksområde ingår i boenderegion och mäter geografisk tillhörighet.\ncatalog:variable_text:41869:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:riksomrfg"
+fields = { "tags" = ["geography"] }
+evidence = "Tidigare riksområde ingår i boenderegion och mäter geografisk tillhörighet.\ncatalog:variable_text:41869:1096:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-fore-flytt"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41870:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetsnyckel-fore-flytt"
+fields = { "tags" = [] }
+evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41870:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarlagstiftning"
+fields = { "sets" = [] }
+evidence = "Klassningen gäller grund för bosättning och därmed migration.\ncatalog:variable_text:41871:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:sarlagstiftning"
+fields = { "tags" = ["migration"] }
+evidence = "Klassningen gäller grund för bosättning och därmed migration.\ncatalog:variable_text:41871:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Källan anger år i äldre perioder och datum i senare perioder.\ncatalog:variable_text:41874:16071:20454\ncatalog:variable_text:41874:3286:3287"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "tags" = [] }
+evidence = "Källan anger år i äldre perioder och datum i senare perioder.\ncatalog:variable_text:41874:16071:20454\ncatalog:variable_text:41874:3286:3287"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Variabeln anger senaste invandringsdatum.\ncatalog:variable_text:41875:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Variabeln anger senaste invandringsdatum.\ncatalog:variable_text:41875:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:senutvdag"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Variabeln anger senaste utvandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41876:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:senutvdag"
+fields = { "tags" = [] }
+evidence = "Variabeln anger senaste utvandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41876:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:storstadsomrade"
+fields = { "sets" = ["storstadsomrade"] }
+evidence = "Variabeln anger storstadsområde.\ncatalog:variable_text:41878:-731:9131\ncatalog:variable_text:41878:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:storstadsomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger storstadsområde.\ncatalog:variable_text:41878:-731:9131\ncatalog:variable_text:41878:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:storstomrfg"
+fields = { "sets" = ["storstadsomrade"] }
+evidence = "Variabeln anger tidigare storstadsområde.\ncatalog:variable_text:41879:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:storstomrfg"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger tidigare storstadsområde.\ncatalog:variable_text:41879:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:student"
+fields = { "sets" = ["grund-for-bosattning"] }
+evidence = "Indikatorn avser studerandeklassning som grund för bosättning.\ncatalog:variable_text:41880:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:student"
+fields = { "tags" = ["migration"] }
+evidence = "Indikatorn avser studerandeklassning som grund för bosättning.\ncatalog:variable_text:41880:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:taxdistriktfg"
+fields = { "sets" = ["taxeringsdistrikt"] }
+evidence = "Variabeln anger taxeringsdistrikt som personen flyttar från.\ncatalog:variable_text:41881:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxdistriktfg"
+fields = { "tags" = ["geography", "taxation"] }
+evidence = "Variabeln anger taxeringsdistrikt som personen flyttar från.\ncatalog:variable_text:41881:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt"
+fields = { "sets" = ["taxeringsdistrikt"] }
+evidence = "Variabeln anger taxeringsdistrikt.\ncatalog:variable_text:41882:2921:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt"
+fields = { "tags" = ["geography", "taxation"] }
+evidence = "Variabeln anger taxeringsdistrikt.\ncatalog:variable_text:41882:2921:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-dodsfall-medborgarskapsandring"
+fields = { "sets" = ["taxeringsdistrikt"] }
+evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41883:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-dodsfall-medborgarskapsandring"
+fields = { "tags" = ["geography", "taxation"] }
+evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41883:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-inflyttning"
+fields = { "sets" = ["taxeringsdistrikt"] }
+evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41884:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt-inflyttning"
+fields = { "tags" = ["geography", "taxation"] }
+evidence = "Suffixet är en tilldelad räknare och finns inte i källkolumnen. Etiketten kolliderar och målet kräver disambiguering enligt D-12.\ncatalog:variable_text:41884:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-folkbokforingsadress-fortsattning-kan-ocksa"
+fields = { "sets" = ["folkbokforingsadress-fortsattning"] }
+evidence = "Fältet är en fortsättning av den tidigare folkbokföringsadressen.\ncatalog:variable_text:41885:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-folkbokforingsadress-fortsattning-kan-ocksa"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet är en fortsättning av den tidigare folkbokföringsadressen.\ncatalog:variable_text:41885:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-postnummer"
+fields = { "sets" = ["postnummer"] }
+evidence = "Variabeln anger tidigare postnummer.\ncatalog:variable_text:41886:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-postnummer"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger tidigare postnummer.\ncatalog:variable_text:41886:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tidmedb"
+fields = { "sets" = ["medborgarskap"] }
+evidence = "Tidigare medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41887:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tidmedb"
+fields = { "tags" = ["demographics"] }
+evidence = "Tidigare medborgarskapskodning hör till kandidatgruppen och demografi.\ncatalog:variable_text:41887:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-vid-dodsfall"
+fields = { "sets" = ["civilstand"] }
+evidence = "Id:t anger en tidpunkt men variabeln kodar civilstånd vid dödsfallet.\ncatalog:variable_text:41888:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand-vid-dodsfall"
+fields = { "tags" = ["family-household"] }
+evidence = "Id:t anger en tidpunkt men variabeln kodar civilstånd vid dödsfallet.\ncatalog:variable_text:41888:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstandstatus"
+fields = { "sets" = [] }
+evidence = "Uppehållstillståndets status gäller bosättning och migration.\ncatalog:occurrence:423457\ncatalog:valueset:11211"
+
+[[statement]]
+kind = "set"
+subject = "var:tillstandstatus"
+fields = { "tags" = ["migration"] }
+evidence = "Uppehållstillståndets status gäller bosättning och migration.\ncatalog:occurrence:423457\ncatalog:valueset:11211"
+
+[[statement]]
+kind = "set"
+subject = "var:urbaniseringsgrad-eu"
+fields = { "sets" = [] }
+evidence = "Urbaniseringsgrad beskriver områdets geografiska indelning; den omfattas inte av kandidaten boenderegion.\ncatalog:valueset:3766\ncatalog:variable_text:41890:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urbaniseringsgrad-eu"
+fields = { "tags" = ["geography"] }
+evidence = "Urbaniseringsgrad beskriver områdets geografiska indelning; den omfattas inte av kandidaten boenderegion.\ncatalog:valueset:3766\ncatalog:variable_text:41890:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "sets" = [] }
+evidence = "Utdelningsadressen anger geografisk tillhörighet.\ncatalog:occurrence:429694"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelningsadress"
+fields = { "tags" = ["geography"] }
+evidence = "Utdelningsadressen anger geografisk tillhörighet.\ncatalog:occurrence:429694"
+
+[[statement]]
+kind = "set"
+subject = "var:utflortnord"
+fields = { "sets" = [] }
+evidence = "Orten beskriver geografiskt ursprung för migration.\ncatalog:occurrence:431005\ncatalog:occurrence:435179"
+
+[[statement]]
+kind = "set"
+subject = "var:utflortnord"
+fields = { "tags" = ["geography", "migration"] }
+evidence = "Orten beskriver geografiskt ursprung för migration.\ncatalog:occurrence:431005\ncatalog:occurrence:435179"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["utlandsk-svensk-bakgrund"] }
+evidence = "Bakgrundskodningen ingår i kandidatgruppen och beskriver befolkningssammansättning.\ncatalog:register:231\ncatalog:valueset:8386"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundskodningen ingår i kandidatgruppen och beskriver befolkningssammansättning.\ncatalog:register:231\ncatalog:valueset:8386"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "sets" = ["utlandsk-svensk-bakgrund"] }
+evidence = "Den alternativa bakgrundskodningen ingår i kandidatgruppen och beskriver befolkningssammansättning.\ncatalog:register:231\ncatalog:valueset:7447"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "tags" = ["demographics"] }
+evidence = "Den alternativa bakgrundskodningen ingår i kandidatgruppen och beskriver befolkningssammansättning.\ncatalog:register:231\ncatalog:valueset:7447"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "Variabeln anger utvandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41895:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum"
+fields = { "tags" = [] }
+evidence = "Variabeln anger utvandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:variable_text:41895:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "sets" = ["migrationsland"] }
+evidence = "Variabeln anger land kopplat till utvandring.\ncatalog:variable_text:41896:10956:10957\ncatalog:variable_text:41896:10957:11322"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln anger land kopplat till utvandring.\ncatalog:variable_text:41896:10956:10957\ncatalog:variable_text:41896:10957:11322"
+
+[[statement]]
+kind = "set"
+subject = "var:utvinvland"
+fields = { "sets" = ["migrationsland"] }
+evidence = "Landkoden avser in- eller utvandring beroende på posttyp.\ncatalog:variable_text:41897:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:utvinvland"
+fields = { "tags" = ["migration"] }
+evidence = "Landkoden avser in- eller utvandring beroende på posttyp.\ncatalog:variable_text:41897:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
+fields = { "sets" = ["bostadsfastighet"] }
+evidence = "UUID och G är källkoder som inte framgår av etiketten. Etiketten delas med andra variabler och målet kräver R6-hållning.\ncatalog:variable_text:41898:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer-fore-flytt"
+fields = { "tags" = ["geography"] }
+evidence = "UUID och G är källkoder som inte framgår av etiketten. Etiketten delas med andra variabler och målet kräver R6-hållning.\ncatalog:variable_text:41898:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Identitetsnumret anger en bostadslägenhet i flera händelsetabeller.\ncatalog:occurrence:424736\ncatalog:variable_text:41899:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh"
+fields = { "tags" = [] }
+evidence = "Identitetsnumret anger en bostadslägenhet i flera händelsetabeller.\ncatalog:occurrence:424736\ncatalog:variable_text:41899:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-far"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Identitetsnumret anger faderns bostadslägenhet vid barnets födelse.\ncatalog:variable_text:41900:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-far"
+fields = { "tags" = [] }
+evidence = "Identitetsnumret anger faderns bostadslägenhet vid barnets födelse.\ncatalog:variable_text:41900:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-mor"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Identitetsnumret anger moderns bostadslägenhet vid barnets födelse.\ncatalog:variable_text:41901:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-mor"
+fields = { "tags" = [] }
+evidence = "Identitetsnumret anger moderns bostadslägenhet vid barnets födelse.\ncatalog:variable_text:41901:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-rel"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Identitetsnumret anger relationspersonens bostadslägenhet vid civilståndsändringen.\ncatalog:variable_text:41902:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid-lgh-rel"
+fields = { "tags" = [] }
+evidence = "Identitetsnumret anger relationspersonens bostadslägenhet vid civilståndsändringen.\ncatalog:variable_text:41902:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
+fields = { "sets" = ["bostadslagenhet"] }
+evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41903:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetens-identitetsnummer-fore-flytt"
+fields = { "tags" = [] }
+evidence = "Id:t består av en ogenomskinlig källmnemonik.\ncatalog:variable_text:41903:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbarnbo"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver vårdnadsrelationer och barnens bostad i förhållande till vårdnadshavaren.\ncatalog:valueset:6492\ncatalog:variable_text:41904:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbarnbo"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver vårdnadsrelationer och barnens bostad i förhållande till vårdnadshavaren.\ncatalog:valueset:6492\ncatalog:variable_text:41904:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:vargamcivrel"
+fields = { "sets" = ["civilstandsvaraktighet"] }
+evidence = "Variabeln anger relationspersonens tidigare civilstånds varaktighet.\ncatalog:variable_text:41905:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vargamcivrel"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln anger relationspersonens tidigare civilstånds varaktighet.\ncatalog:variable_text:41905:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yngstabarn"
+fields = { "sets" = ["alder"] }
+evidence = "Variabeln mäter yngsta barnets ålder.\ncatalog:occurrence:427514\ncatalog:occurrence:432925"
+
+[[statement]]
+kind = "set"
+subject = "var:yngstabarn"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln mäter yngsta barnets ålder.\ncatalog:occurrence:427514\ncatalog:occurrence:432925"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand"
+fields = { "sets" = ["yrke-vid-arbetstillstand"] }
+evidence = "Yrkeskoden ingår i kandidatgruppen och beskriver yrke.\ncatalog:register:231\ncatalog:variable_text:41907:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkeskoden ingår i kandidatgruppen och beskriver yrke.\ncatalog:register:231\ncatalog:variable_text:41907:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk-2012"
+fields = { "sets" = ["yrke-vid-arbetstillstand"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Etiketten kolliderar och målnamnet behöver disambigueras enligt D-12.\ncatalog:register:231\ncatalog:variable_text:41908:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk-2012"
+fields = { "tags" = ["employment"] }
+evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Etiketten kolliderar och målnamnet behöver disambigueras enligt D-12.\ncatalog:register:231\ncatalog:variable_text:41908:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk96-kolumn"
+fields = { "sets" = ["yrke-vid-arbetstillstand"] }
+evidence = "Yrkeskoden ingår i kandidatgruppen och beskriver yrke.\ncatalog:register:231\ncatalog:variable_text:41909:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-vid-arbetstillstand-ssyk96-kolumn"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkeskoden ingår i kandidatgruppen och beskriver yrke.\ncatalog:register:231\ncatalog:variable_text:41909:20453:20454"
+
+[[statement]]
+kind = "link"
+subject = "var:grund-for-bosattning-grundforbosattning"
+relation = "continues"
+object = "scb/rtb/grund-for-bosattning-grupperad-prioriterad"
+at = "2006-01-01.."
+evidence = "RTB settlement grounds: derived grouping (1987-2005) -> Migration Agency code (2006+); classification replaced."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Registered residence and event-time residence fit lan (r282, r11). Birth entries specify the child's registered residence at birth (r225), rather than birthplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:423540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:427595\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428861"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-tidigare"
+fields = { "sets" = ["lan"] }
+evidence = "The county moved from and the registered county before moving (r374, r434) measure previous residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41665\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:432975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:433830"
+
+[[statement]]
+kind = "set"
+subject = "var:lanfar"
+fields = { "sets" = ["lan"] }
+evidence = "The father's registered county at the child's birth (r140) measures parental residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41666\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:425906"
+
+[[statement]]
+kind = "set"
+subject = "var:lanmor"
+fields = { "sets" = ["lan"] }
+evidence = "The mother's registered county at the child's birth (r141) measures parental residence, explicitly covered by lan.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41667\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:425907"
+
+[[statement]]
+kind = "set"
+subject = "var:lanrel"
+fields = { "sets" = ["lan"] }
+evidence = "The relationsperson's registered county at the civil-status change (r16) is expressly included in lan's residential-county definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41668\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:423632"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlan"
+fields = { "sets" = ["lan"] }
+evidence = "Current mantal registration county explicitly fits lan; the previous registration county supplies a distinct partner (r41, r42).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41677\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428869"
+
+[[statement]]
+kind = "set"
+subject = "var:mantlanfg"
+fields = { "sets" = ["lan"] }
+evidence = "Previous mantal registration county explicitly fits lan; the current registration county supplies a distinct partner (r42, r41).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41678\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428868\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:428869"
+
+[[statement]]
+kind = "set"
+subject = "var:omyndig"
+fields = { "tags" = [] }
+evidence = "catalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:41706\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41845\n\nMaintainer audit follow-up 2026-11-02: Definition concerns civil legal capacity rather than criminal justice. Neither social-care (social services/interventions) nor demographics (population characteristics) explicitly covers this status; untagged is valid.\nrel070-base/reg_meta.db:occurrence:428872"
+
+[[statement]]
+kind = "set"
+subject = "var:icke-territoriell-forsamling"
+fields = { "tags" = ["culture", "language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41641\ncatalog:variable_text:41641:-731:-365\ncatalog:variable_text:41641:-365:1096\ncatalog:variable_text:41641:1096:9862\ncatalog:variable_text:41641:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:icketerrforsfg"
+fields = { "tags" = ["culture", "language-religion"] }
+evidence = "The operational definition explicitly records the non-territorial religious congregation the person leaves. This settles the theme despite a contradictory territorial wording in the short definition.\ncatalog:variable:41642\ncatalog:variable_text:41642:-731:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:infosprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41645\ncatalog:variable_text:41645:6209:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:icketerrforsfg"
+fields = { "description" = "Tidigare icke territoriell församling. Uppgiften avser församlingen som personen flyttar från." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger icke territoriell församling; den befintliga texten utelämnar negationen.\ncatalog:variable_text:41783:-731:10227\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:432970:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:kon-samhorighet"
+fields = { "description" = "Samhörighetspersonens kön. Kön härleds från personnumrets elfte position: udda siffra ger 1 (man) och jämn siffra 2 (kvinna); samhörighetsperson är make eller maka för gifta och förälder eller annan folkbokföringsperson för barn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen avser fel person; den operativa definitionen anger samhörighetspersonen.\ncatalog:variable_text:41798:10226:10227\ncatalog:variable_text:41798:9861:9862\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:428860:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Personens folkbokföringslän vid tabellens referenstidpunkt, angivet med länskod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/rtb.toml:110\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgruppmor-eu"
+fields = { "description" = "Grupperat medborgarskapsland för modern enligt EU:s regler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser en gruppering av moderns medborgarskapsland.\ncatalog:occurrence:428780\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandgrupprel-eu"
+fields = { "description" = "Grupperat medborgarskapsland för relationspersonen enligt EU:s regler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser en gruppering av relationspersonens medborgarskapsland.\ncatalog:occurrence:424727\ncatalog:valueset:10739"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnfar"
+fields = { "description" = "Faderns prioriterade medborgarskapsland vid barnets födelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men källan avser faderns medborgarskapsland vid barnets födelse.\ncatalog:variable_text:41828:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor"
+fields = { "description" = "Moderns prioriterade medborgarskapsland vid barnets födelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men källan avser moderns medborgarskapsland vid barnets födelse.\ncatalog:variable_text:41831:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnmor-eu"
+fields = { "description" = "Moderns prioriterade medborgarskapsland vid födelsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser moderns medborgarskapsland vid födelsen.\ncatalog:variable_text:41832:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel"
+fields = { "description" = "Relationspersonens prioriterade medborgarskapsland vid civilståndsändringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser relationspersonens medborgarskapsland vid civilståndsändringen.\ncatalog:variable_text:41833:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medblandnamnrel-eu"
+fields = { "description" = "Relationspersonens prioriterade medborgarskapsland vid civilståndsändringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser personen, men variabeln avser relationspersonens medborgarskapsland vid civilståndsändringen.\ncatalog:variable_text:41834:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland-gg-eu"
+fields = { "description" = "Grupperat tidigare medborgarskapsland." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen avser aktuellt medborgarskap, men variabeln grupperar tidigare medborgarskapsland.\ncatalog:occurrence:436286"
+
+[[statement]]
+kind = "set"
+subject = "var:avsandlan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical citizenship-change events (r99, r108), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435212\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:435378\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:avslan"
+fields = { "sets" = ["lan"] }
+evidence = "The supplying tax authority's county is recorded in historical death-event records (r11, r20), using county codes (r116). The fixed definition explicitly includes older county data in event tables (r153).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424766\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:424950\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:7688\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/rtb/lan"
+
+[[statement]]
+kind = "set"
+subject = "var:sekretesshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "This household-table field flags whether any household member has a secrecy marker (r66, r141, r115). Its household-level administrative role supports family-household.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:431885\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:5417\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41733"
+
+[[statement]]
+kind = "set"
+subject = "dodfodda: lan @1961-01-01..1997-12-31 where key = 'v49'"
+fields = { "variable" = "lanmor" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lanmor"
+fields = { "description" = "Moderns folkbokföringslän vid barnets födelse, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence. Identical mother-at-birth definition on LanMor from 1998; old Lan ends 1997. Merge the disjoint spelling into existing lanmor rather than minting a duplicate identity."
+
+[[statement]]
+kind = "set"
+subject = "fodda-kvartal: lan @1961-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-fodelse" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "description" = "Länet där barnet folkbokfördes vid födelsen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-fodelse"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "doda-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-dodsfall" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "description" = "Personens folkbokföringslän vid dödsfallet, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-dodsfall"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-civilstandsandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "description" = "Personens folkbokföringslän vid civilståndsändringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-civilstandsandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-efter-inrikes-flytt" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "description" = "Personens folkbokföringslän efter den inrikes flyttningen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-efter-inrikes-flytt"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal: lan @1998-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-invandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "description" = "Länet där personen folkbokfördes vid invandringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-invandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal: lan @1998-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-utvandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "description" = "Personens folkbokföringslän vid utvandringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-utvandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal: lan @1968-01-01..2025-12-31 where key = 'v49'"
+fields = { "variable" = "lan-vid-medborgarskapsandring" }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "description" = "Personens folkbokföringslän vid medborgarskapsändringen, angivet med länskod." }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "sets" = ["lan"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-vid-medborgarskapsandring"
+fields = { "tags" = ["geography"] }
+evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definitions, including child (427595+), mother (425870), death (424776+), migration and civil-status events. See item-1.jsonl for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrvard"
+fields = { "label" = "Personnummer vårdnadshavare", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "set:personnrap"
+fields = { "label" = "Personnummer annan person", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap1"
+fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap2"
+fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."

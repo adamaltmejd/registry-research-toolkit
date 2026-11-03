@@ -4,3 +4,1473 @@ kind = "set"
 subject = "hogutbildade-utrikes-fodda: f18_kod"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:38\n\nLegacy exact value-set label: SSYK 2012, 3- och 4-siffernivå"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Samma åldersgruppering som aldersindelning i en annan period.\ncatalog:occurrence:235166\ncatalog:occurrence:235309\ncatalog:valueset:9146"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma åldersgruppering som aldersindelning i en annan period.\ncatalog:occurrence:235166\ncatalog:occurrence:235309\ncatalog:valueset:9146"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersindelning"
+fields = { "sets" = ["alder"] }
+evidence = "Samma åldersgruppering som aldersgrupp i en annan period.\ncatalog:occurrence:235166\ncatalog:occurrence:235309\ncatalog:valueset:9146"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersindelning"
+fields = { "tags" = ["demographics"] }
+evidence = "Samma åldersgruppering som aldersgrupp i en annan period.\ncatalog:occurrence:235166\ncatalog:occurrence:235309\ncatalog:valueset:9146"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-ej-hogskola"
+fields = { "sets" = ["antal-sokta-arbeten"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235264\ncatalog:occurrence:235279\ncatalog:occurrence:235329\ncatalog:occurrence:235340"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-ej-hogskola"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235264\ncatalog:occurrence:235279\ncatalog:occurrence:235329\ncatalog:occurrence:235340"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-hogskola-ej-fatt"
+fields = { "sets" = ["antal-sokta-arbeten"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235198\ncatalog:occurrence:235265\ncatalog:occurrence:235278\ncatalog:occurrence:235330\ncatalog:occurrence:235339"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-hogskola-ej-fatt"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235198\ncatalog:occurrence:235265\ncatalog:occurrence:235278\ncatalog:occurrence:235330\ncatalog:occurrence:235339"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-matchande"
+fields = { "sets" = ["antal-sokta-arbeten"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235197\ncatalog:occurrence:235264\ncatalog:occurrence:235277\ncatalog:occurrence:235338"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sokta-arbeten-matchande"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:235197\ncatalog:occurrence:235264\ncatalog:occurrence:235277\ncatalog:occurrence:235338"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-minst-en-timme"
+fields = { "sets" = ["arbete-under-matveckan"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235181\ncatalog:occurrence:235182\ncatalog:occurrence:235255\ncatalog:occurrence:235256"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-minst-en-timme"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235181\ncatalog:occurrence:235182\ncatalog:occurrence:235255\ncatalog:occurrence:235256"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetat-i-hogskoleomradet"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235262\ncatalog:occurrence:235263\ncatalog:occurrence:235327\ncatalog:occurrence:235328"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetat-i-hogskoleomradet"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235262\ncatalog:occurrence:235263\ncatalog:occurrence:235327\ncatalog:occurrence:235328"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-annan-utb"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "F11B har ett annat begrepp i en senare period.\ncatalog:occurrence:235248\ncatalog:occurrence:235317"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-annan-utb"
+fields = { "tags" = ["employment"] }
+evidence = "F11B har ett annat begrepp i en senare period.\ncatalog:occurrence:235248\ncatalog:occurrence:235317"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-matchar-utb"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "F11A har ett annat begrepp i en senare period.\ncatalog:occurrence:235247\ncatalog:occurrence:235316"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-matchar-utb"
+fields = { "tags" = ["employment"] }
+evidence = "F11A har ett annat begrepp i en senare period.\ncatalog:occurrence:235247\ncatalog:occurrence:235316"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-under-matveckan"
+fields = { "sets" = ["arbete-under-matveckan"] }
+evidence = "F17 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235185\ncatalog:occurrence:235259"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-under-matveckan"
+fields = { "tags" = ["employment"] }
+evidence = "F17 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235185\ncatalog:occurrence:235259"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-annan-utb"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "F10B har ett annat begrepp i en senare period.\ncatalog:occurrence:235245\ncatalog:occurrence:235315"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-annan-utb"
+fields = { "tags" = ["employment"] }
+evidence = "F10B har ett annat begrepp i en senare period.\ncatalog:occurrence:235245\ncatalog:occurrence:235315"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-ej-hogskola"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "Erfarenhet av arbete utan högskolekrav.\ncatalog:occurrence:235249\ncatalog:variable_text:26018:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-ej-hogskola"
+fields = { "tags" = ["employment"] }
+evidence = "Erfarenhet av arbete utan högskolekrav.\ncatalog:occurrence:235249\ncatalog:variable_text:26018:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-matchar-utb"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "F10A har ett annat begrepp i en senare period.\ncatalog:occurrence:235244\ncatalog:occurrence:235314"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-matchar-utb"
+fields = { "tags" = ["employment"] }
+evidence = "F10A har ett annat begrepp i en senare period.\ncatalog:occurrence:235244\ncatalog:occurrence:235314"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetes-overensstammelse"
+fields = { "sets" = ["overensstammelse-mellan-utbildning-och-arbete"] }
+evidence = "Variabeln mäter utbildningens överensstämmelse med arbetet.\ncatalog:valueset:9613\ncatalog:variable_text:26020:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetes-overensstammelse"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Variabeln mäter utbildningens överensstämmelse med arbetet.\ncatalog:valueset:9613\ncatalog:variable_text:26020:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetslos-utomlands"
+fields = { "sets" = ["erfarenhet-av-arbetsloshet"] }
+evidence = "Mäter arbetslöshet utanför Sverige.\ncatalog:variable_text:26021:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetslos-utomlands"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter arbetslöshet utanför Sverige.\ncatalog:variable_text:26021:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235183\ncatalog:occurrence:235184\ncatalog:occurrence:235257\ncatalog:occurrence:235258"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235183\ncatalog:occurrence:235184\ncatalog:occurrence:235257\ncatalog:occurrence:235258"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstimmar-per-vecka"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235184\ncatalog:occurrence:235185\ncatalog:occurrence:235258\ncatalog:occurrence:235259"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstimmar-per-vecka"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235184\ncatalog:occurrence:235185\ncatalog:occurrence:235258\ncatalog:occurrence:235259"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "sets" = [] }
+evidence = "Koden anger svar, bortfall eller övertäckning.\ncatalog:valueset:8527\ncatalog:variable_text:26024:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger svar, bortfall eller övertäckning.\ncatalog:valueset:8527\ncatalog:variable_text:26024:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-program-af"
+fields = { "sets" = [] }
+evidence = "Deltagande i Arbetsförmedlingens program.\ncatalog:variable_text:26025:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-program-af"
+fields = { "tags" = ["employment"] }
+evidence = "Deltagande i Arbetsförmedlingens program.\ncatalog:variable_text:26025:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:examen-universitet-hogskola"
+fields = { "sets" = ["hogskoleexamen-och-examenskrav"] }
+evidence = "Uppgift om högskoleexamen.\ncatalog:variable_text:26026:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:examen-universitet-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Uppgift om högskoleexamen.\ncatalog:variable_text:26026:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:examensbevis-utbildningsbevis"
+fields = { "sets" = ["hogskoleexamen-och-examenskrav"] }
+evidence = "F5 och F6 har andra begrepp i andra perioder.\ncatalog:occurrence:235224\ncatalog:occurrence:235225\ncatalog:occurrence:235354\ncatalog:occurrence:235355"
+
+[[statement]]
+kind = "set"
+subject = "var:examensbevis-utbildningsbevis"
+fields = { "tags" = ["education"] }
+evidence = "F5 och F6 har andra begrepp i andra perioder.\ncatalog:occurrence:235224\ncatalog:occurrence:235225\ncatalog:occurrence:235354\ncatalog:occurrence:235355"
+
+[[statement]]
+kind = "set"
+subject = "var:f10a"
+fields = { "sets" = ["huvudsaklig-sysselsattning"] }
+evidence = "F10A har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235244\ncatalog:occurrence:235314"
+
+[[statement]]
+kind = "set"
+subject = "var:f10a"
+fields = { "tags" = ["employment"] }
+evidence = "F10A har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235244\ncatalog:occurrence:235314"
+
+[[statement]]
+kind = "set"
+subject = "var:f10b"
+fields = { "sets" = ["overensstammelse-mellan-utbildning-och-arbete"] }
+evidence = "F10B har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235245\ncatalog:occurrence:235315"
+
+[[statement]]
+kind = "set"
+subject = "var:f10b"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F10B har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235245\ncatalog:occurrence:235315"
+
+[[statement]]
+kind = "set"
+subject = "var:f11a"
+fields = { "sets" = ["huvudsaklig-sysselsattning"] }
+evidence = "F11A har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235247\ncatalog:occurrence:235316"
+
+[[statement]]
+kind = "set"
+subject = "var:f11a"
+fields = { "tags" = ["employment"] }
+evidence = "F11A har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235247\ncatalog:occurrence:235316"
+
+[[statement]]
+kind = "set"
+subject = "var:f11b"
+fields = { "sets" = ["overensstammelse-mellan-utbildning-och-arbete"] }
+evidence = "F11B har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235248\ncatalog:occurrence:235317"
+
+[[statement]]
+kind = "set"
+subject = "var:f11b"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F11B har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235248\ncatalog:occurrence:235317"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-matveckan"
+fields = { "sets" = ["huvudsaklig-sysselsattning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26033:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-matveckan"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26033:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-som-inte-kraver-hogskoleutbildning"
+fields = { "sets" = ["arbetslivserfarenhet-efter-utbildningskrav"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26034:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-sverige-som-inte-kraver-hogskoleutbildning"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26034:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-i-sverige-pa-sfi"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to deltagande-i-svenskundervisning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-i-sverige-pa-sfi"
+fields = { "tags" = ["education", "integration"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26035:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f13"
+fields = { "sets" = ["huvudsaklig-sysselsattning"] }
+evidence = "F13 har ett annat begrepp i en senare period.\ncatalog:occurrence:235181\ncatalog:occurrence:235255"
+
+[[statement]]
+kind = "set"
+subject = "var:f13"
+fields = { "tags" = ["employment"] }
+evidence = "F13 har ett annat begrepp i en senare period.\ncatalog:occurrence:235181\ncatalog:occurrence:235255"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-1"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26037:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-1"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26037:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-2"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26038:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-2"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26038:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-3"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26039:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f21-3"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26039:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-att-fa-arbete-pga-svar-beskrivlig-kompetens"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26040:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-att-fa-arbete-pga-svar-beskrivlig-kompetens"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26040:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-att-fa-arbete-pga-min-harkomst"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26041:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-att-fa-arbete-pga-min-harkomst"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26041:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-yrkeserfarenhet-senaste-3-ar"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26042:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-yrkeserfarenhet-senaste-3-ar"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26042:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-sv"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235266\ncatalog:variable_text:26043:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-sv"
+fields = { "tags" = ["employment", "integration"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235266\ncatalog:variable_text:26043:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-ut"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26044:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24a-ut"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26044:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-arbetsgivarreferenser-senaste-3-ar"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26045:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-arbetsgivarreferenser-senaste-3-ar"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26045:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-sv"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235268\ncatalog:variable_text:26046:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-sv"
+fields = { "tags" = ["employment", "integration"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235268\ncatalog:variable_text:26046:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-ut"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26047:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24b-ut"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26047:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-kontakter-senaste-3-ar"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26048:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-avsaknad-kontakter-senaste-3-ar"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26048:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-sv"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235270\ncatalog:variable_text:26049:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-sv"
+fields = { "tags" = ["employment", "integration"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235270\ncatalog:variable_text:26049:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-ut"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26050:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24c-ut"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26050:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24d har olika begrepp i de två perioderna.\ncatalog:occurrence:235334\ncatalog:occurrence:235395"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d"
+fields = { "tags" = ["employment"] }
+evidence = "F24d har olika begrepp i de två perioderna.\ncatalog:occurrence:235334\ncatalog:occurrence:235395"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-sv"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235272\ncatalog:variable_text:26052:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-sv"
+fields = { "tags" = ["employment", "integration"] }
+evidence = "Familjen behålls samlat. Variabeln mäter ett upplevt hinder för arbete.\ncatalog:occurrence:235272\ncatalog:variable_text:26052:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-ut"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26053:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24d-ut"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26053:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24e"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24e har olika begrepp i de två perioderna.\ncatalog:occurrence:235335\ncatalog:occurrence:235396"
+
+[[statement]]
+kind = "set"
+subject = "var:f24e"
+fields = { "tags" = ["employment"] }
+evidence = "F24e har olika begrepp i de två perioderna.\ncatalog:occurrence:235335\ncatalog:occurrence:235396"
+
+[[statement]]
+kind = "set"
+subject = "var:f24f-ut"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26055:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24f-ut"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26055:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f24g"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24g har olika begrepp i de två perioderna.\ncatalog:occurrence:235337\ncatalog:occurrence:235398"
+
+[[statement]]
+kind = "set"
+subject = "var:f24g"
+fields = { "tags" = ["employment"] }
+evidence = "F24g har olika begrepp i de två perioderna.\ncatalog:occurrence:235337\ncatalog:occurrence:235398"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-1"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235277\ncatalog:occurrence:235338\ncatalog:variable_text:26057:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235278\ncatalog:occurrence:235339\ncatalog:variable_text:26058:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnen har en annan ägare för ett annat begrepp i en tidigare period. Variabeln mäter upplevd behandling i arbetet.\ncatalog:occurrence:235279\ncatalog:occurrence:235340\ncatalog:variable_text:26059:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:upplevd-orattvis-behandling-kompetensutveckling"
+fields = { "tags" = ["employment"] }
+evidence = "Källans etikett och de senare svarsalternativen beskriver olika omfattning av behandlingen. Gruppen omfattar den uppmätta behandlingen på arbetet.\ncatalog:register:146\ncatalog:valueset:8368\ncatalog:valueset:9175\ncatalog:valueset:9972\ncatalog:variable_text:26060:16436:16801\ncatalog:variable_text:26060:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-amnet-svenska-sprak-ej-deltagit"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26061:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-amnet-svenska-sprak-ej-deltagit"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26061:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-sfi"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26062:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-sfi"
+fields = { "tags" = ["education", "integration"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26062:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-grundskoleniva"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26063:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-grundskoleniva"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26063:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-gymnasieniva"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26064:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-gymnasieniva"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26064:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-hogskoleniva"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26065:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-svenska-pa-hogskoleniva"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26065:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-annat"
+fields = { "sets" = ["deltagande-i-svenskundervisning"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26066:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-annat"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26066:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f27"
+fields = { "sets" = ["bosattningsgrund-och-invandringsskal"] }
+evidence = "Definitionen och den operativa definitionen anger olika omfattning.\ncatalog:occurrence:235405\ncatalog:valueset:4831"
+
+[[statement]]
+kind = "set"
+subject = "var:f27"
+fields = { "tags" = ["migration"] }
+evidence = "Definitionen och den operativa definitionen anger olika omfattning.\ncatalog:occurrence:235405\ncatalog:valueset:4831"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på svenska.\ncatalog:variable_text:26068:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26069:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Id:t är en opak frågekod. Källan beskriver självskattad läsförmåga på engelska.\ncatalog:variable_text:26070:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Id:t är en opak frågekod. Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26071:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-svensk"
+fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26072:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-svensk"
+fields = { "tags" = ["employment", "income"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26072:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-annan"
+fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26073:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-annan"
+fields = { "tags" = ["employment", "income"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26073:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-battre-kunskaper"
+fields = { "sets" = ["hypotetisk-lonefordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26074:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-ett-arbete-med-hogre-lon-om-battre-kunskaper"
+fields = { "tags" = ["employment", "income"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26074:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-svensk-nationalitet"
+fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26075:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-svensk-nationalitet"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26075:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-annan-nationalitet"
+fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26076:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-annan-nationalitet"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26076:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-battre-kunskaper"
+fields = { "sets" = ["hypotetiskt-battre-arbetsuppgifter-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26077:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-fatt-battre-arbetsuppgifter-om-battre-kunskaper"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26077:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-svensk"
+fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26078:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-svensk"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26078:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-annan"
+fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26079:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-annan"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26079:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-battre-kunskaper"
+fields = { "sets" = ["hypotetisk-karriarfordel-av-nationalitet-eller-sprak"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26080:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skulle-ha-haft-storre-karriarmojligheter-om-battre-kunskaper"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26080:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:f28"
+fields = { "sets" = ["bosattningsgrund-och-invandringsskal"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26081:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f28"
+fields = { "tags" = ["migration"] }
+evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:26081:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "sets" = ["hogskoleexamen-och-examenskrav"] }
+evidence = "F5 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235224\ncatalog:occurrence:235354"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "tags" = ["education"] }
+evidence = "F5 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235224\ncatalog:occurrence:235354"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:26083:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:26083:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Kodar födelseland grupperat i Sverige och annat land.\ncatalog:valueset:8681\ncatalog:variable_text:26084:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodar födelseland grupperat i Sverige och annat land.\ncatalog:valueset:8681\ncatalog:variable_text:26084:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Kodar födelseland grupperat i Sverige och utlandet.\ncatalog:valueset:11515\ncatalog:variable_text:26085:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodar födelseland grupperat i Sverige och utlandet.\ncatalog:valueset:11515\ncatalog:variable_text:26085:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Kodar grupper av födelseländer.\ncatalog:variable_text:26086:14245:14610\ncatalog:variable_text:26086:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Kodar grupper av födelseländer.\ncatalog:variable_text:26086:14245:14610\ncatalog:variable_text:26086:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-sex-grupper"
+fields = { "sets" = ["bosattningsgrund-och-invandringsskal"] }
+evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:26087:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-bosattning-sex-grupper"
+fields = { "tags" = ["migration"] }
+evidence = "Id:t är en ogenomskinlig bokstavskod.\ncatalog:variable_text:26087:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-inriktning"
+fields = { "sets" = [] }
+evidence = "F3 har ett annat begrepp i en senare period.\ncatalog:occurrence:235222\ncatalog:occurrence:235349"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-inriktning"
+fields = { "tags" = ["education"] }
+evidence = "F3 har ett annat begrepp i en senare period.\ncatalog:occurrence:235222\ncatalog:occurrence:235349"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-land"
+fields = { "sets" = ["utbildningsland"] }
+evidence = "Anger om utbildningen är från Sverige eller annat land.\ncatalog:variable_text:26089:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-land"
+fields = { "tags" = ["education"] }
+evidence = "Anger om utbildningen är från Sverige eller annat land.\ncatalog:variable_text:26089:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-langd"
+fields = { "sets" = [] }
+evidence = "Mäter utbildningens längd.\ncatalog:variable_text:26090:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-langd"
+fields = { "tags" = ["education"] }
+evidence = "Mäter utbildningens längd.\ncatalog:variable_text:26090:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-overensstammelse"
+fields = { "sets" = ["overensstammelse-mellan-utbildning-och-arbete"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235187\ncatalog:occurrence:235189\ncatalog:occurrence:235261\ncatalog:occurrence:235262\ncatalog:occurrence:235327"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleutbildning-overensstammelse"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235187\ncatalog:occurrence:235189\ncatalog:occurrence:235261\ncatalog:occurrence:235262\ncatalog:occurrence:235327"
+
+[[statement]]
+kind = "set"
+subject = "var:hreg"
+fields = { "sets" = [] }
+evidence = "Hregion är en geografisk indelning.\ncatalog:valueset:11430\ncatalog:variable_text:26092:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:hreg"
+fields = { "tags" = ["geography"] }
+evidence = "Hregion är en geografisk indelning.\ncatalog:valueset:11430\ncatalog:variable_text:26092:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-utbildningen-varderas"
+fields = { "sets" = ["vardering-av-utbildning"] }
+evidence = "Mäter myndigheternas värdering av utbildningen.\ncatalog:variable_text:26093:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hur-utbildningen-varderas"
+fields = { "tags" = ["education"] }
+evidence = "Mäter myndigheternas värdering av utbildningen.\ncatalog:variable_text:26093:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hussyk1"
+fields = { "sets" = [] }
+evidence = "Etikett och värdemängd beskriver olika indelningar.\ncatalog:valueset:12364\ncatalog:variable_text:26094:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hussyk1"
+fields = { "tags" = ["employment"] }
+evidence = "Etikett och värdemängd beskriver olika indelningar.\ncatalog:valueset:12364\ncatalog:variable_text:26094:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kallgrp"
+fields = { "sets" = [] }
+evidence = "Anger uppgiftens källa.\ncatalog:variable_text:26095:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kallgrp"
+fields = { "tags" = ["methods"] }
+evidence = "Anger uppgiftens källa.\ncatalog:variable_text:26095:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-sv"
+fields = { "sets" = ["upprakningsvikt"] }
+evidence = "Variabeln är en kalibreringsvikt för uppräkning till populationen.\ncatalog:occurrence:235303\ncatalog:variable_text:26096:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-sv"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en kalibreringsvikt för uppräkning till populationen.\ncatalog:occurrence:235303\ncatalog:variable_text:26096:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-uf"
+fields = { "sets" = ["upprakningsvikt"] }
+evidence = "Statistisk kalibreringsvikt.\ncatalog:variable_text:26097:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-uf"
+fields = { "tags" = ["methods"] }
+evidence = "Statistisk kalibreringsvikt.\ncatalog:variable_text:26097:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26098:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26099:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26100:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26101:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på engelska.\ncatalog:variable_text:26102:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Källan beskriver självskattad förmåga att kommunicera på svenska.\ncatalog:variable_text:26103:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-engelska"
+fields = { "sets" = ["sjalvskattade-engelskkunskaper"] }
+evidence = "Källan beskriver självskattad skrivförmåga på engelska.\ncatalog:variable_text:26104:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-svenska"
+fields = { "sets" = ["sjalvskattade-svenskkunskaper"] }
+evidence = "Källan beskriver självskattad skrivförmåga på svenska.\ncatalog:variable_text:26105:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Personens folkbokföringskommun.\ncatalog:variable_text:26106:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Personens folkbokföringskommun.\ncatalog:variable_text:26106:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Personens kön.\ncatalog:variable_text:26107:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Personens kön.\ncatalog:variable_text:26107:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = ["antal-enheter-per-stratum"] }
+evidence = "Antal personer i urvalet per stratum.\ncatalog:variable_text:26108:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal personer i urvalet per stratum.\ncatalog:variable_text:26108:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-arbetet"
+fields = { "sets" = [] }
+evidence = "Mäter nöjdhet med arbetet.\ncatalog:variable_text:26110:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-arbetet"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter nöjdhet med arbetet.\ncatalog:variable_text:26110:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "sets" = [] }
+evidence = "Personens sammanräknade förvärvsinkomst.\ncatalog:variable_text:26113:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Personens sammanräknade förvärvsinkomst.\ncatalog:variable_text:26113:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-stratum"
+fields = { "sets" = ["stratumtillhorighet"] }
+evidence = "Samma stratumbegrepp som stratum-huf i en annan period.\ncatalog:occurrence:235234\ncatalog:occurrence:235367"
+
+[[statement]]
+kind = "set"
+subject = "var:scb-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Samma stratumbegrepp som stratum-huf i en annan period.\ncatalog:occurrence:235234\ncatalog:occurrence:235367"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-flytta-till-sverige"
+fields = { "sets" = ["bosattningsgrund-och-invandringsskal"] }
+evidence = "Anger skäl för flytt till Sverige.\ncatalog:variable_text:26116:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:skal-att-flytta-till-sverige"
+fields = { "tags" = ["migration"] }
+evidence = "Anger skäl för flytt till Sverige.\ncatalog:variable_text:26116:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = ["antal-enheter-per-stratum"] }
+evidence = "Antal personer i populationen per stratum.\ncatalog:variable_text:26117:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Antal personer i populationen per stratum.\ncatalog:variable_text:26117:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-huf"
+fields = { "sets" = ["stratumtillhorighet"] }
+evidence = "Samma stratumbegrepp som scb-stratum i en annan period.\ncatalog:occurrence:235234\ncatalog:occurrence:235367"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-huf"
+fields = { "tags" = ["methods"] }
+evidence = "Samma stratumbegrepp som scb-stratum i en annan period.\ncatalog:occurrence:235234\ncatalog:occurrence:235367"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-annan-utbildning-sv"
+fields = { "sets" = ["studiedeltagande-i-sverige"] }
+evidence = "Variabeln avser deltagande i annan utbildning i Sverige.\ncatalog:variable_text:26119:12418:12784\ncatalog:variable_text:26119:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-annan-utbildning-sv"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser deltagande i annan utbildning i Sverige.\ncatalog:variable_text:26119:12418:12784\ncatalog:variable_text:26119:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-hogskola-sverige"
+fields = { "sets" = ["studiedeltagande-i-sverige"] }
+evidence = "Deltagande i högskolestudier i Sverige.\ncatalog:variable_text:26120:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:studerat-hogskola-sverige"
+fields = { "tags" = ["education"] }
+evidence = "Deltagande i högskolestudier i Sverige.\ncatalog:variable_text:26120:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-alder"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24f har olika begrepp i de två perioderna.\ncatalog:occurrence:235336\ncatalog:occurrence:235397"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-alder"
+fields = { "tags" = ["employment"] }
+evidence = "F24f har olika begrepp i de två perioderna.\ncatalog:occurrence:235336\ncatalog:occurrence:235397"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-namn"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24g har olika begrepp i de två perioderna.\ncatalog:occurrence:235337\ncatalog:occurrence:235398"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-namn"
+fields = { "tags" = ["employment"] }
+evidence = "F24g har olika begrepp i de två perioderna.\ncatalog:occurrence:235337\ncatalog:occurrence:235398"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-sprak"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235334\ncatalog:occurrence:235335\ncatalog:occurrence:235395\ncatalog:occurrence:235396"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-pga-sprak"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235334\ncatalog:occurrence:235335\ncatalog:occurrence:235395\ncatalog:occurrence:235396"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-utb-svar-bedoma"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "F24f har olika begrepp i de två perioderna.\ncatalog:occurrence:235336\ncatalog:occurrence:235397"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-arbete-utb-svar-bedoma"
+fields = { "tags" = ["employment"] }
+evidence = "F24f har olika begrepp i de två perioderna.\ncatalog:occurrence:235336\ncatalog:occurrence:235397"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-matchande-arbete"
+fields = { "sets" = ["upplevda-hinder-att-fa-arbete"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235189\ncatalog:occurrence:235198\ncatalog:occurrence:235262\ncatalog:occurrence:235265\ncatalog:occurrence:235330"
+
+[[statement]]
+kind = "set"
+subject = "var:svart-fa-matchande-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235189\ncatalog:occurrence:235198\ncatalog:occurrence:235262\ncatalog:occurrence:235265\ncatalog:occurrence:235330"
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-arbete"
+fields = { "sets" = ["overensstammelse-mellan-utbildning-och-arbete"] }
+evidence = "F19 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235187\ncatalog:occurrence:235261"
+
+[[statement]]
+kind = "set"
+subject = "var:tillracklig-utbildningsniva-arbete"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F19 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235187\ncatalog:occurrence:235261"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235182\ncatalog:occurrence:235183\ncatalog:occurrence:235256\ncatalog:occurrence:235257"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235182\ncatalog:occurrence:235183\ncatalog:occurrence:235256\ncatalog:occurrence:235257"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-utvarderats-svenska"
+fields = { "sets" = ["vardering-av-utbildning"] }
+evidence = "Anger om utbildningen har utvärderats av svenska myndigheter.\ncatalog:variable_text:26128:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-utvarderats-svenska"
+fields = { "tags" = ["education"] }
+evidence = "Anger om utbildningen har utvärderats av svenska myndigheter.\ncatalog:variable_text:26128:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsland"
+fields = { "sets" = ["utbildningsland"] }
+evidence = "F3 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235222\ncatalog:occurrence:235349"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsland"
+fields = { "tags" = ["education"] }
+evidence = "F3 har ett annat begrepp i en tidigare period.\ncatalog:occurrence:235222\ncatalog:occurrence:235349"
+
+[[statement]]
+kind = "set"
+subject = "var:varit-arbetslos-i-sverige"
+fields = { "sets" = ["erfarenhet-av-arbetsloshet"] }
+evidence = "Mäter erfarenhet av arbetslöshet i Sverige.\ncatalog:variable_text:26130:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:varit-arbetslos-i-sverige"
+fields = { "tags" = ["employment"] }
+evidence = "Mäter erfarenhet av arbetslöshet i Sverige.\ncatalog:variable_text:26130:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "sets" = ["upprakningsvikt"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:variable_text:26131:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:variable_text:26131:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vill-arbeta-i-hogskoleomradet"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235197\ncatalog:occurrence:235263\ncatalog:occurrence:235264\ncatalog:occurrence:235328\ncatalog:occurrence:235329"
+
+[[statement]]
+kind = "set"
+subject = "var:vill-arbeta-i-hogskoleomradet"
+fields = { "tags" = ["employment"] }
+evidence = "Källkolumnerna har andra begrepp i andra perioder.\ncatalog:occurrence:235197\ncatalog:occurrence:235263\ncatalog:occurrence:235264\ncatalog:occurrence:235328\ncatalog:occurrence:235329"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-matveckan"
+fields = { "sets" = [] }
+evidence = "Yrkeskod under mätveckan.\ncatalog:variable_text:26133:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-matveckan"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkeskod under mätveckan.\ncatalog:variable_text:26133:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-1"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair pay treatment is measured in r5. The later fair/unfair scale still explicitly measures unfair treatment (r33, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25966\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235200\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair treatment in work tasks is measured in r6. The later fair/unfair scale still explicitly measures unfair treatment (r34, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25967\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235201\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair career treatment is measured in r7. The later fair/unfair scale still explicitly measures unfair treatment (r35, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235202\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235340\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:upplevd-orattvis-behandling-kompetensutveckling"
+fields = { "sets" = ["orattvis-behandling-i-arbetet"] }
+evidence = "Experienced unfair treatment in competence development is measured in r8. The later fair/unfair scale still explicitly measures unfair treatment (r36, r61), fitting the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:25969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:235341\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9175"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25989\ncatalog:variable_text:25989:12418:12784\ncatalog:variable_text:25989:14245:14610\ncatalog:variable_text:25989:16436:16801\ncatalog:variable_text:25989:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-argumentera-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25990\ncatalog:variable_text:25990:12418:12784\ncatalog:variable_text:25990:14245:14610\ncatalog:variable_text:25990:16436:16801\ncatalog:variable_text:25990:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25991\ncatalog:variable_text:25991:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-lasa-och-forsta-en-enklare-text-pa-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25992\ncatalog:variable_text:25992:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25993\ncatalog:variable_text:25993:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-att-skriva-en-enklare-text-pa-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25994\ncatalog:variable_text:25994:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25995\ncatalog:variable_text:25995:12418:12784\ncatalog:variable_text:25995:14245:14610\ncatalog:variable_text:25995:16436:16801\ncatalog:variable_text:25995:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-diskussion-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25996\ncatalog:variable_text:25996:12418:12784\ncatalog:variable_text:25996:14245:14610\ncatalog:variable_text:25996:16436:16801\ncatalog:variable_text:25996:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25997\ncatalog:variable_text:25997:12418:12784\ncatalog:variable_text:25997:14245:14610\ncatalog:variable_text:25997:16436:16801\ncatalog:variable_text:25997:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-muntlig-presentation-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25998\ncatalog:variable_text:25998:12418:12784\ncatalog:variable_text:25998:14245:14610\ncatalog:variable_text:25998:16436:16801\ncatalog:variable_text:25998:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-engelska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:25999\ncatalog:variable_text:25999:12418:12784\ncatalog:variable_text:25999:14245:14610\ncatalog:variable_text:25999:16436:16801\ncatalog:variable_text:25999:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:klarar-skriftlig-rapport-svenska"
+fields = { "tags" = ["language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:26000\ncatalog:variable_text:26000:12418:12784\ncatalog:variable_text:26000:14245:14610\ncatalog:variable_text:26000:16436:16801\ncatalog:variable_text:26000:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utomlands-matchar-utb"
+fields = { "description" = "Arbete utanför Sverige efter högskoleutbildning som högskoleutbildningen är inriktad mot." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett stavfel utan att ändra betydelsen.\ncatalog:occurrence:235244\ncatalog:variable_text:26019:14245:14610"

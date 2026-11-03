@@ -4,3 +4,118 @@ kind = "set"
 subject = "produktionsindex-over-naringslivet: taggbranschgr"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmanadslank-fast-kal"
+fields = { "sets" = [] }
+evidence = "TUtvIxFast är också mappad till tutvixfast under en överlappande period. Variabeln mäter ett utvecklingstal för produktion.\ncatalog:occurrence:401516\ncatalog:occurrence:401517\ncatalog:occurrence:401536\ncatalog:register:224"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmanadslank-fast-kal"
+fields = { "tags" = ["business"] }
+evidence = "TUtvIxFast är också mappad till tutvixfast under en överlappande period. Variabeln mäter ett utvecklingstal för produktion.\ncatalog:occurrence:401516\ncatalog:occurrence:401517\ncatalog:occurrence:401536\ncatalog:register:224"
+
+[[statement]]
+kind = "set"
+subject = "var:kortnamn"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver näringsgren och hör till företag och produktion.\ncatalog:occurrence:401528\ncatalog:variable_text:40938:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:kortnamn"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver näringsgren och hör till företag och produktion.\ncatalog:occurrence:401528\ncatalog:variable_text:40938:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:taggbranschgr"
+fields = { "sets" = [] }
+evidence = "Källkolumnens inledande bokstavskod är inte en läsbar del av etiketten. Variabeln klassificerar näringsgren.\ncatalog:occurrence:401530\ncatalog:variable_text:40940:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:taggbranschgr"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens inledande bokstavskod är inte en läsbar del av etiketten. Variabeln klassificerar näringsgren.\ncatalog:occurrence:401530\ncatalog:variable_text:40940:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-koder-delindex"
+fields = { "sets" = [] }
+evidence = "Källkolumnens bokstavskoder är inte läsbara delar av etiketten. Variabeln beskriver näringsgren.\ncatalog:occurrence:401531\ncatalog:variable_text:40941:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-koder-delindex"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens bokstavskoder är inte läsbara delar av etiketten. Variabeln beskriver näringsgren.\ncatalog:occurrence:401531\ncatalog:variable_text:40941:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-i-fasta-priser"
+fields = { "sets" = [] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40942:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-i-fasta-priser"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40942:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-i-fasta-och-kalenderkorrigerade-priser"
+fields = { "sets" = [] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40943:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-i-fasta-och-kalenderkorrigerade-priser"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40943:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-sasongsjusterade"
+fields = { "sets" = [] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40944:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-sasongsjusterade"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40944:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-trend"
+fields = { "sets" = [] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40945:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:index-trend"
+fields = { "tags" = ["business"] }
+evidence = "Tix är en källmnemonik och inte en igenkännbar stam av etikettens ord. Indexet mäter produktion i näringslivet.\ncatalog:register:224\ncatalog:variable_text:40945:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tutvixfast"
+fields = { "sets" = [] }
+evidence = "TUtvIxFast är också mappad till arsmanadslank-fast-kal under en överlappande period. Variabeln mäter ett utvecklingstal för produktion.\ncatalog:occurrence:401516\ncatalog:occurrence:401517\ncatalog:occurrence:401537\ncatalog:register:224"
+
+[[statement]]
+kind = "set"
+subject = "var:tutvixfast"
+fields = { "tags" = ["business"] }
+evidence = "TUtvIxFast är också mappad till arsmanadslank-fast-kal under en överlappande period. Variabeln mäter ett utvecklingstal för produktion.\ncatalog:occurrence:401516\ncatalog:occurrence:401517\ncatalog:occurrence:401537\ncatalog:register:224"
+
+
+[[statement]]
+kind = "set"
+subject = "var:tutvixfast"
+fields = { "description" = "Årsmånadslänk i fasta priser. Utvecklingstalet beräknas för respektive branschgrupp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRätta stavningen av årsmånadslänk utan att ändra betydelsen.\ncatalog:variable_text:40946:15340:16071\ncatalog:variable_text:40946:16071:16436\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401537:opdef_text. One variable, one description."

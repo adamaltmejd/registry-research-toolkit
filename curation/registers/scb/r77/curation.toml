@@ -106,3 +106,243 @@ kind = "set"
 subject = "byggnadsprisindex: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "sets" = [] }
+evidence = "Antalet bostadslägenheter hör till boende.\ncatalog:variable_text:6292:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "tags" = ["housing"] }
+evidence = "Antalet bostadslägenheter hör till boende.\ncatalog:variable_text:6292:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-balkongperlgh"
+fields = { "sets" = [] }
+evidence = "Balkonger per lägenhet beskriver bostäders egenskaper.\ncatalog:variable_text:6293:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-balkongperlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Balkonger per lägenhet beskriver bostäders egenskaper.\ncatalog:variable_text:6293:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadskostnad-brutto"
+fields = { "sets" = [] }
+evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadskostnad-brutto"
+fields = { "tags" = ["housing"] }
+evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadskostnad-netto"
+fields = { "sets" = [] }
+evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadskostnad-netto"
+fields = { "tags" = ["housing"] }
+evidence = "BK är en ogenomskinlig bokstavskod för byggnadskostnad. Brutto- och nettokostnad är två mått på samma begrepp.\ncatalog:variable_text:6294:13514:20089\ncatalog:variable_text:6295:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-bostadsareaperlgh"
+fields = { "sets" = [] }
+evidence = "Bostadsarea per lägenhet är härledd ur den totala bostadsarean och hör till boende.\ncatalog:variable_text:6296:13514:20089\ncatalog:variable_text:6313:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-bostadsareaperlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarea per lägenhet är härledd ur den totala bostadsarean och hör till boende.\ncatalog:variable_text:6296:13514:20089\ncatalog:variable_text:6313:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fantvaningsplan"
+fields = { "sets" = [] }
+evidence = "Våningsplan beskriver bostadsbyggnadens egenskaper.\ncatalog:variable_text:6297:13514:17167\ncatalog:variable_text:6297:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fantvaningsplan"
+fields = { "tags" = ["housing"] }
+evidence = "Våningsplan beskriver bostadsbyggnadens egenskaper.\ncatalog:variable_text:6297:13514:17167\ncatalog:variable_text:6297:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-ffasadbekladnad"
+fields = { "sets" = [] }
+evidence = "Fasadbeklädnad beskriver byggnadens egenskaper.\ncatalog:variable_text:6298:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-ffasadbekladnad"
+fields = { "tags" = ["property"] }
+evidence = "Fasadbeklädnad beskriver byggnadens egenskaper.\ncatalog:variable_text:6298:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fhusform"
+fields = { "sets" = [] }
+evidence = "Husform och hustyp är klassificeringar av projektets bostadshus.\ncatalog:variable_text:6299:13514:20089\ncatalog:variable_text:6309:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fhusform"
+fields = { "tags" = ["housing"] }
+evidence = "Husform och hustyp är klassificeringar av projektets bostadshus.\ncatalog:variable_text:6299:13514:20089\ncatalog:variable_text:6309:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fkallare"
+fields = { "sets" = [] }
+evidence = "Källare beskriver byggnadens egenskaper.\ncatalog:variable_text:6300:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fkallare"
+fields = { "tags" = ["property"] }
+evidence = "Källare beskriver byggnadens egenskaper.\ncatalog:variable_text:6300:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-ftakbelaggning"
+fields = { "sets" = [] }
+evidence = "Takbeläggning beskriver byggnadens egenskaper.\ncatalog:variable_text:6301:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-ftakbelaggning"
+fields = { "tags" = ["property"] }
+evidence = "Takbeläggning beskriver byggnadens egenskaper.\ncatalog:variable_text:6301:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fvind"
+fields = { "sets" = [] }
+evidence = "Inredningsbar vind beskriver byggnadens egenskaper.\ncatalog:variable_text:6302:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-fvind"
+fields = { "tags" = ["property"] }
+evidence = "Inredningsbar vind beskriver byggnadens egenskaper.\ncatalog:variable_text:6302:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-garageperlgh"
+fields = { "sets" = [] }
+evidence = "Garageplatser per lägenhet beskriver bostadsprojektet.\ncatalog:variable_text:6303:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-garageperlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Garageplatser per lägenhet beskriver bostadsprojektet.\ncatalog:variable_text:6303:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-hygienrumperlgh"
+fields = { "sets" = [] }
+evidence = "Hygienrum per lägenhet beskriver bostädernas utrymme.\ncatalog:variable_text:6304:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-hygienrumperlgh"
+fields = { "tags" = ["housing"] }
+evidence = "Hygienrum per lägenhet beskriver bostädernas utrymme.\ncatalog:variable_text:6304:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-lagenhetsarea"
+fields = { "sets" = [] }
+evidence = "Lägenhetsarea och yteffektivitet är sammanhängande areamått för bostadsprojektet.\ncatalog:variable_text:6305:13514:20089\ncatalog:variable_text:6307:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-lagenhetsarea"
+fields = { "tags" = ["housing"] }
+evidence = "Lägenhetsarea och yteffektivitet är sammanhängande areamått för bostadsprojektet.\ncatalog:variable_text:6305:13514:20089\ncatalog:variable_text:6307:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-yteffektivitet"
+fields = { "sets" = [] }
+evidence = "Yteffektivitet är härledd ur lägenhetsarean och beskriver bostadsprojektet.\ncatalog:variable_text:6305:13514:20089\ncatalog:variable_text:6307:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:b-yteffektivitet"
+fields = { "tags" = ["housing"] }
+evidence = "Yteffektivitet är härledd ur lägenhetsarean och beskriver bostadsprojektet.\ncatalog:variable_text:6305:13514:20089\ncatalog:variable_text:6307:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hiss"
+fields = { "sets" = [] }
+evidence = "Hiss beskriver byggnadens egenskaper.\ncatalog:variable_text:6308:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hiss"
+fields = { "tags" = ["property"] }
+evidence = "Hiss beskriver byggnadens egenskaper.\ncatalog:variable_text:6308:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "sets" = [] }
+evidence = "Hustyp och husform är klassificeringar av projektets bostadshus.\ncatalog:variable_text:6299:13514:20089\ncatalog:variable_text:6309:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "tags" = ["housing"] }
+evidence = "Hustyp och husform är klassificeringar av projektets bostadshus.\ncatalog:variable_text:6299:13514:20089\ncatalog:variable_text:6309:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning, men den knutna värdemängden för en period innehåller län.\ncatalog:valueset:7128\ncatalog:variable_text:6310:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning, men den knutna värdemängden för en period innehåller län.\ncatalog:valueset:7128\ncatalog:variable_text:6310:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalbostadsarea"
+fields = { "sets" = [] }
+evidence = "Bostadsarea per lägenhet är härledd ur den totala bostadsarean och båda hör till boende.\ncatalog:variable_text:6296:13514:20089\ncatalog:variable_text:6313:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totalbostadsarea"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadsarea per lägenhet är härledd ur den totala bostadsarean och båda hör till boende.\ncatalog:variable_text:6296:13514:20089\ncatalog:variable_text:6313:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "sets" = [] }
+evidence = "Upplåtelseform beskriver boendeform.\ncatalog:variable_text:6314:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "tags" = ["housing"] }
+evidence = "Upplåtelseform beskriver boendeform.\ncatalog:variable_text:6314:13514:20089"

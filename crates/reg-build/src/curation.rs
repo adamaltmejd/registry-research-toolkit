@@ -5,7 +5,7 @@ use std::path::Path;
 
 use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
-use reg_resolve::curation::Premise;
+use reg_resolve::curation::{Premise, SourcePremise, variable_level_setter};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 
@@ -13,7 +13,145 @@ use sha2::Digest;
 #[serde(deny_unknown_fields)]
 struct Lock {
     version: u32,
-    statements: BTreeMap<String, Premise>,
+    objects: BTreeMap<String, SourcePremise>,
+    statements: BTreeMap<String, StoredPremise>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StoredPremise {
+    subjects: LockedSubjects,
+    objects: Vec<String>,
+}
+
+impl Lock {
+    fn new(premises: BTreeMap<String, LockedPremise>) -> Self {
+        let mut objects = BTreeMap::new();
+        let statements = premises
+            .into_iter()
+            .map(|(identity, premise)| {
+                let mut keys = Vec::new();
+                for object in premise.objects {
+                    let key = object_key(&object);
+                    objects.entry(key.clone()).or_insert(object);
+                    keys.push(key);
+                }
+                keys.sort();
+                (
+                    identity,
+                    StoredPremise {
+                        subjects: premise.subjects,
+                        objects: keys,
+                    },
+                )
+            })
+            .collect();
+        Self {
+            version: 3,
+            objects,
+            statements,
+        }
+    }
+
+    fn resolve(self) -> Result<BTreeMap<String, LockedPremise>, String> {
+        for (key, object) in &self.objects {
+            if object_key(object) != *key {
+                return Err(format!(
+                    "object digest mismatch for {key}; run reg-build lock"
+                ));
+            }
+        }
+        self.statements
+            .into_iter()
+            .map(|(identity, premise)| {
+                let mut objects = premise
+                    .objects
+                    .iter()
+                    .map(|key| {
+                        self.objects.get(key).cloned().ok_or_else(|| {
+                            format!(
+                                "statement {identity}: missing object {key}; run reg-build lock"
+                            )
+                        })
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                // Digest order is only a storage convention. Restore the resolver's
+                // canonical object order for unchanged field-level diagnostics.
+                objects.sort_by_key(reg_frame::canonical_line);
+                Ok((
+                    identity,
+                    LockedPremise {
+                        subjects: premise.subjects,
+                        objects,
+                    },
+                ))
+            })
+            .collect()
+    }
+}
+
+fn object_key(object: &SourcePremise) -> String {
+    reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(object)))
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct LockedPremise {
+    subjects: LockedSubjects,
+    objects: Vec<SourcePremise>,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(untagged, deny_unknown_fields)]
+enum LockedSubjects {
+    Rows(Vec<SourcePremise>),
+    Variable {
+        variable: String,
+        count: usize,
+        locators_sha256: String,
+    },
+}
+
+impl LockedPremise {
+    fn new(statement: &LocatedStatement, premise: &Premise) -> Self {
+        let variable = variable_level_setter(&statement.statement);
+        let subjects = if let Some(variable) = variable {
+            let locators = premise
+                .subjects
+                .iter()
+                .map(|row| reg_frame::canonical_line(&row.locator))
+                .collect::<BTreeSet<_>>();
+            let mut hash = sha2::Sha256::new();
+            for locator in &locators {
+                hash.update(locator.as_bytes());
+                hash.update(b"\n");
+            }
+            LockedSubjects::Variable {
+                variable: variable.to_owned(),
+                count: locators.len(),
+                locators_sha256: reg_frame::hex(&hash.finalize()),
+            }
+        } else {
+            LockedSubjects::Rows(premise.subjects.clone())
+        };
+        let mut objects = premise
+            .objects
+            .iter()
+            .filter(|object| {
+                variable.is_none()
+                    || !matches!(
+                        object
+                            .fields
+                            .get("kind")
+                            .and_then(serde_json::Value::as_str),
+                        Some("register" | "table" | "release")
+                    )
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        objects.sort_by_key(reg_frame::canonical_line);
+        Self { subjects, objects }
+    }
 }
 
 fn location(statement: &LocatedStatement) -> String {
@@ -94,6 +232,7 @@ fn ledger(
 
 /// Catalog references resolve through each register's ledger, then snapshot source
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
+#[allow(clippy::too_many_arguments)]
 fn references(
     root: &Path,
     records: &[Record],
@@ -102,6 +241,7 @@ fn references(
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     shared: &reg_resolve::curation::SharedSources,
     retired: &[crate::retired::Retired],
+    base: Option<&crate::external::Context>,
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -135,7 +275,7 @@ fn references(
                     object.clone(),
                     vec![reg_resolve::curation::SourcePremise {
                         locator: class.locator.clone(),
-                        fields,
+                        fields: fields.into(),
                     }],
                 );
             }
@@ -177,6 +317,10 @@ fn references(
         }
         if let [Ok(premise)] = &matches[..] {
             references.insert(object.clone(), premise.clone());
+        } else if let Some(base) = base
+            && let Some(premise) = base.premise(object)?
+        {
+            references.insert(object.clone(), premise);
         }
     }
     Ok(references)
@@ -256,6 +400,10 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         class.family_name.clone_from(&c.family_name);
         class.publisher.clone_from(&c.publisher);
         class.succeeds.clone_from(&c.succeeds);
+        class.sentinel_codes = c
+            .sentinel_codes
+            .as_ref()
+            .map(|codes| codes.iter().cloned().collect());
         let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
         out.statements.push(crate::emit::StatementRow {
             hash: hash.clone(),
@@ -315,7 +463,8 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
     for class in &out.classifications {
         let statement = crate::emit::StatementRow::for_locator(&out.statements, &class.locator)
             .expect("inventory classifications have statements");
-        for (field, value) in class.facts(&out.classifications) {
+        let facts = class.facts(&out.classifications);
+        for (field, value) in facts {
             out.overrides.push(reg_resolve::provenance::Claim {
                 kind: "class_version".into(),
                 locator: class.locator.clone(),
@@ -366,16 +515,282 @@ fn changes(old: &serde_json::Value, new: &serde_json::Value, path: &str, out: &m
     }
 }
 
+pub(super) struct Sentinels {
+    pub hash: String,
+    pub codes: BTreeSet<String>,
+    pub locator: reg_frame::Locator,
+    pub statement: String,
+    pub inventory: Option<reg_frame::Locator>,
+}
+
+/// Classification exemptions describe observed column sets, never the canonical book.
+fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<String>, String> {
+    let sets = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::ValueSet(set) => Some((set.hash.as_str(), set)),
+            _ => None,
+        })
+        .collect::<BTreeMap<_, _>>();
+    let mut bindings = BTreeMap::<_, BTreeSet<_>>::new();
+    for claim in applied
+        .overrides
+        .iter()
+        .filter(|claim| claim.kind == "occurrence" && claim.field == "classification")
+    {
+        if let Some(class) = claim.value.as_deref() {
+            bindings
+                .entry((&claim.locator, class))
+                .or_default()
+                .insert(claim.statement.as_str());
+        }
+    }
+    let mut bound = BTreeMap::<_, BTreeSet<_>>::new();
+    for record in records {
+        let Record::Occurrence(occurrence) = record else {
+            continue;
+        };
+        let Some(class) = occurrence.classification.as_deref() else {
+            continue;
+        };
+        let statements = std::iter::once(&occurrence.locator)
+            .chain(&occurrence.also)
+            .filter_map(|at| bindings.get(&(at, class)))
+            .flatten()
+            .copied()
+            .collect::<BTreeSet<_>>();
+        for hash in occurrence
+            .valueset
+            .iter()
+            .chain(occurrence.population_valuesets.iter().map(|p| &p.valueset))
+        {
+            if statements.is_empty() {
+                return Err(format!(
+                    "{}:{}: classification-sentinel-binding-missing: {class} has no curated binding statement",
+                    occurrence.locator.input, occurrence.locator.at
+                ));
+            }
+            bound
+                .entry((class, hash.as_str()))
+                .or_default()
+                .extend(statements.iter().copied());
+        }
+    }
+    let rows = applied
+        .statements
+        .iter()
+        .map(|statement| (statement.hash.as_str(), statement))
+        .collect::<BTreeMap<_, _>>();
+    let mut findings = Vec::new();
+    for class in &applied.classifications {
+        let fqid = format!("class/{}/{}", class.family, class.version);
+        let declared = class.sentinel_codes.clone().unwrap_or_default();
+        let mut used = BTreeSet::new();
+        let mut n_sets = 0;
+        for ((_, hash), statements) in bound.iter().filter(|((version, _), _)| *version == fqid) {
+            let set = sets
+                .get(hash)
+                .ok_or_else(|| format!("classification-sentinel-valueset-missing: {hash}"))?;
+            let codes = declared
+                .iter()
+                .filter(|code| set.items.iter().any(|item| &item.code == *code))
+                .cloned()
+                .collect::<BTreeSet<_>>();
+            used.extend(codes.iter().cloned());
+            n_sets += 1;
+            for statement in statements {
+                let row = rows.get(statement).ok_or_else(|| {
+                    format!("classification-sentinel-binding-missing: {statement}")
+                })?;
+                applied.sentinels.push(Sentinels {
+                    hash: (*hash).into(),
+                    codes: codes.clone(),
+                    locator: reg_frame::Locator {
+                        input: row.file.clone(),
+                        at: format!("line={}", row.line),
+                    },
+                    statement: (*statement).into(),
+                    inventory: Some(class.locator.clone()),
+                });
+            }
+        }
+        let unused = declared.difference(&used).count();
+        if unused > 0 {
+            findings.push(format!("{}:{}: classification-sentinels-unused: {unused} declared codes absent from all bound value sets ({fqid}; {n_sets} bound sets)", class.locator.input, class.locator.at));
+        }
+    }
+    Ok(findings)
+}
+
+/// Local setters are complete claims; classification lists are additive exemptions.
+#[allow(clippy::too_many_lines)]
+fn sentinel_conflicts(
+    root: &Path,
+    records: &[Record],
+    applied: &Applied,
+) -> Result<(BTreeSet<String>, Vec<String>), String> {
+    let sets = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::ValueSet(set) => Some((set.hash.as_str(), set)),
+            _ => None,
+        })
+        .collect::<BTreeMap<_, _>>();
+    let classes = applied
+        .classifications
+        .iter()
+        .map(|class| (&class.locator, class))
+        .collect::<BTreeMap<_, _>>();
+    let mut canonical = BTreeMap::new();
+    for (at, class) in &classes {
+        let set = sets.get(class.valueset.as_str()).ok_or_else(|| {
+            inventory_error(
+                root,
+                at,
+                format!(
+                    "classification-reference-unresolved: value set {}",
+                    class.valueset
+                ),
+            )
+        })?;
+        canonical.insert(
+            *at,
+            set.items
+                .iter()
+                .map(|item| item.code.as_str())
+                .collect::<BTreeSet<_>>(),
+        );
+    }
+    let mut groups = BTreeMap::<&str, Vec<&Sentinels>>::new();
+    for declaration in &applied.sentinels {
+        groups
+            .entry(&declaration.hash)
+            .or_default()
+            .push(declaration);
+    }
+    let mut conflicts = BTreeSet::new();
+    let mut refusals = BTreeSet::new();
+    let mut refuse = |declaration: &Sentinels, other: &Sentinels, detail: String| {
+        conflicts.insert(declaration.statement.clone());
+        refusals.insert(inventory_error(
+            root,
+            &declaration.locator,
+            format!(
+                "sentinel-conflict: shared value set {} {detail}; other binding {}:{}",
+                declaration.hash,
+                other.locator.input,
+                other
+                    .locator
+                    .at
+                    .strip_prefix("line=")
+                    .unwrap_or(&other.locator.at),
+            ),
+        ));
+    };
+    for declarations in groups.values() {
+        let local = declarations
+            .iter()
+            .copied()
+            .filter(|d| d.inventory.is_none())
+            .collect::<Vec<_>>();
+        if let Some(first) = local.first()
+            && let Some(rival) = local.iter().find(|d| d.codes != first.codes)
+        {
+            for declaration in &local {
+                let other = if declaration.codes == first.codes {
+                    *rival
+                } else {
+                    *first
+                };
+                refuse(
+                    declaration,
+                    other,
+                    "has disagreeing local sentinel lists".into(),
+                );
+            }
+        }
+        let mut versions = BTreeMap::<_, Vec<_>>::new();
+        for declaration in declarations {
+            if let Some(at) = &declaration.inventory {
+                versions.entry(at).or_default().push(*declaration);
+            }
+        }
+        for (at, claims) in &versions {
+            for (other_at, other_claims) in &versions {
+                let (class, other) = (classes[at], classes[other_at]);
+                let bad = claims[0]
+                    .codes
+                    .iter()
+                    .filter(|code| canonical[other_at].contains(code.as_str()))
+                    .collect::<Vec<_>>();
+                if bad.is_empty() {
+                    continue;
+                }
+                let detail = format!(
+                    "lists codes {bad:?} from class/{}/{} that are canonical in class/{}/{} (inventory {}:{} and {}:{})",
+                    class.family,
+                    class.version,
+                    other.family,
+                    other.version,
+                    at.input,
+                    at.at.strip_prefix("line=").unwrap_or(&at.at),
+                    other_at.input,
+                    other_at.at.strip_prefix("line=").unwrap_or(&other_at.at),
+                );
+                for declaration in claims {
+                    refuse(declaration, other_claims[0], detail.clone());
+                }
+                for declaration in other_claims {
+                    refuse(declaration, claims[0], detail.clone());
+                }
+            }
+        }
+    }
+    Ok((conflicts, refusals.into_iter().collect()))
+}
+
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub(super) struct Refusal {
+    pub register: Option<String>,
+    pub message: String,
+}
+
+impl Refusal {
+    fn scoped(statement: &LocatedStatement, message: String) -> Self {
+        Self {
+            register: Some(format!("{}/{}", statement.provider, statement.register)),
+            message,
+        }
+    }
+}
+
+fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, String> {
+    if record && !refusals.is_empty() {
+        return Err(refusals
+            .iter()
+            .map(|r| r.message.as_str())
+            .collect::<Vec<_>>()
+            .join("\n"));
+    }
+    Ok(refusals
+        .iter()
+        .map(|r| format!("{} (statement skipped)", r.message))
+        .collect())
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
+    pub sets: Vec<reg_resolve::curation::apply::SetPresentation>,
     pub records: Vec<Record>,
     pub findings: Vec<String>,
+    pub refusals: Vec<Refusal>,
     pub statements: Vec<crate::emit::StatementRow>,
     pub overrides: Vec<reg_resolve::provenance::Claim>,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
     pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
     pub metadata: Vec<reg_resolve::curation::apply::Metadata>,
+    pub sentinels: Vec<Sentinels>,
     pub links: Vec<(LocatedStatement, Premise)>,
     pub linked: Option<crate::link::Curated>,
     pub acks:
@@ -391,6 +806,7 @@ enum Phase {
     Facts,
     Variables,
     Fields,
+    Sentinels,
     Relations,
     Acknowledgements,
 }
@@ -407,6 +823,7 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
+        Statement::Set { fields, .. } if fields.sentinels.is_some() => Phase::Sentinels,
         Statement::Link { .. } => Phase::Relations,
         Statement::Ack { .. } => Phase::Acknowledgements,
         Statement::Set { .. } => Phase::Fields,
@@ -443,9 +860,26 @@ fn field_application(
         .map(|i| records[*i].clone())
         .collect::<Vec<_>>();
     let at = statement_locator(root, statement)?;
-    let applied =
+    let mut applied =
         reg_resolve::curation::apply::apply(&source, ledger, &statement.statement, &at, premise)?;
-    Ok((indices, source, applied))
+    // Unchanged dependency records need no merge; retaining them repeats source text
+    // once per setter. Keep metadata and provenance even when no record changed.
+    let mut changed_indices = Vec::new();
+    let mut before_records = Vec::new();
+    let mut after_records = Vec::new();
+    for ((index, before), after) in indices
+        .into_iter()
+        .zip(source)
+        .zip(std::mem::take(&mut applied.records))
+    {
+        if before != after {
+            changed_indices.push(index);
+            before_records.push(before);
+            after_records.push(after);
+        }
+    }
+    applied.records = after_records;
+    Ok((changed_indices, before_records, applied))
 }
 
 /// Independent fields merge as patches, never as whole-record replacements.
@@ -476,39 +910,57 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, Premise>, String> {
+fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, LockedPremise>, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
         return Ok(BTreeMap::new());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let lock: Lock = serde_json::from_str(&text)
+    let value: serde_json::Value = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if lock.version != 1 {
+    if value["version"] != 3 {
         return Err(format!(
-            "{}: unsupported premise lock version {}",
+            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
             path.display(),
-            lock.version
+            value["version"]
         ));
     }
-    Ok(lock.statements)
+    let lock: Lock = serde_json::from_value(value)
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
+    lock.resolve()
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &BTreeMap<String, Premise>,
+    old: &BTreeMap<String, LockedPremise>,
     path: &Path,
 ) -> Result<(), String> {
+    let premise = LockedPremise::new(statement, premise);
     match old.get(&statement.identity) {
         None => Err(format!(
             "premise-missing: no reviewed premise in {}; run reg-build lock",
             path.display()
         )),
-        Some(previous) if previous != premise => {
+        Some(previous) if previous != &premise => {
             let mut diff = Vec::new();
+            if let (
+                LockedSubjects::Variable {
+                    count: old_count, ..
+                },
+                LockedSubjects::Variable {
+                    variable, count, ..
+                },
+            ) = (&previous.subjects, &premise.subjects)
+                && previous.subjects != premise.subjects
+            {
+                diff.push(format!(
+                    "var:{variable}: matched rows changed (old count {old_count}, new count {count})"
+                ));
+            }
             changes(
                 &serde_json::to_value(previous).map_err(|e| e.to_string())?,
-                &serde_json::to_value(premise).map_err(|e| e.to_string())?,
+                &serde_json::to_value(&premise).map_err(|e| e.to_string())?,
                 "premise",
                 &mut diff,
             );
@@ -525,17 +977,20 @@ pub(super) fn run(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
+    base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
-    run_selected(
+    let mut applied = run_selected(
         root,
         retired,
         &statements.iter().collect::<Vec<_>>(),
         outputs,
         record,
         registers,
-        release,
-    )
+        base,
+    )?;
+    applied.refusals.sort();
+    applied.refusals.dedup();
+    Ok(applied)
 }
 
 /// Apply parent, bound, period, move, fact, identity and field stages in order. Each phase
@@ -549,7 +1004,7 @@ fn run_selected(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
+    base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
     let mut records = outputs
         .iter()
@@ -590,10 +1045,14 @@ fn run_selected(
         Phase::Facts,
         Phase::Variables,
         Phase::Fields,
+        Phase::Sentinels,
         Phase::Relations,
         Phase::Acknowledgements,
     ] {
-        let fields_stage = matches!(stage, Phase::Coverage | Phase::Periods | Phase::Fields);
+        let fields_stage = matches!(
+            stage,
+            Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels
+        );
         let structural_stage = matches!(stage, Phase::Parents | Phase::Moves | Phase::Facts);
         let mut field_snapshot = Vec::new();
         if !conflicts.is_empty() {
@@ -610,7 +1069,7 @@ fn run_selected(
         let finding_catalog = if stage == Phase::Acknowledgements
             && statements.iter().any(|s| phase(&s.statement) == stage)
         {
-            Some(complete_findings(root, retired, &records, &result)?)
+            Some(complete_findings(root, retired, &records, &result, base)?)
         } else {
             None
         };
@@ -675,7 +1134,7 @@ fn run_selected(
                 .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
-            if stage == Phase::Fields
+            if matches!(stage, Phase::Fields | Phase::Sentinels)
                 && group
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
@@ -705,6 +1164,7 @@ fn run_selected(
                 &result.variables,
                 &shared,
                 retired,
+                base,
             )?;
             let evaluations = reg_resolve::curation::resolve(
                 &source,
@@ -719,19 +1179,10 @@ fn run_selected(
                 let mut resolved = match evaluation {
                     Ok(r) => r,
                     Err(e) => {
-                        refusals.push(format!("{at}: {e}"));
+                        refusals.push(Refusal::scoped(statement, format!("{at}: {e}")));
                         continue;
                     }
                 };
-                if !resolved.conflicts.is_empty() {
-                    for other in &resolved.conflicts {
-                        refusals.push(format!(
-                            "{at}: curation-overlap: overlapping overrides with {}",
-                            location(group[*other])
-                        ));
-                    }
-                    continue;
-                }
                 if fields_stage
                     && matches!(
                         statement.statement,
@@ -750,10 +1201,22 @@ fn run_selected(
                             field_applications.insert(publication_identity(statement), application);
                         }
                         Err(error) => {
-                            refusals.push(format!("{at}: {error}"));
+                            refusals.push(Refusal::scoped(statement, format!("{at}: {error}")));
                             continue;
                         }
                     }
+                }
+                if !resolved.conflicts.is_empty() {
+                    for other in &resolved.conflicts {
+                        refusals.push(Refusal::scoped(
+                            statement,
+                            format!(
+                                "{at}: curation-overlap: overlapping overrides with {}",
+                                location(group[*other])
+                            ),
+                        ));
+                    }
+                    continue;
                 }
                 if let Some(view) = &finding_view
                     && matches!(
@@ -770,20 +1233,38 @@ fn run_selected(
                             ack_indices.insert(publication_identity(statement), indices);
                         }
                         Err(error) => {
-                            refusals.push(format!("{at}: {error}"));
+                            refusals.push(Refusal::scoped(statement, format!("{at}: {error}")));
                             continue;
                         }
                     }
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
-                    refusals.push(format!("{at}: {e}"));
+                    refusals.push(Refusal::scoped(statement, format!("{at}: {e}")));
                     continue;
                 }
                 if resolved.redundant {
                     findings.push(format!("{at}: redundant-set: set equals the source"));
                 }
                 accepted.push((*statement, resolved.premise, provider, register));
+            }
+            if stage == Phase::Fields {
+                crate::sets::memberships(
+                    provider,
+                    ledger.public.as_deref().unwrap_or(register),
+                    &result.variables,
+                    group.iter().flat_map(|statement| {
+                        field_applications
+                            .get(&publication_identity(statement))
+                            .into_iter()
+                            .flat_map(|(_, _, applied)| {
+                                applied
+                                    .metadata
+                                    .iter()
+                                    .map(|metadata| (*statement, metadata))
+                            })
+                    }),
+                )?;
             }
         }
         accepted.sort_by_key(|(s, ..)| {
@@ -902,7 +1383,7 @@ fn run_selected(
                 Phase::Relations | Phase::Acknowledgements => {
                     Ok(reg_resolve::curation::apply::Applied::default())
                 }
-                Phase::Coverage | Phase::Periods | Phase::Fields => {
+                Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
@@ -945,33 +1426,43 @@ fn run_selected(
             let applied = match application {
                 Ok(a) => a,
                 Err(e) => {
-                    let refusal = format!("{}: {e}", location(statement));
-                    if record || release {
-                        refusals.push(refusal);
-                        return Err(refusals.join("\n"));
-                    }
+                    let refusal =
+                        Refusal::scoped(statement, format!("{}: {e}", location(statement)));
+                    refusals.push(refusal);
+                    let skipped = refusal_findings(&refusals, record)?;
                     // Refused statements contribute neither facts nor provenance.
                     let retained = statements
                         .iter()
                         .copied()
                         .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
-                    let mut rerun = run_selected(
-                        root, retired, &retained, outputs, record, registers, release,
-                    )?;
-                    rerun
-                        .findings
-                        .push(format!("{refusal} (statement skipped)"));
+                    let mut rerun =
+                        run_selected(root, retired, &retained, outputs, record, registers, base)?;
+                    rerun.findings.extend(skipped);
+                    rerun.refusals.extend(refusals);
                     return Ok(rerun);
                 }
             };
+            result.sets.extend(applied.sets);
             result.variables.extend(applied.assignments);
             result.metadata.extend(applied.metadata);
+            result.sentinels.extend(
+                applied
+                    .sentinels
+                    .into_iter()
+                    .map(|(hash, codes)| Sentinels {
+                        hash,
+                        codes,
+                        locator: locator.clone(),
+                        statement: publication_identity(statement),
+                        inventory: None,
+                    }),
+            );
             evaluated.push((statement, premise.clone()));
-            premises
-                .entry((provider, register))
-                .or_default()
-                .insert(statement.identity.clone(), premise);
+            premises.entry((provider, register)).or_default().insert(
+                statement.identity.clone(),
+                LockedPremise::new(statement, &premise),
+            );
             if !applied.changes.is_empty() {
                 let value =
                     serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
@@ -1067,12 +1558,12 @@ fn run_selected(
                         && affected
                     {
                         conflicts.insert(publication_identity(statement));
-                        refusals.push(format!(
+                        refusals.push(Refusal::scoped(statement, format!(
                             "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
                             location(statement),
                             at.input,
                             at.at
-                        ));
+                        )));
                     }
                 }
             }
@@ -1098,9 +1589,14 @@ fn run_selected(
                 if let Err(error) =
                     reg_resolve::curation::validate_assignments(&source, ledger, &result.variables)
                 {
-                    for (statement, _) in assignments {
-                        conflicts.insert(publication_identity(statement));
-                        refusals.push(format!("{}: {error}", location(statement)));
+                    for (statement, premise) in assignments {
+                        if error.affects(premise) {
+                            conflicts.insert(publication_identity(statement));
+                            refusals.push(Refusal::scoped(
+                                statement,
+                                format!("{}: {}", location(statement), error.message),
+                            ));
+                        }
                     }
                 }
             }
@@ -1118,15 +1614,24 @@ fn run_selected(
             &result.metadata,
             &result.classifications,
         )?;
-        let linked = crate::link::curate(root, &resolved, &records, &result.links)?;
+        let linked = crate::link::curate(root, &resolved, &records, &result.links, base)?;
         if !linked.refusals.is_empty() {
             let messages = linked
                 .refusals
                 .iter()
-                .map(|(_, message)| message.clone())
+                .map(|(hash, message)| Refusal {
+                    register: result
+                        .links
+                        .iter()
+                        .find(|(statement, _)| publication_identity(statement) == *hash)
+                        .map(|(statement, _)| {
+                            format!("{}/{}", statement.provider, statement.register)
+                        }),
+                    message: message.clone(),
+                })
                 .collect::<Vec<_>>();
-            if record || release {
-                return Err(messages.join("\n"));
+            if record {
+                refusal_findings(&messages, record)?;
             }
             let refused = linked
                 .refusals
@@ -1138,14 +1643,11 @@ fn run_selected(
                 .copied()
                 .filter(|s| !refused.contains(&publication_identity(s)))
                 .collect::<Vec<_>>();
-            let mut rerun = run_selected(
-                root, retired, &retained, outputs, record, registers, release,
-            )?;
-            rerun.findings.extend(
-                messages
-                    .into_iter()
-                    .map(|message| format!("{message} (statement skipped)")),
-            );
+            let mut rerun =
+                run_selected(root, retired, &retained, outputs, record, registers, base)?;
+            refusals.extend(messages);
+            rerun.findings.extend(refusal_findings(&refusals, record)?);
+            rerun.refusals.extend(refusals);
             return Ok(rerun);
         }
         result.linked = Some(linked);
@@ -1185,10 +1687,13 @@ fn run_selected(
         let (left, right) = (evaluated[a].0, evaluated[b].0);
         conflicts.insert(publication_identity(left));
         conflicts.insert(publication_identity(right));
-        refusals.push(format!(
-            "{}: curation-overlap: overlapping overrides with {}",
-            location(left),
-            location(right)
+        refusals.push(Refusal::scoped(
+            left,
+            format!(
+                "{}: curation-overlap: overlapping overrides with {}",
+                location(left),
+                location(right)
+            ),
         ));
     }
     for (a, b) in reg_resolve::curation::classification_conflicts(&result.classifications) {
@@ -1200,31 +1705,83 @@ fn run_selected(
                 conflicts.insert(statement.hash.clone());
             }
         }
-        refusals.push(format!(
-            "{}:{}: curation-overlap: classification version overlaps {}:{}",
-            left.locator.input, left.locator.at, right.locator.input, right.locator.at
-        ));
+        refusals.push(Refusal {
+            register: None,
+            message: format!(
+                "{}:{}: curation-overlap: classification version overlaps {}:{}",
+                left.locator.input, left.locator.at, right.locator.input, right.locator.at
+            ),
+        });
     }
+    findings.extend(bound_sentinels(&records, &mut result)?);
+    let (sentinel_conflicts, sentinel_refusals) = sentinel_conflicts(root, &records, &result)?;
+    conflicts.extend(sentinel_conflicts);
+    refusals.extend(sentinel_refusals.into_iter().map(|message| Refusal {
+        register: None,
+        message,
+    }));
     if !conflicts.is_empty() {
-        if record || release {
-            return Err(refusals.join("\n"));
-        }
+        let skipped = refusal_findings(&refusals, record)?;
         let retained = statements
             .iter()
             .copied()
             .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(
-            root, retired, &retained, outputs, record, registers, release,
-        )?;
-        rerun.findings.extend(
-            refusals
-                .into_iter()
-                .map(|r| format!("{r} (statement skipped)")),
-        );
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)?;
+        rerun.findings.extend(skipped);
+        rerun.refusals.extend(refusals);
         return Ok(rerun);
     }
 
+    if !result.sets.is_empty()
+        || result.metadata.iter().any(|m| {
+            matches!(
+                m.value,
+                reg_resolve::curation::apply::MetadataValue::Facets { .. }
+            )
+        })
+    {
+        let resolved = resolve_catalog(
+            root,
+            retired,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )?;
+        let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        if !invalid.is_empty() {
+            let by_location = evaluated
+                .iter()
+                .map(|(statement, _)| statement_locator(root, statement).map(|at| (at, *statement)))
+                .collect::<Result<BTreeMap<_, _>, _>>()?;
+            let mut refused = BTreeSet::new();
+            for error in invalid {
+                let statement = by_location.get(&error.at).ok_or_else(|| {
+                    format!(
+                        "{}:{}: presentation refusal has no originating statement",
+                        error.at.input, error.at.at
+                    )
+                })?;
+                refused.insert(publication_identity(statement));
+                refusals.push(Refusal::scoped(
+                    statement,
+                    format!("{}:{}: {}", error.at.input, error.at.at, error.message),
+                ));
+            }
+            let skipped = refusal_findings(&refusals, record)?;
+            let retained = statements
+                .iter()
+                .copied()
+                .filter(|s| !refused.contains(&publication_identity(s)))
+                .collect::<Vec<_>>();
+            let mut rerun =
+                run_selected(root, retired, &retained, outputs, record, registers, base)?;
+            rerun.findings.extend(skipped);
+            rerun.refusals.extend(refusals);
+            return Ok(rerun);
+        }
+    }
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()
             && !registers
@@ -1237,13 +1794,7 @@ fn run_selected(
         if reviewed.is_empty() {
             continue;
         }
-        pending.push((
-            path,
-            Lock {
-                version: 1,
-                statements: reviewed,
-            },
-        ));
+        pending.push((path, Lock::new(reviewed)));
     }
     if record {
         for register in registers {
@@ -1269,14 +1820,8 @@ fn run_selected(
             }
         }
     }
-    if !refusals.is_empty() && (record || release) {
-        return Err(refusals.join("\n"));
-    }
-    findings.extend(
-        refusals
-            .into_iter()
-            .map(|r| format!("{r} (statement skipped)")),
-    );
+    findings.extend(refusal_findings(&refusals, record)?);
+    result.refusals = refusals;
     if record {
         // Prepare all serializations before writing; a refused register never causes
         // a partial review update in another register.
@@ -1306,9 +1851,6 @@ fn run_selected(
             std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
-    for finding in &findings {
-        eprintln!("reg-build: {finding}");
-    }
     result.findings = findings;
     result.records = records;
     Ok(result)
@@ -1320,6 +1862,7 @@ pub(super) fn complete_findings(
     retired: &[crate::retired::Retired],
     records: &[Record],
     applied: &Applied,
+    base: Option<&crate::external::Context>,
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let mut resolved = resolve_catalog(
         root,
@@ -1337,7 +1880,8 @@ pub(super) fn complete_findings(
     }
     let mut linked = crate::link::resolve(&resolved, records, &[])?;
     if !applied.links.is_empty() {
-        linked.relations = crate::link::curate(root, &resolved, records, &applied.links)?.relations;
+        linked.relations =
+            crate::link::curate(root, &resolved, records, &applied.links, base)?.relations;
     }
     crate::proposals::generate(&mut resolved, &applied.classifications, &sets, &linked)?;
     Ok(resolved)
@@ -1376,7 +1920,7 @@ pub(super) fn resolve_catalog(
             let ledger = ledger(root, provider, register, retired)?;
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
-            reg_resolve::curation::apply_metadata(&mut resolved, metadata);
+            reg_resolve::curation::apply_metadata(&mut resolved, metadata)?;
             Ok(resolved)
         })
         .collect()

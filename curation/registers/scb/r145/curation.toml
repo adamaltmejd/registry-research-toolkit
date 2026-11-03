@@ -52,3 +52,415 @@ kind = "set"
 subject = "hostsadda-arealer: {lan,ordlan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "sets" = [] }
+evidence = "Objektbortfall är en undersökningskvalitetsmarkör.\ncatalog:variable_text:26200:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bortfallskod"
+fields = { "tags" = ["methods"] }
+evidence = "Objektbortfall är en undersökningskvalitetsmarkör.\ncatalog:variable_text:26200:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostdinkel"
+fields = { "sets" = ["hostsadd-areal-hostdinkel-och-speltvete"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostdinkel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostkorn"
+fields = { "sets" = ["hostsadd-areal-hostkorn"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235501\ncatalog:occurrence:235502"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235501\ncatalog:occurrence:235502"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostrag"
+fields = { "sets" = ["hostsadd-areal-hostrag"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235511\ncatalog:occurrence:235512"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostrag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235511\ncatalog:occurrence:235512"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostragvete"
+fields = { "sets" = ["hostsadd-areal-hostragvete"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235513\ncatalog:occurrence:235514"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostragvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235513\ncatalog:occurrence:235514"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostraps"
+fields = { "sets" = ["hostsadd-areal-hostraps"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235503\ncatalog:occurrence:235504"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235503\ncatalog:occurrence:235504"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostrybs"
+fields = { "sets" = ["hostsadd-areal-hostrybs"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235505\ncatalog:occurrence:235506"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235505\ncatalog:occurrence:235506"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostvete"
+fields = { "sets" = ["hostsadd-areal-hostvete"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235507\ncatalog:occurrence:235508"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-areal-hostvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235507\ncatalog:occurrence:235508"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-hostdinkel-speltvete"
+fields = { "sets" = ["hostsadd-areal-hostdinkel-och-speltvete"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:ekologisk-hostsadd-hostdinkel-speltvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för ekologisk och total areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostdinkel"
+fields = { "sets" = ["hostsadd-areal-hostdinkel-och-speltvete"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostdinkel"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostdinkel-speltvete"
+fields = { "sets" = ["hostsadd-areal-hostdinkel-och-speltvete"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostdinkel-speltvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235848\ncatalog:occurrence:235849\ncatalog:occurrence:235905\ncatalog:occurrence:235906"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostkorn"
+fields = { "sets" = ["hostsadd-areal-hostkorn"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235501\ncatalog:occurrence:235502"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostkorn"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235501\ncatalog:occurrence:235502"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostrag"
+fields = { "sets" = ["hostsadd-areal-hostrag"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235511\ncatalog:occurrence:235512"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostrag"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235511\ncatalog:occurrence:235512"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostragvete"
+fields = { "sets" = ["hostsadd-areal-hostragvete"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235513\ncatalog:occurrence:235514"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostragvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235513\ncatalog:occurrence:235514"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostraps"
+fields = { "sets" = ["hostsadd-areal-hostraps"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235503\ncatalog:occurrence:235504"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostraps"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235503\ncatalog:occurrence:235504"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostrybs"
+fields = { "sets" = ["hostsadd-areal-hostrybs"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235505\ncatalog:occurrence:235506"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostrybs"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235505\ncatalog:occurrence:235506"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostvete"
+fields = { "sets" = ["hostsadd-areal-hostvete"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235507\ncatalog:occurrence:235508"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsadd-areal-hostvete"
+fields = { "tags" = ["agriculture"] }
+evidence = "Samma källkolumn har överlappande ägare för total och ekologisk areal.\ncatalog:occurrence:235507\ncatalog:occurrence:235508"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsaddejavslutad"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver höstsåddens status.\ncatalog:variable_text:26218:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hostsaddejavslutad"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln beskriver höstsåddens status.\ncatalog:variable_text:26218:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ingenareal"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om företaget saknar höstsådd areal.\ncatalog:variable_text:26219:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ingenareal"
+fields = { "tags" = ["agriculture"] }
+evidence = "Variabeln anger om företaget saknar höstsådd areal.\ncatalog:variable_text:26219:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "sets" = [] }
+evidence = "Inklusionssannolikhet är ett urvalsmått.\ncatalog:variable_text:26221:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lambda"
+fields = { "tags" = ["methods"] }
+evidence = "Inklusionssannolikhet är ett urvalsmått.\ncatalog:variable_text:26221:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Variabeln kodar arealens län och grupperas med brukningscentrums län.\ncatalog:variable_text:26222:16801:20089\ncatalog:variable_text:26225:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar arealens län och grupperas med brukningscentrums län.\ncatalog:variable_text:26222:16801:20089\ncatalog:variable_text:26225:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Antalet utvalda företag i stratum är ett urvalsmått.\ncatalog:variable_text:26223:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet utvalda företag i stratum är ett urvalsmått.\ncatalog:variable_text:26223:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordlan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Variabeln kodar brukningscentrums län och grupperas med arealens län.\ncatalog:variable_text:26222:16801:20089\ncatalog:variable_text:26225:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordlan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar brukningscentrums län och grupperas med arealens län.\ncatalog:variable_text:26222:16801:20089\ncatalog:variable_text:26225:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "sets" = ["produktionsomradestillhorighet"] }
+evidence = "Brukningscentrums Po8 ingår i kandidatgruppen för produktionsområden.\ncatalog:variable_text:26226:16801:20089\ncatalog:variable_text:26228:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ordpo8"
+fields = { "tags" = ["geography"] }
+evidence = "Brukningscentrums Po8 ingår i kandidatgruppen för produktionsområden.\ncatalog:variable_text:26226:16801:20089\ncatalog:variable_text:26228:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "sets" = ["produktionsomradestillhorighet"] }
+evidence = "Variabeln kodar tillhörighet till produktionsområden.\ncatalog:variable_text:26227:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po18"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar tillhörighet till produktionsområden.\ncatalog:variable_text:26227:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "sets" = ["produktionsomradestillhorighet"] }
+evidence = "Variabeln kodar tillhörighet till produktionsområden.\ncatalog:variable_text:26228:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:po8"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar tillhörighet till produktionsområden.\ncatalog:variable_text:26228:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regkod"
+fields = { "sets" = [] }
+evidence = "Koden avser geografisk indelning.\ncatalog:variable_text:26229:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:regkod"
+fields = { "tags" = ["geography"] }
+evidence = "Koden avser geografisk indelning.\ncatalog:variable_text:26229:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "sets" = ["skordeomradestillhorighet"] }
+evidence = "Sko är en källkod som inte är en läsbar ordstam av skördeområde. Etiketten delas med skordeomrade och mål kräver disambiguering.\ncatalog:variable_text:26230:16801:20089\ncatalog:variable_text:26231:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "tags" = ["geography"] }
+evidence = "Sko är en källkod som inte är en läsbar ordstam av skördeområde. Etiketten delas med skordeomrade och mål kräver disambiguering.\ncatalog:variable_text:26230:16801:20089\ncatalog:variable_text:26231:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "sets" = ["skordeomradestillhorighet"] }
+evidence = "Variabeln kodar brukningscentrums skördeområde och grupperas med arealens skördeområde.\ncatalog:variable_text:26230:16801:20089\ncatalog:variable_text:26231:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skordeomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar brukningscentrums skördeområde och grupperas med arealens skördeområde.\ncatalog:variable_text:26230:16801:20089\ncatalog:variable_text:26231:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:snabb"
+fields = { "sets" = [] }
+evidence = "Uttagning till snabbstatistiken beskriver urval.\ncatalog:variable_text:26232:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:snabb"
+fields = { "tags" = ["methods"] }
+evidence = "Uttagning till snabbstatistiken beskriver urval.\ncatalog:variable_text:26232:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Totalt antal företag i stratum är ett urvalsmått.\ncatalog:variable_text:26233:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Totalt antal företag i stratum är ett urvalsmått.\ncatalog:variable_text:26233:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:26234:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:26234:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totaker"
+fields = { "sets" = [] }
+evidence = "Total åkerareal är ett jordbruksmått.\ncatalog:variable_text:26235:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totaker"
+fields = { "tags" = ["agriculture"] }
+evidence = "Total åkerareal är ett jordbruksmått.\ncatalog:variable_text:26235:16801:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:ekologisk-hostsadd-hostdinkel-speltvete"
+relation = "continues"
+object = "scb/hostsadda-arealer/ekologisk-hostsadd-areal-hostdinkel"
+at = "2023-01-01.."
+evidence = "Autumn-sown areas Areal_511: organic winter spelt -> winter spelt and spelt wheat (2023+), hectares; broadened crop."
+
+[[statement]]
+kind = "link"
+subject = "var:hostsadd-areal-hostdinkel-speltvete"
+relation = "continues"
+object = "scb/hostsadda-arealer/hostsadd-areal-hostdinkel"
+at = "2023-01-01.."
+evidence = "Areal_511 non-organic: same broadening."

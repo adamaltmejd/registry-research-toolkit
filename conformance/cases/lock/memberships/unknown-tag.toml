@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { tags = ["unknown"] }
+evidence = "A syntactically valid slug absent from the vocabulary must refuse."

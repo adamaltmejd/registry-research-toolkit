@@ -22,6 +22,17 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
         OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_URI,
     )
     .map_err(sql)?;
+    semantic(&db)?;
+    schema_version(&db)?;
+    if let Some(previous) = previous {
+        compare(&db, previous)?;
+    }
+    Ok(())
+}
+
+/// Shared semantic-table checks for a base catalog and a supplemental catalog.
+pub(crate) fn semantic(db: &Connection) -> Result<(), String> {
+    let sql = |e: rusqlite::Error| e.to_string();
     let integrity: String = db
         .query_row("PRAGMA integrity_check", [], |r| r.get(0))
         .map_err(sql)?;
@@ -34,17 +45,13 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
         .collect::<Vec<_>>()
         .join("\n");
     for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
-        if has_rows(&db, statement)? {
+        if has_rows(db, statement)? {
             return Err(format!("post-write check failed:\n{statement}"));
         }
     }
-    schema_version(&db)?;
-    types(&db)?;
-    valuesets(&db)?;
-    pdfs(&db)?;
-    if let Some(previous) = previous {
-        compare(&db, previous)?;
-    }
+    types(db)?;
+    valuesets(db)?;
+    pdfs(db)?;
     Ok(())
 }
 
@@ -223,8 +230,8 @@ fn pdfs(db: &Connection) -> Result<(), String> {
     Ok(())
 }
 
-/// Against the previous release, every id survives or is retired, and retirement is
-/// permanent (schema v4 §4.3).
+/// Ids published from v1 survive on overlapping targets or are permanently retired.
+/// Earlier releases report these changes without refusing them.
 fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     let fail = |what: String| format!("previous release: {what}");
     // `#`, `?` and `%` are URI syntax: encode every byte but unreserved ones and `/`.
@@ -263,22 +270,53 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             )));
         }
     }
-    for statement in [
-        "SELECT p.pid FROM prev.ident p
+    let catalog_version: String = db
+        .query_row(
+            "SELECT value FROM prev.meta WHERE key = 'catalog_version'",
+            [],
+            |r| r.get(0),
+        )
+        .map_err(|e| fail(e.to_string()))?;
+    let pre_v1 = catalog_version
+        .split('.')
+        .next()
+        .and_then(|major| major.parse::<u64>().ok())
+        .is_none_or(|major| major == 0);
+    let mut changes = Vec::new();
+    for (change, statement) in [
+        ("removed id", "SELECT p.pid FROM prev.ident p
           WHERE NOT EXISTS (SELECT 1 FROM main.ident c WHERE c.pid = p.pid AND c.kind = p.kind)
-            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid)",
-        "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired",
+            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)"),
+        ("removed id", "SELECT p.pid FROM prev.var_set p
+          WHERE p.kind = 'tag' AND NOT EXISTS (SELECT 1 FROM main.var_set c WHERE c.pid = p.pid AND c.kind = p.kind)
+            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)"),
+        ("removed retirement", "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired"),
     ] {
-        let first: Option<String> = db
-            .query_row(statement, [], |r| r.get(0))
-            .map(Some)
-            .or_else(|e| match e {
-                rusqlite::Error::QueryReturnedNoRows => Ok(None),
-                e => Err(e.to_string()),
-            })?;
-        if let Some(pid) = first {
-            return Err(fail(format!("{statement}; e.g. {pid}")));
+        let mut stmt = db.prepare(statement).map_err(|e| e.to_string())?;
+        let pids = stmt.query_map([], |r| r.get::<_, String>(0)).map_err(|e| e.to_string())?;
+        for pid in pids {
+            let pid = pid.map_err(|e| e.to_string())?;
+            if !pre_v1 {
+                return Err(fail(format!("{change} {pid}")));
+            }
+            changes.push((pid.clone(), format!("{change} {pid}")));
         }
+    }
+    for moved in crate::id_targets::moved(db, "prev", db, "main").map_err(fail)? {
+        if !pre_v1 {
+            return Err(fail(format!(
+                "moved id {}; retire the published id and mint a new one",
+                moved.text()
+            )));
+        }
+        changes.push((moved.pid.clone(), format!("moved id {}", moved.text())));
+    }
+    if pre_v1 {
+        changes.sort();
+        for (_, change) in &changes {
+            println!("previous release (pre-v1): {change}");
+        }
+        println!("previous release (pre-v1): id changes: {}", changes.len());
     }
     Ok(())
 }

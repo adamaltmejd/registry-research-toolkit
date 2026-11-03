@@ -102,6 +102,11 @@ pub struct Table {
     /// frequency the reader's config recognises.
     pub cadence: Option<String>,
     pub locator: Locator,
+    /// Curated table kind and observational unit; source readers leave these unset.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub role: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unit_type: Option<String>,
 }
 
 /// A population a release states, in the source's order.
@@ -200,6 +205,9 @@ pub struct Occurrence {
     /// provisional, and resolve reports a source conflict (F6).
     #[serde(default)]
     pub conflicts: Vec<String>,
+    /// Curated role; source readers leave this unset.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub role: Option<String>,
 }
 
 /// One code of a value set; `parent` is another item's code.

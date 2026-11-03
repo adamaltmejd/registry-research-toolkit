@@ -19,12 +19,6 @@ evidence = "reg_meta_build/curation/registers/scb/fdb.toml:10\n\nSWECOV's delive
 
 [[statement]]
 kind = "set"
-subject = "administrativa: aststat"
-fields = { "description" = "AST-status" }
-evidence = "reg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "arbetsstalleenheter: {kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -472,3 +466,1077 @@ kind = "set"
 subject = "verksamhetsenheter: {ngs,ngs1} @1999..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-statistisk-status"
+fields = { "tags" = ["business"] }
+evidence = "Statistisk verksamhetsstatus hör till gruppen; begreppet avser företagsstruktur.\ncatalog:variable_text:10445:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalletyp"
+fields = { "sets" = [] }
+evidence = "AE är en källkod utan igenkännbar ordstam i etiketten.\ncatalog:variable_text:10446:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalletyp"
+fields = { "tags" = ["business"] }
+evidence = "AE är en källkod utan igenkännbar ordstam i etiketten.\ncatalog:variable_text:10446:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:10447:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:10447:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiekapital"
+fields = { "sets" = [] }
+evidence = "Aktiekapital är företagskapital.\ncatalog:variable_text:10448:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiekapital"
+fields = { "tags" = ["business"] }
+evidence = "Aktiekapital är företagskapital.\ncatalog:variable_text:10448:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma källkolumn är samtidigt tilldelad en annan variabel för juridisk enhet.\ncatalog:occurrence:85707\ncatalog:occurrence:85750\ncatalog:occurrence:87789\ncatalog:occurrence:87790"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn är samtidigt tilldelad en annan variabel för juridisk enhet.\ncatalog:occurrence:85707\ncatalog:occurrence:85750\ncatalog:occurrence:87789\ncatalog:occurrence:87790"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-ku"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antalet anställda enligt kontrolluppgifter hör till antal anställda.\ncatalog:variable_text:10450:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-ku"
+fields = { "tags" = ["employment"] }
+evidence = "Antalet anställda enligt kontrolluppgifter hör till antal anställda.\ncatalog:variable_text:10450:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen härleds från antal anställda.\ncatalog:variable_text:10451:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen härleds från antal anställda.\ncatalog:variable_text:10451:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass-stat"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Storleksklassen härleds från statistiskt antal anställda.\ncatalog:variable_text:10452:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallda-storleksklass-stat"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen härleds från statistiskt antal anställda.\ncatalog:variable_text:10452:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstsdiff"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Koden beskriver typen av differens mellan anställdmåtten.\ncatalog:valueset:8526\ncatalog:variable_text:10453:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:anstsdiff"
+fields = { "tags" = ["employment"] }
+evidence = "Koden beskriver typen av differens mellan anställdmåtten.\ncatalog:valueset:8526\ncatalog:variable_text:10453:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsstalle"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma antal anställda är korrekt uppdelat efter period från scb/fdb/aktuellt-antal-anstallda.\ncatalog:occurrence:85707\ncatalog:occurrence:85750"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsstalle"
+fields = { "tags" = ["employment"] }
+evidence = "Samma antal anställda är korrekt uppdelat efter period från scb/fdb/aktuellt-antal-anstallda.\ncatalog:occurrence:85707\ncatalog:occurrence:85750"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-juridisk-enhet"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Samma källkolumn har överlappande tilldelningar.\ncatalog:occurrence:87789\ncatalog:occurrence:87790"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-juridisk-enhet"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn har överlappande tilldelningar.\ncatalog:occurrence:87789\ncatalog:occurrence:87790"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-statistiskt-matt"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Det statistiska måttet hör till antal anställda.\ncatalog:variable_text:10456:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-statistiskt-matt"
+fields = { "tags" = ["employment"] }
+evidence = "Det statistiska måttet hör till antal anställda.\ncatalog:variable_text:10456:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-aeant"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "AEAnt återges i källetiketten och antalet hör till arbetsställen.\ncatalog:variable_text:10457:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetsstallen-aeant"
+fields = { "tags" = ["business"] }
+evidence = "AEAnt återges i källetiketten och antalet hör till arbetsställen.\ncatalog:variable_text:10457:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ast"
+fields = { "sets" = ["antal-arbetsstallen"] }
+evidence = "Antal administrativa arbetsställeenheter omfattas av kandidatgruppen.\ncatalog:variable_text:10458:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ast"
+fields = { "tags" = ["business"] }
+evidence = "Antal administrativa arbetsställeenheter omfattas av kandidatgruppen.\ncatalog:variable_text:10458:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-firmor"
+fields = { "sets" = [] }
+evidence = "Antalet registrerade firmor beskriver företagsstruktur.\ncatalog:variable_text:10459:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-firmor"
+fields = { "tags" = ["business"] }
+evidence = "Antalet registrerade firmor beskriver företagsstruktur.\ncatalog:variable_text:10459:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-juridiska-enheter"
+fields = { "sets" = [] }
+evidence = "Antal juridiska enheter beskriver företagsstruktur.\ncatalog:variable_text:10460:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-juridiska-enheter"
+fields = { "tags" = ["business"] }
+evidence = "Antal juridiska enheter beskriver företagsstruktur.\ncatalog:variable_text:10460:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lokala-ve"
+fields = { "sets" = ["antal-verksamhetsenheter"] }
+evidence = "Antalet lokala verksamhetsenheter hör till samma begrepp som antalet verksamhetsenheter.\ncatalog:variable_text:10462:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lokala-ve"
+fields = { "tags" = ["business"] }
+evidence = "Antalet lokala verksamhetsenheter hör till samma begrepp som antalet verksamhetsenheter.\ncatalog:variable_text:10462:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rorligt-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Rörligt anställda är en uttrycklig delmängd av anställda.\ncatalog:variable_text:10463:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rorligt-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Rörligt anställda är en uttrycklig delmängd av anställda.\ncatalog:variable_text:10463:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "sets" = ["antal-verksamhetsenheter"] }
+evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_text:10464:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ve"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_text:10464:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivarstatus"
+fields = { "sets" = [] }
+evidence = "Registrering som arbetsgivare beskriver arbetsgivarställning.\ncatalog:variable_text:10465:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivarstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Registrering som arbetsgivare beskriver arbetsgivarställning.\ncatalog:variable_text:10465:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbgivtyp"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver arbetsgivartyp.\ncatalog:variable_text:10468:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbgivtyp"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen beskriver arbetsgivartyp.\ncatalog:variable_text:10468:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstalle-status"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar arbetsställets verksamhetsstatus.\ncatalog:variable_text:10469:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aststat"
+fields = { "tags" = ["business"] }
+evidence = "AST-enhetens verksamhetsstatus hör till företagsstruktur. Coordinator group membership: Verksamhetsstatus och statistisk verksamhetsstatus omfattas för samtliga belagda enhetstyper, inklusive AST och firma. AST stöds av den tidigare sakbedömningen och firma av den uttryckliga definitionen. Bolagsrättslig status och skatteregistreringsstatus utesluts.\ncatalog:valueset:6143\ncatalog:variable_text:10445:17897:20454\ncatalog:variable_text:10469:10592:20454\ncatalog:variable_text:10471:10592:20454\ncatalog:variable_text:10481:10592:20454\ncatalog:variable_text:10490:10592:20454\ncatalog:variable_text:10495:17897:20454\ncatalog:variable_text:10506:10592:20454\ncatalog:variable_text:10507:17897:20454\ncatalog:variable_text:10508:10592:20454\ncatalog:variable_text:10517:10592:20454\ncatalog:variable_text:10551:10592:17897\ncatalog:variable_text:10559:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Gatan är en komponent i belägenhetsadressen och beskriver geografiskt läge.\ncatalog:variable_text:10473:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "tags" = ["geography"] }
+evidence = "Gatan är en komponent i belägenhetsadressen och beskriver geografiskt läge.\ncatalog:variable_text:10473:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Postnumret är en komponent i belägenhetsadressen.\ncatalog:variable_text:10474:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret är en komponent i belägenhetsadressen.\ncatalog:variable_text:10474:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "Besökspostorten är en komponent i belägenhetsadressen.\ncatalog:variable_text:10476:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "tags" = ["geography"] }
+evidence = "Besökspostorten är en komponent i belägenhetsadressen.\ncatalog:variable_text:10476:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bgatulittera"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10477:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bgatulittera"
+fields = { "tags" = ["geography"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10477:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gatunummer"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10478:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gatunummer"
+fields = { "tags" = ["geography"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10478:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ytterligare-specificering-av-belagenhetsadressens-gatudel"
+fields = { "sets" = ["belagenhetsadress"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10479:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ytterligare-specificering-av-belagenhetsadressens-gatudel"
+fields = { "tags" = ["geography"] }
+evidence = "B är en enbokstavskod för belägenhetsadress; etiketten anger komponenten.\ncatalog:variable_text:10479:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bolagsstatus"
+fields = { "sets" = [] }
+evidence = "Bolagsstatus beskriver företagsdemografi.\ncatalog:variable_text:10481:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bolagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Bolagsstatus beskriver företagsdemografi.\ncatalog:variable_text:10481:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "sets" = ["postadress"] }
+evidence = "C/O-uppgiften är en postadresskomponent.\ncatalog:variable_text:10482:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "tags" = ["geography"] }
+evidence = "C/O-uppgiften är en postadresskomponent.\ncatalog:variable_text:10482:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "sets" = ["fastighetstaxeringsvarde"] }
+evidence = "Storleksklassen och värdet beskriver fastighetstaxeringsvärde.\ncatalog:variable_text:10486:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { "tags" = ["property"] }
+evidence = "Storleksklassen och värdet beskriver fastighetstaxeringsvärde.\ncatalog:variable_text:10486:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxvarde"
+fields = { "sets" = ["fastighetstaxeringsvarde"] }
+evidence = "Både belopp och storleksklass ingår i gruppen; källorna motsäger varandra om representationen.\ncatalog:variable_text:10487:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxvarde"
+fields = { "tags" = ["property"] }
+evidence = "Både belopp och storleksklass ingår i gruppen; källorna motsäger varandra om representationen.\ncatalog:variable_text:10487:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-fe"
+fields = { "tags" = ["business"] }
+evidence = "FEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10490:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetstyp"
+fields = { "sets" = [] }
+evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10491:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetstyp"
+fields = { "tags" = ["business"] }
+evidence = "FE är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10491:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:firmarel"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver firmans relation inom den juridiska enheten.\ncatalog:variable_text:10494:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:firmarel"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen beskriver firmans relation inom den juridiska enheten.\ncatalog:variable_text:10494:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:firmastat"
+fields = { "sets" = [] }
+evidence = "Registreringsstatus för firma beskriver företagsdemografi. Coordinator group membership: Verksamhetsstatus och statistisk verksamhetsstatus omfattas för samtliga belagda enhetstyper, inklusive AST och firma. AST stöds av den tidigare sakbedömningen och firma av den uttryckliga definitionen. Bolagsrättslig status och skatteregistreringsstatus utesluts.\ncatalog:valueset:6143\ncatalog:variable_text:10445:17897:20454\ncatalog:variable_text:10469:10592:20454\ncatalog:variable_text:10471:10592:20454\ncatalog:variable_text:10481:10592:20454\ncatalog:variable_text:10490:10592:20454\ncatalog:variable_text:10495:17897:20454\ncatalog:variable_text:10506:10592:20454\ncatalog:variable_text:10507:17897:20454\ncatalog:variable_text:10508:10592:20454\ncatalog:variable_text:10517:10592:20454\ncatalog:variable_text:10551:10592:17897\ncatalog:variable_text:10559:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:firmastat"
+fields = { "tags" = ["business"] }
+evidence = "Registreringsstatus för firma beskriver företagsdemografi. Coordinator group membership: Verksamhetsstatus och statistisk verksamhetsstatus omfattas för samtliga belagda enhetstyper, inklusive AST och firma. AST stöds av den tidigare sakbedömningen och firma av den uttryckliga definitionen. Bolagsrättslig status och skatteregistreringsstatus utesluts.\ncatalog:valueset:6143\ncatalog:variable_text:10445:17897:20454\ncatalog:variable_text:10469:10592:20454\ncatalog:variable_text:10471:10592:20454\ncatalog:variable_text:10481:10592:20454\ncatalog:variable_text:10490:10592:20454\ncatalog:variable_text:10495:17897:20454\ncatalog:variable_text:10506:10592:20454\ncatalog:variable_text:10507:17897:20454\ncatalog:variable_text:10508:10592:20454\ncatalog:variable_text:10517:10592:20454\ncatalog:variable_text:10551:10592:17897\ncatalog:variable_text:10559:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fskattstat"
+fields = { "sets" = [] }
+evidence = "Kodningen gäller registrering för F-skatt.\ncatalog:variable_text:10497:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fskattstat"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen gäller registrering för F-skatt.\ncatalog:variable_text:10497:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "sets" = ["postadress"] }
+evidence = "Källan beskriver postadressens gatukomponent.\ncatalog:variable_text:10499:10592:17897\ncatalog:variable_text:10499:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gata"
+fields = { "tags" = ["geography"] }
+evidence = "Källan beskriver postadressens gatukomponent.\ncatalog:variable_text:10499:10592:17897\ncatalog:variable_text:10499:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gatulittera"
+fields = { "sets" = ["postadress"] }
+evidence = "Gatulittera är en postadresskomponent.\ncatalog:variable_text:10500:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gatulittera"
+fields = { "tags" = ["geography"] }
+evidence = "Gatulittera är en postadresskomponent.\ncatalog:variable_text:10500:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "sets" = ["postadress"] }
+evidence = "Gatunummer är en postadresskomponent.\ncatalog:variable_text:10501:10592:17897\ncatalog:variable_text:10501:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gatunr"
+fields = { "tags" = ["geography"] }
+evidence = "Gatunummer är en postadresskomponent.\ncatalog:variable_text:10501:10592:17897\ncatalog:variable_text:10501:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gaturest"
+fields = { "sets" = ["postadress"] }
+evidence = "Variabeln specificerar postadressens gatudel.\ncatalog:variable_text:10502:10592:16071\ncatalog:variable_text:10502:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gaturest"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln specificerar postadressens gatudel.\ncatalog:variable_text:10502:10592:16071\ncatalog:variable_text:10502:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppmomsstat"
+fields = { "sets" = ["momsregistreringsstatus"] }
+evidence = "Gruppmomsstatus hör till momsregistrering.\ncatalog:variable_text:10503:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppmomsstat"
+fields = { "tags" = ["taxation"] }
+evidence = "Gruppmomsstatus hör till momsregistrering.\ncatalog:variable_text:10503:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpverksamhetskod"
+fields = { "sets" = ["hjalpverksamhet"] }
+evidence = "Koden och hjälpverksamhetsenhet mäter hjälpverksamhet.\ncatalog:variable_text:10504:10592:20454\ncatalog:variable_text:10505:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpverksamhetskod"
+fields = { "tags" = ["business"] }
+evidence = "Koden och hjälpverksamhetsenhet mäter hjälpverksamhet.\ncatalog:variable_text:10504:10592:20454\ncatalog:variable_text:10505:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjenhet"
+fields = { "sets" = ["hjalpverksamhet"] }
+evidence = "Kodningen hör till hjälpverksamhet.\ncatalog:variable_text:10505:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjenhet"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till hjälpverksamhet.\ncatalog:variable_text:10505:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar den juridiska enhetens verksamhetsstatus.\ncatalog:variable_text:10506:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:je-statistisk-foretagsstatus"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln kodar statistisk verksamhetsstatus.\ncatalog:variable_text:10507:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver den juridiska enhetens registrerings- och populationsstatus.\ncatalog:valueset:10193\ncatalog:valueset:9611\ncatalog:variable_text:10508:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:je-status"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen beskriver den juridiska enhetens registrerings- och populationsstatus.\ncatalog:valueset:10193\ncatalog:valueset:9611\ncatalog:variable_text:10508:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jerel"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver relationen mellan juridiska enheter och företagsenheter och hör till företagsstruktur.\ncatalog:valueset:4114\ncatalog:variable_text:10509:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:jerel"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln beskriver relationen mellan juridiska enheter och företagsenheter och hör till företagsstruktur.\ncatalog:valueset:4114\ncatalog:variable_text:10509:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = ["juridisk-form"] }
+evidence = "Kodning av juridisk form hör till kandidatgruppen.\ncatalog:variable_text:10510:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Kodning av juridisk form hör till kandidatgruppen.\ncatalog:variable_text:10510:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form-jurform"
+fields = { "sets" = ["juridisk-form"] }
+evidence = "Variabeln anger juridisk form.\ncatalog:variable_text:10511:16436:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form-jurform"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln anger juridisk form.\ncatalog:variable_text:10511:16436:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunkoden lokaliserar arbetsstället.\ncatalog:variable_text:10512:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunkoden lokaliserar arbetsstället.\ncatalog:variable_text:10512:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = ["lan"] }
+evidence = "Länskoden lokaliserar arbetsstället.\ncatalog:variable_text:10514:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden lokaliserar arbetsstället.\ncatalog:variable_text:10514:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-enligt-kontrolluppgifterna"
+fields = { "sets" = [] }
+evidence = "Lönesumman är en företagskostnad.\ncatalog:variable_text:10515:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-enligt-kontrolluppgifterna"
+fields = { "tags" = ["business"] }
+evidence = "Lönesumman är en företagskostnad.\ncatalog:variable_text:10515:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-lve"
+fields = { "tags" = ["business"] }
+evidence = "LVEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10517:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsstat"
+fields = { "sets" = ["momsregistreringsstatus"] }
+evidence = "Kodningen gäller momsregistrering.\ncatalog:variable_text:10519:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsstat"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen gäller momsregistrering.\ncatalog:variable_text:10519:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln klassificerar enhetens näringsgren.\ncatalog:variable_text:10523:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar enhetens näringsgren.\ncatalog:variable_text:10523:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Variabeln klassificerar näringsgren för statistiska ändamål.\ncatalog:variable_text:10524:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar näringsgren för statistiska ändamål.\ncatalog:variable_text:10524:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-rangordning"
+fields = { "sets" = ["naringsgrenarnas-rangordning"] }
+evidence = "Källkolumnen är samtidigt tilldelad ordinarie och statistisk rangordning.\ncatalog:occurrence:84766\ncatalog:occurrence:84767\ncatalog:occurrence:87512\ncatalog:occurrence:87513"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-rangordning"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen är samtidigt tilldelad ordinarie och statistisk rangordning.\ncatalog:occurrence:84766\ncatalog:occurrence:84767\ncatalog:occurrence:87512\ncatalog:occurrence:87513"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-tid-oms-pct"
+fields = { "sets" = ["andel-tid-eller-omsattning"] }
+evidence = "Samma källkolumn är samtidigt tilldelad två variabler.\ncatalog:occurrence:84769\ncatalog:occurrence:84770"
+
+[[statement]]
+kind = "set"
+subject = "var:ng-tid-oms-pct"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn är samtidigt tilldelad två variabler.\ncatalog:occurrence:84769\ncatalog:occurrence:84770"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en ogenomskinlig källkod för näringsgren; 1 är källkolumnens platsnummer.\ncatalog:variable_text:10527:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ng1"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en ogenomskinlig källkod för näringsgren; 1 är källkolumnens platsnummer.\ncatalog:variable_text:10527:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrenens-rangordningsgrund"
+fields = { "sets" = [] }
+evidence = "NG är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10528:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrenens-rangordningsgrund"
+fields = { "tags" = ["business"] }
+evidence = "NG är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:10528:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-rangordning"
+fields = { "sets" = ["naringsgrenarnas-rangordning"] }
+evidence = "Källkolumnen är samtidigt tilldelad statistisk och ordinarie rangordning.\ncatalog:occurrence:84766\ncatalog:occurrence:84767\ncatalog:occurrence:87512\ncatalog:occurrence:87513"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-rangordning"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnen är samtidigt tilldelad statistisk och ordinarie rangordning.\ncatalog:occurrence:84766\ncatalog:occurrence:84767\ncatalog:occurrence:87512\ncatalog:occurrence:87513"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "sets" = ["naringsgren"] }
+evidence = "NgS är en ogenomskinlig källkod; 1 är källkolumnens platsnummer.\ncatalog:variable_text:10530:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ngs1"
+fields = { "tags" = ["business"] }
+evidence = "NgS är en ogenomskinlig källkod; 1 är källkolumnens platsnummer.\ncatalog:variable_text:10530:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrensdifferens"
+fields = { "sets" = [] }
+evidence = "NgS är en ogenomskinlig källkod för statistisk näringsgren.\ncatalog:variable_text:10531:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrensdifferens"
+fields = { "tags" = ["business"] }
+evidence = "NgS är en ogenomskinlig källkod för statistisk näringsgren.\ncatalog:variable_text:10531:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "sets" = ["omsattning"] }
+evidence = "Variabeln mäter årsomsättning enligt momsdeklarationer.\ncatalog:variable_text:10533:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter årsomsättning enligt momsdeklarationer.\ncatalog:variable_text:10533:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omskl"
+fields = { "sets" = ["omsattning"] }
+evidence = "Storleksklassen avser årsomsättning.\ncatalog:variable_text:10534:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omskl"
+fields = { "tags" = ["business"] }
+evidence = "Storleksklassen avser årsomsättning.\ncatalog:variable_text:10534:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgata"
+fields = { "sets" = ["postadress"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10536:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgata"
+fields = { "tags" = ["geography"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10536:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgatulittera"
+fields = { "sets" = ["postadress"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10537:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgatulittera"
+fields = { "tags" = ["geography"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10537:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgatunr"
+fields = { "sets" = ["postadress"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10538:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgatunr"
+fields = { "tags" = ["geography"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10538:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgaturest"
+fields = { "sets" = ["postadress"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10539:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pgaturest"
+fields = { "tags" = ["geography"] }
+evidence = "P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10539:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-till-postadress"
+fields = { "sets" = ["postadress"] }
+evidence = "P är en enbokstavskod för postadress.\ncatalog:variable_text:10540:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-till-postadress"
+fields = { "tags" = ["geography"] }
+evidence = "P är en enbokstavskod för postadress.\ncatalog:variable_text:10540:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = ["postadress"] }
+evidence = "Postnumret är en postadresskomponent.\ncatalog:variable_text:10541:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnumret är en postadresskomponent.\ncatalog:variable_text:10541:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = ["postadress"] }
+evidence = "Postorten är en postadresskomponent.\ncatalog:variable_text:10542:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten är en postadresskomponent.\ncatalog:variable_text:10542:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ppostnr"
+fields = { "sets" = ["postadress"] }
+evidence = "Det inledande P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10543:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ppostnr"
+fields = { "tags" = ["geography"] }
+evidence = "Det inledande P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10543:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ppostort"
+fields = { "sets" = ["postadress"] }
+evidence = "Det inledande P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10544:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ppostort"
+fields = { "tags" = ["geography"] }
+evidence = "Det inledande P är en enbokstavskod för postadress. Etiketten delas med en annan variabel och målnamnet måste disambigueras enligt D-12.\ncatalog:variable_text:10544:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:privarbgivspec"
+fields = { "sets" = [] }
+evidence = "Kodningen gäller en särskild arbetsgivartyp.\ncatalog:variable_text:10545:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:privarbgivspec"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen gäller en särskild arbetsgivartyp.\ncatalog:variable_text:10545:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:privat-publikt-foretag"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver företagsform.\ncatalog:variable_text:10546:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:privat-publikt-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen beskriver företagsform.\ncatalog:variable_text:10546:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:procent-tid-omsattning"
+fields = { "sets" = ["andel-tid-eller-omsattning"] }
+evidence = "Samma källkolumn är samtidigt tilldelad två variabler.\ncatalog:occurrence:84769\ncatalog:occurrence:84770"
+
+[[statement]]
+kind = "set"
+subject = "var:procent-tid-omsattning"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn är samtidigt tilldelad två variabler.\ncatalog:occurrence:84769\ncatalog:occurrence:84770"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "sets" = [] }
+evidence = "Kodningen beskriver momsredovisning.\ncatalog:variable_text:10548:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Kodningen beskriver momsredovisning.\ncatalog:variable_text:10548:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regdel"
+fields = { "sets" = [] }
+evidence = "Indelningen beskriver företagsenhetens komplexitet.\ncatalog:variable_text:10550:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:regdel"
+fields = { "tags" = ["business"] }
+evidence = "Indelningen beskriver företagsenhetens komplexitet.\ncatalog:variable_text:10550:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:rsvstat"
+fields = { "sets" = [] }
+evidence = "Statusen beskriver företagsregistrering.\ncatalog:valueset:10318\ncatalog:variable_text:10551:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:rsvstat"
+fields = { "tags" = ["business"] }
+evidence = "Statusen beskriver företagsregistrering.\ncatalog:valueset:10318\ncatalog:variable_text:10551:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Variabeln anger den juridiska enhetens säteskommun.\ncatalog:variable_text:10552:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger den juridiska enhetens säteskommun.\ncatalog:variable_text:10552:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sateslan"
+fields = { "sets" = ["lan"] }
+evidence = "Variabeln anger den juridiska enhetens säteslän.\ncatalog:variable_text:10553:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sateslan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger den juridiska enhetens säteslän.\ncatalog:variable_text:10553:10592:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Institutionell sektor beskriver enhetens sektorstillhörighet.\ncatalog:variable_text:10554:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor beskriver enhetens sektorstillhörighet.\ncatalog:variable_text:10554:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ve-antal-allman"
+fields = { "sets" = ["antal-verksamhetsenheter"] }
+evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_text:10556:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ve-antal-allman"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln räknar verksamma verksamhetsenheter.\ncatalog:variable_text:10556:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-ve"
+fields = { "tags" = ["business"] }
+evidence = "VEStat är en källkod vars bokstavskoder inte återger etikettens ord.\ncatalog:variable_text:10559:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ae-statistisk-status"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "AE statistical status follows administrative activity status, with codes for never active, active and inactive (r254, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10428\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10445"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstalle-status"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition explicitly measures workplace activity status, with active and inactive codes (r256, r245, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10452\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10469"
+
+[[statement]]
+kind = "set"
+subject = "var:aststat"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition explicitly records whether the AST unit is active, and the complete codes are active/inactive (r257, r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10454\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6143\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10471"
+
+[[statement]]
+kind = "set"
+subject = "var:je-foretagsstatus"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "This classifies legal-unit activity status and is derived from workplace activity status (r259, r123).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10487\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:86357\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10504"
+
+[[statement]]
+kind = "set"
+subject = "var:je-statistisk-foretagsstatus"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "This classifies legal-unit statistical activity status, derived from workplace statistical activity status (r260, r166).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:87516\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10505"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-fe"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the enterprise unit operates, supported by activity-status codes throughout (r261, r249, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10538\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2274\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10555"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-lve"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the local activity unit operates; both code lists encode activity status (r262, r250, r253).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10539\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3310\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7235\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10556"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsstatus-ve"
+fields = { "sets" = ["verksamhetsstatus"] }
+evidence = "The definition records whether the activity unit operates; historical and later codes encode activity status (r263, r246, r252).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:10540\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12629\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:10557"
+
+[[statement]]
+kind = "set"
+subject = "var:aststat"
+fields = { "description" = "AST-status" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "description" = "Arbetsställets faxnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:10488:17532:17897\n\nIdentity review: rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter"
+fields = { "tags" = ["business"] }
+evidence = "Statements counted for legal entities (r36) and AST units (r9) form a business-register administrative measure, consistent with the dominant business theme (r104, r1) and firm/entity-count siblings (r81, r82).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:84490\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:86365\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10441\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10442\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: fax @1999-01-01..2018-12-31 where key = 'v814'"
+fields = { "variable" = "faxnummer-juridisk-enhet" }
+evidence = "rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer-juridisk-enhet"
+fields = { "description" = "Den juridiska enhetens faxnummer, hämtat från exempelvis Skatteverket eller kontakt med enheten." }
+evidence = "rel070-base/reg_meta.db: Fax v814 on arbetsstalleenheter (84749+) and juridiska-enheter (86348+); explicit unit-specific operational definitions, 1999-2018."

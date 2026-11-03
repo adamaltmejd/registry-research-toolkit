@@ -172,3 +172,429 @@ kind = "set"
 subject = "skyddad-natur: <none> @2016-12-31 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-databas"
+fields = { "sets" = ["registeransvarig"] }
+evidence = "Uppgiften gäller registeransvar.\ncatalog:occurrence:442735"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-databas"
+fields = { "tags" = ["environment"] }
+evidence = "Uppgiften gäller registeransvar.\ncatalog:occurrence:442735"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-skotsel"
+fields = { "sets" = ["forvaltare"] }
+evidence = "Uppgiften gäller områdets förvaltare.\ncatalog:occurrence:442736"
+
+[[statement]]
+kind = "set"
+subject = "var:ansvarig-skotsel"
+fields = { "tags" = ["environment"] }
+evidence = "Uppgiften gäller områdets förvaltare.\ncatalog:occurrence:442736"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442818"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["environment"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442818"
+
+[[statement]]
+kind = "set"
+subject = "var:areaha-scb"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442842"
+
+[[statement]]
+kind = "set"
+subject = "var:areaha-scb"
+fields = { "tags" = ["environment"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442842"
+
+[[statement]]
+kind = "set"
+subject = "var:areaprod"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442843"
+
+[[statement]]
+kind = "set"
+subject = "var:areaprod"
+fields = { "tags" = ["environment"] }
+evidence = "Areal för skyddat område.\ncatalog:occurrence:442843"
+
+[[statement]]
+kind = "set"
+subject = "var:areatot"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442844"
+
+[[statement]]
+kind = "set"
+subject = "var:areatot"
+fields = { "tags" = ["environment"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442844"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsmyndighet"
+fields = { "sets" = [] }
+evidence = "Beslutsfattare för skyddade områden.\ncatalog:occurrence:442845"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsmyndighet"
+fields = { "tags" = ["environment"] }
+evidence = "Beslutsfattare för skyddade områden.\ncatalog:occurrence:442845"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "sets" = [] }
+evidence = "Typ av beslut för skyddat område.\ncatalog:occurrence:442847"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "tags" = ["environment"] }
+evidence = "Typ av beslut för skyddat område.\ncatalog:occurrence:442847"
+
+[[statement]]
+kind = "set"
+subject = "var:beteckn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442848"
+
+[[statement]]
+kind = "set"
+subject = "var:beteckn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442848"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields = { "sets" = ["forvaltare"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442850\ncatalog:variable_text:42738:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields = { "tags" = ["environment"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442850\ncatalog:variable_text:42738:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:iucnkategori"
+fields = { "sets" = [] }
+evidence = "Internationell klassificering av skyddade områden.\ncatalog:occurrence:442851\ncatalog:valueset:5623"
+
+[[statement]]
+kind = "set"
+subject = "var:iucnkategori"
+fields = { "tags" = ["environment"] }
+evidence = "Internationell klassificering av skyddade områden.\ncatalog:occurrence:442851\ncatalog:valueset:5623"
+
+[[statement]]
+kind = "set"
+subject = "var:miljomal"
+fields = { "sets" = [] }
+evidence = "Nationella miljömål kopplade till objektet.\ncatalog:occurrence:442852"
+
+[[statement]]
+kind = "set"
+subject = "var:miljomal"
+fields = { "tags" = ["environment"] }
+evidence = "Nationella miljömål kopplade till objektet.\ncatalog:occurrence:442852"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442853"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442853"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-1"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442854"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-1"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442854"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-12"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442855"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-12"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442855"
+
+[[statement]]
+kind = "set"
+subject = "var:objektnamn"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442829"
+
+[[statement]]
+kind = "set"
+subject = "var:objektnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442829"
+
+[[statement]]
+kind = "set"
+subject = "var:prec-syfte"
+fields = { "sets" = ["syfte-for-skyddat-omrade"] }
+evidence = "Preciserat syfte för skyddat område.\ncatalog:occurrence:442858"
+
+[[statement]]
+kind = "set"
+subject = "var:prec-syfte"
+fields = { "tags" = ["environment"] }
+evidence = "Preciserat syfte för skyddat område.\ncatalog:occurrence:442858"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-myndighet"
+fields = { "sets" = ["registeransvarig"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-myndighet"
+fields = { "tags" = ["environment"] }
+evidence = "Siffersuffixet kommer inte från källkolumnen.\ncatalog:occurrence:442859\ncatalog:variable_text:42751:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sci-43151"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Innehållet ändras från SCI-indikator till kodning av områdestyp.\ncatalog:occurrence:442780\ncatalog:occurrence:442860\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:sci-43151"
+fields = { "tags" = ["environment"] }
+evidence = "Innehållet ändras från SCI-indikator till kodning av områdestyp.\ncatalog:occurrence:442780\ncatalog:occurrence:442860\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:site-name"
+fields = { "sets" = ["namn-pa-geografiskt-objekt"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442756"
+
+[[statement]]
+kind = "set"
+subject = "var:site-name"
+fields = { "tags" = ["geography"] }
+evidence = "Namn på geografiskt objekt.\ncatalog:occurrence:442756"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddstyp"
+fields = { "sets" = [] }
+evidence = "Typ av formellt skydd.\ncatalog:occurrence:442865"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddstyp"
+fields = { "tags" = ["environment"] }
+evidence = "Typ av formellt skydd.\ncatalog:occurrence:442865"
+
+[[statement]]
+kind = "set"
+subject = "var:spa"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Innehållet ändras från SPA-indikator till kodning av områdestyp.\ncatalog:occurrence:442786\ncatalog:occurrence:442868\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:spa"
+fields = { "tags" = ["environment"] }
+evidence = "Innehållet ändras från SPA-indikator till kodning av områdestyp.\ncatalog:occurrence:442786\ncatalog:occurrence:442868\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-registerobjekt"
+fields = { "sets" = [] }
+evidence = "Samma kolumn är mappad till både registerstatus och beslutsdatum.\ncatalog:occurrence:442768\ncatalog:occurrence:442769"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-registerobjekt"
+fields = { "tags" = ["environment"] }
+evidence = "Samma kolumn är mappad till både registerstatus och beslutsdatum.\ncatalog:occurrence:442768\ncatalog:occurrence:442769"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "sets" = ["syfte-for-skyddat-omrade"] }
+evidence = "Primärt syfte för skyddat område.\ncatalog:occurrence:442869"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "tags" = ["environment"] }
+evidence = "Primärt syfte för skyddat område.\ncatalog:occurrence:442869"
+
+[[statement]]
+kind = "set"
+subject = "var:total-areal"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442870"
+
+[[statement]]
+kind = "set"
+subject = "var:total-areal"
+fields = { "tags" = ["environment"] }
+evidence = "Totalareal för skyddat område.\ncatalog:occurrence:442870"
+
+[[statement]]
+kind = "set"
+subject = "var:totarea-scb"
+fields = { "sets" = ["skyddad-areal"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442871"
+
+[[statement]]
+kind = "set"
+subject = "var:totarea-scb"
+fields = { "tags" = ["environment"] }
+evidence = "SCB-beräknad areal för skyddat område.\ncatalog:occurrence:442871"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442872\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442872\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-1"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442873\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-1"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442873\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-12"
+fields = { "sets" = ["natura-2000-omradestyp"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442874\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-12"
+fields = { "tags" = ["environment"] }
+evidence = "Kodning av Natura 2000-områdestyp.\ncatalog:occurrence:442874\ncatalog:valueset:7193"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r14 and r41 explicitly define a protection decision date and identify SCI decision dates in the operational definition. | r14 and r41 explicitly define a protection decision date and identify SCI decision dates in the operational definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42585\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442737\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42728"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r16 and r42 explicitly define a protection decision date and identify SPA decision dates in the operational definition. | r16 and r42 explicitly define a protection decision date and identify SPA decision dates in the operational definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42586\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42729"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslutsstatus"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status. | r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42587\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442794\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442820"
+
+[[statement]]
+kind = "set"
+subject = "var:datbeslut"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r37 and r44 explicitly define the date a decision to protect an area was made. | r37 and r44 explicitly define the date a decision to protect an area was made.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42592\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42735"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-bevarandeomr-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r18 and r45 define a protection decision date and expressly include decisions at EU level. | r18 and r45 define a protection decision date and expressly include decisions at EU level.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42593\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442744\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42736"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-skyddsomr-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r19 and r46 define a protection decision date and expressly include decisions at EU level. | r19 and r46 define a protection decision date and expressly include decisions at EU level.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42594\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42737"
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r15 and r47 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42739"
+
+[[statement]]
+kind = "set"
+subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r17 and r48 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442740\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42740"
+
+[[statement]]
+kind = "set"
+subject = "var:inlamn-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date. | r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42598\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42741"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-beslutsdat"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r21 and r50 define protection decision dates and expressly include the latest decision. | r21 and r50 define protection decision dates and expressly include the latest decision.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42610\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442755\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42753"
+
+[[statement]]
+kind = "set"
+subject = "var:uppd-datum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r22 and r51 explicitly define a protection decision date; the column name alone does not establish an excluded administrative update date. | r22 and r51 explicitly define a protection decision date; the column name alone does not establish an excluded administrative update date.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42624\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42767"
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-beslutsdatum"
+fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
+evidence = "r23 and r52 define a protection decision date, with operational text expressly covering original decisions. | r23 and r52 define a protection decision date, with operational text expressly covering original decisions.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42625\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42768"
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-gallandedatum"
+fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
+evidence = "r24, r40 and r53 consistently define when protection takes legal effect, matching the effective-date group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42626\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442876\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42769"

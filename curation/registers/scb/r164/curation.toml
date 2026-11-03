@@ -670,3 +670,1660 @@ kind = "set"
 subject = "november: utbildn @2024-05-01..2024-05-31,2025-05-01..2025-05-31"
 fields = { "classification" = "class/niva-grov/niva-grovv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "var:ald-kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Indelningen kombinerar ålder och kön.\ncatalog:valueset:2777\ncatalog:variable_text:40947:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:aldg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln grupperar ålder vid årets slut.\ncatalog:valueset:8199\ncatalog:variable_text:40948:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = [] }
+evidence = "Antal anställda är en storleksklass för företaget. Coordinator group membership: Antal anställda mäter det antal som den fasta definitionen omfattar. Fr22 anger endast om företaget har löneanställda och stöder därför inte medlemskap enligt definitionen. Övriga valda variabler mäter andra begrepp. Det stödda medlemskapet behålls för union över registersektionerna.\ncatalog:occurrence:405944\ncatalog:valueset:4205\ncatalog:variable_text:40949:20209:20240\ncatalog:variable_text:41003:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "tags" = ["business"] }
+evidence = "Antal anställda är en storleksklass för företaget. Coordinator group membership: Antal anställda mäter det antal som den fasta definitionen omfattar. Fr22 anger endast om företaget har löneanställda och stöder därför inte medlemskap enligt definitionen. Övriga valda variabler mäter andra begrepp. Det stödda medlemskapet behålls för union över registersektionerna.\ncatalog:occurrence:405944\ncatalog:valueset:4205\ncatalog:variable_text:40949:20209:20240\ncatalog:variable_text:41003:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-under-18-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet har en motsvarande kombinationsindelning.\ncatalog:variable_text:40950:20209:20240\ncatalog:variable_text:40951:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-ald"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Indelningen kombinerar ålder och antal barn under 18 år.\ncatalog:valueset:10737\ncatalog:variable_text:40951:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstyp"
+fields = { "sets" = ["bostadstyp"] }
+evidence = "Kodningen avser bostadstyp.\ncatalog:occurrence:405916\ncatalog:valueset:10399"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadstyp"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen avser bostadstyp.\ncatalog:occurrence:405916\ncatalog:valueset:10399"
+
+[[statement]]
+kind = "set"
+subject = "var:civ-ald"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Indelningen kombinerar ålder och civilstånd.\ncatalog:valueset:4008\ncatalog:variable_text:40953:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = ["civilstand"] }
+evidence = "Civilstånd ingår även i en kombinerad indelning.\ncatalog:valueset:12759\ncatalog:variable_text:40954:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd ingår även i en kombinerad indelning.\ncatalog:valueset:12759\ncatalog:variable_text:40954:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-europaparlamentsval"
+fields = { "sets" = ["valdeltagande-europaparlamentsval"] }
+evidence = "Deltagande är samma begrepp som för den perioduppdelade variabeln rostat-europaparlamentsval.\ncatalog:occurrence:402341\ncatalog:variable_text:40955:14184:14214\ncatalog:variable_text:40955:14549:14579"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-europaparlamentsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Deltagande är samma begrepp som för den perioduppdelade variabeln rostat-europaparlamentsval.\ncatalog:occurrence:402341\ncatalog:variable_text:40955:14184:14214\ncatalog:variable_text:40955:14549:14579"
+
+[[statement]]
+kind = "set"
+subject = "var:dispositionsform-bostad"
+fields = { "sets" = [] }
+evidence = "Dispositionsform är ett boendemått.\ncatalog:occurrence-locators:variable:40956\ncatalog:valueset:8568"
+
+[[statement]]
+kind = "set"
+subject = "var:dispositionsform-bostad"
+fields = { "tags" = ["housing"] }
+evidence = "Dispositionsform är ett boendemått.\ncatalog:occurrence-locators:variable:40956\ncatalog:valueset:8568"
+
+[[statement]]
+kind = "set"
+subject = "var:eurosympat-foregaende-undersokning"
+fields = { "sets" = [] }
+evidence = "Id:t är en ogenomskinlig källkod för eurosympati vid föregående undersökning.\ncatalog:variable_text:40957:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:eurosympat-foregaende-undersokning"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:t är en ogenomskinlig källkod för eurosympati vid föregående undersökning.\ncatalog:variable_text:40957:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-sympati"
+fields = { "sets" = ["eu-sympati"] }
+evidence = "Inställning till EU-medlemskapet hör ihop med föregående undersöknings EU-sympati.\ncatalog:occurrence-locators:variable:40959\ncatalog:variable_text:40960:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-sympati"
+fields = { "tags" = ["democracy"] }
+evidence = "Inställning till EU-medlemskapet hör ihop med föregående undersöknings EU-sympati.\ncatalog:occurrence-locators:variable:40959\ncatalog:variable_text:40960:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-sympati-foregaende-undersokning"
+fields = { "sets" = ["eu-sympati"] }
+evidence = "Id:t är en ogenomskinlig källkod för EU-sympati vid föregående undersökning.\ncatalog:variable_text:40960:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-sympati-foregaende-undersokning"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:t är en ogenomskinlig källkod för EU-sympati vid föregående undersökning.\ncatalog:variable_text:40960:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:euro-sympati"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktumet visar växlande ägare för samma kolumn; motpartens definition saknas.\ncatalog:occurrence:401570\ncatalog:occurrence:401652\ncatalog:occurrence:401733"
+
+[[statement]]
+kind = "set"
+subject = "var:euro-sympati"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet visar växlande ägare för samma kolumn; motpartens definition saknas.\ncatalog:occurrence:401570\ncatalog:occurrence:401652\ncatalog:occurrence:401733"
+
+[[statement]]
+kind = "set"
+subject = "var:fgangvalj"
+fields = { "sets" = [] }
+evidence = "Variabeln avser förstagångsväljare.\ncatalog:occurrence-locators:variable:40962\ncatalog:valueset:2555"
+
+[[statement]]
+kind = "set"
+subject = "var:fgangvalj"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln avser förstagångsväljare.\ncatalog:occurrence-locators:variable:40962\ncatalog:valueset:2555"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:occurrence-locators:variable:40963"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:occurrence-locators:variable:40963"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:occurrence-locators:variable:40964"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:occurrence-locators:variable:40964"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-kapitalinkomst-make"
+fields = { "sets" = ["forvarvs-och-kapitalinkomst"] }
+evidence = "Identitetsfaktet gäller två olika inkomstbegrepp och vissa perioder anger enheten Antal.\ncatalog:occurrence:402795\ncatalog:occurrence:402883\ncatalog:occurrence:402884"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-kapitalinkomst-make"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktet gäller två olika inkomstbegrepp och vissa perioder anger enheten Antal.\ncatalog:occurrence:402795\ncatalog:occurrence:402883\ncatalog:occurrence:402884"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst"
+fields = { "sets" = ["forvarvs-och-kapitalinkomst"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402796\ncatalog:occurrence:402885"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvs-och-kapitalinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402796\ncatalog:occurrence:402885"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-from-2011"
+fields = { "sets" = ["forvarvsarbete"] }
+evidence = "Samma fråga om arbete föregående vecka är uppdelad vid 2011.\ncatalog:occurrence:403399\ncatalog:occurrence:403491"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-from-2011"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fråga om arbete föregående vecka är uppdelad vid 2011.\ncatalog:occurrence:403399\ncatalog:occurrence:403491"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-tom-2010"
+fields = { "sets" = ["forvarvsarbete"] }
+evidence = "Samma fråga om arbete föregående vecka är uppdelad vid 2011.\ncatalog:occurrence:403399\ncatalog:occurrence:403491"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-tom-2010"
+fields = { "tags" = ["employment"] }
+evidence = "Samma fråga om arbete föregående vecka är uppdelad vid 2011.\ncatalog:occurrence:403399\ncatalog:occurrence:403491"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "sets" = ["forvarvsinkomst"] }
+evidence = "Kvintilgruppen är en indelning efter förvärvsinkomst.\ncatalog:valueset:5736\ncatalog:variable_text:40969:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "tags" = ["income"] }
+evidence = "Kvintilgruppen är en indelning efter förvärvsinkomst.\ncatalog:valueset:5736\ncatalog:variable_text:40969:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-europaparlamentsval"
+fields = { "sets" = ["partival-europaparlamentsval"] }
+evidence = "Fr och EP är källkodsförkortningar i id:t.\ncatalog:variable_text:40970:19844:19875"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-europaparlamentsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr och EP är källkodsförkortningar i id:t.\ncatalog:variable_text:40970:19844:19875"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-europaparlamentsval-fritextsvar"
+fields = { "sets" = ["partival-europaparlamentsval"] }
+evidence = "Fr och EP samt ändelsen A är källkod i id:t.\ncatalog:variable_text:40971:19844:19875"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-europaparlamentsval-fritextsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr och EP samt ändelsen A är källkod i id:t.\ncatalog:variable_text:40971:19844:19875"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkdel"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger deltagande i eurofolkomröstningen.\ncatalog:valueset:1901\ncatalog:variable_text:40972:13088:13118"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkrost"
+fields = { "sets" = [] }
+evidence = "Svarskoderna anger ja, nej eller blankt.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Svarskoderna anger ja, nej eller blankt.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935"
+
+[[statement]]
+kind = "set"
+subject = "var:om-nagot-parti-star-narmast"
+fields = { "sets" = [] }
+evidence = "Fr1 är en ogenomskinlig frågekod; variabeln anger om något parti står närmast.\ncatalog:valueset:12128\ncatalog:variable_text:40974:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:om-nagot-parti-star-narmast"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr1 är en ogenomskinlig frågekod; variabeln anger om något parti står närmast.\ncatalog:valueset:12128\ncatalog:variable_text:40974:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-val-idag-fraga"
+fields = { "sets" = ["partiblockval-riksdagsval-idag"] }
+evidence = "Fr10 är en ogenomskinlig frågekod; etiketten anger blockval vid hypotetiskt val.\ncatalog:variable_text:40975:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-val-idag-fraga"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr10 är en ogenomskinlig frågekod; etiketten anger blockval vid hypotetiskt val.\ncatalog:variable_text:40975:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-lutarfraga"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Fr10 är en opak frågekod; etiketten anger partival i lutarfrågan.\ncatalog:occurrence:405005\ncatalog:variable_text:40976:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-lutarfraga"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr10 är en opak frågekod; etiketten anger partival i lutarfrågan.\ncatalog:occurrence:405005\ncatalog:variable_text:40976:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-lutarfraga-annat-parti"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Fr10 är en opak frågekod; etiketten anger fritext för annat parti i lutarfrågan.\ncatalog:occurrence:405006\ncatalog:variable_text:40977:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-lutarfraga-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr10 är en opak frågekod; etiketten anger fritext för annat parti i lutarfrågan.\ncatalog:occurrence:405006\ncatalog:variable_text:40977:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:tveksam-saker-partival-val-idag"
+fields = { "sets" = [] }
+evidence = "Fr11 är en ogenomskinlig frågekod för säkerhet i partivalet.\ncatalog:valueset:12853\ncatalog:variable_text:40978:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:tveksam-saker-partival-val-idag"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11 är en ogenomskinlig frågekod för säkerhet i partivalet.\ncatalog:valueset:12853\ncatalog:variable_text:40978:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:lyfta-medborgarnas-onskemal"
+fields = { "sets" = [] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40979:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:lyfta-medborgarnas-onskemal"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40979:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:ta-ansvar-for-svara-och-langsiktiga-beslut"
+fields = { "sets" = [] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40980:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:ta-ansvar-for-svara-och-langsiktiga-beslut"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40980:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:skapa-engagemang-och-intresse-i-politiska-fragor"
+fields = { "sets" = [] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40981:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:skapa-engagemang-och-intresse-i-politiska-fragor"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40981:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:starka-demokratin"
+fields = { "sets" = [] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40982:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:starka-demokratin"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11p är en ogenomskinlig frågekod; siffran är en källkolumnsplats.\ncatalog:variable_text:40982:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:installning-till-nato"
+fields = { "sets" = [] }
+evidence = "Fr11r är en ogenomskinlig frågekod.\ncatalog:variable_text:40984:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:installning-till-nato"
+fields = { "tags" = ["defence"] }
+evidence = "Fr11r är en ogenomskinlig frågekod.\ncatalog:variable_text:40984:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:asikt-sveriges-coronastrategi"
+fields = { "sets" = [] }
+evidence = "Fr11u är en ogenomskinlig frågekod.\ncatalog:variable_text:40985:18932:18962"
+
+[[statement]]
+kind = "set"
+subject = "var:asikt-sveriges-coronastrategi"
+fields = { "tags" = ["health"] }
+evidence = "Fr11u är en ogenomskinlig frågekod.\ncatalog:variable_text:40985:18932:18962"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xa"
+fields = { "sets" = ["opinionsundersokningars-paverkan-pa-partival"] }
+evidence = "Identitetsfaktumet gäller en annan frågeinnebörd i en senare period.\ncatalog:occurrence:402491\ncatalog:occurrence:402583"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xa"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller en annan frågeinnebörd i en senare period.\ncatalog:occurrence:402491\ncatalog:occurrence:402583"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xb"
+fields = { "sets" = ["opinionsundersokningars-paverkan-pa-partival"] }
+evidence = "Identitetsfaktumet gäller en annan frågeinnebörd i en senare period.\ncatalog:occurrence:402492\ncatalog:occurrence:402584"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xb"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller en annan frågeinnebörd i en senare period.\ncatalog:occurrence:402492\ncatalog:occurrence:402584"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-som-man-tvekar-mellan-annat-parti"
+fields = { "sets" = ["overvagda-partier-riksdagsval-idag"] }
+evidence = "Fr11xba är en ogenomskinlig frågekod.\ncatalog:variable_text:40988:16191:16222"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-som-man-tvekar-mellan-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11xba är en ogenomskinlig frågekod.\ncatalog:variable_text:40988:16191:16222"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xc"
+fields = { "sets" = ["opinionsundersokningars-paverkan-pa-partival"] }
+evidence = "Fr11xc är en ogenomskinlig frågekod. Etiketten delas med andra frågor och målformen behöver disambigueras.\ncatalog:occurrence:402493\ncatalog:variable_text:40989:13088:13118"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11xc"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11xc är en ogenomskinlig frågekod. Etiketten delas med andra frågor och målformen behöver disambigueras.\ncatalog:occurrence:402493\ncatalog:variable_text:40989:13088:13118"
+
+[[statement]]
+kind = "set"
+subject = "var:fortroende-for-politiker"
+fields = { "sets" = [] }
+evidence = "Fr11y är en ogenomskinlig frågekod.\ncatalog:variable_text:40990:19297:19327"
+
+[[statement]]
+kind = "set"
+subject = "var:fortroende-for-politiker"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr11y är en ogenomskinlig frågekod.\ncatalog:variable_text:40990:19297:19327"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11z"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har olika innehåll hos de två ägarna.\ncatalog:occurrence:404146\ncatalog:occurrence:404340"
+
+[[statement]]
+kind = "set"
+subject = "var:fr11z"
+fields = { "tags" = ["democracy"] }
+evidence = "Samma källkolumn har olika innehåll hos de två ägarna.\ncatalog:occurrence:404146\ncatalog:occurrence:404340"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-ej-forvarvsarbetande"
+fields = { "sets" = ["sysselsattning"] }
+evidence = "Fr13 är en ogenomskinlig frågekod för sysselsättning bland ej förvärvsarbetande.\ncatalog:occurrence:405934\ncatalog:valueset:10644"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-ej-forvarvsarbetande"
+fields = { "tags" = ["employment"] }
+evidence = "Fr13 är en ogenomskinlig frågekod för sysselsättning bland ej förvärvsarbetande.\ncatalog:occurrence:405934\ncatalog:valueset:10644"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-yrkesverksamhet-bland-pensionerade"
+fields = { "sets" = ["sysselsattning"] }
+evidence = "Fr14 är en ogenomskinlig frågekod för tidigare yrkesverksamhet bland pensionerade. Coordinator group membership: Variablerna anger arbete eller yrkesverksamhet. Fr14 omfattas också genom sin uttryckliga uppgift om tidigare yrkesverksamhet bland pensionerade. Variablerna anger individens eller partnerns sysselsättning. Fr14 anger uttryckligen tidigare sysselsättning för pensionerade och omfattas också av definitionen.\ncatalog:occurrence:405935\ncatalog:valueset:2595\ncatalog:variable_text:40967:20209:20240\ncatalog:variable_text:40968:14914:14944\ncatalog:variable_text:40992:20209:20240\ncatalog:variable_text:40993:20209:20240\ncatalog:variable_text:40995:20209:20240\ncatalog:variable_text:40998:20209:20240\ncatalog:variable_text:41089:20209:20240\n\nSingle-group ruling 2026-11-02: Previous employment of pensioners is a labour-force status item, not current paid work."
+
+[[statement]]
+kind = "set"
+subject = "var:tidigare-yrkesverksamhet-bland-pensionerade"
+fields = { "tags" = ["employment"] }
+evidence = "Fr14 är en ogenomskinlig frågekod för tidigare yrkesverksamhet bland pensionerade. Coordinator group membership: Variablerna anger arbete eller yrkesverksamhet. Fr14 omfattas också genom sin uttryckliga uppgift om tidigare yrkesverksamhet bland pensionerade. Variablerna anger individens eller partnerns sysselsättning. Fr14 anger uttryckligen tidigare sysselsättning för pensionerade och omfattas också av definitionen.\ncatalog:occurrence:405935\ncatalog:valueset:2595\ncatalog:variable_text:40967:20209:20240\ncatalog:variable_text:40968:14914:14944\ncatalog:variable_text:40992:20209:20240\ncatalog:variable_text:40993:20209:20240\ncatalog:variable_text:40995:20209:20240\ncatalog:variable_text:40998:20209:20240\ncatalog:variable_text:41089:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetslos-permitterad-eller-vantan-pa-arbete"
+fields = { "sets" = [] }
+evidence = "Fr15 är en ogenomskinlig frågekod för längden på arbetslöshet, permittering eller väntan på arbete.\ncatalog:occurrence:405936\ncatalog:valueset:1934"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetslos-permitterad-eller-vantan-pa-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Fr15 är en ogenomskinlig frågekod för längden på arbetslöshet, permittering eller väntan på arbete.\ncatalog:occurrence:405936\ncatalog:valueset:1934"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-bland-forvarvsarbetande-tjanstlediga"
+fields = { "sets" = ["sysselsattning"] }
+evidence = "Fr16 är en ogenomskinlig frågekod för sysselsättning.\ncatalog:occurrence:405937\ncatalog:valueset:1852"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-bland-forvarvsarbetande-tjanstlediga"
+fields = { "tags" = ["employment"] }
+evidence = "Fr16 är en ogenomskinlig frågekod för sysselsättning.\ncatalog:occurrence:405937\ncatalog:valueset:1852"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-for-anstallda"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr17sei är en opak frågekod; källan anger yrke för anställda och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-for-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Fr17sei är en opak frågekod; källan anger yrke för anställda och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:fr18"
+fields = { "sets" = ["civilstand"] }
+evidence = "Frågekoden är opak, men källans civilståndsdefinition stämmer inte entydigt med svarskategorierna.\ncatalog:valueset:4968\ncatalog:variable_text:40997:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:fr18"
+fields = { "tags" = ["family-household"] }
+evidence = "Frågekoden är opak, men källans civilståndsdefinition stämmer inte entydigt med svarskategorierna.\ncatalog:valueset:4968\ncatalog:variable_text:40997:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-make-maka-sammanboende"
+fields = { "sets" = ["sysselsattning"] }
+evidence = "Fr19 är en ogenomskinlig frågekod för partners sysselsättning.\ncatalog:occurrence:405940\ncatalog:valueset:2925"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-make-maka-sammanboende"
+fields = { "tags" = ["employment"] }
+evidence = "Fr19 är en ogenomskinlig frågekod för partners sysselsättning.\ncatalog:occurrence:405940\ncatalog:valueset:2925"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-som-star-narmast"
+fields = { "sets" = ["partisympati"] }
+evidence = "Fr2 är en ogenomskinlig frågekod för partiet som står närmast.\ncatalog:occurrence:405941\ncatalog:valueset:10003"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-som-star-narmast"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr2 är en ogenomskinlig frågekod för partiet som står närmast.\ncatalog:occurrence:405941\ncatalog:valueset:10003"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-for-anstallda-partner"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr20sei är en opak frågekod; källan anger partners yrke och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:41004:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-for-anstallda-partner"
+fields = { "tags" = ["employment"] }
+evidence = "Fr20sei är en opak frågekod; källan anger partners yrke och använder SEI-koder.\ncatalog:valueset:6521\ncatalog:variable_text:41004:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akerjord"
+fields = { "sets" = [] }
+evidence = "Fr21aker innehåller en ogenomskinlig frågekod; etiketten anger åkerjordsareal.\ncatalog:variable_text:41001:14914:14944"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-akerjord"
+fields = { "tags" = ["agriculture"] }
+evidence = "Fr21aker innehåller en ogenomskinlig frågekod; etiketten anger åkerjordsareal.\ncatalog:variable_text:41001:14914:14944"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skog"
+fields = { "sets" = [] }
+evidence = "Fr21skog innehåller en ogenomskinlig frågekod; etiketten anger skogsareal.\ncatalog:variable_text:41002:14914:14944"
+
+[[statement]]
+kind = "set"
+subject = "var:areal-skog"
+fields = { "tags" = ["forestry-fishing"] }
+evidence = "Fr21skog innehåller en ogenomskinlig frågekod; etiketten anger skogsareal.\ncatalog:variable_text:41002:14914:14944"
+
+[[statement]]
+kind = "set"
+subject = "var:loneanstallda-i-foretaget"
+fields = { "sets" = [] }
+evidence = "Fr22 är en ogenomskinlig frågekod för om företaget har löneanställda. Coordinator group membership: Antal anställda mäter det antal som den fasta definitionen omfattar. Fr22 anger endast om företaget har löneanställda och stöder därför inte medlemskap enligt definitionen. Övriga valda variabler mäter andra begrepp. Det stödda medlemskapet behålls för union över registersektionerna.\ncatalog:occurrence:405943\ncatalog:valueset:8269\ncatalog:variable_text:40949:20209:20240\ncatalog:variable_text:41003:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:loneanstallda-i-foretaget"
+fields = { "tags" = ["business"] }
+evidence = "Fr22 är en ogenomskinlig frågekod för om företaget har löneanställda. Coordinator group membership: Antal anställda mäter det antal som den fasta definitionen omfattar. Fr22 anger endast om företaget har löneanställda och stöder därför inte medlemskap enligt definitionen. Övriga valda variabler mäter andra begrepp. Det stödda medlemskapet behålls för union över registersektionerna.\ncatalog:occurrence:405943\ncatalog:valueset:8269\ncatalog:variable_text:40949:20209:20240\ncatalog:variable_text:41003:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeserfarenhet-och-utbildning"
+fields = { "sets" = ["yrke"] }
+evidence = "Fr24sei är en opak frågekod; etiketten beskriver frågans yrkeserfarenhet och utbildning. Coordinator group membership: Medlemmarna omfattar SEI-klassificeringen och de yrkes- eller utbildningsbaserade kodningar som den tidigare källgranskningen knyter till denna. Fr17sei och fr20sei anger individens respektive partnerns yrke. Fr24sei anger uttryckligen ett självklassificerat yrke utifrån erfarenhet och utbildning, inte enbart utbildningsnivå. Ssyk2012 kodar yrke i huvudsysslan.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\ncatalog:variable_text:41000:20209:20240\ncatalog:variable_text:41004:20209:20240\ncatalog:variable_text:41025:20209:20240\ncatalog:variable_text:41073:20209:20240\ncatalog:variable_text:41075:20209:20240\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to yrke; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeserfarenhet-och-utbildning"
+fields = { "tags" = ["employment"] }
+evidence = "Fr24sei är en opak frågekod; etiketten beskriver frågans yrkeserfarenhet och utbildning. Coordinator group membership: Medlemmarna omfattar SEI-klassificeringen och de yrkes- eller utbildningsbaserade kodningar som den tidigare källgranskningen knyter till denna. Fr17sei och fr20sei anger individens respektive partnerns yrke. Fr24sei anger uttryckligen ett självklassificerat yrke utifrån erfarenhet och utbildning, inte enbart utbildningsnivå. Ssyk2012 kodar yrke i huvudsysslan.\ncatalog:valueset:6521\ncatalog:variable_text:40996:20209:20240\ncatalog:variable_text:41000:20209:20240\ncatalog:variable_text:41004:20209:20240\ncatalog:variable_text:41025:20209:20240\ncatalog:variable_text:41073:20209:20240\ncatalog:variable_text:41075:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-for-anstallda"
+fields = { "sets" = [] }
+evidence = "Fr25 är en ogenomskinlig frågekod för anställningssektor.\ncatalog:occurrence:405946\ncatalog:valueset:4532"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-for-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Fr25 är en ogenomskinlig frågekod för anställningssektor.\ncatalog:occurrence:405946\ncatalog:valueset:4532"
+
+[[statement]]
+kind = "set"
+subject = "var:medlemskap-i-fackforening"
+fields = { "sets" = [] }
+evidence = "Fr26 är en ogenomskinlig frågekod för fackligt medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602"
+
+[[statement]]
+kind = "set"
+subject = "var:medlemskap-i-fackforening"
+fields = { "tags" = ["employment"] }
+evidence = "Fr26 är en ogenomskinlig frågekod för fackligt medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27"
+fields = { "sets" = ["bostadstyp"] }
+evidence = "Fr27 är en ogenomskinlig frågekod. Etiketten kolliderar med den härledda bostadstypen och kräver målgranskning.\ncatalog:occurrence:405948\ncatalog:valueset:5996"
+
+[[statement]]
+kind = "set"
+subject = "var:fr27"
+fields = { "tags" = ["housing"] }
+evidence = "Fr27 är en ogenomskinlig frågekod. Etiketten kolliderar med den härledda bostadstypen och kräver målgranskning.\ncatalog:occurrence:405948\ncatalog:valueset:5996"
+
+[[statement]]
+kind = "set"
+subject = "var:fr29"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr29 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar med andra folkomröstningsvariabler och kräver målgranskning.\ncatalog:valueset:222\ncatalog:variable_text:41008:12539:12570"
+
+[[statement]]
+kind = "set"
+subject = "var:fr29-emu"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktumet och frågans hypotetiska innehåll kräver samordnarens granskning.\ncatalog:occurrence:401652\ncatalog:valueset:13033\ncatalog:variable_text:41009:11992:12022"
+
+[[statement]]
+kind = "set"
+subject = "var:fr29-emu"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet och frågans hypotetiska innehåll kräver samordnarens granskning.\ncatalog:occurrence:401652\ncatalog:valueset:13033\ncatalog:variable_text:41009:11992:12022"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-som-star-narmast-fritextsvar"
+fields = { "sets" = ["partisympati"] }
+evidence = "Fr2a är en ogenomskinlig frågekod för fritext om partiet som står närmast.\ncatalog:occurrence:405950"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-som-star-narmast-fritextsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr2a är en ogenomskinlig frågekod för fritext om partiet som står närmast.\ncatalog:occurrence:405950"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblock-som-star-narmast"
+fields = { "sets" = ["partiblocksympati"] }
+evidence = "Fr2x är en ogenomskinlig frågekod; etiketten anger närmaste partiblock.\ncatalog:variable_text:41011:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblock-som-star-narmast"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr2x är en ogenomskinlig frågekod; etiketten anger närmaste partiblock.\ncatalog:variable_text:41011:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-med-storst-sympati"
+fields = { "sets" = ["partisympati"] }
+evidence = "Fr3 är en ogenomskinlig frågekod för partiet med störst sympati.\ncatalog:occurrence:405951\ncatalog:valueset:7479"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-med-storst-sympati"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr3 är en ogenomskinlig frågekod för partiet med störst sympati.\ncatalog:occurrence:405951\ncatalog:valueset:7479"
+
+[[statement]]
+kind = "set"
+subject = "var:fr30"
+fields = { "sets" = [] }
+evidence = "Fr30 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
+
+[[statement]]
+kind = "set"
+subject = "var:fr30"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr30 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
+
+[[statement]]
+kind = "set"
+subject = "var:fr31-eufolk"
+fields = { "sets" = [] }
+evidence = "Fr31 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387"
+
+[[statement]]
+kind = "set"
+subject = "var:fr31-eufolk"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr31 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-regionfullmaktigeval-annat-parti"
+fields = { "sets" = ["partival-senaste-regionfullmaktigeval"] }
+evidence = "Fr32txt är en ogenomskinlig fråge- och formatkod.\ncatalog:variable_text:41015:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-regionfullmaktigeval-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr32txt är en ogenomskinlig fråge- och formatkod.\ncatalog:variable_text:41015:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:hypotetiskt-valdeltagande-vid-omval-till-regionfullmaktige"
+fields = { "sets" = ["valdeltagande-regionfullmaktige-vastra-gotaland"] }
+evidence = "Fr33a är en ogenomskinlig frågekod.\ncatalog:variable_text:41016:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:hypotetiskt-valdeltagande-vid-omval-till-regionfullmaktige"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr33a är en ogenomskinlig frågekod.\ncatalog:variable_text:41016:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-vid-omval-till-regionfullmaktige-i-vastra"
+fields = { "sets" = ["valdeltagande-regionfullmaktige-vastra-gotaland"] }
+evidence = "Fr33b är en ogenomskinlig frågekod.\ncatalog:variable_text:41017:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-vid-omval-till-regionfullmaktige-i-vastra"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr33b är en ogenomskinlig frågekod.\ncatalog:variable_text:41017:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige"
+fields = { "sets" = ["partival-omval-regionfullmaktige"] }
+evidence = "Fr34a är en ogenomskinlig frågekod.\ncatalog:variable_text:41018:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr34a är en ogenomskinlig frågekod.\ncatalog:variable_text:41018:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige-tveksam-ej-rostat"
+fields = { "sets" = ["partival-omval-regionfullmaktige"] }
+evidence = "Fr34b är en ogenomskinlig frågekod.\ncatalog:variable_text:41019:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige-tveksam-ej-rostat"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr34b är en ogenomskinlig frågekod.\ncatalog:variable_text:41019:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige-annat-parti"
+fields = { "sets" = ["partival-omval-regionfullmaktige"] }
+evidence = "Fr34txt är en ogenomskinlig fråge- och formatkod.\ncatalog:variable_text:41020:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-omval-regionfullmaktige-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr34txt är en ogenomskinlig fråge- och formatkod.\ncatalog:variable_text:41020:15095:15126"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-med-storst-sympati-fritextsvar"
+fields = { "sets" = ["partisympati"] }
+evidence = "Fr3a är en ogenomskinlig frågekod för fritext om partiet med störst sympati.\ncatalog:occurrence:405953"
+
+[[statement]]
+kind = "set"
+subject = "var:parti-med-storst-sympati-fritextsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr3a är en ogenomskinlig frågekod för fritext om partiet med störst sympati.\ncatalog:occurrence:405953"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblock-med-storst-sympati"
+fields = { "sets" = ["partiblocksympati"] }
+evidence = "Fr4 är en ogenomskinlig frågekod.\ncatalog:variable_text:41022:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblock-med-storst-sympati"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr4 är en ogenomskinlig frågekod.\ncatalog:variable_text:41022:17836:17866"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-fraga"
+fields = { "sets" = ["nast-basta-parti"] }
+evidence = "Fr4x är en ogenomskinlig frågekod. Etiketten delas med en härledd variabel och målformen behöver disambigueras.\ncatalog:variable_text:41023:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-fraga"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr4x är en ogenomskinlig frågekod. Etiketten delas med en härledd variabel och målformen behöver disambigueras.\ncatalog:variable_text:41023:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-annat-parti"
+fields = { "sets" = ["nast-basta-parti"] }
+evidence = "Fr4xa är en ogenomskinlig frågekod.\ncatalog:variable_text:41024:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr4xa är en ogenomskinlig frågekod.\ncatalog:variable_text:41024:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-senaste-riksdagsval-fraga"
+fields = { "sets" = ["valdeltagande-senaste-riksdagsval"] }
+evidence = "Fr5 är en opak frågekod och etiketten anger valdeltagande vid senaste riksdagsval.\ncatalog:variable_text:41025:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-senaste-riksdagsval-fraga"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr5 är en opak frågekod och etiketten anger valdeltagande vid senaste riksdagsval.\ncatalog:variable_text:41025:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-i-senaste-riksdagsval"
+fields = { "sets" = ["partival-senaste-riksdagsval"] }
+evidence = "Fr6 är en ogenomskinlig frågekod för partival i senaste riksdagsvalet.\ncatalog:occurrence:405957\ncatalog:valueset:107"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-i-senaste-riksdagsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr6 är en ogenomskinlig frågekod för partival i senaste riksdagsvalet.\ncatalog:occurrence:405957\ncatalog:valueset:107"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-i-senaste-riksdagsval-fritextsvar"
+fields = { "sets" = ["partival-senaste-riksdagsval"] }
+evidence = "Fr6a är en ogenomskinlig frågekod för fritext om partival i senaste riksdagsvalet.\ncatalog:occurrence:405958"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-i-senaste-riksdagsval-fritextsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr6a är en ogenomskinlig frågekod för fritext om partival i senaste riksdagsvalet.\ncatalog:occurrence:405958"
+
+[[statement]]
+kind = "set"
+subject = "var:blockval-i-senaste-riksdagsval"
+fields = { "sets" = ["partiblockval-senaste-riksdagsval"] }
+evidence = "Fr7 är en ogenomskinlig frågekod för blockval i senaste riksdagsvalet.\ncatalog:occurrence:404943\ncatalog:valueset:3356"
+
+[[statement]]
+kind = "set"
+subject = "var:blockval-i-senaste-riksdagsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr7 är en ogenomskinlig frågekod för blockval i senaste riksdagsvalet.\ncatalog:occurrence:404943\ncatalog:valueset:3356"
+
+[[statement]]
+kind = "set"
+subject = "var:personrost"
+fields = { "sets" = [] }
+evidence = "Fr7x är en opak frågekod; källan anger personröst.\ncatalog:occurrence:402701\ncatalog:variable_text:41029:13453:13483"
+
+[[statement]]
+kind = "set"
+subject = "var:personrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr7x är en opak frågekod; källan anger personröst.\ncatalog:occurrence:402701\ncatalog:variable_text:41029:13453:13483"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidsrost"
+fields = { "sets" = [] }
+evidence = "Fr7xx är en ogenomskinlig frågekod.\ncatalog:variable_text:41030:13453:13483"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidsrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr7xx är en ogenomskinlig frågekod.\ncatalog:variable_text:41030:13453:13483"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-om-val-idag"
+fields = { "sets" = ["valdeltagande-hypotetiskt-riksdagsval"] }
+evidence = "Fr8 är en frågekod. Variabeln mäter avsett valdeltagande vid ett hypotetiskt riksdagsval.\ncatalog:register:225\ncatalog:variable_text:41031:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-om-val-idag"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr8 är en frågekod. Variabeln mäter avsett valdeltagande vid ett hypotetiskt riksdagsval.\ncatalog:register:225\ncatalog:variable_text:41031:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-val-idag"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Fr9 är en opak frågekod; etiketten anger partival vid val idag.\ncatalog:occurrence:405036\ncatalog:variable_text:41032:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-val-idag"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr9 är en opak frågekod; etiketten anger partival vid val idag.\ncatalog:occurrence:405036\ncatalog:variable_text:41032:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-val-idag-fritextsvar"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Fr9a är en opak frågekod; etiketten anger fritextsvar om partival vid val idag.\ncatalog:occurrence:405037\ncatalog:variable_text:41033:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-val-idag-fritextsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Fr9a är en opak frågekod; etiketten anger fritextsvar om partival vid val idag.\ncatalog:occurrence:405037\ncatalog:variable_text:41033:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:inkmak"
+fields = { "sets" = ["forvarvsinkomst"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402795\ncatalog:occurrence:402883"
+
+[[statement]]
+kind = "set"
+subject = "var:inkmak"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402795\ncatalog:occurrence:402883"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:occurrence-locators:variable:41035"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:occurrence-locators:variable:41035"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "sets" = [] }
+evidence = "Indelningen omfattar geografiska regioner av kommuner och län.\ncatalog:occurrence-locators:variable:41036\ncatalog:valueset:11807"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "tags" = ["geography"] }
+evidence = "Indelningen omfattar geografiska regioner av kommuner och län.\ncatalog:occurrence-locators:variable:41036\ncatalog:valueset:11807"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön ingår även i en kombinerad ålders- och könsindelning.\ncatalog:valueset:12820\ncatalog:variable_text:41037:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning.\ncatalog:occurrence-locators:variable:41038"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning.\ncatalog:occurrence-locators:variable:41038"
+
+[[statement]]
+kind = "set"
+subject = "var:modepreferens"
+fields = { "sets" = ["prefererat-svarssatt"] }
+evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
+
+[[statement]]
+kind = "set"
+subject = "var:modepreferens"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
+
+[[statement]]
+kind = "set"
+subject = "var:modepreferens-epostfraga"
+fields = { "sets" = ["prefererat-svarssatt"] }
+evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
+
+[[statement]]
+kind = "set"
+subject = "var:modepreferens-epostfraga"
+fields = { "tags" = ["methods"] }
+evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
+
+[[statement]]
+kind = "set"
+subject = "var:nettourv"
+fields = { "sets" = [] }
+evidence = "Nettourval är en urvalsuppgift.\ncatalog:occurrence-locators:variable:41042\ncatalog:valueset:9789"
+
+[[statement]]
+kind = "set"
+subject = "var:nettourv"
+fields = { "tags" = ["methods"] }
+evidence = "Nettourval är en urvalsuppgift.\ncatalog:occurrence-locators:variable:41042\ncatalog:valueset:9789"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-valresultatet"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har olika innehåll hos de två ägarna.\ncatalog:occurrence:404146\ncatalog:occurrence:404340"
+
+[[statement]]
+kind = "set"
+subject = "var:nojd-med-valresultatet"
+fields = { "tags" = ["democracy"] }
+evidence = "Samma källkolumn har olika innehåll hos de två ägarna.\ncatalog:occurrence:404146\ncatalog:occurrence:404340"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-forrforra"
+fields = { "sets" = ["partiblockval-senaste-riksdagsval"] }
+evidence = "Identitetsfakta visar att två olika källkolumner växlar ägare mellan partival och blockval.\ncatalog:occurrence:401615\ncatalog:occurrence:401696\ncatalog:occurrence:401778"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-forrforra"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar att två olika källkolumner växlar ägare mellan partival och blockval.\ncatalog:occurrence:401615\ncatalog:occurrence:401696\ncatalog:occurrence:401778"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-idag-forrforra"
+fields = { "sets" = ["partiblockval-riksdagsval-idag"] }
+evidence = "Identitetsfakta visar växlande ägare för blockval och partival.\ncatalog:occurrence:401598\ncatalog:occurrence:401606\ncatalog:occurrence:401680\ncatalog:occurrence:401688"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-idag-forrforra"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar växlande ägare för blockval och partival.\ncatalog:occurrence:401598\ncatalog:occurrence:401606\ncatalog:occurrence:401680\ncatalog:occurrence:401688"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-overvager-annat-parti"
+fields = { "sets" = ["overvagda-partier-riksdagsval-idag"] }
+evidence = "Identitetsfaktet kopplar olika svarsfält till samma källkolumn.\ncatalog:occurrence:403305\ncatalog:occurrence:404049"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-overvager-annat-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktet kopplar olika svarsfält till samma källkolumn.\ncatalog:occurrence:403305\ncatalog:occurrence:404049"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-overvager-riksdagsval-idag"
+fields = { "sets" = ["overvagda-partier-riksdagsval-idag"] }
+evidence = "Identitetsfakta visar växlande ägare för frågekolumnerna.\ncatalog:occurrence:402491\ncatalog:occurrence:402583\ncatalog:occurrence:402584\ncatalog:occurrence:403305\ncatalog:occurrence:403307\ncatalog:occurrence:404050"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-overvager-riksdagsval-idag"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar växlande ägare för frågekolumnerna.\ncatalog:occurrence:402491\ncatalog:occurrence:402583\ncatalog:occurrence:402584\ncatalog:occurrence:403305\ncatalog:occurrence:403307\ncatalog:occurrence:404050"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-tvekar-riksdagsval-idag"
+fields = { "sets" = ["overvagda-partier-riksdagsval-idag"] }
+evidence = "Identitetsfakta visar växlande ägare för frågekolumnerna.\ncatalog:occurrence:402492\ncatalog:occurrence:402583\ncatalog:occurrence:402584\ncatalog:occurrence:403305\ncatalog:occurrence:403307\ncatalog:occurrence:404049\ncatalog:occurrence:404050"
+
+[[statement]]
+kind = "set"
+subject = "var:partier-tvekar-riksdagsval-idag"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar växlande ägare för frågekolumnerna.\ncatalog:occurrence:402492\ncatalog:occurrence:402583\ncatalog:occurrence:402584\ncatalog:occurrence:403305\ncatalog:occurrence:403307\ncatalog:occurrence:404049\ncatalog:occurrence:404050"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-regionfullmaktigeval"
+fields = { "sets" = ["partival-senaste-regionfullmaktigeval"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402154\ncatalog:occurrence:403512"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-regionfullmaktigeval"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402154\ncatalog:occurrence:403512"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-forrforra"
+fields = { "sets" = ["partival-senaste-riksdagsval"] }
+evidence = "Identitetsfakta visar att två olika källkolumner växlar ägare mellan partival och blockval.\ncatalog:occurrence:401617\ncatalog:occurrence:401698\ncatalog:occurrence:401780"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-forrforra"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar att två olika källkolumner växlar ägare mellan partival och blockval.\ncatalog:occurrence:401617\ncatalog:occurrence:401698\ncatalog:occurrence:401780"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-idag-forrforra"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Identitetsfakta visar växlande ägare för parti- och partiblockvariablerna.\ncatalog:occurrence:401598\ncatalog:occurrence:401606\ncatalog:occurrence:401680\ncatalog:occurrence:401688\ncatalog:occurrence:401761\ncatalog:occurrence:401769"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-idag-forrforra"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfakta visar växlande ägare för parti- och partiblockvariablerna.\ncatalog:occurrence:401598\ncatalog:occurrence:401606\ncatalog:occurrence:401680\ncatalog:occurrence:401688\ncatalog:occurrence:401761\ncatalog:occurrence:401769"
+
+[[statement]]
+kind = "set"
+subject = "var:pbsvar"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar tillgång till partiblocksvar, inte blocksympati eller blockval.\ncatalog:occurrence:405974\ncatalog:valueset:249"
+
+[[statement]]
+kind = "set"
+subject = "var:pbsvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln kodar tillgång till partiblocksvar, inte blocksympati eller blockval.\ncatalog:occurrence:405974\ncatalog:valueset:249"
+
+[[statement]]
+kind = "set"
+subject = "var:pbsymp"
+fields = { "sets" = ["partiblocksympati"] }
+evidence = "Den härledda blocksympatin hör till samma begrepp som frågorna om blocksympati.\ncatalog:occurrence:404960"
+
+[[statement]]
+kind = "set"
+subject = "var:pbsymp"
+fields = { "tags" = ["democracy"] }
+evidence = "Den härledda blocksympatin hör till samma begrepp som frågorna om blocksympati.\ncatalog:occurrence:404960"
+
+[[statement]]
+kind = "set"
+subject = "var:pbval-nu"
+fields = { "sets" = ["partiblockval-riksdagsval-idag"] }
+evidence = "Variabeln mäter blockval vid hypotetiskt riksdagsval.\ncatalog:occurrence:405975"
+
+[[statement]]
+kind = "set"
+subject = "var:pbval-nu"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln mäter blockval vid hypotetiskt riksdagsval.\ncatalog:occurrence:405975"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-senaste-riksdagsval"
+fields = { "sets" = ["partiblockval-senaste-riksdagsval"] }
+evidence = "Id:t är en ogenomskinlig källkod. Etiketten anger partiblockval vid senaste riksdagsval och stöder gruppen och demokratitaggen.\ncatalog:occurrence:405976\ncatalog:variable_text:41056:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-senaste-riksdagsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:t är en ogenomskinlig källkod. Etiketten anger partiblockval vid senaste riksdagsval och stöder gruppen och demokratitaggen.\ncatalog:occurrence:405976\ncatalog:variable_text:41056:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-harledd"
+fields = { "sets" = ["nast-basta-parti"] }
+evidence = "Pnbsymp är en ogenomskinlig bokstavskod. Etiketten delas med frågevariabeln och målformen behöver disambigueras.\ncatalog:occurrence:405978"
+
+[[statement]]
+kind = "set"
+subject = "var:nast-basta-parti-harledd"
+fields = { "tags" = ["democracy"] }
+evidence = "Pnbsymp är en ogenomskinlig bokstavskod. Etiketten delas med frågevariabeln och målformen behöver disambigueras.\ncatalog:occurrence:405978"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:occurrence:405979"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk tillhörighet.\ncatalog:occurrence:405979"
+
+[[statement]]
+kind = "set"
+subject = "var:psvar"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om partisvar finns och hör till valundersökningens sakområde.\ncatalog:occurrence:405980\ncatalog:valueset:697"
+
+[[statement]]
+kind = "set"
+subject = "var:psvar"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger om partisvar finns och hör till valundersökningens sakområde.\ncatalog:occurrence:405980\ncatalog:valueset:697"
+
+[[statement]]
+kind = "set"
+subject = "var:partisympati"
+fields = { "sets" = ["partisympati"] }
+evidence = "Inledande p är en bokstavskod och källmnemoniken är opak.\ncatalog:occurrence:405981\ncatalog:variable_text:41060:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partisympati"
+fields = { "tags" = ["democracy"] }
+evidence = "Inledande p är en bokstavskod och källmnemoniken är opak.\ncatalog:occurrence:405981\ncatalog:variable_text:41060:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:pval-nu"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Variabeln anger härlett partival vid riksdagsval idag.\ncatalog:variable_text:41061:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:pval-nu"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln anger härlett partival vid riksdagsval idag.\ncatalog:variable_text:41061:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-riksdagsval"
+fields = { "sets" = ["partival-senaste-riksdagsval"] }
+evidence = "Id:t är en ogenomskinlig källkod. Etiketten anger partival vid senaste riksdagsval och stöder gruppen och demokratitaggen.\ncatalog:occurrence:405983\ncatalog:variable_text:41062:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-riksdagsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Id:t är en ogenomskinlig källkod. Etiketten anger partival vid senaste riksdagsval och stöder gruppen och demokratitaggen.\ncatalog:occurrence:405983\ncatalog:variable_text:41062:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-riksdagsval-idag-forra-undersokningen"
+fields = { "sets" = ["partiblockval-riksdagsval-idag"] }
+evidence = "Rbsfu är en ogenomskinlig bokstavskod för blockval vid föregående intervju.\ncatalog:variable_text:41063:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-riksdagsval-idag-forra-undersokningen"
+fields = { "tags" = ["democracy"] }
+evidence = "Rbsfu är en ogenomskinlig bokstavskod för blockval vid föregående intervju.\ncatalog:variable_text:41063:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:reskont"
+fields = { "sets" = ["insamlingsresultat"] }
+evidence = "Kontaktresultat och resultatkod kodar undersökningens insamlingsutfall.\ncatalog:occurrence:405987\ncatalog:valueset:3482"
+
+[[statement]]
+kind = "set"
+subject = "var:reskont"
+fields = { "tags" = ["methods"] }
+evidence = "Kontaktresultat och resultatkod kodar undersökningens insamlingsutfall.\ncatalog:occurrence:405987\ncatalog:valueset:3482"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "sets" = ["insamlingsresultat"] }
+evidence = "Resultatkoden och kontaktresultatet kodar undersökningens insamlingsutfall.\ncatalog:occurrence:405988"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "tags" = ["methods"] }
+evidence = "Resultatkoden och kontaktresultatet kodar undersökningens insamlingsutfall.\ncatalog:occurrence:405988"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "sets" = [] }
+evidence = "Valkretsen är en geografisk indelning.\ncatalog:occurrence:405989"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Valkretsen är en geografisk indelning.\ncatalog:occurrence:405989"
+
+[[statement]]
+kind = "set"
+subject = "var:rostningssannolikhet-for-parti"
+fields = { "sets" = ["rostningssannolikhet"] }
+evidence = "Roostsh-p är en ogenomskinlig källkod med en bokstav som särskiljer parti.\ncatalog:variable_text:41067:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:rostningssannolikhet-for-parti"
+fields = { "tags" = ["democracy"] }
+evidence = "Roostsh-p är en ogenomskinlig källkod med en bokstav som särskiljer parti.\ncatalog:variable_text:41067:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:rostat-europaparlamentsval"
+fields = { "sets" = ["valdeltagande-europaparlamentsval"] }
+evidence = "Röstning är samma deltagandebegrepp som för den perioduppdelade variabeln deltagande-europaparlamentsval.\ncatalog:occurrence:402341\ncatalog:variable_text:40955:14184:14214"
+
+[[statement]]
+kind = "set"
+subject = "var:rostat-europaparlamentsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Röstning är samma deltagandebegrepp som för den perioduppdelade variabeln deltagande-europaparlamentsval.\ncatalog:occurrence:402341\ncatalog:variable_text:40955:14184:14214"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratteu"
+fields = { "sets" = [] }
+evidence = "Rösträtt vid Europaparlamentsval är en demokratisk rättighet.\ncatalog:occurrence:405894"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratteu"
+fields = { "tags" = ["democracy"] }
+evidence = "Rösträtt vid Europaparlamentsval är en demokratisk rättighet.\ncatalog:occurrence:405894"
+
+[[statement]]
+kind = "set"
+subject = "var:rostningssannolikhet-for-partiblock"
+fields = { "sets" = ["rostningssannolikhet"] }
+evidence = "Rostsh-b är en ogenomskinlig källkod med en bokstav som särskiljer partiblock.\ncatalog:variable_text:41070:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:rostningssannolikhet-for-partiblock"
+fields = { "tags" = ["democracy"] }
+evidence = "Rostsh-b är en ogenomskinlig källkod med en bokstav som särskiljer partiblock.\ncatalog:variable_text:41070:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-riksdagsval-idag-forra-undersokningen"
+fields = { "sets" = ["partival-riksdagsval-idag"] }
+evidence = "Rpsfu är en opak källmnemonik; etiketten anger partival vid föregående undersökning.\ncatalog:occurrence-locators:variable:41071\ncatalog:variable_text:41061:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-riksdagsval-idag-forra-undersokningen"
+fields = { "tags" = ["democracy"] }
+evidence = "Rpsfu är en opak källmnemonik; etiketten anger partival vid föregående undersökning.\ncatalog:occurrence-locators:variable:41071\ncatalog:variable_text:41061:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "sets" = ["forvarvsinkomst"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402796\ncatalog:occurrence:402885"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Identitetsfaktet gäller olika inkomstbegrepp.\ncatalog:occurrence:402796\ncatalog:occurrence:402885"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln är en socioekonomisk klassificering härledd från yrkesfrågor.\ncatalog:occurrence-locators:variable:41073\ncatalog:variable_text:41071:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:smlgdink"
+fields = { "sets" = ["forvarvsinkomst"] }
+evidence = "Variabeln summerar uppgiftspersonens och partnerns förvärvsinkomst.\ncatalog:occurrence-locators:variable:41074\ncatalog:occurrence:402913"
+
+[[statement]]
+kind = "set"
+subject = "var:smlgdink"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln summerar uppgiftspersonens och partnerns förvärvsinkomst.\ncatalog:occurrence-locators:variable:41074\ncatalog:occurrence:402913"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsakliga-sysselsattningen"
+fields = { "sets" = ["yrke"] }
+evidence = "SSYK2012 är en klassifikationskod som inte förekommer i etiketten; etiketten anger yrke i huvudsaklig sysselsättning.\ncatalog:occurrence-locators:variable:41075\ncatalog:variable_text:41075:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-huvudsakliga-sysselsattningen"
+fields = { "tags" = ["employment"] }
+evidence = "SSYK2012 är en klassifikationskod som inte förekommer i etiketten; etiketten anger yrke i huvudsaklig sysselsättning.\ncatalog:occurrence-locators:variable:41075\ncatalog:variable_text:41075:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:svarighetsgrad-rostningsbeslut"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402154\ncatalog:occurrence:403512"
+
+[[statement]]
+kind = "set"
+subject = "var:svarighetsgrad-rostningsbeslut"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402154\ncatalog:occurrence:403512"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad"
+fields = { "sets" = [] }
+evidence = "Tgrad innehåller en ensam bokstav som förkortar tätort och är en ogenomskinlig källkod.\ncatalog:occurrence:405997"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortsgrad"
+fields = { "tags" = ["geography"] }
+evidence = "Tgrad innehåller en ensam bokstav som förkortar tätort och är en ogenomskinlig källkod.\ncatalog:occurrence:405997"
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-beslut"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402152\ncatalog:occurrence:403511"
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-beslut"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402152\ncatalog:occurrence:403511"
+
+[[statement]]
+kind = "set"
+subject = "var:trafftillf"
+fields = { "sets" = [] }
+evidence = "Uppgiften beskriver undersökningens kontaktförsök.\ncatalog:occurrence:403187\ncatalog:valueset:2812"
+
+[[statement]]
+kind = "set"
+subject = "var:trafftillf"
+fields = { "tags" = ["methods"] }
+evidence = "Uppgiften beskriver undersökningens kontaktförsök.\ncatalog:occurrence:403187\ncatalog:valueset:2812"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar utbildningsnivå.\ncatalog:occurrence:405999"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar utbildningsnivå.\ncatalog:occurrence:405999"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "sets" = [] }
+evidence = "Indelningen avser födelsebakgrund.\ncatalog:occurrence:406000\ncatalog:valueset:7447"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakgalt"
+fields = { "tags" = ["demographics"] }
+evidence = "Indelningen avser födelsebakgrund.\ncatalog:occurrence:406000\ncatalog:valueset:7447"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-regionval-vastra-gotaland"
+fields = { "sets" = ["valdeltagande-regionfullmaktige-vastra-gotaland"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402152\ncatalog:occurrence:403511"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-regionval-vastra-gotaland"
+fields = { "tags" = ["democracy"] }
+evidence = "Identitetsfaktumet gäller olika frågor i olika perioder.\ncatalog:occurrence:402152\ncatalog:occurrence:403511"
+
+[[statement]]
+kind = "set"
+subject = "var:valdplan"
+fields = { "sets" = ["valdeltagande-hypotetiskt-riksdagsval"] }
+evidence = "Variabeln avser valdeltagande vid ett hypotetiskt riksdagsval och hör till samma begrepp som Fr8.\ncatalog:occurrence:406001\ncatalog:variable_text:41085:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdplan"
+fields = { "tags" = ["democracy"] }
+evidence = "Variabeln avser valdeltagande vid ett hypotetiskt riksdagsval och hör till samma begrepp som Fr8.\ncatalog:occurrence:406001\ncatalog:variable_text:41085:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-senaste-riksdagsval-harledd"
+fields = { "sets" = ["valdeltagande-senaste-riksdagsval"] }
+evidence = "Valdrv är en källkodsförkortning, och familjen med suffixet sen ges en enhetlig namnändring. Variabeln mäter valdeltagande vid senaste riksdagsval och hör till motsvarande grupp och demokratitemat.\ncatalog:register:225\ncatalog:valueset:10746\ncatalog:variable_text:41086:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-senaste-riksdagsval-harledd"
+fields = { "tags" = ["democracy"] }
+evidence = "Valdrv är en källkodsförkortning, och familjen med suffixet sen ges en enhetlig namnändring. Variabeln mäter valdeltagande vid senaste riksdagsval och hör till motsvarande grupp och demokratitemat.\ncatalog:register:225\ncatalog:valueset:10746\ncatalog:variable_text:41086:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-senaste-riksdagsval-forra-undersokningen"
+fields = { "sets" = ["partiblockval-senaste-riksdagsval"] }
+evidence = "Vbrvfu är en ogenomskinlig bokstavskod för tidigare undersöknings blockval.\ncatalog:variable_text:41087:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-vid-senaste-riksdagsval-forra-undersokningen"
+fields = { "tags" = ["democracy"] }
+evidence = "Vbrvfu är en ogenomskinlig bokstavskod för tidigare undersöknings blockval.\ncatalog:variable_text:41087:20209:20240"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-riksdagsval-forra-undersokningen"
+fields = { "sets" = ["partival-senaste-riksdagsval"] }
+evidence = "Vprvfu är en ogenomskinlig bokstavskod för tidigare undersöknings partival.\ncatalog:occurrence:406006"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-vid-senaste-riksdagsval-forra-undersokningen"
+fields = { "tags" = ["democracy"] }
+evidence = "Vprvfu är en ogenomskinlig bokstavskod för tidigare undersöknings partival.\ncatalog:occurrence:406006"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkv"
+fields = { "sets" = ["forvarvsarbete"] }
+evidence = "Yrkesverksamhet härleds från frågor om arbete föregående vecka.\ncatalog:occurrence:406007"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkv"
+fields = { "tags" = ["employment"] }
+evidence = "Yrkesverksamhet härleds från frågor om arbete föregående vecka.\ncatalog:occurrence:406007"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkdel"
+fields = { "sets" = ["deltagande-folkomrostning"] }
+evidence = "All supplied occurrences explicitly ask about participation in the 2003 euro referendum (r22, r24, r26).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40836\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402433\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402526"
+
+[[statement]]
+kind = "set"
+subject = "var:fr29"
+fields = { "sets" = ["deltagande-folkomrostning"] }
+evidence = "The questions explicitly ask whether the respondent participated in the euro referendum (r17, r20), with Yes/No responses (r70).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40844\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:222"
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkrost"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402345:opdef_text; rel070-base/reg_meta.db:occurrence:402434:opdef_text; rel070-base/reg_meta.db:occurrence:402527:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402345, 402434, 402527."
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr30"
+fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402150:opdef_text; rel070-base/reg_meta.db:occurrence:402241:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402150, 402241."
+
+
+[[statement]]
+kind = "set"
+subject = "var:fr31-eufolk"
+fields = { "description" = "Anger röstalternativ eller uteblivet deltagande i folkomröstningen om EU-medlemskap." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ och deltagande, inte enbart om personen röstade.\ncatalog:valueset:11132\ncatalog:variable_text:41014:12357:12387\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402153:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event date; it does not describe a change in measurement. Evidence: rel070-base/reg_meta.db occurrences 402153."
+
+
+[[statement]]
+kind = "set"
+subject = "var:medlemskap-i-fackforening"
+fields = { "description" = "Anger medlemskap i fackförening, inklusive vilken centralorganisation föreningen tillhör. Frågan ställs till dem som svarat anställd i fråga 16, kod 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna omfattar även andra fackföreningar och icke-medlemskap.\ncatalog:occurrence:405947\ncatalog:valueset:8602\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401567:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Question number and routing code are documented only through May 2015; do not impose that questionnaire-specific routing on later waves. Evidence: rel070-base/reg_meta.db occurrences 401567, 404355, 404837.\n\nFaithfulness review 2026-11-02: Specify the last supported survey wave (May 2015); November 2015 has no routing instruction. Source: 401567 (rel070-base/reg_meta.db:opdef_text).\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401567, 404355."
+
+
+[[statement]]
+kind = "set"
+subject = "var:om-nagot-parti-star-narmast"
+fields = { "description" = "Anger om något parti står personen närmast." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger om ett parti står närmast, inte vilket parti.\ncatalog:valueset:12128\ncatalog:variable_text:40974:20209:20240"
+
+
+[[statement]]
+kind = "set"
+subject = "var:pbsvar"
+fields = { "description" = "Anger om ett partiblocksvar finns och vilken partiblocksfråga svaret kommer från. Giltiga svar 1–8 prioriteras i ordningen pbval_nu, pbsymp och pbvrv_sen, med resultatkoderna 1, 2 och 3; annars sätts 9 om reskont<8 och 0 i övriga fall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga texten anger vilket block, men variabeln kodar om och varifrån ett partiblocksvar finns.\ncatalog:occurrence:401589\ncatalog:occurrence:405974\ncatalog:valueset:249\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401589:opdef_text; rel070-base/reg_meta.db:occurrence:401671:opdef_text; rel070-base/reg_meta.db:occurrence:404389:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed coding algorithm is supplied only from November 2015, while earlier opdefs give inputs only. Bound the algorithm. Evidence: rel070-base/reg_meta.db occurrences 401589, 401671, 402802, 404389.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401589, 401671, 402802, 404389."
+
+
+[[statement]]
+kind = "set"
+subject = "var:valdeltagande-om-val-idag"
+fields = { "description" = "Anger om personen skulle eller inte skulle rösta om det var val idag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:occurrence:405959"
+
+
+[[statement]]
+kind = "set"
+subject = "var:valdplan"
+fields = { "description" = "Valdeltagande vid hypotetiskt riksdagsval. Härleds från fr8; sätts till 100 vid reskont=6, till 101 vid reskont=4 eller 5 och till 0 för kvarvarande saknade värden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavfelet utan att ändra betydelsen.\ncatalog:variable_text:41085:20209:20240\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:401613:opdef_text; rel070-base/reg_meta.db:occurrence:404415:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Detailed derivation is documented only from November 2015; earlier sources name the inputs without the recoding rule. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 401613, 402829, 404415."

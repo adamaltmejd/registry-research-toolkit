@@ -1,0 +1,9 @@
+.member {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.facet {
+  white-space: nowrap;
+}

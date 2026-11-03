@@ -1,0 +1,1304 @@
+
+[[statement]]
+kind = "set"
+subject = "var:andrahandsonskemal-forband"
+fields = { "sets" = ["onskemal-om-forband"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:743:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:andrahandsonskemal-forband"
+fields = { "tags" = ["defence"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:743:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsekg"
+fields = { "sets" = ["ekg"] }
+evidence = "EKG-resultat vid arbete.\ncatalog:variable_text:745:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsekg"
+fields = { "tags" = ["health"] }
+evidence = "EKG-resultat vid arbete.\ncatalog:variable_text:745:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetspuls"
+fields = { "sets" = ["puls"] }
+evidence = "Puls under arbete.\ncatalog:variable_text:746:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetspuls"
+fields = { "tags" = ["health"] }
+evidence = "Puls under arbete.\ncatalog:variable_text:746:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:armbojning"
+fields = { "sets" = ["muskelkraft"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:747:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:armbojning"
+fields = { "tags" = ["health"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:747:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:astigmatisk-hoger-oga"
+fields = { "sets" = ["astigmatism"] }
+evidence = "Astigmatism för höger öga.\ncatalog:variable_text:748:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:astigmatisk-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Astigmatism för höger öga.\ncatalog:variable_text:748:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:astigmatisk-vanster-oga"
+fields = { "sets" = ["astigmatism"] }
+evidence = "Astigmatism för vänster öga.\ncatalog:variable_text:749:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:astigmatisk-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Astigmatism för vänster öga.\ncatalog:variable_text:749:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befalslamplighet"
+fields = { "sets" = [] }
+evidence = "Bedömning av lämplighet för befälsutbildning.\ncatalog:variable_text:750:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befalslamplighet"
+fields = { "tags" = ["defence"] }
+evidence = "Bedömning av lämplighet för befälsutbildning.\ncatalog:variable_text:750:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning-1"
+fields = { "sets" = ["befattning"] }
+evidence = "Kodning av befattning.\ncatalog:variable_text:751:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning-1"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av befattning.\ncatalog:variable_text:751:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning-2"
+fields = { "sets" = ["befattning"] }
+evidence = "Kodning av befattning.\ncatalog:variable_text:752:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:befattning-2"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av befattning.\ncatalog:variable_text:752:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:blod-erytrocyter-volym"
+fields = { "sets" = [] }
+evidence = "Fysiologiskt blodmått.\ncatalog:variable_text:753:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:blod-erytrocyter-volym"
+fields = { "tags" = ["health"] }
+evidence = "Fysiologiskt blodmått.\ncatalog:variable_text:753:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bosattningskod"
+fields = { "sets" = [] }
+evidence = "Kod för geografisk bosättning.\ncatalog:variable_text:754:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:bosattningskod"
+fields = { "tags" = ["geography"] }
+evidence = "Kod för geografisk bosättning.\ncatalog:variable_text:754:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-hoger-oga"
+fields = { "sets" = ["astigmatism"] }
+evidence = "Cylinderangivelse för höger öga.\ncatalog:register:36\ncatalog:variable_text:756:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Cylinderangivelse för höger öga.\ncatalog:register:36\ncatalog:variable_text:756:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-vanster-oga"
+fields = { "sets" = ["astigmatism"] }
+evidence = "Cylinderangivelse för vänster öga.\ncatalog:register:36\ncatalog:variable_text:757:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:cylinder-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Cylinderangivelse för vänster öga.\ncatalog:register:36\ncatalog:variable_text:757:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fargsinne-anomaloskop"
+fields = { "sets" = ["fargsinne"] }
+evidence = "Färgsinnesresultat från anomaloskop.\ncatalog:variable_text:758:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fargsinne-anomaloskop"
+fields = { "tags" = ["health"] }
+evidence = "Färgsinnesresultat från anomaloskop.\ncatalog:variable_text:758:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fargsinne-tavelundersokning"
+fields = { "sets" = ["fargsinne"] }
+evidence = "Färgsinnesresultat från tavelundersökning.\ncatalog:variable_text:759:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fargsinne-tavelundersokning"
+fields = { "tags" = ["health"] }
+evidence = "Färgsinnesresultat från tavelundersökning.\ncatalog:variable_text:759:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forarbevis"
+fields = { "sets" = ["forarbehorighet"] }
+evidence = "Kodning av förarbehörighet.\ncatalog:variable_text:760:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forarbevis"
+fields = { "tags" = ["transport"] }
+evidence = "Kodning av förarbehörighet.\ncatalog:variable_text:760:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forstahandsonskemal-forband"
+fields = { "sets" = ["onskemal-om-forband"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:761:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forstahandsonskemal-forband"
+fields = { "tags" = ["defence"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:761:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forsvarsgren"
+fields = { "sets" = [] }
+evidence = "Militär försvarsgren.\ncatalog:variable_text:762:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:forsvarsgren"
+fields = { "tags" = ["defence"] }
+evidence = "Militär försvarsgren.\ncatalog:variable_text:762:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-arbetsformaga"
+fields = { "sets" = ["fysisk-arbetsformaga"] }
+evidence = "Mått på fysisk arbetsförmåga.\ncatalog:variable_text:763:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-arbetsformaga"
+fields = { "tags" = ["health"] }
+evidence = "Mått på fysisk arbetsförmåga.\ncatalog:variable_text:763:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:glas-hoger-oga"
+fields = { "sets" = ["glas-for-ogonen"] }
+evidence = "Glasangivelse för höger öga.\ncatalog:variable_text:764:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:glas-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Glasangivelse för höger öga.\ncatalog:variable_text:764:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:glas-vanster-oga"
+fields = { "sets" = ["glas-for-ogonen"] }
+evidence = "Glasangivelse för vänster öga.\ncatalog:variable_text:765:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:glas-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Glasangivelse för vänster öga.\ncatalog:variable_text:765:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:grundutbildningsmyndighet-1"
+fields = { "sets" = ["grundutbildningsmyndighet"] }
+evidence = "Kodning av grundutbildningsmyndighet.\ncatalog:variable_text:766:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:grundutbildningsmyndighet-1"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av grundutbildningsmyndighet.\ncatalog:variable_text:766:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:grundutbildningsmyndighet-2"
+fields = { "sets" = ["grundutbildningsmyndighet"] }
+evidence = "Kodning av grundutbildningsmyndighet.\ncatalog:variable_text:767:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:grundutbildningsmyndighet-2"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av grundutbildningsmyndighet.\ncatalog:variable_text:767:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:halsogrupp"
+fields = { "sets" = ["medicinsk-halsobedomning"] }
+evidence = "Sammanfattande hälsobedömning.\ncatalog:register:36\ncatalog:variable_text:768:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:halsogrupp"
+fields = { "tags" = ["health"] }
+evidence = "Sammanfattande hälsobedömning.\ncatalog:register:36\ncatalog:variable_text:768:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:halsoprofil"
+fields = { "sets" = ["medicinsk-halsobedomning"] }
+evidence = "Sammanfattande hälsobedömning.\ncatalog:register:36\ncatalog:variable_text:769:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:halsoprofil"
+fields = { "tags" = ["health"] }
+evidence = "Sammanfattande hälsobedömning.\ncatalog:register:36\ncatalog:variable_text:769:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:handgrepp"
+fields = { "sets" = ["muskelkraft"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:770:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:handgrepp"
+fields = { "tags" = ["health"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:770:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:horsel-hoger-ora"
+fields = { "sets" = ["horsel"] }
+evidence = "Hörselmått för höger öra.\ncatalog:variable_text:771:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:horsel-hoger-ora"
+fields = { "tags" = ["health"] }
+evidence = "Hörselmått för höger öra.\ncatalog:variable_text:771:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:horsel-vanster-ora"
+fields = { "sets" = ["horsel"] }
+evidence = "Hörselmått för vänster öra.\ncatalog:variable_text:772:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:horsel-vanster-ora"
+fields = { "tags" = ["health"] }
+evidence = "Hörselmått för vänster öra.\ncatalog:variable_text:772:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:i-provbedomning"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Bedömning av inskrivningsprov.\ncatalog:register:36\ncatalog:variable_text:773:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:i-provbedomning"
+fields = { "tags" = ["defence"] }
+evidence = "Bedömning av inskrivningsprov.\ncatalog:register:36\ncatalog:variable_text:773:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:intresseanmalan"
+fields = { "sets" = [] }
+evidence = "Intresseanmälan i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:775:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:intresseanmalan"
+fields = { "tags" = ["defence"] }
+evidence = "Intresseanmälan i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:775:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:knastrackning"
+fields = { "sets" = ["muskelkraft"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:776:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:knastrackning"
+fields = { "tags" = ["health"] }
+evidence = "Testkomponent för muskelkraft.\ncatalog:register:36\ncatalog:variable_text:776:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:korkort"
+fields = { "sets" = ["forarbehorighet"] }
+evidence = "Kodning av förarbehörighet.\ncatalog:variable_text:777:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:korkort"
+fields = { "tags" = ["transport"] }
+evidence = "Kodning av förarbehörighet.\ncatalog:variable_text:777:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kravunderskridande"
+fields = { "sets" = [] }
+evidence = "Kravunderskridande vid inskrivning.\ncatalog:register:36\ncatalog:variable_text:778:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kravunderskridande"
+fields = { "tags" = ["defence"] }
+evidence = "Kravunderskridande vid inskrivning.\ncatalog:register:36\ncatalog:variable_text:778:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kroppsvikt"
+fields = { "sets" = [] }
+evidence = "Fysiologiskt mått på kroppsvikt.\ncatalog:variable_text:779:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kroppsvikt"
+fields = { "tags" = ["health"] }
+evidence = "Fysiologiskt mått på kroppsvikt.\ncatalog:variable_text:779:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "sets" = [] }
+evidence = "Fysiologiskt mått på kroppslängd.\ncatalog:register:36\ncatalog:variable_text:781:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "tags" = ["health"] }
+evidence = "Fysiologiskt mått på kroppslängd.\ncatalog:register:36\ncatalog:variable_text:781:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:las-och-skrivsvarigheter"
+fields = { "sets" = [] }
+evidence = "Svårigheter med läsning och skrivning.\ncatalog:variable_text:782:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:las-och-skrivsvarigheter"
+fields = { "tags" = ["disability"] }
+evidence = "Svårigheter med läsning och skrivning.\ncatalog:variable_text:782:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinsk-kapacitetsprofil"
+fields = { "sets" = ["medicinsk-halsobedomning"] }
+evidence = "Sammanfattande medicinsk kapacitetsbedömning.\ncatalog:register:36\ncatalog:variable_text:783:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinsk-kapacitetsprofil"
+fields = { "tags" = ["health"] }
+evidence = "Sammanfattande medicinsk kapacitetsbedömning.\ncatalog:register:36\ncatalog:variable_text:783:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:militar-fardighet"
+fields = { "sets" = [] }
+evidence = "Militär färdighet.\ncatalog:variable_text:784:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:militar-fardighet"
+fields = { "tags" = ["defence"] }
+evidence = "Militär färdighet.\ncatalog:variable_text:784:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:morkerseende"
+fields = { "sets" = [] }
+evidence = "Synfunktion i mörker.\ncatalog:variable_text:786:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:morkerseende"
+fields = { "tags" = ["health"] }
+evidence = "Synfunktion i mörker.\ncatalog:variable_text:786:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:muskelfaktor"
+fields = { "sets" = ["muskelkraft"] }
+evidence = "Sammanfattande muskelkraftsmått.\ncatalog:register:36\ncatalog:variable_text:788:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:muskelfaktor"
+fields = { "tags" = ["health"] }
+evidence = "Sammanfattande muskelkraftsmått.\ncatalog:register:36\ncatalog:variable_text:788:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-gu-borjan-1"
+fields = { "sets" = ["onskat-startar-for-grundutbildning"] }
+evidence = "Önskat år för grundutbildningens början.\ncatalog:variable_text:790:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-gu-borjan-1"
+fields = { "tags" = ["defence"] }
+evidence = "Önskat år för grundutbildningens början.\ncatalog:variable_text:790:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-gu-borjan-2"
+fields = { "sets" = ["onskat-startar-for-grundutbildning"] }
+evidence = "Önskat år för grundutbildningens början.\ncatalog:variable_text:791:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-gu-borjan-2"
+fields = { "tags" = ["defence"] }
+evidence = "Önskat år för grundutbildningens början.\ncatalog:variable_text:791:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "sets" = [] }
+evidence = "Personalkategori i inskrivningen.\ncatalog:register:36\ncatalog:variable_text:792:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:personalkategori"
+fields = { "tags" = ["defence"] }
+evidence = "Personalkategori i inskrivningen.\ncatalog:register:36\ncatalog:variable_text:792:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:planerat-inryckningsar-1"
+fields = { "sets" = ["planerat-inryckningsar"] }
+evidence = "Planerat inryckningsår.\ncatalog:variable_text:794:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:planerat-inryckningsar-1"
+fields = { "tags" = ["defence"] }
+evidence = "Planerat inryckningsår.\ncatalog:variable_text:794:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:planerat-inryckningsar-2"
+fields = { "sets" = ["planerat-inryckningsar"] }
+evidence = "Planerat inryckningsår.\ncatalog:variable_text:795:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:planerat-inryckningsar-2"
+fields = { "tags" = ["defence"] }
+evidence = "Planerat inryckningsår.\ncatalog:variable_text:795:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:provande-varnpliktskontor"
+fields = { "sets" = ["varnpliktskontor"] }
+evidence = "Prövande värnpliktskontor.\ncatalog:variable_text:796:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:provande-varnpliktskontor"
+fields = { "tags" = ["defence"] }
+evidence = "Prövande värnpliktskontor.\ncatalog:variable_text:796:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:provgrupp"
+fields = { "sets" = [] }
+evidence = "Grupp för begåvning enligt inskrivningsprovet.\ncatalog:variable_text:797:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:provgrupp"
+fields = { "tags" = ["defence"] }
+evidence = "Grupp för begåvning enligt inskrivningsprovet.\ncatalog:variable_text:797:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:psykisk-funktionsformaga"
+fields = { "sets" = ["psykisk-funktionsbedomning"] }
+evidence = "Psykologisk bedömning vid mönstring.\ncatalog:variable_text:799:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:psykisk-funktionsformaga"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologisk bedömning vid mönstring.\ncatalog:variable_text:799:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:psykologisk-profil"
+fields = { "sets" = ["psykisk-funktionsbedomning"] }
+evidence = "Psykologisk bedömning vid mönstring.\ncatalog:variable_text:800:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:psykologisk-profil"
+fields = { "tags" = ["defence"] }
+evidence = "Psykologisk bedömning vid mönstring.\ncatalog:variable_text:800:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Råpoäng på inskrivningsprovet.\ncatalog:variable_text:802:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på inskrivningsprovet.\ncatalog:variable_text:802:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-1"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:803:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-1"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:803:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-2"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:804:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-2"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:804:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-3"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:805:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-3"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:805:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-4"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:806:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-inskrivningsprov-delprov-4"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på ett delprov.\ncatalog:variable_text:806:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-pt-prov"
+fields = { "sets" = ["resultat-pa-pt-prov"] }
+evidence = "Råpoäng på PT-prov.\ncatalog:variable_text:807:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:rapoang-pt-prov"
+fields = { "tags" = ["defence"] }
+evidence = "Råpoäng på PT-prov.\ncatalog:variable_text:807:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:refraktion-hoger-oga"
+fields = { "sets" = ["refraktion"] }
+evidence = "Refraktion för höger öga.\ncatalog:variable_text:808:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:refraktion-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Refraktion för höger öga.\ncatalog:variable_text:808:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:refraktion-vanster-oga"
+fields = { "sets" = ["refraktion"] }
+evidence = "Refraktion för vänster öga.\ncatalog:variable_text:809:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:refraktion-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Refraktion för vänster öga.\ncatalog:variable_text:809:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-ansokan"
+fields = { "sets" = [] }
+evidence = "Ansökan i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:811:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-ansokan"
+fields = { "tags" = ["defence"] }
+evidence = "Ansökan i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:811:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:simkunnighet"
+fields = { "sets" = [] }
+evidence = "Simkunnighet är en färdighet inom fritid.\ncatalog:variable_text:812:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:simkunnighet"
+fields = { "tags" = ["culture"] }
+evidence = "Simkunnighet är en färdighet inom fritid.\ncatalog:variable_text:812:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-1"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:813:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-1"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:813:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-2"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:814:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-2"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:814:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-3"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:815:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-3"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:815:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-4"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:816:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-4"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:816:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-5"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:817:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-5"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:817:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-6"
+fields = { "sets" = ["sjukdomsnummer"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:818:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukdomsnummer-6"
+fields = { "tags" = ["health"] }
+evidence = "Kodning av sjukdom.\ncatalog:variable_text:818:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-muskelkraft"
+fields = { "sets" = ["muskelkraft"] }
+evidence = "Sammanfattande skattning av muskelkraft.\ncatalog:variable_text:819:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-muskelkraft"
+fields = { "tags" = ["health"] }
+evidence = "Sammanfattande skattning av muskelkraft.\ncatalog:variable_text:819:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skolutbildning-1"
+fields = { "sets" = ["skolutbildning"] }
+evidence = "Kodning av skolutbildning.\ncatalog:variable_text:822:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skolutbildning-1"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av skolutbildning.\ncatalog:variable_text:822:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skolutbildning-2"
+fields = { "sets" = ["skolutbildning"] }
+evidence = "Kodning av skolutbildning.\ncatalog:variable_text:823:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skolutbildning-2"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av skolutbildning.\ncatalog:variable_text:823:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skytt"
+fields = { "sets" = [] }
+evidence = "Skytt i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:824:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:skytt"
+fields = { "tags" = ["defence"] }
+evidence = "Skytt i inskrivningsregistret.\ncatalog:register:36\ncatalog:variable_text:824:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:slutpuls"
+fields = { "sets" = ["puls"] }
+evidence = "Puls vid provets slut.\ncatalog:register:36\ncatalog:variable_text:825:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:slutpuls"
+fields = { "tags" = ["health"] }
+evidence = "Puls vid provets slut.\ncatalog:register:36\ncatalog:variable_text:825:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Standardpoäng för inskrivningsprovet enligt gruppavgränsningen.\ncatalog:register:36\ncatalog:variable_text:827:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng för inskrivningsprovet enligt gruppavgränsningen.\ncatalog:register:36\ncatalog:variable_text:827:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-1"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:828:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-1"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:828:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-2"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:829:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-2"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:829:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-3"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:830:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-3"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:830:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-4"
+fields = { "sets" = ["resultat-pa-inskrivningsprov"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:831:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-inskrivningsprov-delprov-4"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng på ett delprov.\ncatalog:variable_text:831:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-pt-prov"
+fields = { "sets" = ["resultat-pa-pt-prov"] }
+evidence = "Standardpoäng på PT-prov.\ncatalog:variable_text:832:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:standardpoang-pt-prov"
+fields = { "tags" = ["defence"] }
+evidence = "Standardpoäng på PT-prov.\ncatalog:variable_text:832:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-korrigerat-hoger-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Korrigerad synskärpa för höger öga.\ncatalog:register:36\ncatalog:variable_text:833:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-korrigerat-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Korrigerad synskärpa för höger öga.\ncatalog:register:36\ncatalog:variable_text:833:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-korrigerat-vanster-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Korrigerad synskärpa för vänster öga.\ncatalog:register:36\ncatalog:variable_text:834:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-korrigerat-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Korrigerad synskärpa för vänster öga.\ncatalog:register:36\ncatalog:variable_text:834:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-okorrigerat-hoger-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Okorrigerad synskärpa för höger öga.\ncatalog:register:36\ncatalog:variable_text:835:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-okorrigerat-hoger-oga"
+fields = { "tags" = ["health"] }
+evidence = "Okorrigerad synskärpa för höger öga.\ncatalog:register:36\ncatalog:variable_text:835:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-okorrigerat-vanster-oga"
+fields = { "sets" = ["synskarpa"] }
+evidence = "Okorrigerad synskärpa för vänster öga.\ncatalog:register:36\ncatalog:variable_text:836:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syn-okorrigerat-vanster-oga"
+fields = { "tags" = ["health"] }
+evidence = "Okorrigerad synskärpa för vänster öga.\ncatalog:register:36\ncatalog:variable_text:836:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga"
+fields = { "sets" = ["fysisk-arbetsformaga"] }
+evidence = "Mått på syreupptagningsförmåga.\ncatalog:variable_text:837:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:syreupptagningsformaga"
+fields = { "tags" = ["health"] }
+evidence = "Mått på syreupptagningsförmåga.\ncatalog:variable_text:837:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:telegrafiprov"
+fields = { "sets" = [] }
+evidence = "Färdighetsprov i inskrivningen.\ncatalog:register:36\ncatalog:variable_text:838:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:telegrafiprov"
+fields = { "tags" = ["defence"] }
+evidence = "Färdighetsprov i inskrivningen.\ncatalog:register:36\ncatalog:variable_text:838:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tillhorande-varnpliktskontor"
+fields = { "sets" = ["varnpliktskontor"] }
+evidence = "Tillhörande värnpliktskontor.\ncatalog:variable_text:839:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tillhorande-varnpliktskontor"
+fields = { "tags" = ["defence"] }
+evidence = "Tillhörande värnpliktskontor.\ncatalog:variable_text:839:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjehandsonskemal-forband"
+fields = { "sets" = ["onskemal-om-forband"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:840:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:tredjehandsonskemal-forband"
+fields = { "tags" = ["defence"] }
+evidence = "Rangordnat förbandsönskemål.\ncatalog:variable_text:840:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:truppregistreringsmyndighet"
+fields = { "sets" = ["truppregistreringsmyndighet"] }
+evidence = "Kodning av truppregistreringsmyndighet.\ncatalog:variable_text:841:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:truppregistreringsmyndighet"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av truppregistreringsmyndighet.\ncatalog:variable_text:841:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:truppregistreringsmyndighet-2"
+fields = { "sets" = ["truppregistreringsmyndighet"] }
+evidence = "Kodning av truppregistreringsmyndighet.\ncatalog:variable_text:842:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:truppregistreringsmyndighet-2"
+fields = { "tags" = ["defence"] }
+evidence = "Kodning av truppregistreringsmyndighet.\ncatalog:variable_text:842:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-arbetsprov"
+fields = { "sets" = [] }
+evidence = "Typ av fysiologiskt arbetsprov.\ncatalog:register:36\ncatalog:variable_text:843:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-arbetsprov"
+fields = { "tags" = ["health"] }
+evidence = "Typ av fysiologiskt arbetsprov.\ncatalog:register:36\ncatalog:variable_text:843:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-1"
+fields = { "sets" = ["typhinder-for-inskrivning"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:844:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-1"
+fields = { "tags" = ["defence"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:844:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-3"
+fields = { "sets" = ["typhinder-for-inskrivning"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:845:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-3"
+fields = { "tags" = ["defence"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:845:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-5"
+fields = { "sets" = ["typhinder-for-inskrivning"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-5"
+fields = { "tags" = ["defence"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-6"
+fields = { "sets" = ["typhinder-for-inskrivning"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:847:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-6"
+fields = { "tags" = ["defence"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:register:36\ncatalog:variable_text:847:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-inskrivning"
+fields = { "sets" = ["typhinder-for-inskrivning"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:variable_text:848:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-inskrivning"
+fields = { "tags" = ["defence"] }
+evidence = "Registrerat typhinder för inskrivning.\ncatalog:variable_text:848:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:uglukos"
+fields = { "sets" = [] }
+evidence = "Laboratoriemått på glukos.\ncatalog:variable_text:849:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:uglukos"
+fields = { "tags" = ["health"] }
+evidence = "Laboratoriemått på glukos.\ncatalog:variable_text:849:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:uprotein"
+fields = { "sets" = [] }
+evidence = "Laboratoriemått på protein.\ncatalog:variable_text:850:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:uprotein"
+fields = { "tags" = ["health"] }
+evidence = "Laboratoriemått på protein.\ncatalog:variable_text:850:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:utebliven-pf-skattning"
+fields = { "sets" = [] }
+evidence = "Markör för utebliven psykologisk skattning vid mönstring.\ncatalog:variable_text:851:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:utebliven-pf-skattning"
+fields = { "tags" = ["defence"] }
+evidence = "Markör för utebliven psykologisk skattning vid mönstring.\ncatalog:variable_text:851:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:venblod-sankningsreaktion"
+fields = { "sets" = [] }
+evidence = "Fysiologiskt laboratoriemått.\ncatalog:variable_text:852:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:venblod-sankningsreaktion"
+fields = { "tags" = ["health"] }
+evidence = "Fysiologiskt laboratoriemått.\ncatalog:variable_text:852:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloblodtryck-diastoliskt"
+fields = { "sets" = ["viloblodtryck"] }
+evidence = "Diastoliskt viloblodtryck.\ncatalog:variable_text:853:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloblodtryck-diastoliskt"
+fields = { "tags" = ["health"] }
+evidence = "Diastoliskt viloblodtryck.\ncatalog:variable_text:853:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloblodtryck-systoliskt"
+fields = { "sets" = ["viloblodtryck"] }
+evidence = "Systoliskt viloblodtryck.\ncatalog:variable_text:854:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloblodtryck-systoliskt"
+fields = { "tags" = ["health"] }
+evidence = "Systoliskt viloblodtryck.\ncatalog:variable_text:854:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloekg"
+fields = { "sets" = ["ekg"] }
+evidence = "EKG-resultat i vila.\ncatalog:variable_text:855:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:viloekg"
+fields = { "tags" = ["health"] }
+evidence = "EKG-resultat i vila.\ncatalog:variable_text:855:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:vilopuls"
+fields = { "sets" = ["puls"] }
+evidence = "Puls i vila.\ncatalog:variable_text:856:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:vilopuls"
+fields = { "tags" = ["health"] }
+evidence = "Puls i vila.\ncatalog:variable_text:856:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutbildning-1"
+fields = { "sets" = ["yrkesutbildning"] }
+evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:857:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutbildning-1"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:857:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutbildning-2"
+fields = { "sets" = ["yrkesutbildning"] }
+evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:858:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutbildning-2"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av yrkesutbildning.\ncatalog:variable_text:858:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:sprak"
+fields = { "tags" = ["language-religion"] }
+evidence = "The current label and definition both say Språk. The broad language theme is established even though the purpose of this language field remains unspecified.\ncatalog:variable:826\ncatalog:variable_text:826:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:fysisk-arbetsformaga"
+fields = { "description" = "Fysisk arbetsförmåga" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar böjningsformen utan att ändra betydelsen.\ncatalog:variable_text:763:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:las-och-skrivsvarigheter"
+fields = { "description" = "Läs- och skrivsvårigheter" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:variable_text:782:-365:10227"
+
+
+[[statement]]
+kind = "set"
+subject = "var:typhinder-5"
+fields = { "description" = "Femte typhinder" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar uppenbart stavfel i samma betydelse.\ncatalog:register:36\ncatalog:variable_text:846:-365:10227"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: WMAX @1969-01-01..1997-12-31 where key = 'n:wmax'"
+fields = { "label" = "Fysisk arbetsförmåga" }
+evidence = "Part of #2040. riksarkivet/inskrivning/fysisk-arbetsformaga: Correct adjective agreement: Fysiskt → Fysisk; same physical work capacity. Reviewed occurrence label: Fysiskt arbetsförmåga"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: LASV @1969-01-01..1997-12-31 where key = 'n:lasv'"
+fields = { "label" = "Läs- och skrivsvårigheter" }
+evidence = "Part of #2040. riksarkivet/inskrivning/las-och-skrivsvarigheter: Remove duplicated s in skrivssvårigheter. Reviewed occurrence label: Läs- och skrivssvårigheter"
+
+[[statement]]
+kind = "set"
+subject = "inskrivning: TYP5 @1969-01-01..1997-12-31 where key = 'n:typ5'"
+fields = { "label" = "Femte typhinder" }
+evidence = "Part of #2040. riksarkivet/inskrivning/typhinder-5: Remove stray u in typhuinder. Reviewed occurrence label: Femte typhuinder"
+
+[[statement]]
+kind = "set"
+subject = "var:certifikat"
+fields = { "tags" = ["defence"] }
+evidence = "The unspecified certificate is recorded in the enlistment register (r2, r9), whose supplied subject context supports defence (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1173\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:755\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:multipel-vardering"
+fields = { "tags" = ["defence"] }
+evidence = "The multiple-rating field belongs to the enlistment register (r4, r10); its supplied subject context supports defence without decoding the rating (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1201\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:787\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:nara-hem"
+fields = { "tags" = ["defence"] }
+evidence = "The near-home field belongs to the enlistment register (r5, r11); that context supports defence without assuming a placement preference (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1202\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:789\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanfattningssiffra"
+fields = { "tags" = ["defence"] }
+evidence = "The summary figure belongs to the enlistment register (r7, r12); its subject context supports defence without assuming what the figure summarizes (r18, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1225\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:810\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-safhe"
+fields = { "tags" = ["defence"] }
+evidence = "The enlistment context supports defence for the unspecified SAFHE rating (r6, r14; r18, r1). Its mixed health and defence siblings do not establish a general health measure (r13, r17).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1224\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:819\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:820\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:851\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-sipe"
+fields = { "tags" = ["defence"] }
+evidence = "The enlistment context supports defence for the unspecified SIPE rating (r8, r15; r18, r1). Its mixed health and defence siblings do not establish a general health measure (r13, r17).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:1227\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:819\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:821\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:851\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

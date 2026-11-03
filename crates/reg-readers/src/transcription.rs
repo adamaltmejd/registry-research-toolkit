@@ -85,6 +85,8 @@ pub fn read(
             .or_default()
             .push(table.clone());
         records.push(Record::Table(Table {
+            role: None,
+            unit_type: None,
             provider: provider.to_owned(),
             register,
             table,
@@ -131,6 +133,7 @@ pub fn read(
                     ));
                 }
                 records.push(Record::Occurrence(Occurrence {
+                    role: None,
                     provider: provider.to_owned(),
                     register: register.clone(),
                     table,
@@ -175,8 +178,29 @@ fn rows(
     known: &[&str],
     out: &mut ReadOutput,
 ) -> Result<Vec<(Locator, Row)>, ReadError> {
-    let mut reader =
-        csv::Reader::from_path(root.join(rel)).map_err(|e| error(rel, e.to_string()))?;
+    if Path::new(rel)
+        .components()
+        .any(|component| !matches!(component, std::path::Component::Normal(_)))
+    {
+        return Err(error(
+            "transcription",
+            "input_path_invalid: CSV reference must be relative without traversal",
+        ));
+    }
+    let canonical_root = root
+        .canonicalize()
+        .map_err(|_| error("transcription", "cannot resolve inputs root"))?;
+    let path = root
+        .join(rel)
+        .canonicalize()
+        .map_err(|_| error(rel, "cannot resolve input CSV"))?;
+    if !path.starts_with(&canonical_root) {
+        return Err(error(
+            "transcription",
+            "input_path_invalid: CSV reference escapes inputs root",
+        ));
+    }
+    let mut reader = csv::Reader::from_path(path).map_err(|e| error(rel, e.to_string()))?;
     let headers = reader
         .headers()
         .map_err(|e| error(rel, e.to_string()))?

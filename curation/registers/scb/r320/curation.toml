@@ -8,42 +8,6 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:48\n\
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_b_prp"
-fields = { "description" = "Resultat på delprov B i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_c_prp"
-fields = { "description" = "Resultat på delprov C i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "grundskola-nationella-prov-ak-6: {hkom,kommun} @2018-01-01..2018-06-30"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -143,3 +107,1412 @@ kind = "set"
 subject = "grundskola-nationella-prov-ak-6: jurform @2022-01-01..2022-06-30,2023-01-01..2023-06-30,2024-01-01..2024-06-30,2025-01-01..2025-06-30"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Poäng på betygsnivå A ingår i matematikresultaten.\ncatalog:occurrence:203640"
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang-merit"
+fields = { "tags" = ["education"] }
+evidence = "Poäng på betygsnivå A ingår i matematikresultaten.\ncatalog:occurrence:203640"
+
+[[statement]]
+kind = "set"
+subject = "var:ak6-sva"
+fields = { "sets" = ["kursplansval-i-svenska"] }
+evidence = "Ak6 är en källkod utan läsbara ordstammar i etiketten. Variabeln är en ämnesmarkör.\ncatalog:occurrence:203681\ncatalog:valueset:10571"
+
+[[statement]]
+kind = "set"
+subject = "var:ak6-sva"
+fields = { "tags" = ["education"] }
+evidence = "Ak6 är en källkod utan läsbara ordstammar i etiketten. Variabeln är en ämnesmarkör.\ncatalog:occurrence:203681\ncatalog:valueset:10571"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-a-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Identitetsfaktet länkar variabeln till engelska-delprov-a med annan resultatkodning.\ncatalog:occurrence:203570\ncatalog:occurrence:203624"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-a-engelska"
+fields = { "tags" = ["education"] }
+evidence = "Identitetsfaktet länkar variabeln till engelska-delprov-a med annan resultatkodning.\ncatalog:occurrence:203570\ncatalog:occurrence:203624"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-a-svenska"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Identitetsfaktet länkar variabeln till svenska-delprov-a med annan resultatkodning.\ncatalog:occurrence:203611\ncatalog:occurrence:203671"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-a-svenska"
+fields = { "tags" = ["education"] }
+evidence = "Identitetsfaktet länkar variabeln till svenska-delprov-a med annan resultatkodning.\ncatalog:occurrence:203611\ncatalog:occurrence:203671"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-b-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Identitetsfaktet länkar variabeln till en-delprov-b med annan resultatkodning.\ncatalog:occurrence:203576\ncatalog:occurrence:203625"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg-delprov-b-engelska"
+fields = { "tags" = ["education"] }
+evidence = "Identitetsfaktet länkar variabeln till en-delprov-b med annan resultatkodning.\ncatalog:occurrence:203576\ncatalog:occurrence:203625"
+
+[[statement]]
+kind = "set"
+subject = "var:bi-provbet"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Biologins provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22100:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:bi-provbet"
+fields = { "tags" = ["education"] }
+evidence = "Biologins provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22100:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-a"
+fields = { "sets" = ["provdeltagande-i-engelska"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22101:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-a"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22101:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-b"
+fields = { "sets" = ["provdeltagande-i-engelska"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22102:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-b"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22102:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1a-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22103:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1a-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22103:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1b-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22104:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1b-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22104:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1c-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22105:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b1c-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22105:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b2a-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22106:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b2a-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22106:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b2b-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22107:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b2b-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod och id:t innehåller källans delprovskod.\ncatalog:variable_text:22107:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:en-c-betyg"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203577\ncatalog:occurrence:203626\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:en-c-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203577\ncatalog:occurrence:203626\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-c"
+fields = { "sets" = ["provdeltagande-i-engelska"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22109:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-engelska-prov-c"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden En är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22109:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:en-delprov-b"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203576\ncatalog:occurrence:203625\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:en-delprov-b"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203576\ncatalog:occurrence:203625\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:en-delprov-c"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203577\ncatalog:occurrence:203626\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:en-delprov-c"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika ägare och olika resultatkodningar över perioderna.\ncatalog:occurrence:203577\ncatalog:occurrence:203626\ncatalog:valueset:5118\ncatalog:valueset:5228"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-engelska"
+fields = { "sets" = ["undervisningsgrupp"] }
+evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22112:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22112:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-i-engelska"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22113:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-i-engelska"
+fields = { "tags" = ["education"] }
+evidence = "En är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22113:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:engelska-delprov-a"
+fields = { "sets" = ["provresultat-i-engelska"] }
+evidence = "Identitetsfaktet länkar variabeln till betyg-delprov-a-engelska.\ncatalog:occurrence:203570\ncatalog:occurrence:203624"
+
+[[statement]]
+kind = "set"
+subject = "var:engelska-delprov-a"
+fields = { "tags" = ["education"] }
+evidence = "Identitetsfaktet länkar variabeln till betyg-delprov-a-engelska.\ncatalog:occurrence:203570\ncatalog:occurrence:203624"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22115:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22115:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Elevens födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22116:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Elevens födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22116:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22117:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland ingår i födelselandgruppen.\ncatalog:variable_text:22117:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = [] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:22118:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:22118:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Huvudmannatyp beskriver utbildningens organisation.\ncatalog:variable_text:22119:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Huvudmannatyp beskriver utbildningens organisation.\ncatalog:variable_text:22119:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "sets" = [] }
+evidence = "Skolans inriktning beskriver utbildning.\ncatalog:variable_text:22121:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "tags" = ["education"] }
+evidence = "Skolans inriktning beskriver utbildning.\ncatalog:variable_text:22121:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:inv-sstart"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar invandring relativt skolstart.\ncatalog:variable_text:22122:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:inv-sstart"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln klassificerar invandring relativt skolstart.\ncatalog:variable_text:22122:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver huvudmannens organisationsform.\ncatalog:variable_text:22123:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver huvudmannens organisationsform.\ncatalog:variable_text:22123:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:variable_text:22124:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:variable_text:22124:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:kursplan-i-svenska"
+fields = { "sets" = ["kursplansval-i-svenska"] }
+evidence = "Samma kursplansval är korrekt uppdelat mellan perioder med sv-eller-sva.\ncatalog:occurrence:203617\ncatalog:occurrence:203675"
+
+[[statement]]
+kind = "set"
+subject = "var:kursplan-i-svenska"
+fields = { "tags" = ["education"] }
+evidence = "Samma kursplansval är korrekt uppdelat mellan perioder med sv-eller-sva.\ncatalog:occurrence:203617\ncatalog:occurrence:203675"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203641\ncatalog:variable_text:22127:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-a-matematik-samtliga-delprov"
+fields = { "tags" = ["education"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203641\ncatalog:variable_text:22127:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-a-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22128:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-a-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22128:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22129:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-b-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22129:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-b-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22130:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-b-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22130:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-c-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22131:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-c-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22131:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203644\ncatalog:variable_text:22132:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-muntligt-delprov-a"
+fields = { "tags" = ["education"] }
+evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203644\ncatalog:variable_text:22132:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203645\ncatalog:variable_text:22133:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-c-matematik-samtliga-delprov"
+fields = { "tags" = ["education"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203645\ncatalog:variable_text:22133:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-c-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22134:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-c-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22134:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-d-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22135:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-pa-delprov-d-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22135:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-d-i-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22136:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:resultat-pa-delprov-d-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22136:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-a"
+fields = { "sets" = ["provdeltagande-i-matematik"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22137:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-a"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22137:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-b"
+fields = { "sets" = ["provdeltagande-i-matematik"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22138:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-b"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22138:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-c"
+fields = { "sets" = ["provdeltagande-i-matematik"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22139:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-c"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22139:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-d"
+fields = { "sets" = ["provdeltagande-i-matematik"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22140:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-d"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22140:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-e"
+fields = { "sets" = ["provdeltagande-i-matematik"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22141:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-matematik-prov-e"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Ma är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22141:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203648\ncatalog:variable_text:22142:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-muntligt-delprov-a"
+fields = { "tags" = ["education"] }
+evidence = "Ma och PoM är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203648\ncatalog:variable_text:22142:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203649\ncatalog:variable_text:22143:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:poang-betygsniva-e-matematik-samtliga-delprov"
+fields = { "tags" = ["education"] }
+evidence = "Ma och PoT är källkoder. Etiketten delas med en annan variabel och kräver kolumndisambiguering.\ncatalog:occurrence:203649\ncatalog:variable_text:22143:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-matematik"
+fields = { "sets" = ["undervisningsgrupp"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22144:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Ma är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22144:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-delt"
+fields = { "sets" = ["provdeltagande-i-no"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22145:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-delt"
+fields = { "tags" = ["education"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22145:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-po"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203652\ncatalog:variable_text:22146:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-po"
+fields = { "tags" = ["education"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203652\ncatalog:variable_text:22146:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-delt"
+fields = { "sets" = ["provdeltagande-i-no"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22147:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-delt"
+fields = { "tags" = ["education"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22147:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-po"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203653\ncatalog:variable_text:22148:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-po"
+fields = { "tags" = ["education"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203653\ncatalog:variable_text:22148:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-delt"
+fields = { "sets" = ["provdeltagande-i-no"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22149:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-delt"
+fields = { "tags" = ["education"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22149:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-po"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203654\ncatalog:variable_text:22150:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-po"
+fields = { "tags" = ["education"] }
+evidence = "Po är en källkod. Etiketten delas med andra variabler och kräver kolumndisambiguering.\ncatalog:occurrence:203654\ncatalog:variable_text:22150:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-prov"
+fields = { "sets" = ["provdeltagande-i-no"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln kodar provdeltagande i ett NO-ämne.\ncatalog:valueset:742\ncatalog:variable_text:22151:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-prov"
+fields = { "tags" = ["education"] }
+evidence = "Familjens förkortade provkoder behandlas enhetligt. Variabeln kodar provdeltagande i ett NO-ämne.\ncatalog:valueset:742\ncatalog:variable_text:22151:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:no-provb"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Provb är en källmnemonik för provbetyg; familjens källkoder behandlas enhetligt.\ncatalog:variable_text:22152:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:no-provb"
+fields = { "tags" = ["education"] }
+evidence = "Provb är en källmnemonik för provbetyg; familjens källkoder behandlas enhetligt.\ncatalog:variable_text:22152:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinvandring"
+fields = { "sets" = [] }
+evidence = "Nyinvandring är en migrationsklassificering.\ncatalog:variable_text:22153:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinvandring"
+fields = { "tags" = ["migration"] }
+evidence = "Nyinvandring är en migrationsklassificering.\ncatalog:variable_text:22153:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-fysik"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Fysikens provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22158:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-fysik"
+fields = { "tags" = ["education"] }
+evidence = "Fysikens provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22158:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-geografi"
+fields = { "sets" = ["provresultat-i-so"] }
+evidence = "Provbetyg i geografi är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22159:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-geografi"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyg i geografi är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22159:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-historia"
+fields = { "sets" = ["provresultat-i-so"] }
+evidence = "Provbetyg i historia är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22160:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-historia"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyg i historia är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22160:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-kemi"
+fields = { "sets" = ["provresultat-i-no"] }
+evidence = "Kemins provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22161:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-kemi"
+fields = { "tags" = ["education"] }
+evidence = "Kemins provbetyg ingår i NO-resultaten.\ncatalog:variable_text:22161:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-matematik"
+fields = { "sets" = ["provresultat-i-matematik"] }
+evidence = "Provbetyget ingår i matematikresultaten.\ncatalog:variable_text:22162:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-matematik"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyget ingår i matematikresultaten.\ncatalog:variable_text:22162:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-religion"
+fields = { "sets" = ["provresultat-i-so"] }
+evidence = "Provbetyg i religion är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22163:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-religion"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyg i religion är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22163:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-samhallskunskap"
+fields = { "sets" = ["provresultat-i-so"] }
+evidence = "Provbetyg i samhällskunskap är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22164:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-samhallskunskap"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyg i samhällskunskap är en ämneskomponent av SO-provresultat.\ncatalog:variable_text:22164:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-svenska"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Provbetyget ingår i svenskresultaten.\ncatalog:variable_text:22165:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbetyg-svenska"
+fields = { "tags" = ["education"] }
+evidence = "Provbetyget ingår i svenskresultaten.\ncatalog:variable_text:22165:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Tidpunkten hör ihop med tidigaste invandringsdatum.\ncatalog:variable_text:22166:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Tidpunkten hör ihop med tidigaste invandringsdatum.\ncatalog:variable_text:22166:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Skolform beskriver utbildningens organisation.\ncatalog:variable_text:22171:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Skolform beskriver utbildningens organisation.\ncatalog:variable_text:22171:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = [] }
+evidence = "Skolkommun anger skolans geografiska läge.\ncatalog:variable_text:22173:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Skolkommun anger skolans geografiska läge.\ncatalog:variable_text:22173:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:so-a-delt"
+fields = { "sets" = ["provdeltagande-i-so"] }
+evidence = "Variabeln kodar deltagande i ett SO-delprov.\ncatalog:variable_text:22174:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-a-delt"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar deltagande i ett SO-delprov.\ncatalog:variable_text:22174:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-b-delt"
+fields = { "sets" = ["provdeltagande-i-so"] }
+evidence = "Variabeln kodar deltagande i ett SO-delprov.\ncatalog:variable_text:22175:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-b-delt"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar deltagande i ett SO-delprov.\ncatalog:variable_text:22175:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-grupp"
+fields = { "sets" = ["undervisningsgrupp"] }
+evidence = "Ämnesspecifik undervisningsgrupp ingår i gruppen.\ncatalog:variable_text:22176:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-grupp"
+fields = { "tags" = ["education"] }
+evidence = "Ämnesspecifik undervisningsgrupp ingår i gruppen.\ncatalog:variable_text:22176:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-prov"
+fields = { "sets" = ["provdeltagande-i-so"] }
+evidence = "Variabeln kodar vilket SO-prov eleven genomfört.\ncatalog:valueset:4618\ncatalog:variable_text:22177:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-prov"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar vilket SO-prov eleven genomfört.\ncatalog:valueset:4618\ncatalog:variable_text:22177:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:so-provb"
+fields = { "sets" = ["provresultat-i-so"] }
+evidence = "Variabeln anger provbetyg i SO.\ncatalog:variable_text:22178:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:so-provb"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger provbetyg i SO.\ncatalog:variable_text:22178:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Variabeln mäter moderns utbildningsnivå.\ncatalog:variable_text:22179:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter moderns utbildningsnivå.\ncatalog:variable_text:22179:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22180:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22180:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-3"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Suffixet 3 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22181:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-3"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 3 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22181:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Variabeln mäter moderns grupperade utbildningsnivå.\ncatalog:valueset:11199\ncatalog:variable_text:22182:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter moderns grupperade utbildningsnivå.\ncatalog:valueset:11199\ncatalog:variable_text:22182:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22183:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22183:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Variabeln mäter moderns omkodade utbildningsnivå.\ncatalog:variable_text:22184:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter moderns omkodade utbildningsnivå.\ncatalog:variable_text:22184:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad-2"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22185:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-omkodad-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22185:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "sets" = ["moderns-utbildningsniva"] }
+evidence = "Variabeln mäter moderns utbildningsnivå.\ncatalog:variable_text:22186:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter moderns utbildningsnivå.\ncatalog:variable_text:22186:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22187:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22187:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns grupperade utbildningsnivå.\ncatalog:variable_text:22188:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns grupperade utbildningsnivå.\ncatalog:variable_text:22188:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-omkodad"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22189:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-omkodad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22189:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "sets" = ["foraldrarnas-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:22190:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:22190:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "sets" = ["foraldrarnas-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas grupperade utbildningsnivå.\ncatalog:variable_text:22191:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas grupperade utbildningsnivå.\ncatalog:variable_text:22191:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22192:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22192:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns grupperade utbildningsnivå.\ncatalog:variable_text:22193:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns grupperade utbildningsnivå.\ncatalog:variable_text:22193:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "sets" = ["foraldrarnas-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:22194:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas utbildningsnivå.\ncatalog:variable_text:22194:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "sets" = ["foraldrarnas-utbildningsniva"] }
+evidence = "Variabeln kodar föräldrarnas grupperade utbildningsnivå.\ncatalog:variable_text:22195:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar föräldrarnas grupperade utbildningsnivå.\ncatalog:variable_text:22195:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22196:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22196:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far-omkodad"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22197:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-far-omkodad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22197:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-old-far"
+fields = { "sets" = ["faderns-utbildningsniva"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22198:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva-old-far"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22198:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-a-delt"
+fields = { "sets" = ["provdeltagande-i-svenska"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22199:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-a-delt"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22199:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-b-betyg"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22200:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-b-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22200:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-b-delt"
+fields = { "sets" = ["provdeltagande-i-svenska"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22201:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-b-delt"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22201:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-bc-poang"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv är en ämneskod och BC en delprovskod.\ncatalog:variable_text:22202:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-bc-poang"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod och BC en delprovskod.\ncatalog:variable_text:22202:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-bc-pr"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22203:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-bc-pr"
+fields = { "tags" = ["education"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22203:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-c-betyg"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22204:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-c-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22204:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-c-delt"
+fields = { "sets" = ["provdeltagande-i-svenska"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22205:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-c-delt"
+fields = { "tags" = ["education"] }
+evidence = "Ämneskoden Sv är ogenomskinlig; familjens förkortningar behandlas enhetligt. Variabeln mäter provdeltagande i utbildning.\ncatalog:variable_text:22205:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-d-pr"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22206:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-d-pr"
+fields = { "tags" = ["education"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22206:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-b"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22207:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-b"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22207:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-c"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22208:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-c"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22208:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-e-pr"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22209:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-e-pr"
+fields = { "tags" = ["education"] }
+evidence = "Sv och Pr är källkoder utan läsbara ordstammar i etiketten.\ncatalog:variable_text:22209:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-eller-sva"
+fields = { "sets" = ["kursplansval-i-svenska"] }
+evidence = "Samma kursplansval är korrekt uppdelat i perioder mot scb/grundskola-prov-ak6/kursplan-i-svenska; kodvärdena anger samma alternativ.\ncatalog:occurrence:203617\ncatalog:occurrence:203675\ncatalog:valueset:8390\ncatalog:valueset:9588"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-eller-sva"
+fields = { "tags" = ["education"] }
+evidence = "Samma kursplansval är korrekt uppdelat i perioder mot scb/grundskola-prov-ak6/kursplan-i-svenska; kodvärdena anger samma alternativ.\ncatalog:occurrence:203617\ncatalog:occurrence:203675\ncatalog:valueset:8390\ncatalog:valueset:9588"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-grupp"
+fields = { "sets" = ["undervisningsgrupp"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22211:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:sv-grupp"
+fields = { "tags" = ["education"] }
+evidence = "Sv är en ämneskod utan läsbar ordstam i etiketten.\ncatalog:variable_text:22211:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-delprov-a"
+fields = { "sets" = ["provresultat-i-svenska"] }
+evidence = "Identitetsfaktet länkar variabeln till betyg-delprov-a-svenska.\ncatalog:occurrence:203611\ncatalog:occurrence:203671"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-delprov-a"
+fields = { "tags" = ["education"] }
+evidence = "Identitetsfaktet länkar variabeln till betyg-delprov-a-svenska.\ncatalog:occurrence:203611\ncatalog:occurrence:203671"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Tidpunkten hör ihop med senaste invandringsdatum.\ncatalog:variable_text:22214:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Tidpunkten hör ihop med senaste invandringsdatum.\ncatalog:variable_text:22214:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-no"
+fields = { "sets" = ["undervisningsgrupp"] }
+evidence = "Variabeln anger elevens undervisningsgrupp.\ncatalog:variable_text:22215:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsgrupp-i-no"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger elevens undervisningsgrupp.\ncatalog:variable_text:22215:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-bakgrund"
+fields = { "sets" = ["svensk-eller-utlandsk-bakgrund"] }
+evidence = "Variabeln klassificerar svensk eller utländsk bakgrund.\ncatalog:valueset:7011\ncatalog:variable_text:22216:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-bakgrund"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln klassificerar svensk eller utländsk bakgrund.\ncatalog:valueset:7011\ncatalog:variable_text:22216:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["svensk-eller-utlandsk-bakgrund"] }
+evidence = "Variabeln klassificerar svensk eller utländsk bakgrund.\ncatalog:variable_text:22217:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln klassificerar svensk eller utländsk bakgrund.\ncatalog:variable_text:22217:20089:20270"
+
+
+[[statement]]
+kind = "set"
+subject = "var:ak6-sva"
+fields = { "description" = "Anger om eleven har fått betyg i svenska som andraspråk enligt registret över betyg i årskurs 6." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger om betyg har erhållits, inte betygsnivån.\ncatalog:occurrence:203681\ncatalog:valueset:10571"
+
+
+[[statement]]
+kind = "set"
+subject = "var:no-a-po"
+fields = { "description" = "Anger procentandelen poäng på delprov A i naturorienterande ämnen för eleven." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procentandel poäng, inte antal poäng.\ncatalog:occurrence:203652"
+
+
+[[statement]]
+kind = "set"
+subject = "var:no-b-po"
+fields = { "description" = "Anger procentandelen poäng på delprov B i naturorienterande ämnen för eleven." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procentandel poäng, inte antal poäng.\ncatalog:occurrence:203653"
+
+
+[[statement]]
+kind = "set"
+subject = "var:no-c-po"
+fields = { "description" = "Anger procentandelen poäng på delprov C i naturorienterande ämnen för eleven." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procentandel poäng, inte antal poäng.\ncatalog:occurrence:203654"
+
+
+[[statement]]
+kind = "set"
+subject = "var:no-prov"
+fields = { "description" = "Anger om eleven genomfört prov i biologi, kemi eller fysik." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena och den operativa definitionen anger NO-ämnet, inte vilket delprov eleven deltagit i.\ncatalog:valueset:742\ncatalog:variable_text:22151:16071:16252"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "description" = "Skolkommun" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-b"
+fields = { "description" = "Resultat på delprov B i svenska" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sv-delprov-c"
+fields = { "description" = "Resultat på delprov C i svenska" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

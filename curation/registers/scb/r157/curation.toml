@@ -60,3 +60,113 @@ kind = "set"
 subject = "smaorter: {kommun,lan} @2015"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "sets" = [] }
+evidence = "Landareal är ett geografiskt ytmått.\ncatalog:variable_text:43085:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:area-ha"
+fields = { "tags" = ["geography"] }
+evidence = "Landareal är ett geografiskt ytmått.\ncatalog:variable_text:43085:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "sets" = [] }
+evidence = "Folkmängd är ett demografiskt befolkningsmått.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "tags" = ["demographics"] }
+evidence = "Folkmängd är ett demografiskt befolkningsmått.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Kommunens kod hör ihop med kommunnamnet och beskriver geografisk tillhörighet.\ncatalog:variable_text:43088:19358:19723\ncatalog:variable_text:43089:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunens kod hör ihop med kommunnamnet och beskriver geografisk tillhörighet.\ncatalog:variable_text:43088:19358:19723\ncatalog:variable_text:43089:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Kommunnamnet hör ihop med kommunkoden och beskriver geografisk tillhörighet.\ncatalog:variable_text:43088:19358:19723\ncatalog:variable_text:43089:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunnamnet hör ihop med kommunkoden och beskriver geografisk tillhörighet.\ncatalog:variable_text:43088:19358:19723\ncatalog:variable_text:43089:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Länskoden hör ihop med länsnamnet och beskriver geografisk tillhörighet.\ncatalog:variable_text:43090:19358:19723\ncatalog:variable_text:43091:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länskoden hör ihop med länsnamnet och beskriver geografisk tillhörighet.\ncatalog:variable_text:43090:19358:19723\ncatalog:variable_text:43091:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Länsnamnet hör ihop med länskoden och beskriver geografisk tillhörighet.\ncatalog:variable_text:43090:19358:19723\ncatalog:variable_text:43091:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "tags" = ["geography"] }
+evidence = "Länsnamnet hör ihop med länskoden och beskriver geografisk tillhörighet.\ncatalog:variable_text:43090:19358:19723\ncatalog:variable_text:43091:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort-kod"
+fields = { "sets" = ["smaortskod"] }
+evidence = "Småortskoden och den äldre småortskoden beskriver samma geografiska indelning.\ncatalog:variable_text:43095:19358:19723\ncatalog:variable_text:43096:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:smaort-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Småortskoden och den äldre småortskoden beskriver samma geografiska indelning.\ncatalog:variable_text:43095:19358:19723\ncatalog:variable_text:43096:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:smaortskod-old"
+fields = { "sets" = ["smaortskod"] }
+evidence = "Den äldre småortskoden och småortskoden beskriver samma geografiska indelning.\ncatalog:variable_text:43095:19358:19723\ncatalog:variable_text:43096:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:smaortskod-old"
+fields = { "tags" = ["geography"] }
+evidence = "Den äldre småortskoden och småortskoden beskriver samma geografiska indelning.\ncatalog:variable_text:43095:19358:19723\ncatalog:variable_text:43096:16436:16801"
+
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "description" = "Antal personer folkbokförda i småorten. Uppgifterna bygger på RTB den 31 december referensåret kopplat till Lantmäteriets fastighets- eller adresskoordinater." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionens tätort är felaktig för småortsregistret; de operativa definitionerna avser befolkning i småort.\ncatalog:variable_text:43087:19358:19723\ncatalog:variable_text:43087:7305:7670\n\nMaintainer audit follow-up 2026-11-02: Source dates usually follow edition year, but 1990 explicitly substitutes 1992 in named municipalities, and occurrence 448777 on release r18051 (2015) cites 2020. Apply the qualified date/coordinate rule; flag the 2015 source inconsistency separately rather than treating it as identity.\nrel070-base/reg_meta.db:occurrence:448707\nrel070-base/reg_meta.db:occurrence:448721\nrel070-base/reg_meta.db:occurrence:448735\nrel070-base/reg_meta.db:occurrence:448749\nrel070-base/reg_meta.db:occurrence:448763\nrel070-base/reg_meta.db:occurrence:448777\nrel070-base/reg_meta.db:occurrence:448804\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove occurrence-specific calendar years and substitution dates from the variable description; retain the year-neutral reference-date rule. Evidence: rel070-base/reg_meta.db occurrences 448707, 448721, 448735, 448749, 448763, 448777, 448804."
+
+
+[[statement]]
+kind = "set"
+subject = "var:lannamn"
+fields = { "description" = "Namn för regional indelning i län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällkolumnen avser länets namn, medan den befintliga definitionen anger kod.\ncatalog:variable_text:43091:19358:19723\ncatalog:variable_text:43091:7305:7670"

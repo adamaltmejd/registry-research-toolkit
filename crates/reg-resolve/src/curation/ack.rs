@@ -148,8 +148,7 @@ pub fn review(
     snapshots.sort_by_key(reg_frame::canonical_line);
     // The finding is a premise, never a replacement source fact or an extra subject.
     if let Some(first) = premise.subjects.first_mut() {
-        first
-            .fields
+        std::sync::Arc::make_mut(&mut first.fields)
             .insert("acknowledged_findings".into(), Value::Array(snapshots));
     }
     Ok(indices)

@@ -16,3 +16,627 @@ kind = "set"
 subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsssyk2012"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:21466:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:21466:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver anknytning till arbetsmarknaden.\ncatalog:variable_text:21467:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln beskriver anknytning till arbetsmarknaden.\ncatalog:variable_text:21467:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "sets" = [] }
+evidence = "Variabeln anger arbetskraftsstatus.\ncatalog:variable_text:21468:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger arbetskraftsstatus.\ncatalog:variable_text:21468:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-funktionsnedsattning"
+fields = { "tags" = ["disability", "transfers"] }
+evidence = "Aux är en källkod och funk är en förkortning; etiketten anger hjälpvariabelns innehåll.\ncatalog:variable_text:21469:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-utbildning-sapf"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Aux är en källkod och etiketten anger utbildningsvariabeln.\ncatalog:variable_text:21470:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-utbildning-sapf"
+fields = { "tags" = ["education"] }
+evidence = "Aux är en källkod och etiketten anger utbildningsvariabeln.\ncatalog:variable_text:21470:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln och hjälpvariabeln kodar födelseland.\ncatalog:variable_text:21471:19358:20089\ncatalog:variable_text:21502:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln och hjälpvariabeln kodar födelseland.\ncatalog:variable_text:21471:19358:20089\ncatalog:variable_text:21502:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "tags" = ["disability"] }
+evidence = "Variabeln och hjälpvariabeln kodar förekomst av funktionsnedsättning.\ncatalog:variable_text:21469:19358:20089\ncatalog:variable_text:21472:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk1"
+fields = { "sets" = ["diskriminering-i-arbetslivet"] }
+evidence = "Frågan gäller diskriminering vid jobbsökning på grund av funktionsnedsättning.\ncatalog:variable_text:21473:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk1"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Frågan gäller diskriminering vid jobbsökning på grund av funktionsnedsättning.\ncatalog:variable_text:21473:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk2"
+fields = { "sets" = ["diskriminering-i-arbetslivet"] }
+evidence = "Frågan gäller diskriminering vid avancemang på grund av funktionsnedsättning.\ncatalog:variable_text:21474:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk2"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Frågan gäller diskriminering vid avancemang på grund av funktionsnedsättning.\ncatalog:variable_text:21474:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk3"
+fields = { "sets" = ["diskriminering-i-arbetslivet"] }
+evidence = "Frågan gäller uppsägning på grund av funktionsnedsättning.\ncatalog:variable_text:21475:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk3"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Frågan gäller uppsägning på grund av funktionsnedsättning.\ncatalog:variable_text:21475:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk4"
+fields = { "sets" = ["diskriminering-i-arbetslivet"] }
+evidence = "Frågan gäller mobbning och trakasserier på grund av funktionsnedsättning.\ncatalog:variable_text:21476:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funkdisk4"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Frågan gäller mobbning och trakasserier på grund av funktionsnedsättning.\ncatalog:variable_text:21476:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-arbetstid"
+fields = { "sets" = ["anpassad-arbetstid"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21477:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-arbetstid"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21477:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-arbetstid"
+fields = { "sets" = ["anpassad-arbetstid"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21478:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-arbetstid"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21478:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassat-arbetstempo"
+fields = { "sets" = ["anpassat-arbetstempo"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21479:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassat-arbetstempo"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21479:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassat-arbetstempo"
+fields = { "sets" = ["anpassat-arbetstempo"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21480:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassat-arbetstempo"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21480:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassade-arbetsuppgifter"
+fields = { "sets" = ["anpassade-arbetsuppgifter"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21481:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassade-arbetsuppgifter"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21481:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-arbetsuppgifter"
+fields = { "sets" = ["anpassade-arbetsuppgifter"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21482:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-arbetsuppgifter"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21482:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personligt-anpassade-hjalpmedel"
+fields = { "sets" = ["anpassade-hjalpmedel-i-arbetet"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21483:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personligt-anpassade-hjalpmedel"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21483:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-hjalpmedel"
+fields = { "sets" = ["anpassade-hjalpmedel-i-arbetet"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagna hjälpmedel.\ncatalog:variable_text:21484:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-anpassade-hjalpmedel"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagna hjälpmedel.\ncatalog:variable_text:21484:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-lokalanpassning"
+fields = { "sets" = ["sarskild-lokalanpassning"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21485:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-lokalanpassning"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21485:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-sarskild-lokalanpassning"
+fields = { "sets" = ["sarskild-lokalanpassning"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21486:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-sarskild-lokalanpassning"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottagen anpassning.\ncatalog:variable_text:21486:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-utsedd-person-som-stottar-pa-arbetsplatsen"
+fields = { "sets" = ["sarskilt-personstod-pa-arbetsplatsen"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21487:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-utsedd-person-som-stottar-pa-arbetsplatsen"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger stödformen.\ncatalog:variable_text:21487:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-en-sarskilt-utsedd-person-som-stottar"
+fields = { "sets" = ["sarskilt-personstod-pa-arbetsplatsen"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottaget personstöd.\ncatalog:variable_text:21488:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:har-du-fatt-en-sarskilt-utsedd-person-som-stottar"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger mottaget personstöd.\ncatalog:variable_text:21488:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-behov-for-att-kunna-utfora-arbetet-pa-nuvarande"
+fields = { "sets" = ["annan-arbetsanpassning"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger annat stödbehov.\ncatalog:variable_text:21489:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-behov-for-att-kunna-utfora-arbetet-pa-nuvarande"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger annat stödbehov.\ncatalog:variable_text:21489:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:funkstod7b"
+fields = { "sets" = ["annan-arbetsanpassning"] }
+evidence = "Källans etikett anger erhållen anpassning, medan definitionen frågar om behov. Konflikten behöver klarläggas innan en ny id-etikett kan väljas. Variabeln gäller annan arbetsanpassning vid funktionsnedsättning.\ncatalog:occurrence:197723\ncatalog:register:122\ncatalog:variable_text:21490:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:funkstod7b"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Källans etikett anger erhållen anpassning, medan definitionen frågar om behov. Konflikten behöver klarläggas innan en ny id-etikett kan väljas. Variabeln gäller annan arbetsanpassning vid funktionsnedsättning.\ncatalog:occurrence:197723\ncatalog:register:122\ncatalog:variable_text:21490:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fritext-annat-behov-for-att-kunna-utfora-arbetet"
+fields = { "sets" = ["annan-arbetsanpassning"] }
+evidence = "Bokstavssuffixet T är en källkod; etiketten anger fritext om annat behov.\ncatalog:variable_text:21491:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fritext-annat-behov-for-att-kunna-utfora-arbetet"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet T är en källkod; etiketten anger fritext om annat behov.\ncatalog:variable_text:21491:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassad-arbetstid"
+fields = { "sets" = ["anpassad-arbetstid"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger anpassad arbetstid för ej sysselsatta.\ncatalog:variable_text:21492:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassad-arbetstid"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet A är en källkod; etiketten anger anpassad arbetstid för ej sysselsatta.\ncatalog:variable_text:21492:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassat-arbetstempo"
+fields = { "sets" = ["anpassat-arbetstempo"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger anpassat arbetstempo för ej sysselsatta.\ncatalog:variable_text:21493:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassat-arbetstempo"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet B är en källkod; etiketten anger anpassat arbetstempo för ej sysselsatta.\ncatalog:variable_text:21493:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassade-arbetsuppgifter"
+fields = { "sets" = ["anpassade-arbetsuppgifter"] }
+evidence = "Bokstavssuffixet C är en källkod; etiketten anger anpassade arbetsuppgifter för ej sysselsatta.\ncatalog:variable_text:21494:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-anpassade-arbetsuppgifter"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet C är en källkod; etiketten anger anpassade arbetsuppgifter för ej sysselsatta.\ncatalog:variable_text:21494:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-personligt-anpassade-hjalpmedel"
+fields = { "sets" = ["anpassade-hjalpmedel-i-arbetet"] }
+evidence = "Bokstavssuffixet D är en källkod; etiketten anger hjälpmedel för ej sysselsatta.\ncatalog:variable_text:21495:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-personligt-anpassade-hjalpmedel"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet D är en källkod; etiketten anger hjälpmedel för ej sysselsatta.\ncatalog:variable_text:21495:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-sarskild-lokalanpassning"
+fields = { "sets" = ["sarskild-lokalanpassning"] }
+evidence = "Bokstavssuffixet E är en källkod; etiketten anger lokalanpassning för ej sysselsatta.\ncatalog:variable_text:21496:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-sarskild-lokalanpassning"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet E är en källkod; etiketten anger lokalanpassning för ej sysselsatta.\ncatalog:variable_text:21496:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-sarskilt-utsedd-person-som-stottar"
+fields = { "sets" = ["sarskilt-personstod-pa-arbetsplatsen"] }
+evidence = "Bokstavssuffixet F är en källkod; etiketten anger personstöd för ej sysselsatta.\ncatalog:variable_text:21497:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-sarskilt-utsedd-person-som-stottar"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet F är en källkod; etiketten anger personstöd för ej sysselsatta.\ncatalog:variable_text:21497:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-nagon-annan-anpassning"
+fields = { "sets" = ["annan-arbetsanpassning"] }
+evidence = "Bokstavssuffixet G är en källkod; etiketten anger annan anpassning för ej sysselsatta.\ncatalog:variable_text:21498:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-nagon-annan-anpassning"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet G är en källkod; etiketten anger annan anpassning för ej sysselsatta.\ncatalog:variable_text:21498:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-nagon-annan-anpassning-vad"
+fields = { "sets" = ["annan-arbetsanpassning"] }
+evidence = "Bokstavssuffixet H är en källkod; etiketten anger precisering av annan anpassning.\ncatalog:variable_text:21499:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-sysselsatt-nagon-annan-anpassning-vad"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Bokstavssuffixet H är en källkod; etiketten anger precisering av annan anpassning.\ncatalog:variable_text:21499:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-alder-kon"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar ålder och kön för estimation.\ncatalog:variable_text:21500:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-alder-kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln kodar ålder och kön för estimation.\ncatalog:variable_text:21500:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-arbetssokande-ams"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar arbetslöshet enligt AMS.\ncatalog:valueset:9352\ncatalog:variable_text:21501:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-arbetssokande-ams"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln kodar arbetslöshet enligt AMS.\ncatalog:valueset:9352\ncatalog:variable_text:21501:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Variabeln och födelseland per världsdel kodar födelseland.\ncatalog:variable_text:21471:19358:20089\ncatalog:variable_text:21502:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln och födelseland per världsdel kodar födelseland.\ncatalog:variable_text:21471:19358:20089\ncatalog:variable_text:21502:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-naringsgren-sysselsatta"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar näringsgren för sysselsatta.\ncatalog:variable_text:21503:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-naringsgren-sysselsatta"
+fields = { "tags" = ["business", "employment"] }
+evidence = "Variabeln kodar näringsgren för sysselsatta.\ncatalog:variable_text:21503:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-region"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar regional indelning.\ncatalog:variable_text:21504:19358:19723\ncatalog:variable_text:21504:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-region"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar regional indelning.\ncatalog:variable_text:21504:19358:19723\ncatalog:variable_text:21504:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger personens kön.\ncatalog:variable_text:21505:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger personens kön.\ncatalog:variable_text:21505:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsplats-huvudsyssla"
+fields = { "sets" = [] }
+evidence = "Variabeln anger arbetsplatsens geografiska läge.\ncatalog:variable_text:21506:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsplats-huvudsyssla"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger arbetsplatsens geografiska läge.\ncatalog:variable_text:21506:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:latentsok"
+fields = { "sets" = [] }
+evidence = "Variabeln anger latent arbetssökande.\ncatalog:variable_text:21507:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:latentsok"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger latent arbetssökande.\ncatalog:variable_text:21507:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsatt-arbetsformaga"
+fields = { "sets" = [] }
+evidence = "Frågan gäller arbetsförmåga vid funktionsnedsättning.\ncatalog:variable_text:21509:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsatt-arbetsformaga"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Frågan gäller arbetsförmåga vid funktionsnedsättning.\ncatalog:variable_text:21509:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "sets" = [] }
+evidence = "Kontaktresultatet är en undersökningsmetodisk uppgift.\ncatalog:valueset:5754\ncatalog:variable_text:21510:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "tags" = ["methods"] }
+evidence = "Kontaktresultatet är en undersökningsmetodisk uppgift.\ncatalog:valueset:5754\ncatalog:variable_text:21510:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rotationsgrupp"
+fields = { "sets" = [] }
+evidence = "Rotationsgruppen avser urvalsdragning.\ncatalog:variable_text:21511:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rotationsgrupp"
+fields = { "tags" = ["methods"] }
+evidence = "Rotationsgruppen avser urvalsdragning.\ncatalog:variable_text:21511:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Variabeln anger sektor i huvudsysslan.\ncatalog:variable_text:21512:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger sektor i huvudsysslan.\ncatalog:variable_text:21512:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "sets" = [] }
+evidence = "Antalet enheter i stratum används för urvalet.\ncatalog:variable_text:21513:19358:19723\ncatalog:variable_text:21513:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet enheter i stratum används för urvalet.\ncatalog:variable_text:21513:19358:19723\ncatalog:variable_text:21513:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:21514:19358:19723\ncatalog:variable_text:21514:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:21514:19358:19723\ncatalog:variable_text:21514:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grupperad"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Variabeln och hjälpvariabeln kodar utbildningsnivå.\ncatalog:variable_text:21470:19358:20089\ncatalog:variable_text:21517:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln och hjälpvariabeln kodar utbildningsnivå.\ncatalog:variable_text:21470:19358:20089\ncatalog:variable_text:21517:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvikt"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver svarens andel per urval.\ncatalog:variable_text:21518:19358:19723\ncatalog:variable_text:21518:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver svarens andel per urval.\ncatalog:variable_text:21518:19358:19723\ncatalog:variable_text:21518:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-arbetad-tid-totalt"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter arbetstid.\ncatalog:variable_text:21519:19358:19723\ncatalog:variable_text:21519:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-arbetad-tid-totalt"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter arbetstid.\ncatalog:variable_text:21519:19358:19723\ncatalog:variable_text:21519:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbenamning-huvud"
+fields = { "sets" = [] }
+evidence = "Variabeln anger yrke i huvudsysslan.\ncatalog:variable_text:21520:19358:19723\ncatalog:variable_text:21520:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbenamning-huvud"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln anger yrke i huvudsysslan.\ncatalog:variable_text:21520:19358:19723\ncatalog:variable_text:21520:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "sets" = ["funktionsnedsattning"] }
+evidence = "FUNK directly asks whether the person has a disability and defines the filter identifying persons with disabilities (r4, r6, r9), matching the group's presence-of-disability concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197759\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21483"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-funktionsnedsattning"
+fields = { "sets" = ["funktionsnedsattning"] }
+evidence = "The fixed definition explicitly includes the helper variable (r1, r2, r11). Its documented measure is derived benefit/support receipt (r3, r5, r10); assignment follows that explicit inclusion.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:21419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:21469:19358:20089\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:historical:adcca0caef6a4e7349897edbb0ebfc088bfb72b39e69b834f31fb63ad64bb810:variable_text:21472:19358:20089\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:197754\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:21500\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/funktionsnedsattning-arbetsmarknad/funktionsnedsattning"

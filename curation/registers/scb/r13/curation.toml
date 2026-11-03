@@ -31,60 +31,6 @@ evidence = "reg_meta_build/curation/registers/scb/moms.toml:178\n\nSWECOV holds 
 
 [[statement]]
 kind = "set"
-subject = "momsdeklarationsregistret: imputerad"
-fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: anst"
-fields = { "description" = "Antal anställda på företaget enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: sni92"
-fields = { "description" = "Bransch i FDB enligt SNI2002" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: ng1"
-fields = { "description" = "Bransch i FDB enligt SNI2007" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: jform"
-fields = { "description" = "Juridisk form enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: period"
-fields = { "description" = "Redovisningsgrupp för moms" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: sektor"
-fields = { "description" = "Sektorkod enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: stkl"
-fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "momsdeklarationsregistret: agkat"
-fields = { "description" = "Ägarkategori enligt FDB" }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "momsdeklarationsregistret: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -262,3 +208,923 @@ kind = "set"
 subject = "momsdeklarationsregistret: sni92 @2003..2006"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "sets" = [] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:39276:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "tags" = ["business"] }
+evidence = "Ägarkontroll beskriver företagsstruktur.\ncatalog:variable_text:39276:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:39277:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal anställda.\ncatalog:variable_text:39277:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsgill-ingaende-moms"
+fields = { "sets" = ["ingaende-moms"] }
+evidence = "Avdragsgill ingående moms är en del av ingående moms.\ncatalog:variable_text:39278:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsgill-ingaende-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdragsgill ingående moms är en del av ingående moms.\ncatalog:variable_text:39278:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:export-oms"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter total export av varor och tjänster.\ncatalog:variable_text:39280:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:export-varor-eg-land"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter varuexport till annat EG-land.\ncatalog:variable_text:39281:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Variabeln är en kvalitetsmarkör för imputerade eller rättade deklarationer.\ncatalog:valueset:6457\ncatalog:variable_text:39282:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en kvalitetsmarkör för imputerade eller rättade deklarationer.\ncatalog:valueset:6457\ncatalog:variable_text:39282:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-oms-exkl-moms"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter inrikes omsättning exklusive moms.\ncatalog:variable_text:39283:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = [] }
+evidence = "Institutionell sektor beskriver enhetens struktur.\ncatalog:variable_text:39284:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor beskriver enhetens struktur.\ncatalog:variable_text:39284:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:39285:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur.\ncatalog:variable_text:39285:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m05-forsmomspl"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Variabeln mäter momspliktig omsättning. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:m05-forsmomspl"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter momspliktig omsättning. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m06-uttagmomspl"
+fields = { "sets" = ["momspliktiga-uttag"] }
+evidence = "Variabeln mäter momspliktiga uttag.\ncatalog:variable_text:39287:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m06-uttagmomspl"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter momspliktiga uttag.\ncatalog:variable_text:39287:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m07-beskattningsunderlag-marginalbeskattad-omsattning"
+fields = { "sets" = ["marginalbeskattad-omsattning"] }
+evidence = "Källans mnemonik för beskattningsunderlag är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:39288:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m07-beskattningsunderlag-marginalbeskattad-omsattning"
+fields = { "tags" = ["taxation"] }
+evidence = "Källans mnemonik för beskattningsunderlag är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:39288:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m08-hyresink"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter hyresinkomster vid frivillig skattskyldighet.\ncatalog:variable_text:39289:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m08-hyresink"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter hyresinkomster vid frivillig skattskyldighet.\ncatalog:variable_text:39289:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m11-omssver"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Definitionen anger momspliktig omsättning inom Sverige. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:m11-omssver"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Definitionen anger momspliktig omsättning inom Sverige. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m12-utgaende-moms-6"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med sex procents skattesats.\ncatalog:variable_text:39291:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m12-utgaende-moms-6"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med sex procents skattesats.\ncatalog:variable_text:39291:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m14-omsmarbesk"
+fields = { "sets" = ["marginalbeskattad-omsattning"] }
+evidence = "Variabeln mäter marginalbeskattad omsättning.\ncatalog:variable_text:39292:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m14-omsmarbesk"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter marginalbeskattad omsättning.\ncatalog:variable_text:39292:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsunderlag-marginalbeskattad-omsattning"
+fields = { "sets" = ["marginalbeskattad-omsattning"] }
+evidence = "Källans inledande U är en opak kod för beskattningsunderlag.\ncatalog:variable_text:39293:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:beskattningsunderlag-marginalbeskattad-omsattning"
+fields = { "tags" = ["taxation"] }
+evidence = "Källans inledande U är en opak kod för beskattningsunderlag.\ncatalog:variable_text:39293:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m20-25-inkopvareg"
+fields = { "sets" = ["varuforvarv-fran-eg"] }
+evidence = "Variabeln mäter varuförvärv från annat EG-land.\ncatalog:variable_text:39294:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m20-25-inkopvareg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter varuförvärv från annat EG-land.\ncatalog:variable_text:39294:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m21-inkoptjaeg"
+fields = { "sets" = ["inkop-av-tjanster"] }
+evidence = "Variabeln mäter tjänsteinköp från annat EG-land.\ncatalog:variable_text:39295:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m21-inkoptjaeg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter tjänsteinköp från annat EG-land.\ncatalog:variable_text:39295:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m21-omsvaruteg"
+fields = { "tags" = ["trade"] }
+evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39296:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m22-inkoptjauteg"
+fields = { "sets" = ["inkop-av-tjanster"] }
+evidence = "Variabeln mäter tjänsteinköp från land utanför EG.\ncatalog:variable_text:39297:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m22-inkoptjauteg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter tjänsteinköp från land utanför EG.\ncatalog:variable_text:39297:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m22-omstjautl"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter tjänster till utlandet.\ncatalog:variable_text:39298:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m23-inkopvarsverige"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter företagsinköp av varor.\ncatalog:variable_text:39299:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m23-inkopvarsverige"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter företagsinköp av varor.\ncatalog:variable_text:39299:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m23-omsvareg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter export av varor till annat EG-land.\ncatalog:variable_text:39300:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m24-inkoptjasverige"
+fields = { "sets" = ["inkop-av-tjanster"] }
+evidence = "Variabeln mäter tjänsteinköp i Sverige.\ncatalog:variable_text:39301:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m24-inkoptjasverige"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter tjänsteinköp i Sverige.\ncatalog:variable_text:39301:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m24-overfvareg"
+fields = { "tags" = ["trade"] }
+evidence = "Kandidaten omfattar överföring av varor till utlandet.\ncatalog:variable_text:39302:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m25-forvvareg"
+fields = { "sets" = ["varuforvarv-fran-eg"] }
+evidence = "Variabeln mäter varuförvärv från annat EG-land.\ncatalog:variable_text:39303:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m25-forvvareg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter varuförvärv från annat EG-land.\ncatalog:variable_text:39303:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m26-trepvareg"
+fields = { "sets" = ["trepartsforvarv"] }
+evidence = "Variabeln mäter trepartsförvärv.\ncatalog:variable_text:39304:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m26-trepvareg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter trepartsförvärv.\ncatalog:variable_text:39304:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m30-utginkophog"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39305:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m30-utginkophog"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39305:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m30-utgvlok"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln är ett delbelopp av utgående moms.\ncatalog:variable_text:39306:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m30-utgvlok"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln är ett delbelopp av utgående moms.\ncatalog:variable_text:39306:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m31-ingvlok"
+fields = { "sets" = ["ingaende-moms"] }
+evidence = "Variabeln är ett delbelopp av ingående moms.\ncatalog:variable_text:39307:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m31-ingvlok"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln är ett delbelopp av ingående moms.\ncatalog:variable_text:39307:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m31-utginkopmed"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39308:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m31-utginkopmed"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39308:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m32-utginkoplag"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39309:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m32-utginkoplag"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på inköp.\ncatalog:variable_text:39309:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m35-utgvareg"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på varuförvärv.\ncatalog:variable_text:39310:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m35-utgvareg"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på varuförvärv.\ncatalog:variable_text:39310:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m36-21-forsvaruteg"
+fields = { "tags" = ["trade"] }
+evidence = "Definitionen anger varuexport utanför EG.\ncatalog:variable_text:39311:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m36-utgtjautl"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på tjänsteimport.\ncatalog:variable_text:39312:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m36-utgtjautl"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på tjänsteimport.\ncatalog:variable_text:39312:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m37-ingavdr"
+fields = { "sets" = ["ingaende-moms"] }
+evidence = "Variabeln mäter avdragsgill ingående moms.\ncatalog:variable_text:39313:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m37-ingavdr"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter avdragsgill ingående moms.\ncatalog:variable_text:39313:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m37-trepinkopvar"
+fields = { "sets" = ["trepartsforvarv"] }
+evidence = "Variabeln mäter mellanmans inköp vid trepartshandel.\ncatalog:variable_text:39314:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m37-trepinkopvar"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter mellanmans inköp vid trepartshandel.\ncatalog:variable_text:39314:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m38-trepforsvar"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter trepartsförsäljning till annat EG-land; ingen kandidat omfattar detta. Coordinator group membership: Samtliga mäter export, försäljning eller överföring till utlandet. Även trepartsförsäljning till annat EG-land omfattas av den fasta definitionen.\ncatalog:variable_text:39280:13879:19358\ncatalog:variable_text:39281:17532:19358\ncatalog:variable_text:39296:13149:13514\ncatalog:variable_text:39298:10592:13514\ncatalog:variable_text:39300:13149:13514\ncatalog:variable_text:39302:10592:13514\ncatalog:variable_text:39311:14245:19358\ncatalog:variable_text:39315:14975:19358\ncatalog:variable_text:39317:14245:19358\ncatalog:variable_text:39318:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m39-betaterf"
+fields = { "sets" = ["moms-att-betala-eller-aterfa"] }
+evidence = "Variabeln mäter nettomoms att betala eller återfå.\ncatalog:variable_text:39316:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m39-betaterf"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter nettomoms att betala eller återfå.\ncatalog:variable_text:39316:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:m39-forstjaeg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter tjänsteexport till EG-länder.\ncatalog:variable_text:39317:14245:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m40-forstjauteg"
+fields = { "tags" = ["trade"] }
+evidence = "Variabeln mäter tjänsteexport till land utanför EU.\ncatalog:variable_text:39318:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m41-forssvkopare"
+fields = { "sets" = ["momsfri-omsattning"] }
+evidence = "Variabeln mäter momsfri omsättning inom Sverige. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momsfri-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:m41-forssvkopare"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter momsfri omsättning inom Sverige. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m42-12-omsfrisver"
+fields = { "sets" = ["momsfri-omsattning"] }
+evidence = "Variabeln mäter övrig momsfri omsättning.\ncatalog:variable_text:39320:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m42-12-omsfrisver"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter övrig momsfri omsättning.\ncatalog:variable_text:39320:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m49-39-betaterf"
+fields = { "sets" = ["moms-att-betala-eller-aterfa"] }
+evidence = "Variabeln mäter nettomoms att betala eller återfå.\ncatalog:variable_text:39321:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m49-39-betaterf"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter nettomoms att betala eller återfå.\ncatalog:variable_text:39321:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m50-momsulagimport"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter beskattningsunderlag vid import.\ncatalog:variable_text:39322:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m50-momsulagimport"
+fields = { "tags" = ["taxation", "trade"] }
+evidence = "Variabeln mäter beskattningsunderlag vid import.\ncatalog:variable_text:39322:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m60-momsimportutghog"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39323:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m60-momsimportutghog"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39323:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m61-momsimportutgmed"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39324:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m61-momsimportutgmed"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39324:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m62-momsimportutglag"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39325:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:m62-momsimportutglag"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms på import.\ncatalog:variable_text:39325:15340:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-att-peorgnr-finns-i-fdb"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver registerkoppling.\ncatalog:variable_text:39326:16436:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-att-peorgnr-finns-i-fdb"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen beskriver registerkoppling.\ncatalog:variable_text:39326:16436:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:momsfri-omsattning"
+fields = { "sets" = ["momsfri-omsattning"] }
+evidence = "Variabeln mäter momsfri omsättning. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momsfri-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:momsfri-omsattning"
+fields = { "tags" = ["business", "taxation"] }
+evidence = "Variabeln mäter momsfri omsättning. Coordinator group membership: Variablerna mäter momsfri omsättning inom Sverige och övrig momsfri omsättning. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39320:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:momspl-uttag-fastighetsforvaltning"
+fields = { "sets" = ["momspliktiga-uttag"] }
+evidence = "Variabeln mäter momspliktiga uttag av fastighetsförvaltningstjänster.\ncatalog:variable_text:39329:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:momspl-uttag-fastighetsforvaltning"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter momspliktiga uttag av fastighetsförvaltningstjänster.\ncatalog:variable_text:39329:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat på intilliggande perioder med näringsgren för statistiken.\ncatalog:occurrence:388247\ncatalog:occurrence:388280"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Samma näringsgrensbegrepp är uppdelat på intilliggande perioder med näringsgren för statistiken.\ncatalog:occurrence:388247\ncatalog:occurrence:388280"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodningen är uppdelad på intilliggande perioder med näringsgren och huvudsaklig näringsgren för statistiken.\ncatalog:occurrence:388247\ncatalog:occurrence:388280\ncatalog:occurrence:388488\ncatalog:occurrence:388530"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen är uppdelad på intilliggande perioder med näringsgren och huvudsaklig näringsgren för statistiken.\ncatalog:occurrence:388247\ncatalog:occurrence:388280\ncatalog:occurrence:388488\ncatalog:occurrence:388530"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodningen är uppdelad på intilliggande perioder med näringsgren för statistiken.\ncatalog:occurrence:388488\ncatalog:occurrence:388530"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen är uppdelad på intilliggande perioder med näringsgren för statistiken.\ncatalog:occurrence:388488\ncatalog:occurrence:388530"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Ng är en opak källkod och 1 är en källkolumnsplats; etiketten anger näringsgren.\ncatalog:variable_text:39333:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en opak källkod och 1 är en källkolumnsplats; etiketten anger näringsgren.\ncatalog:variable_text:39333:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:oms-exkl-moms"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter total omsättning inom och utom landet.\ncatalog:variable_text:39334:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:oms-exkl-moms"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln mäter total omsättning inom och utom landet.\ncatalog:variable_text:39334:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-i-sverige"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige moms2007. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-i-sverige"
+fields = { "tags" = ["business"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige moms2007. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-i-sverige-moms2007"
+fields = { "sets" = ["momspliktig-omsattning"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige; moms2007 finns i källans etikett. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to momspliktig-omsattning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-i-sverige-moms2007"
+fields = { "tags" = ["business"] }
+evidence = "Samma omsättningsbegrepp är uppdelat på intilliggande perioder med omsättning i Sverige; moms2007 finns i källans etikett. Coordinator group membership: Samtliga beskriver momspliktig eller inrikes skattepliktig omsättning exklusive moms. Uttag, marginalbeskattningsunderlag och momsbelopp utesluts. Samtliga mäter uttryckligen omsättning inom Sverige, inklusive skattepliktiga och momsfria belopp. Den fasta definitionen begränsar inte medlemskapet till skattepliktig omsättning; total omsättning över alla marknader utesluts.\ncatalog:occurrence:388451\ncatalog:occurrence:388490\ncatalog:variable_text:39283:13879:19358\ncatalog:variable_text:39286:13514:19358\ncatalog:variable_text:39290:13149:13514\ncatalog:variable_text:39319:13514:19358\ncatalog:variable_text:39328:10592:13514\ncatalog:variable_text:39335:13149:13514\ncatalog:variable_text:39336:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar momsredovisningens periodicitet.\ncatalog:valueset:2179\ncatalog:variable_text:39340:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln kodar momsredovisningens periodicitet.\ncatalog:valueset:2179\ncatalog:variable_text:39340:14975:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad"
+fields = { "sets" = ["redovisningsmanad"] }
+evidence = "Samma redovisningsmånad är uppdelad på intilliggande perioder med redovisningsmånad momsregistret.\ncatalog:occurrence:388352\ncatalog:occurrence:388386"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad"
+fields = { "tags" = [] }
+evidence = "Samma redovisningsmånad är uppdelad på intilliggande perioder med redovisningsmånad momsregistret.\ncatalog:occurrence:388352\ncatalog:occurrence:388386"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-momsregistret"
+fields = { "sets" = ["redovisningsmanad"] }
+evidence = "Samma redovisningsmånad är uppdelad på intilliggande perioder med redovisningsmånad.\ncatalog:occurrence:388352\ncatalog:occurrence:388386"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-momsregistret"
+fields = { "tags" = [] }
+evidence = "Samma redovisningsmånad är uppdelad på intilliggande perioder med redovisningsmånad.\ncatalog:occurrence:388352\ncatalog:occurrence:388386"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger enhetens säteskommun.\ncatalog:variable_text:39344:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger enhetens säteskommun.\ncatalog:variable_text:39344:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren.\ncatalog:variable_text:39345:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren.\ncatalog:variable_text:39345:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren; 2002 anger klassifikationens version.\ncatalog:variable_text:39346:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2002"
+fields = { "tags" = ["business"] }
+evidence = "SNI är en bokstavskod som inte förekommer i etiketten Näringsgren; 2002 anger klassifikationens version.\ncatalog:variable_text:39346:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stkl"
+fields = { "sets" = [] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:valueset:9371\ncatalog:variable_text:39347:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:stkl"
+fields = { "tags" = ["employment"] }
+evidence = "Storleksklassen bygger på antal anställda.\ncatalog:valueset:9371\ncatalog:variable_text:39347:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln är summan av utgående moms.\ncatalog:variable_text:39348:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln är summan av utgående moms.\ncatalog:variable_text:39348:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med 12 procents skattesats.\ncatalog:variable_text:39350:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med 12 procents skattesats.\ncatalog:variable_text:39350:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12-m11"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med 12 procents skattesats.\ncatalog:variable_text:39351:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-12-m11"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med 12 procents skattesats.\ncatalog:variable_text:39351:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med 25 procents skattesats.\ncatalog:variable_text:39352:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med 25 procents skattesats.\ncatalog:variable_text:39352:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25-m10"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med 25 procents skattesats.\ncatalog:variable_text:39353:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-25-m10"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med 25 procents skattesats.\ncatalog:variable_text:39353:13514:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-6"
+fields = { "sets" = ["utgaende-moms"] }
+evidence = "Variabeln mäter utgående moms med sex procents skattesats.\ncatalog:variable_text:39354:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utgaende-moms-6"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln mäter utgående moms med sex procents skattesats.\ncatalog:variable_text:39354:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:export-oms"
+fields = { "sets" = ["export"] }
+evidence = "r137 defines total foreign turnover in goods and services; r47 explicitly sums M35, M36, M39 and M40.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39140\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388499\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39281"
+
+[[statement]]
+kind = "set"
+subject = "var:export-varor-eg-land"
+fields = { "sets" = ["export"] }
+evidence = "r138 defines goods turnover to another EC country; r42 explicitly identifies this as goods exports within the EU.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39141\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388478\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39282"
+
+[[statement]]
+kind = "set"
+subject = "var:m21-omsvaruteg"
+fields = { "sets" = ["export"] }
+evidence = "r38 explicitly measures goods exports outside the EC/EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39155\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388434"
+
+[[statement]]
+kind = "set"
+subject = "var:m22-omstjautl"
+fields = { "sets" = ["export"] }
+evidence = "r140 defines turnover from services supplied abroad, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39157\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39298"
+
+[[statement]]
+kind = "set"
+subject = "var:m23-omsvareg"
+fields = { "sets" = ["export"] }
+evidence = "r141 defines goods turnover to another EC country; r40 explicitly identifies this as goods exports within the EU.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39159\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388436\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39300"
+
+[[statement]]
+kind = "set"
+subject = "var:m24-overfvareg"
+fields = { "sets" = ["export"] }
+evidence = "r142 describes goods transferred to another EC country without sale and later returned; the fixed definition explicitly includes foreign transfers.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39161\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39302"
+
+[[statement]]
+kind = "set"
+subject = "var:m36-21-forsvaruteg"
+fields = { "sets" = ["export"] }
+evidence = "r43 explicitly measures goods exports outside the EC/EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39170\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388479"
+
+[[statement]]
+kind = "set"
+subject = "var:m38-trepforsvar"
+fields = { "sets" = ["export"] }
+evidence = "r144 defines triangular sales of goods to another EC country. The fixed definition includes foreign goods sales without excluding triangular sales.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39174\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:39315"
+
+[[statement]]
+kind = "set"
+subject = "var:m39-forstjaeg"
+fields = { "sets" = ["export"] }
+evidence = "r45 explicitly measures service-export turnover within the EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39176\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388482"
+
+[[statement]]
+kind = "set"
+subject = "var:m40-forstjauteg"
+fields = { "sets" = ["export"] }
+evidence = "r46 explicitly measures service-export turnover outside the EU, within the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39177\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:388483"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "description" = "Bransch i FDB enligt SNI92." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2002 men källans operativa definition anger SNI92.\ncatalog:variable_text:39345:11323:11688\ncatalog:variable_text:39345:12053:13514"
+
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
+fields = { "description" = "Bransch i FDB enligt Svensk näringsgrensindelning. Näringsgrenen hämtas vid matchningen av den inkomna momsdeklarationen mot FDB och klassificeras enligt SNI2002 till och med 2006 och SNI2007 från 2007." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen kurerade beskrivningen anger SNI2007 även under perioder med andra klassifikationer.\ncatalog:variable_text:39333:10592:10957\ncatalog:variable_text:39333:11323:13514\ncatalog:variable_text:39333:13514:14975\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:388216:opdef_text; rel070-base/reg_meta.db:occurrence:388248:opdef_text; rel070-base/reg_meta.db:occurrence:388281:opdef_text; rel070-base/reg_meta.db:occurrence:388489:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Replace source narration with the actual classification change; unspecified occurrences do not establish another change. Evidence: rel070-base/reg_meta.db occurrences 388216, 388248, 388281, 388489, 388660."
+
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsgrupp-moms"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:stkl"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

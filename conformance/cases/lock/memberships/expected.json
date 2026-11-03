@@ -1,0 +1,53 @@
+{
+  "singleton": {
+    "command": "build",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "set-too-small",
+    "pid": "set/demo/r/concept"
+  },
+  "unknown-tag": {
+    "command": "lock",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "unknown-tag",
+    "pid": "unknown"
+  },
+  "retired-set": {
+    "command": "build",
+    "location": "retired.toml:1",
+    "code": "retired-id-live",
+    "pid": "set/demo/r/concept"
+  },
+  "multi-group": {
+    "command": "lock",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "variable-multiple-groups",
+    "pid": "demo/r/published",
+    "groups": {
+      "set/demo/r/first": "registers/demo/r/curation.toml:1",
+      "set/demo/r/second": "registers/demo/r/curation.toml:7"
+    }
+  },
+  "variable_premise": {
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "premise-changed",
+    "subject": "var:published",
+    "max_entry_bytes": 256,
+    "original_count": 1,
+    "grown_count": 3
+  },
+  "shared_objects": {
+    "object_count": 3,
+    "statement_count": 2,
+    "locations": [
+      "registers/demo/r/curation.toml:1",
+      "registers/demo/r/curation.toml:7"
+    ],
+    "code": "premise-changed",
+    "object_refusals": {
+      "digest": "object digest mismatch",
+      "missing": "missing object"
+    }
+  },
+  "tag_text": ["Inkomst", "Personers och hushålls inkomster."],
+  "reworded_definition": "Inkomster för personer och hushåll."
+}

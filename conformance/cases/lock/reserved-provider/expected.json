@@ -1,0 +1,10 @@
+{
+  "providers": [
+    "set",
+    "class",
+    "group"
+  ],
+  "manifest_location": "inputs.toml:6",
+  "frame_location": "frame/base.jsonl:line=1",
+  "code": "provider-reserved"
+}

@@ -55,7 +55,10 @@ impl StatementRow {
 
 /// Everything the file holds, linked.
 pub struct Catalog {
+    pub set_presentation: Vec<reg_resolve::curation::apply::SetPresentation>,
+    pub external_relations: Vec<crate::external::Relation>,
     pub retired: Vec<crate::retired::Retired>,
+    pub tags: BTreeMap<String, crate::sets::Tag>,
     pub meta: BTreeMap<&'static str, String>,
     /// Sorted by name.
     pub inputs: Vec<InputRow>,
@@ -63,6 +66,7 @@ pub struct Catalog {
     pub registers: Vec<Resolved>,
     /// Value sets by hash, with the (input index, name) pairs that named them.
     pub valuesets: BTreeMap<String, (ValueSet, BTreeSet<(usize, String)>)>,
+    pub sentinels: BTreeMap<String, BTreeSet<String>>,
     /// A frame file (locator input) → its input index.
     pub file_input: BTreeMap<String, usize>,
     /// The link stage's output (`link.rs`).
@@ -177,6 +181,7 @@ fn write_provenance(
 ) -> Result<(), String> {
     let kind = match subject {
         ProvenanceSubject::Register(_) => "register",
+        ProvenanceSubject::Set(..) => "set",
         ProvenanceSubject::Table(..) => "table",
         ProvenanceSubject::Release(..) => "release",
         ProvenanceSubject::Occurrence(..) => "occurrence",
@@ -244,6 +249,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let mut rows = Rows::default();
     let sql = |e: rusqlite::Error| e.to_string();
     let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
+    let mut external = catalog.external_relations.clone();
+    external.sort();
+    external.dedup();
+    for (i, relation) in external.iter().enumerate() {
+        rows.push(
+            "holding_relation",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str("derived_from".into()),
+                Cell::Str(relation.subject_kind.clone()),
+                Cell::Str(relation.subject_pid.clone()),
+                Cell::Str(relation.object_kind.clone()),
+                Cell::Str(relation.object_pid.clone()),
+                opt_int(relation.start.as_deref().map(start)),
+                opt_int(relation.end.as_deref().map(end)),
+                Cell::Int(statement_id[relation.statement.as_str()]),
+                opt_str(relation.caveat.as_ref()),
+            ],
+        );
+    }
     let mut provenance_by_subject = BTreeMap::<_, Vec<_>>::new();
     for value in &catalog.provenance.values {
         provenance_by_subject
@@ -373,6 +398,23 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
+    let unit_type_id = sorted_ids(
+        catalog
+            .registers
+            .iter()
+            .flat_map(|r| r.tables.iter().filter_map(|t| t.table.unit_type.as_deref())),
+    );
+    for (slug, id) in &unit_type_id {
+        rows.push(
+            "unit_type",
+            vec![
+                Cell::Int(*id),
+                Cell::Str((*slug).into()),
+                Cell::Text((*slug).into()),
+            ],
+        );
+    }
+
     for p in &catalog.providers {
         let pid = provider_id[p.pid.as_str()];
         rows.push(
@@ -459,10 +501,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(pid_of_table(r, t)),
                     opt_text(table.table.name.as_ref()),
                     opt_text(table.table.description.as_ref()),
-                    Cell::Str("data".into()),
+                    Cell::Str(
+                        reg_resolve::role_value(
+                            "table",
+                            table.table.role.as_deref().unwrap_or("data"),
+                        )?
+                        .into(),
+                    ),
                     Cell::Int(i64::from(table.slug.is_none())),
                     Cell::Int(i64::from(table.timeless)),
-                    Cell::Null,
+                    opt_int(table.table.unit_type.as_deref().map(|u| unit_type_id[u])),
                     if table.timeless {
                         Cell::Null
                     } else {
@@ -579,6 +627,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(pid_of_variable(r, v)),
                     Cell::Text(variable.label.clone()),
                     opt_text(variable.definition.as_ref()),
+                    opt_text(variable.description.as_ref()),
                     Cell::Int(start(&variable.hull.0)),
                     Cell::Int(end(&variable.hull.1)),
                 ],
@@ -813,23 +862,75 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 let reg_pid = pid_of_register(&catalog.registers[ri]);
                 (
                     "set",
-                    format!("{reg_pid}/{name}"),
+                    format!("set/{reg_pid}/{name}"),
                     Cell::Int(register_id[&reg_pid]),
                 )
             },
         );
+        let presentation = scope.and_then(|ri| {
+            catalog.set_presentation.iter().find(|set| {
+                let r = &catalog.registers[ri].register;
+                set.provider == r.provider && set.register == r.register && set.slug == name
+            })
+        });
+        let (label, description) = if scope.is_none() {
+            let tag = catalog
+                .tags
+                .get(&name)
+                .expect("tag vocabulary checked at load");
+            (tag.label.clone(), Cell::Text(tag.definition.clone()))
+        } else {
+            (
+                presentation.map_or_else(|| name.clone(), |s| s.label.clone()),
+                presentation
+                    .and_then(|s| s.description.as_ref())
+                    .map_or(Cell::Null, |s| Cell::Text(s.clone())),
+            )
+        };
         let set_id = id(i);
         rows.push(
             "var_set",
             vec![
                 Cell::Int(set_id),
                 Cell::Str(kind.into()),
-                Cell::Str(pid),
-                register,
-                Cell::Text(name),
-                Cell::Null,
+                Cell::Str(pid.clone()),
+                register.clone(),
+                Cell::Text(label),
+                description,
             ],
         );
+        if let Some(ri) = scope {
+            rows.push(
+                "ident",
+                vec![
+                    Cell::Str(pid),
+                    Cell::Str("set".into()),
+                    Cell::Int(set_id),
+                    register,
+                    Cell::Str(reg_core::fold_identity(&name)),
+                ],
+            );
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Set(ri, name.clone()),
+                set_id,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
+        }
+        if let Some(presentation) = presentation {
+            for (ord, axis) in presentation.axes.iter().enumerate() {
+                rows.push(
+                    "var_set_axis",
+                    vec![
+                        Cell::Int(set_id),
+                        Cell::Str(axis.id.clone()),
+                        Cell::Int(count(ord)),
+                        Cell::Text(axis.label.clone()),
+                    ],
+                );
+            }
+        }
         for (ord, (ri, v)) in members.into_iter().enumerate() {
             rows.push(
                 "var_set_member",
@@ -839,6 +940,20 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(i64::try_from(ord).expect("set member ordinal fits i64")),
                 ],
             );
+            if scope.is_some() {
+                for (axis, facet) in &catalog.registers[ri].variables[v].facets {
+                    rows.push(
+                        "var_set_member_facet",
+                        vec![
+                            Cell::Int(set_id),
+                            Cell::Int(variable_id[&(ri, v)]),
+                            Cell::Str(axis.clone()),
+                            Cell::Str(facet.value.clone()),
+                            Cell::Text(facet.label.as_ref().unwrap_or(&facet.value).clone()),
+                        ],
+                    );
+                }
+            }
         }
     }
     for notice in &catalog.notices {
@@ -985,7 +1100,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_text(item.label.as_ref()),
                     Cell::Int(count(level(i))),
                     opt_int(parent(i).map(count)),
-                    Cell::Int(0),
+                    Cell::Int(i64::from(
+                        catalog
+                            .sentinels
+                            .get(hash)
+                            .is_some_and(|codes| codes.contains(&item.code)),
+                    )),
                 ],
             );
         }
@@ -1258,7 +1378,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         reg_core::CATALOG_SCHEMA_VERSION
     ))
     .map_err(sql)?;
-    let statements: Vec<String> = SCHEMA
+    let schema = if external.is_empty() {
+        SCHEMA.to_owned()
+    } else {
+        format!("{SCHEMA}\n{}", include_str!("holdings/relations.sql"))
+    };
+    let statements: Vec<String> = schema
         .lines()
         .map(|line| line.split_once("--").map_or(line, |(code, _)| code))
         .collect::<Vec<_>>()
@@ -1275,14 +1400,17 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         db.execute_batch(statement)
             .map_err(|e| format!("{statement}: {e}"))?;
     }
-    let live: BTreeSet<&str> = rows
-        .tables
-        .get("ident")
+    let live: BTreeSet<&str> = [("ident", 0), ("var_set", 2)]
         .into_iter()
-        .flatten()
-        .filter_map(|row| match &row[0] {
-            Cell::Str(pid) => Some(pid.as_str()),
-            _ => None,
+        .flat_map(|(table, column)| {
+            rows.tables
+                .get(table)
+                .into_iter()
+                .flatten()
+                .filter_map(move |row| match &row[column] {
+                    Cell::Str(pid) => Some(pid.as_str()),
+                    _ => None,
+                })
         })
         .collect();
     for retired in &catalog.retired {
@@ -1306,7 +1434,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     // table in key order.
     let order: Vec<&str> = others
         .iter()
-        .filter_map(|s| s.strip_prefix("CREATE TABLE ")?.split_whitespace().next())
+        .filter_map(|s| {
+            let table = s.strip_prefix("CREATE TABLE ")?;
+            table
+                .strip_prefix("IF NOT EXISTS ")
+                .unwrap_or(table)
+                .split_whitespace()
+                .next()
+        })
         .collect();
     if let Some(table) = rows.tables.keys().find(|t| !order.contains(t)) {
         return Err(format!("{table}: not a table of schema.sql"));
@@ -1363,6 +1498,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     }
     tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])
         .map_err(sql)?;
+    {
+        let mut insert = tx
+            .prepare(
+                "INSERT INTO search_description(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
+            )
+            .map_err(sql)?;
+        for (i, item) in search.iter().enumerate() {
+            if !item.description.is_empty() {
+                let body = format!("{}\n{}", item.body, item.description);
+                insert
+                    .execute((id(i), &item.name, &item.label, &body))
+                    .map_err(|e| format!("search_description: {e}"))?;
+            }
+        }
+    }
+    tx.execute(
+        "INSERT INTO search_description(search_description) VALUES ('optimize')",
+        [],
+    )
+    .map_err(sql)?;
     // External-content FTS5 over doc_section, in rowid order.
     {
         let mut insert = tx

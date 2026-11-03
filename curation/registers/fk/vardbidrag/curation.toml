@@ -1,0 +1,36 @@
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet mäter vårdbidrag och hör till transfereringar; belopp och omfattning är mått på samma förmån.\ncatalog:register:28\ncatalog:variable_text:572:1826:2932897\ncatalog:variable_text:576:1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet mäter vårdbidrag och hör till transfereringar; belopp och omfattning är mått på samma förmån.\ncatalog:register:28\ncatalog:variable_text:572:1826:2932897\ncatalog:variable_text:576:1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-merkost"
+fields = { "sets" = [] }
+evidence = "Nivån avser merkostnadsdelen av vårdbidraget och hör till transfereringar.\ncatalog:register:28\ncatalog:variable_text:575:1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-merkost"
+fields = { "tags" = ["transfers"] }
+evidence = "Nivån avser merkostnadsdelen av vårdbidraget och hör till transfereringar.\ncatalog:register:28\ncatalog:variable_text:575:1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "sets" = [] }
+evidence = "Omfattningen mäter vårdbidrag och hör till transfereringar; belopp och omfattning är mått på samma förmån.\ncatalog:register:28\ncatalog:variable_text:572:1826:2932897\ncatalog:variable_text:576:1826:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Omfattningen mäter vårdbidrag och hör till transfereringar; belopp och omfattning är mått på samma förmån.\ncatalog:register:28\ncatalog:variable_text:572:1826:2932897\ncatalog:variable_text:576:1826:2932897"

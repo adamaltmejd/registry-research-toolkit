@@ -1,12 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:lopnummer-urvalsenheter"
-fields = { "sets" = ["legacy-lopnummer-urvalsenheter"] }
-evidence = "reg_meta_build/curation/registers/scb/pin.toml:1391\n\nThe same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."
-
-[[statement]]
-kind = "set"
 subject = "omsattning-tjanstesektorn-tom2014: bltyp @2011-04-01..2015-03-31"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:40\n\nLegacy exact value-set label: BlTyp SNI2007"
@@ -154,3 +148,2455 @@ kind = "set"
 subject = "industrins-kapacitetsutnyttjande: aktsni92 @1998..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: orgnr"
+fields = { "variable" = "organisationsnummer-12-siffror-orgnr-2" }
+evidence = "PeorgNr became OrgNr with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: peorgnr where key = 'v3578'"
+fields = { "variable" = "organisationsnummer-12-siffror-orgnr-2" }
+evidence = "PeorgNr became OrgNr with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: peorgnr where key = 'v3578'"
+fields = { "variable" = "organisationsnummer-12-siffror-orgnr-2" }
+evidence = "PeorgNr became OrgNr with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: peorgnr where key = 'v3578'"
+fields = { "variable" = "organisationsnummer-12-siffror-orgnr-2" }
+evidence = "PeorgNr became OrgNr with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: branschgr @2006-04-01..2009-03-31"
+fields = { "variable" = "branschgrupp-sni2002" }
+evidence = "BranschGr 2001 and BranschGr 2007 reassign industry codes and require separate families at the April 2009 boundary."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: branschgr @2009-04-01..2015-03-31 where key = 'v3310'"
+fields = { "variable" = "branschgrupp-sni2007" }
+evidence = "BranschGr 2001 and BranschGr 2007 reassign industry codes and require separate families at the April 2009 boundary."
+
+[[statement]]
+kind = "set"
+subject = "var:branschkod-pin"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger branschkod.\ncatalog:variable_text:40407:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:branschkod-pin"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger branschkod.\ncatalog:variable_text:40407:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-benamning-pin"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger branschens benämning.\ncatalog:variable_text:40408:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-benamning-pin"
+fields = { "tags" = ["business"] }
+evidence = "Källkolumnens kod är ogenomskinlig; etiketten anger branschens benämning.\ncatalog:variable_text:40408:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:allokeringsvariabel-pin"
+fields = { "sets" = [] }
+evidence = "Allvar är en ogenomskinlig källmnemonik för allokeringsvariabeln.\ncatalog:variable_text:40410:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:allokeringsvariabel-pin"
+fields = { "tags" = ["methods"] }
+evidence = "Allvar är en ogenomskinlig källmnemonik för allokeringsvariabeln.\ncatalog:variable_text:40410:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-orsak-att-kapacitetsutnyttjandet-understiger-100"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395408\ncatalog:occurrence:395420\ncatalog:variable_text:40413:10227:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-orsak-att-kapacitetsutnyttjandet-understiger-100"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395408\ncatalog:occurrence:395420\ncatalog:variable_text:40413:10227:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arsdeklarant-flagga-pin"
+fields = { "sets" = [] }
+evidence = "Källnamnets engelska ord beskriver årsdeklarant, men VAT-delen är en kodförkortning som saknas i etiketten.\ncatalog:variable_text:40414:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arsdeklarant-flagga-pin"
+fields = { "tags" = ["methods"] }
+evidence = "Källnamnets engelska ord beskriver årsdeklarant, men VAT-delen är en kodförkortning som saknas i etiketten.\ncatalog:variable_text:40414:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda hör till kandidatgruppen och arbetsmarknad.\ncatalog:variable_text:40415:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-enligt-fdb"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda hör till kandidatgruppen och arbetsmarknad.\ncatalog:variable_text:40415:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-verksamhetsenheten"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "AL2UndEjU har flera överlappande ägare; etiketten anger antal anställda.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425\ncatalog:variable_text:40416:10227:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-pa-verksamhetsenheten"
+fields = { "tags" = ["employment"] }
+evidence = "AL2UndEjU har flera överlappande ägare; etiketten anger antal anställda.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425\ncatalog:variable_text:40416:10227:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-abosum"
+fields = { "sets" = ["referensar"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395394\ncatalog:occurrence:395407"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-abosum"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395394\ncatalog:occurrence:395407"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ageovanu"
+fields = { "sets" = ["referensar"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395408\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ageovanu"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395408\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ar"
+fields = { "sets" = ["referensar"] }
+evidence = "Referensår hör till gruppen för referensår.\ncatalog:variable_text:40421:13239:13514\ncatalog:variable_text:40421:13970:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ar"
+fields = { "tags" = [] }
+evidence = "Referensår hör till gruppen för referensår.\ncatalog:variable_text:40421:13239:13514\ncatalog:variable_text:40421:13970:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-och-kvartal"
+fields = { "tags" = [] }
+evidence = "Angivelsen innehåller både referensår och referenskvartal.\ncatalog:variable_text:40422:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:aterrap"
+fields = { "sets" = [] }
+evidence = "Värdena avser insamlingens återrapportering.\ncatalog:valueset:6974"
+
+[[statement]]
+kind = "set"
+subject = "var:aterrap"
+fields = { "tags" = ["methods"] }
+evidence = "Värdena avser insamlingens återrapportering.\ncatalog:valueset:6974"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning-av-orsak"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395417\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning-av-orsak"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395417\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Perioduppdelningen har olika beskrivningar av branschgruppen.\ncatalog:occurrence:395644\ncatalog:occurrence:395662\ncatalog:variable_text:40425:18993:20089\ncatalog:variable_text:40436:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Perioduppdelningen har olika beskrivningar av branschgruppen.\ncatalog:occurrence:395644\ncatalog:occurrence:395662\ncatalog:variable_text:40425:18993:20089\ncatalog:variable_text:40436:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettnummer"
+fields = { "sets" = [] }
+evidence = "Blankettvarianten är insamlingsmetadata.\ncatalog:variable_text:40426:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettnummer"
+fields = { "tags" = ["methods"] }
+evidence = "Blankettvarianten är insamlingsmetadata.\ncatalog:variable_text:40426:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettstatus-kvartal"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395403\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettstatus-kvartal"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395403\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:branchcode"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschkoden hör till näringsgren.\ncatalog:variable_text:40428:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:branchcode"
+fields = { "tags" = ["business"] }
+evidence = "Branschkoden hör till näringsgren.\ncatalog:variable_text:40428:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-branschgr"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Bransch och branschgrupp delar kolumn med överlappande ägare.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-branschgr"
+fields = { "tags" = ["business"] }
+evidence = "Bransch och branschgrupp delar kolumn med överlappande ägare.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Uppgiftslämnarens branschkod hör till näringsgren.\ncatalog:variable_text:40430:14335:15065\ncatalog:variable_text:40430:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren"
+fields = { "tags" = ["business"] }
+evidence = "Uppgiftslämnarens branschkod hör till näringsgren.\ncatalog:variable_text:40430:14335:15065\ncatalog:variable_text:40430:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren-2"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Suff fixet 2 kommer inte från källkolumnen; etiketten kolliderar och mål behöver därför disambiguering.\ncatalog:variable_text:40431:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-enligt-uppgiftslamnaren-2"
+fields = { "tags" = ["business"] }
+evidence = "Suff fixet 2 kommer inte från källkolumnen; etiketten kolliderar och mål behöver därför disambiguering.\ncatalog:variable_text:40431:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma SNI 2007-begrepp är perioduppdelat med scb/pin/naringsgren-sni2007.\ncatalog:occurrence:396452\ncatalog:occurrence:396539\ncatalog:variable_text:40432:14335:15796"
+
+[[statement]]
+kind = "set"
+subject = "var:bransch-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Samma SNI 2007-begrepp är perioduppdelat med scb/pin/naringsgren-sni2007.\ncatalog:occurrence:396452\ncatalog:occurrence:396539\ncatalog:variable_text:40432:14335:15796"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgruppen hör till näringsgren.\ncatalog:variable_text:40433:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr07"
+fields = { "tags" = ["business"] }
+evidence = "Branschgruppen hör till näringsgren.\ncatalog:variable_text:40433:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Branschgruppen hör till näringsgren.\ncatalog:variable_text:40434:10227:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-aktbr92"
+fields = { "tags" = ["business"] }
+evidence = "Branschgruppen hör till näringsgren.\ncatalog:variable_text:40434:10227:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "sets" = ["naringsgren"] }
+evidence = "AL2UndEjU har flera överlappande ägare.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-al2undeju"
+fields = { "tags" = ["business"] }
+evidence = "AL2UndEjU har flera överlappande ägare.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Perioduppdelningen har olika beskrivningar av branschgruppen.\ncatalog:occurrence:395644\ncatalog:occurrence:395662\ncatalog:variable_text:40425:18993:20089\ncatalog:variable_text:40436:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-bgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Perioduppdelningen har olika beskrivningar av branschgruppen.\ncatalog:occurrence:395644\ncatalog:occurrence:395662\ncatalog:variable_text:40425:18993:20089\ncatalog:variable_text:40436:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2002"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma kolumn har flera efterföljande ägare.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2002"
+fields = { "tags" = ["business"] }
+evidence = "Samma kolumn har flera efterföljande ägare.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma kolumn har flera ägare med överlappning.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:branschgrupp-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Samma kolumn har flera ägare med överlappning.\ncatalog:occurrence:396470\ncatalog:occurrence:396511\ncatalog:occurrence:396512"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-insatsvaror"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395418\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-insatsvaror"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395418\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-kvalificerad-arbetskraft"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395409\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-kvalificerad-arbetskraft"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395409\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-okvalificerad-arbetskraft"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395410\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:brist-pa-okvalificerad-arbetskraft"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395410\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-blankett-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId01BL är en ogenomskinlig källkod.\ncatalog:variable_text:40442:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid01bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40443:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid01bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40443:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-moms-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId01MR är en ogenomskinlig källkod.\ncatalog:variable_text:40444:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid01mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40445:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid01mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40445:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-blankett-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId02BL är en ogenomskinlig källkod.\ncatalog:variable_text:40446:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid02bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40447:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid02bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40447:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-moms-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId02MR är en ogenomskinlig källkod.\ncatalog:variable_text:40448:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid02mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40449:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid02mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40449:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-blankett-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId03BL är en ogenomskinlig källkod.\ncatalog:variable_text:40450:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid03bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40451:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid03bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40451:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-moms-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId03MR är en ogenomskinlig källkod.\ncatalog:variable_text:40452:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid03mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40453:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid03mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40453:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-totala-marknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId04BL är en ogenomskinlig källkod.\ncatalog:variable_text:40454:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-totala-marknaden"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40455:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-totala-marknaden"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40455:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-hemmamarknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId05BL är en ogenomskinlig källkod.\ncatalog:variable_text:40456:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-hemmamarknaden"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40457:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-hemmamarknaden"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40457:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-exportmarknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId06BL är en ogenomskinlig källkod.\ncatalog:variable_text:40458:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-exportmarknaden"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40459:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-industrinettoomsattning-exportmarknaden"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40459:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-totala-marknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId07BL är en ogenomskinlig källkod.\ncatalog:variable_text:40460:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-tjanstenettoomsattning-totala-marknaden"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40461:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-tjanstenettoomsattning-totala-marknaden"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40461:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-hemmamarknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId08BL är en ogenomskinlig källkod.\ncatalog:variable_text:40462:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-exportmarknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId09BL är en ogenomskinlig källkod.\ncatalog:variable_text:40463:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-totala-marknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId10BL är en ogenomskinlig källkod.\ncatalog:variable_text:40464:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-handelsnettoomsattning-totala-marknaden"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40465:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-handelsnettoomsattning-totala-marknaden"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40465:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-hemmamarknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId11BL är en ogenomskinlig källkod.\ncatalog:variable_text:40466:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-exportmarknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId12BL är en ogenomskinlig källkod.\ncatalog:variable_text:40467:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:classid13bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40468:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid13bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40468:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid13mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40469:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:classid13mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40469:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-totala-marknaden-pin"
+fields = { "sets" = ["orderingang"] }
+evidence = "ClassId19BL är en ogenomskinlig källkod.\ncatalog:variable_text:40470:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-totala-marknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId19BL är en ogenomskinlig källkod.\ncatalog:variable_text:40470:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-totala-marknaden-blankett-pin"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40471:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-totala-marknaden-blankett-pin"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40471:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-hemmamarknaden-pin"
+fields = { "sets" = ["orderingang"] }
+evidence = "ClassId20BL är en ogenomskinlig källkod.\ncatalog:variable_text:40472:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-hemmamarknaden-pin"
+fields = { "tags" = ["business"] }
+evidence = "ClassId20BL är en ogenomskinlig källkod.\ncatalog:variable_text:40472:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-hemmamarknaden-blankett-pin"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40473:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-hemmamarknaden-blankett-pin"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40473:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-exportmarknaden-pin"
+fields = { "sets" = ["orderingang"] }
+evidence = "ClassId21BL är en ogenomskinlig källkod.\ncatalog:variable_text:40474:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-exportmarknaden-pin"
+fields = { "tags" = ["business", "trade"] }
+evidence = "ClassId21BL är en ogenomskinlig källkod.\ncatalog:variable_text:40474:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-exportmarknaden-blankett-pin"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40475:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsflagga-orderingang-exportmarknaden-blankett-pin"
+fields = { "tags" = ["methods"] }
+evidence = "Källkoden är opak och etiketten anger imputeringsflaggan.\ncatalog:variable_text:40475:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:collectionsurveyname"
+fields = { "sets" = [] }
+evidence = "Undersökningens namn är insamlingsmetadata.\ncatalog:variable_text:40477:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:collectionsurveyname"
+fields = { "tags" = ["methods"] }
+evidence = "Undersökningens namn är insamlingsmetadata.\ncatalog:variable_text:40477:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cutofftotal"
+fields = { "tags" = ["business"] }
+evidence = "Skattningen är ett omsättningsbidrag.\ncatalog:variable_text:40478:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson"
+fields = { "sets" = ["kontaktpersonens-e-postadress"] }
+evidence = "Kontaktpersonens e-postadress ingår i kandidatgruppen.\ncatalog:variable_text:40479:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson"
+fields = { "tags" = [] }
+evidence = "Kontaktpersonens e-postadress ingår i kandidatgruppen.\ncatalog:variable_text:40479:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson-2"
+fields = { "sets" = ["kontaktpersonens-e-postadress"] }
+evidence = "Suff fixet 2 kommer inte från källkolumnen; etiketten kolliderar och mål behöver disambiguering.\ncatalog:variable_text:40480:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:e-postadress-kontaktperson-2"
+fields = { "tags" = [] }
+evidence = "Suff fixet 2 kommer inte från källkolumnen; etiketten kolliderar och mål behöver disambiguering.\ncatalog:variable_text:40480:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:elementar-berakningsbransch-pin"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t identifierar inte beräkningsbranschen med läsbara delar av etiketten.\ncatalog:variable_text:40481:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elementar-berakningsbransch-pin"
+fields = { "tags" = ["business"] }
+evidence = "Id:t identifierar inte beräkningsbranschen med läsbara delar av etiketten.\ncatalog:variable_text:40481:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "sets" = ["faxnummer"] }
+evidence = "Faxnummer ingår i kandidatgruppen.\ncatalog:variable_text:40482:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "tags" = [] }
+evidence = "Faxnummer ingår i kandidatgruppen.\ncatalog:variable_text:40482:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:faxuppg"
+fields = { "sets" = ["faxnummer"] }
+evidence = "Faxnummer ingår i kandidatgruppen.\ncatalog:variable_text:40483:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:faxuppg"
+fields = { "tags" = [] }
+evidence = "Faxnummer ingår i kandidatgruppen.\ncatalog:variable_text:40483:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "sets" = [] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396104\ncatalog:occurrence:396105"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "tags" = ["business"] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396104\ncatalog:occurrence:396105"
+
+[[statement]]
+kind = "set"
+subject = "var:granskning"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395411\ncatalog:occurrence:395416"
+
+[[statement]]
+kind = "set"
+subject = "var:granskning"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395411\ncatalog:occurrence:395416"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsmarginal"
+fields = { "sets" = [] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396947\ncatalog:occurrence:396949"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsmarginal"
+fields = { "tags" = ["business", "trade"] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396947\ncatalog:occurrence:396949"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-insatsvaror"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395398\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-insatsvaror"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395398\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-ovrig-personal"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395397\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-ovrig-personal"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395397\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-yrkesutbildad-personal"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395396\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-brist-pa-yrkesutbildad-personal"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395396\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-graden-av-kapacitetsutnyttjande"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395395\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-graden-av-kapacitetsutnyttjande"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395395\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-om-annan-orsak-finns"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395401\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-om-annan-orsak-finns"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395401\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-otillracklig-efterfragan"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395399\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-otillracklig-efterfragan"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395399\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-produktionsstorningar"
+fields = { "sets" = ["hanteringskod"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395400\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hanteringskod-for-produktionsstorningar"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare; etiketten anger en hanteringskod.\ncatalog:occurrence:395400\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:hui"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver insamlingskälla.\ncatalog:valueset:2044"
+
+[[statement]]
+kind = "set"
+subject = "var:hui"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen beskriver insamlingskälla.\ncatalog:valueset:2044"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40497:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40497:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid01mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40498:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid01mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40498:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40499:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40499:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40500:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid02mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40500:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40501:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40501:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40502:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid03mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40502:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid04bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40503:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid04bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40503:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid05bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40504:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid05bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40504:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid06bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40505:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid06bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40505:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid07bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40506:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid07bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40506:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid08bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40507:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid08bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40507:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid09bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40508:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid09bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40508:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid10bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40509:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid10bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40509:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid11bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40510:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid11bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40510:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid12bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40511:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid12bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40511:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Flagga och belopp delar källkolumn i samma period.\ncatalog:occurrence:397290\ncatalog:occurrence:397291"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Flagga och belopp delar källkolumn i samma period.\ncatalog:occurrence:397290\ncatalog:occurrence:397291"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13mr-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Flagga och belopp delar källkolumn i samma period.\ncatalog:occurrence:397292\ncatalog:occurrence:397293"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid13mr-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Flagga och belopp delar källkolumn i samma period.\ncatalog:occurrence:397292\ncatalog:occurrence:397293"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid22bl-imputed"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40514:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerat-varde-flagga-classid22bl-imputed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en imputeringsflagga.\ncatalog:variable_text:40514:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "sets" = ["imputeringsstatus"] }
+evidence = "Statusen anger imputering.\ncatalog:variable_text:40515:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:imputeringsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Statusen anger imputering.\ncatalog:variable_text:40515:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:inmarketname"
+fields = { "sets" = ["marknadsindelning"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40518:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inmarketname"
+fields = { "tags" = ["business"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40518:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-omsattning"
+fields = { "tags" = ["business"] }
+evidence = "Inrikes omsättning enligt moms är en omsättningskomponent.\ncatalog:variable_text:40519:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname"
+fields = { "sets" = ["variabeldelmangd"] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40520:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40520:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-outsubsetname"
+fields = { "sets" = ["variabeldelmangd"] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40521:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-outsubsetname"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40521:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-subsetname"
+fields = { "sets" = ["variabeldelmangd"] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40522:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:insubsetname-subsetname"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeldelmängd.\ncatalog:variable_text:40522:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:intyp"
+fields = { "sets" = [] }
+evidence = "Koderna beskriver insamling och imputering.\ncatalog:valueset:5253\ncatalog:variable_text:40523:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:intyp"
+fields = { "tags" = ["methods"] }
+evidence = "Koderna beskriver insamling och imputering.\ncatalog:valueset:5253\ncatalog:variable_text:40523:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:invariablename"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40524:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:invariablename"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40524:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inventorypricetypeid"
+fields = { "sets" = [] }
+evidence = "Variabeln anger pristyp för lager.\ncatalog:variable_text:40525:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inventorypricetypeid"
+fields = { "tags" = ["business", "prices"] }
+evidence = "Variabeln anger pristyp för lager.\ncatalog:variable_text:40525:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inventorytypename"
+fields = { "sets" = [] }
+evidence = "Lagertyp är ett företagsmått.\ncatalog:variable_text:40526:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inventorytypename"
+fields = { "tags" = ["business"] }
+evidence = "Lagertyp är ett företagsmått.\ncatalog:variable_text:40526:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:isfictive"
+fields = { "sets" = [] }
+evidence = "Fiktivmarkeringen beskriver statistisk kvalitet.\ncatalog:variable_text:40527:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:isfictive"
+fields = { "tags" = ["methods"] }
+evidence = "Fiktivmarkeringen beskriver statistisk kvalitet.\ncatalog:variable_text:40527:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kapacitetsutnyttjandet"
+fields = { "sets" = [] }
+evidence = "Kapacitetsutnyttjande är ett produktionsmått.\ncatalog:variable_text:40528:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kapacitetsutnyttjandet"
+fields = { "tags" = ["business"] }
+evidence = "Kapacitetsutnyttjande är ett produktionsmått.\ncatalog:variable_text:40528:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "sets" = ["uppgiftslamnarkategori"] }
+evidence = "Kategorinumret ingår i kandidatgruppen.\ncatalog:variable_text:40529:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "tags" = ["business"] }
+evidence = "Kategorinumret ingår i kandidatgruppen.\ncatalog:variable_text:40529:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kategoriupp"
+fields = { "sets" = ["uppgiftslamnarkategori"] }
+evidence = "Kategorinumret ingår i kandidatgruppen.\ncatalog:variable_text:40530:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kategoriupp"
+fields = { "tags" = ["business"] }
+evidence = "Kategorinumret ingår i kandidatgruppen.\ncatalog:variable_text:40530:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Den sista värdemängden innehåller länskoder trots kommunetiketten.\ncatalog:valueset:7128\ncatalog:variable_text:40533:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Den sista värdemängden innehåller länskoder trots kommunetiketten.\ncatalog:valueset:7128\ncatalog:variable_text:40533:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernmarkering"
+fields = { "sets" = [] }
+evidence = "Koncernanknytning beskriver företagsstruktur.\ncatalog:variable_text:40534:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:koncernmarkering"
+fields = { "tags" = ["business"] }
+evidence = "Koncernanknytning beskriver företagsstruktur.\ncatalog:variable_text:40534:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal"
+fields = { "sets" = ["referenskvartal"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395419\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal"
+fields = { "tags" = [] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395419\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:lagerutveckling"
+fields = { "sets" = [] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396944\ncatalog:occurrence:396949"
+
+[[statement]]
+kind = "set"
+subject = "var:lagerutveckling"
+fields = { "tags" = ["business"] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396944\ncatalog:occurrence:396949"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-exportmarknad"
+fields = { "tags" = ["business", "trade"] }
+evidence = "LevE är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40539:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-hemmamarknad"
+fields = { "tags" = ["business"] }
+evidence = "LevH är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40540:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning"
+fields = { "tags" = ["business"] }
+evidence = "LevTot är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40541:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "LillaN anger antalet utvalda företag i stratumet.\ncatalog:variable_text:40542:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "LillaN anger antalet utvalda företag i stratumet.\ncatalog:variable_text:40542:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Månad anger observationens referensperiod.\ncatalog:variable_text:40545:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "tags" = [] }
+evidence = "Månad anger observationens referensperiod.\ncatalog:variable_text:40545:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:marketid"
+fields = { "sets" = ["marknadsindelning"] }
+evidence = "Koden anger försäljningsmarknad.\ncatalog:valueset:10109\ncatalog:variable_text:40546:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:marketid"
+fields = { "tags" = ["business"] }
+evidence = "Koden anger försäljningsmarknad.\ncatalog:valueset:10109\ncatalog:variable_text:40546:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:marketname"
+fields = { "sets" = ["marknadsindelning"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40547:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:marketname"
+fields = { "tags" = ["business"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40547:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:momsgrupp"
+fields = { "sets" = [] }
+evidence = "Momsgrupp beskriver en skattekategori.\ncatalog:variable_text:40549:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:momsgrupp"
+fields = { "tags" = ["taxation"] }
+evidence = "Momsgrupp beskriver en skattekategori.\ncatalog:variable_text:40549:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:momsimp"
+fields = { "sets" = [] }
+evidence = "Koden anger uppgifternas tillförlitlighet och eventuell imputering.\ncatalog:variable_text:40550:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:momsimp"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger uppgifternas tillförlitlighet och eventuell imputering.\ncatalog:variable_text:40550:13970:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren ingår i kandidatgruppen.\ncatalog:variable_text:40552:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni07"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren ingår i kandidatgruppen.\ncatalog:variable_text:40552:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren ingår i kandidatgruppen; versionskonflikten behöver utredas.\ncatalog:valueset:7902\ncatalog:variable_text:40553:10227:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren ingår i kandidatgruppen; versionskonflikten behöver utredas.\ncatalog:valueset:7902\ncatalog:variable_text:40553:10227:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "sets" = ["naringsgren"] }
+evidence = "AL2UndEjU har flera överlappande ägare och källorna anger olika SNI-versioner.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425\ncatalog:valueset:6191\ncatalog:variable_text:40554:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "tags" = ["business"] }
+evidence = "AL2UndEjU har flera överlappande ägare och källorna anger olika SNI-versioner.\ncatalog:occurrence:395423\ncatalog:occurrence:395424\ncatalog:occurrence:395425\ncatalog:valueset:6191\ncatalog:variable_text:40554:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgren ingår i kandidatgruppen.\ncatalog:variable_text:40555:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-cu-branschtext"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren ingår i kandidatgruppen.\ncatalog:variable_text:40555:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-5-siffer"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Id:t är läsbart; variabeln hör till näringsgrensindelningen.\ncatalog:variable_text:40556:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-5-siffer"
+fields = { "tags" = ["business"] }
+evidence = "Id:t är läsbart; variabeln hör till näringsgrensindelningen.\ncatalog:variable_text:40556:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Samma SNI 2007-begrepp är perioduppdelat med scb/pin/bransch-sni2007.\ncatalog:occurrence:396452\ncatalog:occurrence:396539"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { "tags" = ["business"] }
+evidence = "Samma SNI 2007-begrepp är perioduppdelat med scb/pin/bransch-sni2007.\ncatalog:occurrence:396452\ncatalog:occurrence:396539"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-modellskattad-pin"
+fields = { "tags" = ["business"] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396361\ncatalog:occurrence:396362"
+
+[[statement]]
+kind = "set"
+subject = "var:observationsenhetsstatus-kvartal"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395403\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:observationsenhetsstatus-kvartal"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395403\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "tags" = ["business"] }
+evidence = "Årsomsättning enligt moms ingår i omsättningsgruppen.\ncatalog:variable_text:40561:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-blankett-pin-classid13bl"
+fields = { "sets" = ["omsattning-inklusive-moms"] }
+evidence = "Beloppet är omsättning inklusive moms.\ncatalog:variable_text:40562:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-blankett-pin-classid13bl"
+fields = { "tags" = ["business"] }
+evidence = "Beloppet är omsättning inklusive moms.\ncatalog:variable_text:40562:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-classid13bl-imputed"
+fields = { "sets" = ["omsattning-inklusive-moms"] }
+evidence = "Belopp och flagga delar källkolumn i samma period.\ncatalog:occurrence:397290\ncatalog:occurrence:397291"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-classid13bl-imputed"
+fields = { "tags" = ["business"] }
+evidence = "Belopp och flagga delar källkolumn i samma period.\ncatalog:occurrence:397290\ncatalog:occurrence:397291"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
+fields = { "sets" = ["omsattning-inklusive-moms"] }
+evidence = "Belopp och flagga delar källkolumn i samma period.\ncatalog:occurrence:397292\ncatalog:occurrence:397293"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
+fields = { "tags" = ["business"] }
+evidence = "Belopp och flagga delar källkolumn i samma period.\ncatalog:occurrence:397292\ncatalog:occurrence:397293"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-pin-classid13mr"
+fields = { "sets" = ["omsattning-inklusive-moms"] }
+evidence = "Beloppet är omsättning inklusive moms.\ncatalog:variable_text:40565:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-pin-classid13mr"
+fields = { "tags" = ["business"] }
+evidence = "Beloppet är omsättning inklusive moms.\ncatalog:variable_text:40565:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsvarde"
+fields = { "sets" = [] }
+evidence = "Omsättningsvärdet omfattar både belopp med och utan moms beroende på bransch; ingen kandidat täcker båda. Coordinator group membership: Nettoomsättning, angivna verksamhets- och marknadskomponenter samt omsättningsskattningar ingår. Den fasta inkluderingen av omsattningsvarde behålls med en konflikt om momsavgränsningen.\ncatalog:variable_text:40442:18993:20089\ncatalog:variable_text:40444:18993:20089\ncatalog:variable_text:40446:18993:20089\ncatalog:variable_text:40448:18993:20089\ncatalog:variable_text:40450:18993:20089\ncatalog:variable_text:40452:18993:20089\ncatalog:variable_text:40454:18993:20089\ncatalog:variable_text:40456:18993:20089\ncatalog:variable_text:40458:18993:20089\ncatalog:variable_text:40460:18993:20089\ncatalog:variable_text:40462:18993:20089\ncatalog:variable_text:40463:18993:20089\ncatalog:variable_text:40464:18993:20089\ncatalog:variable_text:40466:18993:20089\ncatalog:variable_text:40467:18993:20089\ncatalog:variable_text:40478:18993:20089\ncatalog:variable_text:40519:13239:16526\ncatalog:variable_text:40539:16436:18993\ncatalog:variable_text:40540:16436:18993\ncatalog:variable_text:40541:16436:18993\ncatalog:variable_text:40558:18993:20089\ncatalog:variable_text:40561:17897:18628\ncatalog:variable_text:40566:13239:13970\ncatalog:variable_text:40566:13970:16526\ncatalog:variable_text:40610:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsvarde"
+fields = { "tags" = ["business"] }
+evidence = "Omsättningsvärdet omfattar både belopp med och utan moms beroende på bransch; ingen kandidat täcker båda. Coordinator group membership: Nettoomsättning, angivna verksamhets- och marknadskomponenter samt omsättningsskattningar ingår. Den fasta inkluderingen av omsattningsvarde behålls med en konflikt om momsavgränsningen.\ncatalog:variable_text:40442:18993:20089\ncatalog:variable_text:40444:18993:20089\ncatalog:variable_text:40446:18993:20089\ncatalog:variable_text:40448:18993:20089\ncatalog:variable_text:40450:18993:20089\ncatalog:variable_text:40452:18993:20089\ncatalog:variable_text:40454:18993:20089\ncatalog:variable_text:40456:18993:20089\ncatalog:variable_text:40458:18993:20089\ncatalog:variable_text:40460:18993:20089\ncatalog:variable_text:40462:18993:20089\ncatalog:variable_text:40463:18993:20089\ncatalog:variable_text:40464:18993:20089\ncatalog:variable_text:40466:18993:20089\ncatalog:variable_text:40467:18993:20089\ncatalog:variable_text:40478:18993:20089\ncatalog:variable_text:40519:13239:16526\ncatalog:variable_text:40539:16436:18993\ncatalog:variable_text:40540:16436:18993\ncatalog:variable_text:40541:16436:18993\ncatalog:variable_text:40558:18993:20089\ncatalog:variable_text:40561:17897:18628\ncatalog:variable_text:40566:13239:13970\ncatalog:variable_text:40566:13970:16526\ncatalog:variable_text:40610:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omstyp"
+fields = { "sets" = [] }
+evidence = "Omsättningstyp beskriver företagets omsättning.\ncatalog:variable_text:40567:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:omstyp"
+fields = { "tags" = ["business"] }
+evidence = "Omsättningstyp beskriver företagets omsättning.\ncatalog:variable_text:40567:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-exportmarknad"
+fields = { "sets" = ["orderingang"] }
+evidence = "Orderingång på exportmarknaden ingår i kandidatgruppen.\ncatalog:variable_text:40568:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-exportmarknad"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Orderingång på exportmarknaden ingår i kandidatgruppen.\ncatalog:variable_text:40568:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-hemmamarknad"
+fields = { "sets" = ["orderingang"] }
+evidence = "Orderingång på hemmamarknaden ingår i kandidatgruppen.\ncatalog:variable_text:40569:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:orderingang-hemmamarknad"
+fields = { "tags" = ["business"] }
+evidence = "Orderingång på hemmamarknaden ingår i kandidatgruppen.\ncatalog:variable_text:40569:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:otillracklig-efterfragan"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395413\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:otillracklig-efterfragan"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395413\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:outmarketname"
+fields = { "sets" = ["marknadsindelning"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40574:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outmarketname"
+fields = { "tags" = ["business"] }
+evidence = "Benämningen anger försäljningsmarknad.\ncatalog:variable_text:40574:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outvariableid"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40575:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outvariableid"
+fields = { "tags" = [] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40575:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outvariablename"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40576:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:outvariablename"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40576:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:period"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Värdemängderna anger månader för referensperioden.\ncatalog:valueset:6903\ncatalog:valueset:6959\ncatalog:variable_text:40577:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:period"
+fields = { "tags" = [] }
+evidence = "Värdemängderna anger månader för referensperioden.\ncatalog:valueset:6903\ncatalog:valueset:6959\ncatalog:variable_text:40577:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "sets" = [] }
+evidence = "Postadressen beskriver enhetens läge.\ncatalog:variable_text:40579:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress"
+fields = { "tags" = ["geography"] }
+evidence = "Postadressen beskriver enhetens läge.\ncatalog:variable_text:40579:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer beskriver geografisk tillhörighet.\ncatalog:variable_text:40580:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer beskriver geografisk tillhörighet.\ncatalog:variable_text:40580:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort är en geografisk indelning.\ncatalog:variable_text:40581:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort är en geografisk indelning.\ncatalog:variable_text:40581:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:prisindex"
+fields = { "sets" = [] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396104\ncatalog:occurrence:396105"
+
+[[statement]]
+kind = "set"
+subject = "var:prisindex"
+fields = { "tags" = ["prices"] }
+evidence = "MeasureValue har flera överlappande ägare.\ncatalog:occurrence:396104\ncatalog:occurrence:396105"
+
+[[statement]]
+kind = "set"
+subject = "var:procent-for-tid-eller-omsattning"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395416\ncatalog:occurrence:395422"
+
+[[statement]]
+kind = "set"
+subject = "var:procent-for-tid-eller-omsattning"
+fields = { "tags" = ["business"] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395416\ncatalog:occurrence:395422"
+
+[[statement]]
+kind = "set"
+subject = "var:productid"
+fields = { "sets" = ["produktindelning"] }
+evidence = "Koden anger produktslag.\ncatalog:variable_text:40584:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:productid"
+fields = { "tags" = ["business"] }
+evidence = "Koden anger produktslag.\ncatalog:variable_text:40584:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:productname"
+fields = { "sets" = ["produktindelning"] }
+evidence = "Benämningen anger produktslag.\ncatalog:variable_text:40585:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:productname"
+fields = { "tags" = ["business"] }
+evidence = "Benämningen anger produktslag.\ncatalog:variable_text:40585:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:productprice"
+fields = { "sets" = [] }
+evidence = "Variabeln anger pris per producerad volymenhet.\ncatalog:variable_text:40586:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:productprice"
+fields = { "tags" = ["prices"] }
+evidence = "Variabeln anger pris per producerad volymenhet.\ncatalog:variable_text:40586:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsstorning"
+fields = { "sets" = ["orsaker-till-ofullstandigt-kapacitetsutnyttjande"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395414\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsstorning"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har flera överlappande identiteter.\ncatalog:occurrence:395414\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvolymer"
+fields = { "sets" = [] }
+evidence = "Flera olika mått delar källkolumn i samma period.\ncatalog:occurrence:396103\ncatalog:occurrence:396105\ncatalog:occurrence:396945"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvolymer"
+fields = { "tags" = ["business"] }
+evidence = "Flera olika mått delar källkolumn i samma period.\ncatalog:occurrence:396103\ncatalog:occurrence:396105\ncatalog:occurrence:396945"
+
+[[statement]]
+kind = "set"
+subject = "var:referensar-pin"
+fields = { "sets" = ["referensar"] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:396961\ncatalog:occurrence:396962\ncatalog:occurrence:397316\ncatalog:occurrence:397317"
+
+[[statement]]
+kind = "set"
+subject = "var:referensar-pin"
+fields = { "tags" = [] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:396961\ncatalog:occurrence:396962\ncatalog:occurrence:397316\ncatalog:occurrence:397317"
+
+[[statement]]
+kind = "set"
+subject = "var:referenskvartal-pin"
+fields = { "sets" = ["referenskvartal"] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:396960\ncatalog:occurrence:396961\ncatalog:occurrence:396962"
+
+[[statement]]
+kind = "set"
+subject = "var:referenskvartal-pin"
+fields = { "tags" = [] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:396960\ncatalog:occurrence:396961\ncatalog:occurrence:396962"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-obs-pin"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:395971\ncatalog:occurrence:395972\ncatalog:occurrence:395973"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-obs-pin"
+fields = { "tags" = [] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:395971\ncatalog:occurrence:395972\ncatalog:occurrence:395973"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-pin"
+fields = { "sets" = ["referensmanad"] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:395971\ncatalog:occurrence:395972\ncatalog:occurrence:395973"
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-pin"
+fields = { "tags" = [] }
+evidence = "Flera periodmått delar källkolumn.\ncatalog:occurrence:395971\ncatalog:occurrence:395972\ncatalog:occurrence:395973"
+
+[[statement]]
+kind = "set"
+subject = "var:sampleyearid"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40593:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sampleyearid"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40593:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI-familjen behandlas som läsbar och variabeln hör till näringsgrensindelningen.\ncatalog:variable_text:40595:13239:15796\ncatalog:variable_text:40595:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:sni"
+fields = { "tags" = ["business"] }
+evidence = "SNI-familjen behandlas som läsbar och variabeln hör till näringsgrensindelningen.\ncatalog:variable_text:40595:13239:15796\ncatalog:variable_text:40595:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007upp-datum"
+fields = { "sets" = ["branschkodens-andringsdatum"] }
+evidence = "Datumet gäller branschuppgiftens uppdatering.\ncatalog:variable_text:40596:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007upp-datum"
+fields = { "tags" = [] }
+evidence = "Datumet gäller branschuppgiftens uppdatering.\ncatalog:variable_text:40596:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92upp-datum"
+fields = { "sets" = ["branschkodens-andringsdatum"] }
+evidence = "Datumet gäller branschkodens ändring.\ncatalog:variable_text:40597:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:sni92upp-datum"
+fields = { "tags" = [] }
+evidence = "Datumet gäller branschkodens ändring.\ncatalog:variable_text:40597:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "sets" = [] }
+evidence = "Statuskoderna beskriver urval och insamling.\ncatalog:valueset:1730"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["methods"] }
+evidence = "Statuskoderna beskriver urval och insamling.\ncatalog:valueset:1730"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "sets" = [] }
+evidence = "Granskningsstatus är en kvalitetsmarkör.\ncatalog:variable_text:40599:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:statuskod"
+fields = { "tags" = ["methods"] }
+evidence = "Granskningsstatus är en kvalitetsmarkör.\ncatalog:variable_text:40599:15796:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp"
+fields = { "sets" = [] }
+evidence = "Företagens storleksgrupp beskriver företagsstruktur.\ncatalog:variable_text:40600:17897:18628\ncatalog:variable_text:40600:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp"
+fields = { "tags" = ["business"] }
+evidence = "Företagens storleksgrupp beskriver företagsstruktur.\ncatalog:variable_text:40600:17897:18628\ncatalog:variable_text:40600:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = ["stratumtillhorighet"] }
+evidence = "Stratumtillhörighet är urvalsmetadata.\ncatalog:variable_text:40601:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumtillhörighet är urvalsmetadata.\ncatalog:variable_text:40601:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-storlek"
+fields = { "sets" = [] }
+evidence = "Antal företag i ett stratum beskriver urvalets ram.\ncatalog:variable_text:40602:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-storlek"
+fields = { "tags" = ["methods"] }
+evidence = "Antal företag i ett stratum beskriver urvalets ram.\ncatalog:variable_text:40602:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumid"
+fields = { "sets" = ["stratumtillhorighet"] }
+evidence = "Stratumkoden ingår i kandidatgruppen och beskriver urval.\ncatalog:variable_text:40603:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratumid"
+fields = { "tags" = ["methods"] }
+evidence = "Stratumkoden ingår i kandidatgruppen och beskriver urval.\ncatalog:variable_text:40603:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:subsetid"
+fields = { "sets" = ["variabeldelmangd"] }
+evidence = "Kod och benämning delar källkolumn i samma period.\ncatalog:occurrence:396123\ncatalog:occurrence:396124"
+
+[[statement]]
+kind = "set"
+subject = "var:subsetid"
+fields = { "tags" = [] }
+evidence = "Kod och benämning delar källkolumn i samma period.\ncatalog:occurrence:396123\ncatalog:occurrence:396124"
+
+[[statement]]
+kind = "set"
+subject = "var:tde"
+fields = { "sets" = [] }
+evidence = "Markeringen gäller insamlingssätt.\ncatalog:variable_text:40605:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:tde"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen gäller insamlingssätt.\ncatalog:variable_text:40605:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:total-orderingang"
+fields = { "sets" = ["orderingang"] }
+evidence = "Total orderingång ingår i kandidatgruppen.\ncatalog:variable_text:40609:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:total-orderingang"
+fields = { "tags" = ["business"] }
+evidence = "Total orderingång ingår i kandidatgruppen.\ncatalog:variable_text:40609:16436:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-arsdeklaranter-pin"
+fields = { "tags" = ["business"] }
+evidence = "VAT är en bokstavskod som inte förekommer i etiketten.\ncatalog:variable_text:40610:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "sets" = [] }
+evidence = "Värdena beskriver granskningsstatus.\ncatalog:valueset:8406\ncatalog:variable_text:40613:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Värdena beskriver granskningsstatus.\ncatalog:valueset:8406\ncatalog:variable_text:40613:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395431\ncatalog:occurrence:395433"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395431\ncatalog:occurrence:395433"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-abosum"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395394\ncatalog:occurrence:395407"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-abosum"
+fields = { "tags" = ["methods"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395394\ncatalog:occurrence:395407"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-ageovanu"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395415\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-ageovanu"
+fields = { "tags" = ["methods"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395415\ncatalog:occurrence:395420"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-al2undu"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395429\ncatalog:occurrence:395433"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-al2undu"
+fields = { "tags" = ["methods"] }
+evidence = "Flera olika mått delar källkolumn.\ncatalog:occurrence:395429\ncatalog:occurrence:395433"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-uar"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40619:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-uar"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40619:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-urvalsar"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40620:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsar-urvalsar"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsår.\ncatalog:variable_text:40620:15065:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek"
+fields = { "sets" = [] }
+evidence = "Källkolumnen delas och värdemängden motsäger beskrivningen.\ncatalog:occurrence:395431\ncatalog:occurrence:395433\ncatalog:valueset:10750\ncatalog:variable_text:40622:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek"
+fields = { "tags" = ["methods"] }
+evidence = "Källkolumnen delas och värdemängden motsäger beskrivningen.\ncatalog:occurrence:395431\ncatalog:occurrence:395433\ncatalog:valueset:10750\ncatalog:variable_text:40622:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "sets" = ["urvalsar"] }
+evidence = "Urvalsversionen kan anges som årtal eller SAMU-version.\ncatalog:variable_text:40623:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsversion"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsversionen kan anges som årtal eller SAMU-version.\ncatalog:variable_text:40623:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:vardestatus-kapacitetsutnyttjande"
+fields = { "sets" = [] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395405\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:vardestatus-kapacitetsutnyttjande"
+fields = { "tags" = ["methods"] }
+evidence = "Samma kolumn har flera överlappande ägare.\ncatalog:occurrence:395405\ncatalog:occurrence:395406"
+
+[[statement]]
+kind = "set"
+subject = "var:variabel-kod-pin"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40625:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:variabel-kod-pin"
+fields = { "tags" = [] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40625:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:variabeldelmangd-benamning-pin-subsetid"
+fields = { "sets" = ["variabeldelmangd"] }
+evidence = "Kod och benämning delar källkolumn i samma period.\ncatalog:occurrence:396123\ncatalog:occurrence:396124"
+
+[[statement]]
+kind = "set"
+subject = "var:variabeldelmangd-benamning-pin-subsetid"
+fields = { "tags" = [] }
+evidence = "Kod och benämning delar källkolumn i samma period.\ncatalog:occurrence:396123\ncatalog:occurrence:396124"
+
+[[statement]]
+kind = "set"
+subject = "var:variableid"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40628:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:variableid"
+fields = { "tags" = [] }
+evidence = "Koden anger variabeltyp.\ncatalog:variable_text:40628:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:variablename"
+fields = { "sets" = ["variabelbeteckning"] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40629:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:variablename"
+fields = { "tags" = [] }
+evidence = "Benämningen anger variabeltyp.\ncatalog:variable_text:40629:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktkpc"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Variabeln anger uppräkningstal.\ncatalog:variable_text:40632:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktkpc"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger uppräkningstal.\ncatalog:variable_text:40632:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktomsp"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Variabeln anger ett preliminärt uppräkningstal.\ncatalog:variable_text:40633:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktomsp"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger ett preliminärt uppräkningstal.\ncatalog:variable_text:40633:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktomss"
+fields = { "sets" = ["upprakningstal"] }
+evidence = "Variabeln anger ett slutligt uppräkningstal.\ncatalog:variable_text:40634:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:viktomss"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger ett slutligt uppräkningstal.\ncatalog:variable_text:40634:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stratifieringskod"
+fields = { "sets" = ["stratumtillhorighet"] }
+evidence = "XGrupp är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40635:14335:16526"
+
+[[statement]]
+kind = "set"
+subject = "var:stratifieringskod"
+fields = { "tags" = ["methods"] }
+evidence = "XGrupp är en ogenomskinlig källmnemonik.\ncatalog:variable_text:40635:14335:16526"
+
+[[statement]]
+kind = "link"
+subject = "var:bgrupp"
+relation = "continues"
+object = "scb/pin/branschgrupp-bgrupp"
+at = "2022-01-01.."
+evidence = "PIN BGrupp: reporting group, 42 codes (2019-20) -> frame stratum industry group, 178 codes (2022+); grouping redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:branschgrupp-sni2007"
+relation = "continues"
+object = "scb/pin/branschgrupp-sni2002"
+at = "2009-04-01.."
+evidence = "PIN branschgr: SNI2002-based groups -> SNI2007-based groups (2009); classification revision."
+
+[[statement]]
+kind = "set"
+subject = "var:cutofftotal"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r281 defines a modelled turnover contribution from businesses below the cutoff, fitting the included alternative turnover estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40311\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40452"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r282 explicitly defines trade net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40322\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40463"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r283 explicitly defines trade net turnover on the domestic market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40323\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40464"
+
+[[statement]]
+kind = "set"
+subject = "var:handelsnettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r284 defines total-market trade net turnover. The export-market wording in r272 remains within the same fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40324\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:397288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40465"
+
+[[statement]]
+kind = "set"
+subject = "var:inclassid"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r285 despite the subset wording in r60 and r64.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40360\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395669\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40501"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r286 explicitly defines industrial net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40361\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40502"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r287 explicitly defines industrial net turnover on the domestic market, an included market component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40362\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40503"
+
+[[statement]]
+kind = "set"
+subject = "var:industrinettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r288 explicitly defines industrial net turnover for the total market, an included activity component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40363\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40504"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-mobilnr"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r290 defines a contact person's mobile telephone number; r292 supplies a qualifying partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40383\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40533"
+
+[[statement]]
+kind = "set"
+subject = "var:mobiluppg"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r292 defines a contact person's mobile telephone number; r290 supplies a qualifying partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40392\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40533"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-exportmarknad"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r293 defines the observation unit's net turnover on the export market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40543"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-hemmamarknad"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r294 defines the observation unit's net turnover on the domestic market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40403\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40544"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-modellskattad-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r295 and r221 explicitly describe a monetary net-turnover measure, fitting the included alternative estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40404\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396948\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40545"
+
+[[statement]]
+kind = "set"
+subject = "var:outclassid"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r298 despite the subset wording in r62 and r66.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40422\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395679\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40563"
+
+[[statement]]
+kind = "set"
+subject = "var:skattning-arsdeklaranter-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r299 defines a modelled turnover contribution for annual VAT declarants, fitting the included alternative turnover estimates.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40444\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40585"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "Coordinator-approved audit correction: Opdef 'Telefonnummer till företaget' in a business survey (scb/pin), where the company is the uppgiftslämnare; the group covers the respondent's phone number and lists this variable.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:68\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40457\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396501\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396549\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:396598"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonuppg"
+fields = { "sets" = ["kontakttelefonnummer"] }
+evidence = "r301 defines the respondent's telephone number, fitting the group alongside the contact mobile number in r290.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40458\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40599"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-exportmarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r302 explicitly defines service net turnover on the export market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40460\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40601"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-hemmamarknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r303 explicitly defines service net turnover on the domestic market, an included component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40461\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40602"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstenettoomsattning-totala-marknaden-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r304 defines service net turnover for the total market, an included activity component.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40462\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40603"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r305 defines the observation unit's total net turnover.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40463\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40604"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r306 explicitly defines directly collected total net turnover on the export market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40464\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40605"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-exportmarknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r307 explicitly defines export-market total net turnover derived from VAT information.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40465\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40606"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r308 explicitly defines directly collected total net turnover on the domestic market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40466\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40607"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-hemmamarknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r309 explicitly defines domestic-market total net turnover derived from VAT information.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40467\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40608"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-blankett-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r310 explicitly defines directly collected total net turnover for the total market.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40468\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40609"
+
+[[statement]]
+kind = "set"
+subject = "var:total-nettoomsattning-totala-marknaden-moms-pin"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "r311 explicitly defines total net turnover derived from VAT information; VAT is the source.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40469\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40610"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelklass-kod-pin"
+fields = { "sets" = ["variabelklass"] }
+evidence = "r280's complete codes combine variable, activity subset and market, matching the class definition in r313 despite the subset wording in r59 and r63.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40487\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:395705\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11524\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:40628"
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "description" = "Faxnummer. Numret avser företaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra innebörden.\ncatalog:variable_text:40482:15065:16526\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:396515:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:handelsmarginal"
+fields = { "description" = "Handelsmarginalen uttryckt i procent. Marginalen avser nettot mellan intäkter och kostnader vid handel med produkter mellan två aktörer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nProcenten anger en marginal, inte ett nettobelopp.\ncatalog:variable_text:40488:18993:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:396947:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-modellskattad-pin"
+fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inrikes-omsattning"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "The domestic annual turnover definition and derivation (r91, r65) support a market component covered by r136. Neither states that the amount includes VAT.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:396405\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40366\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/pin/nettoomsattning"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattning-enligt-moms"
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Annual turnover sourced from VAT declarations (r96), operationally the preceding year's turnover (r49), fits the turnover alternatives allowed by r136. VAT sourcing does not establish VAT-inclusive turnover.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:395626\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40407\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/pin/nettoomsattning"
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsvarde"
+fields = { "description" = "Företagsenhetens inlämnade omsättning för perioden, i tusental kronor. I vissa branscher ingår moms och export är undantagen; i övriga redovisas omsättning exklusive moms och inklusive export." }
+evidence = "Definition pass 2026-11-02: The source specifies branch-dependent VAT/export treatment; this is not uniformly net turnover.\nrel070-base/reg_meta.db:occurrence:396407\nrel070-base/reg_meta.db:occurrence:396446\nrel070-base/reg_meta.db:occurrence:396488\nrel070-base/reg_meta.db:occurrence:396533\nrel070-base/reg_meta.db:occurrence:396582\nrel070-base/reg_meta.db:occurrence:396634\nrel070-base/reg_meta.db:occurrence:396686\nrel070-base/reg_meta.db:occurrence:396739\nrel070-base/reg_meta.db:occurrence:396794\n\nDefinition-pass audit follow-up 2026-11-02: The source explicitly says Företagsenhetens; preserve that observational unit.\nAudit: definition-pass-audit.jsonl\nrel070-base/reg_meta.db:occurrence:396407\nrel070-base/reg_meta.db:occurrence:396446\nrel070-base/reg_meta.db:occurrence:396488\nrel070-base/reg_meta.db:occurrence:396533\nrel070-base/reg_meta.db:occurrence:396582\nrel070-base/reg_meta.db:occurrence:396634\nrel070-base/reg_meta.db:occurrence:396686\nrel070-base/reg_meta.db:occurrence:396739\nrel070-base/reg_meta.db:occurrence:396794"

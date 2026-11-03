@@ -7,7 +7,18 @@ SELECT pid FROM register EXCEPT SELECT pid FROM ident WHERE kind='register';
 -- The implicit table takes its register's id, held in ident as the register's.
 SELECT pid FROM tbl WHERE implicit = 0 EXCEPT SELECT pid FROM ident WHERE kind='table';
 SELECT pid FROM variable EXCEPT SELECT pid FROM ident WHERE kind='variable';
+SELECT pid FROM var_set WHERE kind='set' EXCEPT SELECT pid FROM ident WHERE kind='set';
 SELECT pid FROM ident INTERSECT SELECT pid FROM ident_retired;
+SELECT pid FROM var_set INTERSECT SELECT pid FROM ident_retired;
+-- Picking units contain at least two distinct final variables, all in their register.
+SELECT s.pid FROM var_set s LEFT JOIN var_set_member m ON m.set_id = s.id
+WHERE s.kind = 'set' GROUP BY s.id HAVING COUNT(DISTINCT m.variable_id) < 2;
+SELECT s.pid FROM var_set s JOIN var_set_member m ON m.set_id = s.id
+JOIN variable v ON v.id = m.variable_id
+WHERE s.kind = 'set' AND s.register_id <> v.register_id;
+-- Presentation axes belong to picking units and retain a dense authored order.
+SELECT a.set_id FROM var_set_axis a JOIN var_set s ON s.id = a.set_id WHERE s.kind <> 'set';
+SELECT set_id FROM var_set_axis GROUP BY set_id HAVING MIN(ord) <> 0 OR MAX(ord) + 1 <> COUNT(*);
 -- A register's bare-name key is its public name (the pid's last segment), not its handle.
 -- Public names are lowercase slugs, so SQL lower() agrees with fold_identity.
 SELECT pid FROM ident WHERE kind = 'register'
@@ -79,6 +90,10 @@ WHERE o.status = 'unplaced' AND (r.id IS NULL OR r.parse_state <> 'unparsed');
 
 -- search rows and FTS rows agree (contentless index: compare counts)
 SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_docsize);
+
+-- supplementary FTS rows use the primary search rowid of a variable
+SELECT d.id FROM search_description_docsize d LEFT JOIN search_item s ON s.id = d.id
+WHERE s.kind IS NOT 'variable';
 
 -- every code row's (code, label) pair occurs in vs_item (via vs_item_code)
 SELECT id FROM search_item s WHERE kind = 'code' AND NOT EXISTS (

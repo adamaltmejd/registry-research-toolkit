@@ -8,13 +8,84 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA is deleted from this checkout and archived on `archive/reg-webapp-spa`.
-Milestone E rewrites it on the v5 API from that archive and
-`claude/rebuild-s-shell-search`.
+The SPA shell, search, provider, register, table, variable, classification-version and
+loaded-project pages use the current API. The earlier SPA is archived on
+`archive/reg-webapp-spa`.
+
+## Loaded projects
+
+The browser keeps one working `project_data.json` in localStorage. WASM checks every
+opened file and name edit before it becomes a typed 5.1 draft. Rejected input stays
+unchanged for download or discard; no migration is attempted. Catalog validation uses
+the shared abortable resource hook, with issues under their source or binding and
+summary links that focus them. Opening a replacement or discarding the working copy asks
+first. Download remains available if browser persistence fails.
+
+The banner and project page share one catalog check. The banner retains the project
+name, source and column counts, verdict and download save state across routes. A
+restored local draft is recovery, so it remains unsaved until downloaded. The study
+window is an inline window-band picker bounded by the catalog's half-open period span. A
+new project carries over the browsing window or starts at 2015 through the catalog's
+last year. Moving the study window never rewrites source periods.
+
+Variable pages project their segments into a single coverage LaneGraph. A column is the
+exact table and spelling pair; selection and its availability-bounded add window are
+local to the page. Adding creates or widens one source per table and appends one binding
+per variable, using the segments' default type and agreed classification. WASM checks
+the candidate before the existing project store writes its sources. Source cards author
+binding type, classification pin, removal and source period through checked candidates
+and the same sources write path. Each table supplies a coverage row over its binding
+lanes on one shared data axis. Stored periods are never narrowed on load. Variable pages
+read one hop of succession relations into read-only neighbour lanes on the same
+timeline, with arrows from predecessor to successor and names linking to their variable
+pages. Adding starts from the variable page; register rows link there, and both those
+rows and already-bound columns show in-project state without a checkbox.
+
+The order page reads the logical order, grouping entry rows by source and table.
+Secondary fields are in each row's Details popover, so the table fits the narrow detail
+pane. Register-name reads are shared with catalog browsing; value-set names are read by
+their content identity without displaying hashes. Row keys, period clips and
+non-blocking findings remain separate. Panels return in W5b; manifests, resolve and
+steward workflows remain deferred.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
 SQL reader. Holdings, scope and steward branding return in milestone E.
+
+## Catalog pages
+
+Provider, register and table pages read `catalog/{ref}`; register and table findings
+come from `findings/{ref}`. They do not read variable segments. The generated OpenAPI
+types own the response shapes. An implicit table shares its register's FQID, so its
+canonical link opens the register; it has no separately addressable table page.
+
+Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
+to reg-core's inclusive interval renderer, without copying its period grammar. The
+register's `unplaced` list contains release names, not variable identities. Populations
+belong to releases and keep that context on the table page.
+
+Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: review items before
+notices, grouped under human titles with stable codes in delayed tooltips. Entries mount
+only when a group is expanded, keeping large registers usable without mounting thousands
+of notices on load. Subject links use register, table and variable names from the
+register response, falling back to identifiers only when names are unknown.
+`Finding.tsx` remains the separate project-validation renderer. Table releases also
+start collapsed and expand in edition order, marking primary releases. The obsolete
+variants browser has no route or data source; editions remain deferred.
+
+Variable value sets stay inline, deduplicated by hash across segments, with table and
+period coverage. Disclosures fetch codes on first expansion through `values`; hashes
+never become routes. Flat sets use debounced server search and cursor paging.
+Hierarchical sets start at level one, load children by parent code, and keep expanded
+branches while search shows flat matches with levels. Only active search shows a
+matching result count; sentinel items are labelled in plain words.
+
+Classification-version routes (`/catalog/class/<family>/<version>`) read `values` with
+`classification` directly: classifications are not `Show` nodes. Humanized version slugs
+and value-set names are the available title metadata. A family has no page because the
+API cannot list its versions. Classification umbrella group routes remain separate.
+Segments supply their own classification links; a null value-set classification is never
+inferred from its names.
 
 ## Why no auth — cost protection instead
 

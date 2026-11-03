@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "sets" = [] }
+evidence = "Utbetalt barnbidrag är en transferering.\ncatalog:variable_text:99:-8036:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Utbetalt barnbidrag är en transferering.\ncatalog:variable_text:99:-8036:2932897"

@@ -1,0 +1,7 @@
+[[statement]]
+kind = "link"
+subject = "var:slot2"
+relation = "derived_from"
+object = "demo/held/value"
+evidence = "Synthetic received position follows the documented provider concept."
+caveat = "Lineage preserves distinct variable identity and grants no possession."

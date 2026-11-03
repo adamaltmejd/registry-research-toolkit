@@ -1,0 +1,414 @@
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:55783:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:55783:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avliden-i-cancer"
+fields = { "sets" = [] }
+evidence = "Variabeln avser dödsfall i cancer.\ncatalog:variable_text:55785:-4383:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:avliden-i-cancer"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Variabeln avser dödsfall i cancer.\ncatalog:variable_text:55785:-4383:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "sets" = [] }
+evidence = "Civilstånd hör till familj och hushåll.\ncatalog:variable_text:55786:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:civil"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd hör till familj och hushåll.\ncatalog:variable_text:55786:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnosgrund"
+fields = { "sets" = [] }
+evidence = "Undersökningstypen beskriver diagnostisk vård.\ncatalog:variable_text:55789:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnosgrund"
+fields = { "tags" = ["healthcare"] }
+evidence = "Undersökningstypen beskriver diagnostisk vård.\ncatalog:variable_text:55789:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Distriktet anger patientens geografiska hemvist vid diagnos.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Distriktet anger patientens geografiska hemvist vid diagnos.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:figo"
+fields = { "sets" = [] }
+evidence = "FIGO beskriver utbredningen av gynekologiska tumörer.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:figo"
+fields = { "tags" = ["health"] }
+evidence = "FIGO beskriver utbredningen av gynekologiska tumörer.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = [] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:55794:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:55794:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "sets" = [] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:55795:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-sas"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum är en demografisk uppgift.\ncatalog:variable_text:55795:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:framskriving-folkbokforingsort"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en framskriven geografisk hemvist.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:framskriving-folkbokforingsort"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger en framskriven geografisk hemvist.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hrmfr-felkod"
+fields = { "sets" = [] }
+evidence = "HEMFRF är en opak källkod; etiketten identifierar felkoden.\ncatalog:variable_text:55797:365:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hrmfr-felkod"
+fields = { "tags" = ["methods"] }
+evidence = "HEMFRF är en opak källkod; etiketten identifierar felkoden.\ncatalog:variable_text:55797:365:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:histopatologisk-diagnos"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar tumörens histopatologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:histopatologisk-diagnos"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln kodar tumörens histopatologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorer-for-incidensberakning"
+fields = { "sets" = [] }
+evidence = "IARCINC är en opak källmnemonik för tumörer som ingår i incidensberäkning.\ncatalog:variable_text:55799:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorer-for-incidensberakning"
+fields = { "tags" = ["health"] }
+evidence = "IARCINC är en opak källmnemonik för tumörer som ingår i incidensberäkning.\ncatalog:variable_text:55799:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd-o-2-med-icd-10"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd-o-2-med-icd-10"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd-o-3"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd-o-3"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd7"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd7"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd9"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:icd9"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens lokalisation.\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "sets" = [] }
+evidence = "Kliniken är en vårdenhet där diagnosen fastställdes.\ncatalog:variable_text:55805:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:klinik"
+fields = { "tags" = ["healthcare"] }
+evidence = "Kliniken är en vårdenhet där diagnosen fastställdes.\ncatalog:variable_text:55805:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:55806:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:55806:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling-vid-diagnos"
+fields = { "sets" = [] }
+evidence = "Variabeln anger patientens geografiska hemvist vid diagnos.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-kommun-forsamling-vid-diagnos"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger patientens geografiska hemvist vid diagnos.\ncatalog:variable_text:55790:16801:2932897\ncatalog:variable_text:55796:365:2932897\ncatalog:variable_text:55807:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:malign-benign"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver tumörens malignitet.\ncatalog:variable_text:55809:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:malign-benign"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln beskriver tumörens malignitet.\ncatalog:variable_text:55809:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:morfologisk-typ"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver tumörens morfologiska typ.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:morfologisk-typ"
+fields = { "tags" = ["health"] }
+evidence = "Variabeln beskriver tumörens morfologiska typ.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktionsfynd"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver ett fynd relaterat till tumör och dödsfall.\ncatalog:valueset:7009\ncatalog:variable_text:55812:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktionsfynd"
+fields = { "tags" = ["health", "mortality"] }
+evidence = "Variabeln beskriver ett fynd relaterat till tumör och dödsfall.\ncatalog:valueset:7009\ncatalog:variable_text:55812:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patolog-cytolog"
+fields = { "sets" = [] }
+evidence = "Variabeln anger den diagnostiserande vårdavdelningen.\ncatalog:variable_text:55813:365:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:patolog-cytolog"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger den diagnostiserande vårdavdelningen.\ncatalog:variable_text:55813:365:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:55815:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:55815:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sida"
+fields = { "sets" = [] }
+evidence = "Sida beskriver tumörens anatomiska läge.\ncatalog:variable_text:55821:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sida"
+fields = { "tags" = ["health"] }
+evidence = "Sida beskriver tumörens anatomiska läge.\ncatalog:variable_text:55821:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en vårdinrättning.\ncatalog:variable_text:55822:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhus"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger en vårdinrättning.\ncatalog:variable_text:55822:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvardsregion"
+fields = { "sets" = [] }
+evidence = "Variabeln anger en ansvarig sjukvårdsregion.\ncatalog:variable_text:55823:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvardsregion"
+fields = { "tags" = ["geography", "healthcare"] }
+evidence = "Variabeln anger en ansvarig sjukvårdsregion.\ncatalog:variable_text:55823:-4383:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snomed-o-2-10"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens morfologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snomed-o-2-10"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens morfologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snomed-o-3"
+fields = { "sets" = [] }
+evidence = "Koden beskriver tumörens morfologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:snomed-o-3"
+fields = { "tags" = ["health"] }
+evidence = "Koden beskriver tumörens morfologiska diagnos.\ncatalog:variable_text:55798:-4383:2932897\ncatalog:variable_text:55810:12418:2932897\ncatalog:variable_text:55824:8401:2932897\ncatalog:variable_text:55825:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tnmgrund"
+fields = { "sets" = [] }
+evidence = "Variabeln anger undersökningen bakom TNM-bedömningen.\ncatalog:variable_text:55828:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tnmgrund"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln anger undersökningen bakom TNM-bedömningen.\ncatalog:variable_text:55828:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:topografisk-kod"
+fields = { "sets" = [] }
+evidence = "Kodlistan anger tumörens anatomiska lokalisation.\ncatalog:valueset:12488\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:topografisk-kod"
+fields = { "tags" = ["health"] }
+evidence = "Kodlistan anger tumörens anatomiska lokalisation.\ncatalog:valueset:12488\ncatalog:variable_text:55800:8401:2932897\ncatalog:variable_text:55801:12784:2932897\ncatalog:variable_text:55802:-4383:2932897\ncatalog:variable_text:55803:6209:2932897\ncatalog:variable_text:55830:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-m-kategori"
+fields = { "sets" = [] }
+evidence = "M-kategorin beskriver fjärrmetastaser.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-m-kategori"
+fields = { "tags" = ["health"] }
+evidence = "M-kategorin beskriver fjärrmetastaser.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-n-kategori"
+fields = { "sets" = [] }
+evidence = "N-kategorin beskriver tumörutbredning i lymfkörtlar.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-n-kategori"
+fields = { "tags" = ["health"] }
+evidence = "N-kategorin beskriver tumörutbredning i lymfkörtlar.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-t-kategori"
+fields = { "sets" = [] }
+evidence = "T-kategorin beskriver tumörens storlek.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tumorutbredning-t-kategori"
+fields = { "tags" = ["health"] }
+evidence = "T-kategorin beskriver tumörens storlek.\ncatalog:variable_text:55793:12418:2932897\ncatalog:variable_text:55833:12418:2932897\ncatalog:variable_text:55834:12418:2932897\ncatalog:variable_text:55835:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:obduktionsfynd"
+fields = { "description" = "Anger om tumören identifierades vid obduktion. 1 anger att tumören inte var känd före dödsfallet och 2 att tumören var känd före dödsfallet." }
+evidence = "Docs description review 2026-11-02; one variable, one description. The Cancer Register metadata names OBD1, the matching Obduktionsfynd label, the definition and both codes, with a start year of 1958. No diagnosis or clinical inference is added.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/register-variabelforteckning-cancerregistret.xlsx; sheet Metadata - Variabelnivå, extracted row 59, column OBD1; staged:01356f83728cf8916904040a34231ecc6c86c8523001832fcff9dbfce5c8c6ba:page:4:chars:10450-10713"

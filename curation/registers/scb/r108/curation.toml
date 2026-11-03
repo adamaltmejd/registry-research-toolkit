@@ -58,3 +58,2470 @@ kind = "set"
 subject = "gymnasieungdomars-studieintresse: ssyk"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:23361:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:23361:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:andrahandsval-amnesomrade"
+fields = { "sets" = ["val-av-amnesomrade"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder; ämnesvalet tillhör kandidatgruppen.\ncatalog:occurrence:217916\ncatalog:occurrence:217999\ncatalog:occurrence:218055\ncatalog:occurrence:218126"
+
+[[statement]]
+kind = "set"
+subject = "var:andrahandsval-amnesomrade"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder; ämnesvalet tillhör kandidatgruppen.\ncatalog:occurrence:217916\ncatalog:occurrence:217999\ncatalog:occurrence:218055\ncatalog:occurrence:218126"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-hogskola"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder.\ncatalog:occurrence:217917\ncatalog:occurrence:217940\ncatalog:occurrence:217997\ncatalog:occurrence:218127\ncatalog:occurrence:218254\ncatalog:occurrence:218348"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder.\ncatalog:occurrence:217917\ncatalog:occurrence:217940\ncatalog:occurrence:217997\ncatalog:occurrence:218127\ncatalog:occurrence:218254\ncatalog:occurrence:218348"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs3"
+fields = { "sets" = [] }
+evidence = "Årskurs är ett utbildningsmått.\ncatalog:variable_text:23364:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs3"
+fields = { "tags" = ["education"] }
+evidence = "Årskurs är ett utbildningsmått.\ncatalog:variable_text:23364:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:avreg2"
+fields = { "sets" = ["avregistreringskod"] }
+evidence = "Avregistreringskod för den långa enkäten.\ncatalog:occurrence:217977\ncatalog:valueset:4955"
+
+[[statement]]
+kind = "set"
+subject = "var:avreg2"
+fields = { "tags" = ["methods"] }
+evidence = "Avregistreringskod för den långa enkäten.\ncatalog:occurrence:217977\ncatalog:valueset:4955"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "sets" = ["avregistreringskod"] }
+evidence = "Koden avser svarande, bortfall och övertäckning.\ncatalog:occurrence:217796\ncatalog:valueset:791"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden avser svarande, bortfall och övertäckning.\ncatalog:occurrence:217796\ncatalog:valueset:791"
+
+[[statement]]
+kind = "set"
+subject = "var:distansstudier"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "Kolumnidentiteten delas med andra begrepp i andra perioder; variabeln beskriver inställning till distansstudier.\ncatalog:occurrence:217952\ncatalog:occurrence:218014\ncatalog:occurrence:218017\ncatalog:occurrence:218057\ncatalog:occurrence:218060\ncatalog:occurrence:218239\ncatalog:occurrence:218329"
+
+[[statement]]
+kind = "set"
+subject = "var:distansstudier"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnidentiteten delas med andra begrepp i andra perioder; variabeln beskriver inställning till distansstudier.\ncatalog:occurrence:217952\ncatalog:occurrence:218014\ncatalog:occurrence:218017\ncatalog:occurrence:218057\ncatalog:occurrence:218060\ncatalog:occurrence:218239\ncatalog:occurrence:218329"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-fungerat"
+fields = { "tags" = ["education"] }
+evidence = "F28 används för olika begrepp i olika perioder.\ncatalog:occurrence:218370\ncatalog:occurrence:218467"
+
+[[statement]]
+kind = "set"
+subject = "var:erbjuden-kurser-behorighet"
+fields = { "sets" = [] }
+evidence = "F23 har olika ägare mellan perioder.\ncatalog:occurrence:218092\ncatalog:occurrence:218184\ncatalog:occurrence:218359\ncatalog:occurrence:218449"
+
+[[statement]]
+kind = "set"
+subject = "var:erbjuden-kurser-behorighet"
+fields = { "tags" = ["education"] }
+evidence = "F23 har olika ägare mellan perioder.\ncatalog:occurrence:218092\ncatalog:occurrence:218184\ncatalog:occurrence:218359\ncatalog:occurrence:218449"
+
+[[statement]]
+kind = "set"
+subject = "var:f14-05"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnen har olika ägare och svarsalternativ mellan perioderna.\ncatalog:occurrence:217958\ncatalog:occurrence:218336\ncatalog:occurrence:218432"
+
+[[statement]]
+kind = "set"
+subject = "var:f14-05"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har olika ägare och svarsalternativ mellan perioderna.\ncatalog:occurrence:217958\ncatalog:occurrence:218336\ncatalog:occurrence:218432"
+
+[[statement]]
+kind = "set"
+subject = "var:f14-07"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnen har olika ägare och definitionen motsäger frågetexten.\ncatalog:occurrence:217960\ncatalog:occurrence:218338\ncatalog:occurrence:218434\ncatalog:variable_text:23371:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f14-07"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har olika ägare och definitionen motsäger frågetexten.\ncatalog:occurrence:217960\ncatalog:occurrence:218338\ncatalog:occurrence:218434\ncatalog:variable_text:23371:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f17"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17 används för olika begrepp i olika perioder.\ncatalog:occurrence:218019\ncatalog:occurrence:218342"
+
+[[statement]]
+kind = "set"
+subject = "var:f17"
+fields = { "tags" = ["education"] }
+evidence = "F17 används för olika begrepp i olika perioder.\ncatalog:occurrence:218019\ncatalog:occurrence:218342"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-01"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17_01 används för olika begrepp i olika perioder.\ncatalog:occurrence:218244\ncatalog:occurrence:218343"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-01"
+fields = { "tags" = ["education"] }
+evidence = "F17_01 används för olika begrepp i olika perioder.\ncatalog:occurrence:218244\ncatalog:occurrence:218343"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-02"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17_02 används för olika begrepp i olika perioder.\ncatalog:occurrence:218245\ncatalog:occurrence:218344"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-02"
+fields = { "tags" = ["education"] }
+evidence = "F17_02 används för olika begrepp i olika perioder.\ncatalog:occurrence:218245\ncatalog:occurrence:218344"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-03"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17_03 används för olika begrepp i olika perioder.\ncatalog:occurrence:218246\ncatalog:occurrence:218345"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-03"
+fields = { "tags" = ["education", "transfers"] }
+evidence = "F17_03 används för olika begrepp i olika perioder.\ncatalog:occurrence:218246\ncatalog:occurrence:218345"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-04"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17_04 används för olika begrepp i olika perioder.\ncatalog:occurrence:218247\ncatalog:occurrence:218346"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-04"
+fields = { "tags" = ["education"] }
+evidence = "F17_04 används för olika begrepp i olika perioder.\ncatalog:occurrence:218247\ncatalog:occurrence:218346"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-05"
+fields = { "sets" = ["installning-till-distansstudier"] }
+evidence = "F17_05 används för olika begrepp i olika perioder.\ncatalog:occurrence:218248\ncatalog:occurrence:218347"
+
+[[statement]]
+kind = "set"
+subject = "var:f17-05"
+fields = { "tags" = ["education"] }
+evidence = "F17_05 används för olika begrepp i olika perioder.\ncatalog:occurrence:218248\ncatalog:occurrence:218347"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-04"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnen och svarsalternativet varierar mellan perioderna.\ncatalog:occurrence:218291\ncatalog:occurrence:218375\ncatalog:occurrence:218483"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-04"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och svarsalternativet varierar mellan perioderna.\ncatalog:occurrence:218291\ncatalog:occurrence:218375\ncatalog:occurrence:218483"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-05"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "De perioddelade ägarna behöver granskas mot den avvikande etiketten.\ncatalog:occurrence:218292\ncatalog:occurrence:218376\ncatalog:occurrence:218484"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-05"
+fields = { "tags" = ["education"] }
+evidence = "De perioddelade ägarna behöver granskas mot den avvikande etiketten.\ncatalog:occurrence:218292\ncatalog:occurrence:218376\ncatalog:occurrence:218484"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-07"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har olika svarsalternativ och ägare.\ncatalog:occurrence:218294\ncatalog:occurrence:218378\ncatalog:occurrence:218486"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-07"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ och ägare.\ncatalog:occurrence:218294\ncatalog:occurrence:218378\ncatalog:occurrence:218486"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-08"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnen återanvänds för olika alternativ.\ncatalog:occurrence:218295\ncatalog:occurrence:218379"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-08"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för olika alternativ.\ncatalog:occurrence:218295\ncatalog:occurrence:218379"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-09"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har överlappande och periodvis olika mappningar.\ncatalog:occurrence:218296\ncatalog:occurrence:218380\ncatalog:occurrence:218381"
+
+[[statement]]
+kind = "set"
+subject = "var:f2-09"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har överlappande och periodvis olika mappningar.\ncatalog:occurrence:218296\ncatalog:occurrence:218380\ncatalog:occurrence:218381"
+
+[[statement]]
+kind = "set"
+subject = "var:f22"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22 används för olika begrepp i olika perioder.\ncatalog:occurrence:218272\ncatalog:occurrence:218352\ncatalog:occurrence:218448"
+
+[[statement]]
+kind = "set"
+subject = "var:f22"
+fields = { "tags" = ["education"] }
+evidence = "F22 används för olika begrepp i olika perioder.\ncatalog:occurrence:218272\ncatalog:occurrence:218352\ncatalog:occurrence:218448"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-lon"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_01 är en ogenomskinlig frågekod; etiketten anger försörjning med lön.\ncatalog:variable_text:23384:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-lon"
+fields = { "tags" = ["education", "income"] }
+evidence = "F22_01 är en ogenomskinlig frågekod; etiketten anger försörjning med lön.\ncatalog:variable_text:23384:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-studiemedel"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_02 är en ogenomskinlig frågekod; etiketten anger försörjning med studiemedel.\ncatalog:variable_text:23385:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-studiemedel"
+fields = { "tags" = ["education", "transfers"] }
+evidence = "F22_02 är en ogenomskinlig frågekod; etiketten anger försörjning med studiemedel.\ncatalog:variable_text:23385:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-besparingar"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_03 är en ogenomskinlig frågekod; etiketten anger försörjning med besparingar.\ncatalog:variable_text:23386:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-besparingar"
+fields = { "tags" = ["education", "wealth"] }
+evidence = "F22_03 är en ogenomskinlig frågekod; etiketten anger försörjning med besparingar.\ncatalog:variable_text:23386:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-lan-foraldrar-slaktingar"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_04 är en ogenomskinlig frågekod; etiketten anger lån från föräldrar eller släktingar.\ncatalog:variable_text:23387:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjning-hogskolestudier-lan-foraldrar-slaktingar"
+fields = { "tags" = ["education", "finance"] }
+evidence = "F22_04 är en ogenomskinlig frågekod; etiketten anger lån från föräldrar eller släktingar.\ncatalog:variable_text:23387:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f22-05"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_05 är en ogenomskinlig frågekod; etiketten anger ekonomiskt bidrag från föräldrar eller släktingar.\ncatalog:variable_text:23388:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f22-05"
+fields = { "tags" = ["education"] }
+evidence = "F22_05 är en ogenomskinlig frågekod; etiketten anger ekonomiskt bidrag från föräldrar eller släktingar.\ncatalog:variable_text:23388:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f22-06"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F22_06 är en ogenomskinlig frågekod; etiketten anger annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f22-06"
+fields = { "tags" = ["education"] }
+evidence = "F22_06 är en ogenomskinlig frågekod; etiketten anger annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f23"
+fields = { "sets" = [] }
+evidence = "F23 används för olika begrepp i olika perioder; kännedom om distansstudier ingår inte i kandidaten för inställning.\ncatalog:occurrence:218273\ncatalog:occurrence:218359\ncatalog:occurrence:218449"
+
+[[statement]]
+kind = "set"
+subject = "var:f23"
+fields = { "tags" = ["education"] }
+evidence = "F23 används för olika begrepp i olika perioder; kännedom om distansstudier ingår inte i kandidaten för inställning.\ncatalog:occurrence:218273\ncatalog:occurrence:218359\ncatalog:occurrence:218449"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-rad-vid-hogskolestudier-fran-foraldrar"
+fields = { "sets" = ["rad-om-hogskolestudier"] }
+evidence = "F24a är en opak frågekod och etiketten identifierar föräldrars råd.\ncatalog:variable_text:23391:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-rad-vid-hogskolestudier-fran-foraldrar"
+fields = { "tags" = ["education"] }
+evidence = "F24a är en opak frågekod och etiketten identifierar föräldrars råd.\ncatalog:variable_text:23391:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-rad-vid-hogskolestudier-fran-vanner"
+fields = { "sets" = ["rad-om-hogskolestudier"] }
+evidence = "F24b är en opak frågekod och etiketten identifierar vänners råd.\ncatalog:variable_text:23392:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-rad-vid-hogskolestudier-fran-vanner"
+fields = { "tags" = ["education"] }
+evidence = "F24b är en opak frågekod och etiketten identifierar vänners råd.\ncatalog:variable_text:23392:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-fordelaktigt"
+fields = { "sets" = ["attityder-till-studielan"] }
+evidence = "F25_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23393:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-fordelaktigt"
+fields = { "tags" = ["transfers"] }
+evidence = "F25_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23393:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-jobbigt-att-betala-tillbaka"
+fields = { "sets" = ["attityder-till-studielan"] }
+evidence = "F25_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23394:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-jobbigt-att-betala-tillbaka"
+fields = { "tags" = ["transfers"] }
+evidence = "F25_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23394:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-vara-sjalvstandig"
+fields = { "sets" = ["attityder-till-studielan"] }
+evidence = "F25_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23395:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-vara-sjalvstandig"
+fields = { "tags" = ["transfers"] }
+evidence = "F25_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23395:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-04"
+fields = { "sets" = ["attityder-till-studielan"] }
+evidence = "F25_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23396:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:f25-04"
+fields = { "tags" = ["transfers"] }
+evidence = "F25_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23396:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-annat"
+fields = { "sets" = ["attityder-till-studielan"] }
+evidence = "F25_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23397:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:tankar-om-studielan-annat"
+fields = { "tags" = ["transfers"] }
+evidence = "F25_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23397:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-muntlig-studie-yrkesvagledare-larare-gymnasiet"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F25j är en opak källkod; etiketten beskriver informationskällan.\ncatalog:variable_text:23398:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-muntlig-studie-yrkesvagledare-larare-gymnasiet"
+fields = { "tags" = ["education"] }
+evidence = "F25j är en opak källkod; etiketten beskriver informationskällan.\ncatalog:variable_text:23398:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-studielan-och-bidrag"
+fields = { "sets" = ["kannedom-om-studiestod"] }
+evidence = "F27 är en ogenomskinlig frågekod.\ncatalog:variable_text:23399:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-studielan-och-bidrag"
+fields = { "tags" = ["transfers"] }
+evidence = "F27 är en ogenomskinlig frågekod.\ncatalog:variable_text:23399:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-schema"
+fields = { "tags" = ["education"] }
+evidence = "F29_01 är en ogenomskinlig frågekod.\ncatalog:variable_text:23400:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lararhjalp"
+fields = { "tags" = ["education"] }
+evidence = "F29_02 är en ogenomskinlig frågekod.\ncatalog:variable_text:23401:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-delaktighet-under-lektioner"
+fields = { "tags" = ["education"] }
+evidence = "F29_03 är en ogenomskinlig frågekod.\ncatalog:variable_text:23402:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktivit-deltagande"
+fields = { "tags" = ["education"] }
+evidence = "F29_04 är en ogenomskinlig frågekod.\ncatalog:variable_text:23403:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-tekniska-problem"
+fields = { "tags" = ["education"] }
+evidence = "F29_05 är en ogenomskinlig frågekod.\ncatalog:variable_text:23404:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-omgivningen-stor"
+fields = { "tags" = ["education"] }
+evidence = "F29_06 är en ogenomskinlig frågekod.\ncatalog:variable_text:23405:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-individens-maende"
+fields = { "tags" = ["education"] }
+evidence = "F29_07 är en ogenomskinlig frågekod.\ncatalog:variable_text:23406:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktiviteter-for-maende"
+fields = { "tags" = ["education"] }
+evidence = "F29_08 är en ogenomskinlig frågekod.\ncatalog:variable_text:23407:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-starka-gemenskapen"
+fields = { "tags" = ["education"] }
+evidence = "F29_09 är en ogenomskinlig frågekod.\ncatalog:variable_text:23408:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-hjalp-hemifran"
+fields = { "tags" = ["education"] }
+evidence = "F29_10 är en ogenomskinlig frågekod.\ncatalog:variable_text:23409:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-sallskap-hemma"
+fields = { "tags" = ["education"] }
+evidence = "F29_11 är en ogenomskinlig frågekod.\ncatalog:variable_text:23410:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-foralders-intresse"
+fields = { "tags" = ["education"] }
+evidence = "F29_12 är en ogenomskinlig frågekod.\ncatalog:variable_text:23411:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-digitalt-motesverktyg"
+fields = { "sets" = ["undervisningsformer-vid-distansundervisning"] }
+evidence = "F30_01 är en ogenomskinlig frågekod.\ncatalog:occurrence:218488\ncatalog:valueset:6465\ncatalog:variable_text:23412:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-digitalt-motesverktyg"
+fields = { "tags" = ["digital", "education"] }
+evidence = "F30_01 är en ogenomskinlig frågekod.\ncatalog:occurrence:218488\ncatalog:valueset:6465\ncatalog:variable_text:23412:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-inspelade-lektioner"
+fields = { "sets" = ["undervisningsformer-vid-distansundervisning"] }
+evidence = "F30_02 är en ogenomskinlig frågekod.\ncatalog:occurrence:218489\ncatalog:valueset:6465\ncatalog:variable_text:23413:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-inspelade-lektioner"
+fields = { "tags" = ["education"] }
+evidence = "F30_02 är en ogenomskinlig frågekod.\ncatalog:occurrence:218489\ncatalog:valueset:6465\ncatalog:variable_text:23413:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
+fields = { "tags" = ["education"] }
+evidence = "F31 är en opak frågekod. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f32"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har olika innehåll mellan perioderna. Coordinator group membership: Helhetsbedömningen och de redovisade aspekterna av undervisningens funktion omfattas, inklusive upplevt lärande och motivation. Ämnesspecifika bedömningar och undervisningsverktyg hålls utanför.\ncatalog:occurrence:218398\ncatalog:occurrence:218490\ncatalog:occurrence:218491\ncatalog:variable_text:23368:18809:19174\ncatalog:variable_text:23400:18809:19174\ncatalog:variable_text:23401:18809:19174\ncatalog:variable_text:23402:18809:19174\ncatalog:variable_text:23403:18809:19174\ncatalog:variable_text:23404:18809:19174\ncatalog:variable_text:23405:18809:19174\ncatalog:variable_text:23406:18809:19174\ncatalog:variable_text:23407:18809:19174\ncatalog:variable_text:23408:18809:19174\ncatalog:variable_text:23409:18809:19174\ncatalog:variable_text:23410:18809:19174\ncatalog:variable_text:23411:18809:19174\ncatalog:variable_text:23414:18809:19174\ncatalog:variable_text:23415:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-inriktningsspecifikt-amne"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33 är en opak frågekod.\ncatalog:variable_text:23416:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-inriktningsspecifikt-amne"
+fields = { "tags" = ["education"] }
+evidence = "F33 är en opak frågekod.\ncatalog:variable_text:23416:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-engelska"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-01 är en opak frågekod.\ncatalog:variable_text:23417:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-engelska"
+fields = { "tags" = ["education"] }
+evidence = "F33-01 är en opak frågekod.\ncatalog:variable_text:23417:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f33-02"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "Etikett och frågetext anger olika ämnen.\ncatalog:occurrence:218494\ncatalog:variable_text:23418:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f33-02"
+fields = { "tags" = ["education"] }
+evidence = "Etikett och frågetext anger olika ämnen.\ncatalog:occurrence:218494\ncatalog:variable_text:23418:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-idrott-och-halsa"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-03 är en opak frågekod.\ncatalog:variable_text:23419:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-idrott-och-halsa"
+fields = { "tags" = ["education"] }
+evidence = "F33-03 är en opak frågekod.\ncatalog:variable_text:23419:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-matematik"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-04 är en opak frågekod.\ncatalog:variable_text:23420:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-matematik"
+fields = { "tags" = ["education"] }
+evidence = "F33-04 är en opak frågekod.\ncatalog:variable_text:23420:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-naturkunskap"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-05 är en opak frågekod.\ncatalog:variable_text:23421:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-naturkunskap"
+fields = { "tags" = ["education"] }
+evidence = "F33-05 är en opak frågekod.\ncatalog:variable_text:23421:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-religionskunskap"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-06 är en opak frågekod.\ncatalog:variable_text:23422:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-religionskunskap"
+fields = { "tags" = ["education"] }
+evidence = "F33-06 är en opak frågekod.\ncatalog:variable_text:23422:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-samhallskunskap"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-07 är en opak frågekod.\ncatalog:variable_text:23423:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-amne-samhallskunskap"
+fields = { "tags" = ["education"] }
+evidence = "F33-07 är en opak frågekod.\ncatalog:variable_text:23423:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-svenska-svenska-andrasprak"
+fields = { "sets" = ["svaraste-amnen-vid-distansundervisning"] }
+evidence = "F33-08 är en opak frågekod.\ncatalog:variable_text:23424:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-svarast-svenska-svenska-andrasprak"
+fields = { "tags" = ["education"] }
+evidence = "F33-08 är en opak frågekod.\ncatalog:variable_text:23424:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-inriktningsspecifikt-amne"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34 är en opak frågekod.\ncatalog:variable_text:23425:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-inriktningsspecifikt-amne"
+fields = { "tags" = ["education"] }
+evidence = "F34 är en opak frågekod.\ncatalog:variable_text:23425:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-engelska"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-01 är en opak frågekod.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-engelska"
+fields = { "tags" = ["education"] }
+evidence = "F34-01 är en opak frågekod.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-historia"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-02 är en opak frågekod.\ncatalog:variable_text:23427:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-historia"
+fields = { "tags" = ["education"] }
+evidence = "F34-02 är en opak frågekod.\ncatalog:variable_text:23427:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-idrott-och-halsa"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-03 är en opak frågekod.\ncatalog:variable_text:23428:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-idrott-och-halsa"
+fields = { "tags" = ["education"] }
+evidence = "F34-03 är en opak frågekod.\ncatalog:variable_text:23428:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-matematik"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-04 är en opak frågekod.\ncatalog:variable_text:23429:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-matematik"
+fields = { "tags" = ["education"] }
+evidence = "F34-04 är en opak frågekod.\ncatalog:variable_text:23429:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-naturkunskap"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-05 är en opak frågekod.\ncatalog:variable_text:23430:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-naturkunskap"
+fields = { "tags" = ["education"] }
+evidence = "F34-05 är en opak frågekod.\ncatalog:variable_text:23430:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-religionskunskap"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-06 är en opak frågekod.\ncatalog:variable_text:23431:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-religionskunskap"
+fields = { "tags" = ["education"] }
+evidence = "F34-06 är en opak frågekod.\ncatalog:variable_text:23431:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-07 är en opak frågekod.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
+fields = { "tags" = ["education"] }
+evidence = "F34-07 är en opak frågekod.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f34-08"
+fields = { "sets" = ["battre-amnen-vid-distansundervisning"] }
+evidence = "F34-08 är en opak frågekod.\ncatalog:variable_text:23433:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f34-08"
+fields = { "tags" = ["education"] }
+evidence = "F34-08 är en opak frågekod.\ncatalog:variable_text:23433:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "sets" = ["typ-av-hogskolestudier"] }
+evidence = "F5 används för olika begrepp i olika perioder.\ncatalog:occurrence:217914\ncatalog:occurrence:218124"
+
+[[statement]]
+kind = "set"
+subject = "var:f5"
+fields = { "tags" = ["education"] }
+evidence = "F5 används för olika begrepp i olika perioder.\ncatalog:occurrence:217914\ncatalog:occurrence:218124"
+
+[[statement]]
+kind = "set"
+subject = "var:f6"
+fields = { "sets" = ["hogskolestudier-utomlands"] }
+evidence = "F6 används för olika begrepp i olika perioder.\ncatalog:occurrence:217915\ncatalog:occurrence:218125"
+
+[[statement]]
+kind = "set"
+subject = "var:f6"
+fields = { "tags" = ["education"] }
+evidence = "F6 används för olika begrepp i olika perioder.\ncatalog:occurrence:217915\ncatalog:occurrence:218125"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:23436:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:23436:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-grupp"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:valueset:10711\ncatalog:variable_text:23437:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-grupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:valueset:10711\ncatalog:variable_text:23437:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "sets" = [] }
+evidence = "Variabeln avser föräldrars utbildning, men definition och värden skiljer sig.\ncatalog:valueset:2349\ncatalog:variable_text:23438:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser föräldrars utbildning, men definition och värden skiljer sig.\ncatalog:valueset:2349\ncatalog:variable_text:23438:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:forstahandsval-amnesomrade"
+fields = { "sets" = ["val-av-amnesomrade"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder.\ncatalog:occurrence:217915\ncatalog:occurrence:217917\ncatalog:occurrence:218125\ncatalog:occurrence:218127"
+
+[[statement]]
+kind = "set"
+subject = "var:forstahandsval-amnesomrade"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare mellan perioder.\ncatalog:occurrence:217915\ncatalog:occurrence:217917\ncatalog:occurrence:218125\ncatalog:occurrence:218127"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppkod"
+fields = { "sets" = [] }
+evidence = "Koden anger enkätgrupp i undersökningen.\ncatalog:variable_text:23440:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppkod"
+fields = { "tags" = ["methods"] }
+evidence = "Koden anger enkätgrupp i undersökningen.\ncatalog:variable_text:23440:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Samma källkolumn används för detaljerade respektive grupperade program.\ncatalog:occurrence:217881\ncatalog:occurrence:218046"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn används för detaljerade respektive grupperade program.\ncatalog:occurrence:217881\ncatalog:occurrence:218046"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Källkolumnen har perioddelade ägare som behöver granskas.\ncatalog:occurrence:218231\ncatalog:occurrence:218321"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har perioddelade ägare som behöver granskas.\ncatalog:occurrence:218231\ncatalog:occurrence:218321"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-program"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Kolumnen har perioddelade ägare med olika etiketter.\ncatalog:occurrence:218137\ncatalog:occurrence:218525"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-program"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnen har perioddelade ägare med olika etiketter.\ncatalog:occurrence:218137\ncatalog:occurrence:218525"
+
+[[statement]]
+kind = "set"
+subject = "var:heltid-eller-deltid"
+fields = { "sets" = [] }
+evidence = "F12 och F13 har olika ägare mellan perioder.\ncatalog:occurrence:217953\ncatalog:occurrence:218015\ncatalog:occurrence:218239\ncatalog:occurrence:218240\ncatalog:occurrence:218329\ncatalog:occurrence:218330"
+
+[[statement]]
+kind = "set"
+subject = "var:heltid-eller-deltid"
+fields = { "tags" = ["education"] }
+evidence = "F12 och F13 har olika ägare mellan perioder.\ncatalog:occurrence:217953\ncatalog:occurrence:218015\ncatalog:occurrence:218239\ncatalog:occurrence:218240\ncatalog:occurrence:218329\ncatalog:occurrence:218330"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolekod"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna har olika ägare och den senaste perioden har ja/nej-värden i stället för lärosäteskoder.\ncatalog:occurrence:217918\ncatalog:occurrence:218018\ncatalog:occurrence:218019\ncatalog:occurrence:218061\ncatalog:occurrence:218128\ncatalog:occurrence:218153\ncatalog:occurrence:218240\ncatalog:occurrence:218243\ncatalog:occurrence:218330\ncatalog:occurrence:218341\ncatalog:occurrence:218342\ncatalog:valueset:3973"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolekod"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare och den senaste perioden har ja/nej-värden i stället för lärosäteskoder.\ncatalog:occurrence:217918\ncatalog:occurrence:218018\ncatalog:occurrence:218019\ncatalog:occurrence:218061\ncatalog:occurrence:218128\ncatalog:occurrence:218153\ncatalog:occurrence:218240\ncatalog:occurrence:218243\ncatalog:occurrence:218330\ncatalog:occurrence:218341\ncatalog:occurrence:218342\ncatalog:valueset:3973"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolestudier-utomlands"
+fields = { "sets" = ["hogskolestudier-utomlands"] }
+evidence = "F13, F16 och F7 används för olika begrepp i olika perioder.\ncatalog:occurrence:217916\ncatalog:occurrence:217953\ncatalog:occurrence:218015\ncatalog:occurrence:218018\ncatalog:occurrence:218061\ncatalog:occurrence:218126"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolestudier-utomlands"
+fields = { "tags" = ["education"] }
+evidence = "F13, F16 och F7 används för olika begrepp i olika perioder.\ncatalog:occurrence:217916\ncatalog:occurrence:217953\ncatalog:occurrence:218015\ncatalog:occurrence:218018\ncatalog:occurrence:218061\ncatalog:occurrence:218126"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolestudiernas-langd"
+fields = { "sets" = [] }
+evidence = "Flera källkolumner har olika ägare mellan perioder.\ncatalog:occurrence:217913\ncatalog:occurrence:217936\ncatalog:occurrence:217937\ncatalog:occurrence:217993\ncatalog:occurrence:217994\ncatalog:occurrence:218090\ncatalog:occurrence:218091\ncatalog:occurrence:218123\ncatalog:occurrence:218182\ncatalog:occurrence:218183\ncatalog:occurrence:218255\ncatalog:occurrence:218272\ncatalog:occurrence:218349\ncatalog:occurrence:218352"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolestudiernas-langd"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har olika ägare mellan perioder.\ncatalog:occurrence:217913\ncatalog:occurrence:217936\ncatalog:occurrence:217937\ncatalog:occurrence:217993\ncatalog:occurrence:217994\ncatalog:occurrence:218090\ncatalog:occurrence:218091\ncatalog:occurrence:218123\ncatalog:occurrence:218182\ncatalog:occurrence:218183\ncatalog:occurrence:218255\ncatalog:occurrence:218272\ncatalog:occurrence:218349\ncatalog:occurrence:218352"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Huvudman avser skolan.\ncatalog:variable_text:23448:13695:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Huvudman avser skolan.\ncatalog:variable_text:23448:13695:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-andra-webbtjanster"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från webbtjänster.\ncatalog:variable_text:23449:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-andra-webbtjanster"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från webbtjänster.\ncatalog:variable_text:23449:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-foraldrar-anhoriga"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från anhöriga.\ncatalog:variable_text:23450:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-foraldrar-anhoriga"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från anhöriga.\ncatalog:variable_text:23450:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-foraldrar-kamrater"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från föräldrar och kamrater.\ncatalog:variable_text:23451:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-foraldrar-kamrater"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från föräldrar och kamrater.\ncatalog:variable_text:23451:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-hogskola-webbplatser"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från högskolors webbplatser.\ncatalog:variable_text:23452:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-hogskola-webbplatser"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från högskolors webbplatser.\ncatalog:variable_text:23452:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-infomaterial-hogskola"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från högskolors material.\ncatalog:variable_text:23453:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-infomaterial-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från högskolors material.\ncatalog:variable_text:23453:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-informatorer-hogskola"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_06 har olika ägare mellan perioder.\ncatalog:occurrence:217959\ncatalog:occurrence:218337"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-informatorer-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "F14_06 har olika ägare mellan perioder.\ncatalog:occurrence:217959\ncatalog:occurrence:218337"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-kamrater"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från kamrater.\ncatalog:variable_text:23455:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-kamrater"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från kamrater.\ncatalog:variable_text:23455:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-larare-gymnasiet"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_05 har olika ägare mellan perioder.\ncatalog:occurrence:217958\ncatalog:occurrence:218336"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-larare-gymnasiet"
+fields = { "tags" = ["education"] }
+evidence = "F14_05 har olika ägare mellan perioder.\ncatalog:occurrence:217958\ncatalog:occurrence:218336"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-massmedia"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från massmedia.\ncatalog:variable_text:23457:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-massmedia"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från massmedia.\ncatalog:variable_text:23457:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-material-hogskola"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_03 har olika ägare mellan perioder.\ncatalog:occurrence:217956\ncatalog:occurrence:218334"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-material-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "F14_03 har olika ägare mellan perioder.\ncatalog:occurrence:217956\ncatalog:occurrence:218334"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-material-syv-larare"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från vägledares eller lärares material.\ncatalog:variable_text:23459:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-material-syv-larare"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från vägledares eller lärares material.\ncatalog:variable_text:23459:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-oppna-hus"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier genom öppna hus.\ncatalog:variable_text:23460:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-oppna-hus"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier genom öppna hus.\ncatalog:variable_text:23460:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-sociala-medier"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från sociala medier.\ncatalog:variable_text:23461:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-sociala-medier"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från sociala medier.\ncatalog:variable_text:23461:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studenthandboken"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_01 har olika ägare mellan perioder.\ncatalog:occurrence:217954\ncatalog:occurrence:218332"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studenthandboken"
+fields = { "tags" = ["education"] }
+evidence = "F14_01 har olika ägare mellan perioder.\ncatalog:occurrence:217954\ncatalog:occurrence:218332"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studera-nu"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_02 har olika ägare mellan perioder.\ncatalog:occurrence:217955\ncatalog:occurrence:218333"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studera-nu"
+fields = { "tags" = ["education"] }
+evidence = "F14_02 har olika ägare mellan perioder.\ncatalog:occurrence:217955\ncatalog:occurrence:218333"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studiebesok-hogskola"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_07 har olika ägare mellan perioder.\ncatalog:occurrence:217960\ncatalog:occurrence:218338"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-studiebesok-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "F14_07 har olika ägare mellan perioder.\ncatalog:occurrence:217960\ncatalog:occurrence:218338"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-utbildningsmassor"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "Variabeln mäter information om högskolestudier från utbildningsmässor.\ncatalog:variable_text:23465:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infokalla-utbildningsmassor"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter information om högskolestudier från utbildningsmässor.\ncatalog:variable_text:23465:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:infovagl"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F14_04 har olika ägare mellan perioder.\ncatalog:occurrence:217957\ncatalog:occurrence:218335"
+
+[[statement]]
+kind = "set"
+subject = "var:infovagl"
+fields = { "tags" = ["education"] }
+evidence = "F14_04 har olika ägare mellan perioder.\ncatalog:occurrence:217957\ncatalog:occurrence:218335"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "sets" = [] }
+evidence = "Webb- eller pappersenkät är en insamlingsmetod.\ncatalog:valueset:1250\ncatalog:valueset:349"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Webb- eller pappersenkät är en insamlingsmetod.\ncatalog:valueset:1250\ncatalog:valueset:349"
+
+[[statement]]
+kind = "set"
+subject = "var:intresse-hogskolestudier"
+fields = { "sets" = [] }
+evidence = "Variabeln avser intresse för högskolestudier.\ncatalog:variable_text:23469:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:intresse-hogskolestudier"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln avser intresse för högskolestudier.\ncatalog:variable_text:23469:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217965"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217965"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-alla"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217825"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-alla"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217825"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-nya"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Kalibrerad uppräkningsvikt för nya enkäten.\ncatalog:occurrence:217826"
+
+[[statement]]
+kind = "set"
+subject = "var:kalvikt-nya"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad uppräkningsvikt för nya enkäten.\ncatalog:occurrence:217826"
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-studielan-aterbetalning"
+fields = { "sets" = ["kannedom-om-studiestod"] }
+evidence = "F28 används för olika begrepp i olika perioder.\ncatalog:occurrence:218370\ncatalog:occurrence:218467"
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-studielan-aterbetalning"
+fields = { "tags" = ["transfers"] }
+evidence = "F28 används för olika begrepp i olika perioder.\ncatalog:occurrence:218370\ncatalog:occurrence:218467"
+
+[[statement]]
+kind = "set"
+subject = "var:kombinera-arbete-studier"
+fields = { "sets" = [] }
+evidence = "F14 och F20 har olika ägare mellan perioder.\ncatalog:occurrence:218089\ncatalog:occurrence:218241\ncatalog:occurrence:218331\ncatalog:occurrence:218350"
+
+[[statement]]
+kind = "set"
+subject = "var:kombinera-arbete-studier"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F14 och F20 har olika ägare mellan perioder.\ncatalog:occurrence:218089\ncatalog:occurrence:218241\ncatalog:occurrence:218331\ncatalog:occurrence:218350"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk tillhörighet.\ncatalog:variable_text:23475:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk tillhörighet.\ncatalog:variable_text:23475:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "sets" = [] }
+evidence = "Variabeln anger skolans geografiska region.\ncatalog:variable_text:23476:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger skolans geografiska region.\ncatalog:variable_text:23476:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:23477:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:23477:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kort"
+fields = { "sets" = [] }
+evidence = "Variabeln anger enkätversionens längd.\ncatalog:variable_text:23478:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:kort"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger enkätversionens längd.\ncatalog:variable_text:23478:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län är en geografisk indelning; källhistoriken skiljer elevens och skolans län.\ncatalog:variable_text:23479:12234:12600\ncatalog:variable_text:23479:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk indelning; källhistoriken skiljer elevens och skolans län.\ncatalog:variable_text:23479:12234:12600\ncatalog:variable_text:23479:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-annat"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnerna återanvänds för andra koncept.\ncatalog:occurrence:217942\ncatalog:occurrence:217999\ncatalog:occurrence:218241\ncatalog:occurrence:218331"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-annat"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra koncept.\ncatalog:occurrence:217942\ncatalog:occurrence:217999\ncatalog:occurrence:218241\ncatalog:occurrence:218331"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-bra-utbildning"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:217954\ncatalog:occurrence:218247\ncatalog:occurrence:218332\ncatalog:occurrence:218346"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-bra-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:217954\ncatalog:occurrence:218247\ncatalog:occurrence:218332\ncatalog:occurrence:218346"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-brett-utbud"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Samma koncept är korrekt uppdelat mellan perioderna med f17-01.\ncatalog:occurrence:218244\ncatalog:occurrence:218343\ncatalog:variable_text:23482:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-brett-utbud"
+fields = { "tags" = ["education"] }
+evidence = "Samma koncept är korrekt uppdelat mellan perioderna med f17-01.\ncatalog:occurrence:218244\ncatalog:occurrence:218343\ncatalog:variable_text:23482:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-gott-rykte"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Samma koncept är korrekt uppdelat mellan perioderna med f17-05.\ncatalog:occurrence:218248\ncatalog:occurrence:218347\ncatalog:variable_text:23483:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-gott-rykte"
+fields = { "tags" = ["education"] }
+evidence = "Samma koncept är korrekt uppdelat mellan perioderna med f17-05.\ncatalog:occurrence:218248\ncatalog:occurrence:218347\ncatalog:variable_text:23483:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-hemstad"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Frågekolumnerna återanvänds för andra svarsalternativ.\ncatalog:occurrence:217959\ncatalog:occurrence:218336\ncatalog:occurrence:218337\ncatalog:occurrence:218432\ncatalog:occurrence:218433"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-hemstad"
+fields = { "tags" = ["education"] }
+evidence = "Frågekolumnerna återanvänds för andra svarsalternativ.\ncatalog:occurrence:217959\ncatalog:occurrence:218336\ncatalog:occurrence:218337\ncatalog:occurrence:218432\ncatalog:occurrence:218433"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-latt-fa-bostad"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnen har olika innehåll mellan perioderna.\ncatalog:occurrence:217957\ncatalog:occurrence:218335"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-latt-fa-bostad"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har olika innehåll mellan perioderna.\ncatalog:occurrence:217957\ncatalog:occurrence:218335"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-latt-komma-in"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "En källkolumn återanvänds för en informationskälla.\ncatalog:occurrence:217956\ncatalog:occurrence:218245\ncatalog:occurrence:218334\ncatalog:occurrence:218344"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-latt-komma-in"
+fields = { "tags" = ["education"] }
+evidence = "En källkolumn återanvänds för en informationskälla.\ncatalog:occurrence:217956\ncatalog:occurrence:218245\ncatalog:occurrence:218334\ncatalog:occurrence:218344"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-nara-bostaden"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Angiven orsak till val av lärosäte.\ncatalog:occurrence:218252"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-nara-bostaden"
+fields = { "tags" = ["education"] }
+evidence = "Angiven orsak till val av lärosäte.\ncatalog:occurrence:218252"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-studentlivet"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218338\ncatalog:occurrence:218434"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-studentlivet"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218338\ncatalog:occurrence:218434"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-trevlig-stad"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218337\ncatalog:occurrence:218433"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-trevlig-stad"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218337\ncatalog:occurrence:218433"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-utb-finns-dar"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "En källkolumn återanvänds för en informationskälla.\ncatalog:occurrence:217955\ncatalog:occurrence:218246\ncatalog:occurrence:218333\ncatalog:occurrence:218345"
+
+[[statement]]
+kind = "set"
+subject = "var:larosatesorsak-utb-finns-dar"
+fields = { "tags" = ["education"] }
+evidence = "En källkolumn återanvänds för en informationskälla.\ncatalog:occurrence:217955\ncatalog:occurrence:218246\ncatalog:occurrence:218333\ncatalog:occurrence:218345"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = ["urvalsstorlek-per-stratum"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:occurrence:218522"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum.\ncatalog:occurrence:218522"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nya"
+fields = { "sets" = ["urvalsstorlek-per-stratum"] }
+evidence = "Urvalsstorlek per stratum för nya enkäten.\ncatalog:occurrence:217830"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nya"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum för nya enkäten.\ncatalog:occurrence:217830"
+
+[[statement]]
+kind = "set"
+subject = "var:lust-att-lara-mer"
+fields = { "sets" = [] }
+evidence = "F26b har olika ägare mellan perioder.\ncatalog:occurrence:218368\ncatalog:occurrence:218466"
+
+[[statement]]
+kind = "set"
+subject = "var:lust-att-lara-mer"
+fields = { "tags" = ["education"] }
+evidence = "F26b har olika ägare mellan perioder.\ncatalog:occurrence:218368\ncatalog:occurrence:218466"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "sets" = [] }
+evidence = "Variabeln anger geografisk region.\ncatalog:variable_text:23496:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger geografisk region.\ncatalog:variable_text:23496:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:nytta-av-studierna"
+fields = { "sets" = [] }
+evidence = "F26a har olika ägare mellan perioder.\ncatalog:occurrence:218367\ncatalog:occurrence:218465"
+
+[[statement]]
+kind = "set"
+subject = "var:nytta-av-studierna"
+fields = { "tags" = ["education"] }
+evidence = "F26a har olika ägare mellan perioder.\ncatalog:occurrence:218367\ncatalog:occurrence:218465"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnen återanvänds för en annan kodning.\ncatalog:occurrence:217911\ncatalog:occurrence:218445"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för en annan kodning.\ncatalog:occurrence:217911\ncatalog:occurrence:218445"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-andra-saker"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Frågekolumnerna återanvänds för olika alternativ.\ncatalog:occurrence:218289\ncatalog:occurrence:218290\ncatalog:occurrence:218373\ncatalog:occurrence:218374\ncatalog:occurrence:218481\ncatalog:occurrence:218482"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-andra-saker"
+fields = { "tags" = ["education"] }
+evidence = "Frågekolumnerna återanvänds för olika alternativ.\ncatalog:occurrence:218289\ncatalog:occurrence:218290\ncatalog:occurrence:218373\ncatalog:occurrence:218374\ncatalog:occurrence:218481\ncatalog:occurrence:218482"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-annan-utb"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218289\ncatalog:occurrence:218373\ncatalog:occurrence:218481"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-annan-utb"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218289\ncatalog:occurrence:218373\ncatalog:occurrence:218481"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-annat"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna har olika ägare och en överlappande mappning.\ncatalog:occurrence:217911\ncatalog:occurrence:218213\ncatalog:occurrence:218296\ncatalog:occurrence:218302\ncatalog:occurrence:218380\ncatalog:occurrence:218381\ncatalog:occurrence:218445"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-annat"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare och en överlappande mappning.\ncatalog:occurrence:217911\ncatalog:occurrence:218213\ncatalog:occurrence:218296\ncatalog:occurrence:218302\ncatalog:occurrence:218380\ncatalog:occurrence:218381\ncatalog:occurrence:218445"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-ej-behorig"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218209\ncatalog:occurrence:218210\ncatalog:occurrence:218298\ncatalog:occurrence:218299"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-ej-behorig"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218209\ncatalog:occurrence:218210\ncatalog:occurrence:218298\ncatalog:occurrence:218299"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-familjetradition"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218211\ncatalog:occurrence:218212\ncatalog:occurrence:218300\ncatalog:occurrence:218301"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-familjetradition"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218211\ncatalog:occurrence:218212\ncatalog:occurrence:218300\ncatalog:occurrence:218301"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-kanner-ingen"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218212\ncatalog:occurrence:218213\ncatalog:occurrence:218301\ncatalog:occurrence:218302"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-kanner-ingen"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218212\ncatalog:occurrence:218213\ncatalog:occurrence:218301\ncatalog:occurrence:218302"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-klarar-ej"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218208\ncatalog:occurrence:218209\ncatalog:occurrence:218293\ncatalog:occurrence:218297\ncatalog:occurrence:218298\ncatalog:occurrence:218377\ncatalog:occurrence:218485"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-klarar-ej"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218208\ncatalog:occurrence:218209\ncatalog:occurrence:218293\ncatalog:occurrence:218297\ncatalog:occurrence:218298\ncatalog:occurrence:218377\ncatalog:occurrence:218485"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-kravs-ej"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218291\ncatalog:occurrence:218293\ncatalog:occurrence:218375\ncatalog:occurrence:218377\ncatalog:occurrence:218483\ncatalog:occurrence:218485"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-kravs-ej"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218291\ncatalog:occurrence:218293\ncatalog:occurrence:218375\ncatalog:occurrence:218377\ncatalog:occurrence:218483\ncatalog:occurrence:218485"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-lasa-framtiden"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Angiven orsak till att inte planera högskolestudier inom tre år.\ncatalog:occurrence:218480"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-lasa-framtiden"
+fields = { "tags" = ["education"] }
+evidence = "Angiven orsak till att inte planera högskolestudier inom tre år.\ncatalog:occurrence:218480"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-lonar-ej"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218294\ncatalog:occurrence:218378"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-lonar-ej"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218294\ncatalog:occurrence:218378"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-saknar-info"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218295\ncatalog:occurrence:218379"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-saknar-info"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218295\ncatalog:occurrence:218379"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-skoltrott"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Flera källkolumner återanvänds för andra svarsalternativ.\ncatalog:occurrence:218207\ncatalog:occurrence:218208\ncatalog:occurrence:218290\ncatalog:occurrence:218296\ncatalog:occurrence:218297\ncatalog:occurrence:218374\ncatalog:occurrence:218378\ncatalog:occurrence:218380\ncatalog:occurrence:218381\ncatalog:occurrence:218482\ncatalog:occurrence:218486"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-skoltrott"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner återanvänds för andra svarsalternativ.\ncatalog:occurrence:218207\ncatalog:occurrence:218208\ncatalog:occurrence:218290\ncatalog:occurrence:218296\ncatalog:occurrence:218297\ncatalog:occurrence:218374\ncatalog:occurrence:218378\ncatalog:occurrence:218380\ncatalog:occurrence:218381\ncatalog:occurrence:218482\ncatalog:occurrence:218486"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-trakigt"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218207\ncatalog:occurrence:218296"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-trakigt"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har olika svarsalternativ mellan perioderna.\ncatalog:occurrence:218207\ncatalog:occurrence:218296"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-vill-arbeta"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Den perioddelade mappningen har en avvikande etikett.\ncatalog:occurrence:218292\ncatalog:occurrence:218376\ncatalog:occurrence:218484"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-vill-arbeta"
+fields = { "tags" = ["education"] }
+evidence = "Den perioddelade mappningen har en avvikande etikett.\ncatalog:occurrence:218292\ncatalog:occurrence:218376\ncatalog:occurrence:218484"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-vill-ej-flytta"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218210\ncatalog:occurrence:218211\ncatalog:occurrence:218299\ncatalog:occurrence:218300"
+
+[[statement]]
+kind = "set"
+subject = "var:ointresse-orsak-vill-ej-flytta"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra alternativ.\ncatalog:occurrence:218210\ncatalog:occurrence:218211\ncatalog:occurrence:218299\ncatalog:occurrence:218300"
+
+[[statement]]
+kind = "set"
+subject = "var:pgm"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Källkolumnens programkodning varierar mellan perioderna.\ncatalog:occurrence:217881\ncatalog:occurrence:218046\ncatalog:occurrence:218227\ncatalog:occurrence:218317"
+
+[[statement]]
+kind = "set"
+subject = "var:pgm"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnens programkodning varierar mellan perioderna.\ncatalog:occurrence:217881\ncatalog:occurrence:218046\ncatalog:occurrence:218227\ncatalog:occurrence:218317"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-arskurs-2-lasaret-2002-03"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23516:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-arskurs-2-lasaret-2002-03"
+fields = { "tags" = ["education"] }
+evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23516:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23517:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
+fields = { "tags" = ["education"] }
+evidence = "Pgm är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23517:15887:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fyra-grupper-2009-10"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Pgmgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23518:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-fyra-grupper-2009-10"
+fields = { "tags" = ["education"] }
+evidence = "Pgmgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23518:14426:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:pgrgrp"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Pgrgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23519:13695:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:pgrgrp"
+fields = { "tags" = ["education"] }
+evidence = "Pgrgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23519:13695:14061"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Prggrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23520:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
+fields = { "tags" = ["education"] }
+evidence = "Prggrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23520:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:rad-studielan-foraldrar"
+fields = { "sets" = ["rad-om-studielan"] }
+evidence = "F26a har olika ägare mellan perioder.\ncatalog:occurrence:218367\ncatalog:occurrence:218465"
+
+[[statement]]
+kind = "set"
+subject = "var:rad-studielan-foraldrar"
+fields = { "tags" = ["transfers"] }
+evidence = "F26a har olika ägare mellan perioder.\ncatalog:occurrence:218367\ncatalog:occurrence:218465"
+
+[[statement]]
+kind = "set"
+subject = "var:rad-studielan-vanner"
+fields = { "sets" = ["rad-om-studielan"] }
+evidence = "F26b har olika ägare mellan perioder.\ncatalog:occurrence:218368\ncatalog:occurrence:218466"
+
+[[statement]]
+kind = "set"
+subject = "var:rad-studielan-vanner"
+fields = { "tags" = ["transfers"] }
+evidence = "F26b har olika ägare mellan perioder.\ncatalog:occurrence:218368\ncatalog:occurrence:218466"
+
+[[statement]]
+kind = "set"
+subject = "var:saker-amnesomrade-andrahand"
+fields = { "sets" = ["sakerhet-i-amnesval"] }
+evidence = "F10 och F11 har olika ägare mellan perioder.\ncatalog:occurrence:217942\ncatalog:occurrence:217951\ncatalog:occurrence:217999\ncatalog:occurrence:218055\ncatalog:occurrence:218056"
+
+[[statement]]
+kind = "set"
+subject = "var:saker-amnesomrade-andrahand"
+fields = { "tags" = ["education"] }
+evidence = "F10 och F11 har olika ägare mellan perioder.\ncatalog:occurrence:217942\ncatalog:occurrence:217951\ncatalog:occurrence:217999\ncatalog:occurrence:218055\ncatalog:occurrence:218056"
+
+[[statement]]
+kind = "set"
+subject = "var:saker-amnesomrade-forstahand"
+fields = { "sets" = ["sakerhet-i-amnesval"] }
+evidence = "F08 och F9 har olika ägare mellan perioder.\ncatalog:occurrence:217918\ncatalog:occurrence:217940\ncatalog:occurrence:217997\ncatalog:occurrence:218128"
+
+[[statement]]
+kind = "set"
+subject = "var:saker-amnesomrade-forstahand"
+fields = { "tags" = ["education"] }
+evidence = "F08 och F9 har olika ägare mellan perioder.\ncatalog:occurrence:217918\ncatalog:occurrence:217940\ncatalog:occurrence:217997\ncatalog:occurrence:218128"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = [] }
+evidence = "Variabeln anger skolans geografiska läge.\ncatalog:variable_text:23525:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger skolans geografiska läge.\ncatalog:variable_text:23525:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar önskat yrke.\ncatalog:occurrence:218528\ncatalog:valueset:11747\ncatalog:variable_text:23526:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln kodar önskat yrke.\ncatalog:occurrence:218528\ncatalog:valueset:11747\ncatalog:variable_text:23526:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Populationsstorlek per stratum är undersökningsmetadata.\ncatalog:variable_text:23527:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek per stratum är undersökningsmetadata.\ncatalog:variable_text:23527:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum anger undersökningens urvalsindelning.\ncatalog:variable_text:23528:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum anger undersökningens urvalsindelning.\ncatalog:variable_text:23528:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-akademisk-karriar"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23529:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-akademisk-karriar"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23529:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-annat"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_15 har olika ägare mellan perioder.\ncatalog:occurrence:218180\ncatalog:occurrence:218270"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-annat"
+fields = { "tags" = ["education"] }
+evidence = "F20_15 har olika ägare mellan perioder.\ncatalog:occurrence:218180\ncatalog:occurrence:218270"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-arbete-utomlands"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23531:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-arbete-utomlands"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23531:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-arbetsmarknad"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23532:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-arbetsmarknad"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23532:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-familjetradition"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_13 och F20_14 har olika ägare mellan perioder.\ncatalog:occurrence:218178\ncatalog:occurrence:218179\ncatalog:occurrence:218268\ncatalog:occurrence:218269"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-familjetradition"
+fields = { "tags" = ["education"] }
+evidence = "F20_13 och F20_14 har olika ägare mellan perioder.\ncatalog:occurrence:218178\ncatalog:occurrence:218179\ncatalog:occurrence:218268\ncatalog:occurrence:218269"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-hellre-studera"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23534:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-hellre-studera"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23534:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-hog-lon"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23535:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-hog-lon"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23535:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-intressant-jobb"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23536:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-intressant-jobb"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23536:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-kanner-manga"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_14 och F20_15 har olika ägare mellan perioder.\ncatalog:occurrence:218179\ncatalog:occurrence:218180\ncatalog:occurrence:218269\ncatalog:occurrence:218270"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-kanner-manga"
+fields = { "tags" = ["education"] }
+evidence = "F20_14 och F20_15 har olika ägare mellan perioder.\ncatalog:occurrence:218179\ncatalog:occurrence:218180\ncatalog:occurrence:218269\ncatalog:occurrence:218270"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-kravs-yrke"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23538:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-kravs-yrke"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23538:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-lika-garna"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23539:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-lika-garna"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23539:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-oka-kunskaper"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23540:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-oka-kunskaper"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23540:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-roligt"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_11 och F20_12 har olika ägare mellan perioder.\ncatalog:occurrence:218176\ncatalog:occurrence:218177\ncatalog:occurrence:218266\ncatalog:occurrence:218267"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-roligt"
+fields = { "tags" = ["education"] }
+evidence = "F20_11 och F20_12 har olika ägare mellan perioder.\ncatalog:occurrence:218176\ncatalog:occurrence:218177\ncatalog:occurrence:218266\ncatalog:occurrence:218267"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-studentlivet"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_12 och F20_13 har olika ägare mellan perioder.\ncatalog:occurrence:218177\ncatalog:occurrence:218178\ncatalog:occurrence:218267\ncatalog:occurrence:218268"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-studentlivet"
+fields = { "tags" = ["education"] }
+evidence = "F20_12 och F20_13 har olika ägare mellan perioder.\ncatalog:occurrence:218177\ncatalog:occurrence:218178\ncatalog:occurrence:218267\ncatalog:occurrence:218268"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-svart-fa-arbete"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23543:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-svart-fa-arbete"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger ett skäl till högskolestudier.\ncatalog:variable_text:23543:17348:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-talang"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "F20_11 har olika ägare mellan perioder.\ncatalog:occurrence:218176\ncatalog:occurrence:218266"
+
+[[statement]]
+kind = "set"
+subject = "var:studieanledning-talang"
+fields = { "tags" = ["education"] }
+evidence = "F20_11 har olika ägare mellan perioder.\ncatalog:occurrence:218176\ncatalog:occurrence:218266"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-fran-csn"
+fields = { "sets" = ["forsorjning-under-hogskolestudier"] }
+evidence = "F15 och F21 används för olika begrepp i olika perioder.\ncatalog:occurrence:218060\ncatalog:occurrence:218152\ncatalog:occurrence:218242\ncatalog:occurrence:218271\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218351"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-fran-csn"
+fields = { "tags" = ["education", "transfers"] }
+evidence = "F15 och F21 används för olika begrepp i olika perioder.\ncatalog:occurrence:218060\ncatalog:occurrence:218152\ncatalog:occurrence:218242\ncatalog:occurrence:218271\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218351"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Källkolumnens detaljeringsgrad varierar.\ncatalog:occurrence:218227\ncatalog:occurrence:218317\ncatalog:valueset:1794\ncatalog:valueset:4356"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnens detaljeringsgrad varierar.\ncatalog:occurrence:218227\ncatalog:occurrence:218317\ncatalog:valueset:1794\ncatalog:valueset:4356"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-program"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Kolumnen har perioddelade ägare och etiketter.\ncatalog:occurrence:218137\ncatalog:occurrence:218525"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-program"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnen har perioddelade ägare och etiketter.\ncatalog:occurrence:218137\ncatalog:occurrence:218525"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-typpgm"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Samma programtyp är korrekt uppdelad mellan perioderna med gymnasieprogram-grupperat.\ncatalog:occurrence:218231\ncatalog:occurrence:218321\ncatalog:valueset:5249"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-gymnasieprogram-typpgm"
+fields = { "tags" = ["education"] }
+evidence = "Samma programtyp är korrekt uppdelad mellan perioderna med gymnasieprogram-grupperat.\ncatalog:occurrence:218231\ncatalog:occurrence:218321\ncatalog:valueset:5249"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hogskolestudier"
+fields = { "sets" = ["typ-av-hogskolestudier"] }
+evidence = "F03, F04, F3 och F4 används för olika begrepp i olika perioder.\ncatalog:occurrence:217912\ncatalog:occurrence:217913\ncatalog:occurrence:217935\ncatalog:occurrence:217936\ncatalog:occurrence:217992\ncatalog:occurrence:217993\ncatalog:occurrence:218122\ncatalog:occurrence:218123"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hogskolestudier"
+fields = { "tags" = ["education"] }
+evidence = "F03, F04, F3 och F4 används för olika begrepp i olika perioder.\ncatalog:occurrence:217912\ncatalog:occurrence:217913\ncatalog:occurrence:217935\ncatalog:occurrence:217936\ncatalog:occurrence:217992\ncatalog:occurrence:217993\ncatalog:occurrence:218122\ncatalog:occurrence:218123"
+
+[[statement]]
+kind = "set"
+subject = "var:typpgr"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Kodning av gymnasieprogramtyp.\ncatalog:occurrence:218531\ncatalog:valueset:10780"
+
+[[statement]]
+kind = "set"
+subject = "var:typpgr"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av gymnasieprogramtyp.\ncatalog:occurrence:218531\ncatalog:valueset:10780"
+
+[[statement]]
+kind = "set"
+subject = "var:utbild"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Kodning av gymnasieprogram.\ncatalog:occurrence:218049\ncatalog:valueset:637"
+
+[[statement]]
+kind = "set"
+subject = "var:utbild"
+fields = { "tags" = ["education"] }
+evidence = "Kodning av gymnasieprogram.\ncatalog:occurrence:218049\ncatalog:valueset:637"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217885\ncatalog:occurrence:217931"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217885\ncatalog:occurrence:217931"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-anledning-hogskola"
+fields = { "sets" = ["anledningar-till-hogskolestudier"] }
+evidence = "Källkolumnerna har olika ägare och F15 har överlappande mappning.\ncatalog:occurrence:217951\ncatalog:occurrence:218056\ncatalog:occurrence:218072\ncatalog:occurrence:218165\ncatalog:occurrence:218182\ncatalog:occurrence:218242\ncatalog:occurrence:218254\ncatalog:occurrence:218255\ncatalog:occurrence:218271\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218351\ncatalog:occurrence:218435"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-anledning-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har olika ägare och F15 har överlappande mappning.\ncatalog:occurrence:217951\ncatalog:occurrence:218056\ncatalog:occurrence:218072\ncatalog:occurrence:218165\ncatalog:occurrence:218182\ncatalog:occurrence:218242\ncatalog:occurrence:218254\ncatalog:occurrence:218255\ncatalog:occurrence:218271\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218351\ncatalog:occurrence:218435"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-anledning-larosate"
+fields = { "sets" = ["orsaker-till-val-av-larosate"] }
+evidence = "Källkolumnerna återanvänds och de äldre värdemängderna gäller skäl till högskolestudier snarare än lärosätesval.\ncatalog:occurrence:218014\ncatalog:occurrence:218072\ncatalog:occurrence:218089\ncatalog:occurrence:218182\ncatalog:occurrence:218254\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218435\ncatalog:valueset:2425\ncatalog:valueset:8635"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-anledning-larosate"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds och de äldre värdemängderna gäller skäl till högskolestudier snarare än lärosätesval.\ncatalog:occurrence:218014\ncatalog:occurrence:218072\ncatalog:occurrence:218089\ncatalog:occurrence:218182\ncatalog:occurrence:218254\ncatalog:occurrence:218339\ncatalog:occurrence:218340\ncatalog:occurrence:218435\ncatalog:valueset:2425\ncatalog:valueset:8635"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-informationskallan"
+fields = { "sets" = ["informationskallor-om-hogskolestudier"] }
+evidence = "F32 har olika ägare mellan perioder.\ncatalog:occurrence:218398\ncatalog:occurrence:218491"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-informationskallan"
+fields = { "tags" = ["education"] }
+evidence = "F32 har olika ägare mellan perioder.\ncatalog:occurrence:218398\ncatalog:occurrence:218491"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-orsak-ej-vidare"
+fields = { "sets" = ["orsaker-till-ointresse-for-hogskolestudier"] }
+evidence = "Källkolumnen återanvänds för en annan fråga.\ncatalog:occurrence:217912\ncatalog:occurrence:217935\ncatalog:occurrence:217992\ncatalog:occurrence:218122"
+
+[[statement]]
+kind = "set"
+subject = "var:viktigaste-orsak-ej-vidare"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för en annan fråga.\ncatalog:occurrence:217912\ncatalog:occurrence:217935\ncatalog:occurrence:217992\ncatalog:occurrence:218122"
+
+[[statement]]
+kind = "set"
+subject = "var:viss-hogskola-utbildning"
+fields = { "sets" = [] }
+evidence = "Källkolumnerna återanvänds för andra frågor.\ncatalog:occurrence:217914\ncatalog:occurrence:217937\ncatalog:occurrence:217994\ncatalog:occurrence:218017\ncatalog:occurrence:218060\ncatalog:occurrence:218061\ncatalog:occurrence:218124\ncatalog:occurrence:218152\ncatalog:occurrence:218153\ncatalog:occurrence:218165\ncatalog:occurrence:218243\ncatalog:occurrence:218255\ncatalog:occurrence:218341\ncatalog:occurrence:218349"
+
+[[statement]]
+kind = "set"
+subject = "var:viss-hogskola-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra frågor.\ncatalog:occurrence:217914\ncatalog:occurrence:217937\ncatalog:occurrence:217994\ncatalog:occurrence:218017\ncatalog:occurrence:218060\ncatalog:occurrence:218061\ncatalog:occurrence:218124\ncatalog:occurrence:218152\ncatalog:occurrence:218153\ncatalog:occurrence:218165\ncatalog:occurrence:218243\ncatalog:occurrence:218255\ncatalog:occurrence:218341\ncatalog:occurrence:218349"
+
+[[statement]]
+kind = "set"
+subject = "var:wk"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23559:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:wk"
+fields = { "tags" = ["methods"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23559:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-fragor-kort-och-lang-enkat"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Wk-k är en opak källkod.\ncatalog:variable_text:23560:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-fragor-kort-och-lang-enkat"
+fields = { "tags" = ["methods"] }
+evidence = "Wk-k är en opak källkod.\ncatalog:variable_text:23560:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-fragor-endast-lang-enkat"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Wk-l är en opak källkod.\ncatalog:variable_text:23561:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-fragor-endast-lang-enkat"
+fields = { "tags" = ["methods"] }
+evidence = "Wk-l är en opak källkod.\ncatalog:variable_text:23561:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:wk-ord"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23562:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:wk-ord"
+fields = { "tags" = ["methods"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23562:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
+fields = { "sets" = ["upprakningsvikter"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23563:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
+fields = { "tags" = ["methods"] }
+evidence = "Wk är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23563:18078:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-pa-gymnasieskolan"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Källkolumnerna återanvänds för andra frågor.\ncatalog:occurrence:218091\ncatalog:occurrence:218092\ncatalog:occurrence:218183\ncatalog:occurrence:218184\ncatalog:occurrence:218273\ncatalog:occurrence:218352\ncatalog:occurrence:218359\ncatalog:occurrence:218448"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-pa-gymnasieskolan"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna återanvänds för andra frågor.\ncatalog:occurrence:218091\ncatalog:occurrence:218092\ncatalog:occurrence:218183\ncatalog:occurrence:218184\ncatalog:occurrence:218273\ncatalog:occurrence:218352\ncatalog:occurrence:218359\ncatalog:occurrence:218448"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: lopnr @2005-07-01..2006-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: lopnr @2007-07-01..2008-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: uenr @2009-07-01..2010-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: uenr @2011-07-01..2012-06-30 where key = 'v2179'"
+fields = { "variable" = "uenr" }
+evidence = "Both are internal questionnaire identifiers used for survey mailing and checking returns, share the unit serial number, and use UENR/UENr in separate observed releases. The earlier ledger ends at 15522 and the later starts at 15887; coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktivit-deltagande"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_04 asks how far students could participate actively in lessons (r18), directly measuring a functional aspect of instruction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23287\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218471"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktiviteter-for-maende"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_08 measures school activities supporting students' wellbeing (r22), a reported support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23288\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218475"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-delaktighet-under-lektioner"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_03 measures teachers' efforts to involve students in lessons (r17), an explicit participation aspect of instruction.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23297\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218470"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-foralders-intresse"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_12 measures parental interest in how students were managing distance education (r26), a reported home-support aspect.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23299\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218479"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-fungerat"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F28 directly asks how distance education functioned, with responses from very good to very bad (r14, r31).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23300\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218467\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3603"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-hjalp-hemifran"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_10 measures help with schoolwork received at home (r24), a reported support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23301\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218477"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-individens-maende"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_07 measures whether the school checked students' wellbeing (r21), an explicit student-support aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23302\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218474"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F31 compares perceived learning in distance and on-site lessons (r27, r30), a functional outcome covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23304\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218490\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1460"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lararhjalp"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_02 measures whether teachers noticed when students needed help (r16), an explicit instructional-support aspect.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218469"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-omgivningen-stor"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_06 measures whether surrounding disturbances impeded following instruction (r20), directly assessing instructional functioning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23306\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218473"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-sallskap-hemma"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_11 measures company at home from family members also working or studying there (r25), a reported home-environment aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23307\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218478"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-schema"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_01 measures whether the usual timetable continued digitally (r15), an explicit organizational aspect of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23308\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218468"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-starka-gemenskapen"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_09 measures the school's work to strengthen student community (r23), a reported social function of distance education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23309\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218476"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-tekniska-problem"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F29_05 measures whether technical problems impeded following instruction (r19), directly assessing instructional functioning.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23318\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218472"
+
+[[statement]]
+kind = "set"
+subject = "var:f32"
+fields = { "sets" = ["distansundervisningens-funktion"] }
+evidence = "F32 rates motivation during distance study as better, unchanged or worse (r28, r29), a functional aspect covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:23338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:218491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12084"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-aktivit-deltagande"
+fields = { "description" = "Aktivt deltagande under lektionerna. Uppgiften är elevens bedömning av i vilken grad hen kunde delta aktivt under distanslektionerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:23403:18809:19174\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218471:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-engelska"
+fields = { "description" = "Om engelska har fungerat bäst att genomföra på distans under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218502\ncatalog:variable_text:23426:18809:19174"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-battre-amne-samhallskunskap"
+fields = { "description" = "Om samhällskunskap har fungerat bäst att genomföra på distans under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger svårast men frågan avser ämnen som fungerat bäst.\ncatalog:occurrence:218508\ncatalog:variable_text:23432:18809:19174"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-digitalt-motesverktyg"
+fields = { "description" = "Hur stor andel av lektionerna som hölls genom ett digitalt mötesverktyg, till exempel Zoom, Google Meet eller Teams." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger andelen lektioner, inte antalet.\ncatalog:occurrence:218488\ncatalog:valueset:6465"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-inspelade-lektioner"
+fields = { "description" = "Hur stor andel av distanslektionerna som spelades in så att individen kunde se dem i efterhand eller flera gånger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdena anger andelen lektioner som spelades in.\ncatalog:occurrence:218489\ncatalog:valueset:6465"
+
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning-lar-sig-pa-lektioner"
+fields = { "description" = "Upplevt lärande på distanslektioner jämfört med lektioner i skolans lokaler under coronapandemin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen avser undervisningsplats, medan frågan mäter upplevt lärande.\ncatalog:occurrence:218490\ncatalog:valueset:1460"
+
+
+[[statement]]
+kind = "set"
+subject = "var:f22-06"
+fields = { "description" = "Hur individen har tänkt att försörja sig på annat sätt under sina studier. Uppgiften avser planerad försörjning under universitets- eller högskolestudier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger studiemedel men frågan gäller annat försörjningssätt.\ncatalog:occurrence:218358\ncatalog:variable_text:23389:18078:18444\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218358:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-urval"
+fields = { "description" = "Urvalspersonens personnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans definition anger registret snarare än variabelns identifierare.\ncatalog:variable_text:23514:18809:19174"

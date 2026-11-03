@@ -16,3 +16,351 @@ kind = "set"
 subject = "lakarintygsregistret: diagnoskod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:2461\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetsbegransning"
+fields = { "sets" = [] }
+evidence = "Aktivitetsbegränsning är ett funktionsmått.\ncatalog:variable_text:206:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivitetsbegransning"
+fields = { "tags" = ["disability"] }
+evidence = "Aktivitetsbegränsning är ett funktionsmått.\ncatalog:variable_text:206:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsanpassning"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser arbetsanpassning.\ncatalog:variable_text:209:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsanpassning"
+fields = { "tags" = ["disability", "employment"] }
+evidence = "Kryssrutan avser arbetsanpassning.\ncatalog:variable_text:209:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsresor"
+fields = { "sets" = [] }
+evidence = "Kryssrutan gäller resor till och från arbetet med annat färdmedel.\ncatalog:variable_text:210:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsresor"
+fields = { "tags" = ["transport"] }
+evidence = "Kryssrutan gäller resor till och från arbetet med annat färdmedel.\ncatalog:variable_text:210:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssokande"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser arbetssökande.\ncatalog:variable_text:211:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetssokande"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser arbetssökande.\ncatalog:variable_text:211:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidsforlaggning"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser arbetstidens förläggning.\ncatalog:variable_text:212:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstidsforlaggning"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser arbetstidens förläggning.\ncatalog:variable_text:212:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstraning"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser arbetsträning.\ncatalog:variable_text:213:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstraning"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser arbetsträning.\ncatalog:variable_text:213:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besok-arbetsplats"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser besök på arbetsplatsen.\ncatalog:variable_text:214:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:besok-arbetsplats"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser besök på arbetsplatsen.\ncatalog:variable_text:214:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidiagnos1"
+fields = { "sets" = [] }
+evidence = "Bidiagnos är en diagnos; sifferändelsen är källans platsnummer.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidiagnos1"
+fields = { "tags" = ["health"] }
+evidence = "Bidiagnos är en diagnos; sifferändelsen är källans platsnummer.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidiagnos2"
+fields = { "sets" = [] }
+evidence = "Bidiagnos är en diagnos; sifferändelsen är källans platsnummer.\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bidiagnos2"
+fields = { "tags" = ["health"] }
+evidence = "Bidiagnos är en diagnos; sifferändelsen är källans platsnummer.\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-klartext"
+fields = { "sets" = [] }
+evidence = "Klartexten avser huvuddiagnosen.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos-klartext"
+fields = { "tags" = ["health"] }
+evidence = "Klartexten avser huvuddiagnosen.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "sets" = [] }
+evidence = "Koden avser huvuddiagnosen.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod"
+fields = { "tags" = ["health"] }
+evidence = "Koden avser huvuddiagnosen.\ncatalog:variable_text:215:16801:2932897\ncatalog:variable_text:216:16801:2932897\ncatalog:variable_text:218:16801:2932897\ncatalog:variable_text:219:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ergonomisk"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser ergonomisk bedömning.\ncatalog:variable_text:221:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ergonomisk"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser ergonomisk bedömning.\ncatalog:variable_text:221:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraledig"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser föräldraledighet.\ncatalog:variable_text:222:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraledig"
+fields = { "tags" = ["employment", "family-household"] }
+evidence = "Kryssrutan avser föräldraledighet.\ncatalog:variable_text:222:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsmedicinskt-beslutsstod"
+fields = { "sets" = [] }
+evidence = "Texten gäller bedömd nedsättning av arbetsförmågan i förhållande till beslutsstödet.\ncatalog:variable_text:223:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsmedicinskt-beslutsstod"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Texten gäller bedömd nedsättning av arbetsförmågan i förhållande till beslutsstödet.\ncatalog:variable_text:223:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:funktionsnedsattning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser funktionsnedsättning.\ncatalog:variable_text:224:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:funktionsnedsattning"
+fields = { "tags" = ["disability"] }
+evidence = "Variabeln avser funktionsnedsättning.\ncatalog:variable_text:224:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpmedel"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser hjälpmedel som åtgärd.\ncatalog:variable_text:226:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpmedel"
+fields = { "tags" = ["disability"] }
+evidence = "Kryssrutan avser hjälpmedel som åtgärd.\ncatalog:variable_text:226:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kanal"
+fields = { "sets" = [] }
+evidence = "Kanalen anger hur intyget kom in.\ncatalog:variable_text:228:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kanal"
+fields = { "tags" = ["methods"] }
+evidence = "Kanalen anger hur intyget kom in.\ncatalog:variable_text:228:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-fhv"
+fields = { "sets" = [] }
+evidence = "FHV är en bokstavsförkortning för företagshälsovård och saknas som ord i etiketten.\ncatalog:variable_text:230:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-fhv"
+fields = { "tags" = ["healthcare"] }
+evidence = "FHV är en bokstavsförkortning för företagshälsovård och saknas som ord i etiketten.\ncatalog:variable_text:230:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinska-forutsattningar-for-arbete"
+fields = { "sets" = [] }
+evidence = "Fältet beskriver medicinska skäl som försämrar möjligheterna till återgång i arbete.\ncatalog:variable_text:232:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:medicinska-forutsattningar-for-arbete"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Fältet beskriver medicinska skäl som försämrar möjligheterna till återgång i arbete.\ncatalog:variable_text:232:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete"
+fields = { "sets" = [] }
+evidence = "Variabeln avser nuvarande arbete.\ncatalog:variable_text:233:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:nuvarande-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln avser nuvarande arbete.\ncatalog:variable_text:233:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfordelning"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser omfördelning av arbetsuppgifter.\ncatalog:variable_text:234:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfordelning"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser omfördelning av arbetsuppgifter.\ncatalog:variable_text:234:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-medicinsk-behandling"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver pågående medicinsk behandling.\ncatalog:variable_text:237:16801:2932897\ncatalog:variable_text:248:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-medicinsk-behandling"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln beskriver pågående medicinsk behandling.\ncatalog:variable_text:237:16801:2932897\ncatalog:variable_text:248:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:planerad-medicinsk-behandling"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver planerad medicinsk behandling.\ncatalog:variable_text:237:16801:2932897\ncatalog:variable_text:248:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:planerad-medicinsk-behandling"
+fields = { "tags" = ["healthcare"] }
+evidence = "Variabeln beskriver planerad medicinsk behandling.\ncatalog:variable_text:237:16801:2932897\ncatalog:variable_text:248:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smittbararpenning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger om intyget avser smittbärarpenning.\ncatalog:variable_text:251:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:smittbararpenning"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger om intyget avser smittbärarpenning.\ncatalog:variable_text:251:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:soka-nytt-arbete"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser att söka nytt arbete.\ncatalog:variable_text:252:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:soka-nytt-arbete"
+fields = { "tags" = ["employment"] }
+evidence = "Kryssrutan avser att söka nytt arbete.\ncatalog:variable_text:252:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:studier"
+fields = { "sets" = [] }
+evidence = "Kryssrutan avser studier.\ncatalog:variable_text:253:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:studier"
+fields = { "tags" = ["education"] }
+evidence = "Kryssrutan avser studier.\ncatalog:variable_text:253:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "sets" = [] }
+evidence = "Koden skiljer typer av intyg för socialförsäkring.\ncatalog:register:17\ncatalog:variable_text:254:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden skiljer typer av intyg för socialförsäkring.\ncatalog:register:17\ncatalog:variable_text:254:16801:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:konflikthantering"
+fields = { "tags" = ["employment"] }
+evidence = "Coordinator-approved audit correction: Def 'Fält 10 i intyget - kryssruta konflikthantering'. Sibling field-10 checkboxes (arbetstraning, besok-arbetsplats, omfordelning, ergonomisk, arbetsanpassning) all carry employment in the catalog; this is a return-to-work measure.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:24\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:229\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:229"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-medicinskt-underlag-mu"
+fields = { "tags" = ["health"] }
+evidence = "The alternative basis for medical evidence (r5) belongs to the medical-assessment context documented by its sibling (r6). Health is an established register theme (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:225\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-atgarder"
+fields = { "tags" = ["health"] }
+evidence = "The residual measures checkbox (r7) belongs to the certificate's medical-assessment context (r6). The register's established health theme supports tagging this residual consistently (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:235\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar"
+fields = { "tags" = ["health"] }
+evidence = "The certificate's residual information field (r8) shares the medical-assessment context documented in r6. Health is an established register theme (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:236\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"

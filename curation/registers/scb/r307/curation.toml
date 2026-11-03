@@ -197,3 +197,694 @@ kind = "set"
 subject = "personal-individ: jurform @2021-10-15,2022-10-15,2023-10-15,2024-10-15"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "var:barnomfatt"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Avser tjänstgöringsomfattning.\ncatalog:occurrence-locators:variable:12887"
+
+[[statement]]
+kind = "set"
+subject = "var:barnomfatt"
+fields = { "tags" = ["employment"] }
+evidence = "Avser tjänstgöringsomfattning.\ncatalog:occurrence-locators:variable:12887"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "sets" = [] }
+evidence = "Gatuadress anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12888"
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-gata"
+fields = { "tags" = ["geography"] }
+evidence = "Gatuadress anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12888"
+
+[[statement]]
+kind = "set"
+subject = "var:chef"
+fields = { "sets" = ["typ-av-tjanst"] }
+evidence = "Koderna anger chefsfunktion.\ncatalog:occurrence-locators:variable:12890\ncatalog:valueset:8210\ncatalog:valueset:9070"
+
+[[statement]]
+kind = "set"
+subject = "var:chef"
+fields = { "tags" = ["employment"] }
+evidence = "Koderna anger chefsfunktion.\ncatalog:occurrence-locators:variable:12890\ncatalog:valueset:8210\ncatalog:valueset:9070"
+
+[[statement]]
+kind = "set"
+subject = "var:chefomf"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Avser tjänstgöringsomfattning för chef.\ncatalog:occurrence-locators:variable:12891"
+
+[[statement]]
+kind = "set"
+subject = "var:chefomf"
+fields = { "tags" = ["employment"] }
+evidence = "Avser tjänstgöringsomfattning för chef.\ncatalog:occurrence-locators:variable:12891"
+
+[[statement]]
+kind = "set"
+subject = "var:driftform"
+fields = { "sets" = [] }
+evidence = "Driftsformen beskriver verksamhetens organisation.\ncatalog:occurrence-locators:variable:12892"
+
+[[statement]]
+kind = "set"
+subject = "var:driftform"
+fields = { "tags" = ["business"] }
+evidence = "Driftsformen beskriver verksamhetens organisation.\ncatalog:occurrence-locators:variable:12892"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Faderns utbildningsnivå är en utbildningskodning.\ncatalog:occurrence-locators:variable:12893"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Faderns utbildningsnivå är en utbildningskodning.\ncatalog:occurrence-locators:variable:12893"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12894"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12894"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12895"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12895"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12896"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamnfar"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12896"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12897"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12897"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Föräldrarnas sammanvägda utbildningsnivå är en utbildningskodning.\ncatalog:occurrence-locators:variable:12898"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas sammanvägda utbildningsnivå är en utbildningskodning.\ncatalog:occurrence-locators:variable:12898"
+
+[[statement]]
+kind = "set"
+subject = "var:forsk"
+fields = { "sets" = ["typ-av-tjanst"] }
+evidence = "Koderna anger tjänst som förskollärare.\ncatalog:occurrence-locators:variable:12899\ncatalog:valueset:11615"
+
+[[statement]]
+kind = "set"
+subject = "var:forsk"
+fields = { "tags" = ["employment"] }
+evidence = "Koderna anger tjänst som förskollärare.\ncatalog:occurrence-locators:variable:12899\ncatalog:valueset:11615"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = ["huvudman"] }
+evidence = "Koderna anger huvudman.\ncatalog:occurrence-locators:variable:12900\ncatalog:valueset:972"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Koderna anger huvudman.\ncatalog:occurrence-locators:variable:12900\ncatalog:valueset:972"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "sets" = ["huvudman"] }
+evidence = "Namnet anger huvudman.\ncatalog:occurrence-locators:variable:12901"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "tags" = ["education"] }
+evidence = "Namnet anger huvudman.\ncatalog:occurrence-locators:variable:12901"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver en juridisk enhet.\ncatalog:occurrence-locators:variable:12902"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver en juridisk enhet.\ncatalog:occurrence-locators:variable:12902"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Variabeln klassificerar kommunens geografiska tillhörighet.\ncatalog:occurrence-locators:variable:12903\ncatalog:valueset:12332\ncatalog:valueset:4872\ncatalog:valueset:5056"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln klassificerar kommunens geografiska tillhörighet.\ncatalog:occurrence-locators:variable:12903\ncatalog:valueset:12332\ncatalog:valueset:4872\ncatalog:valueset:5056"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12904"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:occurrence-locators:variable:12904"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Län anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12905"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12905"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Arbetsställets län anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12906"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Arbetsställets län anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12906"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "sets" = [] }
+evidence = "Kategorin avser nylig invandring.\ncatalog:occurrence-locators:variable:12907\ncatalog:valueset:1140"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "tags" = ["migration"] }
+evidence = "Kategorin avser nylig invandring.\ncatalog:occurrence-locators:variable:12907\ncatalog:valueset:1140"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningstid"
+fields = { "sets" = [] }
+evidence = "OB är en källförkortning som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:12908\ncatalog:variable_text:12908:18915:18916"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningstid"
+fields = { "tags" = ["education"] }
+evidence = "OB är en källförkortning som inte förekommer i etiketten.\ncatalog:occurrence-locators:variable:12908\ncatalog:variable_text:12908:18915:18916"
+
+[[statement]]
+kind = "set"
+subject = "var:omfatt"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Avser personalens tjänstgöringsomfattning.\ncatalog:occurrence-locators:variable:12909"
+
+[[statement]]
+kind = "set"
+subject = "var:omfatt"
+fields = { "tags" = ["employment"] }
+evidence = "Avser personalens tjänstgöringsomfattning.\ncatalog:occurrence-locators:variable:12909"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12912"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12912"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "sets" = [] }
+evidence = "Postort anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12913"
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "tags" = ["geography"] }
+evidence = "Postort anger verksamhetens läge.\ncatalog:occurrence-locators:variable:12913"
+
+[[statement]]
+kind = "set"
+subject = "var:rektor"
+fields = { "sets" = ["typ-av-tjanst"] }
+evidence = "Koderna anger rektorsfunktion.\ncatalog:occurrence-locators:variable:12914\ncatalog:valueset:6951"
+
+[[statement]]
+kind = "set"
+subject = "var:rektor"
+fields = { "tags" = ["employment"] }
+evidence = "Koderna anger rektorsfunktion.\ncatalog:occurrence-locators:variable:12914\ncatalog:valueset:6951"
+
+[[statement]]
+kind = "set"
+subject = "var:rektoromf"
+fields = { "sets" = ["tjanstgoringsomfattning"] }
+evidence = "Avser tjänstgöringsomfattning för rektor.\ncatalog:occurrence-locators:variable:12915"
+
+[[statement]]
+kind = "set"
+subject = "var:rektoromf"
+fields = { "tags" = ["employment"] }
+evidence = "Avser tjänstgöringsomfattning för rektor.\ncatalog:occurrence-locators:variable:12915"
+
+[[statement]]
+kind = "set"
+subject = "var:resurs"
+fields = { "sets" = ["typ-av-tjanst"] }
+evidence = "Koderna anger resurs- eller stödpersonal.\ncatalog:occurrence-locators:variable:12916\ncatalog:valueset:9720"
+
+[[statement]]
+kind = "set"
+subject = "var:resurs"
+fields = { "tags" = ["employment"] }
+evidence = "Koderna anger resurs- eller stödpersonal.\ncatalog:occurrence-locators:variable:12916\ncatalog:valueset:9720"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Datumet ingår bland invandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12917"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Datumet ingår bland invandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12917"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Koderna anger verksamhetsform inom utbildning.\ncatalog:occurrence-locators:variable:12918\ncatalog:valueset:10682"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Koderna anger verksamhetsform inom utbildning.\ncatalog:occurrence-locators:variable:12918\ncatalog:valueset:10682"
+
+[[statement]]
+kind = "set"
+subject = "var:smabarnsavdelning"
+fields = { "sets" = ["avdelningens-aldersinriktning"] }
+evidence = "Variabeln kodar småbarnsavdelning.\ncatalog:occurrence-locators:variable:12919\ncatalog:valueset:7133"
+
+[[statement]]
+kind = "set"
+subject = "var:smabarnsavdelning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar småbarnsavdelning.\ncatalog:occurrence-locators:variable:12919\ncatalog:valueset:7133"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum"
+fields = { "sets" = ["inskrivningens-startdatum"] }
+evidence = "Datumet avser inskrivningens start och får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12920"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum"
+fields = { "tags" = [] }
+evidence = "Datumet avser inskrivningens start och får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12920"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-inskr"
+fields = { "sets" = ["inskrivningens-startdatum"] }
+evidence = "Datumet avser inskrivningens start och får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12921"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-inskr"
+fields = { "tags" = [] }
+evidence = "Datumet avser inskrivningens start och får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12921"
+
+[[statement]]
+kind = "set"
+subject = "var:storbarnsavdelning"
+fields = { "sets" = ["avdelningens-aldersinriktning"] }
+evidence = "Variabeln kodar storbarnsavdelning.\ncatalog:occurrence-locators:variable:12922"
+
+[[statement]]
+kind = "set"
+subject = "var:storbarnsavdelning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln kodar storbarnsavdelning.\ncatalog:occurrence-locators:variable:12922"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Moderns utbildningsnivå.\ncatalog:variable_text:12923:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "tags" = ["education"] }
+evidence = "Moderns utbildningsnivå.\ncatalog:variable_text:12923:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Personalens utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12924:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr"
+fields = { "tags" = ["education"] }
+evidence = "Personalens utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12924:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Prioriterad utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12925:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio"
+fields = { "tags" = ["education"] }
+evidence = "Prioriterad utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12925:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio2"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Näst högsta relevanta utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12926:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio2"
+fields = { "tags" = ["education"] }
+evidence = "Näst högsta relevanta utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12926:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio3"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Tredje högsta relevanta utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12927:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000inr-prio3"
+fields = { "tags" = ["education"] }
+evidence = "Tredje högsta relevanta utbildningsinriktning enligt SUN 2000.\ncatalog:variable_text:12927:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Personalens utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12928:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "tags" = ["education"] }
+evidence = "Personalens utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12928:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Prioriterad utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12929:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio"
+fields = { "tags" = ["education"] }
+evidence = "Prioriterad utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12929:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Näst högsta relevanta utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12930:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio2"
+fields = { "tags" = ["education"] }
+evidence = "Näst högsta relevanta utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12930:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio3"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Tredje högsta relevanta utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12931:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-prio3"
+fields = { "tags" = ["education"] }
+evidence = "Tredje högsta relevanta utbildningsnivå enligt SUN 2000.\ncatalog:variable_text:12931:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Personalens utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12932:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr"
+fields = { "tags" = ["education"] }
+evidence = "Personalens utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12932:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Prioriterad utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12933:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio"
+fields = { "tags" = ["education"] }
+evidence = "Prioriterad utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12933:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio2"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Näst högsta relevanta utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12934:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio2"
+fields = { "tags" = ["education"] }
+evidence = "Näst högsta relevanta utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12934:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio3"
+fields = { "sets" = ["utbildningsinriktning"] }
+evidence = "Tredje högsta relevanta utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12935:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020inr-prio3"
+fields = { "tags" = ["education"] }
+evidence = "Tredje högsta relevanta utbildningsinriktning enligt SUN 2020.\ncatalog:variable_text:12935:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Personalens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12936:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "Personalens utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12936:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Prioriterad utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12937:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio"
+fields = { "tags" = ["education"] }
+evidence = "Prioriterad utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12937:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio2"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Näst högsta relevanta utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12938:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio2"
+fields = { "tags" = ["education"] }
+evidence = "Näst högsta relevanta utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12938:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio3"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Tredje högsta relevanta utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12939:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-prio3"
+fields = { "tags" = ["education"] }
+evidence = "Tredje högsta relevanta utbildningsnivå enligt SUN 2020.\ncatalog:variable_text:12939:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "Datumet ingår bland invandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12940"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Datumet ingår bland invandringsdatum; händelsedatum får ingen tematisk tagg.\ncatalog:occurrence-locators:variable:12940"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig"
+fields = { "sets" = [] }
+evidence = "Tjänstledighet avser arbetsmarknad.\ncatalog:occurrence-locators:variable:12941"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledig"
+fields = { "tags" = ["employment"] }
+evidence = "Tjänstledighet avser arbetsmarknad.\ncatalog:occurrence-locators:variable:12941"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "sets" = [] }
+evidence = "Anställningsslag avser arbetsmarknad.\ncatalog:occurrence-locators:variable:12942"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-anstallning"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsslag avser arbetsmarknad.\ncatalog:occurrence-locators:variable:12942"
+
+[[statement]]
+kind = "set"
+subject = "var:utbkat"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Kategorierna avser högsta utbildning för arbete med barn.\ncatalog:occurrence-locators:variable:12943\ncatalog:valueset:9603"
+
+[[statement]]
+kind = "set"
+subject = "var:utbkat"
+fields = { "tags" = ["education"] }
+evidence = "Kategorierna avser högsta utbildning för arbete med barn.\ncatalog:occurrence-locators:variable:12943\ncatalog:valueset:9603"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Bakgrundskategorin beskriver befolkningssammansättning.\ncatalog:occurrence-locators:variable:12944\ncatalog:valueset:12793"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundskategorin beskriver befolkningssammansättning.\ncatalog:occurrence-locators:variable:12944\ncatalog:valueset:12793"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetskommun"
+fields = { "sets" = ["kommuntillhorighet"] }
+evidence = "Verksamhetskommun anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12946"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Verksamhetskommun anger geografisk tillhörighet.\ncatalog:occurrence-locators:variable:12946"
+
+[[statement]]
+kind = "set"
+subject = "var:waldorf"
+fields = { "sets" = [] }
+evidence = "Variabeln anger förskolans pedagogiska profil.\ncatalog:occurrence-locators:variable:12947"
+
+[[statement]]
+kind = "set"
+subject = "var:waldorf"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln anger förskolans pedagogiska profil.\ncatalog:occurrence-locators:variable:12947"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Indelning av verksamhetskommunen i kommungrupper. SKL:s kommungruppsindelning 2011 används till och med 2016, SKL:s indelning 2017 används 2017–2022 och SKR:s indelning 2023 används från 2023." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger kommun snarare än kommungrupp i alla perioder.\ncatalog:occurrence-locators:variable:12903\ncatalog:valueset:12332\ncatalog:valueset:4872\ncatalog:valueset:5056\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:132228:opdef_text; rel070-base/reg_meta.db:occurrence:131907:opdef_text; rel070-base/reg_meta.db:occurrence:131988:opdef_text; rel070-base/reg_meta.db:occurrence:132169:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the actual classification-version changes with their effective periods, instead of an undated sequence of version names. Evidence: rel070-base/reg_meta.db occurrences 132228, 131907, 131988, 132169."

@@ -1,0 +1,10 @@
+{"kind":"register","provider":"demo","register":"assignment","name":"Assignment fixture"}
+{"kind":"table","provider":"demo","register":"assignment","table":"t","name":"T"}
+{"kind":"table","provider":"demo","register":"assignment","table":"u","name":"U"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","column":"EARLY","source_key":"v1","label":"Alpha","from":"2000-01-01","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","column":"LATER","source_key":"v2","label":"Beta","from":"2001-01-01","to":"2001-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","column":"LATER","source_key":"v2","label":"Beta","from":"2002-01-01","to":"2002-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","column":"RIVAL","source_key":"v3","label":"Gamma","from":"2000-12-31","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","column":"RIVAL","source_key":"v3","label":"Gamma","from":"2002-01-01","to":"2002-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"u","column":"SIDE","source_key":"v4","label":"Delta","from":"2000-01-01","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"u","column":"SIDE","source_key":"v4","label":"Delta","from":"2002-01-01","to":"2002-12-31"}

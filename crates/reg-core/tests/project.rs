@@ -64,7 +64,8 @@ fn expected_keys(result: &Value) -> Vec<IssueKey> {
 
 /// Every corpus case gives exactly its expected issues (level, code, path, message),
 /// in emission order. Fails when a rule's code, path or message template
-/// changes, or a rule is lost or added.
+/// changes, or a rule is lost or added. Reserved-prefix cases also fail if set
+/// presentation ids are accepted as project tables or variable bindings.
 #[test]
 fn structural_corpus() {
     let cases = cases(&repo().join(CORPUS));

@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "t: Fresh"
+fields.label = "Reviewed label"
+evidence = "This valid statement intentionally lacks a reviewed premise."

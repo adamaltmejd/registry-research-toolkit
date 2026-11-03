@@ -1,5 +1,5 @@
-//! Row keys and panels: a table's row keys are its segments with role `row_key`
-//! (schema §0), whether or not a binding orders them.
+//! Row keys and panels use the steward's declared physical entity/time components.
+//! Reference-only orders use catalog segments with role `row_key`.
 
 use std::collections::BTreeSet;
 
@@ -8,11 +8,173 @@ use reg_core::project::{Panel, Source};
 use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
-use crate::Error;
 use crate::ops::Server;
+use crate::{Code, Error};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
+
+#[derive(Clone)]
+struct KeySegment {
+    variable: String,
+    spelling: String,
+    start: i64,
+    end: i64,
+    state: String,
+    kind: Option<String>,
+    entity: bool,
+}
+
+/// Physical key declarations select the key set; metadata supplies state/kind only.
+fn key_segments(
+    server: &Server,
+    conn: &Connection,
+    serving: &Serving,
+) -> Result<Vec<KeySegment>, Error> {
+    if server.catalog.steward().is_none() {
+        return Ok(conn
+            .prepare(
+                "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
+             JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
+             LEFT JOIN id_kind k ON k.id=s.id_kind_id
+             WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
+            )?
+            .query_map([serving.table.id], |r| {
+                Ok(KeySegment {
+                    variable: r.get(0)?,
+                    spelling: r.get(1)?,
+                    start: r.get(2)?,
+                    end: r.get(3)?,
+                    state: r.get(4)?,
+                    kind: r.get(5)?,
+                    entity: true,
+                })
+            })?
+            .collect::<rusqlite::Result<_>>()?);
+    }
+    let mut mappings = conn.prepare(
+        "WITH semantics AS (
+           SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state,k.slug
+           FROM main.segment s JOIN main.tbl t ON t.id=s.table_id
+           JOIN main.variable v ON v.id=s.variable_id LEFT JOIN main.id_kind k ON k.id=s.id_kind_id
+           UNION ALL
+           SELECT t.pid,v.pid,s.start,s.end,s.state,k.slug
+           FROM held.segment s JOIN held.tbl t ON t.id=s.table_id
+           JOIN held.variable v ON v.id=s.variable_id LEFT JOIN held.id_kind k ON k.id=s.id_kind_id
+         )
+         SELECT DISTINCT m.variable_pid,c.name,max(m.start,served.start,s.start),
+                min(m.end,served.end,s.end),s.state,s.slug,json_extract(k.value,'$.period'),
+                EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
+         FROM held.holding_table h JOIN held.holding_column c ON c.holding_id=h.id
+         JOIN held.holding_mapping m ON m.column_id=c.id JOIN json_each(h.key_requirements) k
+         JOIN held.holding_column sc ON sc.holding_id=h.id
+         JOIN held.holding_mapping served ON served.column_id=sc.id AND served.table_pid=?
+           AND served.start<m.end AND served.end>m.start
+         JOIN semantics s ON s.table_pid=m.table_pid AND s.variable_pid=m.variable_pid
+           AND s.start<min(m.end,served.end) AND s.end>max(m.start,served.start)
+         WHERE json_extract(k.value,'$.hold') IS NULL AND (
+           EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
+           OR EXISTS(SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid))
+         ORDER BY m.variable_pid,c.name,m.start",
+    )?;
+    let mut out = Vec::new();
+    for row in mappings.query_map([&serving.table.pid], |r| {
+        Ok((
+            KeySegment {
+                variable: r.get(0)?,
+                spelling: r.get(1)?,
+                start: r.get(2)?,
+                end: r.get(3)?,
+                state: r.get(4)?,
+                kind: r.get(5)?,
+                entity: r.get(7)?,
+            },
+            r.get::<_, Option<String>>(6)?,
+        ))
+    })? {
+        let (key, period) = row?;
+        let scopes = period.map_or_else(
+            || Ok(vec![(key.start, key.end)]),
+            |period| {
+                period
+                    .split(',')
+                    .map(|token| {
+                        let (lo, hi) = token
+                            .trim()
+                            .parse::<reg_core::Period>()
+                            .map_err(|_| {
+                                Error::new(
+                                    Code::InternalError,
+                                    "Admitted row-key period is invalid.",
+                                    vec![],
+                                )
+                            })?
+                            .iso_bounds();
+                        Ok((key.start.max(day(&lo)), key.end.min(day(&hi) + 1)))
+                    })
+                    .collect::<Result<Vec<_>, Error>>()
+            },
+        )?;
+        for (start, end) in scopes {
+            if start < end {
+                out.push(KeySegment {
+                    start,
+                    end,
+                    ..key.clone()
+                });
+            }
+        }
+    }
+    Ok(merge_key_segments(out))
+}
+
+fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
+    // Several served columns can expose overlapping pieces of the same physical key.
+    out.sort_by(|a, b| {
+        (
+            &a.variable,
+            &a.spelling,
+            &a.state,
+            &a.kind,
+            a.entity,
+            a.start,
+            a.end,
+        )
+            .cmp(&(
+                &b.variable,
+                &b.spelling,
+                &b.state,
+                &b.kind,
+                b.entity,
+                b.start,
+                b.end,
+            ))
+    });
+    let mut merged: Vec<KeySegment> = Vec::new();
+    for key in out {
+        if let Some(last) = merged.last_mut()
+            && (
+                &last.variable,
+                &last.spelling,
+                &last.state,
+                &last.kind,
+                last.entity,
+            ) == (
+                &key.variable,
+                &key.spelling,
+                &key.state,
+                &key.kind,
+                key.entity,
+            )
+            && key.start <= last.end
+        {
+            last.end = last.end.max(key.end);
+        } else {
+            merged.push(key);
+        }
+    }
+    merged
+}
 
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
@@ -27,30 +189,21 @@ pub(super) fn row_keys(
     source: &Source,
     serving: &[Serving],
 ) -> Result<(Vec<OrderRowKeys>, Vec<Issue>), Error> {
-    let mut query = conn.prepare(
-        "SELECT v.pid, sp.exact, s.start, s.end, s.state
-         FROM segment s JOIN variable v ON v.id = s.variable_id
-           JOIN spelling sp ON sp.id = s.spelling_id
-         WHERE s.table_id = ? AND s.role = 'row_key'
-         ORDER BY v.pid, sp.exact, s.start",
-    )?;
     let mut out = Vec::new();
     let mut findings = Vec::new();
     for s in serving {
-        let rows: Vec<(String, String, i64, i64, String)> = query
-            .query_map([s.table.id], |row| {
-                Ok((
-                    row.get(0)?,
-                    row.get(1)?,
-                    row.get(2)?,
-                    row.get(3)?,
-                    row.get(4)?,
-                ))
-            })?
-            .collect::<rusqlite::Result<_>>()?;
+        let rows = key_segments(server, conn, s)?;
         // Day-number pieces `[start, end)` of each column inside the requested days.
         let mut pieces = Vec::new();
-        for (variable, spelling, start, end, state) in rows {
+        for KeySegment {
+            variable,
+            spelling,
+            start,
+            end,
+            state,
+            ..
+        } in rows
+        {
             for (lo, hi) in &s.requested {
                 let (lo, hi) = (start.max(day(lo)), end.min(day(hi) + 1));
                 if lo >= hi {
@@ -129,34 +282,32 @@ pub(super) fn row_keys(
     Ok((out, findings))
 }
 
-/// `panel_row_keys_differ`: every member's row-key segments over its requested days
+/// `panel_row_keys_differ`: every member's entity keys over its requested days
 /// carry a known identifier kind (the full kind, pseudonymised form included) and the
 /// members' kinds differ. A member with an unknown kind, or whose source did not
 /// resolve, gives no finding.
 pub(super) fn panel(
+    server: &Server,
     conn: &Connection,
     index: usize,
     panel: &Panel,
-    served: &[(&str, Option<Vec<Serving>>)],
+    members: &[(&str, Option<Vec<Serving>>)],
 ) -> Result<Vec<Issue>, Error> {
-    let mut query = conn.prepare(
-        "SELECT DISTINCT k.slug FROM segment s LEFT JOIN id_kind k ON k.id = s.id_kind_id
-         WHERE s.table_id = ?1 AND s.role = 'row_key' AND s.start <= ?2 AND s.end > ?3",
-    )?;
     let mut kinds: Vec<(&str, BTreeSet<String>)> = Vec::new();
     for member in &panel.members {
-        let Some((_, Some(serving))) = served.iter().find(|(name, _)| name == member) else {
+        let Some((_, Some(serving))) = members.iter().find(|(name, _)| name == member) else {
             return Ok(vec![]);
         };
         let mut found: BTreeSet<Option<String>> = BTreeSet::new();
         for s in serving {
-            for (lo, hi) in &s.requested {
-                let rows = query
-                    .query_map(rusqlite::params![s.table.id, day(hi), day(lo)], |row| {
-                        row.get::<_, Option<String>>(0)
-                    })?
-                    .collect::<rusqlite::Result<Vec<_>>>()?;
-                found.extend(rows);
+            for key in key_segments(server, conn, s)? {
+                if key.entity
+                    && s.requested
+                        .iter()
+                        .any(|(lo, hi)| key.start <= day(hi) && key.end > day(lo))
+                {
+                    found.insert(key.kind);
+                }
             }
         }
         if found.is_empty() || found.contains(&None) {

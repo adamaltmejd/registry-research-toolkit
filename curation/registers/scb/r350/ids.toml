@@ -9,4 +9,4 @@ public = "gronytor-tatorter"
 "areascbm2" = ["Grönområden, hoplagda grönytor: AreaScbm2"]
 "datatyp-for-geometri" = ["Grönområden, hoplagda grönytor: SP_Geometry"]
 "tatortskod" = ["Grönområden, hoplagda grönytor: TATORTSKOD"]
-"uuid" = ["Grönområden, hoplagda grönytor: uuid"]
+"id-gronytor-inom-tatort" = ["Grönområden, hoplagda grönytor: uuid"]

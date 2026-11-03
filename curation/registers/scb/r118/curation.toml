@@ -76,3 +76,3009 @@ kind = "set"
 subject = "taxeringsutfallet: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:alderspensionsavgift"
+fields = { "sets" = [] }
+evidence = "Avgift av skattekaraktär.\ncatalog:variable_text:44899:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:alderspensionsavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift av skattekaraktär.\ncatalog:variable_text:44899:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmavdr"
+fields = { "sets" = [] }
+evidence = "Avdraget är skatterelaterat.\ncatalog:variable_text:44900:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmavdr"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdraget är skatterelaterat.\ncatalog:variable_text:44900:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmloneavg"
+fields = { "sets" = ["allman-loneavgift"] }
+evidence = "Avgiftsbelopp.\ncatalog:variable_text:44901:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmloneavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp.\ncatalog:variable_text:44901:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmloneavgung"
+fields = { "sets" = ["allman-loneavgift"] }
+evidence = "Avgiftsbelopp för ungdomar.\ncatalog:variable_text:44902:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmloneavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp för ungdomar.\ncatalog:variable_text:44902:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavgannat"
+fields = { "sets" = ["allman-pensionsavgift"] }
+evidence = "Pensionsavgiftens belopp.\ncatalog:variable_text:44903:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavgannat"
+fields = { "tags" = ["taxation"] }
+evidence = "Pensionsavgiftens belopp.\ncatalog:variable_text:44903:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavganst"
+fields = { "sets" = ["allman-pensionsavgift"] }
+evidence = "Pensionsavgiftens belopp.\ncatalog:variable_text:44904:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavganst"
+fields = { "tags" = ["taxation"] }
+evidence = "Pensionsavgiftens belopp.\ncatalog:variable_text:44904:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavgavdr"
+fields = { "sets" = [] }
+evidence = "Avdraget är skatterelaterat.\ncatalog:variable_text:44905:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:allmpensavgavdr"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdraget är skatterelaterat.\ncatalog:variable_text:44905:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskforvink"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44906:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskforvink"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44906:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskink-svkyrkan"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Källkolumnen har en annan ägare i föregående period.\ncatalog:occurrence:464802\ncatalog:occurrence:464945"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskink-svkyrkan"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har en annan ägare i föregående period.\ncatalog:occurrence:464802\ncatalog:occurrence:464945"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkbosnisl"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44908:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkbosnisl"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44908:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkequ"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Definitionen avser antal personer.\ncatalog:variable_text:44909:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkequ"
+fields = { "tags" = ["taxation"] }
+evidence = "Definitionen avser antal personer.\ncatalog:variable_text:44909:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkevfriky"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44910:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkevfriky"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44910:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkforislfor"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44911:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkforislfor"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44911:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkfrarmen"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44912:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkfrarmen"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44912:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkislshiasamf"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44913:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkislshiasamf"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44913:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkmetodist"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44914:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkmetodist"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44914:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkmiky"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44915:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkmiky"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44915:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkpingst"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464798\ncatalog:occurrence:464941"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkpingst"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464798\ncatalog:occurrence:464941"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkromkat"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464536\ncatalog:occurrence:464666"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkromkat"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464536\ncatalog:occurrence:464666"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvallians"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44918:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvallians"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44918:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvbaptist"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44919:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvbaptist"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44919:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvky"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Källkolumnerna har olika ägare och samfund.\ncatalog:occurrence:464798\ncatalog:occurrence:464802\ncatalog:occurrence:464941\ncatalog:occurrence:464945"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvky"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnerna har olika ägare och samfund.\ncatalog:occurrence:464798\ncatalog:occurrence:464802\ncatalog:occurrence:464941\ncatalog:occurrence:464945"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvmusfor"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44921:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksvmusfor"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44921:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksyrortark"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44922:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksyrortark"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44922:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksyrortpat"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464536\ncatalog:occurrence:464666"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinksyrortpat"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464536\ncatalog:occurrence:464666"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkungprot"
+fields = { "sets" = ["antal-med-positiv-beskattningsbar-inkomst"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44924:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antbeskinkungprot"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal med positiv beskattningsbar inkomst.\ncatalog:variable_text:44924:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antfyspersskstat"
+fields = { "sets" = ["statlig-inkomstskatt-pa-forvarvsinkomster"] }
+evidence = "Antal betalare av statlig inkomstskatt.\ncatalog:variable_text:44925:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antfyspersskstat"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal betalare av statlig inkomstskatt.\ncatalog:variable_text:44925:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antfyspersskstatovre"
+fields = { "sets" = ["statlig-inkomstskatt-pa-forvarvsinkomster"] }
+evidence = "Antal betalare över övre skiktgränsen.\ncatalog:variable_text:44926:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antfyspersskstatovre"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal betalare över övre skiktgränsen.\ncatalog:variable_text:44926:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antnolltax"
+fields = { "sets" = [] }
+evidence = "Antal nollbeskattade.\ncatalog:variable_text:44927:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antnolltax"
+fields = { "tags" = ["taxation"] }
+evidence = "Antal nollbeskattade.\ncatalog:variable_text:44927:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antoskkap"
+fields = { "sets" = ["resultat-av-kapital"] }
+evidence = "Antal personer med kapitalöverskott.\ncatalog:variable_text:44928:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antoskkap"
+fields = { "tags" = ["income"] }
+evidence = "Antal personer med kapitalöverskott.\ncatalog:variable_text:44928:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anttaxforvink"
+fields = { "sets" = ["faststalld-inkomst"] }
+evidence = "Antal med fastställd inkomst.\ncatalog:variable_text:44929:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anttaxforvink"
+fields = { "tags" = ["income"] }
+evidence = "Antal med fastställd inkomst.\ncatalog:variable_text:44929:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antuskkap"
+fields = { "sets" = ["resultat-av-kapital"] }
+evidence = "Antal personer med kapitalunderskott.\ncatalog:variable_text:44930:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antuskkap"
+fields = { "tags" = ["income"] }
+evidence = "Antal personer med kapitalunderskott.\ncatalog:variable_text:44930:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsavgift"
+fields = { "sets" = ["arbetsmarknadsavgift"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44931:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44931:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskadeavgift"
+fields = { "sets" = ["arbetsskadeavgift"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44932:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsskadeavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44932:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbmarknavgung"
+fields = { "sets" = ["arbetsmarknadsavgift"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44933:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbmarknavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44933:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbskadeavgung"
+fields = { "sets" = ["arbetsskadeavgift"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44934:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbskadeavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44934:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:aterfexpfondsk"
+fields = { "sets" = ["expansionsfondsskatt"] }
+evidence = "Återförd expansionsfondsskatt.\ncatalog:variable_text:44935:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:aterfexpfondsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Återförd expansionsfondsskatt.\ncatalog:variable_text:44935:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:aterfordexpfondsk"
+fields = { "sets" = ["expansionsfondsskatt"] }
+evidence = "Återförd expansionsfondsskatt.\ncatalog:variable_text:44936:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:aterfordexpfondsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Återförd expansionsfondsskatt.\ncatalog:variable_text:44936:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:avgbegravn"
+fields = { "sets" = [] }
+evidence = "Begravningsavgift.\ncatalog:variable_text:44937:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgbegravn"
+fields = { "tags" = ["taxation"] }
+evidence = "Begravningsavgift.\ncatalog:variable_text:44937:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgbosnisl"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44938:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgbosnisl"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44938:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgequ"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44939:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgequ"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44939:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgevfriky"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44940:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgevfriky"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44940:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr015"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44941:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr015"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44941:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr020"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44942:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr020"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44942:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr030"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44943:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr030"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44943:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr040"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44944:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasthyr040"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för hyreshus.\ncatalog:variable_text:44944:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfastsma0375"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för småhus.\ncatalog:variable_text:44945:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfastsma0375"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för småhus.\ncatalog:variable_text:44945:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfastsma075"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Fastighetsavgift för småhus.\ncatalog:variable_text:44946:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfastsma075"
+fields = { "tags" = ["taxation"] }
+evidence = "Fastighetsavgift för småhus.\ncatalog:variable_text:44946:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasttot"
+fields = { "sets" = ["kommunal-fastighetsavgift"] }
+evidence = "Total fastighetsavgift.\ncatalog:variable_text:44947:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfasttot"
+fields = { "tags" = ["taxation"] }
+evidence = "Total fastighetsavgift.\ncatalog:variable_text:44947:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgforislfor"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44948:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgforislfor"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44948:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfrarmen"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44949:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgfrarmen"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44949:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgisl"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44950:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgisl"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44950:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgislshiasamf"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44951:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgislshiasamf"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44951:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgmetodist"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44952:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgmetodist"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44952:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgpingst"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44953:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgpingst"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44953:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgromkat"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464560\ncatalog:occurrence:464691"
+
+[[statement]]
+kind = "set"
+subject = "var:avgromkat"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464560\ncatalog:occurrence:464691"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvallians"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44955:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvallians"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44955:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvbaptist"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44956:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvbaptist"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44956:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvkyrkan"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44957:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvkyrkan"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44957:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvmiky"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44958:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvmiky"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44958:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvmusfor"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44959:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsvmusfor"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44959:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsyrortark"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44960:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsyrortark"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44960:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsyrortpat"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464560\ncatalog:occurrence:464691"
+
+[[statement]]
+kind = "set"
+subject = "var:avgsyrortpat"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och samfund.\ncatalog:occurrence:464560\ncatalog:occurrence:464691"
+
+[[statement]]
+kind = "set"
+subject = "var:avgungprot"
+fields = { "sets" = ["trossamfundsavgift"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44962:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avgungprot"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift till trossamfund.\ncatalog:variable_text:44962:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-15-forsakring"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44963:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-15-forsakring"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44963:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-30-forsakring"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44964:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkastningsskatt-30-forsakring"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44964:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44965:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskattens belopp.\ncatalog:variable_text:44965:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk-kapfors"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskatt på kapitalförsäkring.\ncatalog:variable_text:44966:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk-kapfors"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskatt på kapitalförsäkring.\ncatalog:variable_text:44966:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk15"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskatt på pensionsförsäkring.\ncatalog:variable_text:44967:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avksk15"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskatt på pensionsförsäkring.\ncatalog:variable_text:44967:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskmandeb"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Manuellt debiterad avkastningsskatt.\ncatalog:variable_text:44968:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskmandeb"
+fields = { "tags" = ["taxation"] }
+evidence = "Manuellt debiterad avkastningsskatt.\ncatalog:variable_text:44968:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskutlkap"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskatt på utländsk kapitalförsäkring.\ncatalog:variable_text:44969:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskutlkap"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskatt på utländsk kapitalförsäkring.\ncatalog:variable_text:44969:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskutlpens"
+fields = { "sets" = ["avkastningsskatt"] }
+evidence = "Avkastningsskatt på utländsk pensionsförsäkring.\ncatalog:variable_text:44970:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avkskutlpens"
+fields = { "tags" = ["taxation"] }
+evidence = "Avkastningsskatt på utländsk pensionsförsäkring.\ncatalog:variable_text:44970:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:beskforvink"
+fields = { "sets" = [] }
+evidence = "Beskattningsbar inkomst.\ncatalog:variable_text:44971:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:beskforvink"
+fields = { "tags" = ["income", "taxation"] }
+evidence = "Beskattningsbar inkomst.\ncatalog:variable_text:44971:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:efterlevandepensionsavgift"
+fields = { "sets" = ["efterlevandepensionsavgift"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44972:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:efterlevandepensionsavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp inklusive ungdomsvariant.\ncatalog:variable_text:44972:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:eftpensavgung"
+fields = { "sets" = ["efterlevandepensionsavgift"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44973:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:eftpensavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44973:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondminskn"
+fields = { "sets" = ["forandring-av-expansionsfond"] }
+evidence = "Förändring av expansionsfond.\ncatalog:variable_text:44974:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondminskn"
+fields = { "tags" = ["taxation"] }
+evidence = "Förändring av expansionsfond.\ncatalog:variable_text:44974:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondokn"
+fields = { "sets" = ["forandring-av-expansionsfond"] }
+evidence = "Förändring av expansionsfond.\ncatalog:variable_text:44975:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondokn"
+fields = { "tags" = ["taxation"] }
+evidence = "Förändring av expansionsfond.\ncatalog:variable_text:44975:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondsk"
+fields = { "sets" = ["expansionsfondsskatt"] }
+evidence = "Debiterad expansionsfondsskatt.\ncatalog:variable_text:44976:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:expfondsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Debiterad expansionsfondsskatt.\ncatalog:variable_text:44976:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraforsavg"
+fields = { "sets" = ["foraldraforsakringsavgift"] }
+evidence = "Föräldraförsäkringsavgift.\ncatalog:variable_text:44977:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraforsavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Föräldraförsäkringsavgift.\ncatalog:variable_text:44977:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraforsavgung"
+fields = { "sets" = ["foraldraforsakringsavgift"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44978:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraforsavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Ungdomsvariant av avgiften.\ncatalog:variable_text:44978:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forhojt-grundavdrag-stodomrade-a"
+fields = { "sets" = ["grundavdrag"] }
+evidence = "Förhöjt grundavdrag.\ncatalog:variable_text:44979:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forhojt-grundavdrag-stodomrade-a"
+fields = { "tags" = ["taxation"] }
+evidence = "Förhöjt grundavdrag.\ncatalog:variable_text:44979:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdr"
+fields = { "sets" = ["grundavdrag"] }
+evidence = "Medgivet grundavdrag.\ncatalog:variable_text:44980:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdr"
+fields = { "tags" = ["taxation"] }
+evidence = "Medgivet grundavdrag.\ncatalog:variable_text:44980:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdrsarskbel"
+fields = { "sets" = ["grundavdrag"] }
+evidence = "Särskilt belopp av grundavdraget.\ncatalog:variable_text:44981:14610:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdrsarskbel"
+fields = { "tags" = ["taxation"] }
+evidence = "Särskilt belopp av grundavdraget.\ncatalog:variable_text:44981:14610:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdrtlgnp"
+fields = { "sets" = ["grundavdrag"] }
+evidence = "Tillägg till grundavdrag.\ncatalog:variable_text:44982:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:gravdrtlgnp"
+fields = { "tags" = ["taxation"] }
+evidence = "Tillägg till grundavdrag.\ncatalog:variable_text:44982:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommunetiketten motsägs av länsvärdemängden för en period.\ncatalog:valueset:7128\ncatalog:variable_text:44985:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunetiketten motsägs av länsvärdemängden för en period.\ncatalog:valueset:7128\ncatalog:variable_text:44985:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-inkomstskatt-forvarvsinkomst"
+fields = { "sets" = ["kommunal-inkomstskatt"] }
+evidence = "Kommunal inkomstskatt.\ncatalog:variable_text:44986:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunal-inkomstskatt-forvarvsinkomst"
+fields = { "tags" = ["taxation"] }
+evidence = "Kommunal inkomstskatt.\ncatalog:variable_text:44986:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:loneskatt-pens-forsakring-egen"
+fields = { "sets" = ["sarskild-loneskatt-pa-pensionskostnader"] }
+evidence = "Särskild löneskatt på pensionskostnader.\ncatalog:variable_text:44987:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:loneskatt-pens-forsakring-egen"
+fields = { "tags" = ["taxation"] }
+evidence = "Särskild löneskatt på pensionskostnader.\ncatalog:variable_text:44987:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattn-egenavg"
+fields = { "sets" = ["nedsattning-av-egenavgifter"] }
+evidence = "Nedsättning av egenavgifter.\ncatalog:variable_text:44988:14975:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattn-egenavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Nedsättning av egenavgifter.\ncatalog:variable_text:44988:14975:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:negulagslpensanst"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-anstalldas-pensioner"] }
+evidence = "Negativt pensionsskatteunderlag.\ncatalog:variable_text:44989:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:negulagslpensanst"
+fields = { "tags" = ["taxation"] }
+evidence = "Negativt pensionsskatteunderlag.\ncatalog:variable_text:44989:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskaktnrv"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44990:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskaktnrv"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44990:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskaktnrvhb"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44991:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskaktnrvhb"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44991:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskkap"
+fields = { "sets" = ["resultat-av-kapital"] }
+evidence = "Kapitalöverskott.\ncatalog:variable_text:44992:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskkap"
+fields = { "tags" = ["income"] }
+evidence = "Kapitalöverskott.\ncatalog:variable_text:44992:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskpassnrv"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44993:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskpassnrv"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44993:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskpassnrvhb"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44994:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:oskpassnrvhb"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:44994:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:osktjanst"
+fields = { "sets" = [] }
+evidence = "Överskott av tjänst.\ncatalog:variable_text:44995:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:osktjanst"
+fields = { "tags" = ["income"] }
+evidence = "Överskott av tjänst.\ncatalog:variable_text:44995:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:public-service-avgift"
+fields = { "sets" = [] }
+evidence = "Avgift av skattekaraktär.\ncatalog:variable_text:44996:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:public-service-avgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgift av skattekaraktär.\ncatalog:variable_text:44996:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:regional-nedsattning-egenavgifter"
+fields = { "sets" = ["nedsattning-av-egenavgifter"] }
+evidence = "Regional nedsättning av egenavgifter.\ncatalog:variable_text:44997:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:regional-nedsattning-egenavgifter"
+fields = { "tags" = ["taxation"] }
+evidence = "Regional nedsättning av egenavgifter.\ncatalog:variable_text:44997:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-f-sarsk-loneskatt-pa-pens-kostn-ulagslpensegen2426"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-egen-pension"] }
+evidence = "Id:t anger skatt men variabeln anger underlag under hela perioden.\ncatalog:variable_text:44998:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-f-sarsk-loneskatt-pa-pens-kostn-ulagslpensegen2426"
+fields = { "tags" = ["taxation"] }
+evidence = "Id:t anger skatt men variabeln anger underlag under hela perioden.\ncatalog:variable_text:44998:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-skattereduktion"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:44999:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-skattereduktion"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:44999:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoinkomstavdrag"
+fields = { "sets" = [] }
+evidence = "Sjöinkomstavdrag.\ncatalog:variable_text:45000:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sjoinkomstavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Sjöinkomstavdrag.\ncatalog:variable_text:45000:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukforsakringsavgift"
+fields = { "sets" = ["sjukforsakringsavgift"] }
+evidence = "Avgiftsbelopp.\ncatalog:variable_text:45001:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukforsakringsavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp.\ncatalog:variable_text:45001:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukforsavgung"
+fields = { "sets" = ["sjukforsakringsavgift"] }
+evidence = "Avgiftsbelopp för ungdomar.\ncatalog:variable_text:45002:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukforsavgung"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsbelopp för ungdomar.\ncatalog:variable_text:45002:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktig-formogenhet"
+fields = { "sets" = [] }
+evidence = "Skattepliktig förmögenhet.\ncatalog:variable_text:45003:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktig-formogenhet"
+fields = { "tags" = ["taxation", "wealth"] }
+evidence = "Skattepliktig förmögenhet.\ncatalog:variable_text:45003:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-avgift-akassa"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45004:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-avgift-akassa"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45004:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-byggnadsarbete"
+fields = { "sets" = ["skattereduktion-for-husarbete"] }
+evidence = "Skattereduktion för byggnadsarbete.\ncatalog:variable_text:45005:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-byggnadsarbete"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för byggnadsarbete.\ncatalog:variable_text:45005:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-fastighetsskatt"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för fastighetsskatt.\ncatalog:variable_text:45006:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-fastighetsskatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för fastighetsskatt.\ncatalog:variable_text:45006:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-for-fackforeningsavgift"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för fackföreningsavgift.\ncatalog:variable_text:45007:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-for-fackforeningsavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för fackföreningsavgift.\ncatalog:variable_text:45007:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-formogenhetsskatt"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för förmögenhetsskatt.\ncatalog:variable_text:45008:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-formogenhetsskatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för förmögenhetsskatt.\ncatalog:variable_text:45008:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-gava"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för gåva.\ncatalog:variable_text:45009:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-gava"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för gåva.\ncatalog:variable_text:45009:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-husarbete"
+fields = { "sets" = ["skattereduktion-for-husarbete"] }
+evidence = "Skattereduktion för husarbete.\ncatalog:variable_text:45010:14610:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-husarbete"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för husarbete.\ncatalog:variable_text:45010:14610:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-hushallsarbete"
+fields = { "sets" = ["skattereduktion-for-husarbete"] }
+evidence = "Skattereduktion för hushållsarbete.\ncatalog:variable_text:45011:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-hushallsarbete"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för hushållsarbete.\ncatalog:variable_text:45011:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-sjuk-aktivitet"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för sjuk- och aktivitetsersättning.\ncatalog:variable_text:45012:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-sjuk-aktivitet"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för sjuk- och aktivitetsersättning.\ncatalog:variable_text:45012:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underskott-kapital"
+fields = { "sets" = [] }
+evidence = "Skattereduktion för kapitalunderskott.\ncatalog:variable_text:45013:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattereduktion-underskott-kapital"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion för kapitalunderskott.\ncatalog:variable_text:45013:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr020"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45014:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr020"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45014:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr025"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45015:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr025"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45015:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr040"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45016:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr040"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45016:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr050"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45017:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasthyr050"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45017:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastind050"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45018:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastind050"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45018:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastlok100"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45019:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastlok100"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45019:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsma050"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45020:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsma050"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45020:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsma100"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45021:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsma100"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45021:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsmautl"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45022:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastsmautl"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45022:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasttomthyr040"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45023:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasttomthyr040"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45023:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasttomtsma100"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45024:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfasttomtsma100"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45024:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvarm050"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45025:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvarm050"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45025:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvind020"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45026:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvind020"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45026:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvtn170"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45027:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvtn170"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45027:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvtn280"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45028:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skfastvtn280"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig fastighetsskatt.\ncatalog:variable_text:45028:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skform"
+fields = { "sets" = [] }
+evidence = "Förmögenhetsskatt.\ncatalog:variable_text:45029:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skform"
+fields = { "tags" = ["taxation"] }
+evidence = "Förmögenhetsskatt.\ncatalog:variable_text:45029:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skkominkfastbel"
+fields = { "sets" = ["kommunal-inkomstskatt"] }
+evidence = "Kommunal inkomstskatt, fast belopp.\ncatalog:variable_text:45030:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:skkominkfastbel"
+fields = { "tags" = ["taxation"] }
+evidence = "Kommunal inkomstskatt, fast belopp.\ncatalog:variable_text:45030:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:mervardesskatt-debiterat-belopp"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45031:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mervardesskatt-debiterat-belopp"
+fields = { "tags" = ["taxation"] }
+evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45031:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mervardesskatt-tillgodofort-belopp"
+fields = { "sets" = ["mervardesskatt"] }
+evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45032:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:mervardesskatt-tillgodofort-belopp"
+fields = { "tags" = ["taxation"] }
+evidence = "MVS är en källkod som inte är en läsbar ordstam i etiketten.\ncatalog:variable_text:45032:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:skplformneg"
+fields = { "sets" = [] }
+evidence = "Förmögenhetsunderskott.\ncatalog:variable_text:45033:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skplformneg"
+fields = { "tags" = ["wealth"] }
+evidence = "Förmögenhetsunderskott.\ncatalog:variable_text:45033:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:skredallmpensavg"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45034:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredallmpensavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45034:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredarbink"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45035:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredarbink"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45035:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredbredband"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45036:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skredbredband"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45036:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skredel"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45037:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredel"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45037:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredfastavg"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45038:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredfastavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45038:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredmiljosma"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45039:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skredmiljosma"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45039:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skredsjoinkomst"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45040:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredsjoinkomst"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45040:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skredstormskog"
+fields = { "sets" = [] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45041:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skredstormskog"
+fields = { "tags" = ["taxation"] }
+evidence = "Skattereduktion.\ncatalog:variable_text:45041:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:skstatinkforv"
+fields = { "sets" = ["statlig-inkomstskatt-pa-forvarvsinkomster"] }
+evidence = "Statlig inkomstskatt.\ncatalog:variable_text:45042:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skstatinkforv"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig inkomstskatt.\ncatalog:variable_text:45042:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-loneskatt-pa-vissa-forvarvsinkomster"
+fields = { "sets" = [] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45043:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-loneskatt-pa-vissa-forvarvsinkomster"
+fields = { "tags" = ["taxation"] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45043:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-loneskatt-pa-pensionskostnader-for-anstallda"
+fields = { "sets" = ["sarskild-loneskatt-pa-pensionskostnader"] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45044:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-loneskatt-pa-pensionskostnader-for-anstallda"
+fields = { "tags" = ["taxation"] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45044:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-fastighetsskatt"
+fields = { "sets" = ["statlig-fastighetsskatt"] }
+evidence = "Total statlig fastighetsskatt.\ncatalog:variable_text:45045:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-fastighetsskatt"
+fields = { "tags" = ["taxation"] }
+evidence = "Total statlig fastighetsskatt.\ncatalog:variable_text:45045:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-kapitalinkomster"
+fields = { "sets" = [] }
+evidence = "Statlig skatt på kapitalinkomst.\ncatalog:variable_text:45046:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:statlig-inkomstskatt-kapitalinkomster"
+fields = { "tags" = ["taxation"] }
+evidence = "Statlig skatt på kapitalinkomst.\ncatalog:variable_text:45046:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxforvink"
+fields = { "sets" = ["faststalld-inkomst"] }
+evidence = "Fastställd inkomst.\ncatalog:variable_text:45047:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxforvink"
+fields = { "tags" = ["income"] }
+evidence = "Fastställd inkomst.\ncatalog:variable_text:45047:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgexpfondsk"
+fields = { "sets" = ["expansionsfondsskatt"] }
+evidence = "Tillgodoförd expansionsfondsskatt.\ncatalog:variable_text:45048:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tillgexpfondsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Tillgodoförd expansionsfondsskatt.\ncatalog:variable_text:45048:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagaldpensavg"
+fields = { "sets" = [] }
+evidence = "Avgiftsunderlag.\ncatalog:variable_text:45049:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagaldpensavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsunderlag.\ncatalog:variable_text:45049:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45051:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45051:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per1"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45052:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45052:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per2"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45053:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45053:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per3"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45054:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg1per3"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45054:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg2"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Källkolumnens ägare och beskrivna underlag skiljer sig mellan perioderna.\ncatalog:occurrence:464892\ncatalog:occurrence:465343"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg2"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnens ägare och beskrivna underlag skiljer sig mellan perioderna.\ncatalog:occurrence:464892\ncatalog:occurrence:465343"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg220ung"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45056:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg220ung"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45056:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg307"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45057:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg307"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45057:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg313"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45058:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg313"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45058:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg325"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45059:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg325"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45059:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg440"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45060:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmloneavg440"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän löneavgift.\ncatalog:variable_text:45060:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmpensavgannat"
+fields = { "sets" = ["underlag-for-allman-pensionsavgift"] }
+evidence = "Underlag för allmän pensionsavgift.\ncatalog:variable_text:45061:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmpensavgannat"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän pensionsavgift.\ncatalog:variable_text:45061:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmpensavganst"
+fields = { "sets" = ["underlag-for-allman-pensionsavgift"] }
+evidence = "Underlag för allmän pensionsavgift.\ncatalog:variable_text:45062:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagallmpensavganst"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för allmän pensionsavgift.\ncatalog:variable_text:45062:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg095ung"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45063:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg095ung"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45063:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45064:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45064:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg116"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45065:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg116"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45065:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg191"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45066:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg191"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45066:13149:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1ex1"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45067:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1ex1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45067:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per1"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45068:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45068:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per2"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45069:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45069:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per3"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45070:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg1per3"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45070:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg2"
+fields = { "sets" = ["underlag-for-arbetsmarknadsavgift"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45071:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbmarknavg2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsmarknadsavgift.\ncatalog:variable_text:45071:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45072:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45072:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg-foregar"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45073:14610:14975\ncatalog:variable_text:45073:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg-foregar"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45073:14610:14975\ncatalog:variable_text:45073:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg034ung"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45074:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg034ung"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45074:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg068"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45075:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavg068"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45075:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper1"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45076:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45076:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper2"
+fields = { "sets" = ["underlag-for-arbetsskadeavgift"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45077:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för arbetsskadeavgift.\ncatalog:variable_text:45077:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper3"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumn och etikett anger olika avgifter.\ncatalog:occurrence-locators:variable:45078\ncatalog:variable_text:45078:16801:17167\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to underlag-for-sjukforsakringsavgift; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:ulagarbskadeavgper3"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumn och etikett anger olika avgifter.\ncatalog:occurrence-locators:variable:45078\ncatalog:variable_text:45078:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagaterfordexpfondsk"
+fields = { "sets" = [] }
+evidence = "Underlag för skatt.\ncatalog:variable_text:45079:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagaterfordexpfondsk"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för skatt.\ncatalog:variable_text:45079:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagavksk15"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45080:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagavksk15"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45080:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagavksk30"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45081:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagavksk30"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45081:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Samma avgiftsunderlag är uppdelat efter period med ulageftpensavg-ar.\ncatalog:occurrence:463964\ncatalog:occurrence:464232\ncatalog:variable_text:45082:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma avgiftsunderlag är uppdelat efter period med ulageftpensavg-ar.\ncatalog:occurrence:463964\ncatalog:occurrence:464232\ncatalog:variable_text:45082:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg-ar"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Samma avgiftsunderlag är uppdelat efter period med ulageftpensavg.\ncatalog:occurrence:463964\ncatalog:occurrence:464232\ncatalog:variable_text:45083:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg-ar"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma avgiftsunderlag är uppdelat efter period med ulageftpensavg.\ncatalog:occurrence:463964\ncatalog:occurrence:464232\ncatalog:variable_text:45083:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg-foregar"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Samma föregående års underlag är uppdelat efter period med ulageftpensavg2.\ncatalog:occurrence:464370\ncatalog:occurrence:464631\ncatalog:variable_text:45084:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg-foregar"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma föregående års underlag är uppdelat efter period med ulageftpensavg2.\ncatalog:occurrence:464370\ncatalog:occurrence:464631\ncatalog:variable_text:45084:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg085ung"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Avgiftsunderlag för ungdomar.\ncatalog:variable_text:45085:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg085ung"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsunderlag för ungdomar.\ncatalog:variable_text:45085:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg170"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Underlag för efterlevandepensionsavgift.\ncatalog:variable_text:45086:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg170"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för efterlevandepensionsavgift.\ncatalog:variable_text:45086:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg2"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Samma föregående års underlag är uppdelat efter period med ulageftpensavg-foregar.\ncatalog:occurrence:464370\ncatalog:occurrence:464631\ncatalog:variable_text:45087:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavg2"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma föregående års underlag är uppdelat efter period med ulageftpensavg-foregar.\ncatalog:occurrence:464370\ncatalog:occurrence:464631\ncatalog:variable_text:45087:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper1"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Avgiftsunderlag period 1.\ncatalog:variable_text:45088:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper1"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsunderlag period 1.\ncatalog:variable_text:45088:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper2"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Avgiftsunderlag period 2.\ncatalog:variable_text:45089:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper2"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsunderlag period 2.\ncatalog:variable_text:45089:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper3"
+fields = { "sets" = ["underlag-for-efterlevandepensionsavgift"] }
+evidence = "Avgiftsunderlag period 3.\ncatalog:variable_text:45090:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulageftpensavgper3"
+fields = { "tags" = ["taxation"] }
+evidence = "Avgiftsunderlag period 3.\ncatalog:variable_text:45090:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyr015"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45091:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyr015"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45091:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyr030"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45092:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyr030"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45092:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrbosthalvfys"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45093:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrbosthalvfys"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45093:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrbosthalvjur"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45094:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrbosthalvjur"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45094:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrhelfys"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45095:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrhelfys"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45095:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrheljur"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45096:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavghyrheljur"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45096:16436:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavgsma075"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45097:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastavgsma075"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45097:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastvarm050"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45098:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagfastvarm050"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45098:13514:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:463973\ncatalog:occurrence:464248"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:463973\ncatalog:occurrence:464248"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg-220"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:464774\ncatalog:occurrence:464914"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg-220"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:464774\ncatalog:occurrence:464914"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg-tot"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:463973\ncatalog:occurrence:464248\ncatalog:occurrence:464774\ncatalog:occurrence:464914"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg-tot"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och olika angiven avgränsning.\ncatalog:occurrence:463973\ncatalog:occurrence:464248\ncatalog:occurrence:464774\ncatalog:occurrence:464914"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg110ung"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45102:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg110ung"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45102:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg2"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45103:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavg2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45103:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper1"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45104:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper1"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45104:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper2"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45105:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper2"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45105:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper3"
+fields = { "sets" = ["underlag-for-foraldraforsakringsavgift"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45106:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagforaldraforsavgper3"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för föräldraförsäkringsavgift.\ncatalog:variable_text:45106:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-foregar"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumnen har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:463976\ncatalog:occurrence:464111\ncatalog:occurrence:464385\ncatalog:occurrence:464917"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-foregar"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:463976\ncatalog:occurrence:464111\ncatalog:occurrence:464385\ncatalog:occurrence:464917"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-over75"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumnerna har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:463975\ncatalog:occurrence:463976\ncatalog:occurrence:464110\ncatalog:occurrence:464111"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-over75"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnerna har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:463975\ncatalog:occurrence:463976\ncatalog:occurrence:464110\ncatalog:occurrence:464111"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-over75-2012"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumnen har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:464385\ncatalog:occurrence:464917"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg-over75-2012"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har olika ägare och inkomstavgränsningar.\ncatalog:occurrence:464385\ncatalog:occurrence:464917"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-pa-inkomst-lagre-an-7-5"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget entydigt.\ncatalog:variable_text:45110:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-pa-inkomst-lagre-an-7-5"
+fields = { "tags" = ["taxation"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget entydigt.\ncatalog:variable_text:45110:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-period-1"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45111:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-period-1"
+fields = { "tags" = ["taxation"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45111:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-period-2"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45112:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-sjukforsakringsavgift-period-2"
+fields = { "tags" = ["taxation"] }
+evidence = "UlagSFAvg är en källförkortning; etiketten anger underlaget och perioden.\ncatalog:variable_text:45112:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-summerat-for-berakning-av-allman-loneavgift"
+fields = { "sets" = ["underlag-for-allman-loneavgift"] }
+evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to underlag-for-allman-loneavgift; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-summerat-for-berakning-av-allman-loneavgift"
+fields = { "tags" = ["taxation"] }
+evidence = "UlagSFAvg är en källförkortning. Källans etikett anger underlag för allmän löneavgift; båda gruppkandidaterna omfattar variabeln enligt sina avgränsningar.\ncatalog:occurrence:465219\ncatalog:register:258\ncatalog:variable_text:45113:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg2"
+fields = { "sets" = ["underlag-for-sjukforsakringsavgift"] }
+evidence = "Källkolumnen har en intilliggande mappning till scb/taxeringsutfallet/ulagsfavg-over75 med annan definition.\ncatalog:occurrence:463975\ncatalog:occurrence:464110\ncatalog:variable_text:45114:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagsfavg2"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumnen har en intilliggande mappning till scb/taxeringsutfallet/ulagsfavg-over75 med annan definition.\ncatalog:occurrence:463975\ncatalog:occurrence:464110\ncatalog:variable_text:45114:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-forvarvsinkomster"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45115:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45115:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink1616"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-forvarvsinkomster"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45116:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink1616"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45116:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink2426"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-forvarvsinkomster"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45117:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslforvink2426"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för särskild löneskatt.\ncatalog:variable_text:45117:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensanst"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-anstalldas-pensioner"] }
+evidence = "Underlag för löneskatt på anställdas pensioner.\ncatalog:variable_text:45118:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensanst"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för löneskatt på anställdas pensioner.\ncatalog:variable_text:45118:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensanst2426"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-anstalldas-pensioner"] }
+evidence = "Underlag för löneskatt på anställdas pensioner.\ncatalog:variable_text:45119:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensanst2426"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för löneskatt på anställdas pensioner.\ncatalog:variable_text:45119:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensegen0"
+fields = { "sets" = ["underlag-for-sarskild-loneskatt-pa-egen-pension"] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45120:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ulagslpensegen0"
+fields = { "tags" = ["taxation"] }
+evidence = "SL är en bokstavskod för särskild löneskatt.\ncatalog:variable_text:45120:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-15-pens"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45121:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-15-pens"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45121:17532:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-27"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45122:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-27"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för avkastningsskatt.\ncatalog:variable_text:45122:12784:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-30-forsak"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:465513\ncatalog:occurrence:465670"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-30-forsak"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:465513\ncatalog:occurrence:465670"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-utl-pens"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465516\ncatalog:occurrence:465517"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-utl-pens"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465516\ncatalog:occurrence:465517"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-utl-pens-2"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465516\ncatalog:occurrence:465517"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avkastningsskatt-utl-pens-2"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465516\ncatalog:occurrence:465517"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavg-hyreshus-02"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45126:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavg-hyreshus-02"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45126:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavg-hyreshus-04"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45127:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavg-hyreshus-04"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45127:14245:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavgift-smahus-0375"
+fields = { "sets" = ["underlag-for-kommunal-fastighetsavgift"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45128:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavgift-smahus-0375"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsavgift.\ncatalog:variable_text:45128:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-02"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45129:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-02"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45129:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-025"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45130:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-025"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45130:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-04"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45131:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-04"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45131:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-05"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45132:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-hyreshus-05"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45132:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-industri-05"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45133:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-industri-05"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45133:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-lokaler-10"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45134:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-lokaler-10"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45134:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-05"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45135:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-05"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45135:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-10"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45136:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-10"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45136:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-utl-10"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45137:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-smahus-utl-10"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45137:12784:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-tomt-hyr-04"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45138:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-tomt-hyr-04"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45138:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-tomt-sma-10"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45139:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-tomt-sma-10"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45139:14245:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-17"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45140:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-17"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45140:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-22"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45141:14245:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-22"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45141:14245:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-28"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45142:15340:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vattenkraft-28"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45142:15340:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vindkraft-02"
+fields = { "sets" = ["underlag-for-statlig-fastighetsskatt"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45143:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsskatt-vindkraft-02"
+fields = { "tags" = ["taxation"] }
+evidence = "Underlag för fastighetsskatt.\ncatalog:variable_text:45143:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-avkastningsskatt-30-utlandska"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Källkolumner har angränsande och överlappande ägare.\ncatalog:occurrence:465513\ncatalog:occurrence:465514\ncatalog:occurrence:465515\ncatalog:occurrence:465670"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-avkastningsskatt-30-utlandska"
+fields = { "tags" = ["taxation"] }
+evidence = "Källkolumner har angränsande och överlappande ägare.\ncatalog:occurrence:465513\ncatalog:occurrence:465514\ncatalog:occurrence:465515\ncatalog:occurrence:465670"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-avkastningsskatt-pa-utlandsk-kapitalforsakring"
+fields = { "sets" = ["underlag-for-avkastningsskatt"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465514\ncatalog:occurrence:465515"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-avkastningsskatt-pa-utlandsk-kapitalforsakring"
+fields = { "tags" = ["taxation"] }
+evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:465514\ncatalog:occurrence:465515"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-aktiv-naringsverksamhet-hb"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45146:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-aktiv-naringsverksamhet-hb"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45146:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-passiv-naringsverksamhet-hb"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45147:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underskott-passiv-naringsverksamhet-hb"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45147:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskaktnrv"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45148:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskaktnrv"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45148:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskkap"
+fields = { "sets" = ["resultat-av-kapital"] }
+evidence = "Kapitalunderskott.\ncatalog:variable_text:45149:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskkap"
+fields = { "tags" = ["income"] }
+evidence = "Kapitalunderskott.\ncatalog:variable_text:45149:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskpassnrv"
+fields = { "sets" = ["resultat-av-naringsverksamhet"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45150:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:uskpassnrv"
+fields = { "tags" = ["income"] }
+evidence = "Resultat av näringsverksamhet.\ncatalog:variable_text:45150:12784:18628"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsutfallet: ulagallmloneavg2 @2017-01-01..2017-12-31 where key = 'v37010'"
+fields = { "variable" = "ulagallmloneavg2" }
+evidence = "Both identify the general payroll contribution base for the preceding income year, for individuals, in SEK. The later definition describes the base as summed. Both use UlagAllmLoneAvg2 in non-overlapping observed periods [14245,16436) and [17167,17532); coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "taxeringsutfallet: ulagallmloneavgex1 @2018-01-01..2018-12-31 where key = 'v37010'"
+fields = { "variable" = "ulagallmloneavg2" }
+evidence = "Both identify the general payroll contribution base for the preceding income year, for individuals, in SEK. The later definition describes the base as summed. Both use UlagAllmLoneAvg2 in non-overlapping observed periods [14245,16436) and [17167,17532); coverage across the gap is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:katkod"
+fields = { "tags" = ["taxation"] }
+evidence = "The definition classifies taxpayers into natural persons/estates and legal-entity categories (r18), confirmed by the complete four-code list (r17), supporting taxation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44835\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:2902\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44984"

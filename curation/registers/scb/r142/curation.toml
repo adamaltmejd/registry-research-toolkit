@@ -1,18 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:redovisningsmanad"
-fields = { "sets" = ["legacy-redovisningsmanad"] }
-evidence = "reg_meta_build/curation/registers/scb/manel.toml:98\n\nThe complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:redovisningsmanad-producteo"
-fields = { "sets" = ["legacy-redovisningsmanad"] }
-evidence = "reg_meta_build/curation/registers/scb/manel.toml:98\n\nThe complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."
-
-[[statement]]
-kind = "set"
 subject = "register-over-manatlig-elstatistik: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -142,3 +130,567 @@ kind = "set"
 subject = "register-over-manatlig-elstatistik: ng2007"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-ej-hushall-antal"
+fields = { "sets" = ["elleverantorsbyten"] }
+evidence = "A är en bokstavskod; etiketten anger antal byten för andra kunder än hushåll.\ncatalog:variable_text:39209:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-ej-hushall-antal"
+fields = { "tags" = ["energy"] }
+evidence = "A är en bokstavskod; etiketten anger antal byten för andra kunder än hushåll.\ncatalog:variable_text:39209:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-ej-hushall-volym"
+fields = { "sets" = ["elleverantorsbyten"] }
+evidence = "A är en bokstavskod; etiketten anger volym för andra kunder än hushåll.\ncatalog:variable_text:39210:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-ej-hushall-volym"
+fields = { "tags" = ["energy"] }
+evidence = "A är en bokstavskod; etiketten anger volym för andra kunder än hushåll.\ncatalog:variable_text:39210:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-redovisningsenhet"
+fields = { "sets" = [] }
+evidence = "Identitetsfakta visar överlapp med postort och benämning.\ncatalog:occurrence:387548\ncatalog:occurrence:387549\ncatalog:occurrence:387935\ncatalog:occurrence:387936"
+
+[[statement]]
+kind = "set"
+subject = "var:adress-redovisningsenhet"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfakta visar överlapp med postort och benämning.\ncatalog:occurrence:387548\ncatalog:occurrence:387549\ncatalog:occurrence:387935\ncatalog:occurrence:387936"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-tyskland"
+fields = { "sets" = ["export-av-el"] }
+evidence = "ExpDeu är en källkod för export och destinationsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39215:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-tyskland"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ExpDeu är en källkod för export och destinationsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39215:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-danmark"
+fields = { "sets" = ["export-av-el"] }
+evidence = "ExpDnk är en källkod för export och destinationsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-danmark"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ExpDnk är en källkod för export och destinationsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-finland"
+fields = { "sets" = ["export-av-el"] }
+evidence = "ExpFin följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39217:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-finland"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ExpFin följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39217:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-norge"
+fields = { "sets" = ["export-av-el"] }
+evidence = "ExpNor följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39218:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-norge"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ExpNor följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39218:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-polen"
+fields = { "sets" = ["export-av-el"] }
+evidence = "ExpPol följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39219:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:export-av-el-till-polen"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ExpPol följer samma källkodsmönster för export och destinationsland som övriga familjen.\ncatalog:variable_text:39219:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-3"
+fields = { "sets" = ["elproduktion-med-gasturbinkraft"] }
+evidence = "Elproduktion med gasturbin ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39220:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med gasturbin ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39220:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-4"
+fields = { "sets" = ["elproduktion-med-gasturbinkraft"] }
+evidence = "Elproduktion med gasturbin ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39221:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:gasturbinkraft-se-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med gasturbin ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39221:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-hushall-antal"
+fields = { "sets" = ["elleverantorsbyten"] }
+evidence = "H är en bokstavskod; etiketten anger antal byten för hushåll.\ncatalog:variable_text:39222:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-hushall-antal"
+fields = { "tags" = ["energy"] }
+evidence = "H är en bokstavskod; etiketten anger antal byten för hushåll.\ncatalog:variable_text:39222:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-hushall-volym"
+fields = { "sets" = ["elleverantorsbyten"] }
+evidence = "H är en bokstavskod; etiketten anger volym för hushåll.\ncatalog:variable_text:39223:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elleverantorsbyten-hushall-volym"
+fields = { "tags" = ["energy"] }
+evidence = "H är en bokstavskod; etiketten anger volym för hushåll.\ncatalog:variable_text:39223:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-1"
+fields = { "sets" = ["elproduktion-med-vattenkraft"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39224:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-1"
+fields = { "tags" = ["energy"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39224:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-2"
+fields = { "sets" = ["elproduktion-med-vattenkraft"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39225:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-2"
+fields = { "tags" = ["energy"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39225:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-3"
+fields = { "sets" = ["elproduktion-med-vattenkraft"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39226:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39226:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-4"
+fields = { "sets" = ["elproduktion-med-vattenkraft"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39227:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hydroeo-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Nettoelproduktion från vattenkraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39227:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-tyskland"
+fields = { "sets" = ["import-av-el"] }
+evidence = "ImpDeu är en källkod för import och ursprungsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39228:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-tyskland"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ImpDeu är en källkod för import och ursprungsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39228:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-danmark"
+fields = { "sets" = ["import-av-el"] }
+evidence = "ImpDnk är en källkod för import och ursprungsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39229:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-danmark"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ImpDnk är en källkod för import och ursprungsland. Etiketten anger elflödet tydligt.\ncatalog:variable_text:39229:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-finland"
+fields = { "sets" = ["import-av-el"] }
+evidence = "ImpFin följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39230:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-finland"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ImpFin följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39230:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-norge"
+fields = { "sets" = ["import-av-el"] }
+evidence = "ImpNor följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39231:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-norge"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ImpNor följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39231:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-polen"
+fields = { "sets" = ["import-av-el"] }
+evidence = "ImpPol följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39232:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:import-av-el-fran-polen"
+fields = { "tags" = ["energy", "trade"] }
+evidence = "ImpPol följer samma källkodsmönster för import och ursprungsland som övriga familjen.\ncatalog:variable_text:39232:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39234:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:39234:15706:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-3"
+fields = { "sets" = ["elproduktion-med-kondenskraft"] }
+evidence = "Kondenskraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39235:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Kondenskraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39235:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-4"
+fields = { "sets" = ["elproduktion-med-kondenskraft"] }
+evidence = "Kondenskraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39236:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kondenskraft-se-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Kondenskraft ingår i kraftslagsgruppen och energitemat.\ncatalog:variable_text:39236:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-1"
+fields = { "sets" = ["elproduktion-med-kraftvarme-for-fjarrvarme"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39237\ncatalog:variable_text:39237:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-1"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39237\ncatalog:variable_text:39237:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-2"
+fields = { "sets" = ["elproduktion-med-kraftvarme-for-fjarrvarme"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39238\ncatalog:variable_text:39238:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-2"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39238\ncatalog:variable_text:39238:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-3"
+fields = { "sets" = ["elproduktion-med-kraftvarme-for-fjarrvarme"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39239\ncatalog:variable_text:39239:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39239\ncatalog:variable_text:39239:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-4"
+fields = { "sets" = ["elproduktion-med-kraftvarme-for-fjarrvarme"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39240\ncatalog:variable_text:39240:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-fjarrvarme-se-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion i kraftvärmeverk för fjärrvärme ingår i gruppen och energitemat.\ncatalog:occurrence-locators:variable:39240\ncatalog:variable_text:39240:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-1"
+fields = { "sets" = ["elproduktion-med-industriellt-mottryck"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39241:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-1"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39241:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-2"
+fields = { "sets" = ["elproduktion-med-industriellt-mottryck"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39242:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-2"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39242:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-3"
+fields = { "sets" = ["elproduktion-med-industriellt-mottryck"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39243:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39243:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-4"
+fields = { "sets" = ["elproduktion-med-industriellt-mottryck"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39244:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-industri-se-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Elproduktion med industriellt mottryck ingår i gruppen och energitemat.\ncatalog:variable_text:39244:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Näringsgrenskodningen hör till gruppen och företagstemat.\ncatalog:variable_text:39248:16071:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-arbetsstalle"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen hör till gruppen och företagstemat.\ncatalog:variable_text:39248:16071:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "sets" = ["arbetsstallets-naringsgren"] }
+evidence = "Ng är en bokstavskod för näringsgren; etiketten kolliderar med en annan variabel och målet behöver R6-prövning.\ncatalog:variable_text:39249:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ng"
+fields = { "tags" = ["business"] }
+evidence = "Ng är en bokstavskod för näringsgren; etiketten kolliderar med en annan variabel och målet behöver R6-prövning.\ncatalog:variable_text:39249:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:karnkraft-kondens-netto"
+fields = { "sets" = [] }
+evidence = "EO är en källkod för elområde i ett i övrigt engelskt källnamn.\ncatalog:variable_text:39250:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:karnkraft-kondens-netto"
+fields = { "tags" = ["energy"] }
+evidence = "EO är en källkod för elområde i ett i övrigt engelskt källnamn.\ncatalog:variable_text:39250:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elforbrukning-manatlig-elstatistik"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken omrkvant anger inte tydligt elförbrukning.\ncatalog:variable_text:39251:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:elforbrukning-manatlig-elstatistik"
+fields = { "tags" = ["energy"] }
+evidence = "Källmnemoniken omrkvant anger inte tydligt elförbrukning.\ncatalog:variable_text:39251:13149:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-redovisningsenhet"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktum visar överlapp med redovisningsenhetens adress.\ncatalog:occurrence:387548\ncatalog:occurrence:387549"
+
+[[statement]]
+kind = "set"
+subject = "var:postort-redovisningsenhet"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfaktum visar överlapp med redovisningsenhetens adress.\ncatalog:occurrence:387548\ncatalog:occurrence:387549"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-producteo"
+fields = { "sets" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-producteo"
+fields = { "tags" = [] }
+evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-1"
+fields = { "sets" = ["elproduktion-med-solkraft"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39256:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-1"
+fields = { "tags" = ["energy"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39256:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-2"
+fields = { "sets" = ["elproduktion-med-solkraft"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39257:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-2"
+fields = { "tags" = ["energy"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39257:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-3"
+fields = { "sets" = ["elproduktion-med-solkraft"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39258:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39258:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-4"
+fields = { "sets" = ["elproduktion-med-solkraft"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39259:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:solareo-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Nätansluten solkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39259:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-1"
+fields = { "sets" = ["elproduktion-med-vindkraft"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39260:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-1"
+fields = { "tags" = ["energy"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39260:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-2"
+fields = { "sets" = ["elproduktion-med-vindkraft"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39261:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-2"
+fields = { "tags" = ["energy"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39261:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-3"
+fields = { "sets" = ["elproduktion-med-vindkraft"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39262:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-3"
+fields = { "tags" = ["energy"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39262:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-4"
+fields = { "sets" = ["elproduktion-med-vindkraft"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39263:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:windeo-elomrade-4"
+fields = { "tags" = ["energy"] }
+evidence = "Vindkraftsproduktion ingår i gruppen och energitemat.\ncatalog:variable_text:39263:19723:20454"

@@ -1,0 +1,21 @@
+# The webapp-dev fixture: the synthetic catalog `reg_webapp/dev/dev.sh --fixture-db`
+# serves and the page PRs screenshot. `demo/bas` has the implicit table, a spelling
+# change, changing value sets and a gap; `demo/hush` named tables, a hierarchical value
+# set, an ambiguous and a preliminary window, a dated table succession and Antal
+# across two tables with provider wording, a notice and a Basregistret predecessor;
+# `demo2/reg` an undated table succession and a timeless table.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[provider]]
+pid = "demo2"
+name = "Andra leverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

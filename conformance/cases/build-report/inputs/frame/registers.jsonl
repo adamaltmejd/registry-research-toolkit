@@ -1,0 +1,10 @@
+{"kind":"register","provider":"demo","register":"a","name":"Register A"}
+{"kind":"table","provider":"demo","register":"a","table":"t","name":"Table"}
+{"kind":"occurrence","provider":"demo","register":"a","table":"t","column":"X","source_key":"x","label":"X","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"a","table":"t","column":"Y","source_key":"y","label":"Y","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"a","table":"t","column":"Fresh","source_key":"fresh","label":"Fresh","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"register","provider":"demo","register":"b","name":"Register B"}
+{"kind":"table","provider":"demo","register":"b","table":"t","name":"Table"}
+{"kind":"occurrence","provider":"demo","register":"b","table":"t","column":"X","source_key":"x","label":"X","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"b","table":"t","column":"Y","source_key":"y","label":"Y","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"b","table":"t","column":"Fresh","source_key":"fresh","label":"Fresh","from":"2018-01-01","to":"2019-12-31"}

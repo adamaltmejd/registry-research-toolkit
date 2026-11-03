@@ -1,0 +1,210 @@
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgifter-och-slf"
+fields = { "sets" = [] }
+evidence = "Beloppet avser arbetsgivaravgifter och särskild löneskatt.\ncatalog:variable_text:1333:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsgivaravgifter-och-slf"
+fields = { "tags" = ["taxation"] }
+evidence = "Beloppet avser arbetsgivaravgifter och särskild löneskatt.\ncatalog:variable_text:1333:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-fo-u"
+fields = { "sets" = [] }
+evidence = "Avdraget avser forskning och utveckling och är ett skatteavdrag.\ncatalog:variable_text:1334:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-fo-u"
+fields = { "tags" = ["research", "taxation"] }
+evidence = "Avdraget avser forskning och utveckling och är ett skatteavdrag.\ncatalog:variable_text:1334:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-rederi-regress"
+fields = { "sets" = [] }
+evidence = "Variabeln avser avdrag för rederier vid regress.\ncatalog:variable_text:1335:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-rederi-regress"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser avdrag för rederier vid regress.\ncatalog:variable_text:1335:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "sets" = [] }
+evidence = "Variabeln avser avdrag för regionalt stöd.\ncatalog:variable_text:1336:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-regionalt-stod"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser avdrag för regionalt stöd.\ncatalog:variable_text:1336:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-fast-driftstalle-i-sv"
+fields = { "sets" = [] }
+evidence = "Markeringen avser om arbetsgivaren saknar fast driftställe i Sverige.\ncatalog:variable_text:1337:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-fast-driftstalle-i-sv"
+fields = { "tags" = ["taxation"] }
+evidence = "Markeringen avser om arbetsgivaren saknar fast driftställe i Sverige.\ncatalog:variable_text:1337:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteavdr-pens-fors"
+fields = { "sets" = [] }
+evidence = "Variabeln avser skatteavdrag för pensionsförsäkring.\ncatalog:variable_text:1340:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteavdr-pens-fors"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser skatteavdrag för pensionsförsäkring.\ncatalog:variable_text:1340:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteavdr-ranta-utd"
+fields = { "sets" = [] }
+evidence = "Variabeln avser skatteavdrag på ränta och utdelning.\ncatalog:variable_text:1341:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteavdr-ranta-utd"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser skatteavdrag på ränta och utdelning.\ncatalog:variable_text:1341:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:slf-vinstandel"
+fields = { "sets" = [] }
+evidence = "Variabeln avser särskild löneskatt på vinstandel.\ncatalog:variable_text:1342:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:slf-vinstandel"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser särskild löneskatt på vinstandel.\ncatalog:variable_text:1342:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skatteavdrag"
+fields = { "sets" = [] }
+evidence = "Variabeln avser summan av skatteavdrag.\ncatalog:variable_text:1340:17897:2932897\ncatalog:variable_text:1341:17897:2932897\ncatalog:variable_text:1344:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skatteavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser summan av skatteavdrag.\ncatalog:variable_text:1340:17897:2932897\ncatalog:variable_text:1341:17897:2932897\ncatalog:variable_text:1344:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:total-sjuklonekostnad"
+fields = { "sets" = [] }
+evidence = "Variabeln avser arbetsgivarens sjuklönekostnad.\ncatalog:variable_text:1345:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:total-sjuklonekostnad"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln avser arbetsgivarens sjuklönekostnad.\ncatalog:variable_text:1345:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsgivaravgift"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för arbetsgivaravgift.\ncatalog:variable_text:1346:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-arbetsgivaravgift"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för arbetsgivaravgift.\ncatalog:variable_text:1346:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avdrag-fou"
+fields = { "sets" = [] }
+evidence = "Underlaget avser avdrag för forskning och utveckling.\ncatalog:variable_text:1347:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-avdrag-fou"
+fields = { "tags" = ["research", "taxation"] }
+evidence = "Underlaget avser avdrag för forskning och utveckling.\ncatalog:variable_text:1347:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-rederi-regress"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för rederiavdrag vid regress.\ncatalog:variable_text:1348:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-rederi-regress"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för rederiavdrag vid regress.\ncatalog:variable_text:1348:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-regionalt-stod"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för avdrag för regionalt stöd.\ncatalog:variable_text:1349:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-regionalt-stod"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för avdrag för regionalt stöd.\ncatalog:variable_text:1349:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skatteavdr-pensforsakring"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för skatteavdrag för pensionsförsäkring.\ncatalog:variable_text:1350:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skatteavdr-pensforsakring"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för skatteavdrag för pensionsförsäkring.\ncatalog:variable_text:1350:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skatteavdr-ranta-utdelning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för skatteavdrag på ränta och utdelning.\ncatalog:variable_text:1351:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skatteavdr-ranta-utdelning"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för skatteavdrag på ränta och utdelning.\ncatalog:variable_text:1351:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-slf-vinstandel"
+fields = { "sets" = [] }
+evidence = "Variabeln avser underlag för särskild löneskatt på vinstandel.\ncatalog:variable_text:1352:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-slf-vinstandel"
+fields = { "tags" = ["taxation"] }
+evidence = "Variabeln avser underlag för särskild löneskatt på vinstandel.\ncatalog:variable_text:1352:17897:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:stod-av-mindre-betydelse"
+fields = { "tags" = ["transfers"] }
+evidence = "The variable records de minimis aid received by the company during the current and two preceding tax years (r2), fitting transfers’ scope of grants and their receipt.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1343\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1343"

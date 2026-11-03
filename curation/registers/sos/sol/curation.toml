@@ -1,297 +1,9 @@
 
 [[statement]]
 kind = "set"
-subject = "sol: pseudo"
-fields = { "description" = "Anonymt id nummer" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: htjtim"
-fields = { "description" = "Antal beviljade hemtjänsttimmar under månaden" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:328\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: abist"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om annan vård- eller omsorgsinsats" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:238\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: avan"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om avlösning av anhörig i hemmet som inte ingår i ett hemtjänstbeslut" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:247\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: bosto"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om boendestöd" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: dagv"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om dagverksamhet" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: htj"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om hemtjänst" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: kontf"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktfamilj" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:346\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: kontp"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktperson" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:355\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: korttid"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om korttidsvård/korttidsboende" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: ledsag"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om ledsagning som inte ingår i ett hemtjänstbeslut" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:373\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: matd"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om matdistribution som inte ingår i ett hemtjänstbeslut" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:382\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: trygg"
-fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om trygghetslarm som inte ingår i ett hemtjänstbeslut" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:409\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: foddatn"
-fields = { "description" = "Brukarens födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: foddatn"
-fields = { "description" = "Brukarens födelsedatum" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: foddatn"
-fields = { "description" = "Brukarens födelsedatum, numeriskt sas-datum" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: kdel"
-fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är frivillig och är till för att underlätta eventuella återkontakter med kommunen." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: kdel"
-fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är till för Stockholm, Göteborg och Malmö." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: kdel"
-fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är till för Stockholm, Göteborg och Malmö." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: bosto"
-fields = { "description" = "Med boendestöd avses bistånd i form av stöd i den dagliga livsföringen riktat till särskilda målgrupper. Till särskilda målgrupper hör bl.a. personer med psykisk funktionsnedsättning. Boendestöd kan vara ett såväl praktiskt som socialt stöd för att stärka en persons förmåga att klara vardagen i bostaden och ute i samhället." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: dagv"
-fields = { "description" = "Med dagverksamhet avses bistånd i form av sysselsättning, gemenskap, behandling eller rehabilitering under dagtid utanför den egna bostaden. Så kallade öppna verksamheter, dvs. verksamheter i vilka personer kan delta utan ett individuellt beslut, t.ex. kaféverksamheter och andra former av träffpunkter avses inte." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: htj"
-fields = { "description" = "Med hemtjänst avses biståndsbeslutad service och personlig omvårdnad i den enskildes bostad i ordinärt boende, i särskilt boende eller i annat boende. Service avser t.ex. praktisk hjälp med hemmets skötsel, såsom städning och tvätt, hjälp med inköp, ärenden på post- och bankkontor, hjälp med tillredning av måltid" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: korttid"
-fields = { "description" = "Med korttidsvård/korttidsboende avses bistånd i form av tillfälligt boende för bl.a. avlösning och växelvård, som kan vara förenat med hälso- och sjukvårdsinsatser.\n26" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htjtim"
-fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: antal beviljade timmar per månad" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:328\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htjavan"
-fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser avlösning av anhörig" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:292\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htjled"
-fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser ledsagning" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:301\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htjpomv"
-fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser personlig omvårdnad" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:310\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htjserv"
-fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser service" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:319\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: pseudo"
-fields = { "description" = "Pseudonymiserat ID-nummer, alfanumeriskt" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: pseudo"
-fields = { "description" = "Socialstyrelsens pseudonymiserade ID-nummer för brukaren, alfanumeriskt" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-2007-2012: sbo"
-fields = { "description" = "Särskilda boendeformer för service och omvårdnad som kommunen, enligt 5 kap. 5 § socialtjänstlagen, ska inrätta för äldre personer som behöver särskilt stöd. Till särskilda boendeformer för service och omvårdnad hör bl.a. ålderdomshem, servicehus, gruppboenden och sjukhem. - Bostäder med särskild service som kommunen, enligt 5 kap. 7 § socialtjänstlagen, ska inrätta för personer som av fysiska, psykiska eller andra skäl möter betydande svårigheter i sin livsföring och som till följd av dessa svårigheter behöver ett sådant boende." }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:400\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: htjavan"
-fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser avlösning av anhörig" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:292\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: htjled"
-fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser ledsagning" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:301\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: htjpomv"
-fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser personlig omvårdnad" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:310\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol: htjserv"
-fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser service" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:319\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: abist"
-fields = { "description" = "Verkställigheten/avslutet avser annat bistånd inom vård- och omsorg" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:238\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: bosto"
-fields = { "description" = "Verkställigheten/avslutet avser boendestöd" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: dagv"
-fields = { "description" = "Verkställigheten/avslutet avser dagverksamhet" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: htj"
-fields = { "description" = "Verkställigheten/avslutet avser hemtjänst" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: kontf"
-fields = { "description" = "Verkställigheten/avslutet avser kontaktfamilj" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:346\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: kontp"
-fields = { "description" = "Verkställigheten/avslutet avser kontaktperson" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:355\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: korttid"
-fields = { "description" = "Verkställigheten/avslutet avser korttidsboende/korttidsvård" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: avan"
-fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om avlösning i hemmet" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:247\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: ledsag"
-fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om ledsagning" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:373\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: matd"
-fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om matdistribution" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:382\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: trygg"
-fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om trygghetslarm" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:409\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: sbo"
-fields = { "description" = "Verkställigheten/avslutet avser särskilt boende" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:400\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "sol-incr: adat"
 fields = { "label" = "Datum för avslut" }
 evidence = "reg_meta_build/curation/registers/sos/sol.toml:158\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
-
-[[statement]]
-kind = "set"
-subject = "sol-incr: korttid"
-fields = { "label" = "Korttidsvård/-boende" }
-evidence = "reg_meta_build/curation/registers/sos/sol.toml:203\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
 
 [[statement]]
 kind = "set"
@@ -316,3 +28,1192 @@ kind = "set"
 subject = "sol: pomvtrygg"
 fields = { value_set = "b4acd7895f71aecc3067b8f93ae9a983eb02405590bed7d0db0b6b603a73ec4e" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx#Metadata - Variabelnivå!32. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list. Rows 32 and 109 enumerate the same six codes and meanings; use row 109's spelling ogiltigt for code 0, retaining row 32's source typo as evidence."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: abist"
+fields = { "variable" = "annat-bistand-boende" }
+evidence = "ABIST changes from other assistance-approved housing to other care and service assistance."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: abist"
+fields = { "variable" = "annat-bistand-vard-och-omsorg-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!2; sos/sol/sol-incr: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!78"
+
+[[statement]]
+kind = "set"
+subject = "sol: abist"
+fields = { "variable" = "annat-bistand-vard-och-omsorg" }
+evidence = "ABIST changes from other assistance-approved housing to other care and service assistance."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: avan"
+fields = { "variable" = "avlosning-av-anhorig-separat-beslut-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!5; sos/sol/sol-incr: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!83"
+
+[[statement]]
+kind = "set"
+subject = "sol: avan"
+fields = { "variable" = "avlosning-av-anhorig-separat-beslut" }
+evidence = "AVAN changes from relief within home help to a separate decision for relief of a relative."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: avan"
+fields = { "variable" = "hemtjanst-avlosning-av-anhorig" }
+evidence = "AVAN changes from relief within home help to a separate decision for relief of a relative."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: avdat"
+fields = { "variable" = "datum-for-avslut-utan-verkstallan" }
+evidence = "AVDAT changes from the termination date of an unimplemented decision to the start date of the service being ended."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: avdat"
+fields = { "variable" = "startdatum-for-avslutat-bistand" }
+evidence = "AVDAT changes from the termination date of an unimplemented decision to the start date of the service being ended."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: kontp"
+fields = { "variable" = "kontaktfamilj-eller-kontaktperson" }
+evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kontp"
+fields = { "variable" = "kontaktperson-kontp-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!22; sos/sol/sol-incr: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!101"
+
+[[statement]]
+kind = "set"
+subject = "sol: kontp"
+fields = { "variable" = "kontaktperson-kontp" }
+evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: matd"
+fields = { "variable" = "hemtjanst-matdistribution" }
+evidence = "MATD changes from meal distribution within home help to a separate meal-distribution decision."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: matd"
+fields = { "variable" = "matdistribution-separat-beslut-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!28; sos/sol/sol-incr: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!105"
+
+[[statement]]
+kind = "set"
+subject = "sol: matd"
+fields = { "variable" = "matdistribution-separat-beslut" }
+evidence = "MATD changes from meal distribution within home help to a separate meal-distribution decision."
+
+[[statement]]
+kind = "set"
+subject = "var:aboform"
+fields = { "sets" = ["boendeform"] }
+evidence = "Boendeform ingår i kandidatgruppen.\ncatalog:variable_text:57372:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:aboform"
+fields = { "tags" = ["housing"] }
+evidence = "Boendeform ingår i kandidatgruppen.\ncatalog:variable_text:57372:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:57373:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:57373:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anhorigbidrag"
+fields = { "sets" = [] }
+evidence = "Anhörigbidrag är en transferering.\ncatalog:variable_text:57374:13787:13788"
+
+[[statement]]
+kind = "set"
+subject = "var:anhorigbidrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Anhörigbidrag är en transferering.\ncatalog:variable_text:57374:13787:13788"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-insats"
+fields = { "sets" = [] }
+evidence = "Insatsen hör till socialtjänsten.\ncatalog:register:288\ncatalog:variable_text:57375:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-insats"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen hör till socialtjänsten.\ncatalog:register:288\ncatalog:variable_text:57375:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-boende"
+fields = { "sets" = [] }
+evidence = "Kodningen ingår i kandidatgruppen annat bistånd. Coordinator group membership: Båda skyddade medlemskapen behålls. Annan vård- eller omsorgsinsats stöds av beskrivningen; boendevariabelns beskrivning står i konflikt med kandidatens undantag. Variablerna kodar boendeform eller namngivna boendeformer. Detta omfattar även annat biståndsbeslutat boende och särskilt boende med hemtjänst dygnet runt samt boendeform vid verkställan och avslut.\ncatalog:variable_text:57372:15522:2932897\ncatalog:variable_text:57376:13787:15615\ncatalog:variable_text:57377:15522:2932897\ncatalog:variable_text:57378:13787:15615\ncatalog:variable_text:57388:15522:2932897\ncatalog:variable_text:57424:13787:15615\ncatalog:variable_text:57430:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57435:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-boende"
+fields = { "tags" = ["housing", "social-care"] }
+evidence = "Kodningen ingår i kandidatgruppen annat bistånd. Coordinator group membership: Båda skyddade medlemskapen behålls. Annan vård- eller omsorgsinsats stöds av beskrivningen; boendevariabelns beskrivning står i konflikt med kandidatens undantag. Variablerna kodar boendeform eller namngivna boendeformer. Detta omfattar även annat biståndsbeslutat boende och särskilt boende med hemtjänst dygnet runt samt boendeform vid verkställan och avslut.\ncatalog:variable_text:57372:15522:2932897\ncatalog:variable_text:57376:13787:15615\ncatalog:variable_text:57377:15522:2932897\ncatalog:variable_text:57378:13787:15615\ncatalog:variable_text:57388:15522:2932897\ncatalog:variable_text:57424:13787:15615\ncatalog:variable_text:57430:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57435:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-vard-och-omsorg"
+fields = { "sets" = [] }
+evidence = "Kodningen ingår i kandidatgruppen annat bistånd.\ncatalog:variable_text:57377:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-vard-och-omsorg"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen ingår i kandidatgruppen annat bistånd.\ncatalog:variable_text:57377:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-boende"
+fields = { "sets" = ["boendeform"] }
+evidence = "Annat boende är en boendeform.\ncatalog:variable_text:57378:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-boende"
+fields = { "tags" = ["housing"] }
+evidence = "Annat boende är en boendeform.\ncatalog:variable_text:57378:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut"
+fields = { "sets" = ["avlosning-av-anhorig"] }
+evidence = "Insatsen ingår i kandidatgruppen avlösning av anhörig.\ncatalog:variable_text:57380:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i kandidatgruppen avlösning av anhörig.\ncatalog:variable_text:57380:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "sets" = [] }
+evidence = "Förändringen avser ett socialtjänstbeslut.\ncatalog:variable_text:57381:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Förändringen avser ett socialtjänstbeslut.\ncatalog:variable_text:57381:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller ett biståndsbeslut.\ncatalog:variable_text:57382:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln gäller ett biståndsbeslut.\ncatalog:variable_text:57382:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum"
+fields = { "sets" = ["bistandsbeslutsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57383:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57383:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-avslutat-bistand"
+fields = { "sets" = ["bistandsbeslutsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57384:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-avslutat-bistand"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57384:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bistandsbeslutsdatum"
+fields = { "sets" = ["bistandsbeslutsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57385:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:bistandsbeslutsdatum"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen biståndsbeslutsdatum.\ncatalog:variable_text:57385:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod"
+fields = { "sets" = ["boendestod"] }
+evidence = "Förekomst av boendestöd ingår i kandidatgruppen.\ncatalog:variable_text:57386:13787:15522\ncatalog:variable_text:57386:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod"
+fields = { "tags" = ["social-care"] }
+evidence = "Förekomst av boendestöd ingår i kandidatgruppen.\ncatalog:variable_text:57386:13787:15522\ncatalog:variable_text:57386:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestodstimmar"
+fields = { "sets" = ["boendestod"] }
+evidence = "Timomfattning av boendestöd ingår i kandidatgruppen.\ncatalog:variable_text:57387:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestodstimmar"
+fields = { "tags" = ["social-care"] }
+evidence = "Timomfattning av boendestöd ingår i kandidatgruppen.\ncatalog:variable_text:57387:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:boform"
+fields = { "sets" = ["boendeform"] }
+evidence = "Kodningen ingår i kandidatgruppen boendeform.\ncatalog:variable_text:57388:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boform"
+fields = { "tags" = ["housing"] }
+evidence = "Kodningen ingår i kandidatgruppen boendeform.\ncatalog:variable_text:57388:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dagverksamhet"
+fields = { "sets" = [] }
+evidence = "Dagverksamhet är en socialtjänstinsats.\ncatalog:variable_text:57389:13787:15522\ncatalog:variable_text:57389:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dagverksamhet"
+fields = { "tags" = ["social-care"] }
+evidence = "Dagverksamhet är en socialtjänstinsats.\ncatalog:variable_text:57389:13787:15522\ncatalog:variable_text:57389:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-avslut"
+fields = { "sets" = ["avslutsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen avslutsdatum.\ncatalog:variable_text:57391:14244:14610\ncatalog:variable_text:57391:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-avslut"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen avslutsdatum.\ncatalog:variable_text:57391:14244:14610\ncatalog:variable_text:57391:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-avslut-utan-verkstallan"
+fields = { "sets" = ["avslutsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen avslutsdatum.\ncatalog:variable_text:57392:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-avslut-utan-verkstallan"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen avslutsdatum.\ncatalog:variable_text:57392:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-verkstallighet"
+fields = { "sets" = ["verkstallighetsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57393:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-verkstallighet"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57393:14244:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-verkstallighet-bistandsbeslut"
+fields = { "sets" = ["verkstallighetsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57394:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-verkstallighet-bistandsbeslut"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57394:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:enpersonshushall"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver hushållets sammansättning.\ncatalog:variable_text:57395:13787:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:enpersonshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver hushållets sammansättning.\ncatalog:variable_text:57395:13787:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Födelseår ingår i kandidatgruppen födelsetid.\ncatalog:variable_text:57396:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår ingår i kandidatgruppen födelsetid.\ncatalog:variable_text:57396:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Födelsedatum ingår i kandidatgruppen födelsetid.\ncatalog:variable_text:57397:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum ingår i kandidatgruppen födelsetid.\ncatalog:variable_text:57397:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "sets" = ["fodelsetid"] }
+evidence = "Födelsedatum ingår i kandidatgruppen födelsetid.\ncatalog:occurrence:522927\ncatalog:variable_text:57398:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelsedatum ingår i kandidatgruppen födelsetid.\ncatalog:occurrence:522927\ncatalog:variable_text:57398:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forenklat"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller beslutsfattande om hemtjänst.\ncatalog:variable_text:57400:19144:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forenklat"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln gäller beslutsfattande om hemtjänst.\ncatalog:variable_text:57400:19144:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun-periodens-slut"
+fields = { "sets" = ["kommun"] }
+evidence = "Hemkommun ingår i kandidatgruppen kommun.\ncatalog:variable_text:57401:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemkommun-periodens-slut"
+fields = { "tags" = ["geography"] }
+evidence = "Hemkommun ingår i kandidatgruppen kommun.\ncatalog:variable_text:57401:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst"
+fields = { "sets" = ["hemtjanst"] }
+evidence = "Kodningen ingår i kandidatgruppen hemtjänst.\ncatalog:variable_text:57402:13787:15522\ncatalog:variable_text:57402:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen ingår i kandidatgruppen hemtjänst.\ncatalog:variable_text:57402:13787:15522\ncatalog:variable_text:57402:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avlosning-av-anhorig"
+fields = { "sets" = ["avlosning-av-anhorig"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57403:13787:15615\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to avlosning-av-anhorig; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avlosning-av-anhorig"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57403:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-ledsagning"
+fields = { "sets" = ["ledsagning"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57404:15522:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ledsagning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-ledsagning"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57404:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-ledsagning-2"
+fields = { "sets" = ["ledsagning"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen LED.\ncatalog:variable_text:57405:13787:15615\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to ledsagning; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-ledsagning-2"
+fields = { "tags" = ["social-care"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen LED.\ncatalog:variable_text:57405:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-matdistribution"
+fields = { "sets" = ["matdistribution"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57406:13787:15615\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to matdistribution; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-matdistribution"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57406:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-personlig-omvardnad"
+fields = { "sets" = ["personlig-omvardnad-inom-hemtjanst"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57407:15522:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to personlig-omvardnad-inom-hemtjanst; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-personlig-omvardnad"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57407:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-personlig-omvardnad-2"
+fields = { "sets" = ["personlig-omvardnad-inom-hemtjanst"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen POMV.\ncatalog:variable_text:57408:13787:15615\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to personlig-omvardnad-inom-hemtjanst; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-personlig-omvardnad-2"
+fields = { "tags" = ["social-care"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen POMV.\ncatalog:variable_text:57408:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-service"
+fields = { "sets" = ["service-inom-hemtjanst"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57409:15522:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to service-inom-hemtjanst; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-service"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i båda kandidatgrupperna.\ncatalog:variable_text:57409:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-service-2"
+fields = { "sets" = ["service-inom-hemtjanst"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen SERV.\ncatalog:variable_text:57410:13787:15615\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to service-inom-hemtjanst; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-service-2"
+fields = { "tags" = ["social-care"] }
+evidence = "Sifferändelsen är en tillagd räknare och finns inte i källkolumnen SERV.\ncatalog:variable_text:57410:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avlosning-anhorig-verkstallighet"
+fields = { "sets" = ["avlosning-av-anhorig"] }
+evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57411:15522:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to avlosning-av-anhorig; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avlosning-anhorig-verkstallighet"
+fields = { "tags" = ["social-care"] }
+evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57411:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar"
+fields = { "sets" = ["hemtjanst"] }
+evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57412:13787:15522\ncatalog:variable_text:57412:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar"
+fields = { "tags" = ["social-care"] }
+evidence = "HTJ är en källkod för hemtjänst och id:t är ett ogenomskinligt källmnemoniskt namn.\ncatalog:variable_text:57412:13787:15522\ncatalog:variable_text:57412:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommunangivelsen ingår i kandidatgruppen kommun.\ncatalog:variable_text:57413:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunangivelsen ingår i kandidatgruppen kommun.\ncatalog:variable_text:57413:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommundel"
+fields = { "sets" = [] }
+evidence = "Kommundel är en geografisk indelning.\ncatalog:variable_text:57414:13787:15522\ncatalog:variable_text:57414:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommundel"
+fields = { "tags" = ["geography"] }
+evidence = "Kommundel är en geografisk indelning.\ncatalog:variable_text:57414:13787:15522\ncatalog:variable_text:57414:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:57415:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:57415:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj"
+fields = { "sets" = ["kontaktfamilj-eller-kontaktperson"] }
+evidence = "Kontaktfamilj ingår i kandidatgruppen.\ncatalog:variable_text:57416:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj"
+fields = { "tags" = ["social-care"] }
+evidence = "Kontaktfamilj ingår i kandidatgruppen.\ncatalog:variable_text:57416:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj-eller-kontaktperson"
+fields = { "sets" = ["kontaktfamilj-eller-kontaktperson"] }
+evidence = "Insatsen ingår i kandidatgruppen.\ncatalog:variable_text:57417:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj-eller-kontaktperson"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i kandidatgruppen.\ncatalog:variable_text:57417:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp"
+fields = { "sets" = ["kontaktfamilj-eller-kontaktperson"] }
+evidence = "Kontaktperson ingår i kandidatgruppen.\ncatalog:variable_text:57418:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp"
+fields = { "tags" = ["social-care"] }
+evidence = "Kontaktperson ingår i kandidatgruppen.\ncatalog:variable_text:57418:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kortdag"
+fields = { "sets" = ["korttidsvard-och-korttidsboende"] }
+evidence = "Status för korttidsboende ingår i kandidatgruppen.\ncatalog:variable_text:57419:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kortdag"
+fields = { "tags" = ["social-care"] }
+evidence = "Status för korttidsboende ingår i kandidatgruppen.\ncatalog:variable_text:57419:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kortman"
+fields = { "sets" = ["korttidsvard-och-korttidsboende"] }
+evidence = "Dygnsomfattning av korttidsboende ingår i kandidatgruppen.\ncatalog:variable_text:57420:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kortman"
+fields = { "tags" = ["social-care"] }
+evidence = "Dygnsomfattning av korttidsboende ingår i kandidatgruppen.\ncatalog:variable_text:57420:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttid"
+fields = { "sets" = ["korttidsvard-och-korttidsboende"] }
+evidence = "Insatsen ingår i kandidatgruppen.\ncatalog:variable_text:57421:13787:15522\ncatalog:variable_text:57421:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:korttid"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i kandidatgruppen.\ncatalog:variable_text:57421:13787:15522\ncatalog:variable_text:57421:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag"
+fields = { "sets" = ["ledsagning"] }
+evidence = "Insatsen ingår i kandidatgruppen ledsagning.\ncatalog:variable_text:57422:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i kandidatgruppen ledsagning.\ncatalog:variable_text:57422:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut"
+fields = { "sets" = ["matdistribution"] }
+evidence = "Insatsen ingår i kandidatgruppen matdistribution.\ncatalog:variable_text:57423:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Insatsen ingår i kandidatgruppen matdistribution.\ncatalog:variable_text:57423:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinart-boende"
+fields = { "sets" = ["boendeform"] }
+evidence = "Ordinärt boende är en boendeform.\ncatalog:variable_text:57424:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:ordinart-boende"
+fields = { "tags" = ["housing"] }
+evidence = "Ordinärt boende är en boendeform.\ncatalog:variable_text:57424:13787:15615"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "sets" = [] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:57427:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummerkvalitet"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en kvalitetsmarkör för personnummer.\ncatalog:variable_text:57427:13787:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pomvtrygg"
+fields = { "sets" = ["personlig-omvardnad-inom-hemtjanst"] }
+evidence = "Kodningen specificerar trygghetslarm inom personlig omvårdnad i hemtjänsten.\ncatalog:valueset:9215\ncatalog:variable_text:57428:15522:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to personlig-omvardnad-inom-hemtjanst; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:pomvtrygg"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen specificerar trygghetslarm inom personlig omvårdnad i hemtjänsten.\ncatalog:valueset:9215\ncatalog:variable_text:57428:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende"
+fields = { "sets" = ["boendeform"] }
+evidence = "Särskilt boende är en boendeform.\ncatalog:variable_text:57430:13787:15522\ncatalog:variable_text:57430:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende"
+fields = { "tags" = ["housing"] }
+evidence = "Särskilt boende är en boendeform.\ncatalog:variable_text:57430:13787:15522\ncatalog:variable_text:57430:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende-hemtjanst-dygnet-runt"
+fields = { "sets" = ["hemtjanst"] }
+evidence = "Kodningen anger uttryckligen hemtjänst och ingår i kandidatgruppen. Coordinator group membership: Variablerna kodar boendeform eller namngivna boendeformer. Detta omfattar även annat biståndsbeslutat boende och särskilt boende med hemtjänst dygnet runt samt boendeform vid verkställan och avslut. Variablerna kodar hemtjänst, dess timomfattning eller uttryckligen namngivet innehåll. Förenklat beslutsfattande beskriver beslutsförfarandet och separat beslutade insatser saknar den erforderliga hemtjänstanknytningen.\ncatalog:variable_text:57372:15522:2932897\ncatalog:variable_text:57376:13787:15615\ncatalog:variable_text:57378:13787:15615\ncatalog:variable_text:57388:15522:2932897\ncatalog:variable_text:57400:19144:2932897\ncatalog:variable_text:57402:15522:2932897\ncatalog:variable_text:57403:13787:15615\ncatalog:variable_text:57404:15522:2932897\ncatalog:variable_text:57405:13787:15615\ncatalog:variable_text:57406:13787:15615\ncatalog:variable_text:57407:15522:2932897\ncatalog:variable_text:57408:13787:15615\ncatalog:variable_text:57409:15522:2932897\ncatalog:variable_text:57410:13787:15615\ncatalog:variable_text:57411:15522:2932897\ncatalog:variable_text:57412:15522:2932897\ncatalog:variable_text:57424:13787:15615\ncatalog:variable_text:57428:15522:2932897\ncatalog:variable_text:57430:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57432:15522:2932897\ncatalog:variable_text:57435:15522:2932897\n\nSingle-group ruling 2026-11-02: The item asks whether the housing decision includes round-the-clock home help; keep the service group."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende-hemtjanst-dygnet-runt"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen anger uttryckligen hemtjänst och ingår i kandidatgruppen. Coordinator group membership: Variablerna kodar boendeform eller namngivna boendeformer. Detta omfattar även annat biståndsbeslutat boende och särskilt boende med hemtjänst dygnet runt samt boendeform vid verkställan och avslut. Variablerna kodar hemtjänst, dess timomfattning eller uttryckligen namngivet innehåll. Förenklat beslutsfattande beskriver beslutsförfarandet och separat beslutade insatser saknar den erforderliga hemtjänstanknytningen.\ncatalog:variable_text:57372:15522:2932897\ncatalog:variable_text:57376:13787:15615\ncatalog:variable_text:57378:13787:15615\ncatalog:variable_text:57388:15522:2932897\ncatalog:variable_text:57400:19144:2932897\ncatalog:variable_text:57402:15522:2932897\ncatalog:variable_text:57403:13787:15615\ncatalog:variable_text:57404:15522:2932897\ncatalog:variable_text:57405:13787:15615\ncatalog:variable_text:57406:13787:15615\ncatalog:variable_text:57407:15522:2932897\ncatalog:variable_text:57408:13787:15615\ncatalog:variable_text:57409:15522:2932897\ncatalog:variable_text:57410:13787:15615\ncatalog:variable_text:57411:15522:2932897\ncatalog:variable_text:57412:15522:2932897\ncatalog:variable_text:57424:13787:15615\ncatalog:variable_text:57428:15522:2932897\ncatalog:variable_text:57430:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57432:15522:2932897\ncatalog:variable_text:57435:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:servmatd"
+fields = { "sets" = ["service-inom-hemtjanst"] }
+evidence = "Kodningen specificerar matdistribution inom hemtjänstens service. Coordinator group membership: Variablerna kodar hemtjänst, dess timomfattning eller uttryckligen namngivet innehåll. Förenklat beslutsfattande beskriver beslutsförfarandet och separat beslutade insatser saknar den erforderliga hemtjänstanknytningen. Alla tre variablerna anger uttryckligen matdistribution, genom hemtjänst eller separat beslut. SERVMATD specificerar matdistribution inom hemtjänstens service. Variablerna kodar service inom hemtjänsten, inklusive matdistribution som uttryckligen specificerad del av denna service.\ncatalog:valueset:10879\ncatalog:variable_text:57400:19144:2932897\ncatalog:variable_text:57402:15522:2932897\ncatalog:variable_text:57403:13787:15615\ncatalog:variable_text:57404:15522:2932897\ncatalog:variable_text:57405:13787:15615\ncatalog:variable_text:57406:13787:15615\ncatalog:variable_text:57407:15522:2932897\ncatalog:variable_text:57408:13787:15615\ncatalog:variable_text:57409:15522:2932897\ncatalog:variable_text:57410:13787:15615\ncatalog:variable_text:57411:15522:2932897\ncatalog:variable_text:57412:15522:2932897\ncatalog:variable_text:57423:15522:2932897\ncatalog:variable_text:57428:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57432:15522:2932897\n\nSingle-group ruling 2026-11-02: The definition explicitly specifies meal distribution within home-help service."
+
+[[statement]]
+kind = "set"
+subject = "var:servmatd"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen specificerar matdistribution inom hemtjänstens service. Coordinator group membership: Variablerna kodar hemtjänst, dess timomfattning eller uttryckligen namngivet innehåll. Förenklat beslutsfattande beskriver beslutsförfarandet och separat beslutade insatser saknar den erforderliga hemtjänstanknytningen. Alla tre variablerna anger uttryckligen matdistribution, genom hemtjänst eller separat beslut. SERVMATD specificerar matdistribution inom hemtjänstens service. Variablerna kodar service inom hemtjänsten, inklusive matdistribution som uttryckligen specificerad del av denna service.\ncatalog:valueset:10879\ncatalog:variable_text:57400:19144:2932897\ncatalog:variable_text:57402:15522:2932897\ncatalog:variable_text:57403:13787:15615\ncatalog:variable_text:57404:15522:2932897\ncatalog:variable_text:57405:13787:15615\ncatalog:variable_text:57406:13787:15615\ncatalog:variable_text:57407:15522:2932897\ncatalog:variable_text:57408:13787:15615\ncatalog:variable_text:57409:15522:2932897\ncatalog:variable_text:57410:13787:15615\ncatalog:variable_text:57411:15522:2932897\ncatalog:variable_text:57412:15522:2932897\ncatalog:variable_text:57423:15522:2932897\ncatalog:variable_text:57428:15522:2932897\ncatalog:variable_text:57431:14244:14610\ncatalog:variable_text:57432:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-for-avslutat-bistand"
+fields = { "sets" = ["verkstallighetsdatum"] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57433:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-for-avslutat-bistand"
+fields = { "tags" = [] }
+evidence = "Datumet ingår i kandidatgruppen verkställighetsdatum.\ncatalog:variable_text:57433:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghetslarm"
+fields = { "sets" = [] }
+evidence = "Trygghetslarm är en socialtjänstinsats.\ncatalog:variable_text:57434:13787:15522\ncatalog:variable_text:57434:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghetslarm"
+fields = { "tags" = ["social-care"] }
+evidence = "Trygghetslarm är en socialtjänstinsats.\ncatalog:variable_text:57434:13787:15522\ncatalog:variable_text:57434:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform-vid-verkstallan"
+fields = { "sets" = ["boendeform"] }
+evidence = "Den inledande bokstaven V är en källkod för verkställan.\ncatalog:variable_text:57435:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform-vid-verkstallan"
+fields = { "tags" = ["housing"] }
+evidence = "Den inledande bokstaven V är en källkod för verkställan.\ncatalog:variable_text:57435:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verkst"
+fields = { "sets" = [] }
+evidence = "Förändringen avser ett socialtjänstbeslut.\ncatalog:variable_text:57436:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:verkst"
+fields = { "tags" = ["social-care"] }
+evidence = "Förändringen avser ett socialtjänstbeslut.\ncatalog:variable_text:57436:15522:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-vard-och-omsorg"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om annan vård- eller omsorgsinsats." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!2; sos/sol/sol-incr: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!78"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om avlösning av anhörig i hemmet som inte ingår i ett hemtjänstbeslut." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!5; sos/sol/sol-incr: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!83"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod"
+fields = { "description" = "Uppgift om biståndsbeslut om boendestöd." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!7; sos/sol/sol-2007-2012: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!47; sos/sol/sol-incr: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!86"
+
+[[statement]]
+kind = "set"
+subject = "var:dagverksamhet"
+fields = { "description" = "Uppgift om biståndsbeslut om dagverksamhet." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!8; sos/sol/sol-2007-2012: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!49; sos/sol/sol-incr: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!87"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-numerisk"
+fields = { "description" = "Brukarens födelsedatum, representerat som numeriskt SAS-datum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/fodelsedatum-numerisk"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst"
+fields = { "description" = "Uppgift om biståndsbeslut om hemtjänst." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!13; sos/sol/sol-2007-2012: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!56; sos/sol/sol-incr: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!92"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-avlosning-anhorig-verkstallighet"
+fields = { "description" = "Indikator för att hemtjänstbeslutets verkställighet eller avslut avser avlösning av anhörig." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:292\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/hemtjanst-avlosning-anhorig-verkstallighet"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-ledsagning"
+fields = { "description" = "Indikator för att hemtjänstbeslutets verkställighet eller avslut avser ledsagning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:301\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/hemtjanst-ledsagning"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-personlig-omvardnad"
+fields = { "description" = "Indikator för att hemtjänstbeslutets verkställighet eller avslut avser personlig omvårdnad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:310\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/hemtjanst-personlig-omvardnad"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-service"
+fields = { "description" = "Indikator för att hemtjänstbeslutets verkställighet eller avslut avser service." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:319\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/hemtjanst-service"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar"
+fields = { "description" = "Antal beviljade eller beräknade hemtjänsttimmar per månad." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!18; sos/sol/sol-2007-2012: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!57; sos/sol/sol-incr: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!97"
+
+[[statement]]
+kind = "set"
+subject = "var:kommundel"
+fields = { "description" = "Kommundel, stadsdel, nämnd eller motsvarande; från juli 2012 är uppgiften avsedd för Stockholm, Göteborg och Malmö." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/kommundel"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktfamilj." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!21; sos/sol/sol-incr: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!100"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktperson." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!22; sos/sol/sol-incr: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!101"
+
+[[statement]]
+kind = "set"
+subject = "var:korttid"
+fields = { "description" = "Uppgift om biståndsbeslut om korttidsvård eller korttidsboende." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!25; sos/sol/sol-2007-2012: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!61; sos/sol/sol-incr: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!102"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om ledsagning som inte ingår i ett hemtjänstbeslut." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!26; sos/sol/sol-incr: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!103"
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om matdistribution som inte ingår i ett hemtjänstbeslut." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!28; sos/sol/sol-incr: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!105"
+
+[[statement]]
+kind = "set"
+subject = "var:pseudo"
+fields = { "description" = "Socialstyrelsens pseudonymiserade alfanumeriska ID-nummer för brukaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/sol/pseudo"
+
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende"
+fields = { "description" = "Verkställigheten eller avslutet avser särskilt boende." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol-2007-2012: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!72; sos/sol/sol-incr: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!111"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghetslarm"
+fields = { "description" = "Uppgift om biståndsbeslut om trygghetslarm." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!35; sos/sol/sol-2007-2012: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!75; sos/sol/sol-incr: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!113"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-vard-och-omsorg-verkstallighet-avslut"
+fields = { "label" = "Annat biståndsbeslut vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser annat bistånd inom vård- och omsorg." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!2; sos/sol/sol-incr: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!78"
+
+[[statement]]
+kind = "set"
+subject = "var:annat-bistand-vard-och-omsorg-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!2; sos/sol/sol-incr: ABIST (n:abist), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!78 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut-verkstallighet-avslut"
+fields = { "label" = "Avlösning av anhörig vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om avlösning i hemmet." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!5; sos/sol/sol-incr: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!83"
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut-verkstallighet-avslut"
+fields = { "sets" = ["avlosning-av-anhorig"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!5; sos/sol/sol-incr: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!83 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:avlosning-av-anhorig-separat-beslut-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!5; sos/sol/sol-incr: AVAN (n:avan), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!83 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: bosto"
+fields = { "variable" = "boendestod-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!7; sos/sol/sol-2007-2012: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!47; sos/sol/sol-incr: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!86"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod-verkstallighet-avslut"
+fields = { "label" = "Boendestöd vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser boendestöd." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!7; sos/sol/sol-2007-2012: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!47; sos/sol/sol-incr: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!86"
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod-verkstallighet-avslut"
+fields = { "sets" = ["boendestod"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!7; sos/sol/sol-2007-2012: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!47; sos/sol/sol-incr: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!86 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:boendestod-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!7; sos/sol/sol-2007-2012: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!47; sos/sol/sol-incr: BOSTO (n:bosto), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!86 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: dagv"
+fields = { "variable" = "dagverksamhet-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!8; sos/sol/sol-2007-2012: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!49; sos/sol/sol-incr: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!87"
+
+[[statement]]
+kind = "set"
+subject = "var:dagverksamhet-verkstallighet-avslut"
+fields = { "label" = "Dagverksamhet vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser dagverksamhet." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!8; sos/sol/sol-2007-2012: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!49; sos/sol/sol-incr: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!87"
+
+[[statement]]
+kind = "set"
+subject = "var:dagverksamhet-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!8; sos/sol/sol-2007-2012: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!49; sos/sol/sol-incr: DAGV (n:dagv), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!87 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htj"
+fields = { "variable" = "hemtjanst-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!13; sos/sol/sol-2007-2012: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!56; sos/sol/sol-incr: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!92"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-verkstallighet-avslut"
+fields = { "label" = "Hemtjänst vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser hemtjänst." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!13; sos/sol/sol-2007-2012: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!56; sos/sol/sol-incr: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!92"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-verkstallighet-avslut"
+fields = { "sets" = ["hemtjanst"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!13; sos/sol/sol-2007-2012: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!56; sos/sol/sol-incr: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!92 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjanst-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!13; sos/sol/sol-2007-2012: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!56; sos/sol/sol-incr: HTJ (n:htj), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!92 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjtim"
+fields = { "variable" = "hemtjansttimmar-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!18; sos/sol/sol-2007-2012: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!57; sos/sol/sol-incr: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!97"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar-verkstallighet-avslut"
+fields = { "label" = "Hemtjänsttimmar vid verkställighet eller avslut", "description" = "Om verkställigheten/avslutet avser hemtjänst: antal beviljade timmar per månad." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!18; sos/sol/sol-2007-2012: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!57; sos/sol/sol-incr: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!97"
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar-verkstallighet-avslut"
+fields = { "sets" = ["hemtjanst"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!18; sos/sol/sol-2007-2012: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!57; sos/sol/sol-incr: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!97 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:hemtjansttimmar-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!18; sos/sol/sol-2007-2012: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!57; sos/sol/sol-incr: HTJTIM (n:htjtim), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!97 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kontf"
+fields = { "variable" = "kontaktfamilj-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!21; sos/sol/sol-incr: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!100"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj-verkstallighet-avslut"
+fields = { "label" = "Kontaktfamilj vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser kontaktfamilj." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!21; sos/sol/sol-incr: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!100"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj-verkstallighet-avslut"
+fields = { "sets" = ["kontaktfamilj-eller-kontaktperson"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!21; sos/sol/sol-incr: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!100 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktfamilj-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!21; sos/sol/sol-incr: KONTF (n:kontf), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!100 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp-verkstallighet-avslut"
+fields = { "label" = "Kontaktperson vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser kontaktperson." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!22; sos/sol/sol-incr: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!101"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp-verkstallighet-avslut"
+fields = { "sets" = ["kontaktfamilj-eller-kontaktperson"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!22; sos/sol/sol-incr: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!101 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-kontp-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!22; sos/sol/sol-incr: KONTP (n:kontp), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!101 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: korttid"
+fields = { "variable" = "korttid-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!25; sos/sol/sol-2007-2012: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!61; sos/sol/sol-incr: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!102"
+
+[[statement]]
+kind = "set"
+subject = "var:korttid-verkstallighet-avslut"
+fields = { "label" = "Korttidsvård/-boende vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser korttidsboende/korttidsvård." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!25; sos/sol/sol-2007-2012: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!61; sos/sol/sol-incr: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!102"
+
+[[statement]]
+kind = "set"
+subject = "var:korttid-verkstallighet-avslut"
+fields = { "sets" = ["korttidsvard-och-korttidsboende"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!25; sos/sol/sol-2007-2012: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!61; sos/sol/sol-incr: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!102 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:korttid-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!25; sos/sol/sol-2007-2012: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!61; sos/sol/sol-incr: KORTTID (n:korttid), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!102 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: ledsag"
+fields = { "variable" = "ledsag-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!26; sos/sol/sol-incr: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!103"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag-verkstallighet-avslut"
+fields = { "label" = "Ledsagning vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om ledsagning." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!26; sos/sol/sol-incr: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!103"
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag-verkstallighet-avslut"
+fields = { "sets" = ["ledsagning"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!26; sos/sol/sol-incr: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!103 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:ledsag-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!26; sos/sol/sol-incr: LEDSAG (n:ledsag), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!103 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut-verkstallighet-avslut"
+fields = { "label" = "Matdistribution vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om matdistribution." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!28; sos/sol/sol-incr: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!105"
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut-verkstallighet-avslut"
+fields = { "sets" = ["matdistribution"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!28; sos/sol/sol-incr: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!105 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:matdistribution-separat-beslut-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!28; sos/sol/sol-incr: MATD (n:matd), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!105 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: sbo"
+fields = { "variable" = "sarskilt-boende-bistandsbeslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol-2007-2012: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!72; sos/sol/sol-incr: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!111"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende-bistandsbeslut"
+fields = { "label" = "Biståndsbeslut om särskilt boende", "description" = "Uppgift om biståndsbeslut om särskilt boende." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol-2007-2012: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!72; sos/sol/sol-incr: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!111"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende-bistandsbeslut"
+fields = { "sets" = ["boendeform"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol-2007-2012: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!72; sos/sol/sol-incr: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!111 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-boende-bistandsbeslut"
+fields = { "tags" = ["housing"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol-2007-2012: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!72; sos/sol/sol-incr: SBO (n:sbo), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!111 The same service/episode topic applies to both parallel quantities."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: trygg"
+fields = { "variable" = "trygghetslarm-verkstallighet-avslut" }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!35; sos/sol/sol-2007-2012: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!75; sos/sol/sol-incr: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!113"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghetslarm-verkstallighet-avslut"
+fields = { "label" = "Trygghetslarm vid verkställighet eller avslut", "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om trygghetslarm." }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!35; sos/sol/sol-2007-2012: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!75; sos/sol/sol-incr: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!113"
+
+[[statement]]
+kind = "set"
+subject = "var:trygghetslarm-verkstallighet-avslut"
+fields = { "tags" = ["social-care"] }
+evidence = "Identity review 2026-11-02: A status of an implemented assistance decision and the service type/hours on an implementation/termination event are distinct quantities. Their coverage overlaps from 2012-07-01; these are parallel variables, not succession. Historical status definitions are retained without projecting the later month-end date backwards. Source: sos/sol/sol: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!35; sos/sol/sol-2007-2012: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!75; sos/sol/sol-incr: TRYGG (n:trygg), catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx:Metadata - Variabelnivå!113 The same service/episode topic applies to both parallel quantities."

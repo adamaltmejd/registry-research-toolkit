@@ -46,3 +46,15 @@ kind = "set"
 subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2017 where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun stämmer med etikett och definition, men värdemängden för en period innehåller länskoder.\ncatalog:occurrence:320916\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:35037:13514:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun stämmer med etikett och definition, men värdemängden för en period innehåller länskoder.\ncatalog:occurrence:320916\ncatalog:valueset:13\ncatalog:valueset:7128\ncatalog:variable_text:35037:13514:14245"

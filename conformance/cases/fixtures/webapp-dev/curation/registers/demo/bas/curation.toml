@@ -1,0 +1,61 @@
+[[statement]]
+kind = "set"
+subject = "set:inkomst"
+fields.label = "Inkomstmått"
+fields.description = "Inkomst före och efter skatt för personer och hushåll."
+fields.axes = [{ id = "unit", label = "Enhet" }, { id = "measure", label = "Mått" }]
+evidence = "Synthetic income variants exercise presentation axes in authored order."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst"
+fields.sets = ["inkomst"]
+evidence = "Synthetic income variants form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst"
+fields.facets = { measure = { value = "net", label = "Efter skatt" }, unit = { value = "person" } }
+evidence = "Synthetic income variants differ by measure and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-household"
+fields.sets = ["inkomst"]
+evidence = "Synthetic income variants form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-household"
+fields.facets = { measure = { value = "gross", label = "Före skatt" }, unit = { value = "household" } }
+evidence = "Synthetic income variants differ by measure and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-person"
+fields.sets = ["inkomst"]
+evidence = "Synthetic income variants form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-person"
+fields.facets = { measure = { value = "gross", label = "Före skatt" }, unit = { value = "person" } }
+evidence = "Synthetic income variants differ by measure and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:net-household"
+fields.sets = ["inkomst"]
+evidence = "Synthetic income variants form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:net-household"
+fields.facets = { measure = { value = "net", label = "Efter skatt" }, unit = { value = "household" } }
+evidence = "Synthetic income variants differ by measure and unit."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst"
+fields.tags = ["income"]
+evidence = "One tagged member supplies the set tag union and narrows search."

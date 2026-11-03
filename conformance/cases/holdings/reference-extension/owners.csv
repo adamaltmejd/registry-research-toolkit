@@ -1,0 +1,2 @@
+table,column,label,definition,data_type,unit,codes,code_system,sensitive,identifier,from,to
+received,Id,Observation identity,Entity key attested in received table,integer,,,,,true,2017-01-01,2019-12-31

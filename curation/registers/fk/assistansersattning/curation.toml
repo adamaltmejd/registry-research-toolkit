@@ -10,3 +10,819 @@ kind = "set"
 subject = "pagaende-beslut-201810: diagnos"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:391\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = [] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:28:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är en demografisk uppgift.\ncatalog:variable_text:28:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-tidsbegransat"
+fields = { "sets" = [] }
+evidence = "Variabeln anger skälet till tidsbegränsad rätt till ersättning.\ncatalog:variable_text:29:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anledning-tidsbegransat"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger skälet till tidsbegränsad rätt till ersättning.\ncatalog:variable_text:29:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anordnartyp"
+fields = { "sets" = [] }
+evidence = "Anordnartyp beskriver organiseringen av personlig assistans.\ncatalog:register:3\ncatalog:variable_text:30:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:anordnartyp"
+fields = { "tags" = ["social-care"] }
+evidence = "Anordnartyp beskriver organiseringen av personlig assistans.\ncatalog:register:3\ncatalog:variable_text:30:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsanledning"
+fields = { "sets" = [] }
+evidence = "Variabeln anger skälet till avslag på assistansersättning.\ncatalog:variable_text:32:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:avslagsanledning"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln anger skälet till avslag på assistansersättning.\ncatalog:variable_text:32:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnomsorg"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller barnomsorgens betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:33:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:barnomsorg"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln gäller barnomsorgens betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:33:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsutfall"
+fields = { "sets" = ["beslutsutfall"] }
+evidence = "Beslutsutfall ingår i gruppen för beslutets utfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:35:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsutfall"
+fields = { "tags" = ["transfers"] }
+evidence = "Beslutsutfall ingår i gruppen för beslutets utfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:35:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:betalningsmottagartyp"
+fields = { "sets" = [] }
+evidence = "Betalningsmottagartyp gäller utbetalning av assistansersättning.\ncatalog:register:3\ncatalog:variable_text:36:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:betalningsmottagartyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Betalningsmottagartyp gäller utbetalning av assistansersättning.\ncatalog:register:3\ncatalog:variable_text:36:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljat-beslut"
+fields = { "sets" = ["beslutsutfall"] }
+evidence = "Kodningen av första beviljande eller återvändande ingår i beslutsutfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:37:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beviljat-beslut"
+fields = { "tags" = ["transfers"] }
+evidence = "Kodningen av första beviljande eller återvändande ingår i beslutsutfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:37:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daglig-verksamhet"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller daglig verksamhets betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:38:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:daglig-verksamhet"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln gäller daglig verksamhets betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:38:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "sets" = [] }
+evidence = "Huvuddiagnos är en hälsouppgift.\ncatalog:variable_text:39:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnos"
+fields = { "tags" = ["health"] }
+evidence = "Huvuddiagnos är en hälsouppgift.\ncatalog:variable_text:39:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dubbel-assistans"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Kodningen ingår tillsammans med tidsmåtten i dubbel assistans.\ncatalog:variable_text:40:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dubbel-assistans"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen ingår tillsammans med tidsmåtten i dubbel assistans.\ncatalog:variable_text:40:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:41:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:41:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraansvar"
+fields = { "sets" = [] }
+evidence = "Variabeln avser föräldraansvarets betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:42:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldraansvar"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln avser föräldraansvarets betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:42:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forandringsstatus"
+fields = { "sets" = [] }
+evidence = "Förändringsstatus beskriver ändringar i beviljade assistanstimmar eller indragen ersättning.\ncatalog:variable_text:43:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forandringsstatus"
+fields = { "tags" = ["transfers"] }
+evidence = "Förändringsstatus beskriver ändringar i beviljade assistanstimmar eller indragen ersättning.\ncatalog:variable_text:43:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-beslutsutfall"
+fields = { "sets" = ["beslutsutfall"] }
+evidence = "Första beslutsutfall ingår i gruppen för beslutets utfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:44:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-beslutsutfall"
+fields = { "tags" = ["transfers"] }
+evidence = "Första beslutsutfall ingår i gruppen för beslutets utfall och gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:44:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:interimistiskt"
+fields = { "sets" = [] }
+evidence = "Beslutets interimistiska karaktär gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:45:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:interimistiskt"
+fields = { "tags" = ["transfers"] }
+evidence = "Beslutets interimistiska karaktär gäller assistansersättning.\ncatalog:register:3\ncatalog:variable_text:45:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["geografisk-tillhorighet"] }
+evidence = "Kommun är en geografisk tillhörighet tillsammans med län.\ncatalog:variable_text:46:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk tillhörighet tillsammans med län.\ncatalog:variable_text:46:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:47:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:47:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-hygien"
+fields = { "sets" = ["kvalificerade-insatser"] }
+evidence = "Kodningen av kvalificerad insats för hygien ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:48:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-hygien"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen av kvalificerad insats för hygien ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:48:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-kladning"
+fields = { "sets" = ["kvalificerade-insatser"] }
+evidence = "Kodningen av kvalificerad insats för klädning ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:49:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-kladning"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen av kvalificerad insats för klädning ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:49:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-kommunikation"
+fields = { "sets" = ["kvalificerade-insatser"] }
+evidence = "Kodningen av kvalificerad insats för kommunikation ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:50:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-kommunikation"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen av kvalificerad insats för kommunikation ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:50:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-maltider"
+fields = { "sets" = ["kvalificerade-insatser"] }
+evidence = "Kodningen av kvalificerad insats för måltider ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:51:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kval-insats-maltider"
+fields = { "tags" = ["social-care"] }
+evidence = "Kodningen av kvalificerad insats för måltider ingår i gruppen för kvalificerade insatser.\ncatalog:variable_text:51:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["geografisk-tillhorighet"] }
+evidence = "Län är en geografisk tillhörighet tillsammans med kommun.\ncatalog:variable_text:52:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk tillhörighet tillsammans med kommun.\ncatalog:variable_text:52:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personkrets"
+fields = { "sets" = [] }
+evidence = "Personkrets avser tillhörighet till en grupp med funktionsnedsättning inom assistansersättningen.\ncatalog:register:3\ncatalog:variable_text:54:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personkrets"
+fields = { "tags" = ["disability"] }
+evidence = "Personkrets avser tillhörighet till en grupp med funktionsnedsättning inom assistansersättningen.\ncatalog:register:3\ncatalog:variable_text:54:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provningstyp"
+fields = { "sets" = [] }
+evidence = "Prövningstypen gäller beslut om assistansersättning.\ncatalog:register:3\ncatalog:variable_text:55:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:provningstyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Prövningstypen gäller beslut om assistansersättning.\ncatalog:register:3\ncatalog:variable_text:55:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhusvistelse"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller rätt till assistans under sjukhusvistelse.\ncatalog:variable_text:56:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukhusvistelse"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln gäller rätt till assistans under sjukhusvistelse.\ncatalog:variable_text:56:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timbelopp"
+fields = { "sets" = ["timbelopp"] }
+evidence = "Beviljat timbelopp och timbeloppstyp hör till samma ersättningsmått.\ncatalog:variable_text:57:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljat timbelopp och timbeloppstyp hör till samma ersättningsmått.\ncatalog:variable_text:57:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timbeloppstyp"
+fields = { "sets" = ["timbelopp"] }
+evidence = "Timbeloppstyp och beviljat timbelopp hör till samma ersättningsmått.\ncatalog:register:3\ncatalog:variable_text:58:11688:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timbeloppstyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Timbeloppstyp och beviljat timbelopp hör till samma ersättningsmått.\ncatalog:register:3\ncatalog:variable_text:58:11688:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-aktiv-tid"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för aktiv tid är en komponent av assistanstiden.\ncatalog:variable_text:59:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-aktiv-tid"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för aktiv tid är en komponent av assistanstiden.\ncatalog:variable_text:59:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för andra personliga behov ingår i assistanstid.\ncatalog:variable_text:60:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för andra personliga behov ingår i assistanstid.\ncatalog:variable_text:60:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-aktiv-tid"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljad aktiv tid för andra behov är en komponent av assistanstiden.\ncatalog:variable_text:61:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-aktiv-tid"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljad aktiv tid för andra behov är en komponent av assistanstiden.\ncatalog:variable_text:61:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-andning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för andning är en komponent av assistanstiden.\ncatalog:variable_text:62:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-andning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för andning är en komponent av assistanstiden.\ncatalog:variable_text:62:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-arbete-studier"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för arbete och studier är en komponent av assistanstiden.\ncatalog:variable_text:63:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-arbete-studier"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för arbete och studier är en komponent av assistanstiden.\ncatalog:variable_text:63:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-arenden"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för ärenden är en komponent av assistanstiden.\ncatalog:variable_text:64:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-arenden"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för ärenden är en komponent av assistanstiden.\ncatalog:variable_text:64:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-dubbel-assistans"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:65:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-dubbel-assistans"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:65:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-foralder"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för att fungera som förälder är en komponent av assistanstiden.\ncatalog:variable_text:66:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-foralder"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för att fungera som förälder är en komponent av assistanstiden.\ncatalog:variable_text:66:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-foraldraavdrag"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget för andra behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:67:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-foraldraavdrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Tidsavdraget för andra behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:67:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-forflyttning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för förflyttning är en komponent av assistanstiden.\ncatalog:variable_text:68:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-forflyttning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för förflyttning är en komponent av assistanstiden.\ncatalog:variable_text:68:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-fritidsaktiviteter"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för fritidsaktiviteter är en komponent av assistanstiden.\ncatalog:variable_text:69:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-fritidsaktiviteter"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för fritidsaktiviteter är en komponent av assistanstiden.\ncatalog:variable_text:69:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-hushallsarbete"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för hushållsarbete är en komponent av assistanstiden.\ncatalog:variable_text:70:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-hushallsarbete"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för hushållsarbete är en komponent av assistanstiden.\ncatalog:variable_text:70:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-hygien"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för hygien är en komponent av assistanstiden.\ncatalog:variable_text:71:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-hygien"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för hygien är en komponent av assistanstiden.\ncatalog:variable_text:71:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-kladning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för klädning är en komponent av assistanstiden.\ncatalog:variable_text:72:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-kladning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för klädning är en komponent av assistanstiden.\ncatalog:variable_text:72:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-kommunikation"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för kommunikation är en komponent av assistanstiden.\ncatalog:variable_text:73:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-kommunikation"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för kommunikation är en komponent av assistanstiden.\ncatalog:variable_text:73:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-maltider"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för måltider är en komponent av assistanstiden.\ncatalog:variable_text:74:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-maltider"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för måltider är en komponent av assistanstiden.\ncatalog:variable_text:74:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-nodvandig-atgard"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för nödvändiga åtgärder är en komponent av assistanstiden.\ncatalog:variable_text:75:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-nodvandig-atgard"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för nödvändiga åtgärder är en komponent av assistanstiden.\ncatalog:variable_text:75:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-ovrigt"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för övriga andra behov är en komponent av assistanstiden.\ncatalog:variable_text:76:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-ovrigt"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för övriga andra behov är en komponent av assistanstiden.\ncatalog:variable_text:76:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-skota-halsa"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för att sköta hälsa är en komponent av assistanstiden.\ncatalog:variable_text:77:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-skota-halsa"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för att sköta hälsa är en komponent av assistanstiden.\ncatalog:variable_text:77:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-sondmatning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för sondmatning är en komponent av assistanstiden.\ncatalog:variable_text:78:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-sondmatning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för sondmatning är en komponent av assistanstiden.\ncatalog:variable_text:78:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-trana"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för träning är en komponent av assistanstiden.\ncatalog:variable_text:79:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-andra-trana"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för träning är en komponent av assistanstiden.\ncatalog:variable_text:79:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-beredskapstid"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljad beredskapstid är en komponent av assistanstiden.\ncatalog:variable_text:80:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-beredskapstid"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljad beredskapstid är en komponent av assistanstiden.\ncatalog:variable_text:80:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-dubbel-assistans"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:81:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-dubbel-assistans"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:81:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-foraldraavdrag"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:82:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-foraldraavdrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Tidsavdraget ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:82:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för grundläggande behov ingår i assistanstid.\ncatalog:variable_text:83:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för grundläggande behov ingår i assistanstid.\ncatalog:variable_text:83:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-aktiv-tid"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljad aktiv tid för grundläggande behov är en komponent av assistanstiden.\ncatalog:variable_text:84:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-aktiv-tid"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljad aktiv tid för grundläggande behov är en komponent av assistanstiden.\ncatalog:variable_text:84:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-andning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för andning är en komponent av assistanstiden.\ncatalog:variable_text:85:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-andning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för andning är en komponent av assistanstiden.\ncatalog:variable_text:85:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-dubbel-assistans"
+fields = { "sets" = ["dubbel-assistans"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:86:17805:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to dubbel-assistans; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-dubbel-assistans"
+fields = { "tags" = ["transfers"] }
+evidence = "Måttet är både assistanstid och tid för dubbel assistans.\ncatalog:variable_text:86:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-foraldraavdrag"
+fields = { "sets" = ["foraldraavdrag"] }
+evidence = "Tidsavdraget för grundläggande behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:87:19358:2932897\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to foraldraavdrag; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-foraldraavdrag"
+fields = { "tags" = ["transfers"] }
+evidence = "Tidsavdraget för grundläggande behov ingår i assistanstid och föräldraavdrag.\ncatalog:variable_text:87:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-forebygga-skada"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för att förebygga skada är en komponent av assistanstiden.\ncatalog:variable_text:88:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-forebygga-skada"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för att förebygga skada är en komponent av assistanstiden.\ncatalog:variable_text:88:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-hygien"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för hygien är en komponent av assistanstiden.\ncatalog:variable_text:89:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-hygien"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för hygien är en komponent av assistanstiden.\ncatalog:variable_text:89:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kladning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för klädning är en komponent av assistanstiden.\ncatalog:variable_text:90:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kladning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för klädning är en komponent av assistanstiden.\ncatalog:variable_text:90:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kommunikation"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för kommunikation är en komponent av assistanstiden.\ncatalog:variable_text:91:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kommunikation"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för kommunikation är en komponent av assistanstiden.\ncatalog:variable_text:91:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kunskap"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för ingående kunskap är en komponent av assistanstiden.\ncatalog:variable_text:92:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-kunskap"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för ingående kunskap är en komponent av assistanstiden.\ncatalog:variable_text:92:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-maltider"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för måltider är en komponent av assistanstiden.\ncatalog:variable_text:93:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-maltider"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för måltider är en komponent av assistanstiden.\ncatalog:variable_text:93:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-medicinskt-tillst"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för stöd vid medicinskt tillstånd är en komponent av assistanstiden.\ncatalog:variable_text:94:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-medicinskt-tillst"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för stöd vid medicinskt tillstånd är en komponent av assistanstiden.\ncatalog:variable_text:94:19358:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-sondmatning"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljade timmar för sondmatning är en komponent av assistanstiden.\ncatalog:variable_text:95:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-grund-sondmatning"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljade timmar för sondmatning är en komponent av assistanstiden.\ncatalog:variable_text:95:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-per-vecka"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Genomsnittligt antal beviljade timmar per vecka ingår i assistanstid.\ncatalog:variable_text:96:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-per-vecka"
+fields = { "tags" = ["transfers"] }
+evidence = "Genomsnittligt antal beviljade timmar per vecka ingår i assistanstid.\ncatalog:variable_text:96:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-vantetid"
+fields = { "sets" = ["assistanstid"] }
+evidence = "Beviljad väntetid är en komponent av assistanstiden.\ncatalog:variable_text:97:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-vantetid"
+fields = { "tags" = ["transfers"] }
+evidence = "Beviljad väntetid är en komponent av assistanstiden.\ncatalog:variable_text:97:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vistelse-skolan"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller skolans betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:98:17805:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:vistelse-skolan"
+fields = { "tags" = ["social-care"] }
+evidence = "Variabeln gäller skolans betydelse för bedömningen av assistansbehov.\ncatalog:variable_text:98:17805:2932897"

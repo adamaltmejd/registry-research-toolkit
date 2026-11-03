@@ -10,7 +10,8 @@
 //! ```
 //!
 //! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
-//! against the previous release's; it prints nothing on success. `read` and `build` run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
+//! against the previous release's, reporting id changes when the previous release is pre-v1.
+//! `read` and `build` run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
 //! An input that is a release asset of the inputs repository is read from
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
@@ -28,10 +29,14 @@ mod curation;
 mod diff;
 mod docs;
 mod emit;
+mod external;
+mod holdings;
+mod id_targets;
 mod link;
 mod proposals;
 mod retired;
 mod search;
+mod sets;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -39,7 +44,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use reg_frame::Record;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 /// `curation/inputs.toml`: the pinned inputs and the providers they belong to.
@@ -56,7 +61,7 @@ struct Manifest {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Provider {
-    pid: String,
+    pid: toml::Spanned<String>,
     name: String,
     url: Option<String>,
 }
@@ -71,6 +76,14 @@ struct Args {
     catalog_version: String,
     release: bool,
     registers: Vec<String>,
+    base: Option<PathBuf>,
+}
+
+#[derive(Serialize)]
+struct BuildRefusal {
+    register: Option<String>,
+    kind: &'static str,
+    details: Vec<String>,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
@@ -81,6 +94,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
         (None, None, None, None, None, None);
     let mut release = false;
     let mut registers = Vec::new();
+    let mut base = None;
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--inputs" => &mut inputs,
@@ -89,6 +103,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
             "--assets" => &mut assets,
             "--report" => &mut report,
             "--catalog-version" => &mut version,
+            "--base" if command == "lock" => &mut base,
             "--release" => {
                 release = true;
                 continue;
@@ -118,6 +133,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
         catalog_version: version.unwrap_or_else(|| "dev".to_owned()),
         release,
         registers,
+        base: base.map(PathBuf::from),
     })
 }
 
@@ -165,13 +181,47 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
 }
 
 fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>, String> {
+    let check_provider = |provider: &str, input: &str, at: &str| {
+        if matches!(provider, "set" | "class" | "group") {
+            Err(format!(
+                "{input}:{at}: provider-reserved: provider {provider:?} is a reserved leading public-id segment"
+            ))
+        } else {
+            Ok(())
+        }
+    };
+    let path = args.curation.join("inputs.toml");
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    for provider in &manifest.provider {
+        let line = text[..provider.pid.span().start]
+            .bytes()
+            .filter(|&b| b == b'\n')
+            .count()
+            + 1;
+        check_provider(
+            provider.pid.get_ref(),
+            &path.to_string_lossy(),
+            &line.to_string(),
+        )?;
+    }
     let readers = args.curation.join("readers");
     manifest
         .input
         .iter()
         .map(|input| {
-            reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
-                .map_err(|e| e.to_string())
+            let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
+                .map_err(|e| e.to_string())?;
+            for record in &output.frame.records {
+                let (provider, at) = match record {
+                    Record::Register(r) => (&r.provider, &r.locator),
+                    Record::Table(r) => (&r.provider, &r.locator),
+                    Record::Release(r) => (&r.provider, &r.locator),
+                    Record::Occurrence(r) => (&r.provider, &r.locator),
+                    _ => continue,
+                };
+                check_provider(provider, &at.input, &at.at)?;
+            }
+            Ok(output)
         })
         .collect()
 }
@@ -245,11 +295,27 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
     Ok(())
 }
 
-#[allow(clippy::too_many_lines)]
 fn build(args: &Args) -> Result<(), String> {
+    build_with_provenance(args, None, None)
+}
+
+/// A steward commit covers its own generated transcription inputs; putting that
+/// same commit inside its manifest would make a self-referential Git pin.
+#[allow(clippy::too_many_lines)]
+fn build_with_provenance(
+    args: &Args,
+    admitted_pin: Option<(&str, &str)>,
+    base: Option<&external::Context>,
+) -> Result<(), String> {
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
-    let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
+    let tags = sets::vocabulary(&args.curation)?;
+    sets::statements(&tags, &statements)?;
+    let mut manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
+    if let Some((repo, commit)) = admitted_pin {
+        repo.clone_into(&mut manifest.repo);
+        commit.clone_into(&mut manifest.commit);
+    }
     let outputs = read_all(args, &manifest)?;
     let mut applied = curation::run(
         &args.curation,
@@ -258,8 +324,13 @@ fn build(args: &Args) -> Result<(), String> {
         &outputs,
         false,
         &[],
-        args.release,
+        base,
     )?;
+    if !args.release {
+        for finding in &applied.findings {
+            eprintln!("reg-build: {finding}");
+        }
+    }
 
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
@@ -354,8 +425,23 @@ fn build(args: &Args) -> Result<(), String> {
     }
 
     let mut resolved =
-        curation::complete_findings(&args.curation, &retired, &applied.records, &applied)?;
+        curation::complete_findings(&args.curation, &retired, &applied.records, &applied, base)?;
     let mut report = BTreeMap::new();
+    let mut refusals = Vec::new();
+    if args.release {
+        let mut groups = BTreeMap::<_, Vec<_>>::new();
+        for refusal in &applied.refusals {
+            groups
+                .entry(refusal.register.clone())
+                .or_default()
+                .push(refusal.message.clone());
+        }
+        refusals.extend(groups.into_iter().map(|(register, details)| BuildRefusal {
+            register,
+            kind: "curation",
+            details,
+        }));
+    }
     for r in &mut resolved {
         let (provider, register) = (&r.register.provider, &r.register.register);
         let path = ledger_path(&args.curation, provider, register);
@@ -363,28 +449,36 @@ fn build(args: &Args) -> Result<(), String> {
             r.acknowledgements.extend(acks.clone());
         }
         if args.release {
-            if let Some(id) = r.report.unplaced_ids.first() {
-                return Err(ledger_refusal(
-                    &path,
-                    id,
+            for (ids, kind, reason) in [
+                (
+                    &r.report.unplaced_ids,
                     "ledger-id-unplaced",
                     "has no placed variable",
-                )?);
-            }
-            if let Some(id) = r.report.split_ids.first() {
-                return Err(ledger_refusal(
-                    &path,
-                    id,
+                ),
+                (
+                    &r.report.split_ids,
                     "ledger-id-split",
                     "anchors more than one variable",
-                )?);
+                ),
+            ] {
+                if !ids.is_empty() {
+                    refusals.push(BuildRefusal {
+                        register: Some(format!("{provider}/{register}")),
+                        kind,
+                        details: ids
+                            .iter()
+                            .map(|id| ledger_refusal(&path, id, kind, reason))
+                            .collect::<Result<_, _>>()?,
+                    });
+                }
             }
-        }
-        if args.release && !r.report.unminted.is_empty() {
-            return Err(format!(
-                "{provider}/{register}: {} variables have no ledger id (--release)",
-                r.report.unminted.len()
-            ));
+            if !r.report.unminted.is_empty() {
+                refusals.push(BuildRefusal {
+                    register: Some(format!("{provider}/{register}")),
+                    kind: "unminted-variable",
+                    details: r.report.unminted.clone(),
+                });
+            }
         }
     }
     // A public name is one register's within its provider: no other register's public
@@ -393,28 +487,39 @@ fn build(args: &Args) -> Result<(), String> {
     for r in &resolved {
         let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
         if let Some(other) = named.insert((provider, r.public.as_str()), handle) {
-            return Err(format!(
-                "{}: public name {:?} of {provider}/{handle} is also {provider}/{other}'s",
-                ledger_path(&args.curation, provider, handle).display(),
-                r.public
-            ));
+            refusals.push(BuildRefusal {
+                register: Some(format!("{provider}/{handle}")),
+                kind: "public-name-collision",
+                details: vec![format!(
+                    "{}: public name {:?} of {provider}/{handle} is also {provider}/{other}'s",
+                    ledger_path(&args.curation, provider, handle).display(),
+                    r.public
+                )],
+            });
         }
     }
     for r in &resolved {
         let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
         if r.public != handle && registers.contains_key(&(provider.to_owned(), r.public.clone())) {
-            return Err(format!(
-                "{}: public name {:?} of {provider}/{handle} is another register's handle",
-                ledger_path(&args.curation, provider, handle).display(),
-                r.public
-            ));
+            refusals.push(BuildRefusal {
+                register: Some(format!("{provider}/{handle}")),
+                kind: "public-name-collision",
+                details: vec![format!(
+                    "{}: public name {:?} of {provider}/{handle} is another register's handle",
+                    ledger_path(&args.curation, provider, handle).display(),
+                    r.public
+                )],
+            });
         }
     }
+    sets::final_members(&resolved, &statements)?;
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     let mut linked = link::resolve(&resolved, &links, &docs)?;
+    let mut external_relations = Vec::new();
     if let Some(curated) = applied.linked {
         linked.relations = curated.relations;
+        external_relations = curated.external;
         applied.statements.extend(curated.statements);
     }
     let link_unresolved = linked.warnings.len();
@@ -448,6 +553,10 @@ fn build(args: &Args) -> Result<(), String> {
         ));
     }
     hasher.update(&curation_digest);
+    if let Some(base) = base {
+        hasher.update(&base.generation);
+        hasher.update(&base.sha256);
+    }
     let generation_id = reg_frame::hex(&hasher.finalize());
     let day = |iso| reg_core::iso_day_number(iso).expect("an ISO day");
     let meta = BTreeMap::from([
@@ -468,7 +577,7 @@ fn build(args: &Args) -> Result<(), String> {
         .provider
         .into_iter()
         .map(|p| emit::ProviderRow {
-            pid: p.pid,
+            pid: p.pid.into_inner(),
             name: p.name,
             url: p.url,
         })
@@ -486,12 +595,23 @@ fn build(args: &Args) -> Result<(), String> {
         &applied.overrides,
     );
     let catalog = emit::Catalog {
+        set_presentation: applied.sets,
         retired,
+        tags,
         meta,
         inputs: sorted_inputs,
         providers,
         registers: resolved,
         valuesets,
+        sentinels: applied
+            .sentinels
+            .into_iter()
+            .fold(BTreeMap::new(), |mut sets, declaration| {
+                sets.entry(declaration.hash)
+                    .or_insert_with(BTreeSet::new)
+                    .extend(declaration.codes);
+                sets
+            }),
         file_input,
         relations: linked.relations,
         notices: linked.notices,
@@ -500,6 +620,7 @@ fn build(args: &Args) -> Result<(), String> {
         statements: applied.statements,
         provenance,
         classifications: applied.classifications,
+        external_relations,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({
@@ -509,27 +630,59 @@ fn build(args: &Args) -> Result<(), String> {
             "link_unresolved": link_unresolved,
             "succession_dropped": succession_dropped,
             "doc_subject_unresolved": doc_subject_unresolved,
+            "refusals": refusals,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
+    }
+    if !refusals.is_empty() {
+        for refusal in &refusals {
+            eprintln!(
+                "reg-build: {}: {} {}",
+                refusal.register.as_deref().unwrap_or("curation"),
+                refusal.details.len(),
+                refusal.kind,
+            );
+            if base.is_some()
+                && let Some(code) = ["premise-changed", "premise-missing"]
+                    .into_iter()
+                    .find(|code| refusal.details.iter().any(|detail| detail.contains(code)))
+            {
+                eprintln!("reg-build: {code}");
+            }
+        }
+        return Err(match &args.report {
+            Some(path) => format!("build refused; report: {}", path.display()),
+            None => "build refused; use --report FILE for details".to_owned(),
+        });
     }
     emit::write(&catalog, &args.out)
 }
 
 fn lock(args: &Args) -> Result<(), String> {
+    let base = args
+        .base
+        .as_deref()
+        .map(external::Context::open)
+        .transpose()?;
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let tags = sets::vocabulary(&args.curation)?;
+    sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
-    curation::run(
+    let applied = curation::run(
         &args.curation,
         &retired,
         &statements,
         &outputs,
         true,
         &args.registers,
-        true,
+        base.as_ref(),
     )?;
+    for finding in &applied.findings {
+        eprintln!("reg-build: {finding}");
+    }
     Ok(())
 }
 
@@ -560,7 +713,14 @@ fn main() -> ExitCode {
     if args.next_if_eq("diff").is_some() {
         return diff::run(&args.collect::<Vec<_>>());
     }
-    let result = if args.next_if_eq("verify").is_some() {
+    let result = if args.next_if_eq("holdings").is_some() {
+        holdings::run(args)
+    } else if args.peek().is_some_and(|arg| arg == "verify")
+        && std::env::args().any(|arg| arg == "--catalog")
+    {
+        args.next();
+        holdings::verify_args(args)
+    } else if args.next_if_eq("verify").is_some() {
         parse_verify(args).and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
     } else {
         parse_args(args).and_then(|args| match args.command.as_str() {

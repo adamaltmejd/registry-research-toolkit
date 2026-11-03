@@ -124,3 +124,3676 @@ kind = "set"
 subject = "source-annual-1999-2003: {husni2007_1,husni2007_2}"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder och åldersgrupp mäter samma begrepp.\ncatalog:variable_text:39649:14610:14791\ncatalog:variable_text:39650:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder och åldersgrupp mäter samma begrepp.\ncatalog:variable_text:39649:14610:14791\ncatalog:variable_text:39650:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = ["alder"] }
+evidence = "Grupperad ålder hör till åldersmåtten.\ncatalog:variable_text:39650:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Grupperad ålder hör till åldersmåtten.\ncatalog:variable_text:39650:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-sarkurs"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:393151\ncatalog:occurrence:393218\ncatalog:variable_text:39651:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-sarkurs"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har en annan ägare i angränsande period.\ncatalog:occurrence:393151\ncatalog:occurrence:393218\ncatalog:variable_text:39651:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:amne1gr"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39652:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne1gr"
+fields = { "tags" = ["education"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39652:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne2gr"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39653:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne2gr"
+fields = { "tags" = ["education"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39653:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne3gr"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39654:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne3gr"
+fields = { "tags" = ["education"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39654:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne4gr"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39655:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne4gr"
+fields = { "tags" = ["education"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39655:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne5gr"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39656:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:amne5gr"
+fields = { "tags" = ["education"] }
+evidence = "Grupperat kursinnehåll hör till kursinnehåll och utbildning.\ncatalog:variable_text:39656:9131:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "sets" = ["anknytningsgrad-till-arbetsmarknaden"] }
+evidence = "AKSTATUS delas med arbetskraftsstatus-aldre men kodar här anknytningsgrad.\ncatalog:occurrence:394301\ncatalog:occurrence:394376\ncatalog:occurrence:394482"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad"
+fields = { "tags" = ["employment"] }
+evidence = "AKSTATUS delas med arbetskraftsstatus-aldre men kodar här anknytningsgrad.\ncatalog:occurrence:394301\ncatalog:occurrence:394376\ncatalog:occurrence:394482"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad-aku"
+fields = { "sets" = ["anknytningsgrad-till-arbetsmarknaden"] }
+evidence = "Kodningen avser anknytningsgrad.\ncatalog:variable_text:39658:13879:14061\ncatalog:variable_text:39658:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad-aku"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen avser anknytningsgrad.\ncatalog:variable_text:39658:13879:14061\ncatalog:variable_text:39658:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid-grupperad"
+fields = { "sets" = ["anstallningstid"] }
+evidence = "Grupperad anställningstid hör samman med anställningstid i år.\ncatalog:variable_text:39659:14610:14791\ncatalog:variable_text:39897:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid-grupperad"
+fields = { "tags" = ["employment"] }
+evidence = "Grupperad anställningstid hör samman med anställningstid i år.\ncatalog:variable_text:39659:14610:14791\ncatalog:variable_text:39897:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsplatsen"
+fields = { "sets" = [] }
+evidence = "Antal anställda på arbetsplatsen mäter arbetsplatsens storlek.\ncatalog:variable_text:39660:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-arbetsplatsen"
+fields = { "tags" = ["business"] }
+evidence = "Antal anställda på arbetsplatsen mäter arbetsplatsens storlek.\ncatalog:variable_text:39660:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "sets" = [] }
+evidence = "Antal anställda är ett mått på företagsstorlek.\ncatalog:variable_text:39661:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "tags" = ["business"] }
+evidence = "Antal anställda är ett mått på företagsstorlek.\ncatalog:variable_text:39661:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare"
+fields = { "sets" = ["antal-kursdeltagare"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393452\ncatalog:occurrence:394435"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393452\ncatalog:occurrence:394435"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-2"
+fields = { "sets" = ["antal-kursdeltagare"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393453\ncatalog:occurrence:394436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393453\ncatalog:occurrence:394436"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-3"
+fields = { "sets" = ["antal-kursdeltagare"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393454\ncatalog:occurrence:394437"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393454\ncatalog:occurrence:394437"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-4"
+fields = { "sets" = ["antal-kursdeltagare"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393455\ncatalog:occurrence:394438"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393455\ncatalog:occurrence:394438"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-5"
+fields = { "sets" = ["antal-kursdeltagare"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393456\ncatalog:occurrence:394439"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kursdeltagare-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; antal deltagare hör till utbildning.\ncatalog:occurrence:393456\ncatalog:occurrence:394439"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393447\ncatalog:occurrence:394430"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393447\ncatalog:occurrence:394430"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-2"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393448\ncatalog:occurrence:394431"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393448\ncatalog:occurrence:394431"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-3"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393449\ncatalog:occurrence:394432"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393449\ncatalog:occurrence:394432"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-4"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393450\ncatalog:occurrence:394433"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393450\ncatalog:occurrence:394433"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-5"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393451\ncatalog:occurrence:394434"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-overnattningar-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används senare för ett annat begrepp; variabeln mäter övernattningar vid kurs.\ncatalog:occurrence:393451\ncatalog:occurrence:394434"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-utbildning"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Måttet avser utbildningstid.\ncatalog:variable_text:39672:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Måttet avser utbildningstid.\ncatalog:variable_text:39672:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs"
+fields = { "sets" = [] }
+evidence = "Antalet kurser avser utbildningsdeltagande.\ncatalog:variable_text:39673:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antkurs"
+fields = { "tags" = ["education"] }
+evidence = "Antalet kurser avser utbildningsdeltagande.\ncatalog:variable_text:39673:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Kodningen avser arbetskraftsstatus.\ncatalog:variable_text:39674:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Kodningen avser arbetskraftsstatus.\ncatalog:variable_text:39674:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-aldre"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Samma källkolumn används även för anknytningsgrad.\ncatalog:occurrence:394301\ncatalog:occurrence:394376\ncatalog:occurrence:394482"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-aldre"
+fields = { "tags" = ["employment"] }
+evidence = "Samma källkolumn används även för anknytningsgrad.\ncatalog:occurrence:394301\ncatalog:occurrence:394376\ncatalog:occurrence:394482"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "Sektor i huvudsysslan och härledd arbetsmarknadssektor är samma sektorbegrepp med olika indelning, korrekt uppdelat efter period.\ncatalog:occurrence:394303\ncatalog:occurrence:394378\ncatalog:occurrence:394587\ncatalog:valueset:5725"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "tags" = ["employment"] }
+evidence = "Sektor i huvudsysslan och härledd arbetsmarknadssektor är samma sektorbegrepp med olika indelning, korrekt uppdelat efter period.\ncatalog:occurrence:394303\ncatalog:occurrence:394378\ncatalog:occurrence:394587\ncatalog:valueset:5725"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-per-vecka"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Variabeln grupperar arbetstid per vecka.\ncatalog:valueset:9252\ncatalog:variable_text:39677:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-per-vecka"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln grupperar arbetstid per vecka.\ncatalog:valueset:9252\ncatalog:variable_text:39677:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1-forsta-halvaret"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Arr är en ogenomskinlig källförkortning; etiketten anger kursanordnare.\ncatalog:variable_text:39678:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Arr är en ogenomskinlig källförkortning; etiketten anger kursanordnare.\ncatalog:variable_text:39678:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2-forsta-halvaret"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Arr är en ogenomskinlig källförkortning; tvåan är en källplats.\ncatalog:variable_text:39679:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Arr är en ogenomskinlig källförkortning; tvåan är en källplats.\ncatalog:variable_text:39679:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3-forsta-halvaret"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Arr är en ogenomskinlig källförkortning; trean är en källplats.\ncatalog:variable_text:39680:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Arr är en ogenomskinlig källförkortning; trean är en källplats.\ncatalog:variable_text:39680:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4-forsta-halvaret"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Arr är en ogenomskinlig källförkortning; fyran är en källplats.\ncatalog:variable_text:39681:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Arr är en ogenomskinlig källförkortning; fyran är en källplats.\ncatalog:variable_text:39681:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Källans kategorier omfattar även samboskap.\ncatalog:valueset:3981\ncatalog:variable_text:39682:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Källans kategorier omfattar även samboskap.\ncatalog:valueset:3981\ncatalog:variable_text:39682:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-sjalvstudier"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393151\ncatalog:occurrence:393218"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-sjalvstudier"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393151\ncatalog:occurrence:393218"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-personalutbildning"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Variabeln mäter deltagande i utbildning.\ncatalog:variable_text:39684:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-personalutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln mäter deltagande i utbildning.\ncatalog:variable_text:39684:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:fackforb"
+fields = { "sets" = ["facklig-tillhorighet"] }
+evidence = "Fackförbund är en kodning av facklig tillhörighet.\ncatalog:variable_text:39685:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:fackforb"
+fields = { "tags" = ["employment"] }
+evidence = "Fackförbund är en kodning av facklig tillhörighet.\ncatalog:variable_text:39685:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:facklig-centralorganisation"
+fields = { "sets" = ["facklig-tillhorighet"] }
+evidence = "Centralorganisation är en kodning av facklig tillhörighet.\ncatalog:valueset:941\ncatalog:variable_text:39686:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:facklig-centralorganisation"
+fields = { "tags" = ["employment"] }
+evidence = "Centralorganisation är en kodning av facklig tillhörighet.\ncatalog:valueset:941\ncatalog:variable_text:39686:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-andra-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39687:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39687:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39688:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39688:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39689:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39689:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39690:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39690:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39691:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39691:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39692:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-5-grupperad-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39692:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-andra-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39693:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-1-grupperad-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39693:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-andra-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39694:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-2-grupperad-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39694:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-andra-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39695:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-3-grupperad-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39695:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-andra-halvaret"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39696:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-4-grupperad-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Fikod är en opak källkod; etiketten anger grupperat kursinnehåll.\ncatalog:variable_text:39696:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = [] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:39697:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun anger geografisk tillhörighet.\ncatalog:variable_text:39697:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek"
+fields = { "sets" = [] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39698:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek"
+fields = { "tags" = ["business"] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39698:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t12"
+fields = { "sets" = [] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39699:9496:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t12"
+fields = { "tags" = ["business"] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39699:9496:10408"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t14"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etikett och intervjufråga skiljer sig i populationsenhet.\ncatalog:occurrence:393219\ncatalog:occurrence:393587\ncatalog:variable_text:39700:10957:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t14"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etikett och intervjufråga skiljer sig i populationsenhet.\ncatalog:occurrence:393219\ncatalog:occurrence:393587\ncatalog:variable_text:39700:10957:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t15"
+fields = { "sets" = [] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etikett och intervjufråga skiljer sig i populationsenhet.\ncatalog:occurrence:393220\ncatalog:occurrence:394034\ncatalog:variable_text:39701:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t15"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har en annan ägare i en tidigare period; etikett och intervjufråga skiljer sig i populationsenhet.\ncatalog:occurrence:393220\ncatalog:occurrence:394034\ncatalog:variable_text:39701:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t16"
+fields = { "sets" = [] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39702:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t16"
+fields = { "tags" = ["business"] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39702:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t17"
+fields = { "sets" = [] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39703:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t17"
+fields = { "tags" = ["business"] }
+evidence = "Etikett och definition anger företagsstorlek, medan intervjufrågan anger arbetsplats.\ncatalog:variable_text:39703:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Förvärvsarbete är en kodning av arbetskraftsstatus.\ncatalog:variable_text:39704:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { "tags" = ["employment"] }
+evidence = "Förvärvsarbete är en kodning av arbetskraftsstatus.\ncatalog:variable_text:39704:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp-andra-fas-urval"
+fields = { "sets" = [] }
+evidence = "Stratifieringsgruppen hör till urvalsmetoden.\ncatalog:variable_text:39705:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp-andra-fas-urval"
+fields = { "tags" = ["methods"] }
+evidence = "Stratifieringsgruppen hör till urvalsmetoden.\ncatalog:variable_text:39705:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-i-urvalets-forsta-fas"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Gruppnan är en källmnemonik utan tydliga stammar för etiketten.\ncatalog:variable_text:39706:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-i-urvalets-forsta-fas"
+fields = { "tags" = ["methods"] }
+evidence = "Gruppnan är en källmnemonik utan tydliga stammar för etiketten.\ncatalog:variable_text:39706:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-1-forsta-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Gxpld är en ogenomskinlig källkod.\ncatalog:variable_text:39707:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-1-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Gxpld är en ogenomskinlig källkod.\ncatalog:variable_text:39707:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-2-forsta-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39708:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-2-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39708:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-3-forsta-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39709:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-3-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39709:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-4-forsta-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39710:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-4-forsta-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39710:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-5-andra-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39711:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-dagar-5-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Gxpld är en ogenomskinlig källförkortning för kursens längd i dagar.\ncatalog:variable_text:39711:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region"
+fields = { "sets" = ["regional-kommungruppering"] }
+evidence = "Identitetsfakt visar delad källkolumn och olika regionala indelningar.\ncatalog:occurrence:394310\ncatalog:occurrence:394391\ncatalog:valueset:6960"
+
+[[statement]]
+kind = "set"
+subject = "var:h-region"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfakt visar delad källkolumn och olika regionala indelningar.\ncatalog:occurrence:394310\ncatalog:occurrence:394391\ncatalog:valueset:6960"
+
+[[statement]]
+kind = "set"
+subject = "var:halvar"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver deltagande i undersökningens halvår.\ncatalog:valueset:5743\ncatalog:variable_text:39713:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:halvar"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver deltagande i undersökningens halvår.\ncatalog:valueset:5743\ncatalog:variable_text:39713:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-1"
+fields = { "sets" = [] }
+evidence = "Help4 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39714:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-1"
+fields = { "tags" = ["methods"] }
+evidence = "Help4 är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39714:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-alder-kon"
+fields = { "sets" = [] }
+evidence = "Hjälpvariabel för estimation baserad på ålder och kön.\ncatalog:variable_text:39715:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-alder-kon"
+fields = { "tags" = ["demographics", "methods"] }
+evidence = "Hjälpvariabel för estimation baserad på ålder och kön.\ncatalog:variable_text:39715:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-arbetssokande-ams"
+fields = { "sets" = [] }
+evidence = "Hjälpvariabeln kodar arbetslöshet för estimation.\ncatalog:valueset:9352\ncatalog:variable_text:39716:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-arbetssokande-ams"
+fields = { "tags" = ["employment", "methods"] }
+evidence = "Hjälpvariabeln kodar arbetslöshet för estimation.\ncatalog:valueset:9352\ncatalog:variable_text:39716:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-fodelseland"
+fields = { "sets" = [] }
+evidence = "Hjälpvariabeln kodar födelseland för estimation.\ncatalog:valueset:12249\ncatalog:variable_text:39717:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-fodelseland"
+fields = { "tags" = ["demographics", "methods"] }
+evidence = "Hjälpvariabeln kodar födelseland för estimation.\ncatalog:valueset:12249\ncatalog:variable_text:39717:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-kalibrering-2"
+fields = { "sets" = [] }
+evidence = "Hjälpvariabel för kalibrering.\ncatalog:variable_text:39718:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-kalibrering-2"
+fields = { "tags" = ["methods"] }
+evidence = "Hjälpvariabel för kalibrering.\ncatalog:variable_text:39718:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-naringsgren-sysselsatta"
+fields = { "sets" = [] }
+evidence = "Näringsgren används som hjälpinformation vid estimation.\ncatalog:variable_text:39719:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-naringsgren-sysselsatta"
+fields = { "tags" = ["business", "methods"] }
+evidence = "Näringsgren används som hjälpinformation vid estimation.\ncatalog:variable_text:39719:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-region"
+fields = { "sets" = [] }
+evidence = "Region används som hjälpinformation vid estimation.\ncatalog:variable_text:39720:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-region"
+fields = { "tags" = ["geography", "methods"] }
+evidence = "Region används som hjälpinformation vid estimation.\ncatalog:variable_text:39720:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:person-som-aku-intervjuare-kontaktade"
+fields = { "sets" = [] }
+evidence = "Introb är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39721:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:person-som-aku-intervjuare-kontaktade"
+fields = { "tags" = ["methods"] }
+evidence = "Introb är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39721:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvikt"
+fields = { "sets" = [] }
+evidence = "Vikten används för uppräkning till populationen.\ncatalog:variable_text:39722:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Vikten används för uppräkning till populationen.\ncatalog:variable_text:39722:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "sets" = ["regional-kommungruppering"] }
+evidence = "Identitetsfakt och värdemängder visar H-regioner i äldre perioder och regionfamiljer senare.\ncatalog:occurrence:394310\ncatalog:occurrence:394391\ncatalog:valueset:2843\ncatalog:valueset:8963"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppering-regioner"
+fields = { "tags" = ["geography"] }
+evidence = "Identitetsfakt och värdemängder visar H-regioner i äldre perioder och regionfamiljer senare.\ncatalog:occurrence:394310\ncatalog:occurrence:394391\ncatalog:valueset:2843\ncatalog:valueset:8963"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:39724:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger kön.\ncatalog:variable_text:39724:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-1"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-andra-branscher"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393452\ncatalog:occurrence:394435"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-1"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393452\ncatalog:occurrence:394435"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-2"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-andra-branscher"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393453\ncatalog:occurrence:394436"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393453\ncatalog:occurrence:394436"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-3"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-andra-branscher"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393454\ncatalog:occurrence:394437"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393454\ncatalog:occurrence:394437"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-4"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-andra-branscher"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393455\ncatalog:occurrence:394438"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393455\ncatalog:occurrence:394438"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-5"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-andra-branscher"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393456\ncatalog:occurrence:394439"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-andra-bransch-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393456\ncatalog:occurrence:394439"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-1"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-samma-bransch"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393447\ncatalog:occurrence:394430"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-1"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393447\ncatalog:occurrence:394430"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-2"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-samma-bransch"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393448\ncatalog:occurrence:394431"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393448\ncatalog:occurrence:394431"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-3"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-samma-bransch"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393449\ncatalog:occurrence:394432"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393449\ncatalog:occurrence:394432"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-4"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-samma-bransch"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393450\ncatalog:occurrence:394433"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393450\ncatalog:occurrence:394433"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-5"
+fields = { "sets" = ["kurskunskapers-anvandbarhet-i-samma-bransch"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393451\ncatalog:occurrence:394434"
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-samma-bransch-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:393451\ncatalog:occurrence:394434"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393758\ncatalog:occurrence:393984"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393758\ncatalog:occurrence:393984"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-2"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393773\ncatalog:occurrence:394326\ncatalog:occurrence:394520"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393773\ncatalog:occurrence:394326\ncatalog:occurrence:394520"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-3"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393783\ncatalog:occurrence:393999"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393783\ncatalog:occurrence:393999"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-4"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394331\ncatalog:occurrence:394420"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-4"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394331\ncatalog:occurrence:394420"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393760\ncatalog:occurrence:393985"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393760\ncatalog:occurrence:393985"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-2"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393775\ncatalog:occurrence:394327\ncatalog:occurrence:394521"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393775\ncatalog:occurrence:394327\ncatalog:occurrence:394521"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-3"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393784\ncatalog:occurrence:394000"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393784\ncatalog:occurrence:394000"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-4"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394332\ncatalog:occurrence:394421"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-4"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394332\ncatalog:occurrence:394421"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393762\ncatalog:occurrence:393986"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393762\ncatalog:occurrence:393986"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-2"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393777\ncatalog:occurrence:394328\ncatalog:occurrence:394522"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393777\ncatalog:occurrence:394328\ncatalog:occurrence:394522"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-3"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393785\ncatalog:occurrence:394001"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393785\ncatalog:occurrence:394001"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-4"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394333\ncatalog:occurrence:394422"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-4"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394333\ncatalog:occurrence:394422"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393764\ncatalog:occurrence:393987"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393764\ncatalog:occurrence:393987"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-2"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393779\ncatalog:occurrence:394329\ncatalog:occurrence:394523"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393779\ncatalog:occurrence:394329\ncatalog:occurrence:394523"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-3"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393786\ncatalog:occurrence:394002"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393786\ncatalog:occurrence:394002"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-4"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394334\ncatalog:occurrence:394423"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-4"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394334\ncatalog:occurrence:394423"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393766\ncatalog:occurrence:393988"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för kursanordnare; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393766\ncatalog:occurrence:393988"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-2"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393781\ncatalog:occurrence:394330\ncatalog:occurrence:394524"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-2"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393781\ncatalog:occurrence:394330\ncatalog:occurrence:394524"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-3"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393787\ncatalog:occurrence:394003"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-3"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:393787\ncatalog:occurrence:394003"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-4"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394335\ncatalog:occurrence:394424"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-4"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Källkolumnen återanvänds för studieform; variabeln gäller utbildning på arbetstid.\ncatalog:occurrence:394335\ncatalog:occurrence:394424"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-1"
+fields = { "sets" = ["kursens-avslutningsstatus"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393869\ncatalog:occurrence:393915\ncatalog:occurrence:393979\ncatalog:occurrence:394062\ncatalog:occurrence:394316\ncatalog:occurrence:394321\ncatalog:occurrence:394410\ncatalog:occurrence:394415"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-1"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393869\ncatalog:occurrence:393915\ncatalog:occurrence:393979\ncatalog:occurrence:394062\ncatalog:occurrence:394316\ncatalog:occurrence:394321\ncatalog:occurrence:394410\ncatalog:occurrence:394415"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-2"
+fields = { "sets" = ["kursens-avslutningsstatus"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393870\ncatalog:occurrence:393916\ncatalog:occurrence:393980\ncatalog:occurrence:394063\ncatalog:occurrence:394317\ncatalog:occurrence:394322\ncatalog:occurrence:394411\ncatalog:occurrence:394416"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-2"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393870\ncatalog:occurrence:393916\ncatalog:occurrence:393980\ncatalog:occurrence:394063\ncatalog:occurrence:394317\ncatalog:occurrence:394322\ncatalog:occurrence:394411\ncatalog:occurrence:394416"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-3"
+fields = { "sets" = ["kursens-avslutningsstatus"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393871\ncatalog:occurrence:393917\ncatalog:occurrence:393981\ncatalog:occurrence:394064\ncatalog:occurrence:394318\ncatalog:occurrence:394323\ncatalog:occurrence:394412\ncatalog:occurrence:394417"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-3"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393871\ncatalog:occurrence:393917\ncatalog:occurrence:393981\ncatalog:occurrence:394064\ncatalog:occurrence:394318\ncatalog:occurrence:394323\ncatalog:occurrence:394412\ncatalog:occurrence:394417"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-4"
+fields = { "sets" = ["kursens-avslutningsstatus"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393872\ncatalog:occurrence:393918\ncatalog:occurrence:393982\ncatalog:occurrence:394065\ncatalog:occurrence:394319\ncatalog:occurrence:394324\ncatalog:occurrence:394413\ncatalog:occurrence:394418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-4"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393872\ncatalog:occurrence:393918\ncatalog:occurrence:393982\ncatalog:occurrence:394065\ncatalog:occurrence:394319\ncatalog:occurrence:394324\ncatalog:occurrence:394413\ncatalog:occurrence:394418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-5"
+fields = { "sets" = ["kursens-avslutningsstatus"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393873\ncatalog:occurrence:393919\ncatalog:occurrence:393983\ncatalog:occurrence:394066\ncatalog:occurrence:394320\ncatalog:occurrence:394325\ncatalog:occurrence:394414\ncatalog:occurrence:394419"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-avslutad-5"
+fields = { "tags" = ["education"] }
+evidence = "Flera källkolumner har andra ägare i angränsande eller senare perioder.\ncatalog:occurrence:393873\ncatalog:occurrence:393919\ncatalog:occurrence:393983\ncatalog:occurrence:394066\ncatalog:occurrence:394320\ncatalog:occurrence:394325\ncatalog:occurrence:394414\ncatalog:occurrence:394419"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393153\ncatalog:occurrence:393442\ncatalog:occurrence:394019"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för andra begrepp; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393153\ncatalog:occurrence:393442\ncatalog:occurrence:394019"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-2"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393443\ncatalog:occurrence:394021"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393443\ncatalog:occurrence:394021"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-3"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393444\ncatalog:occurrence:394023"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393444\ncatalog:occurrence:394023"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-4"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393445\ncatalog:occurrence:394025"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393445\ncatalog:occurrence:394025"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-5"
+fields = { "sets" = ["overnattning-vid-kurs"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393446\ncatalog:occurrence:394027"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-overnattning-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för kursinnehåll; variabeln gäller övernattning vid kurs.\ncatalog:occurrence:393446\ncatalog:occurrence:394027"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa"
+fields = { "sets" = ["resa-vid-kurs"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393437\ncatalog:occurrence:393572"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393437\ncatalog:occurrence:393572"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-2"
+fields = { "sets" = ["resa-vid-kurs"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393438\ncatalog:occurrence:393574"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-2"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393438\ncatalog:occurrence:393574"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-3"
+fields = { "sets" = ["resa-vid-kurs"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393439\ncatalog:occurrence:393576"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-3"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393439\ncatalog:occurrence:393576"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-4"
+fields = { "sets" = ["resa-vid-kurs"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393440\ncatalog:occurrence:393578"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-4"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393440\ncatalog:occurrence:393578"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-5"
+fields = { "sets" = ["resa-vid-kurs"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393441\ncatalog:occurrence:393580"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-medforde-resa-5"
+fields = { "tags" = ["transport"] }
+evidence = "Källkolumnen byter begrepp; variabeln gäller en resa vid kurs.\ncatalog:occurrence:393441\ncatalog:occurrence:393580"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-1-arr6"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39770:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-1-arr6"
+fields = { "tags" = ["education"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39770:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-2-arr7"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39771:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-2-arr7"
+fields = { "tags" = ["education"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39771:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-3-arr8"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39772:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-3-arr8"
+fields = { "tags" = ["education"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39772:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-4-arr9"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39773:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-4-arr9"
+fields = { "tags" = ["education"] }
+evidence = "Kursanordnare för andra halvåret.\ncatalog:variable_text:39773:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-5"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Samma källkolumn används för olika kursuppgifter i andra perioder.\ncatalog:occurrence:393766\ncatalog:occurrence:393988\ncatalog:occurrence:394325\ncatalog:occurrence:394419"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn används för olika kursuppgifter i andra perioder.\ncatalog:occurrence:393766\ncatalog:occurrence:393988\ncatalog:occurrence:394325\ncatalog:occurrence:394419"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-5-arr5"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Kursanordnare för kurs 5 i källkolumn Arr5.\ncatalog:variable_text:39775:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-utbildningsanordnare-kurs-5-arr5"
+fields = { "tags" = ["education"] }
+evidence = "Kursanordnare för kurs 5 i källkolumn Arr5.\ncatalog:variable_text:39775:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-1"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394347\ncatalog:occurrence:394352\ncatalog:occurrence:394448\ncatalog:occurrence:394453"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-1"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394347\ncatalog:occurrence:394352\ncatalog:occurrence:394448\ncatalog:occurrence:394453"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-2"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394348\ncatalog:occurrence:394355\ncatalog:occurrence:394449\ncatalog:occurrence:394454"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394348\ncatalog:occurrence:394355\ncatalog:occurrence:394449\ncatalog:occurrence:394454"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-3"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394349\ncatalog:occurrence:394358\ncatalog:occurrence:394450\ncatalog:occurrence:394455"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394349\ncatalog:occurrence:394358\ncatalog:occurrence:394450\ncatalog:occurrence:394455"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-4"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394350\ncatalog:occurrence:394361\ncatalog:occurrence:394451\ncatalog:occurrence:394456"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394350\ncatalog:occurrence:394361\ncatalog:occurrence:394451\ncatalog:occurrence:394456"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-5"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394351\ncatalog:occurrence:394364\ncatalog:occurrence:394452\ncatalog:occurrence:394457"
+
+[[statement]]
+kind = "set"
+subject = "var:kursamne-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i senare perioder.\ncatalog:occurrence:394351\ncatalog:occurrence:394364\ncatalog:occurrence:394452\ncatalog:occurrence:394457"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393758\ncatalog:occurrence:393984\ncatalog:occurrence:394321\ncatalog:occurrence:394415"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393758\ncatalog:occurrence:393984\ncatalog:occurrence:394321\ncatalog:occurrence:394415"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394326\ncatalog:occurrence:394520"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-1-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394326\ncatalog:occurrence:394520"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393760\ncatalog:occurrence:393985\ncatalog:occurrence:394322\ncatalog:occurrence:394416"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393760\ncatalog:occurrence:393985\ncatalog:occurrence:394322\ncatalog:occurrence:394416"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394327\ncatalog:occurrence:394521"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-2-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394327\ncatalog:occurrence:394521"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393762\ncatalog:occurrence:393986\ncatalog:occurrence:394323\ncatalog:occurrence:394417"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393762\ncatalog:occurrence:393986\ncatalog:occurrence:394323\ncatalog:occurrence:394417"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394328\ncatalog:occurrence:394522"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-3-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394328\ncatalog:occurrence:394522"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393764\ncatalog:occurrence:393987\ncatalog:occurrence:394324\ncatalog:occurrence:394418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika kursuppgifter.\ncatalog:occurrence:393764\ncatalog:occurrence:393987\ncatalog:occurrence:394324\ncatalog:occurrence:394418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394329\ncatalog:occurrence:394523"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-4-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394329\ncatalog:occurrence:394523"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-2"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394330\ncatalog:occurrence:394524"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för arbetstid i en annan period.\ncatalog:occurrence:394330\ncatalog:occurrence:394524"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-andra-halvaret"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Suffixet 3 är en tillagd räknare och finns inte i källkolumnen arr10.\ncatalog:variable_text:39790:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanordnare-5-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 3 är en tillagd räknare och finns inte i källkolumnen arr10.\ncatalog:variable_text:39790:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393437\ncatalog:occurrence:393572\ncatalog:occurrence:394004"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393437\ncatalog:occurrence:393572\ncatalog:occurrence:394004"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-10"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393802\ncatalog:occurrence:394018"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-10"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393802\ncatalog:occurrence:394018"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-11"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393442\ncatalog:occurrence:394019\ncatalog:occurrence:394425"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-11"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393442\ncatalog:occurrence:394019\ncatalog:occurrence:394425"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-12"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393443\ncatalog:occurrence:394021\ncatalog:occurrence:394426"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-12"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393443\ncatalog:occurrence:394021\ncatalog:occurrence:394426"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-13"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393444\ncatalog:occurrence:394023\ncatalog:occurrence:394427"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-13"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393444\ncatalog:occurrence:394023\ncatalog:occurrence:394427"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-14"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393445\ncatalog:occurrence:394025\ncatalog:occurrence:394428"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-14"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393445\ncatalog:occurrence:394025\ncatalog:occurrence:394428"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-15"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393446\ncatalog:occurrence:394027\ncatalog:occurrence:394429"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-15"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393446\ncatalog:occurrence:394027\ncatalog:occurrence:394429"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-2"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393438\ncatalog:occurrence:393574\ncatalog:occurrence:394006"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393438\ncatalog:occurrence:393574\ncatalog:occurrence:394006"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-3"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393439\ncatalog:occurrence:393576\ncatalog:occurrence:394008"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393439\ncatalog:occurrence:393576\ncatalog:occurrence:394008"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-4"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393440\ncatalog:occurrence:393578\ncatalog:occurrence:394010"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393440\ncatalog:occurrence:393578\ncatalog:occurrence:394010"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-5"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393441\ncatalog:occurrence:393580\ncatalog:occurrence:394012"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393441\ncatalog:occurrence:393580\ncatalog:occurrence:394012"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-6"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393798\ncatalog:occurrence:394014"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-6"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393798\ncatalog:occurrence:394014"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-7"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393799\ncatalog:occurrence:394015"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-7"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393799\ncatalog:occurrence:394015"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-8"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393800\ncatalog:occurrence:394016"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-8"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393800\ncatalog:occurrence:394016"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-9"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393801\ncatalog:occurrence:394017"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-9"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen byter begrepp; denna variabel gäller kursinnehållets användningsområde.\ncatalog:occurrence:393801\ncatalog:occurrence:394017"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394352\ncatalog:occurrence:394367\ncatalog:occurrence:394453\ncatalog:occurrence:394458"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-1"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394352\ncatalog:occurrence:394367\ncatalog:occurrence:394453\ncatalog:occurrence:394458"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-2"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394355\ncatalog:occurrence:394368\ncatalog:occurrence:394454\ncatalog:occurrence:394461"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394355\ncatalog:occurrence:394368\ncatalog:occurrence:394454\ncatalog:occurrence:394461"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-3"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394358\ncatalog:occurrence:394369\ncatalog:occurrence:394455\ncatalog:occurrence:394464"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394358\ncatalog:occurrence:394369\ncatalog:occurrence:394455\ncatalog:occurrence:394464"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-4"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394361\ncatalog:occurrence:394370\ncatalog:occurrence:394456\ncatalog:occurrence:394467"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394361\ncatalog:occurrence:394370\ncatalog:occurrence:394456\ncatalog:occurrence:394467"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394364\ncatalog:occurrence:394371\ncatalog:occurrence:394457\ncatalog:occurrence:394470"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:394364\ncatalog:occurrence:394371\ncatalog:occurrence:394457\ncatalog:occurrence:394470"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39811:14610:14791\ncatalog:variable_text:39811:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-1"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39811:14610:14791\ncatalog:variable_text:39811:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-2"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39812:14610:14791\ncatalog:variable_text:39812:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-2"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39812:14610:14791\ncatalog:variable_text:39812:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-3"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39813:14610:14791\ncatalog:variable_text:39813:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-3"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39813:14610:14791\ncatalog:variable_text:39813:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-4"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39814:14610:14791\ncatalog:variable_text:39814:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-4"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39814:14610:14791\ncatalog:variable_text:39814:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39815:14610:14791\ncatalog:variable_text:39815:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-5"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningstid i månader hör till utbildningstidens omfattning.\ncatalog:variable_text:39815:14610:14791\ncatalog:variable_text:39815:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Måttet anger utbildningstidens längd.\ncatalog:variable_text:39816:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langd"
+fields = { "tags" = ["education"] }
+evidence = "Måttet anger utbildningstidens längd.\ncatalog:variable_text:39816:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdhld"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Längd för handledd distansutbildning.\ncatalog:variable_text:39817:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdhld"
+fields = { "tags" = ["education"] }
+evidence = "Längd för handledd distansutbildning.\ncatalog:variable_text:39817:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdk"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Längd för konferenser och seminarier.\ncatalog:variable_text:39818:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdk"
+fields = { "tags" = ["education"] }
+evidence = "Längd för konferenser och seminarier.\ncatalog:variable_text:39818:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdl"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Längd för lärarledd utbildning.\ncatalog:variable_text:39819:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdl"
+fields = { "tags" = ["education"] }
+evidence = "Längd för lärarledd utbildning.\ncatalog:variable_text:39819:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langds"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Längd för självstudier.\ncatalog:variable_text:39820:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langds"
+fields = { "tags" = ["education"] }
+evidence = "Längd för självstudier.\ncatalog:variable_text:39820:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdsm"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Grupperad utbildningslängd.\ncatalog:variable_text:39821:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:langdsm"
+fields = { "tags" = ["education"] }
+evidence = "Grupperad utbildningslängd.\ncatalog:variable_text:39821:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = [] }
+evidence = "Urvalsstorlek per stratum är undersökningsmetodik.\ncatalog:variable_text:39822:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Urvalsstorlek per stratum är undersökningsmetodik.\ncatalog:variable_text:39822:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-i-urvalets-andra-fas"
+fields = { "sets" = ["antal-svarande"] }
+evidence = "Lills2ny är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39823:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-i-urvalets-andra-fas"
+fields = { "tags" = ["methods"] }
+evidence = "Lills2ny är en ogenomskinlig källmnemonik.\ncatalog:variable_text:39823:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-handledd-distansutbildning"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i handledd distansutbildning.\ncatalog:variable_text:39825:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-handledd-distansutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i handledd distansutbildning.\ncatalog:variable_text:39825:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-konferenser"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i konferenser.\ncatalog:variable_text:39826:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-konferenser"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i konferenser.\ncatalog:variable_text:39826:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-lararledd-utbildning"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i lärarledd utbildning.\ncatalog:variable_text:39827:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-lararledd-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i lärarledd utbildning.\ncatalog:variable_text:39827:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-kurser"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i kurser.\ncatalog:variable_text:39828:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-kurser"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger deltagande i kurser.\ncatalog:variable_text:39828:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Arbetstimmar grupperas med övriga arbetstidsmått.\ncatalog:variable_text:39829:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:namnare"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetstimmar grupperas med övriga arbetstidsmått.\ncatalog:variable_text:39829:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "Näringsgrenskodningen hör samman med SNI-variablerna.\ncatalog:variable_text:39830:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgrenskodningen hör samman med SNI-variablerna.\ncatalog:variable_text:39830:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-1-antal-dagar-gxpld6"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39831:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-1-antal-dagar-gxpld6"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39831:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-1-antal-dagar-xplangd6"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39832:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-1-antal-dagar-xplangd6"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39832:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-2-antal-dagar-gxpld7"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39833:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-2-antal-dagar-gxpld7"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39833:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-2-antal-dagar-xplangd7"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39834:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-2-antal-dagar-xplangd7"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39834:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-3-antal-dagar-gxpld8"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39835:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-3-antal-dagar-gxpld8"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39835:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-3-antal-dagar-xplangd8"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39836:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-3-antal-dagar-xplangd8"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39836:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-4-antal-dagar-gxpld9"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39837:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-4-antal-dagar-gxpld9"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39837:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-4-antal-dagar-xplangd9"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39838:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-4-antal-dagar-xplangd9"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39838:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-5-antal-dagar-gxpld5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39839:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-5-antal-dagar-gxpld5"
+fields = { "tags" = ["education"] }
+evidence = "Antal kursdagar hör till utbildningstidens omfattning.\ncatalog:variable_text:39839:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-5-antal-dagar-xplangd5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen har en annan ägare i en senare period.\ncatalog:occurrence:394296\ncatalog:occurrence:394726"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-for-kurs-utbildning-5-antal-dagar-xplangd5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en senare period.\ncatalog:occurrence:394296\ncatalog:occurrence:394726"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "sets" = [] }
+evidence = "Resultat av intervjuförsök är undersökningsmetodik.\ncatalog:variable_text:39841:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "tags" = ["methods"] }
+evidence = "Resultat av intervjuförsök är undersökningsmetodik.\ncatalog:variable_text:39841:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "sets" = ["arbetsmarknadssektor"] }
+evidence = "Sektor i huvudsysslan och härledd arbetsmarknadssektor mäter samma sektorbegrepp med olika detaljering och är perioduppdelade.\ncatalog:occurrence:394303\ncatalog:occurrence:394378\ncatalog:occurrence:394587\ncatalog:valueset:2012\ncatalog:valueset:5725"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Sektor i huvudsysslan och härledd arbetsmarknadssektor mäter samma sektorbegrepp med olika detaljering och är perioduppdelade.\ncatalog:occurrence:394303\ncatalog:occurrence:394378\ncatalog:occurrence:394587\ncatalog:valueset:2012\ncatalog:valueset:5725"
+
+[[statement]]
+kind = "set"
+subject = "var:sjalvstudie-omfattning"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen används för olika begrepp i angränsande perioder.\ncatalog:occurrence:393152\ncatalog:occurrence:393219"
+
+[[statement]]
+kind = "set"
+subject = "var:sjalvstudie-omfattning"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för olika begrepp i angränsande perioder.\ncatalog:occurrence:393152\ncatalog:occurrence:393219"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-1bokstav"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI-kodning av näringsgren.\ncatalog:variable_text:39844:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-1bokstav"
+fields = { "tags" = ["business"] }
+evidence = "SNI-kodning av näringsgren.\ncatalog:variable_text:39844:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-2siffror"
+fields = { "sets" = ["naringsgren"] }
+evidence = "SNI-kodning av näringsgren.\ncatalog:variable_text:39845:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-2siffror"
+fields = { "tags" = ["business"] }
+evidence = "SNI-kodning av näringsgren.\ncatalog:variable_text:39845:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = ["populationsstorlek-per-stratum"] }
+evidence = "Populationsstorlek används i urvalsmetoden.\ncatalog:variable_text:39846:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek används i urvalsmetoden.\ncatalog:variable_text:39846:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:storny"
+fields = { "sets" = ["populationsstorlek-per-stratum"] }
+evidence = "Populationsstorlek efter sammanslagning av strata.\ncatalog:variable_text:39847:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:storny"
+fields = { "tags" = ["methods"] }
+evidence = "Populationsstorlek efter sammanslagning av strata.\ncatalog:variable_text:39847:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum är en urvalsvariabel.\ncatalog:variable_text:39848:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum är en urvalsvariabel.\ncatalog:variable_text:39848:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393773\ncatalog:occurrence:393989"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393773\ncatalog:occurrence:393989"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393783\ncatalog:occurrence:393999"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393783\ncatalog:occurrence:393999"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393789\ncatalog:occurrence:394004\ncatalog:occurrence:394331\ncatalog:occurrence:394420"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393789\ncatalog:occurrence:394004\ncatalog:occurrence:394331\ncatalog:occurrence:394420"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393798\ncatalog:occurrence:394014"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393798\ncatalog:occurrence:394014"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394336\ncatalog:occurrence:394425"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-1-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394336\ncatalog:occurrence:394425"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393775\ncatalog:occurrence:393991"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393775\ncatalog:occurrence:393991"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393784\ncatalog:occurrence:394000"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393784\ncatalog:occurrence:394000"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393791\ncatalog:occurrence:394006\ncatalog:occurrence:394332\ncatalog:occurrence:394421"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393791\ncatalog:occurrence:394006\ncatalog:occurrence:394332\ncatalog:occurrence:394421"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393799\ncatalog:occurrence:394015"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393799\ncatalog:occurrence:394015"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394337\ncatalog:occurrence:394426"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-2-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394337\ncatalog:occurrence:394426"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393777\ncatalog:occurrence:393993"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393777\ncatalog:occurrence:393993"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393785\ncatalog:occurrence:394001"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393785\ncatalog:occurrence:394001"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393793\ncatalog:occurrence:394008\ncatalog:occurrence:394333\ncatalog:occurrence:394422"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393793\ncatalog:occurrence:394008\ncatalog:occurrence:394333\ncatalog:occurrence:394422"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393800\ncatalog:occurrence:394016"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393800\ncatalog:occurrence:394016"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394338\ncatalog:occurrence:394427"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-3-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394338\ncatalog:occurrence:394427"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393779\ncatalog:occurrence:393995"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393779\ncatalog:occurrence:393995"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393786\ncatalog:occurrence:394002"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393786\ncatalog:occurrence:394002"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393795\ncatalog:occurrence:394010\ncatalog:occurrence:394334\ncatalog:occurrence:394423"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393795\ncatalog:occurrence:394010\ncatalog:occurrence:394334\ncatalog:occurrence:394423"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393801\ncatalog:occurrence:394017"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393801\ncatalog:occurrence:394017"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394339\ncatalog:occurrence:394428"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-4-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394339\ncatalog:occurrence:394428"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393781\ncatalog:occurrence:393997"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393781\ncatalog:occurrence:393997"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-2"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393787\ncatalog:occurrence:394003"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i nästa observerade period.\ncatalog:occurrence:393787\ncatalog:occurrence:394003"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-3"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393797\ncatalog:occurrence:394012\ncatalog:occurrence:394335\ncatalog:occurrence:394424"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har andra ägare i angränsande observerade perioder.\ncatalog:occurrence:393797\ncatalog:occurrence:394012\ncatalog:occurrence:394335\ncatalog:occurrence:394424"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-4"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393802\ncatalog:occurrence:394018"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-4"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:393802\ncatalog:occurrence:394018"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-5"
+fields = { "sets" = ["studieform"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394340\ncatalog:occurrence:394429"
+
+[[statement]]
+kind = "set"
+subject = "var:studieform-kurs-5-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma kolumn har en annan ägare i föregående observerade period.\ncatalog:occurrence:394340\ncatalog:occurrence:394429"
+
+[[statement]]
+kind = "set"
+subject = "var:studietid"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen används för skilda begrepp i olika perioder.\ncatalog:occurrence:393153\ncatalog:occurrence:393341"
+
+[[statement]]
+kind = "set"
+subject = "var:studietid"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för skilda begrepp i olika perioder.\ncatalog:occurrence:393153\ncatalog:occurrence:393341"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-1"
+fields = { "sets" = ["studietimmar-per-kursdag"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394316\ncatalog:occurrence:394367\ncatalog:occurrence:394410\ncatalog:occurrence:394458\ncatalog:occurrence:394643"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-1"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394316\ncatalog:occurrence:394367\ncatalog:occurrence:394410\ncatalog:occurrence:394458\ncatalog:occurrence:394643"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-2"
+fields = { "sets" = ["studietimmar-per-kursdag"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394317\ncatalog:occurrence:394368\ncatalog:occurrence:394411\ncatalog:occurrence:394461\ncatalog:occurrence:394644"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-2"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394317\ncatalog:occurrence:394368\ncatalog:occurrence:394411\ncatalog:occurrence:394461\ncatalog:occurrence:394644"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-3"
+fields = { "sets" = ["studietimmar-per-kursdag"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394318\ncatalog:occurrence:394369\ncatalog:occurrence:394412\ncatalog:occurrence:394464\ncatalog:occurrence:394645"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-3"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394318\ncatalog:occurrence:394369\ncatalog:occurrence:394412\ncatalog:occurrence:394464\ncatalog:occurrence:394645"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-4"
+fields = { "sets" = ["studietimmar-per-kursdag"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394319\ncatalog:occurrence:394370\ncatalog:occurrence:394413\ncatalog:occurrence:394467\ncatalog:occurrence:394646"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-4"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394319\ncatalog:occurrence:394370\ncatalog:occurrence:394413\ncatalog:occurrence:394467\ncatalog:occurrence:394646"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-5"
+fields = { "sets" = ["studietimmar-per-kursdag"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394320\ncatalog:occurrence:394371\ncatalog:occurrence:394414\ncatalog:occurrence:394470\ncatalog:occurrence:394647"
+
+[[statement]]
+kind = "set"
+subject = "var:studietimmar-per-kursdag-5"
+fields = { "tags" = ["education"] }
+evidence = "Kolumnerna har andra ägare i närliggande perioder och den senaste enheten anges i dagar.\ncatalog:occurrence:394320\ncatalog:occurrence:394371\ncatalog:occurrence:394414\ncatalog:occurrence:394470\ncatalog:occurrence:394647"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Sysselsättningsstatus är en kodning av arbetskraftsstatus.\ncatalog:variable_text:39880:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Sysselsättningsstatus är en kodning av arbetskraftsstatus.\ncatalog:variable_text:39880:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t10a"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393869\ncatalog:occurrence:393979"
+
+[[statement]]
+kind = "set"
+subject = "var:t10a"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393869\ncatalog:occurrence:393979"
+
+[[statement]]
+kind = "set"
+subject = "var:t10b"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393870\ncatalog:occurrence:393980"
+
+[[statement]]
+kind = "set"
+subject = "var:t10b"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393870\ncatalog:occurrence:393980"
+
+[[statement]]
+kind = "set"
+subject = "var:t10c"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393871\ncatalog:occurrence:393981"
+
+[[statement]]
+kind = "set"
+subject = "var:t10c"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393871\ncatalog:occurrence:393981"
+
+[[statement]]
+kind = "set"
+subject = "var:t10d"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393872\ncatalog:occurrence:393982"
+
+[[statement]]
+kind = "set"
+subject = "var:t10d"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393872\ncatalog:occurrence:393982"
+
+[[statement]]
+kind = "set"
+subject = "var:t10e"
+fields = { "sets" = ["utbildningsanordnare"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393873\ncatalog:occurrence:393983"
+
+[[statement]]
+kind = "set"
+subject = "var:t10e"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för kursens avslutningsstatus i nästa period.\ncatalog:occurrence:393873\ncatalog:occurrence:393983"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-andra-halvaret"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "T11f är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39886:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-arbetstid-andra-halvaret"
+fields = { "tags" = ["education", "employment"] }
+evidence = "T11f är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39886:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-andra-halvaret"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "T11g är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39887:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-arbetstid-andra-halvaret"
+fields = { "tags" = ["education", "employment"] }
+evidence = "T11g är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39887:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-andra-halvaret"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "T11h är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39888:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-arbetstid-andra-halvaret"
+fields = { "tags" = ["education", "employment"] }
+evidence = "T11h är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39888:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-andra-halvaret"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "T11i är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39889:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-arbetstid-andra-halvaret"
+fields = { "tags" = ["education", "employment"] }
+evidence = "T11i är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39889:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-andra-halvaret"
+fields = { "sets" = ["utbildning-pa-arbetstid"] }
+evidence = "T11j är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39890:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-arbetstid-andra-halvaret"
+fields = { "tags" = ["education", "employment"] }
+evidence = "T11j är en ogenomskinlig källkod; etiketten anger kurs och arbetstid.\ncatalog:variable_text:39890:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-1-andra-halvaret"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "T14f är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39891:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-1-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "T14f är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39891:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-2-andra-halvaret"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "T14g är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39892:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-2-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "T14g är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39892:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-3-andra-halvaret"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "T14h är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39893:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-3-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "T14h är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39893:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-4-andra-halvaret"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "T14i är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39894:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-4-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "T14i är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39894:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-5-andra-halvaret"
+fields = { "sets" = ["kursinnehallets-anvandningsomrade"] }
+evidence = "T14j är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39895:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kursinnehall-anvandning-kurs-5-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "T14j är en ogenomskinlig källkod; etiketten anger kursinnehållets användningsområde.\ncatalog:variable_text:39895:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t15"
+fields = { "sets" = ["utbildningsbehov"] }
+evidence = "Källkolumnen återanvänds för företagsstorlek; variabeln gäller utbildningsbehov.\ncatalog:occurrence:393220\ncatalog:occurrence:394034"
+
+[[statement]]
+kind = "set"
+subject = "var:t15"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen återanvänds för företagsstorlek; variabeln gäller utbildningsbehov.\ncatalog:occurrence:393220\ncatalog:occurrence:394034"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid"
+fields = { "sets" = ["anstallningstid"] }
+evidence = "Id:t är en opak frågekod; etiketten anger anställningstid.\ncatalog:variable_text:39897:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallningstid"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod; etiketten anger anställningstid.\ncatalog:variable_text:39897:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter"
+fields = { "sets" = ["tid-med-nuvarande-arbetsuppgifter"] }
+evidence = "Id:t är en opak frågekod; etiketten anger tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39898:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod; etiketten anger tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39898:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter-grupperad"
+fields = { "sets" = ["tid-med-nuvarande-arbetsuppgifter"] }
+evidence = "Id:t är en opak frågekod; etiketten anger grupperad tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39899:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsperiod-med-nuvarande-arbetsuppgifter-grupperad"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är en opak frågekod; etiketten anger grupperad tidsperiod med nuvarande arbetsuppgifter.\ncatalog:variable_text:39899:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-utbildning"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak frågekod; etiketten anger deltagande i utbildning.\ncatalog:variable_text:39900:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagande-i-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak frågekod; etiketten anger deltagande i utbildning.\ncatalog:variable_text:39900:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:handledning-sjalvstudier"
+fields = { "sets" = ["utbildningsdeltagande"] }
+evidence = "Id:t är en opak frågekod; etiketten anger handledning och självstudier. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0421: Båda kodar deltagande i namngivna utbildningsformer. Antal kurser och antal kursdeltagare mäter andra begrepp. membership-0422: Variablerna anger deltagande i utbildning och namngivna former, inklusive utbildning via handledning eller självstudier i t5. T6 gäller finansiering och undantas.\ncatalog:variable_text:39662:10592:10957\ncatalog:variable_text:39673:10592:12418\ncatalog:variable_text:39683:14610:14791\ncatalog:variable_text:39684:14610:14791\ncatalog:variable_text:39825:14610:14791\ncatalog:variable_text:39826:14610:14791\ncatalog:variable_text:39827:14610:14791\ncatalog:variable_text:39828:14610:14791\ncatalog:variable_text:39900:14610:14791\ncatalog:variable_text:39901:14610:14791\ncatalog:variable_text:39902:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:handledning-sjalvstudier"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak frågekod; etiketten anger handledning och självstudier. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0421: Båda kodar deltagande i namngivna utbildningsformer. Antal kurser och antal kursdeltagare mäter andra begrepp. membership-0422: Variablerna anger deltagande i utbildning och namngivna former, inklusive utbildning via handledning eller självstudier i t5. T6 gäller finansiering och undantas.\ncatalog:variable_text:39662:10592:10957\ncatalog:variable_text:39673:10592:12418\ncatalog:variable_text:39683:14610:14791\ncatalog:variable_text:39684:14610:14791\ncatalog:variable_text:39825:14610:14791\ncatalog:variable_text:39826:14610:14791\ncatalog:variable_text:39827:14610:14791\ncatalog:variable_text:39828:14610:14791\ncatalog:variable_text:39900:14610:14791\ncatalog:variable_text:39901:14610:14791\ncatalog:variable_text:39902:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-betald-av-arbetsgivaren"
+fields = { "sets" = [] }
+evidence = "Id:t är en opak frågekod; etiketten anger utbildning betald av arbetsgivaren.\ncatalog:variable_text:39902:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-betald-av-arbetsgivaren"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak frågekod; etiketten anger utbildning betald av arbetsgivaren.\ncatalog:variable_text:39902:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t7a"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394347\ncatalog:occurrence:394448"
+
+[[statement]]
+kind = "set"
+subject = "var:t7a"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394347\ncatalog:occurrence:394448"
+
+[[statement]]
+kind = "set"
+subject = "var:t7b"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394348\ncatalog:occurrence:394449"
+
+[[statement]]
+kind = "set"
+subject = "var:t7b"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394348\ncatalog:occurrence:394449"
+
+[[statement]]
+kind = "set"
+subject = "var:t7c"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394349\ncatalog:occurrence:394450"
+
+[[statement]]
+kind = "set"
+subject = "var:t7c"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394349\ncatalog:occurrence:394450"
+
+[[statement]]
+kind = "set"
+subject = "var:t7d"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394350\ncatalog:occurrence:394451"
+
+[[statement]]
+kind = "set"
+subject = "var:t7d"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394350\ncatalog:occurrence:394451"
+
+[[statement]]
+kind = "set"
+subject = "var:t7e"
+fields = { "sets" = [] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394351\ncatalog:occurrence:394452"
+
+[[statement]]
+kind = "set"
+subject = "var:t7e"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occurrence:394351\ncatalog:occurrence:394452"
+
+[[statement]]
+kind = "set"
+subject = "var:t8a1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T8a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39908:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8a1"
+fields = { "tags" = ["education"] }
+evidence = "T8a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39908:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8b1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T8b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39909:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8b1"
+fields = { "tags" = ["education"] }
+evidence = "T8b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39909:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8c1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T8c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39910:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8c1"
+fields = { "tags" = ["education"] }
+evidence = "T8c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39910:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8d1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T8d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39911:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8d1"
+fields = { "tags" = ["education"] }
+evidence = "T8d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39911:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8e1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T8e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39912:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t8e1"
+fields = { "tags" = ["education"] }
+evidence = "T8e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39912:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:t9a1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T9a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39913:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9a1"
+fields = { "tags" = ["education"] }
+evidence = "T9a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39913:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9b1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T9b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39914:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9b1"
+fields = { "tags" = ["education"] }
+evidence = "T9b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39914:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9c1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T9c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39915:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9c1"
+fields = { "tags" = ["education"] }
+evidence = "T9c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39915:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9d1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T9d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39916:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9d1"
+fields = { "tags" = ["education"] }
+evidence = "T9d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39916:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9e1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "T9e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39917:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:t9e1"
+fields = { "tags" = ["education"] }
+evidence = "T9e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39917:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-for-handledd-distansutbildning"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för handledd distansutbildning.\ncatalog:variable_text:39918:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-for-handledd-distansutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för handledd distansutbildning.\ncatalog:variable_text:39918:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-pa-konferenser"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar på konferenser.\ncatalog:variable_text:39919:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-pa-konferenser"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar på konferenser.\ncatalog:variable_text:39919:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-i-lararledd-utbildning"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar i lärarledd utbildning.\ncatalog:variable_text:39920:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-i-lararledd-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar i lärarledd utbildning.\ncatalog:variable_text:39920:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-for-sjalvstudier"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för självstudier.\ncatalog:variable_text:39921:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-for-sjalvstudier"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för självstudier.\ncatalog:variable_text:39921:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för lärarledda kurser och konferenser.\ncatalog:variable_text:39922:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
+fields = { "tags" = ["education"] }
+evidence = "Id:t är en opak källkod; etiketten anger timmar för lärarledda kurser och konferenser.\ncatalog:variable_text:39922:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:tim"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Antal timmar i utbildning.\ncatalog:variable_text:39923:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:tim"
+fields = { "tags" = ["education"] }
+evidence = "Antal timmar i utbildning.\ncatalog:variable_text:39923:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:totvanltimgr"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Grupperad arbetstid i huvud- och bisyssla.\ncatalog:variable_text:39924:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:totvanltimgr"
+fields = { "tags" = ["employment"] }
+evidence = "Grupperad arbetstid i huvud- och bisyssla.\ncatalog:variable_text:39924:13149:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:urval1"
+fields = { "sets" = ["urvalstillhorighet"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394717\ncatalog:valueset:6709"
+
+[[statement]]
+kind = "set"
+subject = "var:urval1"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394717\ncatalog:valueset:6709"
+
+[[statement]]
+kind = "set"
+subject = "var:urval2"
+fields = { "sets" = ["urvalstillhorighet"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394718\ncatalog:valueset:8139"
+
+[[statement]]
+kind = "set"
+subject = "var:urval2"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394718\ncatalog:valueset:8139"
+
+[[statement]]
+kind = "set"
+subject = "var:urval3"
+fields = { "sets" = ["urvalstillhorighet"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394719\ncatalog:valueset:4357"
+
+[[statement]]
+kind = "set"
+subject = "var:urval3"
+fields = { "tags" = ["methods"] }
+evidence = "Indikatorn anger urvalstillhörighet.\ncatalog:occurrence:394719\ncatalog:valueset:4357"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbehov"
+fields = { "sets" = ["utbildningsbehov"] }
+evidence = "Källkolumnen används för andra begrepp i andra perioder; denna variabel gäller utbildningsbehov.\ncatalog:occurrence:393152\ncatalog:occurrence:393219\ncatalog:occurrence:393587"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbehov"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen används för andra begrepp i andra perioder; denna variabel gäller utbildningsbehov.\ncatalog:occurrence:393152\ncatalog:occurrence:393219\ncatalog:occurrence:393587"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod1"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Koden beskriver första kursens inriktning.\ncatalog:occurrence:394596\ncatalog:variable_text:39929:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod1"
+fields = { "tags" = ["education"] }
+evidence = "Koden beskriver första kursens inriktning.\ncatalog:occurrence:394596\ncatalog:variable_text:39929:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod2"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Koden beskriver andra kursens inriktning.\ncatalog:occurrence:394598\ncatalog:variable_text:39930:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod2"
+fields = { "tags" = ["education"] }
+evidence = "Koden beskriver andra kursens inriktning.\ncatalog:occurrence:394598\ncatalog:variable_text:39930:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod3"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Koden beskriver tredje kursens inriktning.\ncatalog:occurrence:394600\ncatalog:variable_text:39931:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod3"
+fields = { "tags" = ["education"] }
+evidence = "Koden beskriver tredje kursens inriktning.\ncatalog:occurrence:394600\ncatalog:variable_text:39931:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod4"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Koden beskriver fjärde kursens inriktning.\ncatalog:occurrence:394602\ncatalog:variable_text:39932:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod4"
+fields = { "tags" = ["education"] }
+evidence = "Koden beskriver fjärde kursens inriktning.\ncatalog:occurrence:394602\ncatalog:variable_text:39932:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod5"
+fields = { "sets" = ["kursinnehall"] }
+evidence = "Koden beskriver femte kursens inriktning.\ncatalog:occurrence:394604\ncatalog:variable_text:39933:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-3-positioner-fikod5"
+fields = { "tags" = ["education"] }
+evidence = "Koden beskriver femte kursens inriktning.\ncatalog:occurrence:394604\ncatalog:variable_text:39933:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "sets" = [] }
+evidence = "Inriktningen avser personens högsta utbildning, inte kursinnehåll.\ncatalog:occurrence:394640\ncatalog:variable_text:39934:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Inriktningen avser personens högsta utbildning, inte kursinnehåll.\ncatalog:occurrence:394640\ncatalog:variable_text:39934:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Utbildningsnivå är samma begrepp som utbildningsniva-aggregat-old, uppdelat efter period; kodningen ändras senare.\ncatalog:occurrence:394374\ncatalog:occurrence:394481\ncatalog:valueset:12067"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå är samma begrepp som utbildningsniva-aggregat-old, uppdelat efter period; kodningen ändras senare.\ncatalog:occurrence:394374\ncatalog:occurrence:394481\ncatalog:valueset:12067"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Den detaljerade SUN-nivåkoden hör till utbildningsnivå.\ncatalog:variable_text:39936:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { "tags" = ["education"] }
+evidence = "Den detaljerade SUN-nivåkoden hör till utbildningsnivå.\ncatalog:variable_text:39936:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-old"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Utbildningsnivå är samma begrepp som utbildningsniva, uppdelat efter period.\ncatalog:occurrence:394374\ncatalog:occurrence:394481\ncatalog:variable_text:39937:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-old"
+fields = { "tags" = ["education"] }
+evidence = "Utbildningsnivå är samma begrepp som utbildningsniva, uppdelat efter period.\ncatalog:occurrence:394374\ncatalog:occurrence:394481\ncatalog:variable_text:39937:9131:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-arbetad-tid-huvudsysslan"
+fields = { "sets" = ["arbetstid"] }
+evidence = "Vanligen arbetad tid i huvudsysslan.\ncatalog:variable_text:39938:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:vanligen-arbetad-tid-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Vanligen arbetad tid i huvudsysslan.\ncatalog:variable_text:39938:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källorna beskriver samma kurslängd i dagar, korrekt uppdelad mellan observerade perioder.\ncatalog:occurrence:394292\ncatalog:occurrence:394722\ncatalog:variable_text:39939:12053:12418\ncatalog:variable_text:39944:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd"
+fields = { "tags" = ["education"] }
+evidence = "Källorna beskriver samma kurslängd i dagar, korrekt uppdelad mellan observerade perioder.\ncatalog:occurrence:394292\ncatalog:occurrence:394722\ncatalog:variable_text:39939:12053:12418\ncatalog:variable_text:39944:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-2"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394294\ncatalog:occurrence:394724\ncatalog:variable_text:39940:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-2"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394294\ncatalog:occurrence:394724\ncatalog:variable_text:39940:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-3"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394295\ncatalog:occurrence:394725\ncatalog:variable_text:39941:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-3"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394295\ncatalog:occurrence:394725\ncatalog:variable_text:39941:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-antal-dagar-andra-halvaret"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Suffixet 4 kommer inte från källkolumnen xplangd0. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394291\ncatalog:variable_text:39942:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-antal-dagar-andra-halvaret"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 4 kommer inte från källkolumnen xplangd0. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394291\ncatalog:variable_text:39942:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394293\ncatalog:occurrence:394723\ncatalog:variable_text:39943:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd-5"
+fields = { "tags" = ["education"] }
+evidence = "Samma källkolumn har en annan ägare i en senare observerad period. Utbildningstidens omfattning hör till gruppen och utbildningstemat.\ncatalog:occurrence:394293\ncatalog:occurrence:394723\ncatalog:variable_text:39943:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd1"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källorna beskriver samma kurslängd i dagar, korrekt uppdelad mellan observerade perioder.\ncatalog:occurrence:394292\ncatalog:occurrence:394722\ncatalog:variable_text:39939:12053:12418\ncatalog:variable_text:39944:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd1"
+fields = { "tags" = ["education"] }
+evidence = "Källorna beskriver samma kurslängd i dagar, korrekt uppdelad mellan observerade perioder.\ncatalog:occurrence:394292\ncatalog:occurrence:394722\ncatalog:variable_text:39939:12053:12418\ncatalog:variable_text:39944:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd2"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen och etiketten anger kurs 2:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394293\ncatalog:occurrence:394723\ncatalog:variable_text:39945:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd2"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och etiketten anger kurs 2:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394293\ncatalog:occurrence:394723\ncatalog:variable_text:39945:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd3"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen och etiketten anger kurs 3:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394294\ncatalog:occurrence:394724\ncatalog:variable_text:39946:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd3"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och etiketten anger kurs 3:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394294\ncatalog:occurrence:394724\ncatalog:variable_text:39946:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd4"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen och etiketten anger kurs 4:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394295\ncatalog:occurrence:394725\ncatalog:variable_text:39947:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd4"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och etiketten anger kurs 4:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394295\ncatalog:occurrence:394725\ncatalog:variable_text:39947:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd5"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Källkolumnen och etiketten anger kurs 5:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394296\ncatalog:occurrence:394726\ncatalog:variable_text:39948:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:xplangd5"
+fields = { "tags" = ["education"] }
+evidence = "Källkolumnen och etiketten anger kurs 5:s längd i dagar; uppdelningen gäller observerade perioder.\ncatalog:occurrence:394296\ncatalog:occurrence:394726\ncatalog:variable_text:39948:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-antal-kurstimmar"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 1.\ncatalog:variable_text:39949:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-1-antal-kurstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 1.\ncatalog:variable_text:39949:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-antal-kurstimmar"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 2.\ncatalog:variable_text:39950:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-2-antal-kurstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 2.\ncatalog:variable_text:39950:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-antal-kurstimmar"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 3.\ncatalog:variable_text:39951:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-3-antal-kurstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 3.\ncatalog:variable_text:39951:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-antal-kurstimmar"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 4.\ncatalog:variable_text:39952:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-4-antal-kurstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 4.\ncatalog:variable_text:39952:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-antal-kurstimmar"
+fields = { "sets" = ["utbildningstidens-omfattning"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\ncatalog:variable_text:39953:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-5-antal-kurstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Xp är en opak källkod och etiketten anger kurstimmar för kurs 5.\ncatalog:variable_text:39953:14610:14791"
+
+
+[[statement]]
+kind = "set"
+subject = "var:antalt-timmar-for-lararledda-kurser-konferanser"
+fields = { "description" = "Antal timmar för lärarledda kurser och konferenser. Timmarna härleds från rapporterad omfattning per dag och kurs och summeras över personens samtliga rapporterade utbildningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltextens stavfel kan rättas utan att ändra betydelsen.\ncatalog:variable_text:39922:14610:14791\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394477:opdef_text; rel070-base/reg_meta.db:occurrence:394714:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2006-01-01..2006-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2008-01-01..2008-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
+fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
+evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"

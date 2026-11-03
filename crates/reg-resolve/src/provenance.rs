@@ -30,6 +30,7 @@ pub struct Claim {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Subject {
     Register(usize),
+    Set(usize, String),
     Table(usize, usize),
     Release(usize, usize),
     Occurrence(usize, usize),
@@ -206,6 +207,25 @@ pub fn finalize(
             &serde_json::to_value(register).expect("register serializes"),
             Some(&resolved.coverage),
         ));
+        let set_claims = claims.iter().filter(|c| {
+            c.kind == "set"
+                && c.provider.as_deref() == Some(register.provider.as_str())
+                && c.register.as_deref() == Some(register.register.as_str())
+        });
+        let mut by_set = BTreeMap::<&str, Vec<&Claim>>::new();
+        for claim in set_claims {
+            if let Some(slug) = claim.table.as_deref() {
+                by_set.entry(slug).or_default().push(claim);
+            }
+        }
+        for (slug, claims) in by_set {
+            result.values.extend(field_values(
+                claims.into_iter(),
+                &Subject::Set(ri, slug.to_owned()),
+                &serde_json::json!({}),
+                None,
+            ));
+        }
         for (ti, table) in resolved.tables.iter().enumerate() {
             let table = &table.table;
             let period = (
@@ -292,8 +312,27 @@ pub fn finalize(
                 || "none".to_owned(),
                 |index| resolved.variables[index].slug.clone(),
             ));
-            let mut values =
-                field_values(candidates, &subject, &current, occurrence.period.as_ref());
+            if let Some(variable) = occurrence.variable {
+                let current =
+                    serde_json::json!({"description": resolved.variables[variable].description});
+                for mut value in field_values(
+                    candidates
+                        .clone()
+                        .filter(|claim| claim.field == "description"),
+                    &Subject::Variable(ri, variable),
+                    &current,
+                    None,
+                ) {
+                    value.source_value = None;
+                    result.values.push(value);
+                }
+            }
+            let mut values = field_values(
+                candidates.filter(|claim| claim.field != "description"),
+                &subject,
+                &current,
+                occurrence.period.as_ref(),
+            );
             let mut mask = values
                 .iter()
                 .fold(0, |mask, value| mask | override_bit(&value.field));
@@ -314,7 +353,10 @@ pub fn finalize(
                 result.occurrence_masks.insert((ri, oi), mask);
             }
             for mut value in values {
-                if matches!(value.field.as_str(), "sets" | "tags") {
+                if matches!(
+                    value.field.as_str(),
+                    "sets" | "tags" | "synonyms" | "facets"
+                ) {
                     if let Some(variable) = occurrence.variable {
                         value.subject = Subject::Variable(ri, variable);
                         result.values.push(value);

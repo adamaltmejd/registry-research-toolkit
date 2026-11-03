@@ -1,0 +1,36 @@
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "sets" = [] }
+evidence = "Bränsleslag hör till energi.\ncatalog:variable_text:45942:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleslag hör till energi.\ncatalog:variable_text:45942:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "sets" = [] }
+evidence = "Bränsleförbrukning hör till energi.\ncatalog:variable_text:45943:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforbrukning"
+fields = { "tags" = ["energy"] }
+evidence = "Bränsleförbrukning hör till energi.\ncatalog:variable_text:45943:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svavelhalt"
+fields = { "sets" = [] }
+evidence = "Svavelhalten är en egenskap hos bränslet.\ncatalog:variable_text:45947:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:svavelhalt"
+fields = { "tags" = ["energy"] }
+evidence = "Svavelhalten är en egenskap hos bränslet.\ncatalog:variable_text:45947:17897:19723"

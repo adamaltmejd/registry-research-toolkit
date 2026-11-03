@@ -1,266 +1,277 @@
-"""One-shot default-identity projection; deleted at milestone F (REBUILD.md).
+"""One-shot built-catalog lookup; deleted at milestone F (REBUILD.md).
 
-Mirrors reg-resolve's period, edition, identity and ledger steps for report-only
-noise removal. It does not apply statements or certify resolver equivalence.
+The published resolver output is the identity authority. Source locators join reader
+frames to catalog occurrences; this module never repeats resolver identity rules.
+New assignments are certified by reg-build lock, not predicted here.
 """
 
 import collections
 import datetime as dt
+import sqlite3
 
-OPEN = ("0001-01-01", "9999-12-31")
-
-
-def _anchor(text):
-    day = key = None
-    if " @ " in text:
-        text, day = text.rsplit(" @ ", 1)
-        day = day.strip()
-        dt.date.fromisoformat(day)
-    if " # " in text:
-        text, key = text.rsplit(" # ", 1)
-        key = key.strip()
-    table, spelling = text.rsplit(": ", 1) if ": " in text else ("", text)
-    return table.strip(), spelling.strip().lower(), key, day
+from rebuild_convert_selectors import merge_periods
 
 
-class IdentityProjection:
-    """Project only pinned default slugs, preserving unminted identities as None."""
+def iso_day(day):
+    return (dt.date(1970, 1, 1) + dt.timedelta(days=day)).isoformat()
 
-    def __init__(self, records, ledgers):
+
+class CatalogIdentity:
+    """Read current identities and placement from an immutable catalog."""
+
+    def __init__(self, records, ledgers, catalog):
         self.ledgers = ledgers
-        self.slugs = {}
-        self.statuses = {}
-        self.periods = {}
-        self.groups = {}
-        self.members = {}
-        self.marker_groups = collections.defaultdict(dict)
+        self.tables = {}
+        self.releases = {}
+        self.matches = {}
         self.provider_slugs = collections.defaultdict(set)
         for (provider, register), ledger in ledgers.items():
             for slug in ledger.get("variables", {}):
                 self.provider_slugs[provider, slug].add(register)
-        registers = collections.defaultdict(list)
+        connection = sqlite3.connect(catalog.resolve().as_uri() + "?mode=ro", uri=True)
+        connection.row_factory = sqlite3.Row
+        try:
+            table_rows = list(
+                connection.execute("""
+                SELECT id, pid FROM tbl
+            """)
+            )
+            table_ids = {r["pid"]: r["id"] for r in table_rows}
+            by_locator = collections.defaultdict(dict)
+            for row in connection.execute("""
+                SELECT ol.locator, o.id, o.source_key, o.status, o.start, o.end,
+                       v.pid AS variable, t.pid AS table_pid
+                FROM occurrence o JOIN occurrence_locator ol ON ol.occurrence_id = o.id
+                JOIN tbl t ON t.id = o.table_id
+                LEFT JOIN variable v ON v.id = o.variable_id
+            """):
+                by_locator[row["locator"], row["source_key"]][row["id"]] = dict(row)
+            for row in records:
+                if row["kind"] != "occurrence":
+                    continue
+                matches = {}
+                for locator in [row["locator"], *row.get("also", [])]:
+                    matches.update(
+                        by_locator.get(
+                            (f"{locator['input']}:{locator['at']}", row["source_key"]),
+                            {},
+                        )
+                    )
+                self.matches[id(row)] = tuple(matches.values())
+                pids = {r["table_pid"] for r in matches.values()}
+                if len(pids) == 1:
+                    self._table(row, pids.pop())
+            for row in records:
+                if row["kind"] not in {"table", "occurrence"}:
+                    continue
+                provider, register = row["provider"], row["register"]
+                key = provider, register, row["table"]
+                if key in self.tables:
+                    continue
+                ledger = ledgers.get((provider, register), {})
+                public = ledger.get("public", register)
+                prefix = f"{provider}/{public}"
+                slug = ledger.get("tables", {}).get(row["table"])
+                pid = (
+                    f"{prefix}/{slug}" if slug else prefix if not row["table"] else None
+                )
+                if pid in table_ids:
+                    self._table(row, pid)
+                    continue
+            # The LISA attachment reconstructs authored constructors whose locators
+            # are deliberately absent from occurrence_locator. Match their exact
+            # published coordinates; never synthesize their identity.
+            authored = collections.defaultdict(list)
+            authored_coordinates = collections.defaultdict(list)
+            for result in connection.execute("""
+                SELECT o.id, o.source_key, o.status, o.start, o.end,
+                       v.pid AS variable, t.pid AS table_pid, s.exact AS spelling,
+                       r.source_key AS release
+                FROM occurrence o JOIN tbl t ON t.id = o.table_id
+                LEFT JOIN variable v ON v.id = o.variable_id
+                LEFT JOIN spelling s ON s.id = o.spelling_id
+                LEFT JOIN release r ON r.id = o.release_id
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM occurrence_locator ol WHERE ol.occurrence_id = o.id
+                )
+            """):
+                authored[
+                    result["table_pid"],
+                    result["source_key"],
+                    result["spelling"],
+                    result["release"],
+                ].append(dict(result))
+                authored_coordinates[
+                    result["table_pid"], result["spelling"], result["release"]
+                ].append(dict(result))
+            for row in records:
+                if row["kind"] != "occurrence" or self.matches[id(row)]:
+                    continue
+                provider, register = row["provider"], row["register"]
+                public = ledgers.get((provider, register), {}).get("public", register)
+                reconstructed = row["locator"]["at"].startswith("assert:")
+                slug = (
+                    self.table(row)
+                    if reconstructed
+                    else self.tables.get((provider, register, row["table"]))
+                )
+                if slug is None:
+                    # No implicit-table fallback for an unmatched named table;
+                    # selector construction will refuse with its source locator.
+                    continue
+                pid = f"{provider}/{public}" + (
+                    f"/{slug}" if slug and slug != public else ""
+                )
+                coordinates = pid, row["column"] or None, row.get("release")
+                if reconstructed and row.get("_keyless_assertion", False):
+                    # Snapshot's local ordinal is not the builder's scoped statement
+                    # key. Require one published key covering the exact source period;
+                    # the catalog may segment that assertion across multiple occurrences.
+                    candidates = authored_coordinates.get(coordinates, [])
+                else:
+                    candidates = authored.get(
+                        (pid, row["source_key"], *coordinates[1:]),
+                        [],
+                    )
+                by_key = collections.defaultdict(list)
+                for candidate in candidates:
+                    by_key[candidate["source_key"]].append(candidate)
+                exact = []
+                for group in by_key.values():
+                    start, end = row.get("from"), row.get("to")
+                    scoped = reconstructed and start is not None and end is not None
+                    if scoped:
+                        # Snapshot expands a multi-period constructor into rows;
+                        # match this row's coverage, not the key's whole history.
+                        group = [
+                            r
+                            for r in group
+                            if r["start"] is not None
+                            and max(start, iso_day(r["start"]))
+                            <= min(end, iso_day(r["end"] - 1))
+                        ]
+                    spans = [
+                        (
+                            max(start, iso_day(r["start"]))
+                            if scoped
+                            else iso_day(r["start"]),
+                            min(end, iso_day(r["end"] - 1))
+                            if scoped
+                            else iso_day(r["end"] - 1),
+                        )
+                        for r in group
+                        if r["start"] is not None
+                    ]
+                    if (
+                        group
+                        and len(spans) == len(group)
+                        and merge_periods(spans) == [(start, end)]
+                    ) or (group and not spans and not start and not end):
+                        exact.append(group)
+                if reconstructed and len(exact) != 1:
+                    locator = row["locator"]
+                    raise ValueError(
+                        f"{locator['input']}:{locator['at']}: reconstructed assertion "
+                        f"{row['column']!r} has {len(exact)} exact catalog identities; "
+                        "review its key, release and period"
+                    )
+                self.matches[id(row)] = tuple(exact[0]) if len(exact) == 1 else ()
+            handles = collections.defaultdict(list)
+            for key, slug in self.tables.items():
+                provider, register, _ = key
+                public = ledgers.get((provider, register), {}).get("public", register)
+                prefix = f"{provider}/{public}"
+                pid = prefix if slug == public else f"{prefix}/{slug}"
+                if pid in table_ids:
+                    handles[table_ids[pid]].append(key)
+            for row in connection.execute("""
+                SELECT r.table_id, r.source_key, r.start, r.end, x.body AS name,
+                       r.edition, r.qualifier
+                FROM release r JOIN text x ON x.id = r.name_text
+            """):
+                for key in handles[row["table_id"]]:
+                    self.releases[*key, row["source_key"]] = {
+                        "kind": "release",
+                        "provider": key[0],
+                        "register": key[1],
+                        "table": key[2],
+                        "release": row["source_key"],
+                        "name": row["name"],
+                        "from": iso_day(row["start"])
+                        if row["start"] is not None
+                        else None,
+                        "to": iso_day(row["end"] - 1)
+                        if row["end"] is not None
+                        else None,
+                        "edition": row["edition"],
+                        "qualifier": row["qualifier"],
+                    }
+        finally:
+            connection.close()
+        self.members = collections.defaultdict(list)
         for row in records:
-            if row["kind"] in {"register", "table", "release", "occurrence"}:
-                registers[row["provider"], row["register"]].append(row)
-        for at, rows in registers.items():
-            self._project(rows, ledgers.get(at, {}))
+            if row["kind"] == "occurrence":
+                group = self.group(row)
+                if group is not None:
+                    self.members[group].append(row)
 
-    def default_slug(self, row):
-        return self.slugs.get(id(row))
+    def _table(self, row, pid):
+        provider, register = row["provider"], row["register"]
+        public = self.ledgers.get((provider, register), {}).get("public", register)
+        prefix = f"{provider}/{public}"
+        if pid == prefix:
+            slug = public
+        elif pid.startswith(prefix + "/"):
+            slug = pid[len(prefix) + 1 :]
+        else:
+            # Cross-register routing needs reviewed curation, never a guessed handle.
+            return
+        self.tables[provider, register, row["table"]] = slug
 
-    def status(self, row):
-        return self.statuses[id(row)]
-
-    def period(self, row):
-        return self.periods.get(id(row))
+    def table(self, row):
+        key = row["provider"], row["register"], row["table"]
+        if key not in self.tables:
+            locator = row["locator"]
+            raise ValueError(
+                f"{locator['input']}:{locator['at']}: source table {row['table']!r} "
+                "has no catalog identity; review its ledger or source locators"
+            )
+        return self.tables[key]
 
     def group(self, row):
-        return self.groups.get(id(row))
+        pids = {r["variable"] for r in self.matches[id(row)]}
+        return pids.pop() if len(pids) == 1 and None not in pids else None
 
     def group_members(self, row):
-        """All placed rows of this default identity, including shadowed rows."""
+        return self.members.get(self.group(row), ())
+
+    def default_slug(self, row):
         group = self.group(row)
-        return self.members.get((row["provider"], row["register"], group), ())
+        return group.rsplit("/", 1)[1] if group is not None else None
+
+    def status(self, row):
+        statuses = {r["status"] for r in self.matches[id(row)]}
+        return (
+            statuses.pop()
+            if len(statuses) == 1
+            else "multiple"
+            if statuses
+            else "absent"
+        )
+
+    def period(self, row):
+        spans = {(r["start"], r["end"]) for r in self.matches[id(row)]}
+        if len(spans) == 1:
+            start, end = spans.pop()
+            if start is not None:
+                return iso_day(start), iso_day(end - 1)
+        return None
 
     def target_status(self, provider, register, slug):
         if slug in self.ledgers.get((provider, register), {}).get("variables", {}):
             return "local"
-        if self.provider_slugs.get((provider, slug)):
-            return "only-other-register"
-        return "absent-everywhere"
-
-    def orphaned_markers(self, provider, register, assignments):
-        """Default gap-marker identities the complete assignment phase removes."""
-        surviving_slugs = {
-            assignments.get(id(row), self.default_slug(row))
-            for (p, r, _), rows in self.members.items()
-            if (p, r) == (provider, register)
-            for row in rows
-            if self.status(row) == "used"
-        } - {None, "none"}
-        orphaned = {}
-        for group, slug in self.marker_groups[provider, register].items():
-            if slug is not None:
-                survives = slug in surviving_slugs
-            else:
-                # An unminted default slug cannot be named by a valid assignment.
-                survives = any(
-                    self.status(row) == "used" and id(row) not in assignments
-                    for row in self.members[provider, register, group]
-                )
-            if not survives:
-                orphaned[group] = slug
-        return orphaned
-
-    def concurrent_fold_assignments(self, provider, register, assignments):
-        """Assignments joining concurrent different folds in one table (D-11)."""
-        by_target = collections.defaultdict(list)
-        for (p, r, _), rows in self.members.items():
-            if (p, r) != (provider, register):
-                continue
-            for row in rows:
-                if self.status(row) != "used":
-                    continue
-                target = assignments.get(id(row), self.default_slug(row))
-                if target is None or target == "none":
-                    continue
-                lo, hi = self.period(row)
-                by_target[row["table"], target].append(
-                    (lo, hi, id(row), row["column"].lower())
-                )
-        conflicts = collections.defaultdict(list)
-        for (table, target), events in by_target.items():
-            if not any(rid in assignments for _, _, rid, _ in events):
-                continue
-            active = {}
-            for lo, hi, rid, fold in sorted(events):
-                active = {i: v for i, v in active.items() if v[0] >= lo}
-                for other, (_, other_fold) in active.items():
-                    if fold == other_fold:
-                        continue
-                    detail = {
-                        "variable": target,
-                        "table": table,
-                        "folds": sorted({fold, other_fold}),
-                    }
-                    for contributor in (rid, other):
-                        if (
-                            contributor in assignments
-                            and detail not in conflicts[contributor]
-                        ):
-                            conflicts[contributor].append(detail)
-                active[rid] = hi, fold
-        return dict(conflicts)
-
-    def _project(self, records, ledger):
-        register = next((r for r in records if r["kind"] == "register"), {})
-        tables = {r["table"]: r for r in records if r["kind"] == "table"}
-        releases = {
-            (r["table"], r["release"]): r for r in records if r["kind"] == "release"
-        }
-        editions = collections.defaultdict(list)
-        rank = {"final": 0, "unstated": 1, "preliminary": 2}
-        primary = {}
-        for at, release in releases.items():
-            if release.get("from") and release.get("to"):
-                editions[
-                    at[0], release["from"], release["to"], release.get("qualifier")
-                ].append(at)
-        for members in editions.values():
-            best = min(
-                members,
-                key=lambda at: (rank.get(releases[at].get("edition"), 2), at[1]),
-            )
-            for at in members:
-                primary[at] = best
-
-        rows = [r for r in records if r["kind"] == "occurrence"]
-        for row in rows:
-            rid = id(row)
-            table = tables.get(row["table"], {})
-            release_at = row["table"], row.get("release")
-            if row.get("release"):
-                if release_at not in releases:
-                    raise ValueError(
-                        "identity projection: occurrence release is missing"
-                    )
-                if release_at not in primary:
-                    self.statuses[rid] = "unplaced"
-                    continue
-                source = releases[release_at]
-            else:
-                source = row
-            stated = source.get("from") or OPEN[0], source.get("to") or OPEN[1]
-            if stated[0] > stated[1]:
-                raise ValueError("identity projection: reversed occurrence period")
-            limit = (
-                table.get("from") or register.get("from") or OPEN[0],
-                table.get("to") or register.get("to") or OPEN[1],
-            )
-            clipped = max(stated[0], limit[0]), min(stated[1], limit[1])
-            status = "used" if clipped[0] <= clipped[1] else "rejected"
-            self.periods[rid] = clipped if status == "used" else stated
-            self.statuses[rid] = "gap_marker" if not row["column"] else status
-
-        primary_keys = {
-            (r["table"], r["release"], r["source_key"])
-            for r in rows
-            if self.status(r) == "used" and r.get("release")
-        }
-        for row in rows:
-            at = row["table"], row.get("release")
-            best = primary.get(at)
-            if (
-                self.status(row) == "used"
-                and best is not None
-                and best != at
-                and (*best, row["source_key"]) in primary_keys
-            ):
-                self.statuses[id(row)] = "shadowed"
-
-        by_key = collections.defaultdict(lambda: collections.defaultdict(list))
-        for row in rows:
-            if self.status(row) == "used":
-                by_key[row["source_key"]][row["column"].lower()].append(
-                    self.period(row)
-                )
-        split = set()
-        for key, folds in by_key.items():
-            events = sorted(
-                (lo, hi, fold) for fold, spans in folds.items() for lo, hi in spans
-            )
-            ends = {}
-            for lo, hi, fold in events:
-                if any(other != fold and end >= lo for other, end in ends.items()):
-                    split.add(key)
-                    break
-                ends[fold] = max(hi, ends.get(fold, hi))
-
-        members = collections.defaultdict(list)
-        for row in rows:
-            if self.status(row) in {"used", "shadowed", "rejected"}:
-                key = row["source_key"]
-                group = key, row["column"].lower() if key in split else ""
-                members[group].append(row)
-        members = {
-            group: own
-            for group, own in members.items()
-            if any(self.status(r) == "used" for r in own)
-        }
-        anchors = collections.defaultdict(list)
-        for group, own in members.items():
-            at = own[0]["provider"], own[0]["register"], group
-            self.members[at] = tuple(own)
-            for row in own:
-                self.groups[id(row)] = group
-                anchors[row["table"], row["column"].lower()].append((group, row))
-        pinned = {}
-        for slug, texts in sorted(ledger.get("variables", {}).items()):
-            targets = set()
-            for text in texts:
-                table, spelling, key, day = _anchor(text)
-                for group, row in anchors.get((table, spelling), []):
-                    lo, hi = self.period(row)
-                    if (key is None or key == row["source_key"]) and (
-                        day is None or lo <= day <= hi
-                    ):
-                        targets.add(group)
-            target = next((g for g in sorted(targets) if g not in pinned), None)
-            if target is not None:
-                pinned[target] = slug
-        for row in rows:
-            group = self.groups.get(id(row))
-            if group is not None:
-                self.slugs[id(row)] = pinned.get(group)
-            elif self.status(row) in {"used", "shadowed", "rejected"}:
-                self.statuses[id(row)] = "withheld"
-        key_groups = collections.defaultdict(set)
-        for group in members:
-            key_groups[group[0]].add(group)
-        for row in rows:
-            groups = key_groups[row["source_key"]]
-            if self.status(row) == "gap_marker" and len(groups) == 1:
-                group = next(iter(groups))
-                self.marker_groups[row["provider"], row["register"]][group] = (
-                    pinned.get(group)
-                )
+        return (
+            "only-other-register"
+            if self.provider_slugs.get((provider, slug))
+            else "absent-everywhere"
+        )

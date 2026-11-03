@@ -97,114 +97,732 @@ evidence = "reg_meta_build/curation/registers/scb/agi.toml:527\n\nSWECOV's deliv
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: avdr_prel_skatt"
+subject = "var:ambassad-anstalld-sverige"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser beskattning enligt skatteavtal.\ncatalog:variable_text:1353:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ambassad-anstalld-sverige"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften avser beskattning enligt skatteavtal.\ncatalog:variable_text:1353:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-sjoinkomst"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser dagar med sjöinkomst.\ncatalog:variable_text:1354:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-sjoinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Uppgiften avser dagar med sjöinkomst.\ncatalog:variable_text:1354:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-asink"
+fields = { "sets" = ["avdragen-inkomstskatt"] }
+evidence = "Avdragen särskild inkomstskatt ingår i gruppen.\ncatalog:variable_text:1356:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-asink"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdragen särskild inkomstskatt ingår i gruppen.\ncatalog:variable_text:1356:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-sink"
+fields = { "sets" = ["avdragen-inkomstskatt"] }
+evidence = "Avdragen särskild inkomstskatt ingår i gruppen.\ncatalog:variable_text:1357:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-sink"
+fields = { "tags" = ["taxation"] }
+evidence = "Avdragen särskild inkomstskatt ingår i gruppen.\ncatalog:variable_text:1357:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller avdrag i inkomstdeklarationen.\ncatalog:variable_text:1358:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften gäller avdrag i inkomstdeklarationen.\ncatalog:variable_text:1358:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
+fields = { "sets" = ["avdragen-inkomstskatt"] }
+evidence = "Preliminär A-skatt ingår i gruppen för avdragen inkomstskatt.\ncatalog:variable_text:1359:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
+fields = { "tags" = ["taxation"] }
+evidence = "Preliminär A-skatt ingår i gruppen för avdragen inkomstskatt.\ncatalog:variable_text:1359:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avrakning-avgiftsfri-ers"
+fields = { "sets" = [] }
+evidence = "Avräkningen gäller avgiftspliktig ersättning.\ncatalog:variable_text:1360:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avrakning-avgiftsfri-ers"
+fields = { "tags" = ["taxation"] }
+evidence = "Avräkningen gäller avgiftspliktig ersättning.\ncatalog:variable_text:1360:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:betalningsmottagaren-utsand-under-tid"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller utsändning av betalningsmottagaren.\ncatalog:variable_text:1361:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:betalningsmottagaren-utsand-under-tid"
+fields = { "tags" = ["employment"] }
+evidence = "Uppgiften gäller utsändning av betalningsmottagaren.\ncatalog:variable_text:1361:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning"
+fields = { "tags" = ["income"] }
+evidence = "Bilersättning är en kostnadsersättning.\ncatalog:variable_text:1362:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-inte-underlag-arbetsgivaravgift"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1363\ncatalog:variable_text:1363:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-inte-underlag-arbetsgivaravgift"
+fields = { "tags" = ["housing", "income"] }
+evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1363\ncatalog:variable_text:1363:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1364\ncatalog:variable_text:1364:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
+fields = { "tags" = ["housing", "income"] }
+evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1364\ncatalog:variable_text:1364:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1365\ncatalog:variable_text:1365:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
+fields = { "tags" = ["housing", "income"] }
+evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1365\ncatalog:variable_text:1365:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1366\ncatalog:variable_text:1366:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
+fields = { "tags" = ["housing", "income"] }
+evidence = "SA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1366\ncatalog:variable_text:1366:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-arbetsgivaravgift-slf"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1367\ncatalog:variable_text:1367:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-arbetsgivaravgift-slf"
+fields = { "tags" = ["housing", "income"] }
+evidence = "AG är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1367\ncatalog:variable_text:1367:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-egenavgift"
+fields = { "sets" = ["bostadsforman"] }
+evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1368\ncatalog:variable_text:1368:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahus-underlag-egenavgift"
+fields = { "tags" = ["housing", "income"] }
+evidence = "EA är en bokstavskod och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1368\ncatalog:variable_text:1368:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-inte-underlag-socialavgift"
+fields = { "sets" = ["drivmedelsforman"] }
+evidence = "DM och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1369\ncatalog:variable_text:1369:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-inte-underlag-socialavgift"
+fields = { "tags" = ["income"] }
+evidence = "DM och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1369\ncatalog:variable_text:1369:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
+fields = { "sets" = ["drivmedelsforman"] }
+evidence = "DM och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1370\ncatalog:variable_text:1370:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "DM och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1370\ncatalog:variable_text:1370:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
+fields = { "sets" = ["drivmedelsforman"] }
+evidence = "DM och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1371\ncatalog:variable_text:1371:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
+fields = { "tags" = ["income"] }
+evidence = "DM och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1371\ncatalog:variable_text:1371:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag"
+fields = { "sets" = [] }
+evidence = "Antalet avser deklarationer utan skatteavdrag.\ncatalog:variable_text:1372:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Antalet avser deklarationer utan skatteavdrag.\ncatalog:variable_text:1372:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "tags" = ["income"] }
+evidence = "Ersättningen omfattar resor till och från Sverige.\ncatalog:variable_text:1373:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Beloppet hör ihop med ersättningskoden.\ncatalog:variable_text:1374:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet hör ihop med ersättningskoden.\ncatalog:variable_text:1374:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Koden anger typen av social ersättning och hör ihop med ersättningsbeloppet.\ncatalog:valueset:8556\ncatalog:variable_text:1375:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod"
+fields = { "tags" = ["transfers"] }
+evidence = "Koden anger typen av social ersättning och hör ihop med ersättningsbeloppet.\ncatalog:valueset:8556\ncatalog:variable_text:1375:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-som-pension"
+fields = { "sets" = ["pensionsersattning"] }
+evidence = "SA är en bokstavskod.\ncatalog:occurrence-locators:variable:1379\ncatalog:variable_text:1379:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forman-som-pension"
+fields = { "tags" = ["transfers"] }
+evidence = "SA är en bokstavskod.\ncatalog:occurrence-locators:variable:1379\ncatalog:variable_text:1379:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forskar-skatte-namnden"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller skattefria ersättningar och förmåner.\ncatalog:variable_text:1380:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forskar-skatte-namnden"
+fields = { "tags" = ["income", "taxation"] }
+evidence = "Uppgiften gäller skattefria ersättningar och förmåner.\ncatalog:variable_text:1380:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-anstalld"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller anställning.\ncatalog:variable_text:1381:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-anstalld"
+fields = { "tags" = ["employment"] }
+evidence = "Uppgiften gäller anställning.\ncatalog:variable_text:1381:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller ersättning för uthyrd lokal.\ncatalog:variable_text:1382:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "tags" = ["income"] }
+evidence = "Uppgiften gäller ersättning för uthyrd lokal.\ncatalog:variable_text:1382:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "sets" = [] }
+evidence = "Kontant bruttolön är arbetsinkomst.\ncatalog:variable_text:1384:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon"
+fields = { "tags" = ["income"] }
+evidence = "Kontant bruttolön är arbetsinkomst.\ncatalog:variable_text:1384:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
+fields = { "sets" = ["ersattning-for-egenavgifter"] }
+evidence = "SA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1385\ncatalog:variable_text:1385:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "SA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1385\ncatalog:variable_text:1385:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
+fields = { "sets" = ["ersattning-for-egenavgifter"] }
+evidence = "EA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1386\ncatalog:variable_text:1386:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
+fields = { "tags" = ["income"] }
+evidence = "EA är en bokstavskod och beteckningen delas med en annan variabel; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1386\ncatalog:variable_text:1386:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kontrollstatus"
+fields = { "sets" = [] }
+evidence = "Statusen beskriver SCB:s granskning av uppgiften.\ncatalog:variable_text:1387:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kontrollstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Statusen beskriver SCB:s granskning av uppgiften.\ncatalog:variable_text:1387:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser avdrag för utgifter i arbetet.\ncatalog:variable_text:1389:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften avser avdrag för utgifter i arbetet.\ncatalog:variable_text:1389:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-arbetsland"
+fields = { "sets" = [] }
+evidence = "Koden anger arbetslandets geografiska läge.\ncatalog:variable_text:1390:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-arbetsland"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger arbetslandets geografiska läge.\ncatalog:variable_text:1390:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-medborgarskap-ej-svenskt"
+fields = { "sets" = [] }
+evidence = "Koden avser medborgarskap.\ncatalog:variable_text:1391:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-medborgarskap-ej-svenskt"
+fields = { "tags" = ["demographics"] }
+evidence = "Koden avser medborgarskap.\ncatalog:variable_text:1391:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-postort-om-ifylld"
+fields = { "sets" = [] }
+evidence = "Koden anger postortens land.\ncatalog:variable_text:1392:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod-postort-om-ifylld"
+fields = { "tags" = ["geography"] }
+evidence = "Koden anger postortens land.\ncatalog:variable_text:1392:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalanstalld"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller anställning.\ncatalog:variable_text:1394:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lokalanstalld"
+fields = { "tags" = ["employment"] }
+evidence = "Uppgiften gäller anställning.\ncatalog:variable_text:1394:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:narfart-fjarrfart"
+fields = { "sets" = [] }
+evidence = "Uppgiften skiljer typer av sjöfart.\ncatalog:variable_text:1395:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:narfart-fjarrfart"
+fields = { "tags" = ["transport"] }
+evidence = "Uppgiften skiljer typer av sjöfart.\ncatalog:variable_text:1395:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "tags" = ["income"] }
+evidence = "Uppgiften gäller kostnadsersättningar.\ncatalog:variable_text:1396:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:personaloption-som-inte-ska-formanbeskattas-har-utnyttjats"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller utnyttjande av personaloption och förmånsbeskattning.\ncatalog:variable_text:1399:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personaloption-som-inte-ska-formanbeskattas-har-utnyttjats"
+fields = { "tags" = ["income", "taxation"] }
+evidence = "Uppgiften gäller utnyttjande av personaloption och förmånsbeskattning.\ncatalog:variable_text:1399:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattebefriad-enligt-skatteavtal"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller skattebefrielse.\ncatalog:variable_text:1402:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattebefriad-enligt-skatteavtal"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften gäller skattebefrielse.\ncatalog:variable_text:1402:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller skattepliktig ersättning.\ncatalog:variable_text:1403:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "tags" = ["income"] }
+evidence = "Uppgiften gäller skattepliktig ersättning.\ncatalog:variable_text:1403:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-inte-underlag-arbetsgivaravgift"
+fields = { "sets" = ["bilforman"] }
+evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1404\ncatalog:variable_text:1404:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-inte-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1404\ncatalog:variable_text:1404:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
+fields = { "sets" = ["bilforman"] }
+evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1405\ncatalog:variable_text:1405:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1405\ncatalog:variable_text:1405:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
+fields = { "sets" = ["bilforman"] }
+evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1406\ncatalog:variable_text:1406:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1406\ncatalog:variable_text:1406:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-inte-underlag-arbetsgivaravgift"
+fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
+evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1407\ncatalog:variable_text:1407:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-inte-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och SA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1407\ncatalog:variable_text:1407:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
+fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
+evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1408\ncatalog:variable_text:1408:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och AG är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1408\ncatalog:variable_text:1408:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-egenavgift"
+fields = { "sets" = ["ovriga-skattepliktiga-formaner"] }
+evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1409\ncatalog:variable_text:1409:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-egenavgift"
+fields = { "tags" = ["income"] }
+evidence = "SP och EA är bokstavskoder och beteckningen delas med andra variabler; källkolumnen skiljer dem åt.\ncatalog:occurrence-locators:variable:1409\ncatalog:variable_text:1409:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension"
+fields = { "sets" = ["pensionsersattning"] }
+evidence = "Tjänstepension ingår i pensionsersättning.\ncatalog:variable_text:1410:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension"
+fields = { "tags" = ["transfers"] }
+evidence = "Tjänstepension ingår i pensionsersättning.\ncatalog:variable_text:1410:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente"
+fields = { "sets" = [] }
+evidence = "Antalet avser deklarationer med traktamente.\ncatalog:variable_text:1411:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente"
+fields = { "tags" = ["income"] }
+evidence = "Antalet avser deklarationer med traktamente.\ncatalog:variable_text:1411:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rot-forman"
+fields = { "sets" = ["underlag-skattereduktion-hushallsarbete-som-forman"] }
+evidence = "Uppgiften är underlag för skattereduktion för ROT-arbete som förmån.\ncatalog:variable_text:1412:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rot-forman"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften är underlag för skattereduktion för ROT-arbete som förmån.\ncatalog:variable_text:1412:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rut-forman"
+fields = { "sets" = ["underlag-skattereduktion-hushallsarbete-som-forman"] }
+evidence = "Uppgiften är underlag för skattereduktion för RUT-arbete som förmån.\ncatalog:variable_text:1413:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rut-forman"
+fields = { "tags" = ["taxation"] }
+evidence = "Uppgiften är underlag för skattereduktion för RUT-arbete som förmån.\ncatalog:variable_text:1413:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:bilersattning"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "r14 identifies whether standard-rate mileage reimbursement was paid; r13 supplies complete occurrence codes. This is an included cost-reimbursement coding.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1362"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "r16 defines an amount of cost reimbursements other than mileage or subsistence allowance, within the fixed group's scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1402\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1396"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-arbetsgivaravgift"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF. Bil- och drivmedelsförmån ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2183:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-formaner-underlag-egenavgift"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter. Bilförmån och fritt drivmedel vid bilförmån ingår inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2184:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-skatt-sink"
+fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2145:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
 fields = { "description" = "Avdragen preliminär skatt" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: avdr_skatt_sink"
-fields = { "description" = "Avdragen skatt, SINK" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individuppgifter-agi: avrakning_avgiftsfri_ers"
+subject = "var:avrakning-avgiftsfri-ers"
 fields = { "description" = "Avräkning från avgiftsfri ersättning" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: bilersattning"
+subject = "var:bilersattning"
 fields = { "description" = "Bilersättning" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: bostadsf_smahus_ej_ulag_sa"
-fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2180:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ag"
+subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2181:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ea"
+subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
 fields = { "description" = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ers_forman_bostad_mm_sink"
+subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
+fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF. Förmånsvärdet är marknadsvärdet gånger 1,2 minus nettolöneavdrag, medan arbetsgivaravgiften beräknas på marknadsvärdet utan uppräkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2156:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-bilforman-underlag-egenavgift"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter. Förmånen värderas till marknadsvärdet gånger 1,2 och minskas med den anställdes betalning genom nettolöneavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2157:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-skatteavdrag"
+fields = { "description" = "Antal arbetsgivardeklarationer utan skatteavdrag under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ett beslut medan uppgiften mäter antal deklarationer.\ncatalog:variable_text:1372:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
+fields = { "description" = "Kontant ersättning som är underlag för egenavgifter. Uppgiften omfattar uppenbart anställda med F-skatt och andra mottagare som själva ska betala egenavgifter eller särskild löneskatt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2171:opdef_text. One variable, one description."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "description" = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ers_ej_soc_avg_ej_jobbavd"
-fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+subject = "var:forman-har-justerats"
+fields = { "description" = "Markering för att en förmån har justerats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver en rättad post medan uppgiften avser justering av en förmån.\ncatalog:variable_text:1378:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ag"
-fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF." }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ea"
-fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter." }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individuppgifter-agi: forman_som_pension_ej_ulag_sa"
+subject = "var:forman-som-pension"
 fields = { "description" = "Förmån som pension som inte är underlag för socialavgifter" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: hyresersattning"
+subject = "var:hyresersattning"
 fields = { "description" = "Hyresersättning" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: kontant_ersattning_ulag_ea"
-fields = { "description" = "Kontant ersättning som är underlag för egenavgifter" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: sp_bilforman_ulag_ag"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+subject = "var:traktamente"
+fields = { "description" = "Antal arbetsgivardeklarationer med utbetalat traktamente under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver ersättning medan uppgiften mäter antal deklarationer.\ncatalog:variable_text:1411:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: sp_bilforman_ulag_ea"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individuppgifter-agi: underlag_rotarbete"
+subject = "var:underlag-skattereduktion-rot-forman"
 fields = { "description" = "Underlag för skattereduktion för rotarbete" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ag"
-fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ea"
-fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+subject = "var:ersattning-resa-utomlands-bosatta"
+fields = { "sets" = ["kostnadsersattningar"] }
+evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'ersättning för resor till och från Sverige' and the variable is on the 4-item candidate list; the 'förmån' wording does not make it a förmånsvärde.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:30\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1380"

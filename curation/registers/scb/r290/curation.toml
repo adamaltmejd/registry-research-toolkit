@@ -64,3 +64,1707 @@ kind = "set"
 subject = "kvartalsutfall-kommuner: kommun @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivering-arbete-anlaggningstillgangar"
+fields = { "sets" = [] }
+evidence = "Identitetsfakta visar överlappande mappningar av RadNr till andra variabler, bland annat rad. Beloppet avser aktivering i kommuners och regioners redovisning.\ncatalog:occurrence:322335\ncatalog:occurrence:322583\ncatalog:occurrence:322833\ncatalog:occurrence:323162"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivering-arbete-anlaggningstillgangar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakta visar överlappande mappningar av RadNr till andra variabler, bland annat rad. Beloppet avser aktivering i kommuners och regioners redovisning.\ncatalog:occurrence:322335\ncatalog:occurrence:322583\ncatalog:occurrence:322833\ncatalog:occurrence:323162"
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod"
+fields = { "sets" = ["kvartals-och-berakningsperiod"] }
+evidence = "Variabeln kodar kvartalet för insamlingsperioden och hör tillsammans med kvartal-period till periodgruppen.\ncatalog:valueset:10188\ncatalog:variable_text:35086:17897:20454\ncatalog:variable_text:35169:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod"
+fields = { "tags" = [] }
+evidence = "Variabeln kodar kvartalet för insamlingsperioden och hör tillsammans med kvartal-period till periodgruppen.\ncatalog:valueset:10188\ncatalog:variable_text:35086:17897:20454\ncatalog:variable_text:35169:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr; källans driftredovisning avser lämnade bidrag.\ncatalog:occurrence:322003\ncatalog:variable_text:35087:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr; källans driftredovisning avser lämnade bidrag.\ncatalog:occurrence:322003\ncatalog:variable_text:35087:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-juridiska-personer-ersattning-fk"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Variabeln avser lämnad ersättning till Försäkringskassan.\ncatalog:occurrence:321989\ncatalog:variable_text:35088:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-juridiska-personer-ersattning-fk"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Variabeln avser lämnad ersättning till Försäkringskassan.\ncatalog:occurrence:321989\ncatalog:variable_text:35088:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-privata-aktorer-offentliga"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Postens sammansatta innehåll omfattas inte fullt ut av investeringsinkomstkandidaten.\ncatalog:occurrence:322003\ncatalog:occurrence:322009\ncatalog:variable_text:35089:16801:18628\ncatalog:variable_text:35089:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-privata-aktorer-offentliga"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Postens sammansatta innehåll omfattas inte fullt ut av investeringsinkomstkandidaten.\ncatalog:occurrence:322003\ncatalog:occurrence:322009\ncatalog:variable_text:35089:16801:18628\ncatalog:variable_text:35089:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-enskilda"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser bidrag till enskilda.\ncatalog:occurrence:321986\ncatalog:variable_text:35090:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-enskilda"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser bidrag till enskilda.\ncatalog:occurrence:321986\ncatalog:variable_text:35090:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-foreningar-foretag-m-fl"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser lämnade bidrag.\ncatalog:occurrence:321988\ncatalog:variable_text:35091:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-foreningar-foretag-m-fl"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser lämnade bidrag.\ncatalog:occurrence:321988\ncatalog:variable_text:35091:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-infrastruktur"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser lämnade infrastrukturbidrag.\ncatalog:occurrence:322018\ncatalog:variable_text:35092:16801:18993\ncatalog:variable_text:35092:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-till-infrastruktur"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser lämnade infrastrukturbidrag.\ncatalog:occurrence:322018\ncatalog:variable_text:35092:16801:18993\ncatalog:variable_text:35092:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:biljettintakter-kollektivtrafik"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Biljettintäkter ingår i avgiftsgruppen och avser offentlig ekonomi och transport.\ncatalog:occurrence:322629\ncatalog:occurrence:322648\ncatalog:variable_text:35093:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:biljettintakter-kollektivtrafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Biljettintäkter ingår i avgiftsgruppen och avser offentlig ekonomi och transport.\ncatalog:occurrence:322629\ncatalog:occurrence:322648\ncatalog:variable_text:35093:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadssociala-bidrag"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser bostadssociala bidrag.\ncatalog:occurrence:321987\ncatalog:variable_text:35095:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadssociala-bidrag"
+fields = { "tags" = ["housing", "public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser bostadssociala bidrag.\ncatalog:occurrence:321987\ncatalog:variable_text:35095:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:driftbidrag-fran-staten"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Gruppen och taggen beskriver erhållna driftbidrag i offentlig ekonomi.\ncatalog:occurrence:322003\ncatalog:variable_text:35096:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:driftbidrag-fran-staten"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Gruppen och taggen beskriver erhållna driftbidrag i offentlig ekonomi.\ncatalog:occurrence:322003\ncatalog:variable_text:35096:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:entreprenad-kop-huvudverksamhet"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Gruppen och taggen följer kostnaderna för köp av huvudverksamhet.\ncatalog:occurrence:321996\ncatalog:occurrence:322003\ncatalog:variable_text:35097:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:entreprenad-kop-huvudverksamhet"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Gruppen och taggen följer kostnaderna för köp av huvudverksamhet.\ncatalog:occurrence:321996\ncatalog:occurrence:322003\ncatalog:variable_text:35097:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Gruppen och taggen beskriver erhållna bidrag i offentlig ekonomi.\ncatalog:occurrence:322655\ncatalog:variable_text:35098:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Gruppen och taggen beskriver erhållna bidrag i offentlig ekonomi.\ncatalog:occurrence:322655\ncatalog:variable_text:35098:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-darav-trafik"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av erhållna bidrag.\ncatalog:occurrence:322638\ncatalog:variable_text:35099:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-darav-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av erhållna bidrag.\ncatalog:occurrence:322638\ncatalog:variable_text:35099:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-riktade-statsbidrag"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser riktade erhållna bidrag och kostnadsersättningar.\ncatalog:occurrence:322638\ncatalog:variable_text:35100:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-riktade-statsbidrag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser riktade erhållna bidrag och kostnadsersättningar.\ncatalog:occurrence:322638\ncatalog:variable_text:35100:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-statsbidrag-trafik"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikrelaterade riktade bidrag och kostnadsersättningar.\ncatalog:occurrence:322638\ncatalog:variable_text:35101:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-statsbidrag-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikrelaterade riktade bidrag och kostnadsersättningar.\ncatalog:occurrence:322638\ncatalog:variable_text:35101:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-varav-alf-medel"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. ALF-medel är en del av erhållna bidrag för läkarutbildning och forskning.\ncatalog:occurrence:322638\ncatalog:variable_text:35102:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:erhallna-bidrag-varav-alf-medel"
+fields = { "tags" = ["education", "public-finance", "research"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. ALF-medel är en del av erhållna bidrag för läkarutbildning och forskning.\ncatalog:occurrence:322638\ncatalog:variable_text:35102:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-fk-personlig-assistans"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens erhållna ersättning för personlig assistans.\ncatalog:occurrence:322003\ncatalog:variable_text:35103:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-fk-personlig-assistans"
+fields = { "tags" = ["public-finance", "social-care"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens erhållna ersättning för personlig assistans.\ncatalog:occurrence:322003\ncatalog:variable_text:35103:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-bidrag-intakter"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser EU-bidrag som tillfaller kommunen.\ncatalog:occurrence:322003\ncatalog:variable_text:35104:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:eu-bidrag-intakter"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser EU-bidrag som tillfaller kommunen.\ncatalog:occurrence:322003\ncatalog:variable_text:35104:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiell-kostnad-pensionsavsattningar"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en finansiell kostnad i kommunernas redovisning.\ncatalog:occurrence:321984\ncatalog:occurrence:322003\ncatalog:variable_text:35105:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiell-kostnad-pensionsavsattningar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en finansiell kostnad i kommunernas redovisning.\ncatalog:occurrence:321984\ncatalog:occurrence:322003\ncatalog:variable_text:35105:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-darav-ranteintakter"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Ränteintäkterna är en finansiell intäktskomponent. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323139\ncatalog:variable_text:35106:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-darav-ranteintakter"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Ränteintäkterna är en finansiell intäktskomponent. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323139\ncatalog:variable_text:35106:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-regioner"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Variabeln avser regionernas finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323139\ncatalog:variable_text:35107:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-regioner"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Variabeln avser regionernas finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323139\ncatalog:variable_text:35107:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-utdelning-aktier"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Utdelning är en finansiell intäktskomponent. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323140\ncatalog:variable_text:35108:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-intakter-utdelning-aktier"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Utdelning är en finansiell intäktskomponent. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323138\ncatalog:occurrence:323140\ncatalog:variable_text:35108:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-kostnader-rantekostnader"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Räntekostnader är en del av regionernas finansiella kostnader.\ncatalog:occurrence:322616\ncatalog:occurrence:322617\ncatalog:variable_text:35109:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-kostnader-rantekostnader"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Räntekostnader är en del av regionernas finansiella kostnader.\ncatalog:occurrence:322616\ncatalog:occurrence:322617\ncatalog:variable_text:35109:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-kostnader-regioner"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas finansiella kostnader.\ncatalog:occurrence:322616\ncatalog:occurrence:322617\ncatalog:variable_text:35110:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-kostnader-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas finansiella kostnader.\ncatalog:occurrence:322616\ncatalog:occurrence:322617\ncatalog:variable_text:35110:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavg-och-riskkotn-div-kost"
+fields = { "sets" = [] }
+evidence = "Källan avser försäkringsavgifter och riskkostnader i kommunernas redovisning. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322150\ncatalog:occurrence:322151\ncatalog:variable_text:35111:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsakringsavg-och-riskkotn-div-kost"
+fields = { "tags" = ["public-finance"] }
+evidence = "Källan avser försäkringsavgifter och riskkostnader i kommunernas redovisning. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322150\ncatalog:occurrence:322151\ncatalog:variable_text:35111:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-anlaggningstillgangar"
+fields = { "sets" = ["forsaljningsmedel-for-anlaggningstillgangar"] }
+evidence = "Variabeln avser försäljning av anläggningstillgångar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323120\ncatalog:occurrence:323122\ncatalog:variable_text:35112:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-anlaggningstillgangar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Variabeln avser försäljning av anläggningstillgångar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323120\ncatalog:occurrence:323122\ncatalog:variable_text:35112:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-material-och-varor"
+fields = { "sets" = [] }
+evidence = "Variabeln avser försäljning av material och varor. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323132\ncatalog:occurrence:323149\ncatalog:variable_text:35113:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-material-och-varor"
+fields = { "tags" = ["public-finance", "trade"] }
+evidence = "Variabeln avser försäljning av material och varor. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:323132\ncatalog:occurrence:323149\ncatalog:variable_text:35113:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-tjanster"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Tjänsteförsäljning hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323131\ncatalog:occurrence:323148\ncatalog:variable_text:35114:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-tjanster"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Tjänsteförsäljning hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323131\ncatalog:occurrence:323148\ncatalog:variable_text:35114:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-tjanster-darav-trafik"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323131\ncatalog:occurrence:323148\ncatalog:variable_text:35115:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-tjanster-darav-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323131\ncatalog:occurrence:323148\ncatalog:variable_text:35115:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-verksamhet-darav-trafik"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323128\ncatalog:occurrence:323145\ncatalog:variable_text:35116:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-verksamhet-darav-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323128\ncatalog:occurrence:323145\ncatalog:variable_text:35116:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-verksamhet-regioner"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Verksamhetsförsäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323128\ncatalog:occurrence:323145\ncatalog:variable_text:35117:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-av-verksamhet-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Verksamhetsförsäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323128\ncatalog:occurrence:323145\ncatalog:variable_text:35117:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-exploateringsfastigheter"
+fields = { "sets" = ["exploateringsintakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till exploateringsintäkter och offentlig ekonomi.\ncatalog:occurrence:322534\ncatalog:occurrence:322582\ncatalog:variable_text:35118:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-exploateringsfastigheter"
+fields = { "tags" = ["property", "public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till exploateringsintäkter och offentlig ekonomi.\ncatalog:occurrence:322534\ncatalog:occurrence:322582\ncatalog:variable_text:35118:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-material-varor-trafik"
+fields = { "sets" = [] }
+evidence = "Etiketten och definitionen anger olika slag av försäljning. RadNr har också en överlappande koppling till en annan variabel. Coordinator group membership: Totalen och trafikdelen anges som material- och varuförsäljning i etiketterna. Trafikdelens motstridiga beskrivning kräver granskning.\ncatalog:occurrence:323132\ncatalog:occurrence:323149\ncatalog:variable_text:35113:17897:20454\ncatalog:variable_text:35119:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-material-varor-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Etiketten och definitionen anger olika slag av försäljning. RadNr har också en överlappande koppling till en annan variabel. Coordinator group membership: Totalen och trafikdelen anges som material- och varuförsäljning i etiketterna. Trafikdelens motstridiga beskrivning kräver granskning.\ncatalog:occurrence:323132\ncatalog:occurrence:323149\ncatalog:variable_text:35113:17897:20454\ncatalog:variable_text:35119:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-regionsagda-foretag-trafik"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323146\ncatalog:occurrence:323147\ncatalog:variable_text:35120:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-regionsagda-foretag-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323146\ncatalog:occurrence:323147\ncatalog:variable_text:35120:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-kommuner-regioner"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322570\ncatalog:variable_text:35121:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-kommuner-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322570\ncatalog:variable_text:35121:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-kommuner-trafik"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323146\ncatalog:occurrence:323147\ncatalog:variable_text:35122:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-kommuner-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Trafikdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323146\ncatalog:occurrence:323147\ncatalog:variable_text:35122:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-till-kommuner"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Motpartsdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323129\ncatalog:occurrence:323130\ncatalog:variable_text:35123:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-till-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Motpartsdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323129\ncatalog:occurrence:323130\ncatalog:variable_text:35123:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-till-regionsagda"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Motpartsdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323129\ncatalog:occurrence:323130\ncatalog:variable_text:35124:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-till-regionsagda"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Motpartsdelen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:323129\ncatalog:occurrence:323130\ncatalog:variable_text:35124:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-tjanster-ovriga"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322570\ncatalog:variable_text:35125:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-verksamhet-tjanster-ovriga"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Försäljningen hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322570\ncatalog:variable_text:35125:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsmedel"
+fields = { "sets" = ["forsaljningsmedel-for-anlaggningstillgangar"] }
+evidence = "Försäljningsmedlen redovisas tillsammans med belopp efter tillgångsslag. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322556\ncatalog:occurrence:322557\ncatalog:variable_text:35126:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningsmedel"
+fields = { "tags" = ["public-finance"] }
+evidence = "Försäljningsmedlen redovisas tillsammans med belopp efter tillgångsslag. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322556\ncatalog:occurrence:322557\ncatalog:variable_text:35126:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-finansiella-tillgangar"
+fields = { "sets" = ["forsaljningsmedel-for-anlaggningstillgangar"] }
+evidence = "Variabeln avser försäljningsbelopp för finansiella anläggningstillgångar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322126\ncatalog:occurrence:322153\ncatalog:variable_text:35127:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-finansiella-tillgangar"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Variabeln avser försäljningsbelopp för finansiella anläggningstillgångar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322126\ncatalog:occurrence:322153\ncatalog:variable_text:35127:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-mark-byggnader"
+fields = { "sets" = ["forsaljningsmedel-for-anlaggningstillgangar"] }
+evidence = "Variabeln avser försäljningsbelopp för mark, byggnader och tekniska anläggningar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322556\ncatalog:occurrence:322557\ncatalog:variable_text:35128:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-mark-byggnader"
+fields = { "tags" = ["property", "public-finance"] }
+evidence = "Variabeln avser försäljningsbelopp för mark, byggnader och tekniska anläggningar. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322556\ncatalog:occurrence:322557\ncatalog:variable_text:35128:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-maskiner-inventarier"
+fields = { "sets" = ["forsaljningsmedel-for-anlaggningstillgangar"] }
+evidence = "Variabeln avser försäljningsbelopp för maskiner och inventarier. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322555\ncatalog:occurrence:322557\ncatalog:variable_text:35129:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljningspris-maskiner-inventarier"
+fields = { "tags" = ["public-finance"] }
+evidence = "Variabeln avser försäljningsbelopp för maskiner och inventarier. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322555\ncatalog:occurrence:322557\ncatalog:variable_text:35129:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-statsbidrag-lakemedelsforman"
+fields = { "sets" = ["generella-statsbidrag-och-utjamning"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Läkemedelsförmånsbidraget är en angiven del av generella statsbidrag.\ncatalog:occurrence:323136\ncatalog:occurrence:323137\ncatalog:variable_text:35130:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-statsbidrag-lakemedelsforman"
+fields = { "tags" = ["medicines", "public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Läkemedelsförmånsbidraget är en angiven del av generella statsbidrag.\ncatalog:occurrence:323136\ncatalog:occurrence:323137\ncatalog:variable_text:35130:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-statsbidrag-och-utjamning"
+fields = { "sets" = ["generella-statsbidrag-och-utjamning"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Måttet avser generella statsbidrag och utjämning netto.\ncatalog:occurrence:323136\ncatalog:occurrence:323137\ncatalog:variable_text:35131:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:generella-statsbidrag-och-utjamning"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Måttet avser generella statsbidrag och utjämning netto.\ncatalog:occurrence:323136\ncatalog:occurrence:323137\ncatalog:variable_text:35131:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-och-arrenden"
+fields = { "sets" = [] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Hyres- och arrendeintäkterna hör till offentlig ekonomi.\ncatalog:occurrence:322557\ncatalog:occurrence:322558\ncatalog:variable_text:35132:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-och-arrenden"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Hyres- och arrendeintäkterna hör till offentlig ekonomi.\ncatalog:occurrence:322557\ncatalog:occurrence:322558\ncatalog:variable_text:35132:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Variabeln anger imputering och hör till statistisk metod.\ncatalog:variable_text:35133:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger imputering och hör till statistisk metod.\ncatalog:variable_text:35133:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-exploatering-ersattningar"
+fields = { "sets" = ["exploateringsintakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Ersättningarna hör till exploateringsintäkter och offentlig ekonomi.\ncatalog:occurrence:322534\ncatalog:occurrence:322582\ncatalog:variable_text:35134:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-exploatering-ersattningar"
+fields = { "tags" = ["property", "public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Ersättningarna hör till exploateringsintäkter och offentlig ekonomi.\ncatalog:occurrence:322534\ncatalog:occurrence:322582\ncatalog:variable_text:35134:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-lokalhyror-landsting"
+fields = { "sets" = ["lokal-och-bostadshyreskostnader"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokalhyrorna hör till hyreskostnader.\ncatalog:occurrence:323123\ncatalog:variable_text:35135:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:interna-lokalhyror-landsting"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokalhyrorna hör till hyreskostnader.\ncatalog:occurrence:323123\ncatalog:variable_text:35135:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-affarsverksamhet-maskiner"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter en del av investeringsutgifterna.\ncatalog:occurrence:322580\ncatalog:variable_text:35136:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-affarsverksamhet-maskiner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter en del av investeringsutgifterna.\ncatalog:occurrence:322580\ncatalog:variable_text:35136:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-immateriella-forvarvade"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Förvärvade tillgångar är en del av investeringsutgifterna.\ncatalog:occurrence:323164\ncatalog:variable_text:35137:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-immateriella-forvarvade"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Förvärvade tillgångar är en del av investeringsutgifterna.\ncatalog:occurrence:323164\ncatalog:variable_text:35137:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-immateriella-internt"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Internt upparbetade tillgångar är en del av investeringsutgifterna.\ncatalog:occurrence:323165\ncatalog:variable_text:35138:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringar-immateriella-internt"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Internt upparbetade tillgångar är en del av investeringsutgifterna.\ncatalog:occurrence:323165\ncatalog:variable_text:35138:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-landsting"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Investeringsinkomsterna hör till kandidatgruppen och offentlig ekonomi.\ncatalog:occurrence:322625\ncatalog:occurrence:322626\ncatalog:variable_text:35139:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statliga-bidrag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Statliga investeringsbidrag är en uttrycklig komponent i kandidatgruppen.\ncatalog:occurrence:321983\ncatalog:occurrence:322003\ncatalog:variable_text:35140:16801:17532\ncatalog:variable_text:35140:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statsbidrag"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Statsbidraget är en uttrycklig komponent av investeringsinkomster.\ncatalog:occurrence:322625\ncatalog:occurrence:322626\ncatalog:variable_text:35141:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter investeringsutgifter.\ncatalog:occurrence:322536\ncatalog:variable_text:35142:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter investeringsutgifter.\ncatalog:occurrence:322536\ncatalog:variable_text:35142:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-affarsverksamhet"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Affärsverksamhetens investeringar ingår i kandidatgruppen.\ncatalog:occurrence:322579\ncatalog:variable_text:35143:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-affarsverksamhet"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Affärsverksamhetens investeringar ingår i kandidatgruppen.\ncatalog:occurrence:322579\ncatalog:variable_text:35143:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-byggnader-regioner"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Utgifter för byggnader och mark ingår i kandidatgruppen.\ncatalog:occurrence:323114\ncatalog:variable_text:35144:17897:19723\ncatalog:variable_text:35144:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-byggnader-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Utgifter för byggnader och mark ingår i kandidatgruppen.\ncatalog:occurrence:323114\ncatalog:variable_text:35144:17897:19723\ncatalog:variable_text:35144:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-byggnader-trafik"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Trafikdelens byggnadsinvesteringar ingår i kandidatgruppen.\ncatalog:occurrence:322829\ncatalog:variable_text:35145:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-byggnader-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Trafikdelens byggnadsinvesteringar ingår i kandidatgruppen.\ncatalog:occurrence:322829\ncatalog:variable_text:35145:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-darav-leasing"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Leasing är en angiven del av investeringsutgifterna.\ncatalog:occurrence:323118\ncatalog:variable_text:35146:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-darav-leasing"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Leasing är en angiven del av investeringsutgifterna.\ncatalog:occurrence:323118\ncatalog:variable_text:35146:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-entreprenader"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Entreprenader och konsulter är angivna investeringsutgifter.\ncatalog:occurrence:322538\ncatalog:variable_text:35147:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-entreprenader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Entreprenader och konsulter är angivna investeringsutgifter.\ncatalog:occurrence:322538\ncatalog:variable_text:35147:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-for-inventarier"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inventarier är en angiven tillgångsdel.\ncatalog:occurrence:323116\ncatalog:variable_text:35148:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-for-inventarier"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inventarier är en angiven tillgångsdel.\ncatalog:occurrence:323116\ncatalog:variable_text:35148:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-immateriella"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Källhistoriken anger en definitionsändring och bör bevaras.\ncatalog:occurrence:323117\ncatalog:variable_text:35149:17897:19723\ncatalog:variable_text:35149:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-immateriella"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Källhistoriken anger en definitionsändring och bör bevaras.\ncatalog:occurrence:323117\ncatalog:variable_text:35149:17897:19723\ncatalog:variable_text:35149:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-inventarier"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inköp av maskiner och inventarier ingår i kandidatgruppen.\ncatalog:occurrence:322537\ncatalog:variable_text:35150:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-inventarier"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inköp av maskiner och inventarier ingår i kandidatgruppen.\ncatalog:occurrence:322537\ncatalog:variable_text:35150:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-kopt-mark-byggnader"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Köpt mark och byggnader är en angiven anskaffningsdel.\ncatalog:occurrence:323119\ncatalog:variable_text:35151:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-kopt-mark-byggnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Köpt mark och byggnader är en angiven anskaffningsdel.\ncatalog:occurrence:323119\ncatalog:variable_text:35151:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-landsting"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter totala icke-finansiella investeringsutgifter.\ncatalog:occurrence:323113\ncatalog:variable_text:35152:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-landsting"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Variabeln mäter totala icke-finansiella investeringsutgifter.\ncatalog:occurrence:323113\ncatalog:variable_text:35152:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-mark-byggnader"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inköp av mark, byggnader och tekniska anläggningar ingår i kandidatgruppen.\ncatalog:occurrence:322539\ncatalog:variable_text:35153:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-mark-byggnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Inköp av mark, byggnader och tekniska anläggningar ingår i kandidatgruppen.\ncatalog:occurrence:322539\ncatalog:variable_text:35153:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-medicintekniska"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Medicintekniska informationssystem är en angiven investeringsdel.\ncatalog:occurrence:322996\ncatalog:variable_text:35154:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-medicintekniska"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Medicintekniska informationssystem är en angiven investeringsdel.\ncatalog:occurrence:322996\ncatalog:variable_text:35154:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-medtek-inventarier"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Medicintekniska inventarier är en angiven tillgångsdel.\ncatalog:occurrence:323115\ncatalog:variable_text:35155:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-medtek-inventarier"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Medicintekniska inventarier är en angiven tillgångsdel.\ncatalog:occurrence:323115\ncatalog:variable_text:35155:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-ovriga-tillgangar"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Övriga materiella tillgångar är en angiven investeringsdel.\ncatalog:occurrence:323160\ncatalog:variable_text:35156:17897:18993\ncatalog:variable_text:35156:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsutgifter-ovriga-tillgangar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Övriga materiella tillgångar är en angiven investeringsdel.\ncatalog:occurrence:323160\ncatalog:variable_text:35156:17897:18993\ncatalog:variable_text:35156:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning; den regionala gruppkandidaten avser landsting och region.\ncatalog:variable_text:35158:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning; den regionala gruppkandidaten avser landsting och region.\ncatalog:variable_text:35158:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-huvudverksamhet-fran-andra-kommuner"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av köp av huvudverksamhet.\ncatalog:occurrence:322003\ncatalog:occurrence:322020\ncatalog:variable_text:35159:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-huvudverksamhet-fran-andra-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av köp av huvudverksamhet.\ncatalog:occurrence:322003\ncatalog:occurrence:322020\ncatalog:variable_text:35159:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-huvudverksamhet-fran-enskilda"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Etiketten anger en motpartsdel av köp av huvudverksamhet.\ncatalog:occurrence:322003\ncatalog:occurrence:322026\ncatalog:variable_text:35160:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kop-huvudverksamhet-fran-enskilda"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Etiketten anger en motpartsdel av köp av huvudverksamhet.\ncatalog:occurrence:322003\ncatalog:occurrence:322026\ncatalog:variable_text:35160:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-kopt-verksamhet-regioner"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322601\ncatalog:variable_text:35161:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-for-kopt-verksamhet-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322601\ncatalog:variable_text:35161:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kop-verksamhet-kommuner-trafik"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser en motpartsdel av köpt trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322662\ncatalog:variable_text:35162:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kop-verksamhet-kommuner-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser en motpartsdel av köpt trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322662\ncatalog:variable_text:35162:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-regionsagda-trafik"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser en motpartsdel av köpt trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322663\ncatalog:variable_text:35163:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-regionsagda-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser en motpartsdel av köpt trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322663\ncatalog:variable_text:35163:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-fran-kommuner"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322601\ncatalog:variable_text:35164:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-fran-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322601\ncatalog:variable_text:35164:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-regionsagda"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322602\ncatalog:variable_text:35165:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-regionsagda"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en motpartsdel av regionernas köp av huvudverksamhet.\ncatalog:occurrence:322600\ncatalog:occurrence:322602\ncatalog:variable_text:35165:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-trafik"
+fields = { "sets" = ["kop-av-huvudverksamhet"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas köpta trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322662\ncatalog:variable_text:35166:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-kopt-verksamhet-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser regionernas köpta trafikverksamhet.\ncatalog:occurrence:322661\ncatalog:occurrence:322662\ncatalog:variable_text:35166:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar-bidrag-kommuner"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser erhållna bidrag och kostnadsersättningar från kommunala motparter.\ncatalog:occurrence:322003\ncatalog:variable_text:35167:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar-bidrag-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser erhållna bidrag och kostnadsersättningar från kommunala motparter.\ncatalog:occurrence:322003\ncatalog:variable_text:35167:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kundforluster-riskkostnader"
+fields = { "sets" = [] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till flera olika ekonomiska poster.\ncatalog:occurrence:322151\ncatalog:occurrence:322203\ncatalog:variable_text:35168:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kundforluster-riskkostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till flera olika ekonomiska poster.\ncatalog:occurrence:322151\ncatalog:occurrence:322203\ncatalog:variable_text:35168:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal-period"
+fields = { "sets" = ["kvartals-och-berakningsperiod"] }
+evidence = "Variabeln kodar kvartalet som uppgifterna avser och hör tillsammans med berakningsperiod till periodgruppen.\ncatalog:valueset:10188\ncatalog:valueset:172\ncatalog:valueset:5682\ncatalog:variable_text:35169:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal-period"
+fields = { "tags" = [] }
+evidence = "Variabeln kodar kvartalet som uppgifterna avser och hör tillsammans med berakningsperiod till periodgruppen.\ncatalog:valueset:10188\ncatalog:valueset:172\ncatalog:valueset:5682\ncatalog:variable_text:35169:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser regionernas lämnade bidrag inklusive trafik.\ncatalog:occurrence:322610\ncatalog:variable_text:35170:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan avser regionernas lämnade bidrag inklusive trafik.\ncatalog:occurrence:322610\ncatalog:variable_text:35170:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-kommuner"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till kommuner och regioner.\ncatalog:occurrence:322612\ncatalog:variable_text:35171:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till kommuner och regioner.\ncatalog:occurrence:322612\ncatalog:variable_text:35171:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-ovriga"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till övriga företag.\ncatalog:occurrence:322614\ncatalog:variable_text:35172:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-ovriga"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till övriga företag.\ncatalog:occurrence:322614\ncatalog:variable_text:35172:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-regionsagda"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till regionsägda företag.\ncatalog:occurrence:322613\ncatalog:variable_text:35173:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-regionsagda"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till regionsägda företag.\ncatalog:occurrence:322613\ncatalog:variable_text:35173:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-varav-trafik"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till länstrafikbolag.\ncatalog:occurrence:322611\ncatalog:variable_text:35174:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lamnade-bidrag-inkl-trafik-varav-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger bidrag till länstrafikbolag.\ncatalog:occurrence:322611\ncatalog:variable_text:35174:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landsting"
+fields = { "sets" = ["regional-geografisk-tillhorighet"] }
+evidence = "Landsting och region kodar samma regionala tillhörighet i på varandra följande perioder.\ncatalog:occurrence:322675\ncatalog:occurrence:322757\ncatalog:variable_text:35175:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:landsting"
+fields = { "tags" = ["geography"] }
+evidence = "Landsting och region kodar samma regionala tillhörighet i på varandra följande perioder.\ncatalog:occurrence:322675\ncatalog:occurrence:322757\ncatalog:variable_text:35175:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-darav-sjuklon"
+fields = { "sets" = ["lonekostnader"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Sjuklön är en del av lönekostnaderna.\ncatalog:occurrence:321990\ncatalog:occurrence:321991\ncatalog:variable_text:35176:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-darav-sjuklon"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Sjuklön är en del av lönekostnaderna.\ncatalog:occurrence:321990\ncatalog:occurrence:321991\ncatalog:variable_text:35176:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-exkl-skattefria-ersattningar"
+fields = { "sets" = ["lonekostnader"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Variabeln avser lönekostnader.\ncatalog:occurrence:322596\ncatalog:occurrence:322659\ncatalog:variable_text:35177:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-exkl-skattefria-ersattningar"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Variabeln avser lönekostnader.\ncatalog:occurrence:322596\ncatalog:occurrence:322659\ncatalog:variable_text:35177:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-forandring-semesterloneskuld"
+fields = { "sets" = ["lonekostnader"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Förändringen är en angiven del av lönekostnaderna.\ncatalog:occurrence:322596\ncatalog:occurrence:322659\ncatalog:variable_text:35178:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-forandring-semesterloneskuld"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Förändringen är en angiven del av lönekostnaderna.\ncatalog:occurrence:322596\ncatalog:occurrence:322659\ncatalog:variable_text:35178:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-m-m"
+fields = { "sets" = ["lonekostnader"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Sjuklön redovisas som en del av lönerna.\ncatalog:occurrence:321990\ncatalog:occurrence:321991\ncatalog:variable_text:35179:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loner-m-m"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfakten visar överlappande mappningar av RadNr till olika poster. Sjuklön redovisas som en del av lönerna.\ncatalog:occurrence:321990\ncatalog:occurrence:321991\ncatalog:variable_text:35179:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Material är en kostnadsdel.\ncatalog:occurrence:322550\ncatalog:variable_text:35180:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Material är en kostnadsdel.\ncatalog:occurrence:322550\ncatalog:variable_text:35180:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-och-tjanster"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter kostnader för material och tjänster.\ncatalog:occurrence:323102\ncatalog:variable_text:35181:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-och-tjanster"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter kostnader för material och tjänster.\ncatalog:occurrence:323102\ncatalog:variable_text:35181:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-och-tjanster-lakemedel"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln avser läkemedelskostnader som del av material och tjänster.\ncatalog:occurrence:323103\ncatalog:variable_text:35182:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-och-tjanster-lakemedel"
+fields = { "tags" = ["medicines", "public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln avser läkemedelskostnader som del av material och tjänster.\ncatalog:occurrence:323103\ncatalog:variable_text:35182:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-tjanster-fastighetsunderhall"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Fastighetsunderhåll är en kostnadsdel av material och tjänster.\ncatalog:occurrence:323104\ncatalog:variable_text:35183:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:material-tjanster-fastighetsunderhall"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Fastighetsunderhåll är en kostnadsdel av material och tjänster.\ncatalog:occurrence:323104\ncatalog:variable_text:35183:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsbidrag-kop-ej-skattepliktig"
+fields = { "sets" = ["erhallna-driftbidrag-och-kostnadsersattningar"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens erhållna momsersättning.\ncatalog:occurrence:322003\ncatalog:variable_text:35184:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:momsbidrag-kop-ej-skattepliktig"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens erhållna momsersättning.\ncatalog:occurrence:322003\ncatalog:variable_text:35184:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-intakter-from-2011"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Övriga finansiella intäkter är en komponent i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322574\ncatalog:variable_text:35185:16801:19723\ncatalog:variable_text:35185:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-intakter-from-2011"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Övriga finansiella intäkter är en komponent i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322574\ncatalog:variable_text:35185:16801:19723\ncatalog:variable_text:35185:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-kostnader"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en komponent av kommunernas finansiella kostnader.\ncatalog:occurrence:322006\ncatalog:occurrence:322028\ncatalog:variable_text:35186:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-finansiella-kostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är en komponent av kommunernas finansiella kostnader.\ncatalog:occurrence:322006\ncatalog:occurrence:322028\ncatalog:variable_text:35186:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter"
+fields = { "sets" = ["ovriga-verksamhetsintakter"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger övriga intäkter.\ncatalog:occurrence:322030\ncatalog:variable_text:35187:16801:18993\ncatalog:variable_text:35187:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger övriga intäkter.\ncatalog:occurrence:322030\ncatalog:variable_text:35187:16801:18993\ncatalog:variable_text:35187:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-darav-trafik"
+fields = { "sets" = ["ovriga-verksamhetsintakter"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger trafikrelaterade övriga verksamhetsintäkter.\ncatalog:occurrence:322657\ncatalog:variable_text:35188:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-darav-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger trafikrelaterade övriga verksamhetsintäkter.\ncatalog:occurrence:322657\ncatalog:variable_text:35188:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-landsting"
+fields = { "sets" = ["ovriga-verksamhetsintakter"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger övriga verksamhetsintäkter.\ncatalog:occurrence:322640\ncatalog:variable_text:35189:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-intakter-landsting"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger övriga verksamhetsintäkter.\ncatalog:occurrence:322640\ncatalog:variable_text:35189:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "sets" = ["ovriga-verksamhetskostnader"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger kommunernas övriga kostnader.\ncatalog:occurrence:322029\ncatalog:variable_text:35190:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger kommunernas övriga kostnader.\ncatalog:occurrence:322029\ncatalog:variable_text:35190:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-for-personal"
+fields = { "sets" = [] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Separat redovisade övriga personalkostnader ingår inte i kandidaten för övriga verksamhetskostnader.\ncatalog:occurrence:322597\ncatalog:variable_text:35191:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-for-personal"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Separat redovisade övriga personalkostnader ingår inte i kandidaten för övriga verksamhetskostnader.\ncatalog:occurrence:322597\ncatalog:variable_text:35191:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-regioner"
+fields = { "sets" = ["ovriga-verksamhetskostnader"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger regionernas övriga verksamhetskostnader.\ncatalog:occurrence:322615\ncatalog:variable_text:35192:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnader-regioner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger regionernas övriga verksamhetskostnader.\ncatalog:occurrence:322615\ncatalog:variable_text:35192:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader-kap-kl-pension"
+fields = { "sets" = ["avgiftsbestamda-pensionskostnader"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger avgiftsbestämd ålderspension exklusive löneskatt.\ncatalog:occurrence:322660\ncatalog:variable_text:35193:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader-kap-kl-pension"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger avgiftsbestämd ålderspension exklusive löneskatt.\ncatalog:occurrence:322660\ncatalog:variable_text:35193:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-for-tandvard"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Tandvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322632\ncatalog:variable_text:35194:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-for-tandvard"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Tandvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322632\ncatalog:variable_text:35194:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-inom-slutenvarden"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Slutenvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322631\ncatalog:variable_text:35195:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-inom-slutenvarden"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Slutenvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322631\ncatalog:variable_text:35195:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-och-andra-avgifter"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Patientavgifter och andra avgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322631\ncatalog:variable_text:35196:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-och-andra-avgifter"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Patientavgifter och andra avgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322631\ncatalog:variable_text:35196:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-oppen-vard"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Öppenvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322630\ncatalog:variable_text:35197:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:patientavgifter-oppen-vard"
+fields = { "tags" = ["healthcare", "public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Öppenvårdsavgifter ingår i avgiftsgruppen och avser vård och offentlig ekonomi.\ncatalog:occurrence:322629\ncatalog:occurrence:322630\ncatalog:variable_text:35197:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnad-avgiftsbestamd-del"
+fields = { "sets" = ["avgiftsbestamda-pensionskostnader"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger kostnad för avgiftsbestämd ålderspension.\ncatalog:occurrence:321976\ncatalog:variable_text:35198:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionskostnad-avgiftsbestamd-del"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger kostnad för avgiftsbestämd ålderspension.\ncatalog:occurrence:321976\ncatalog:variable_text:35198:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalningar"
+fields = { "sets" = ["pensionsutbetalningar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger pensionsutbetalningar.\ncatalog:occurrence:321993\ncatalog:variable_text:35199:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalningar"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger pensionsutbetalningar.\ncatalog:occurrence:321993\ncatalog:variable_text:35199:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalningar-exkl-loneskatt"
+fields = { "sets" = ["pensionsutbetalningar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger pensionsutbetalningar exklusive löneskatt.\ncatalog:occurrence:322598\ncatalog:variable_text:35200:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsutbetalningar-exkl-loneskatt"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger pensionsutbetalningar exklusive löneskatt.\ncatalog:occurrence:322598\ncatalog:variable_text:35200:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-from-2011"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Ränteintäkter är en komponent i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322573\ncatalog:variable_text:35202:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ranteintakter-from-2011"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Ränteintäkter är en komponent i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322573\ncatalog:variable_text:35202:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-pa-lan"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser kommunernas räntekostnader på lån.\ncatalog:occurrence:321998\ncatalog:occurrence:322006\ncatalog:variable_text:35203:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rantekostnader-pa-lan"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet avser kommunernas räntekostnader på lån.\ncatalog:occurrence:321998\ncatalog:occurrence:322006\ncatalog:variable_text:35203:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:region"
+fields = { "sets" = ["regional-geografisk-tillhorighet"] }
+evidence = "Region och landsting kodar samma regionala tillhörighet i på varandra följande perioder.\ncatalog:occurrence:322675\ncatalog:occurrence:322757\ncatalog:variable_text:35204:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:region"
+fields = { "tags" = ["geography"] }
+evidence = "Region och landsting kodar samma regionala tillhörighet i på varandra följande perioder.\ncatalog:occurrence:322675\ncatalog:occurrence:322757\ncatalog:variable_text:35204:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteintakter"
+fields = { "sets" = [] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger landstingens skatteintäkter.\ncatalog:occurrence:322649\ncatalog:variable_text:35205:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:skatteintakter"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger landstingens skatteintäkter.\ncatalog:occurrence:322649\ncatalog:variable_text:35205:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-avgifter-enl-lag-och-avtal"
+fields = { "sets" = ["sociala-avgifter"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger sociala avgifter enligt lag och avtal.\ncatalog:occurrence:321992\ncatalog:variable_text:35206:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-avgifter-enl-lag-och-avtal"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger sociala avgifter enligt lag och avtal.\ncatalog:occurrence:321992\ncatalog:variable_text:35206:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-avgifter-inkl-loneskatt"
+fields = { "sets" = ["sociala-avgifter"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger sociala och andra avgifter inklusive löneskatt.\ncatalog:occurrence:322599\ncatalog:variable_text:35207:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-avgifter-inkl-loneskatt"
+fields = { "tags" = ["public-finance", "taxation"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger sociala och andra avgifter inklusive löneskatt.\ncatalog:occurrence:322599\ncatalog:variable_text:35207:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bidrag-och-transfereringar"
+fields = { "sets" = ["lamnade-bidrag-och-transfereringar"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger summan av bidrag och transfereringar i externa utgifter.\ncatalog:occurrence:322005\ncatalog:variable_text:35208:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bidrag-och-transfereringar"
+fields = { "tags" = ["public-finance", "transfers"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger summan av bidrag och transfereringar i externa utgifter.\ncatalog:occurrence:322005\ncatalog:variable_text:35208:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-intakter"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Variabeln avser summan av finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322573\ncatalog:variable_text:35209:16801:18993\ncatalog:variable_text:35209:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-intakter"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Variabeln avser summan av finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322573\ncatalog:variable_text:35209:16801:18993\ncatalog:variable_text:35209:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-kostnader"
+fields = { "sets" = ["finansiella-kostnader"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är summan av kommunernas finansiella kostnader.\ncatalog:occurrence:321998\ncatalog:occurrence:322006\ncatalog:variable_text:35210:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-finansiella-kostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogen kopplar samma kolumn till flera olika variabler. Måttet är summan av kommunernas finansiella kostnader.\ncatalog:occurrence:321998\ncatalog:occurrence:322006\ncatalog:variable_text:35210:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forsaljning-verksamhet-tjanster"
+fields = { "sets" = ["forsaljning-av-verksamhet-och-tjanster"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Summan hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322578\ncatalog:variable_text:35211:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-forsaljning-verksamhet-tjanster"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar för RadNr. Summan hör till försäljningsgruppen och offentlig ekonomi.\ncatalog:occurrence:322560\ncatalog:occurrence:322578\ncatalog:variable_text:35211:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-investeringsutgifter"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Summan ingår i kandidatgruppen och källhistoriken bevaras.\ncatalog:occurrence:323161\ncatalog:variable_text:35212:17897:18993\ncatalog:variable_text:35212:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-investeringsutgifter"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Summan ingår i kandidatgruppen och källhistoriken bevaras.\ncatalog:occurrence:323161\ncatalog:variable_text:35212:17897:18993\ncatalog:variable_text:35212:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-investeringsutgifter-materiella"
+fields = { "sets" = ["investeringsutgifter"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Materiella tillgångar är en angiven investeringsdel.\ncatalog:occurrence:323163\ncatalog:variable_text:35213:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-investeringsutgifter-materiella"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktorn visar överlappande mappning för RadNr. Materiella tillgångar är en angiven investeringsdel.\ncatalog:occurrence:323163\ncatalog:variable_text:35213:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-personalkostnader"
+fields = { "sets" = [] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger summan av driftredovisningens personalkostnader.\ncatalog:occurrence:322024\ncatalog:variable_text:35214:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-personalkostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakta visar överlappande ägare av RadNr. Källan anger summan av driftredovisningens personalkostnader.\ncatalog:occurrence:322024\ncatalog:variable_text:35214:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-intakter-enligt-rr"
+fields = { "sets" = ["verksamhetens-samlade-intakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens samlade verksamhetsintäkter.\ncatalog:occurrence:322003\ncatalog:variable_text:35215:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-intakter-enligt-rr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens samlade verksamhetsintäkter.\ncatalog:occurrence:322003\ncatalog:variable_text:35215:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-intakter-trafik"
+fields = { "sets" = ["verksamhetens-samlade-intakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av regionens samlade verksamhetsintäkter.\ncatalog:occurrence:322638\ncatalog:variable_text:35216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-intakter-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av regionens samlade verksamhetsintäkter.\ncatalog:occurrence:322638\ncatalog:variable_text:35216:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader"
+fields = { "sets" = ["verksamhetens-samlade-kostnader"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser regionens samlade verksamhetskostnader.\ncatalog:occurrence:322638\ncatalog:variable_text:35217:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser regionens samlade verksamhetskostnader.\ncatalog:occurrence:322638\ncatalog:variable_text:35217:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader-enligt-rr"
+fields = { "sets" = ["verksamhetens-samlade-kostnader"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens samlade verksamhetskostnader.\ncatalog:occurrence:322003\ncatalog:variable_text:35218:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader-enligt-rr"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser kommunens samlade verksamhetskostnader.\ncatalog:occurrence:322003\ncatalog:variable_text:35218:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader-trafik"
+fields = { "sets" = ["verksamhetens-samlade-kostnader"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av regionens samlade verksamhetskostnader.\ncatalog:occurrence:322638\ncatalog:variable_text:35219:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-verksamhetens-kostnader-trafik"
+fields = { "tags" = ["public-finance", "transport"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser trafikdelen av regionens samlade verksamhetskostnader.\ncatalog:occurrence:322638\ncatalog:variable_text:35219:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:taxor-och-avgifter"
+fields = { "sets" = ["taxor-och-avgiftsintakter"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Taxor och avgifter ingår i avgiftsgruppen och avser offentlig ekonomi.\ncatalog:occurrence:321975\ncatalog:occurrence:322003\ncatalog:variable_text:35220:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:taxor-och-avgifter"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktumet visar överlappande mappningar av RadNr. Taxor och avgifter ingår i avgiftsgruppen och avser offentlig ekonomi.\ncatalog:occurrence:321975\ncatalog:occurrence:322003\ncatalog:variable_text:35220:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-darav-fastighets-entreprenader"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Entreprenaderna är en angiven del av tjänstekostnaderna.\ncatalog:occurrence:322576\ncatalog:variable_text:35221:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-darav-fastighets-entreprenader"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Entreprenaderna är en angiven del av tjänstekostnaderna.\ncatalog:occurrence:322576\ncatalog:variable_text:35221:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-inkl-kop-av-huvudverksamhet"
+fields = { "sets" = ["kostnader-for-material-och-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter tjänsteutgifter.\ncatalog:occurrence:322551\ncatalog:variable_text:35222:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-inkl-kop-av-huvudverksamhet"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter tjänsteutgifter.\ncatalog:occurrence:322551\ncatalog:variable_text:35222:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-inkl-kop-lokalhyror"
+fields = { "sets" = ["lokal-och-bostadshyreskostnader"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokal- och bostadshyror är en angiven del av tjänsteutgifterna.\ncatalog:occurrence:322553\ncatalog:variable_text:35223:18993:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to lokal-och-bostadshyreskostnader; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanster-inkl-kop-lokalhyror"
+fields = { "tags" = ["housing", "public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Lokal- och bostadshyror är en angiven del av tjänsteutgifterna.\ncatalog:occurrence:322553\ncatalog:variable_text:35223:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-pa-aktier-och-andelar-kommunen"
+fields = { "sets" = ["finansiella-intakter"] }
+evidence = "Utdelning på aktier och andelar ingår i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322572\ncatalog:variable_text:35224:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-pa-aktier-och-andelar-kommunen"
+fields = { "tags" = ["finance", "public-finance"] }
+evidence = "Utdelning på aktier och andelar ingår i finansiella intäkter. RadNr har en överlappande koppling till en annan variabel.\ncatalog:occurrence:322531\ncatalog:occurrence:322572\ncatalog:variable_text:35224:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetens-intakter-landsting"
+fields = { "sets" = ["verksamhetens-samlade-intakter"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser landstingets samlade verksamhetsintäkter.\ncatalog:occurrence:322638\ncatalog:variable_text:35225:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetens-intakter-landsting"
+fields = { "tags" = ["public-finance"] }
+evidence = "Identitetsfaktet visar överlappande mappningar av RadNr. Variabeln avser landstingets samlade verksamhetsintäkter.\ncatalog:occurrence:322638\ncatalog:variable_text:35225:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster.\ncatalog:occurrence:323098\ncatalog:variable_text:35226:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster.\ncatalog:occurrence:323098\ncatalog:variable_text:35226:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-inhyrd"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Inhyrd personal är en angiven del av verksamhetsanknutna tjänster.\ncatalog:occurrence:323099\ncatalog:variable_text:35227:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-inhyrd"
+fields = { "tags" = ["employment", "public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Inhyrd personal är en angiven del av verksamhetsanknutna tjänster.\ncatalog:occurrence:323099\ncatalog:variable_text:35227:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-kommuner"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från kommuner och regioner.\ncatalog:occurrence:323100\ncatalog:variable_text:35228:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-kommuner"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från kommuner och regioner.\ncatalog:occurrence:323100\ncatalog:variable_text:35228:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-regionsagda"
+fields = { "sets" = ["verksamhetsanknutna-tjanster"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från företag.\ncatalog:occurrence:323101\ncatalog:variable_text:35229:17897:20454\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to verksamhetsanknutna-tjanster; the other candidates are broader context or a different dimension."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsanknutna-tjanster-regionsagda"
+fields = { "tags" = ["public-finance"] }
+evidence = "Katalogens identitetsfakt anger överlappande mappningar för RadNr. Variabeln mäter verksamhetsanknutna tjänster från företag.\ncatalog:occurrence:323101\ncatalog:variable_text:35229:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-landsting"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r41 defines investment income used in investment accounting, account 950, directly matching the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35012\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35139"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statliga-bidrag"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r42 explicitly defines state investment grants by activity, satisfying the group's investment-component requirement.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35013\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35140"
+
+[[statement]]
+kind = "set"
+subject = "var:investeringsinkomster-statsbidrag"
+fields = { "sets" = ["investeringsinkomster"] }
+evidence = "r43 explicitly identifies grants for buildings and equipment as a component of investment income, account 951.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:35014\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:35141"

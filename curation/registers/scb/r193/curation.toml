@@ -70,66 +70,6 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:10\n\nS
 
 [[statement]]
 kind = "set"
-subject = "individregister: m2_spr_alt"
-fields = { "description" = "Alternativ till språkval" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: anp_stud"
-fields = { "description" = "Anpassad studiegång" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: sva"
-fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: personnr"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: skolenhetskod"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: skolkod @2008-10-15"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: skolkommun"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: skom"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: stud_handl_ml"
-fields = { "description" = "Studiehandlening på modersmål" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:141\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "individregister: inriktning"
-fields = { "description" = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar." }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
 subject = "individregister: {hemkommun,skolkommun} @2018-10-15"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
@@ -265,3 +205,1092 @@ kind = "set"
 subject = "individregister: jurform @2022-10-15,2023-10-15,2024-10-15"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2013-10-15 where release = 'r5652' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2014-10-15 where release = 'r6204' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2015-10-15 where release = 'r7429' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2016-10-15 where release = 'r11113' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2017-10-15 where release = 'r11817' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2018-10-15 where release = 'r13154' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2019-10-15 where release = 'r14804' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2020-10-15 where release = 'r18499' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2021-10-15 where release = 'r18500' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2022-10-15 where release = 'r18729' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2023-10-15 where release = 'r19645' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolenhetsKodFTH @2024-10-15 where release = 'r19941' and key = 'skolenhetskodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolKodFTH @2008-10-15 where release = 'r6203' and key = 'skolkodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolKodFTH @2009-10-15 where release = 'r6202' and key = 'skolkodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolKodFTH @2010-10-15 where release = 'r6201' and key = 'skolkodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolKodFTH @2011-10-15 where release = 'r6200' and key = 'skolkodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: SkolKodFTH @2012-10-15 where release = 'r5660' and key = 'skolkodfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2008-10-15 where release = 'r6203' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2009-10-15 where release = 'r6202' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2010-10-15 where release = 'r6201' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2011-10-15 where release = 'r6200' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2012-10-15 where release = 'r5660' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2013-10-15 where release = 'r5652' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2014-10-15 where release = 'r6204' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2015-10-15 where release = 'r7429' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2016-10-15 where release = 'r11113' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2017-10-15 where release = 'r11817' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2018-10-15 where release = 'r13154' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2019-10-15 where release = 'r14804' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2020-10-15 where release = 'r18499' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2021-10-15 where release = 'r18500' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2022-10-15 where release = 'r18729' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2023-10-15 where release = 'r19645' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: AvdFTH @2024-10-15 where release = 'r19941' and key = 'avdfth'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+
+[[statement]]
+kind = "set"
+subject = "var:anger-om-eleven-ar-inskriven-i-fritidshem"
+fields = { "sets" = ["inskrivning-i-fritidshem"] }
+evidence = "Inskrivning i fritidshem är en gemensam grupp; uppgiften gäller utbildningsdeltagande.\ncatalog:variable_text:21855:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anger-om-eleven-ar-inskriven-i-fritidshem"
+fields = { "tags" = ["education"] }
+evidence = "Inskrivning i fritidshem är en gemensam grupp; uppgiften gäller utbildningsdeltagande.\ncatalog:variable_text:21855:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Anpassad studiegång är en form av särskilt stöd.\ncatalog:variable_text:21856:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "tags" = ["education"] }
+evidence = "Anpassad studiegång är en form av särskilt stöd.\ncatalog:variable_text:21856:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:antalar"
+fields = { "sets" = [] }
+evidence = "Antalet år avser deltagande i grundskolan.\ncatalog:variable_text:21857:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:antalar"
+fields = { "tags" = ["education"] }
+evidence = "Antalet år avser deltagande i grundskolan.\ncatalog:variable_text:21857:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "sets" = ["arskurs"] }
+evidence = "Årskurs och startårskurs ingår i samma begreppsgrupp.\ncatalog:variable_text:21860:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "tags" = ["education"] }
+evidence = "Årskurs och startårskurs ingår i samma begreppsgrupp.\ncatalog:variable_text:21860:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Åtgärdsprogram hör till elevens särskilda stöd.\ncatalog:variable_text:21861:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsprogram"
+fields = { "tags" = ["education"] }
+evidence = "Åtgärdsprogram hör till elevens särskilda stöd.\ncatalog:variable_text:21861:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:berattigad-till-modersmalsundervisning"
+fields = { "sets" = [] }
+evidence = "BERML är en opak källförkortning för berättigande till modersmålsundervisning.\ncatalog:variable_text:21862:17819:17820"
+
+[[statement]]
+kind = "set"
+subject = "var:berattigad-till-modersmalsundervisning"
+fields = { "tags" = ["education"] }
+evidence = "BERML är en opak källförkortning för berättigande till modersmålsundervisning.\ncatalog:variable_text:21862:17819:17820"
+
+[[statement]]
+kind = "set"
+subject = "var:central-insamlingsenhet"
+fields = { "sets" = [] }
+evidence = "Markeringen beskriver insamlingens organisation.\ncatalog:variable_text:21863:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:central-insamlingsenhet"
+fields = { "tags" = ["methods"] }
+evidence = "Markeringen beskriver insamlingens organisation.\ncatalog:variable_text:21863:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-sva"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller deltagande i undervisning.\ncatalog:variable_text:21864:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-sva"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller deltagande i undervisning.\ncatalog:variable_text:21864:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser distansundervisning.\ncatalog:variable_text:21865:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:distansundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser distansundervisning.\ncatalog:variable_text:21865:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:eleven-ar-inskriven-pa-fritidshem-under-obekvama-tider"
+fields = { "sets" = ["inskrivning-i-fritidshem"] }
+evidence = "Inskrivning under obekväma tider är en form av fritidshemsinskrivning.\ncatalog:variable_text:21866:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:eleven-ar-inskriven-pa-fritidshem-under-obekvama-tider"
+fields = { "tags" = ["education"] }
+evidence = "Inskrivning under obekväma tider är en form av fritidshemsinskrivning.\ncatalog:variable_text:21866:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Faderns födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21867:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:faderns-fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Faderns födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21867:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:21868:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:21868:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Elevens födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21869:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Elevens födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21869:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:21870:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en kommunangivelse.\ncatalog:variable_text:21870:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:gemensam-rektor-med-fritidshem"
+fields = { "sets" = [] }
+evidence = "Uppgiften beskriver fritidshemmets skolorganisation.\ncatalog:variable_text:21872:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gemensam-rektor-med-fritidshem"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften beskriver fritidshemmets skolorganisation.\ncatalog:variable_text:21872:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = ["huvudman"] }
+evidence = "Klassificeringen av skolans huvudman hör till huvudmannagruppen.\ncatalog:variable_text:21873:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Klassificeringen av skolans huvudman hör till huvudmannagruppen.\ncatalog:variable_text:21873:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-fritidshem"
+fields = { "sets" = ["huvudman"] }
+evidence = "Fritidshemmets huvudman hör till huvudmannagruppen.\ncatalog:variable_text:21874:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-fritidshem"
+fields = { "tags" = ["education"] }
+evidence = "Fritidshemmets huvudman hör till huvudmannagruppen.\ncatalog:variable_text:21874:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "sets" = ["huvudman"] }
+evidence = "Huvudmannens namn hör till huvudmannagruppen.\ncatalog:variable_text:21875:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields = { "tags" = ["education"] }
+evidence = "Huvudmannens namn hör till huvudmannagruppen.\ncatalog:variable_text:21875:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "sets" = [] }
+evidence = "Uppgiften klassificerar skolans inriktning.\ncatalog:variable_text:21876:20011:20012\nregisters/scb/r193/curation.toml:125"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften klassificerar skolans inriktning.\ncatalog:variable_text:21876:20011:20012\nregisters/scb/r193/curation.toml:125"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver en juridisk enhets struktur.\ncatalog:variable_text:21877:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver en juridisk enhets struktur.\ncatalog:variable_text:21877:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Fältet anger skolans kommun.\ncatalog:variable_text:21879:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet anger skolans kommun.\ncatalog:variable_text:21879:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfth"
+fields = { "sets" = ["kommun"] }
+evidence = "Fältet anger fritidshemmets kommun.\ncatalog:variable_text:21880:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfth"
+fields = { "tags" = ["geography"] }
+evidence = "Fältet anger fritidshemmets kommun.\ncatalog:variable_text:21880:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:21881:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:21881:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spr"
+fields = { "sets" = ["sprakval"] }
+evidence = "M2 är en opak källkod; språkvalsetiketten delas och målet behöver disambigueras.\ncatalog:variable_text:21884:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spr"
+fields = { "tags" = ["education"] }
+evidence = "M2 är en opak källkod; språkvalsetiketten delas och målet behöver disambigueras.\ncatalog:variable_text:21884:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:alternativ-till-sprakval"
+fields = { "sets" = ["sprakval"] }
+evidence = "M2 är en opak källkod; alternativet hör till språkval.\ncatalog:variable_text:21885:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:alternativ-till-sprakval"
+fields = { "tags" = ["education"] }
+evidence = "M2 är en opak källkod; alternativet hör till språkval.\ncatalog:variable_text:21885:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra"
+fields = { "sets" = ["sprakval"] }
+evidence = "M2 är en opak källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:21886:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra"
+fields = { "tags" = ["education"] }
+evidence = "M2 är en opak källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:21886:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra-alt"
+fields = { "sets" = ["sprakval"] }
+evidence = "M2 är en opak källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:21887:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:m2-spra-alt"
+fields = { "tags" = ["education"] }
+evidence = "M2 är en opak källkod; den delade etiketten kräver disambiguering.\ncatalog:variable_text:21887:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-elevens-val-sprak"
+fields = { "sets" = ["sprakval"] }
+evidence = "Modernt språk inom elevens val ingår i kandidatgruppen.\ncatalog:variable_text:21888:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-elevens-val-sprak"
+fields = { "tags" = ["education"] }
+evidence = "Modernt språk inom elevens val ingår i kandidatgruppen.\ncatalog:variable_text:21888:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-alternativ"
+fields = { "sets" = ["sprakval"] }
+evidence = "Alternativ inom språkval ingår i kandidatgruppen.\ncatalog:variable_text:21889:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-alternativ"
+fields = { "tags" = ["education"] }
+evidence = "Alternativ inom språkval ingår i kandidatgruppen.\ncatalog:variable_text:21889:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-sprak"
+fields = { "sets" = ["sprakval"] }
+evidence = "Språk inom språkval ingår i kandidatgruppen.\ncatalog:variable_text:21890:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-inom-ramen-for-sprakval-sprak"
+fields = { "tags" = ["education"] }
+evidence = "Språk inom språkval ingår i kandidatgruppen.\ncatalog:variable_text:21890:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-val"
+fields = { "sets" = ["sprakval"] }
+evidence = "Modernt språk inom elevens val ingår i kandidatgruppen.\ncatalog:variable_text:21891:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:moderna-sprak-val"
+fields = { "tags" = ["education"] }
+evidence = "Modernt språk inom elevens val ingår i kandidatgruppen.\ncatalog:variable_text:21891:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Moderns födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21892:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:moderns-fodelseland"
+fields = { "tags" = ["demographics"] }
+evidence = "Moderns födelseland ingår i födelselandsgruppen.\ncatalog:variable_text:21892:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "sets" = [] }
+evidence = "Kategorin beskriver nylig invandring.\ncatalog:variable_text:21893:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:nyligen-invandrad"
+fields = { "tags" = ["migration"] }
+evidence = "Kategorin beskriver nylig invandring.\ncatalog:variable_text:21893:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:overar"
+fields = { "sets" = ["aldersavvikelse-i-skolan"] }
+evidence = "Överårighet och underårighet är åldersavvikelser i skolan.\ncatalog:variable_text:21895:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:overar"
+fields = { "tags" = ["education"] }
+evidence = "Överårighet och underårighet är åldersavvikelser i skolan.\ncatalog:variable_text:21895:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-ensk"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Enskilt särskilt stöd ingår i kandidatgruppen.\ncatalog:variable_text:21900:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-ensk"
+fields = { "tags" = ["education"] }
+evidence = "Enskilt särskilt stöd ingår i kandidatgruppen.\ncatalog:variable_text:21900:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-undergrp"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Särskild undervisningsgrupp ingår i kandidatgruppen.\ncatalog:variable_text:21901:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sarsk-undergrp"
+fields = { "tags" = ["education"] }
+evidence = "Särskild undervisningsgrupp ingår i kandidatgruppen.\ncatalog:variable_text:21901:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "sets" = ["invandringstidpunkt"] }
+evidence = "Senaste invandringsår ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21902:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "tags" = [] }
+evidence = "Senaste invandringsår ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21902:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "sets" = ["invandringstidpunkt"] }
+evidence = "Senaste invandringsdatum ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21903:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Senaste invandringsdatum ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21903:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "sets" = [] }
+evidence = "Skolform klassificerar utbildningsverksamhet.\ncatalog:variable_text:21908:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolform"
+fields = { "tags" = ["education"] }
+evidence = "Skolform klassificerar utbildningsverksamhet.\ncatalog:variable_text:21908:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Skolkommun är en kommunangivelse.\ncatalog:variable_text:21912:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "tags" = ["geography"] }
+evidence = "Skolkommun är en kommunangivelse.\ncatalog:variable_text:21912:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "sets" = ["kommun"] }
+evidence = "S är en opak bokstavskod; den delade etiketten kräver disambiguering med källkolumnen.\ncatalog:variable_text:21913:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "tags" = ["geography"] }
+evidence = "S är en opak bokstavskod; den delade etiketten kräver disambiguering med källkolumnen.\ncatalog:variable_text:21913:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "var:startarskurs"
+fields = { "sets" = ["arskurs"] }
+evidence = "Startårskurs ingår i årskursgruppen.\ncatalog:variable_text:21915:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:startarskurs"
+fields = { "tags" = ["education"] }
+evidence = "Startårskurs ingår i årskursgruppen.\ncatalog:variable_text:21915:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Den operativa definitionen anger särskilt stöd.\ncatalog:variable_text:21916:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stodundervisning"
+fields = { "tags" = ["education"] }
+evidence = "Den operativa definitionen anger särskilt stöd.\ncatalog:variable_text:21916:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stud-handl-ml"
+fields = { "sets" = ["sarskilt-stod"] }
+evidence = "Studiehandledning på modersmål är en angiven stödform.\ncatalog:variable_text:21917:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:stud-handl-ml"
+fields = { "tags" = ["education"] }
+evidence = "Studiehandledning på modersmål är en angiven stödform.\ncatalog:variable_text:21917:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-1-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21918\ncatalog:valueset:7048\ncatalog:variable_text:21918:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-1-mor"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21918\ncatalog:valueset:7048\ncatalog:variable_text:21918:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21919\ncatalog:variable_text:21919:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21919\ncatalog:variable_text:21919:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21920\ncatalog:variable_text:21920:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen. Variabeln mäter moderns utbildningsnivå och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21920\ncatalog:variable_text:21920:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21921\ncatalog:valueset:3227\ncatalog:variable_text:21921:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21921\ncatalog:valueset:3227\ncatalog:variable_text:21921:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21922\ncatalog:valueset:9139\ncatalog:variable_text:21922:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-mor-grupperad-2"
+fields = { "tags" = ["education"] }
+evidence = "Suffixet 2 är en räknare som inte finns i källkolumnen. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21922\ncatalog:valueset:9139\ncatalog:variable_text:21922:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå enligt en äldre nivåindelning och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21923\ncatalog:valueset:7922\ncatalog:variable_text:21923:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-old-mor"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en förkortning som inte förekommer i etiketten. Variabeln mäter moderns utbildningsnivå enligt en äldre nivåindelning och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21923\ncatalog:valueset:7922\ncatalog:variable_text:21923:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-sv-mor"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "SUN och SV är förkortningar som inte förekommer i etiketten. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21924\ncatalog:valueset:4794\ncatalog:variable_text:21924:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:sun-niva-sv-mor"
+fields = { "tags" = ["education"] }
+evidence = "SUN och SV är förkortningar som inte förekommer i etiketten. Variabeln mäter grupperad utbildningsnivå för modern och hör till gruppen för föräldrars utbildningsnivå.\ncatalog:occurrence-locators:variable:21924\ncatalog:valueset:4794\ncatalog:variable_text:21924:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-1-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21925:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-1-far"
+fields = { "tags" = ["education"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21925:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21926:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21926:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21927:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21927:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21928:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21928:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21929:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21929:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns äldre nivåindelning ingår i kandidatgruppen.\ncatalog:variable_text:21930:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old-far"
+fields = { "tags" = ["education"] }
+evidence = "Faderns äldre nivåindelning ingår i kandidatgruppen.\ncatalog:variable_text:21930:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-sv-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21931:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-sv-far"
+fields = { "tags" = ["education"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21931:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21932:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far"
+fields = { "tags" = ["education"] }
+evidence = "Faderns utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21932:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21933:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-far-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Faderns grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21933:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21934:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21934:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "sets" = ["foraldrars-utbildningsniva"] }
+evidence = "Föräldrarnas grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21935:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-for-grupperad"
+fields = { "tags" = ["education"] }
+evidence = "Föräldrarnas grupperade utbildningsnivå ingår i kandidatgruppen.\ncatalog:variable_text:21935:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "sets" = ["invandringstidpunkt"] }
+evidence = "Tidigaste invandringsdatum ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21937:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:tidigaste-invandringsdatum"
+fields = { "tags" = [] }
+evidence = "Tidigaste invandringsdatum ingår i gruppen för invandringstidpunkt.\ncatalog:variable_text:21937:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:underar"
+fields = { "sets" = ["aldersavvikelse-i-skolan"] }
+evidence = "Underårighet och överårighet är åldersavvikelser i skolan.\ncatalog:variable_text:21938:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:underar"
+fields = { "tags" = ["education"] }
+evidence = "Underårighet och överårighet är åldersavvikelser i skolan.\ncatalog:variable_text:21938:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21939:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21939:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21940:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "tags" = ["demographics"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21940:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21941:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "tags" = ["demographics"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21941:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = ["svensk-utlandsk-bakgrund"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21942:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatgruppen.\ncatalog:variable_text:21942:20011:20012"
+
+[[statement]]
+kind = "set"
+subject = "var:alternativ-till-sprakval"
+fields = { "description" = "Alternativ till språkval" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "description" = "Anpassad studiegång" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-sva"
+fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning"
+fields = { "description" = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202210:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:201937:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:stud-handl-ml"
+fields = { "description" = "Studiehandlening på modersmål" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/grundskola-elever.toml:141\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

@@ -893,6 +893,7 @@ dependencies = [
  "rusqlite",
  "serde",
  "serde_json",
+ "sha2",
  "toml",
  "utoipa",
 ]
@@ -918,6 +919,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "reg-core-wasm"
+version = "0.0.0"
+dependencies = [
+ "reg-core",
+ "serde_json",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "reg-frame"
 version = "0.0.0"
 dependencies = [
@@ -929,7 +939,7 @@ dependencies = [
 
 [[package]]
 name = "reg-meta"
-version = "0.66.0"
+version = "0.71.0"
 dependencies = [
  "axum",
  "reg-catalog",

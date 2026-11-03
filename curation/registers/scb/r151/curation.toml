@@ -316,3 +316,621 @@ kind = "set"
 subject = "privata-stugor-lagenheter: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:affarsresenarer"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:affarsresenarer"
+fields = { "tags" = [] }
+evidence = "Aff är en avkortad ordstam men saknar en igenkännlig del av resenärer; gruppen samlar resenärskategorier. Turism saknar en passande tematagg.\ncatalog:register:156\ncatalog:variable_text:27783:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Måttet ingår i vistelsedygn.\ncatalog:variable_text:27785:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antdygn"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i vistelsedygn.\ncatalog:variable_text:27785:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atyp"
+fields = { "sets" = ["anlaggningstyp"] }
+evidence = "Kodningen hör till anläggningstyp.\ncatalog:valueset:1515\ncatalog:variable_text:27789:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atyp"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen hör till anläggningstyp.\ncatalog:valueset:1515\ncatalog:variable_text:27789:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:atypa"
+fields = { "sets" = ["anlaggningstyp"] }
+evidence = "Det ensamma A är en källkodsbokstav; kodningen hör till anläggningstyp.\ncatalog:valueset:11890\ncatalog:variable_text:27790:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:atypa"
+fields = { "tags" = ["business"] }
+evidence = "Det ensamma A är en källkodsbokstav; kodningen hör till anläggningstyp.\ncatalog:valueset:11890\ncatalog:variable_text:27790:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27791:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-totalt"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-totalt"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27792:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda bäddar.\ncatalog:variable_text:27793:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar"
+fields = { "sets" = ["belagda-baddar"] }
+evidence = "Måttet ingår i belagda bäddar.\ncatalog:variable_text:27794:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-baddar"
+fields = { "tags" = [] }
+evidence = "Måttet ingår i belagda bäddar.\ncatalog:variable_text:27794:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belpostort"
+fields = { "sets" = [] }
+evidence = "Postorten anger geografisk tillhörighet.\ncatalog:variable_text:27795:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belpostort"
+fields = { "tags" = ["geography"] }
+evidence = "Postorten anger geografisk tillhörighet.\ncatalog:variable_text:27795:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-alla-dagar"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-alla-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27797:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-fredag-sondag-inklusive-roda-dagar"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-fredag-sondag-inklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27798:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-mandag-torsdag-exklusive-roda-dagar"
+fields = { "sets" = ["belagda-rum"] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:belagda-rum-stugor-mandag-torsdag-exklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; måttet ingår i belagda rum.\ncatalog:variable_text:27799:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:campingnatter"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Cn är en bokstavskod; campingnätter ingår i vistelsedygn.\ncatalog:variable_text:27801:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-alla-dagar"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-alla-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27805:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-fredag-sondag-inklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27806:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-baddar-mandag-torsdag-exklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla bäddar ingår i bäddkapacitet.\ncatalog:variable_text:27807:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27808:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:drm"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27808:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-fredag-sondag-inklusive-roda-dagar"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-fredag-sondag-inklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27809:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-mandag-torsdag-exklusive-roda-dagar"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-rum-mandag-torsdag-exklusive-roda-dagar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; disponibla rum ingår i rumskapacitet.\ncatalog:variable_text:27810:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-stugor"
+fields = { "sets" = ["stugkapacitet"] }
+evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-stugor"
+fields = { "tags" = [] }
+evidence = "D är en källkodsbokstav; disponibla stugor ingår i stugkapacitet.\ncatalog:variable_text:27811:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-tomter"
+fields = { "sets" = ["tomtkapacitet"] }
+evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibla-tomter"
+fields = { "tags" = [] }
+evidence = "D är en källkodsbokstav; disponibla tomter ingår i tomtkapacitet.\ncatalog:variable_text:27812:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:fritid"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Måttet ingår i resenärskategorier; turismin­kvartering saknar en tydlig tematagg.\ncatalog:variable_text:27813:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "sets" = [] }
+evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gatuadress"
+fields = { "tags" = ["geography"] }
+evidence = "Adressen anger geografiskt läge.\ncatalog:variable_text:27814:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppresenarer"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Grp är en källmnemonik; måttet ingår i resenärskategorier.\ncatalog:variable_text:27815:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "sets" = [] }
+evidence = "Källan beskriver både imputering och rapportering, med olika innehåll över perioderna.\ncatalog:variable_text:27816:13514:16071\ncatalog:variable_text:27816:16071:16436\ncatalog:variable_text:27816:16801:17897\ncatalog:variable_text:27816:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "tags" = ["methods"] }
+evidence = "Källan beskriver både imputering och rapportering, med olika innehåll över perioderna.\ncatalog:variable_text:27816:13514:16071\ncatalog:variable_text:27816:16071:16436\ncatalog:variable_text:27816:16801:17897\ncatalog:variable_text:27816:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun anger anläggningens geografiska läge.\ncatalog:variable_text:27817:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun anger anläggningens geografiska läge.\ncatalog:variable_text:27817:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konf"
+fields = { "sets" = ["gaster-efter-resenarskategori"] }
+evidence = "Måttet ingår i resenärskategorier.\ncatalog:variable_text:27818:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Län anger geografiskt läge.\ncatalog:variable_text:27819:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län anger geografiskt läge.\ncatalog:variable_text:27819:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiint"
+fields = { "sets" = [] }
+evidence = "Logiintäkt är en företagsintäkt.\ncatalog:variable_text:27820:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiint"
+fields = { "tags" = ["business"] }
+evidence = "Logiintäkt är en företagsintäkt.\ncatalog:variable_text:27820:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:maxbaddar"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:maxbaddar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; maxbäddar ingår i bäddkapacitet.\ncatalog:variable_text:27821:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:maxrum"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:maxrum"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; maxrum ingår i rumskapacitet.\ncatalog:variable_text:27822:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:max-stugor"
+fields = { "sets" = ["stugkapacitet"] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:max-stugor"
+fields = { "tags" = [] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i stugkapacitet.\ncatalog:variable_text:27823:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:max-tomter"
+fields = { "sets" = ["tomtkapacitet"] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:max-tomter"
+fields = { "tags" = [] }
+evidence = "Mx är en källmnemonik för max; måttet ingår i tomtkapacitet.\ncatalog:variable_text:27824:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hemland"
+fields = { "sets" = [] }
+evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hemland"
+fields = { "tags" = ["geography"] }
+evidence = "Natid anger nationalitet medan källans hemland avser bosättningsland.\ncatalog:variable_text:27826:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyin"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27827:13879:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinsve"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27828:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinutl"
+fields = { "sets" = ["nyinskrivna-gaster"] }
+evidence = "Måttet ingår i nyinskrivna gäster.\ncatalog:variable_text:27829:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oppen"
+fields = { "sets" = [] }
+evidence = "Öppenstatus beskriver anläggningens verksamhet.\ncatalog:variable_text:27830:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oppen"
+fields = { "tags" = ["business"] }
+evidence = "Öppenstatus beskriver anläggningens verksamhet.\ncatalog:variable_text:27830:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "sets" = [] }
+evidence = "Postnummer anger geografisk postindelning.\ncatalog:variable_text:27832:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "tags" = ["geography"] }
+evidence = "Postnummer anger geografisk postindelning.\ncatalog:variable_text:27832:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rapptyp"
+fields = { "sets" = [] }
+evidence = "Rapporteringssätt är en insamlingsmetod.\ncatalog:variable_text:27833:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rapptyp"
+fields = { "tags" = ["methods"] }
+evidence = "Rapporteringssätt är en insamlingsmetod.\ncatalog:variable_text:27833:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sgbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27834:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgbd"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27834:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxbd"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27835:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxbd"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i bäddkapacitet.\ncatalog:variable_text:27835:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-tomter-stugor"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen omfattar både tomter och stugor.\ncatalog:variable_text:27836:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxrm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27837:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgmxrm"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27837:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrm"
+fields = { "sets" = ["rumskapacitet"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27838:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sgrm"
+fields = { "tags" = ["business"] }
+evidence = "Id är en källmnemonik; storleksgruppen ingår i rumskapacitet.\ncatalog:variable_text:27838:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:snittantdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:snittantdygn"
+fields = { "tags" = [] }
+evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak"
+fields = { "sets" = ["stangningsorsak"] }
+evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak"
+fields = { "tags" = ["business"] }
+evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak-datumupph"
+fields = { "sets" = ["stangningsorsak"] }
+evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:stangdorsak-datumupph"
+fields = { "tags" = ["business"] }
+evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsstatus"
+fields = { "sets" = [] }
+evidence = "Svarsstatus beskriver insamlingens kvalitet och bortfall.\ncatalog:valueset:4956\ncatalog:variable_text:27842:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsstatus"
+fields = { "tags" = ["methods"] }
+evidence = "Svarsstatus beskriver insamlingens kvalitet och bortfall.\ncatalog:valueset:4956\ncatalog:variable_text:27842:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantdygn"
+fields = { "sets" = ["vistelsedygn"] }
+evidence = "Totalen ingår i vistelsedygn.\ncatalog:variable_text:27843:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:totantdygn"
+fields = { "tags" = [] }
+evidence = "Totalen ingår i vistelsedygn.\ncatalog:variable_text:27843:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extrabaddar"
+fields = { "sets" = ["baddkapacitet"] }
+evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:extrabaddar"
+fields = { "tags" = [] }
+evidence = "Id är en källmnemonik; extrabäddar ingår i bäddkapacitet.\ncatalog:variable_text:27845:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendeform-camping"
+fields = { "tags" = ["business"] }
+evidence = "Classifies camping accommodation into caravan, motorhome, tent and cabin categories alongside rented-unit counts, supporting accommodation-service production (r179, r2).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11843"
+
+[[statement]]
+kind = "set"
+subject = "var:campingnatter"
+fields = { "tags" = ["business"] }
+evidence = "Explicitly counts rented camping plots or cabins, a measure of accommodation-service production (r2).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244855"
+
+[[statement]]
+kind = "set"
+subject = "var:fritid"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by leisure travellers, an accommodation-service output rather than participation in leisure activities (r53).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27723\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245407"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppresenarer"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by groups, an accommodation-service output rather than a count of group members (r54, r119).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27725\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245408\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245977"
+
+[[statement]]
+kind = "set"
+subject = "var:konf"
+fields = { "tags" = ["business"] }
+evidence = "Measures rooms booked by conference guests, an accommodation-service output (r55, r120).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27729\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245411\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245980"
+
+[[statement]]
+kind = "set"
+subject = "var:nyin"
+fields = { "tags" = ["business"] }
+evidence = "Counts accommodation guests only on their arrival day, supporting the business theme of service production (r3, r186).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27737\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:244867\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27828"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinsve"
+fields = { "tags" = ["business"] }
+evidence = "Counts Swedish arrivals at accommodation establishments, supporting the business theme of service production (r56, r143).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245418\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:246174"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinutl"
+fields = { "tags" = ["business"] }
+evidence = "Counts foreign arrivals at accommodation establishments, supporting the business theme of service production (r57, r144).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27739\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:245419\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:246175"
+
+[[statement]]
+kind = "set"
+subject = "var:hemland"
+fields = { "description" = "Kod för gästens stadigvarande bosättningsland enligt ISO-standard. Stadigvarande bosättning avser mer än tolv månader, oavsett medborgarskap." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger nationalitet men den operativa definitionen avser stadigvarande bosättningsland oavsett medborgarskap.\ncatalog:variable_text:27826:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:245417:opdef_text. One variable, one description."

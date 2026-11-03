@@ -42,3 +42,771 @@ kind = "set"
 subject = "valdeltagande: hussyk2"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "var:akumed"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver svarsdeltagande i undersökningen.\ncatalog:variable_text:11670:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:akumed"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln beskriver svarsdeltagande i undersökningen.\ncatalog:variable_text:11670:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-tabellframstallning"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Källnamnet är en opak bokstavskod.\ncatalog:variable_text:11671:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-tabellframstallning"
+fields = { "tags" = ["employment"] }
+evidence = "Källnamnet är en opak bokstavskod.\ncatalog:variable_text:11671:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = ["alder"] }
+evidence = "Ålder och åldersgrupp hör till samma kandidat.\ncatalog:variable_text:11672:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder och åldersgrupp hör till samma kandidat.\ncatalog:variable_text:11672:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldg"
+fields = { "sets" = ["alder"] }
+evidence = "Åldersgrupperingen hör till kandidaten.\ncatalog:variable_text:11673:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldg"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgrupperingen hör till kandidaten.\ncatalog:variable_text:11673:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldgkon1"
+fields = { "sets" = ["alder-och-kon"] }
+evidence = "Gemensam kodning av ålder och kön.\ncatalog:valueset:12847\ncatalog:variable_text:11674:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldgkon1"
+fields = { "tags" = ["demographics"] }
+evidence = "Gemensam kodning av ålder och kön.\ncatalog:valueset:12847\ncatalog:variable_text:11674:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldgkon2"
+fields = { "sets" = ["alder-och-kon"] }
+evidence = "Gemensam kodning av ålder och kön.\ncatalog:valueset:4037\ncatalog:variable_text:11675:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:aldgkon2"
+fields = { "tags" = ["demographics"] }
+evidence = "Gemensam kodning av ålder och kön.\ncatalog:valueset:4037\ncatalog:variable_text:11675:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad-till-arbetsmarknaden-enligt-aku-fr-o-m-2007"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Källan beskriver anknytning till arbetsmarknaden.\ncatalog:occurrence:102251\ncatalog:variable_text:11676:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:anknytningsgrad-till-arbetsmarknaden-enligt-aku-fr-o-m-2007"
+fields = { "tags" = ["employment"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Källan beskriver anknytning till arbetsmarknaden.\ncatalog:occurrence:102251\ncatalog:variable_text:11676:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Arbetskraftsstatus ingår i kandidaten.\ncatalog:variable_text:11677:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetskraftsstatus ingår i kandidaten.\ncatalog:variable_text:11677:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-aldre"
+fields = { "sets" = ["arbetskraftsstatus"] }
+evidence = "Arbetskraftsstatus ingår i kandidaten.\ncatalog:variable_text:11678:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-aldre"
+fields = { "tags" = ["employment"] }
+evidence = "Arbetskraftsstatus ingår i kandidaten.\ncatalog:variable_text:11678:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppering-av-lan-inklusive-gotland"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Befolk är inte en igenkännbar stam i källans länsgruppering.\ncatalog:variable_text:11679:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:gruppering-av-lan-inklusive-gotland"
+fields = { "tags" = ["geography"] }
+evidence = "Befolk är inte en igenkännbar stam i källans länsgruppering.\ncatalog:variable_text:11679:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "sets" = [] }
+evidence = "Civilstånd är en familjerelaterad uppgift.\ncatalog:variable_text:11680:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "tags" = ["family-household"] }
+evidence = "Civilstånd är en familjerelaterad uppgift.\ncatalog:variable_text:11680:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:11681:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter disponibel inkomst.\ncatalog:variable_text:11681:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:designvikt-for-aku-urval"
+fields = { "sets" = ["designvikt"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102240\ncatalog:variable_text:11682:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:designvikt-for-aku-urval"
+fields = { "tags" = ["methods"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102240\ncatalog:variable_text:11682:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:designvikt-for-rtb-urval"
+fields = { "sets" = ["designvikt"] }
+evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102241\ncatalog:variable_text:11683:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:designvikt-for-rtb-urval"
+fields = { "tags" = ["methods"] }
+evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Variabeln är en designvikt.\ncatalog:occurrence:102241\ncatalog:variable_text:11683:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fackansl"
+fields = { "sets" = ["facklig-tillhorighet"] }
+evidence = "Facklig anslutning ingår i kandidaten.\ncatalog:variable_text:11684:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fackansl"
+fields = { "tags" = ["employment"] }
+evidence = "Facklig anslutning ingår i kandidaten.\ncatalog:variable_text:11684:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:facklig-centralorganisation"
+fields = { "sets" = ["facklig-tillhorighet"] }
+evidence = "Facklig centralorganisation ingår i kandidaten.\ncatalog:variable_text:11685:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:facklig-centralorganisation"
+fields = { "tags" = ["employment"] }
+evidence = "Facklig centralorganisation ingår i kandidaten.\ncatalog:variable_text:11685:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Källan beskriver födelseland.\ncatalog:occurrence:102246\ncatalog:variable_text:11686:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "tags" = ["demographics"] }
+evidence = "Familjen RTB ska ha ett enhetligt namnbytesbeslut. Källan beskriver födelseland.\ncatalog:occurrence:102246\ncatalog:variable_text:11686:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Gruppering av födelseland ingår i kandidaten.\ncatalog:variable_text:11687:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Gruppering av födelseland ingår i kandidaten.\ncatalog:variable_text:11687:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandvdnamn"
+fields = { "sets" = ["fodelseland"] }
+evidence = "Benämning av grupperat födelseland ingår i kandidaten.\ncatalog:variable_text:11688:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandvdnamn"
+fields = { "tags" = ["demographics"] }
+evidence = "Benämning av grupperat födelseland ingår i kandidaten.\ncatalog:variable_text:11688:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:folkrost"
+fields = { "sets" = ["rostdeltagande"] }
+evidence = "Faktiskt röstdeltagande ingår i kandidaten.\ncatalog:variable_text:11689:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:folkrost"
+fields = { "tags" = ["democracy"] }
+evidence = "Faktiskt röstdeltagande ingår i kandidaten.\ncatalog:variable_text:11689:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-allmanna-val"
+fields = { "sets" = ["forstagangsvaljare"] }
+evidence = "Status som förstagångsväljare ingår i kandidaten.\ncatalog:variable_text:11690:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-allmanna-val"
+fields = { "tags" = ["democracy"] }
+evidence = "Status som förstagångsväljare ingår i kandidaten.\ncatalog:variable_text:11690:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-europaparlamentsval"
+fields = { "sets" = ["forstagangsvaljare"] }
+evidence = "Status som förstagångsväljare ingår i kandidaten.\ncatalog:variable_text:11691:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-europaparlamentsval"
+fields = { "tags" = ["democracy"] }
+evidence = "Status som förstagångsväljare ingår i kandidaten.\ncatalog:variable_text:11691:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Kvintilgrupp för sammanräknad förvärvsinkomst ingår i kandidaten.\ncatalog:variable_text:11692:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { "tags" = ["income"] }
+evidence = "Kvintilgrupp för sammanräknad förvärvsinkomst ingår i kandidaten.\ncatalog:variable_text:11692:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostande-i-folkomrostning-kalibrering"
+fields = { "sets" = ["rostdeltagande"] }
+evidence = "F är en enskild bokstav och röst anger inte självständigt folkomröstning.\ncatalog:variable_text:11693:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostande-i-folkomrostning-kalibrering"
+fields = { "tags" = ["democracy"] }
+evidence = "F är en enskild bokstav och röst anger inte självständigt folkomröstning.\ncatalog:variable_text:11693:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:gift-sambo-ensamstaende"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver familje- och hushållsställning.\ncatalog:valueset:2497\ncatalog:variable_text:11694:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:gift-sambo-ensamstaende"
+fields = { "tags" = ["family-household"] }
+evidence = "Variabeln beskriver familje- och hushållsställning.\ncatalog:valueset:2497\ncatalog:variable_text:11694:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:homogen-region"
+fields = { "sets" = [] }
+evidence = "H är en enskild bokstav för homogen.\ncatalog:variable_text:11695:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:homogen-region"
+fields = { "tags" = ["geography"] }
+evidence = "H är en enskild bokstav för homogen.\ncatalog:variable_text:11695:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "SSYK är en källmnemonik och hus är inte en tydlig stam för huvudsyssla i kombinationen.\ncatalog:variable_text:11696:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-pa-2-sifferniva-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "SSYK är en källmnemonik och hus är inte en tydlig stam för huvudsyssla i kombinationen.\ncatalog:variable_text:11696:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = [] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:11697:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:11697:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "Kommungruppens kod ingår i kandidaten.\ncatalog:occurrence:102257\ncatalog:variable_text:11698:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-kod"
+fields = { "tags" = ["geography"] }
+evidence = "Kommungruppens kod ingår i kandidaten.\ncatalog:occurrence:102257\ncatalog:variable_text:11698:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-namn"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "Kommungruppens namn ingår i kandidaten.\ncatalog:occurrence:102256\ncatalog:variable_text:11699:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp-namn"
+fields = { "tags" = ["geography"] }
+evidence = "Kommungruppens namn ingår i kandidaten.\ncatalog:occurrence:102256\ncatalog:variable_text:11699:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:11700:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:11700:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-for-svarande-i-aku"
+fields = { "sets" = ["kalibrerad-vikt"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en kalibrerad vikt.\ncatalog:occurrence:102260\ncatalog:variable_text:11701:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-for-svarande-i-aku"
+fields = { "tags" = ["methods"] }
+evidence = "Familjen AKU ska ha ett enhetligt namnbytesbeslut. Variabeln är en kalibrerad vikt.\ncatalog:occurrence:102260\ncatalog:variable_text:11701:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-folkomrostning"
+fields = { "sets" = ["kalibrerad-vikt"] }
+evidence = "Fo är en källmnemonik för folkomröstning, inte en igenkännbar ordstam.\ncatalog:variable_text:11702:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibrerad-vikt-folkomrostning"
+fields = { "tags" = ["methods"] }
+evidence = "Fo är en källmnemonik för folkomröstning, inte en igenkännbar ordstam.\ncatalog:variable_text:11702:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lanstillhorighet"] }
+evidence = "Länstillhörighet ingår i kandidaten.\ncatalog:variable_text:11703:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Länstillhörighet ingår i kandidaten.\ncatalog:variable_text:11703:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-i-urvalet-rtb"
+fields = { "sets" = [] }
+evidence = "Lillan är en ogenomskinlig källkod för antalet individer i urvalet per stratum.\ncatalog:occurrence:102263\ncatalog:variable_text:11704:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-i-urvalet-rtb"
+fields = { "tags" = ["methods"] }
+evidence = "Lillan är en ogenomskinlig källkod för antalet individer i urvalet per stratum.\ncatalog:occurrence:102263\ncatalog:variable_text:11704:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-aku"
+fields = { "sets" = [] }
+evidence = "Lillas är en ogenomskinlig källkod för antalet svarande i AKU per stratum.\ncatalog:occurrence:102264\ncatalog:variable_text:11705:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-aku"
+fields = { "tags" = ["methods"] }
+evidence = "Lillas är en ogenomskinlig källkod för antalet svarande i AKU per stratum.\ncatalog:occurrence:102264\ncatalog:variable_text:11705:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Gruppering av medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11706:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "tags" = ["demographics"] }
+evidence = "Gruppering av medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11706:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel-namn"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Benämning av grupperat medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11707:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel-namn"
+fields = { "tags" = ["demographics"] }
+evidence = "Benämning av grupperat medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11707:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11709:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapsland"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskapsland ingår i kandidaten.\ncatalog:variable_text:11709:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:natsv"
+fields = { "sets" = [] }
+evidence = "Naturaliseringsstatus är en demografisk uppgift.\ncatalog:variable_text:11710:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:natsv"
+fields = { "tags" = ["demographics"] }
+evidence = "Naturaliseringsstatus är en demografisk uppgift.\ncatalog:variable_text:11710:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidsrostat"
+fields = { "sets" = ["rostdeltagande"] }
+evidence = "Poströst anger en annan röstningsform än den dokumenterade förtidsröstningen.\ncatalog:variable_text:11712:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidsrostat"
+fields = { "tags" = ["democracy"] }
+evidence = "Poströst anger en annan röstningsform än den dokumenterade förtidsröstningen.\ncatalog:variable_text:11712:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "sets" = [] }
+evidence = "Kontaktresultat är en undersökningsmetodisk uppgift.\ncatalog:variable_text:11713:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:resultatkod"
+fields = { "tags" = ["methods"] }
+evidence = "Kontaktresultat är en undersökningsmetodisk uppgift.\ncatalog:variable_text:11713:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "sets" = [] }
+evidence = "Rösträtt hör till demokrati.\ncatalog:variable_text:11714:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:rostratt"
+fields = { "tags" = ["democracy"] }
+evidence = "Rösträtt hör till demokrati.\ncatalog:variable_text:11714:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvs-och-kapitalinkomst"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter inkomst.\ncatalog:variable_text:11715:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvs-och-kapitalinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Variabeln mäter inkomst.\ncatalog:variable_text:11715:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
+evidence = "Inkomstbeloppet ingår i kandidaten.\ncatalog:variable_text:11716:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstbeloppet ingår i kandidaten.\ncatalog:variable_text:11716:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Socioekonomisk grupp beskriver arbetsmarknadsställning.\ncatalog:valueset:4306\ncatalog:variable_text:11717:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sei-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Socioekonomisk grupp beskriver arbetsmarknadsställning.\ncatalog:valueset:4306\ncatalog:variable_text:11717:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "sets" = [] }
+evidence = "Sektor i huvudsysslan beskriver arbetsmarknadsställning.\ncatalog:valueset:12272\ncatalog:variable_text:11718:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor-i-huvudsysslan"
+fields = { "tags" = ["employment"] }
+evidence = "Sektor i huvudsysslan beskriver arbetsmarknadsställning.\ncatalog:valueset:12272\ncatalog:variable_text:11718:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-1"
+fields = { "sets" = ["populationstillhorighet"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11719:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-1"
+fields = { "tags" = ["democracy"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11719:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-2"
+fields = { "sets" = ["populationstillhorighet"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11720:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-2"
+fields = { "tags" = ["democracy"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11720:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-6"
+fields = { "sets" = ["populationstillhorighet"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11721:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-6"
+fields = { "tags" = ["democracy"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11721:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-7"
+fields = { "sets" = ["populationstillhorighet"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11722:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-7"
+fields = { "tags" = ["democracy"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11722:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-8-av"
+fields = { "sets" = ["populationstillhorighet"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11723:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:population-8-av"
+fields = { "tags" = ["democracy"] }
+evidence = "Sel är en opak källkod; siffran återfinns i etiketten.\ncatalog:variable_text:11723:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "sets" = [] }
+evidence = "Antal i stratum är undersökningsmetadata.\ncatalog:variable_text:11725:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n"
+fields = { "tags" = ["methods"] }
+evidence = "Antal i stratum är undersökningsmetadata.\ncatalog:variable_text:11725:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratifiering är en urvalsmetod.\ncatalog:variable_text:11726:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratifiering är en urvalsmetod.\ncatalog:variable_text:11726:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:studier"
+fields = { "sets" = ["studiedeltagande"] }
+evidence = "Studiedeltagande ingår i kandidaten.\ncatalog:variable_text:11727:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:studier"
+fields = { "tags" = ["education"] }
+evidence = "Studiedeltagande ingår i kandidaten.\ncatalog:variable_text:11727:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-hel-eller-deltid"
+fields = { "sets" = ["studiedeltagande"] }
+evidence = "Studiernas omfattning ingår i kandidaten.\ncatalog:variable_text:11728:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-hel-eller-deltid"
+fields = { "tags" = ["education"] }
+evidence = "Studiernas omfattning ingår i kandidaten.\ncatalog:variable_text:11728:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "sets" = [] }
+evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11729:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11729:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11730:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "SUN är en klassifikationskod som inte förekommer i etiketten.\ncatalog:variable_text:11730:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:svmedb"
+fields = { "sets" = ["medborgarskapsland"] }
+evidence = "Svensk eller utländsk medborgare ingår i kandidaten.\ncatalog:variable_text:11731:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:svmedb"
+fields = { "tags" = ["demographics"] }
+evidence = "Svensk eller utländsk medborgare ingår i kandidaten.\ncatalog:variable_text:11731:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "sets" = ["utbildningsniva"] }
+evidence = "Grov utbildningsnivå ingår i kandidaten.\ncatalog:variable_text:11734:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov"
+fields = { "tags" = ["education"] }
+evidence = "Grov utbildningsnivå ingår i kandidaten.\ncatalog:variable_text:11734:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Bakgrundskodningen beskriver befolkningssammansättning.\ncatalog:valueset:6731\ncatalog:variable_text:11735:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Bakgrundskodningen beskriver befolkningssammansättning.\ncatalog:valueset:6731\ncatalog:variable_text:11735:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-svarande-i-aku-over-ar"
+fields = { "sets" = [] }
+evidence = "Uvikt är en ogenomskinlig källkod för andelen AKU-svarande per urvalsår.\ncatalog:occurrence:102290\ncatalog:variable_text:11736:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-svarande-i-aku-over-ar"
+fields = { "tags" = ["methods"] }
+evidence = "Uvikt är en ogenomskinlig källkod för andelen AKU-svarande per urvalsår.\ncatalog:occurrence:102290\ncatalog:variable_text:11736:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-urvalet-over-ar"
+fields = { "sets" = [] }
+evidence = "Uvikt är en ogenomskinlig källkod för andelen i urvalet per urvalsår.\ncatalog:occurrence:102291\ncatalog:variable_text:11737:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:andel-i-urvalet-over-ar"
+fields = { "tags" = ["methods"] }
+evidence = "Uvikt är en ogenomskinlig källkod för andelen i urvalet per urvalsår.\ncatalog:occurrence:102291\ncatalog:variable_text:11737:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "sets" = [] }
+evidence = "Valdistrikt är en geografisk indelning för val.\ncatalog:variable_text:11738:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Valdistrikt är en geografisk indelning för val.\ncatalog:variable_text:11738:12053:12418"

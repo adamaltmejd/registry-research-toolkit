@@ -160,3 +160,387 @@ kind = "set"
 subject = "kortperiodisk-sysselsattningsstatistik-ks: snia @2001..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Antal anställda ingår i gruppen och arbetsmarknadstemat.\ncatalog:variable_text:34898:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "tags" = ["employment"] }
+evidence = "Antal anställda ingår i gruppen och arbetsmarknadstemat.\ncatalog:variable_text:34898:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-tillsvid-kv"
+fields = { "sets" = ["avgangna-anstallda"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34899:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-tillsvid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34899:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-tillsvid-man"
+fields = { "sets" = ["avgangna-anstallda"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34900:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-tillsvid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34900:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-visstid-kv"
+fields = { "sets" = ["avgangna-anstallda"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34901:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-visstid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34901:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-visstid-man"
+fields = { "sets" = ["avgangna-anstallda"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34902:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangna-visstid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter avgångna anställda.\ncatalog:variable_text:34902:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:fastovrk"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Id:t är läsbart som fast anställda enligt övrigt avtal, kvinnor. Variabeln ingår i antalet anställda och avser sysselsättning.\ncatalog:register:186\ncatalog:variable_text:34904:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:fastovrk"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är läsbart som fast anställda enligt övrigt avtal, kvinnor. Variabeln ingår i antalet anställda och avser sysselsättning.\ncatalog:register:186\ncatalog:variable_text:34904:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:fastovrm"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Id:t är läsbart som fast anställda enligt övrigt avtal, män. Variabeln ingår i antalet anställda och avser sysselsättning.\ncatalog:register:186\ncatalog:variable_text:34905:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:fastovrm"
+fields = { "tags" = ["employment"] }
+evidence = "Id:t är läsbart som fast anställda enligt övrigt avtal, män. Variabeln ingår i antalet anställda och avser sysselsättning.\ncatalog:register:186\ncatalog:variable_text:34905:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagare-kv"
+fields = { "sets" = ["antal-foretagare"] }
+evidence = "Variabeln mäter antal företagare vid arbetsstället.\ncatalog:variable_text:34906:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagare-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal företagare vid arbetsstället.\ncatalog:variable_text:34906:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagare-man"
+fields = { "sets" = ["antal-foretagare"] }
+evidence = "Variabeln mäter antal företagare vid arbetsstället.\ncatalog:variable_text:34907:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagare-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal företagare vid arbetsstället.\ncatalog:variable_text:34907:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "sets" = [] }
+evidence = "Klassificeringen av institutionell sektor beskriver företagsstruktur.\ncatalog:variable_text:34908:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { "tags" = ["business"] }
+evidence = "Klassificeringen av institutionell sektor beskriver företagsstruktur.\ncatalog:variable_text:34908:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["arbetsstallets-geografiska-lage"] }
+evidence = "Kommunen kodar arbetsställets geografiska läge.\ncatalog:variable_text:34909:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommunen kodar arbetsställets geografiska läge.\ncatalog:variable_text:34909:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "sets" = ["arbetsstallets-geografiska-lage"] }
+evidence = "Länet kodar arbetsställets geografiska läge.\ncatalog:variable_text:34910:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "Länet kodar arbetsställets geografiska läge.\ncatalog:variable_text:34910:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-kort-blankett"
+fields = { "sets" = ["utvalda-arbetsstallen"] }
+evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34911:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-kort-blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34911:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-lang-blankett"
+fields = { "sets" = ["utvalda-arbetsstallen"] }
+evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34912:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utvalda-arbetsstallen-i-ett-stratum-lang-blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Källmnemoniken är opak; variabeln mäter urvalets storlek.\ncatalog:variable_text:34912:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Näringsgren hör till företagsstruktur.\ncatalog:variable_text:34914:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Näringsgren hör till företagsstruktur.\ncatalog:variable_text:34914:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-kort-blankett"
+fields = { "sets" = [] }
+evidence = "Källmnemoniken är opak; antal svarande objekt är ett undersökningsmått.\ncatalog:variable_text:34915:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-kort-blankett"
+fields = { "tags" = ["methods"] }
+evidence = "Källmnemoniken är opak; antal svarande objekt är ett undersökningsmått.\ncatalog:variable_text:34915:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-tillsvid-kv"
+fields = { "sets" = ["nyanstallda"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34916:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-tillsvid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34916:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-tillsvid-man"
+fields = { "sets" = ["nyanstallda"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34917:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-tillsvid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34917:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-visstid-kv"
+fields = { "sets" = ["nyanstallda"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34918:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-visstid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34918:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-visstid-man"
+fields = { "sets" = ["nyanstallda"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34919:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanstallda-visstid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter nyanställda.\ncatalog:variable_text:34919:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-franvaro-kv"
+fields = { "sets" = ["ovrig-franvaro"] }
+evidence = "Variabeln mäter anställda med övrig frånvaro.\ncatalog:variable_text:34920:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-franvaro-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter anställda med övrig frånvaro.\ncatalog:variable_text:34920:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-franvaro-man"
+fields = { "sets" = ["ovrig-franvaro"] }
+evidence = "Variabeln mäter anställda med övrig frånvaro.\ncatalog:variable_text:34921:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-franvaro-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter anställda med övrig frånvaro.\ncatalog:variable_text:34921:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:semester-kv"
+fields = { "sets" = ["semesterfranvaro"] }
+evidence = "Variabeln mäter anställda med semesterfrånvaro.\ncatalog:variable_text:34923:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:semester-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter anställda med semesterfrånvaro.\ncatalog:variable_text:34923:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:semester-man"
+fields = { "sets" = ["semesterfranvaro"] }
+evidence = "Variabeln mäter anställda med semesterfrånvaro.\ncatalog:variable_text:34924:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:semester-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter anställda med semesterfrånvaro.\ncatalog:variable_text:34924:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-kv"
+fields = { "sets" = ["sjukfranvaro"] }
+evidence = "Variabeln mäter sjukfrånvaro bland anställda.\ncatalog:variable_text:34925:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-kv"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln mäter sjukfrånvaro bland anställda.\ncatalog:variable_text:34925:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-man"
+fields = { "sets" = ["sjukfranvaro"] }
+evidence = "Variabeln mäter sjukfrånvaro bland anställda.\ncatalog:variable_text:34926:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfranvaro-man"
+fields = { "tags" = ["employment", "health"] }
+evidence = "Variabeln mäter sjukfrånvaro bland anställda.\ncatalog:variable_text:34926:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-visstidsanstallda-kvinnor-enligt-ovrigt-avtal"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34927:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-visstidsanstallda-kvinnor-enligt-ovrigt-avtal"
+fields = { "tags" = ["employment"] }
+evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34927:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:antalet-visstidsanstallda-man-enligt-ovrigt-avtal"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34928:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:antalet-visstidsanstallda-man-enligt-ovrigt-avtal"
+fields = { "tags" = ["employment"] }
+evidence = "Källmnemoniken är inte en läsbar förkortning av etiketten.\ncatalog:variable_text:34928:11323:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsvid-kv"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal tillsvidareanställda.\ncatalog:variable_text:34929:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsvid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal tillsvidareanställda.\ncatalog:variable_text:34929:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsvid-man"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal tillsvidareanställda.\ncatalog:variable_text:34930:11323:13149\ncatalog:variable_text:34930:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:tillsvid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal tillsvidareanställda.\ncatalog:variable_text:34930:11323:13149\ncatalog:variable_text:34930:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:visstid-kv"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal visstidsanställda.\ncatalog:variable_text:34931:11323:13149\ncatalog:variable_text:34931:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:visstid-kv"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal visstidsanställda.\ncatalog:variable_text:34931:11323:13149\ncatalog:variable_text:34931:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:visstid-man"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Variabeln mäter antal visstidsanställda.\ncatalog:variable_text:34932:11323:13149\ncatalog:variable_text:34932:13149:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:visstid-man"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter antal visstidsanställda.\ncatalog:variable_text:34932:11323:13149\ncatalog:variable_text:34932:13149:19358"

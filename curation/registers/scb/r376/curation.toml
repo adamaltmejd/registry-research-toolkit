@@ -1,0 +1,270 @@
+
+[[statement]]
+kind = "set"
+subject = "var:anstform"
+fields = { "sets" = [] }
+evidence = "Anställningsform är ett arbetsmarknadsmått.\ncatalog:variable_text:7902:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:anstform"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsform är ett arbetsmarknadsmått.\ncatalog:variable_text:7902:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:anstvillkor"
+fields = { "sets" = [] }
+evidence = "Anställningsvillkor är ett arbetsmarknadsmått.\ncatalog:variable_text:7903:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anstvillkor"
+fields = { "tags" = ["employment"] }
+evidence = "Anställningsvillkor är ett arbetsmarknadsmått.\ncatalog:variable_text:7903:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar arbetsmarknadsstatus.\ncatalog:variable_text:7907:18628:21184\ncatalog:variable_text:7911:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln klassificerar arbetsmarknadsstatus.\ncatalog:variable_text:7907:18628:21184\ncatalog:variable_text:7911:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsomfattning"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter anställningens omfattning.\ncatalog:variable_text:7908:16071:18628\ncatalog:variable_text:7908:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsomfattning"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln mäter anställningens omfattning.\ncatalog:variable_text:7908:16071:18628\ncatalog:variable_text:7908:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:avslstatus"
+fields = { "sets" = [] }
+evidence = "Värdena beskriver arbets- och studiesituation vid avslut.\ncatalog:valueset:5499\ncatalog:variable_text:7910:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:avslstatus"
+fields = { "tags" = ["education", "employment"] }
+evidence = "Värdena beskriver arbets- och studiesituation vid avslut.\ncatalog:valueset:5499\ncatalog:variable_text:7910:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus6man"
+fields = { "sets" = [] }
+evidence = "Bas är en ogenomskinlig källkod; etiketten anger arbetsmarknadsstatus.\ncatalog:variable_text:7911:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus6man"
+fields = { "tags" = ["employment"] }
+evidence = "Bas är en ogenomskinlig källkod; etiketten anger arbetsmarknadsstatus.\ncatalog:variable_text:7911:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:landsbygdsomrade"
+fields = { "sets" = [] }
+evidence = "Degurba19 är en kod som inte återges i etiketten.\ncatalog:variable_text:7912:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:landsbygdsomrade"
+fields = { "tags" = ["geography"] }
+evidence = "Degurba19 är en kod som inte återges i etiketten.\ncatalog:variable_text:7912:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller funktionsvariation.\ncatalog:variable_text:7916:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "tags" = ["disability"] }
+evidence = "Variabeln gäller funktionsvariation.\ncatalog:variable_text:7916:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrfunk"
+fields = { "sets" = [] }
+evidence = "Projektets inriktning gäller funktionsvariation.\ncatalog:variable_text:7917:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrfunk"
+fields = { "tags" = ["disability"] }
+evidence = "Projektets inriktning gäller funktionsvariation.\ncatalog:variable_text:7917:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrgrund"
+fields = { "sets" = [] }
+evidence = "Projektets inriktning gäller grundskolan.\ncatalog:variable_text:7918:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrgrund"
+fields = { "tags" = ["education"] }
+evidence = "Projektets inriktning gäller grundskolan.\ncatalog:variable_text:7918:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrgymn"
+fields = { "sets" = [] }
+evidence = "Projektets inriktning gäller gymnasiet.\ncatalog:variable_text:7919:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:inrgymn"
+fields = { "tags" = ["education"] }
+evidence = "Projektets inriktning gäller gymnasiet.\ncatalog:variable_text:7919:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskontroll"
+fields = { "sets" = [] }
+evidence = "Klar är inte en igenkännbar stam i etiketten granskningskontroll.\ncatalog:variable_text:7921:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:granskningskontroll"
+fields = { "tags" = ["methods"] }
+evidence = "Klar är inte en igenkännbar stam i etiketten granskningskontroll.\ncatalog:variable_text:7921:16071:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kval"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller formell kvalifikation genom projektet.\ncatalog:occurrence:57119\ncatalog:variable_text:7922:16071:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:kval"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln gäller formell kvalifikation genom projektet.\ncatalog:occurrence:57119\ncatalog:variable_text:7922:16071:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:ltidalos"
+fields = { "sets" = [] }
+evidence = "Variabeln gäller långtidsarbetslöshet.\ncatalog:variable_text:7923:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:ltidalos"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln gäller långtidsarbetslöshet.\ncatalog:variable_text:7923:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanl"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar nyanlända deltagare.\ncatalog:variable_text:7924:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:nyanl"
+fields = { "tags" = ["migration"] }
+evidence = "Variabeln klassificerar nyanlända deltagare.\ncatalog:variable_text:7924:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:region-eu"
+fields = { "sets" = [] }
+evidence = "Variabeln anger projektets region.\ncatalog:valueset:4570\ncatalog:variable_text:7929:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:region-eu"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln anger projektets region.\ncatalog:valueset:4570\ncatalog:variable_text:7929:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:trelandmedb"
+fields = { "sets" = [] }
+evidence = "Etiketten anger medborgarskap.\ncatalog:occurrence:57149\ncatalog:variable_text:7936:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:trelandmedb"
+fields = { "tags" = ["demographics"] }
+evidence = "Etiketten anger medborgarskap.\ncatalog:occurrence:57149\ncatalog:variable_text:7936:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:utbngr"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar utbildningsnivå.\ncatalog:valueset:4310\ncatalog:variable_text:7937:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:utbngr"
+fields = { "tags" = ["education"] }
+evidence = "Variabeln klassificerar utbildningsnivå.\ncatalog:valueset:4310\ncatalog:variable_text:7937:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver bakgrund utifrån födelseland.\ncatalog:variable_text:7938:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln beskriver bakgrund utifrån födelseland.\ncatalog:variable_text:7938:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:avslorsak"
+fields = { "tags" = ["employment"] }
+evidence = "Exit reasons explicitly include employment, self-employment and seeking work (r13), as well as leaving for work in the earlier coding (r16), supporting employment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7897\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7144\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7910"
+
+[[statement]]
+kind = "set"
+subject = "var:fullfoljt"
+fields = { "tags" = ["employment"] }
+evidence = "Post-completion activity offers include employment, apprenticeships and internships alongside education (r11, r20), supporting employment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:12704\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7914"
+
+[[statement]]
+kind = "set"
+subject = "var:specmal"
+fields = { "tags" = ["employment"] }
+evidence = "The objectives include skills development for workers and unemployed people, and increased opportunities for work (r14), supporting employment.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7919\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4741\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:7932"
+
+[[statement]]
+kind = "set"
+subject = "var:funk"
+fields = { "description" = "Anger om deltagaren har en funktionsvariation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKorrigerar dubblerad punkt utan att ändra betydelsen.\ncatalog:variable_text:7916:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:anvfran"
+fields = { "tags" = ["employment"] }
+evidence = "This records referral into an ESF project, including referrals from the Public Employment Service (r10, r7, r8), supporting the register's employment theme (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:11777\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:3016\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7893\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:deltpo"
+fields = { "tags" = ["employment"] }
+evidence = "This records ESF programme participation (r11, r9). The register's employment context supports that broad theme for this administrative participation field (r14, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:6071\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7899\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:inrmin"
+fields = { "tags" = ["demographics"] }
+evidence = "The flag concerns projects targeting Sweden's official minorities (r13, r6), fitting population composition under demographics. Its sibling similarly carries its target group's theme, disability (r12).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10571\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7904\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7907"

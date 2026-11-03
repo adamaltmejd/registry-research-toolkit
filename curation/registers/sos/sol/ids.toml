@@ -38,8 +38,8 @@
 "hemtjanst-personlig-omvardnad-2" = ["SOL_2007_2012: POMV"]
 "hemtjanst-service" = ["SOL: HTJSERV"]
 "hemtjanst-service-2" = ["SOL_2007_2012: SERV"]
-"htjavan" = ["SOL: HTJAVAN"]
-"htjtim" = ["SOL: HTJTIM"]
+"hemtjanst-avlosning-anhorig-verkstallighet" = ["SOL: HTJAVAN"]
+"hemtjansttimmar" = ["SOL: HTJTIM"]
 "kommun" = ["SOL: LK"]
 "kommundel" = ["SOL: KDEL"]
 "kon" = ["SOL: KON"]
@@ -54,14 +54,51 @@
 "personnummerkvalitet" = ["SOL: PNRQ"]
 "pomvtrygg" = ["SOL: POMVTRYGG"]
 "pseudo" = ["SOL: PSEUDO"]
-"sarskilt-boende" = ["SOL_2007_2012: SBO"]
+"sarskilt-boende" = ["SOL_INCR: SBO @ 2012-07-01"]
 "sarskilt-boende-hemtjanst-dygnet-runt" = ["SOL_2007_2012: OMDR"]
 "servmatd" = ["SOL: SERVMATD"]
-"vboform" = ["SOL_INCR: VBOFORM"]
+"boendeform-vid-verkstallan" = ["SOL_INCR: VBOFORM"]
 "verkst" = ["SOL_INCR: VERKST"]
-"annat-bistandsbeslut" = ["SOL: ABIST"]
-"avlosning-av-anhorig" = ["SOL: AVAN"]
-"kontaktperson" = ["SOL: KONTP"]
-"matdistribution" = ["SOL: MATD"]
+
+
+
+
 "trygghetslarm" = ["SOL: TRYGG"]
-"verkstallighetsdatum-for-avslutat-bistand" = ["SOL_2007_2012: AVDAT"]
+
+
+"annat-bistand-boende" = ["SOL_2007_2012: ABIST @ 2007-10-01"]
+"annat-bistand-vard-och-omsorg" = ["SOL: ABIST @ 2012-07-01"]
+"avlosning-av-anhorig-separat-beslut" = ["SOL: AVAN @ 2012-07-01"]
+"datum-for-avslut-utan-verkstallan" = ["SOL_2007_2012: AVDAT @ 2008-12-31"]
+"hemtjanst-avlosning-av-anhorig" = ["SOL_2007_2012: AVAN @ 2007-10-01"]
+"hemtjanst-matdistribution" = ["SOL_2007_2012: MATD @ 2007-10-01"]
+"kontaktfamilj-eller-kontaktperson" = ["SOL_2007_2012: KONTP @ 2007-10-01"]
+"kontaktperson-kontp" = ["SOL: KONTP @ 2012-07-01"]
+"matdistribution-separat-beslut" = ["SOL: MATD @ 2012-07-01"]
+"startdatum-for-avslutat-bistand" = ["SOL_INCR: AVDAT @ 2012-07-01"]
+
+"annat-bistand-vard-och-omsorg-verkstallighet-avslut" = ["SOL_INCR: ABIST @ 2012-07-01"]
+
+"avlosning-av-anhorig-separat-beslut-verkstallighet-avslut" = ["SOL_INCR: AVAN @ 2012-07-01"]
+
+"boendestod-verkstallighet-avslut" = ["SOL_INCR: BOSTO @ 2012-07-01"]
+
+"dagverksamhet-verkstallighet-avslut" = ["SOL_INCR: DAGV @ 2012-07-01"]
+
+"hemtjanst-verkstallighet-avslut" = ["SOL_INCR: HTJ @ 2012-07-01"]
+
+"hemtjansttimmar-verkstallighet-avslut" = ["SOL_INCR: HTJTIM @ 2012-07-01"]
+
+"kontaktfamilj-verkstallighet-avslut" = ["SOL_INCR: KONTF @ 2012-07-01"]
+
+"kontaktperson-kontp-verkstallighet-avslut" = ["SOL_INCR: KONTP @ 2012-07-01"]
+
+"korttid-verkstallighet-avslut" = ["SOL_INCR: KORTTID @ 2012-07-01"]
+
+"ledsag-verkstallighet-avslut" = ["SOL_INCR: LEDSAG @ 2012-07-01"]
+
+"matdistribution-separat-beslut-verkstallighet-avslut" = ["SOL_INCR: MATD @ 2012-07-01"]
+
+"sarskilt-boende-bistandsbeslut" = ["SOL_2007_2012: SBO @ 2007-10-01"]
+
+"trygghetslarm-verkstallighet-avslut" = ["SOL_INCR: TRYGG @ 2012-07-01"]

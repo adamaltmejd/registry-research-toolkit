@@ -1,0 +1,9 @@
+[tables]
+main = "main"
+other = "other"
+
+[variables]
+measure = ["main: Measure", "other: Measure"]
+weighted = ["main: Weighted"]
+comparator = ["main: Comparator"]
+deduplicated = ["main: Deduplicated"]

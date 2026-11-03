@@ -1,0 +1,156 @@
+
+[[statement]]
+kind = "set"
+subject = "var:dagtyp"
+fields = { "sets" = [] }
+evidence = "Dagtypen beskriver uttag av föräldrapenning.\ncatalog:variable_text:175:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dagtyp"
+fields = { "tags" = ["transfers"] }
+evidence = "Dagtypen beskriver uttag av föräldrapenning.\ncatalog:variable_text:175:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet avser utbetald föräldrapenning; fall- och delfallsbelopp är mått på samma begrepp.\ncatalog:register:14\ncatalog:variable_text:178:8401:2932897\ncatalog:variable_text:183:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser utbetald föräldrapenning; fall- och delfallsbelopp är mått på samma begrepp.\ncatalog:register:14\ncatalog:variable_text:178:8401:2932897\ncatalog:variable_text:183:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-bruttodagar"
+fields = { "sets" = [] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-bruttodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-dagar-lo-so"
+fields = { "sets" = [] }
+evidence = "Helgdagarna är en komponent av dagarna under delfallet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-dagar-lo-so"
+fields = { "tags" = ["transfers"] }
+evidence = "Helgdagarna är en komponent av dagarna under delfallet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-dagar-tot"
+fields = { "sets" = [] }
+evidence = "Antalet omfattar skattad ledighet under delfallet, inklusive icke ersatt ledighet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet omfattar skattad ledighet under delfallet, inklusive icke ersatt ledighet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-nettodagar"
+fields = { "sets" = [] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delfall-nettodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp"
+fields = { "sets" = [] }
+evidence = "Beloppet avser utbetald föräldrapenning; fall- och delfallsbelopp är mått på samma begrepp.\ncatalog:register:14\ncatalog:variable_text:178:8401:2932897\ncatalog:variable_text:183:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser utbetald föräldrapenning; fall- och delfallsbelopp är mått på samma begrepp.\ncatalog:register:14\ncatalog:variable_text:178:8401:2932897\ncatalog:variable_text:183:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-bruttodagar"
+fields = { "sets" = [] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-bruttodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-tot"
+fields = { "sets" = [] }
+evidence = "Antalet omfattar skattad ledighet under fallet, inklusive icke ersatt ledighet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet omfattar skattad ledighet under fallet, inklusive icke ersatt ledighet.\ncatalog:register:14\ncatalog:variable_text:180:8401:2932897\ncatalog:variable_text:181:8401:2932897\ncatalog:variable_text:185:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-nettodagar"
+fields = { "sets" = [] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-nettodagar"
+fields = { "tags" = ["transfers"] }
+evidence = "Brutto- och nettodagar mäter ersatta föräldrapenningdagar på fall- och delfallsnivå.\ncatalog:register:14\ncatalog:variable_text:179:8401:2932897\ncatalog:variable_text:182:8401:2932897\ncatalog:variable_text:184:8401:2932897\ncatalog:variable_text:187:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foddat-barn"
+fields = { "sets" = [] }
+evidence = "Variabeln anger barnets födelsedatum.\ncatalog:variable_text:189:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:foddat-barn"
+fields = { "tags" = ["demographics"] }
+evidence = "Variabeln anger barnets födelsedatum.\ncatalog:variable_text:189:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "sets" = [] }
+evidence = "Nivån avser föräldrapenning.\ncatalog:variable_text:190:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:niva"
+fields = { "tags" = ["transfers"] }
+evidence = "Nivån avser föräldrapenning.\ncatalog:variable_text:190:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "sets" = [] }
+evidence = "Omfattningen avser föräldrapenning.\ncatalog:variable_text:191:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "tags" = ["transfers"] }
+evidence = "Omfattningen avser föräldrapenning.\ncatalog:variable_text:191:8401:2932897"

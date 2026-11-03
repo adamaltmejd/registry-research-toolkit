@@ -1,0 +1,600 @@
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = [] }
+evidence = "Åldersgrupp är ett demografiskt mått.\ncatalog:valueset:6911\ncatalog:variable_text:41943:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgrupp är ett demografiskt mått.\ncatalog:valueset:6911\ncatalog:variable_text:41943:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad"
+fields = { "sets" = [] }
+evidence = "Bostadens antal rum är ett boendemått.\ncatalog:valueset:2725\ncatalog:variable_text:41944:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:bostad"
+fields = { "tags" = ["housing"] }
+evidence = "Bostadens antal rum är ett boendemått.\ncatalog:valueset:2725\ncatalog:variable_text:41944:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lektionstimmar-med-larare"
+fields = { "sets" = [] }
+evidence = "F13 är en ogenomskinlig frågekod; etiketten anger lektionstimmar med lärare.\ncatalog:variable_text:41945:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:lektionstimmar-med-larare"
+fields = { "tags" = ["education"] }
+evidence = "F13 är en ogenomskinlig frågekod; etiketten anger lektionstimmar med lärare.\ncatalog:variable_text:41945:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-lara-sig-svenska"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_1 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41946:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-lara-sig-svenska"
+fields = { "tags" = ["education"] }
+evidence = "F14_1 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41946:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-komma-in-pa-annan-utbildning"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_2 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41947:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-komma-in-pa-annan-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "F14_2 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41947:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-lattare-kunna-fa-arbete"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_3 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41948:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-lattare-kunna-fa-arbete"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F14_3 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41948:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-traffa-vanner-social-kontakt"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_4 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41949:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-traffa-vanner-social-kontakt"
+fields = { "tags" = ["education"] }
+evidence = "F14_4 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41949:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-fa-ersattning-forsorjning"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_5 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41950:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-fa-ersattning-forsorjning"
+fields = { "tags" = ["education", "transfers"] }
+evidence = "F14_5 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41950:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-annan-orsak"
+fields = { "sets" = ["anledningar-till-sfi-deltagande"] }
+evidence = "F14_6 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41951:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-anledning-annan-orsak"
+fields = { "tags" = ["education"] }
+evidence = "F14_6 är en ogenomskinlig frågekod för ett motiv till sfi-deltagande.\ncatalog:variable_text:41951:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-i-sfi"
+fields = { "sets" = [] }
+evidence = "F15 är en ogenomskinlig frågekod för studietid i sfi.\ncatalog:variable_text:41952:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-i-sfi"
+fields = { "tags" = ["education"] }
+evidence = "F15 är en ogenomskinlig frågekod för studietid i sfi.\ncatalog:variable_text:41952:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:individuell-planering"
+fields = { "sets" = ["individuell-studieplanering-i-sfi"] }
+evidence = "F16 är en ogenomskinlig frågekod för individuell studieplanering.\ncatalog:variable_text:41953:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:individuell-planering"
+fields = { "tags" = ["education"] }
+evidence = "F16 är en ogenomskinlig frågekod för individuell studieplanering.\ncatalog:variable_text:41953:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsplan-i-planeringen"
+fields = { "sets" = ["individuell-studieplanering-i-sfi"] }
+evidence = "F17 är en ogenomskinlig frågekod för tidsplan i studieplaneringen.\ncatalog:variable_text:41954:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:tidsplan-i-planeringen"
+fields = { "tags" = ["education"] }
+evidence = "F17 är en ogenomskinlig frågekod för tidsplan i studieplaneringen.\ncatalog:variable_text:41954:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:latt-eller-svart-att-lasa-i-sfi"
+fields = { "sets" = [] }
+evidence = "F18 är en ogenomskinlig frågekod för upplevd svårighet i sfi.\ncatalog:variable_text:41955:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:latt-eller-svart-att-lasa-i-sfi"
+fields = { "tags" = ["education"] }
+evidence = "F18 är en ogenomskinlig frågekod för upplevd svårighet i sfi.\ncatalog:variable_text:41955:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-jag-kan-sjalv-paverka-planeringen-av-mina-studier"
+fields = { "sets" = ["individuell-studieplanering-i-sfi"] }
+evidence = "F19_1 är en ogenomskinlig frågekod för inflytande över studieplaneringen.\ncatalog:variable_text:41956:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-jag-kan-sjalv-paverka-planeringen-av-mina-studier"
+fields = { "tags" = ["education"] }
+evidence = "F19_1 är en ogenomskinlig frågekod för inflytande över studieplaneringen.\ncatalog:variable_text:41956:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-jag-kan-sjalv-lasa-i-en-takt-som-passar-mig"
+fields = { "sets" = [] }
+evidence = "F19_2 är en ogenomskinlig frågekod för bedömning av studietakt. Coordinator group membership: F19-2 mäter möjligheten att läsa i en takt som passar deltagaren och omfattas av definitionen. F29 och F30 mäter uppfattningar om incitaments påverkan på inlärningshastighet och omfattas inte. F13 och F15 är uttryckligen uteslutna undervisningstimmar respektive hittillsvarande studielängd. Övriga valda variabler mäter andra begrepp. Medlemmen behålls för registerövergripande sammanfogning enligt sektionsregeln.\ncatalog:variable_text:41945:14061:14245\ncatalog:variable_text:41952:14061:14245\ncatalog:variable_text:41957:14061:14245\ncatalog:variable_text:41973:14061:14245\ncatalog:variable_text:41974:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-jag-kan-sjalv-lasa-i-en-takt-som-passar-mig"
+fields = { "tags" = ["education"] }
+evidence = "F19_2 är en ogenomskinlig frågekod för bedömning av studietakt. Coordinator group membership: F19-2 mäter möjligheten att läsa i en takt som passar deltagaren och omfattas av definitionen. F29 och F30 mäter uppfattningar om incitaments påverkan på inlärningshastighet och omfattas inte. F13 och F15 är uttryckligen uteslutna undervisningstimmar respektive hittillsvarande studielängd. Övriga valda variabler mäter andra begrepp. Medlemmen behålls för registerövergripande sammanfogning enligt sektionsregeln.\ncatalog:variable_text:41945:14061:14245\ncatalog:variable_text:41952:14061:14245\ncatalog:variable_text:41957:14061:14245\ncatalog:variable_text:41973:14061:14245\ncatalog:variable_text:41974:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-studiemiljon-i-klassen-ar-bra"
+fields = { "sets" = ["studiemiljo-i-sfi-klassen"] }
+evidence = "F19_3 är en ogenomskinlig frågekod för bedömning av studiemiljön.\ncatalog:variable_text:41958:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-studiemiljon-i-klassen-ar-bra"
+fields = { "tags" = ["education"] }
+evidence = "F19_3 är en ogenomskinlig frågekod för bedömning av studiemiljön.\ncatalog:variable_text:41958:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-ordningen-i-klassen-ar-bra"
+fields = { "sets" = ["studiemiljo-i-sfi-klassen"] }
+evidence = "F19_4 är en ogenomskinlig frågekod för bedömning av ordningen i klassen.\ncatalog:variable_text:41959:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-ordningen-i-klassen-ar-bra"
+fields = { "tags" = ["education"] }
+evidence = "F19_4 är en ogenomskinlig frågekod för bedömning av ordningen i klassen.\ncatalog:variable_text:41959:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-studiematerial-ar-bra"
+fields = { "sets" = [] }
+evidence = "F19_5 är en ogenomskinlig frågekod för bedömning av studiematerial.\ncatalog:variable_text:41960:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-studiematerial-ar-bra"
+fields = { "tags" = ["education"] }
+evidence = "F19_5 är en ogenomskinlig frågekod för bedömning av studiematerial.\ncatalog:variable_text:41960:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-undervisningen-ar-bra"
+fields = { "sets" = [] }
+evidence = "F19_6 är en ogenomskinlig frågekod för bedömning av undervisningen.\ncatalog:variable_text:41961:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-undervisningen-ar-bra"
+fields = { "tags" = ["education"] }
+evidence = "F19_6 är en ogenomskinlig frågekod för bedömning av undervisningen.\ncatalog:variable_text:41961:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-sfi-gor-det-lattare-for-mig-att-fa-arbete"
+fields = { "sets" = ["upplevd-nytta-av-sfi-for-arbete-och-studier"] }
+evidence = "F19_7 är en ogenomskinlig frågekod för upplevd nytta av sfi för arbete.\ncatalog:variable_text:41962:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:om-sfi-sfi-gor-det-lattare-for-mig-att-fa-arbete"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F19_7 är en ogenomskinlig frågekod för upplevd nytta av sfi för arbete.\ncatalog:variable_text:41962:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:f19-8"
+fields = { "sets" = ["upplevd-nytta-av-sfi-for-arbete-och-studier"] }
+evidence = "F19_8 är en ogenomskinlig frågekod för upplevd nytta av sfi för fortsatta studier.\ncatalog:variable_text:41963:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:f19-8"
+fields = { "tags" = ["education"] }
+evidence = "F19_8 är en ogenomskinlig frågekod för upplevd nytta av sfi för fortsatta studier.\ncatalog:variable_text:41963:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-pa-lektionerna"
+fields = { "sets" = ["anvandning-av-svenska-i-undervisning-och-praktik"] }
+evidence = "F20 är en ogenomskinlig frågekod för användning av svenska på lektioner.\ncatalog:variable_text:41964:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-pa-lektionerna"
+fields = { "tags" = ["education"] }
+evidence = "F20 är en ogenomskinlig frågekod för användning av svenska på lektioner.\ncatalog:variable_text:41964:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:praktik"
+fields = { "sets" = [] }
+evidence = "F21 är en ogenomskinlig frågekod för praktik.\ncatalog:variable_text:41965:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:praktik"
+fields = { "tags" = ["education"] }
+evidence = "F21 är en ogenomskinlig frågekod för praktik.\ncatalog:variable_text:41965:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:valet-av-praktikplats"
+fields = { "sets" = [] }
+evidence = "F22 är en ogenomskinlig frågekod för inflytande över valet av praktikplats.\ncatalog:variable_text:41966:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:valet-av-praktikplats"
+fields = { "tags" = ["education"] }
+evidence = "F22 är en ogenomskinlig frågekod för inflytande över valet av praktikplats.\ncatalog:variable_text:41966:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-pa-praktiken"
+fields = { "sets" = ["anvandning-av-svenska-i-undervisning-och-praktik"] }
+evidence = "F23 är en ogenomskinlig frågekod för användning av svenska på praktiken.\ncatalog:variable_text:41967:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-pa-praktiken"
+fields = { "tags" = ["education"] }
+evidence = "F23 är en ogenomskinlig frågekod för användning av svenska på praktiken.\ncatalog:variable_text:41967:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-genom-praktik"
+fields = { "sets" = [] }
+evidence = "F24 är en ogenomskinlig frågekod för arbete genom praktik.\ncatalog:variable_text:41968:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-genom-praktik"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F24 är en ogenomskinlig frågekod för arbete genom praktik.\ncatalog:variable_text:41968:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-senaste-fyra-veckorna"
+fields = { "sets" = [] }
+evidence = "F25 är en ogenomskinlig frågekod för arbete under de senaste fyra veckorna.\ncatalog:variable_text:41969:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-senaste-fyra-veckorna"
+fields = { "tags" = ["employment"] }
+evidence = "F25 är en ogenomskinlig frågekod för arbete under de senaste fyra veckorna.\ncatalog:variable_text:41969:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-per-vecka"
+fields = { "sets" = [] }
+evidence = "F26 är en ogenomskinlig frågekod för arbetade timmar per vecka.\ncatalog:variable_text:41970:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetade-timmar-per-vecka"
+fields = { "tags" = ["employment"] }
+evidence = "F26 är en ogenomskinlig frågekod för arbetade timmar per vecka.\ncatalog:variable_text:41970:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-sfi"
+fields = { "sets" = [] }
+evidence = "F27 är en ogenomskinlig frågekod för planer efter sfi.\ncatalog:variable_text:41971:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:efter-sfi"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F27 är en ogenomskinlig frågekod för planer efter sfi.\ncatalog:variable_text:41971:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-bonus"
+fields = { "sets" = [] }
+evidence = "F29 är en ogenomskinlig frågekod för uppfattningen om en sfi-bonus.\ncatalog:variable_text:41973:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:sfi-bonus"
+fields = { "tags" = ["education"] }
+evidence = "F29 är en ogenomskinlig frågekod för uppfattningen om en sfi-bonus.\ncatalog:variable_text:41973:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-i-snabbare-takt"
+fields = { "sets" = [] }
+evidence = "F30 är en ogenomskinlig frågekod för uppfattningen om snabbare inlärning. Coordinator group membership: F19-2 mäter möjligheten att läsa i en takt som passar deltagaren och omfattas av definitionen. F29 och F30 mäter uppfattningar om incitaments påverkan på inlärningshastighet och omfattas inte. F13 och F15 är uttryckligen uteslutna undervisningstimmar respektive hittillsvarande studielängd. Övriga valda variabler mäter andra begrepp. Medlemmen behålls för registerövergripande sammanfogning enligt sektionsregeln.\ncatalog:variable_text:41945:14061:14245\ncatalog:variable_text:41952:14061:14245\ncatalog:variable_text:41957:14061:14245\ncatalog:variable_text:41973:14061:14245\ncatalog:variable_text:41974:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-i-snabbare-takt"
+fields = { "tags" = ["education"] }
+evidence = "F30 är en ogenomskinlig frågekod för uppfattningen om snabbare inlärning. Coordinator group membership: F19-2 mäter möjligheten att läsa i en takt som passar deltagaren och omfattas av definitionen. F29 och F30 mäter uppfattningar om incitaments påverkan på inlärningshastighet och omfattas inte. F13 och F15 är uttryckligen uteslutna undervisningstimmar respektive hittillsvarande studielängd. Övriga valda variabler mäter andra begrepp. Medlemmen behålls för registerövergripande sammanfogning enligt sektionsregeln.\ncatalog:variable_text:41945:14061:14245\ncatalog:variable_text:41952:14061:14245\ncatalog:variable_text:41957:14061:14245\ncatalog:variable_text:41973:14061:14245\ncatalog:variable_text:41974:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbakgrund"
+fields = { "sets" = [] }
+evidence = "F5 är en ogenomskinlig frågekod för utbildningsbakgrund.\ncatalog:variable_text:41975:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsbakgrund"
+fields = { "tags" = ["education"] }
+evidence = "F5 är en ogenomskinlig frågekod för utbildningsbakgrund.\ncatalog:variable_text:41975:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-boende-i-hemmet"
+fields = { "sets" = [] }
+evidence = "F7 är en ogenomskinlig frågekod för antal boende i hemmet.\ncatalog:variable_text:41976:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-boende-i-hemmet"
+fields = { "tags" = ["family-household"] }
+evidence = "F7 är en ogenomskinlig frågekod för antal boende i hemmet.\ncatalog:variable_text:41976:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-arbetsmarknad"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_1 är en ogenomskinlig frågekod för information om arbetsmarknaden.\ncatalog:variable_text:41977:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-arbetsmarknad"
+fields = { "tags" = ["employment", "integration"] }
+evidence = "F9_1 är en ogenomskinlig frågekod för information om arbetsmarknaden.\ncatalog:variable_text:41977:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-halso-och-sjukvard"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_2 är en ogenomskinlig frågekod för information om hälso- och sjukvård.\ncatalog:variable_text:41978:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-halso-och-sjukvard"
+fields = { "tags" = ["healthcare", "integration"] }
+evidence = "F9_2 är en ogenomskinlig frågekod för information om hälso- och sjukvård.\ncatalog:variable_text:41978:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-kultur-fritid"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_3 är en ogenomskinlig frågekod för information om kultur och fritid.\ncatalog:variable_text:41979:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-kultur-fritid"
+fields = { "tags" = ["culture", "integration"] }
+evidence = "F9_3 är en ogenomskinlig frågekod för information om kultur och fritid.\ncatalog:variable_text:41979:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-bostader"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_4 är en ogenomskinlig frågekod för information om bostäder.\ncatalog:variable_text:41980:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-bostader"
+fields = { "tags" = ["housing", "integration"] }
+evidence = "F9_4 är en ogenomskinlig frågekod för information om bostäder.\ncatalog:variable_text:41980:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-barnomsorg"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_5 är en ogenomskinlig frågekod för information om barnomsorg.\ncatalog:variable_text:41981:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-barnomsorg"
+fields = { "tags" = ["education", "integration"] }
+evidence = "F9_5 är en ogenomskinlig frågekod för information om barnomsorg.\ncatalog:variable_text:41981:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-barns-rattigheter"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_6 är en ogenomskinlig frågekod för information om barns rättigheter.\ncatalog:variable_text:41982:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-barns-rattigheter"
+fields = { "tags" = ["integration"] }
+evidence = "F9_6 är en ogenomskinlig frågekod för information om barns rättigheter.\ncatalog:variable_text:41982:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-jamstalldhet-mellan-kvinnor-och-man"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_7 är en ogenomskinlig frågekod för information om jämställdhet.\ncatalog:variable_text:41983:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-jamstalldhet-mellan-kvinnor-och-man"
+fields = { "tags" = ["integration"] }
+evidence = "F9_7 är en ogenomskinlig frågekod för information om jämställdhet.\ncatalog:variable_text:41983:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-studiemojligheter-efter-sfi"
+fields = { "sets" = ["samhallsinformation-inom-sfi"] }
+evidence = "F9_8 är en ogenomskinlig frågekod för information om fortsatta studiemöjligheter.\ncatalog:variable_text:41984:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:information-om-studiemojligheter-efter-sfi"
+fields = { "tags" = ["education", "integration"] }
+evidence = "F9_8 är en ogenomskinlig frågekod för information om fortsatta studiemöjligheter.\ncatalog:variable_text:41984:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod"
+fields = { "sets" = [] }
+evidence = "Variabeln avser mottagande av försörjningsstöd.\ncatalog:valueset:7326\ncatalog:variable_text:41985:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod"
+fields = { "tags" = ["transfers"] }
+evidence = "Variabeln avser mottagande av försörjningsstöd.\ncatalog:valueset:7326\ncatalog:variable_text:41985:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn"
+fields = { "sets" = [] }
+evidence = "Hemmavarande barn beskriver hushållets sammansättning.\ncatalog:valueset:9667\ncatalog:variable_text:41986:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:hemmavarande-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "Hemmavarande barn beskriver hushållets sammansättning.\ncatalog:valueset:9667\ncatalog:variable_text:41986:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "sets" = [] }
+evidence = "Variabeln avser mottagande av introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Variabeln avser mottagande av introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:valueset:6821\ncatalog:variable_text:41988:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är ett demografiskt mått.\ncatalog:valueset:6821\ncatalog:variable_text:41988:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-sfi"
+fields = { "sets" = [] }
+evidence = "Studieväg är ett utbildningsmått.\ncatalog:variable_text:41991:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-sfi"
+fields = { "tags" = ["education"] }
+evidence = "Studieväg är ett utbildningsmått.\ncatalog:variable_text:41991:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-invandring"
+fields = { "sets" = [] }
+evidence = "Typ av invandring beskriver invandringens grund.\ncatalog:valueset:871\ncatalog:variable_text:41992:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-invandring"
+fields = { "tags" = ["migration"] }
+evidence = "Typ av invandring beskriver invandringens grund.\ncatalog:valueset:871\ncatalog:variable_text:41992:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "sets" = [] }
+evidence = "Kalibreringsvikten är ett statistiskt metodmått.\ncatalog:variable_text:41993:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibreringsvikten är ett statistiskt metodmått.\ncatalog:variable_text:41993:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "tags" = ["demographics", "language-religion"] }
+evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:41825\ncatalog:variable_text:41825:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod"
+fields = { "description" = "Beskriver om personen har försörjningsstöd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver rätt till bistånd, medan frågan mäter om personen har försörjningsstöd.\ncatalog:valueset:7326\ncatalog:variable_text:41985:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "description" = "Beskriver om personen har introduktionsersättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger ett utbetalt belopp till hushållet, medan frågan mäter om personen har introduktionsersättning.\ncatalog:valueset:11859\ncatalog:variable_text:41987:14061:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:svenska-for-framtida-livet-i-sverige"
+fields = { "tags" = ["language-religion"] }
+evidence = "The item measures the perceived importance of Swedish for future life in Sweden (r9), using an importance scale (r3). This supports the language theme.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:2525\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:41842"

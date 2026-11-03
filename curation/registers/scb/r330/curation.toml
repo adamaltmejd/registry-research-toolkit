@@ -10,3 +10,243 @@ kind = "set"
 subject = "aktieagarstatistik: jurform"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "var:agandetyp"
+fields = { "sets" = [] }
+evidence = "Identitetsfakten och de ändrade värdesätten kräver granskning.\ncatalog:occurrence:2291\ncatalog:occurrence:2314\ncatalog:valueset:10176\ncatalog:valueset:244"
+
+[[statement]]
+kind = "set"
+subject = "var:agandetyp"
+fields = { "tags" = ["finance"] }
+evidence = "Identitetsfakten och de ändrade värdesätten kräver granskning.\ncatalog:occurrence:2291\ncatalog:occurrence:2314\ncatalog:valueset:10176\ncatalog:valueset:244"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "sets" = [] }
+evidence = "Åldersgrupp är ett demografiskt mått.\ncatalog:variable_text:1415:17167:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersgrupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Åldersgrupp är ett demografiskt mått.\ncatalog:variable_text:1415:17167:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aktier"
+fields = { "sets" = [] }
+evidence = "Antal aktier beskriver ett finansiellt innehav.\ncatalog:variable_text:1416:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-aktier"
+fields = { "tags" = ["finance"] }
+evidence = "Antal aktier beskriver ett finansiellt innehav.\ncatalog:variable_text:1416:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbokfvp"
+fields = { "sets" = [] }
+evidence = "Identitetsfakten kan inte avfärdas som en entydig perioduppdelning.\ncatalog:occurrence:2278\ncatalog:occurrence:2297\ncatalog:variable_text:1418:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antalbokfvp"
+fields = { "tags" = ["finance"] }
+evidence = "Identitetsfakten kan inte avfärdas som en entydig perioduppdelning.\ncatalog:occurrence:2278\ncatalog:occurrence:2297\ncatalog:variable_text:1418:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:emitterade-vardepapper"
+fields = { "sets" = [] }
+evidence = "Identitetsfakten kan inte avfärdas som en entydig perioduppdelning.\ncatalog:occurrence:2278\ncatalog:occurrence:2297\ncatalog:variable_text:1418:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:emitterade-vardepapper"
+fields = { "tags" = ["finance"] }
+evidence = "Identitetsfakten kan inte avfärdas som en entydig perioduppdelning.\ncatalog:occurrence:2278\ncatalog:occurrence:2297\ncatalog:variable_text:1418:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "sets" = [] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:1419:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:1419:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-bransch-naringsgren"
+fields = { "sets" = [] }
+evidence = "Företagets näringsgren hör till företagsstruktur.\ncatalog:variable_text:1420:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-bransch-naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Företagets näringsgren hör till företagsstruktur.\ncatalog:variable_text:1420:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "sets" = [] }
+evidence = "Juridisk form beskriver företagsstruktur; den senare operativa preciseringen behålls i källhistoriken.\ncatalog:variable_text:1422:17167:20089\ncatalog:variable_text:1422:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "tags" = ["business"] }
+evidence = "Juridisk form beskriver företagsstruktur; den senare operativa preciseringen behålls i källhistoriken.\ncatalog:variable_text:1422:17167:20089\ncatalog:variable_text:1422:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:1423:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:1423:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontotyp"
+fields = { "sets" = [] }
+evidence = "Kontotypen avser värdepapperskonton.\ncatalog:valueset:2783\ncatalog:variable_text:1424:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kontotyp"
+fields = { "tags" = ["finance"] }
+evidence = "Kontotypen avser värdepapperskonton.\ncatalog:valueset:2783\ncatalog:variable_text:1424:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "sets" = [] }
+evidence = "Landskoden beskriver geografisk tillhörighet; källhistoriken skiljer aktieägare från aktiebolag.\ncatalog:variable_text:1425:17167:18262\ncatalog:variable_text:1425:18262:20089\ncatalog:variable_text:1425:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "tags" = ["geography"] }
+evidence = "Landskoden beskriver geografisk tillhörighet; källhistoriken skiljer aktieägare från aktiebolag.\ncatalog:variable_text:1425:17167:18262\ncatalog:variable_text:1425:18262:20089\ncatalog:variable_text:1425:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-borslista"
+fields = { "sets" = [] }
+evidence = "Börslista beskriver en finansiell marknadsplats.\ncatalog:valueset:2342\ncatalog:variable_text:1426:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-borslista"
+fields = { "tags" = ["finance"] }
+evidence = "Börslista beskriver en finansiell marknadsplats.\ncatalog:valueset:2342\ncatalog:variable_text:1426:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadskod"
+fields = { "sets" = [] }
+evidence = "Värdesättet anger finansiella marknadsplatser.\ncatalog:valueset:10851\ncatalog:variable_text:1427:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadskod"
+fields = { "tags" = ["finance"] }
+evidence = "Värdesättet anger finansiella marknadsplatser.\ncatalog:valueset:10851\ncatalog:variable_text:1427:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadspris"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter marknadspris för ett värdepapper.\ncatalog:variable_text:1428:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:marknadspris"
+fields = { "tags" = ["finance", "prices"] }
+evidence = "Variabeln mäter marknadspris för ett värdepapper.\ncatalog:variable_text:1428:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:noterat"
+fields = { "sets" = [] }
+evidence = "Markeringen avser börsnotering.\ncatalog:variable_text:1430:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:noterat"
+fields = { "tags" = ["finance"] }
+evidence = "Markeringen avser börsnotering.\ncatalog:variable_text:1430:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:regtyp"
+fields = { "sets" = [] }
+evidence = "Identitetsfakten kräver granskning mot den andra variabelns ändrade värdesätt.\ncatalog:occurrence:2291\ncatalog:occurrence:2314\ncatalog:valueset:10176\ncatalog:valueset:244"
+
+[[statement]]
+kind = "set"
+subject = "var:regtyp"
+fields = { "tags" = ["finance"] }
+evidence = "Identitetsfakten kräver granskning mot den andra variabelns ändrade värdesätt.\ncatalog:occurrence:2291\ncatalog:occurrence:2314\ncatalog:valueset:10176\ncatalog:valueset:244"
+
+[[statement]]
+kind = "set"
+subject = "var:rostvarde"
+fields = { "sets" = [] }
+evidence = "Röstvärdet är en egenskap hos ett finansiellt instrument.\ncatalog:variable_text:1435:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rostvarde"
+fields = { "tags" = ["finance"] }
+evidence = "Röstvärdet är en egenskap hos ett finansiellt instrument.\ncatalog:variable_text:1435:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "sets" = [] }
+evidence = "Institutionell sektor beskriver enhetens ekonomiska struktur.\ncatalog:variable_text:1436:17167:20089\ncatalog:variable_text:1436:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "tags" = ["business"] }
+evidence = "Institutionell sektor beskriver enhetens ekonomiska struktur.\ncatalog:variable_text:1436:17167:20089\ncatalog:variable_text:1436:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperstyp"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver typ av finansiellt instrument.\ncatalog:variable_text:1437:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperstyp"
+fields = { "tags" = ["finance"] }
+evidence = "Variabeln beskriver typ av finansiellt instrument.\ncatalog:variable_text:1437:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperssort"
+fields = { "sets" = [] }
+evidence = "VP är en källkodsförkortning för värdepapper och id är därmed opakt.\ncatalog:variable_text:1438:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:vardepapperssort"
+fields = { "tags" = ["finance"] }
+evidence = "VP är en källkodsförkortning för värdepapper och id är därmed opakt.\ncatalog:variable_text:1438:17167:20454"

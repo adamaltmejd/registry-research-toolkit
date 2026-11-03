@@ -96,6 +96,7 @@ pub enum Address {
         guards: Vec<Guard>,
     },
     Variable(String),
+    Set(String),
     Table(String),
     Release {
         table: String,
@@ -156,12 +157,16 @@ impl FromStr for Address {
         if spelling.contains([':', '/']) {
             return Err(RELEASE_SELECTOR.to_owned());
         }
-        if table == "var" || table == "table" {
+        if matches!(table, "var" | "table" | "set") {
             if !reg_core::is_slug(spelling) || periods.is_some() || !guards.is_empty() {
-                return Err("var: and table: need a public slug without scope or guards".to_owned());
+                return Err(
+                    "var:, table: and set: need a public slug without scope or guards".to_owned(),
+                );
             }
             return Ok(if table == "var" {
                 Self::Variable(spelling.to_owned())
+            } else if table == "set" {
+                Self::Set(spelling.to_owned())
             } else {
                 Self::Table(spelling.to_owned())
             });
@@ -317,6 +322,7 @@ impl fmt::Display for Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Variable(id) => write!(f, "var:{id}"),
+            Self::Set(id) => write!(f, "set:{id}"),
             Self::Table(id) => write!(f, "table:{id}"),
             Self::Release { table, handle } => write!(f, "release:{table}/{handle}"),
             Self::Occurrence {

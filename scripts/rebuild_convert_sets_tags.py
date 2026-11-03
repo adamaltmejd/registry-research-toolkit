@@ -2,7 +2,7 @@
 """Convert legacy set/tag membership only; deleted at milestone F (REBUILD.md).
 
 Uses exact register public ids and variable ids from the current ledgers. Missing
-ids are located D-12 refusals, never inferred from labels or delivery hints. This
+ids are located next-id-sprint refusals, never inferred from labels or delivery hints. This
 static conversion does not certify occurrence placement or review lock premises.
 Run with --write-curation to apply; otherwise only the source-accounting report is
 written. Existing locks are preserved for the later scheduled lock/build review.
@@ -10,123 +10,11 @@ written. Existing locks are preserved for the later scheduled lock/build review.
 
 import argparse
 import collections
-import json
 import re
 import tomllib
 from pathlib import Path
 
 from rebuild_convert import ROOT, entries, literal
-
-
-def frame_deferrals(frames, ledgers):
-    """Recheck the five real-lock refusals against their reviewed source facts.
-
-    This one-shot conversion cannot invent release placement or split variable
-    identity. A changed premise needs a new reviewed address, not a stale exception.
-    """
-    rows = []
-    releases = {}
-    for path in sorted(frames.glob("*.jsonl")):
-        for line in path.open():
-            row = json.loads(line)
-            if (row.get("provider"), row.get("register")) not in {
-                ("scb", "r25"),
-                ("sos", "lova"),
-            }:
-                continue
-            if row["kind"] == "occurrence":
-                rows.append(row)
-            elif row["kind"] == "release":
-                releases[row["provider"], row["register"], row["release"]] = row
-    if not rows:
-        raise ValueError("--frames contains no current IOT/LOVA occurrence frames")
-    deferred = {}
-    notes = []
-    iot = ledgers["scb/iot"]
-    if any(
-        "period" in statement.get("fields", {})
-        for statement in tomllib.loads(iot[0].read_text()).get("statement", [])
-    ):
-        raise ValueError(
-            "IOT placement curation changed; review the VX membership addresses"
-        )
-    for variable in (
-        "disponibel-inkomst-2",
-        "disponibel-inkomst-4",
-        "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende",
-        "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende",
-    ):
-        anchors = iot[1][variable]
-        if len(anchors) != 1 or " @ " in anchors[0] or " # " in anchors[0]:
-            raise ValueError(
-                f"IOT anchor changed; review membership address: {variable}"
-            )
-        table, spelling = anchors[0].rsplit(": ", 1)
-        selected = [
-            row
-            for row in rows
-            if (row["provider"], row["register"], row["table"]) == ("scb", "r25", table)
-            and row["column"].lower() == spelling.lower()
-        ]
-        parents = {
-            row["release"]: releases.get(("scb", "r25", row["release"]))
-            for row in selected
-        }
-        if not selected or any(
-            parent is None or parent.get("from") or parent.get("to")
-            for parent in parents.values()
-        ):
-            raise ValueError(
-                f"IOT source placement changed; review membership address: {variable}"
-            )
-        windows = ", ".join(
-            f"{handle} ({releases['scb', 'r25', handle]['name']})"
-            for handle in sorted(parents)
-        )
-        deferred[f"scb/iot/{variable}"] = (
-            "D-7: unplaced VX releases; see current-frame deferrals"
-        )
-    notes.append(
-        f"The four IOT targets occur only on unplaced releases {windows}. "
-        "Their frame periods are absent; no final variable address exists until release "
-        "placement is curated. The converter does not infer a calendar period from a name."
-    )
-    selected = [
-        row
-        for row in rows
-        if (row["provider"], row["register"], row["table"], row["column"].lower())
-        == ("sos", "lova", "A_LOVA_PERSON", "invarn8")
-    ]
-    if (
-        len(selected) != 2
-        or {row["label"] for row in selected}
-        != {"Invandringsdatum 8 numerisk", "Invandringsdatum 9 numerisk"}
-        or {row["source_key"] for row in selected} != {"n:invarn8"}
-    ):
-        raise ValueError(
-            "LOVA INVARN8 source changed; review the numeric membership address"
-        )
-    lova_statements = tomllib.loads(ledgers["sos/lova"][0].read_text()).get(
-        "statement", []
-    )
-    if any(
-        "invarn8" in statement["subject"].lower()
-        and {"variable", "spelling"} & statement.get("fields", {}).keys()
-        for statement in lova_statements
-    ):
-        raise ValueError(
-            "LOVA INVARN8 identity curation changed; review membership address"
-        )
-    deferred["sos/lova/invandringsdatum-8-numerisk"] = (
-        "LOVA: shared INVARN8 variable remains ambiguous after exact-label selection; final identity review required"
-    )
-    notes.append(
-        "LOVA's current frame has eighth/ninth numeric fields at Metadata - Variabelnivå!60/61 "
-        "with shared spelling INVARN8 and key n:invarn8. A label guard identifies the eighth "
-        "occurrence, but variable-wide membership expansion selects both again and remains "
-        "ambiguous. Membership is deferred until separate final identities are curated."
-    )
-    return deferred, notes
 
 
 def source_rows():
@@ -266,7 +154,7 @@ def merge_memberships(path, additions, removals):
     return (prefix + "".join(kept)).rstrip() + "\n"
 
 
-def convert(*, frames, write_curation=False):
+def convert(*, write_curation=False):
     ledgers = {}
     for path in sorted((ROOT / "curation/registers").glob("*/*/ids.toml")):
         data = tomllib.loads(path.read_text())
@@ -275,7 +163,6 @@ def convert(*, frames, write_curation=False):
         if public in ledgers:
             raise ValueError(f"duplicate register public id: {public}")
         ledgers[public] = path.parent / "curation.toml", data.get("variables", {})
-    deferred_addresses, address_notes = frame_deferrals(frames, ledgers)
     additions = collections.defaultdict(dict)
     removals = collections.defaultdict(lambda: collections.defaultdict(set))
     outcomes = []
@@ -288,11 +175,7 @@ def convert(*, frames, write_curation=False):
     for _, field, target, member, _ in rows:
         if field == "sets":
             public, _, variable = target.rpartition("/")
-            if (
-                public in ledgers
-                and variable in ledgers[public][1]
-                and target not in deferred_addresses
-            ):
+            if public in ledgers and variable in ledgers[public][1]:
                 valid_members[public, member].add(variable)
     # Existing curated memberships also count when the legacy group uses the same slug.
     for public, (path, variables) in ledgers.items():
@@ -305,7 +188,6 @@ def convert(*, frames, write_curation=False):
                 statement["kind"] != "set"
                 or not subject.startswith("var:")
                 or variable not in variables
-                or f"{public}/{variable}" in deferred_addresses
             ):
                 continue
             for name in statement.get("fields", {}).get("sets", []):
@@ -336,7 +218,7 @@ def convert(*, frames, write_curation=False):
                     field,
                     target,
                     member,
-                    f"fewer than two valid local ledger members after refusals ({len(valid_members[target, member])}); review after D-12",
+                    f"fewer than two valid local ledger members after refusals ({len(valid_members[target, member])}); review in the next id sprint",
                 )
             )
         if field.endswith("declaration"):
@@ -362,18 +244,12 @@ def convert(*, frames, write_curation=False):
                     field,
                     target,
                     member,
-                    "D-12: no exact local variable ledger id; no id or delivery-column mapping inferred",
+                    "no exact local variable ledger id; next id sprint; no id or delivery-column mapping inferred",
                 )
             )
             continue
         path, _ = ledgers[public]
         key = f"var:{variable}", field
-        if target in deferred_addresses:
-            removals[path][key].add(member)
-            outcomes.append(
-                ("deferred", source, field, target, member, deferred_addresses[target])
-            )
-            continue
         if field == "sets" and len(valid_members[public, member]) < 2:
             removals[path][key].add(member)
             outcomes.append(
@@ -383,7 +259,7 @@ def convert(*, frames, write_curation=False):
                     field,
                     target,
                     member,
-                    "set has fewer than two valid local ledger members after refusals; review after D-12",
+                    "set has fewer than two valid local ledger members after refusals; review in the next id sprint",
                 )
             )
             continue
@@ -411,10 +287,12 @@ def convert(*, frames, write_curation=False):
     lines = [
         "# D-9 set/tag membership conversion",
         "",
-        "Generated by `uv run --no-project scripts/rebuild_convert_sets_tags.py --frames FRAMES --write-curation`.",
+        "Temporary conversion evidence; deleted with this converter at milestone F.",
+        "",
+        "Generated by `uv run --no-project scripts/rebuild_convert_sets_tags.py --write-curation`.",
         "",
         f"Source inventory: {counts['set declaration']} explicit sets, {counts['sets']} set memberships; {counts['tag declaration']} tags, {counts['tags']} variable memberships and {counts['register tags']} register memberships.",
-        "Exact current local ledger ids are the conversion authority. Missing ids are refused for D-12; delivery-column hints never supply identity. The five real-lock address refusals are rechecked against current source frames and deferred with named reasons below. Existing membership setters are consolidated per variable and field. Unrelated authored statements and all locks are preserved.",
+        "Exact current local ledger ids are the conversion authority. Missing ids are refused for the next id sprint; delivery-column hints never supply identity. Existing membership setters are consolidated per variable and field. Unrelated authored statements and all locks are preserved.",
         "",
         "This is static source accounting. Lock, curated build and verify were not run; placement and final resolver selection remain unverified. Tag search is not implemented. Presentation fields are dropped with reasons below; register memberships remain deferred.",
         "",
@@ -434,10 +312,6 @@ def convert(*, frames, write_curation=False):
         )
     lines += [
         "",
-        "## Current-frame deferrals",
-        "",
-        *[f"- {note}" for note in address_notes],
-        "",
         "## Source-located outcomes",
         "",
         "Each membership has one converted/refused/deferred row; presentation payloads have separate dropped rows.",
@@ -454,7 +328,6 @@ def convert(*, frames, write_curation=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--frames", type=Path, required=True)
     parser.add_argument("--write-curation", action="store_true")
     parser.add_argument(
         "--report",
@@ -462,7 +335,7 @@ def main():
         default=ROOT / "scripts/rebuild_convert_sets_tags_report.md",
     )
     args = parser.parse_args()
-    report, edits = convert(frames=args.frames, write_curation=args.write_curation)
+    report, edits = convert(write_curation=args.write_curation)
     args.report.write_text(report)
     print(
         f"Accounted for set/tag sources; {len(edits)} register files {'written' if args.write_curation else 'proposed'}. Report: {args.report}"

@@ -331,7 +331,7 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         }
         None => (0, None),
     };
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let scope = scope(
         &conn,
         params["ref"],
@@ -430,7 +430,7 @@ fn changes(conn: &Connection, from: &Line, to: &Line) -> Result<Vec<DiffChange>,
 fn diff(server: &Server, params: &Params) -> Result<Value, Error> {
     let from = super::days(params, "from")?.expect("a required parameter");
     let to = super::days(params, "to")?.expect("a required parameter");
-    let conn = server.catalog.connect()?;
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
     let scope = scope(
         &conn,
         params["ref"],

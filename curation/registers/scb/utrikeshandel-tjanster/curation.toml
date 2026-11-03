@@ -1,0 +1,72 @@
+
+[[statement]]
+kind = "set"
+subject = "var:intakt-export"
+fields = { "sets" = [] }
+evidence = "Exportvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:intakt-export"
+fields = { "tags" = ["trade"] }
+evidence = "Exportvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnad-import"
+fields = { "sets" = [] }
+evidence = "Importvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnad-import"
+fields = { "tags" = ["trade"] }
+evidence = "Importvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landkod"
+fields = { "sets" = [] }
+evidence = "Motpartslandet är en geografisk kod.\ncatalog:variable_text:54870:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:landkod"
+fields = { "tags" = ["geography"] }
+evidence = "Motpartslandet är en geografisk kod.\ncatalog:variable_text:54870:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:riktning"
+fields = { "sets" = [] }
+evidence = "Riktningskoden skiljer export från import och hör till handel.\ncatalog:valueset:1689\ncatalog:variable_text:54873:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:riktning"
+fields = { "tags" = ["trade"] }
+evidence = "Riktningskoden skiljer export från import och hör till handel.\ncatalog:valueset:1689\ncatalog:variable_text:54873:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tjansteslag"
+fields = { "sets" = [] }
+evidence = "Scbkod är en källmnemonik som inte beskriver tjänsteslaget; källans etikett ger ett tydligt namn. Tjänsteslag klassificerar tjänstehandeln.\ncatalog:register:272\ncatalog:variable_text:54874:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:tjansteslag"
+fields = { "tags" = ["trade"] }
+evidence = "Scbkod är en källmnemonik som inte beskriver tjänsteslaget; källans etikett ger ett tydligt namn. Tjänsteslag klassificerar tjänstehandeln.\ncatalog:register:272\ncatalog:variable_text:54874:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varde"
+fields = { "sets" = [] }
+evidence = "Handelsvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:varde"
+fields = { "tags" = ["trade"] }
+evidence = "Handelsvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"

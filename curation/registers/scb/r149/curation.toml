@@ -88,3 +88,130 @@ kind = "set"
 subject = "forsaljning-av-mineralgodsel-for-jord-och-tradgardsbruk: lan @2016-07-01..2017-06-30"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:kadmiumandel-av-fosforinnehallet"
+fields = { "sets" = [] }
+evidence = "Cd är en kemisk bokstavskod och etiketten anger måttet.\ncatalog:variable_text:12800:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:kadmiumandel-av-fosforinnehallet"
+fields = { "tags" = ["agriculture"] }
+evidence = "Cd är en kemisk bokstavskod och etiketten anger måttet.\ncatalog:variable_text:12800:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ekol"
+fields = { "sets" = [] }
+evidence = "Indikatorn gäller ekologiskt gödselmedel.\ncatalog:valueset:8323\ncatalog:variable_text:12801:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:ekol"
+fields = { "tags" = ["agriculture"] }
+evidence = "Indikatorn gäller ekologiskt gödselmedel.\ncatalog:valueset:8323\ncatalog:variable_text:12801:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:kaliumandel"
+fields = { "sets" = [] }
+evidence = "K är en kemisk bokstavskod; etiketten anger kaliumandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:kaliumandel"
+fields = { "tags" = ["agriculture"] }
+evidence = "K är en kemisk bokstavskod; etiketten anger kaliumandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:yarakop"
+fields = { "sets" = [] }
+evidence = "Kod anger inte vilken uppgift som kodas; etiketten anger Yaraköp.\ncatalog:valueset:12138\ncatalog:variable_text:12803:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:yarakop"
+fields = { "tags" = ["agriculture", "trade"] }
+evidence = "Kod anger inte vilken uppgift som kodas; etiketten anger Yaraköp.\ncatalog:valueset:12138\ncatalog:variable_text:12803:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "var:kvant"
+fields = { "sets" = [] }
+evidence = "Kvantiteten avser mineralgödsel i registerkontexten.\ncatalog:register:111\ncatalog:variable_text:12804:12965:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:kvant"
+fields = { "tags" = ["agriculture"] }
+evidence = "Kvantiteten avser mineralgödsel i registerkontexten.\ncatalog:register:111\ncatalog:variable_text:12804:12965:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = [] }
+evidence = "Variabeln kodar geografisk länstillhörighet.\ncatalog:variable_text:12805:12965:16617\ncatalog:variable_text:12805:16617:16983\ncatalog:variable_text:12805:16983:17713\ncatalog:variable_text:12805:17713:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln kodar geografisk länstillhörighet.\ncatalog:variable_text:12805:12965:16617\ncatalog:variable_text:12805:16617:16983\ncatalog:variable_text:12805:16983:17713\ncatalog:variable_text:12805:17713:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveandel"
+fields = { "sets" = [] }
+evidence = "N är en kemisk bokstavskod; etiketten anger kväveandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:kvaveandel"
+fields = { "tags" = ["agriculture"] }
+evidence = "N är en kemisk bokstavskod; etiketten anger kväveandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:fosforandel"
+fields = { "sets" = [] }
+evidence = "P är en kemisk bokstavskod; etiketten anger fosforandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:fosforandel"
+fields = { "tags" = ["agriculture"] }
+evidence = "P är en kemisk bokstavskod; etiketten anger fosforandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt"
+fields = { "sets" = [] }
+evidence = "Produkten avser mineralgödsel.\ncatalog:variable_text:12810:13330:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:produkt"
+fields = { "tags" = ["agriculture"] }
+evidence = "Produkten avser mineralgödsel.\ncatalog:variable_text:12810:13330:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:svavelandel"
+fields = { "sets" = [] }
+evidence = "S är en kemisk bokstavskod; etiketten anger svavelandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:svavelandel"
+fields = { "tags" = ["agriculture"] }
+evidence = "S är en kemisk bokstavskod; etiketten anger svavelandelen.\ncatalog:variable_text:12802:12965:19905\ncatalog:variable_text:12808:12965:16983\ncatalog:variable_text:12809:12965:19905\ncatalog:variable_text:12811:12965:19905"
+
+
+[[statement]]
+kind = "set"
+subject = "var:kadmiumandel-av-fosforinnehallet"
+fields = { "description" = "Kadmiumandel i försåld fosfor, gram per ton fosfor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger komponenten men måttet är en andel med enheten gram per ton fosfor.\ncatalog:variable_text:12800:12965:19905"

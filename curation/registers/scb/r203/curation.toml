@@ -4,3 +4,159 @@ kind = "set"
 subject = "energianvandning-inom-byggsektorn: ngs1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "var:branslebenamning"
+fields = { "sets" = [] }
+evidence = "Bränslekoden anger energislag.\ncatalog:valueset:9043\ncatalog:variable_text:7640:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:branslebenamning"
+fields = { "tags" = ["energy"] }
+evidence = "Bränslekoden anger energislag.\ncatalog:valueset:9043\ncatalog:variable_text:7640:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:energi"
+fields = { "sets" = [] }
+evidence = "Energianvändning är ett energimått.\ncatalog:occurrence:56144\ncatalog:variable_text:7641:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:energi"
+fields = { "tags" = ["energy"] }
+evidence = "Energianvändning är ett energimått.\ncatalog:occurrence:56144\ncatalog:variable_text:7641:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-tank"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter energianvändning inköpt via tankstation.\ncatalog:occurrence:56148\ncatalog:variable_text:7644:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inkop-tank"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter energianvändning inköpt via tankstation.\ncatalog:occurrence:56148\ncatalog:variable_text:7644:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-kvantitet"
+fields = { "sets" = [] }
+evidence = "Kostnaden avser inköpta bränslen.\ncatalog:variable_text:7645:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-kvantitet"
+fields = { "tags" = ["energy"] }
+evidence = "Kostnaden avser inköpta bränslen.\ncatalog:variable_text:7645:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver urvalets storlek.\ncatalog:occurrence:56151\ncatalog:variable_text:7648:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver urvalets storlek.\ncatalog:occurrence:56151\ncatalog:variable_text:7648:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:med-bio"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter energianvändning med bioinblandning.\ncatalog:occurrence:56152\ncatalog:variable_text:7649:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:med-bio"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter energianvändning med bioinblandning.\ncatalog:occurrence:56152\ncatalog:variable_text:7649:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = [] }
+evidence = "Variabeln klassificerar näringsgren.\ncatalog:variable_text:7650:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "tags" = ["business"] }
+evidence = "Variabeln klassificerar näringsgren.\ncatalog:variable_text:7650:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver urvalsramen.\ncatalog:occurrence:56157\ncatalog:variable_text:7652:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "tags" = ["methods"] }
+evidence = "Antalet beskriver urvalsramen.\ncatalog:occurrence:56157\ncatalog:variable_text:7652:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Stratum används för stratifierat urval.\ncatalog:variable_text:7653:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum används för stratifierat urval.\ncatalog:variable_text:7653:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:svarstid-enkat"
+fields = { "sets" = [] }
+evidence = "Tiden beskriver undersökningens uppgiftsinsamling.\ncatalog:variable_text:7654:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:svarstid-enkat"
+fields = { "tags" = ["methods"] }
+evidence = "Tiden beskriver undersökningens uppgiftsinsamling.\ncatalog:variable_text:7654:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter energianvändning i byggnader.\ncatalog:occurrence:56143\ncatalog:variable_text:7655:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter energianvändning i byggnader.\ncatalog:occurrence:56143\ncatalog:variable_text:7655:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:transporter"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter energianvändning för transporter.\ncatalog:occurrence:56160\ncatalog:variable_text:7656:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:transporter"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter energianvändning för transporter.\ncatalog:occurrence:56160\ncatalog:variable_text:7656:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet"
+fields = { "sets" = [] }
+evidence = "Variabeln mäter energianvändning i verksamheten.\ncatalog:occurrence:56161\ncatalog:variable_text:7657:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet"
+fields = { "tags" = ["energy"] }
+evidence = "Variabeln mäter energianvändning i verksamheten.\ncatalog:occurrence:56161\ncatalog:variable_text:7657:17167:17532"

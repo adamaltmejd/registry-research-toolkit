@@ -1,0 +1,195 @@
+{
+  "variable": [
+    {
+      "pid": "demo/implicit/dated",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            17532,
+            17713
+          ]
+        },
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            17713,
+            17897
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            18628,
+            18993
+          ]
+        }
+      ]
+    },
+    {
+      "pid": "demo/implicit/later",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            18628,
+            18993
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            17532,
+            17713
+          ]
+        },
+        {
+          "table": "demo/implicit",
+          "spelling": "z",
+          "period": [
+            17713,
+            17897
+          ]
+        }
+      ]
+    },
+    {
+      "pid": "demo/implicit/one",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "a",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "b",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ]
+    },
+    {
+      "pid": "demo/implicit/two",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "b",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "a",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/other",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/r/u",
+          "spelling": "x",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/r/t",
+          "spelling": "x",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/published",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/r/t",
+          "spelling": "x",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/r/u",
+          "spelling": "x",
+          "period": [
+            17532,
+            17897
+          ]
+        }
+      ]
+    }
+  ],
+  "table": [
+    {
+      "pid": "demo/r/t",
+      "kind": "table",
+      "old": [
+        {
+          "table": "First"
+        }
+      ],
+      "new": [
+        {
+          "table": "Second"
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/u",
+      "kind": "table",
+      "old": [
+        {
+          "table": "Second"
+        }
+      ],
+      "new": [
+        {
+          "table": "First"
+        }
+      ]
+    }
+  ],
+  "grown": []
+}

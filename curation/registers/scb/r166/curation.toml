@@ -1,0 +1,427 @@
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-omvardering"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25845:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25845:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-koncernforetag-utland-omvardering-under"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25846:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-koncernforetag-utland-omvardering-under"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25846:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-ovriga-foretag-utland-omvardering-under"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25847:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-ovriga-foretag-utland-omvardering-under"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25847:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-omvardering"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25848:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25848:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-omvardering"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25849:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25849:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-koncernforetag-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25850:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-koncernforetag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25850:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-ovriga-foretag-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad201 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25851:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-ovriga-foretag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad201 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25851:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-omvardering"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "OmvRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25852:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25852:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25853:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25853:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25854:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25854:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-foretag-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25855:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-foretag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25855:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-foretag-utland-omvardering"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "OmvRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25856:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-foretag-utland-omvardering"
+fields = { "tags" = ["finance"] }
+evidence = "OmvRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25856:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "sets" = [] }
+evidence = "Variabeln markerar avvikande urvalsenheter.\ncatalog:variable_text:25857:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln markerar avvikande urvalsenheter.\ncatalog:variable_text:25857:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-stallning"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25859:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad10 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25859:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-ingaende"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25860:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-koncernforetag-utland-ingaende"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25860:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-koncernforetag-utland-stallning-aktuellt"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25861:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-koncernforetag-utland-stallning-aktuellt"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad100 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25861:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-ovriga-foretag-utland-stallning-aktuellt"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25862:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kundfordringar-mot-ovriga-foretag-utland-stallning-aktuellt"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad101 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25862:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-stallning"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25863:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad11 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25863:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-ingaende"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25864:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-koncernforetag-utland-ingaende"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25864:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-stallning"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25865:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad20 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25865:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-ingaende"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25866:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-kundfordringar-mot-ovriga-foretag-utland-ingaende"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25866:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-koncernforetag-utland-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25867:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsskulder-till-koncernforetag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad200 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25867:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Etiketten anger ställning men definitionen anger omvärdering.\ncatalog:variable_text:25868:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnrad201"
+fields = { "tags" = ["finance"] }
+evidence = "Etiketten anger ställning men definitionen anger omvärdering.\ncatalog:variable_text:25868:9862:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-stallning"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "StallnRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25869:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad21 är en källkod som inte anger fordringens uppdelning.\ncatalog:variable_text:25869:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-ingaende"
+fields = { "sets" = ["utlandska-kundfordringar"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25870:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-kundfordringar-mot-ovriga-foretag-utland-ingaende"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25870:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25871:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad30 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25871:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-ingaende-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25872:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-koncern-utland-ingaende-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25872:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25873:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad31 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25873:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-ingaende-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25874:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-koncern-utland-ingaende-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25874:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-foretag-utland-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25875:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-foretag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad40 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25875:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-utland-ingaende-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25876:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-leverantorsskulder-ovriga-utland-ingaende-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25876:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-foretag-utland-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "StallnRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25877:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-foretag-utland-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "StallnRad41 är en källkod som inte anger skuldens uppdelning.\ncatalog:variable_text:25877:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-utland-ingaende-stallning"
+fields = { "sets" = ["utlandska-leverantorsskulder"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25878:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:langa-leverantorsskulder-ovriga-utland-ingaende-stallning"
+fields = { "tags" = ["finance"] }
+evidence = "Källans radkod är ogenomskinlig; etiketten anger ingående ställning.\ncatalog:variable_text:25878:15340:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = [] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:25879:16071:18628\ncatalog:variable_text:25879:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln anger urvalsstratum.\ncatalog:variable_text:25879:16071:18628\ncatalog:variable_text:25879:9862:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = [] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:25880:9862:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "tags" = ["methods"] }
+evidence = "Variabeln är en uppräkningsvikt.\ncatalog:variable_text:25880:9862:20454"
+
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "description" = "Faxnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:25841:10227:20454"

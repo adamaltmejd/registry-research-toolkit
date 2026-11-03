@@ -157,12 +157,836 @@ evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "var:antmanad"
-fields = { "tags" = ["transfers"] }
-evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:73"
-
-[[statement]]
-kind = "set"
 subject = "var:utbetalt-belopp-till-hushallet"
 fields = { "tags" = ["transfers"] }
 evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:61"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "sets" = [] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:7248:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "tags" = ["demographics"] }
+evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:7248:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-15-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7249:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-15-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7249:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7250:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7250:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-1-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7251:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-1-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7251:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-10-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7252:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-10-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7252:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-11-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7253:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-11-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7253:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-12-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7254:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-12-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7254:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-13-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7255:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-13-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7255:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-14-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7256:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-14-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7256:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-15-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7257:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-15-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7257:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7258:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-17-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7258:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-2-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7259:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-2-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7259:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-3-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7260:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-3-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7260:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-4-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7261:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-4-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7261:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-5-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7262:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-5-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7262:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7263:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7263:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7264:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7264:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-8-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7265:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-8-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7265:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-9-ar"
+fields = { "sets" = ["antal-barn-i-bistandshushallet"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7266:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-9-ar"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets barn.\ncatalog:variable_text:7266:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antmanad"
+fields = { "sets" = ["bistandsmanader"] }
+evidence = "Antalet månader hör till biståndsperioderna.\ncatalog:variable_text:7267:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antmanad"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet månader hör till biståndsperioderna.\ncatalog:variable_text:7267:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "sets" = [] }
+evidence = "Antalet beskriver hushållets sammansättning.\ncatalog:variable_text:7268:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "tags" = ["family-household"] }
+evidence = "Antalet beskriver hushållets sammansättning.\ncatalog:variable_text:7268:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:arblosuers"
+fields = { "sets" = [] }
+evidence = "Variabeln avser arbetslöshet utan ersättning.\ncatalog:variable_text:7269:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:arblosuers"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Variabeln avser arbetslöshet utan ersättning.\ncatalog:variable_text:7269:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "sets" = [] }
+evidence = "Variabeln beskriver en geografisk indelning.\ncatalog:variable_text:7270:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "tags" = ["geography"] }
+evidence = "Variabeln beskriver en geografisk indelning.\ncatalog:variable_text:7270:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flykthh"
+fields = { "sets" = ["flyktingstatus"] }
+evidence = "Kodningen beskriver flyktingstatus i hushållet.\ncatalog:variable_text:7271:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flykthh"
+fields = { "tags" = ["migration"] }
+evidence = "Kodningen beskriver flyktingstatus i hushållet.\ncatalog:variable_text:7271:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flykting"
+fields = { "sets" = ["flyktingstatus"] }
+evidence = "Kodningen beskriver flyktingstatus.\ncatalog:variable_text:7272:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flykting"
+fields = { "tags" = ["migration"] }
+evidence = "Kodningen beskriver flyktingstatus.\ncatalog:variable_text:7272:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flyktingstatus"
+fields = { "sets" = ["flyktingstatus"] }
+evidence = "Kodningen beskriver grunden för flyktingstatus.\ncatalog:variable_text:7273:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:flyktingstatus"
+fields = { "tags" = ["migration"] }
+evidence = "Kodningen beskriver grunden för flyktingstatus.\ncatalog:variable_text:7273:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "sets" = ["fodelseplats"] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:7274:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelselän är en födelseuppgift.\ncatalog:variable_text:7274:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland"
+fields = { "sets" = ["fodelseplats"] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:7275:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fodland"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en födelseuppgift.\ncatalog:variable_text:7275:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet.\ncatalog:variable_text:7276:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringskommun är en geografisk tillhörighet.\ncatalog:variable_text:7276:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingslan"
+fields = { "sets" = ["lan"] }
+evidence = "Folkbokföringslän är en geografisk tillhörighet.\ncatalog:variable_text:7277:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingslan"
+fields = { "tags" = ["geography"] }
+evidence = "Folkbokföringslän är en geografisk tillhörighet.\ncatalog:variable_text:7277:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "sets" = [] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7278:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "tags" = ["geography"] }
+evidence = "Församling är en geografisk indelning.\ncatalog:variable_text:7278:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstatus"
+fields = { "sets" = [] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger hushållstatus.\ncatalog:variable_text:7279:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstatus"
+fields = { "tags" = ["family-household"] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger hushållstatus.\ncatalog:variable_text:7279:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-i-socialbidragshushall"
+fields = { "sets" = [] }
+evidence = "H är en bokstavskod för hushåll; etiketten anger hushållstyp.\ncatalog:variable_text:7280:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-i-socialbidragshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "H är en bokstavskod för hushåll; etiketten anger hushållstyp.\ncatalog:variable_text:7280:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-april"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "I är en bokstavskod för introduktionsersättning; etiketten anger aprilbeloppet.\ncatalog:variable_text:7281:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-april"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "I är en bokstavskod för introduktionsersättning; etiketten anger aprilbeloppet.\ncatalog:variable_text:7281:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:inskriven"
+fields = { "sets" = [] }
+evidence = "Variabeln avser inskrivning vid Arbetsförmedlingen och arbetslöshet.\ncatalog:variable_text:7282:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:inskriven"
+fields = { "tags" = ["employment"] }
+evidence = "Variabeln avser inskrivning vid Arbetsförmedlingen och arbetslöshet.\ncatalog:variable_text:7282:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7283:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7283:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-augusti"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7284:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-augusti"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7284:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-december"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7285:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-december"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7285:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-februari"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7286:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-februari"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7286:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-januari"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7287:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-januari"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7287:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-juli"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7288:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-juli"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7288:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-juni"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7289:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-juni"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7289:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-maj"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7290:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-maj"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7290:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-mars"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7291:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-mars"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7291:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-november"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7292:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-november"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7292:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-oktober"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7293:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-oktober"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7293:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-september"
+fields = { "sets" = ["introduktionsersattningsbelopp"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7294:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:introduktionsersattning-i-september"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Beloppet avser introduktionsersättning.\ncatalog:variable_text:7294:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun"] }
+evidence = "Kommun är en geografisk tillhörighet.\ncatalog:variable_text:7295:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "Kommun är en geografisk tillhörighet.\ncatalog:variable_text:7295:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:7296:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:7296:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "sets" = ["lan"] }
+evidence = "Län är en geografisk tillhörighet.\ncatalog:variable_text:7297:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "tags" = ["geography"] }
+evidence = "Län är en geografisk tillhörighet.\ncatalog:variable_text:7297:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-ekonomiskt-bistand"
+fields = { "sets" = ["bistandsmanader"] }
+evidence = "Antalet månader avser ekonomiskt bistånd.\ncatalog:variable_text:7299:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-ekonomiskt-bistand"
+fields = { "tags" = ["transfers"] }
+evidence = "Antalet månader avser ekonomiskt bistånd.\ncatalog:variable_text:7299:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-introduktionsersattning"
+fields = { "sets" = ["bistandsmanader"] }
+evidence = "Antalet månader avser introduktionsersättning.\ncatalog:variable_text:7300:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-introduktionsersattning"
+fields = { "tags" = ["integration", "transfers"] }
+evidence = "Antalet månader avser introduktionsersättning.\ncatalog:variable_text:7300:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = [] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:7301:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "tags" = ["demographics"] }
+evidence = "Medborgarskap är en demografisk uppgift.\ncatalog:variable_text:7301:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-april"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "S är en bokstavskod för socialbidrag; etiketten anger aprilbeloppet.\ncatalog:variable_text:7307:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-april"
+fields = { "tags" = ["transfers"] }
+evidence = "S är en bokstavskod för socialbidrag; etiketten anger aprilbeloppet.\ncatalog:variable_text:7307:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidragsbelopp"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "S är en bokstavskod för socialbidrag; etiketten anger beloppet.\ncatalog:variable_text:7308:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidragsbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "S är en bokstavskod för socialbidrag; etiketten anger beloppet.\ncatalog:variable_text:7308:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-augusti"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7310:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-augusti"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7310:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-december"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7311:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-december"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7311:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-februari"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7312:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-februari"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7312:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-januari"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7313:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-januari"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7313:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-juli"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7314:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-juli"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7314:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-juni"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7315:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-juni"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7315:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-maj"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7316:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-maj"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7316:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-mars"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7317:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-mars"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7317:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-november"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7318:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-november"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7318:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-oktober"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7319:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-oktober"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7319:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-september"
+fields = { "sets" = ["socialbidragsbelopp"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7320:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-september"
+fields = { "tags" = ["transfers"] }
+evidence = "Beloppet avser socialbidrag.\ncatalog:variable_text:7320:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandskt-hushall"
+fields = { "sets" = [] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger utländskt hushåll.\ncatalog:variable_text:7322:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandskt-hushall"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger utländskt hushåll.\ncatalog:variable_text:7322:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikesfott-hushall"
+fields = { "sets" = [] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger utrikesfött hushåll.\ncatalog:variable_text:7323:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:utrikesfott-hushall"
+fields = { "tags" = ["demographics", "family-household"] }
+evidence = "Hh är en bokstavskod för hushåll; etiketten anger utrikesfött hushåll.\ncatalog:variable_text:7323:13149:13514"
+
+
+[[statement]]
+kind = "set"
+subject = "var:antpers"
+fields = { "description" = "Antal personer i biståndshushållet. Beräknas från antalet angivna personer över 15 år och antalet barn under 16 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTar bort en upprepad felskrivning.\ncatalog:variable_text:7268:13149:13514\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54416:opdef_text. One variable, one description."
+
+
+[[statement]]
+kind = "set"
+subject = "var:socialbidrag-i-december"
+fields = { "description" = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i december månad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger november, medan etikett och källkolumn anger december.\ncatalog:occurrence-locators:variable:7311\ncatalog:variable_text:7311:13149:13514"

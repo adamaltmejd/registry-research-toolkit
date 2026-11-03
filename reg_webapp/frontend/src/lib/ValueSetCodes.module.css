@@ -1,0 +1,61 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.note {
+  display: block;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.row,
+.trigger {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  min-width: 0;
+}
+.code {
+  flex-shrink: 0;
+  overflow-wrap: anywhere;
+  max-width: 50%;
+}
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.trigger {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.trigger svg {
+  flex-shrink: 0;
+}
+.trigger[data-hovered] {
+  background: var(--surface-hover);
+}
+.trigger[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.branch[data-expanded] > .trigger svg {
+  transform: rotate(90deg);
+}
+.children {
+  margin-inline-start: var(--space-3);
+  padding-inline-start: var(--space-2);
+  border-inline-start: 1px solid var(--border);
+}
+
+.list:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

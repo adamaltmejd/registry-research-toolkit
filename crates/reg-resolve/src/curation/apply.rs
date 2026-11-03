@@ -38,6 +38,7 @@ pub struct Classification {
     pub family_name: Option<String>,
     pub publisher: Option<String>,
     pub succeeds: Vec<String>,
+    pub sentinel_codes: Option<BTreeSet<String>>,
 }
 
 impl Classification {
@@ -57,7 +58,7 @@ impl Classification {
     #[must_use]
     pub fn facts(&self, classes: &[Self]) -> BTreeMap<String, Value> {
         let (family_name, publisher) = Self::family_facts(classes, &self.family);
-        BTreeMap::from([
+        let mut facts = BTreeMap::from([
             ("family".into(), json!(self.family)),
             ("version".into(), json!(self.version)),
             ("valueset".into(), json!(self.valueset)),
@@ -69,7 +70,11 @@ impl Classification {
             ("publisher".into(), json!(publisher)),
             ("period".into(), json!(self.period)),
             ("succeeds".into(), json!(self.succeeds)),
-        ])
+        ]);
+        if let Some(codes) = &self.sentinel_codes {
+            facts.insert("sentinel_codes".into(), json!(codes));
+        }
+        facts
     }
 }
 
@@ -109,6 +114,7 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
         family_name: None,
         publisher: None,
         succeeds: Vec::new(),
+        sentinel_codes: None,
     })
 }
 
@@ -117,6 +123,15 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
 pub enum MetadataValue {
     Sets(BTreeSet<String>),
     Tags(BTreeSet<String>),
+    Facets {
+        facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
+        at: Locator,
+    },
+    Synonyms(BTreeSet<String>),
+    Description {
+        text: String,
+        at: Locator,
+    },
     Notice(String),
 }
 
@@ -126,13 +141,48 @@ pub struct Metadata {
     pub value: MetadataValue,
 }
 
+/// Presentation attached to an ordinary locked set statement.
+#[derive(Debug, Clone)]
+pub struct SetPresentation {
+    pub provider: String,
+    pub register: String,
+    pub slug: String,
+    pub label: String,
+    pub description: Option<String>,
+    pub axes: Vec<reg_frame::statement::SetAxis>,
+    pub at: Locator,
+}
+
 #[derive(Debug, Default)]
 pub struct Applied {
+    pub sets: Vec<SetPresentation>,
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
     pub assignments: BTreeMap<crate::OccurrenceKey, String>,
     pub metadata: Vec<Metadata>,
+    /// Complete sentinel declarations for shared value sets, without changing hashes.
+    pub sentinels: BTreeMap<String, BTreeSet<String>>,
+}
+
+/// Validate a set-wide sentinel declaration without changing the set's identity.
+///
+/// # Errors
+/// A declared code is absent from the addressed value set.
+pub fn validate_sentinels(
+    hash: &str,
+    items: &[reg_frame::Item],
+    codes: &BTreeSet<String>,
+) -> Result<(), String> {
+    if let Some(code) = codes
+        .iter()
+        .find(|code| !items.iter().any(|item| &item.code == *code))
+    {
+        return Err(format!(
+            "sentinel-code-missing: code {code:?} is not in value set {hash}"
+        ));
+    }
+    Ok(())
 }
 
 /// Assign variables against one immutable phase snapshot without copying its facts.
@@ -455,15 +505,70 @@ pub fn apply(
     at: &Locator,
     premise: &Premise,
 ) -> Result<Applied, String> {
+    if matches!(statement, Statement::Set { subject: Address::Occurrence { .. }, fields, .. } if fields.description.is_some())
+    {
+        return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
+    }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
+        sets: Vec::new(),
         records: records.to_vec(),
         changes: Vec::new(),
         classifications: Vec::new(),
         assignments: BTreeMap::new(),
         metadata: Vec::new(),
+        sentinels: BTreeMap::new(),
     };
     match statement {
+        Statement::Set {
+            subject: Address::Set(slug),
+            fields,
+            ..
+        } => {
+            let source = premise
+                .subjects
+                .first()
+                .ok_or("set: statement requires an existing register")?;
+            let provider = source
+                .fields
+                .get("provider")
+                .and_then(Value::as_str)
+                .ok_or("set provider missing")?
+                .to_owned();
+            let register = source
+                .fields
+                .get("register")
+                .and_then(Value::as_str)
+                .ok_or("set register missing")?
+                .to_owned();
+            out.sets.push(SetPresentation {
+                provider: provider.clone(),
+                register: register.clone(),
+                slug: slug.clone(),
+                label: fields
+                    .label
+                    .clone()
+                    .ok_or("set-label: set requires label")?,
+                description: fields.description.clone(),
+                axes: fields.axes.clone().unwrap_or_default(),
+                at: at.clone(),
+            });
+            for (field, value) in stated_fields(fields) {
+                out.changes.push(Change {
+                    kind: "set".into(),
+                    locator: source.locator.clone(),
+                    identity: None,
+                    provider: Some(provider.clone()),
+                    register: Some(register.clone()),
+                    table: Some(slug.clone()),
+                    release: None,
+                    period: None,
+                    field,
+                    value: rendered(&value),
+                    source_value: None,
+                });
+            }
+        }
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
             if stated_fields(fields)
                 .keys()
@@ -584,7 +689,7 @@ pub fn apply(
             }
         }
         Statement::Set { fields, .. } => {
-            apply_fields(records, fields, premise, &context, &mut out)?;
+            apply_fields(records, fields, at, premise, &context, &mut out)?;
         }
         Statement::Assert { subject, fact, .. } => {
             let register = records
@@ -604,7 +709,7 @@ pub fn apply(
                     table_handle(records, ledger, table)?,
                     p.as_ref().map(periods),
                 ),
-                Address::Variable(_) => {
+                Address::Variable(_) | Address::Set(_) => {
                     return Err(
                         "assert requires a source table, release or occurrence address".into(),
                     );
@@ -965,6 +1070,7 @@ fn target_field(field: &str) -> &str {
 fn apply_fields(
     records: &[Record],
     fields: &reg_frame::statement::SetFields,
+    at: &Locator,
     premise: &Premise,
     context: &crate::OccurrenceContext<'_>,
     out: &mut Applied,
@@ -973,18 +1079,6 @@ fn apply_fields(
     let fields = stated_fields(fields);
     if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
         return Err("set coverage/period with other fields requires separate statements".into());
-    }
-    for field in fields.keys() {
-        let package = match field.as_str() {
-            "sentinels" => Some("D (sentinels)"),
-            "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
-            "synonyms" => Some("D (search curation)"),
-            "name" => Some("D (entity names)"),
-            _ => None,
-        };
-        if let Some(package) = package {
-            return Err(format!("set {field} is applied in {package}"));
-        }
     }
     let mut selected = false;
     for (index, record) in records.iter().enumerate() {
@@ -1014,11 +1108,18 @@ fn apply_fields(
                         | "period"
                         | "sets"
                         | "tags"
+                        | "facets"
+                        | "synonyms"
+                        | "sentinels"
+                        | "role"
                         | "classification"
                         | "notice"
                 ),
-                "table" => matches!(field.as_str(), "description" | "coverage"),
-                "release" => matches!(field.as_str(), "description" | "period"),
+                "table" => matches!(
+                    field.as_str(),
+                    "description" | "coverage" | "name" | "role" | "unit_type"
+                ),
+                "release" => matches!(field.as_str(), "description" | "period" | "name"),
                 _ => false,
             };
             if !supported {
@@ -1040,7 +1141,58 @@ fn apply_fields(
                         return Err(format!("set {field} requires catalog slugs"));
                     }
                 }
-                "notice" => {}
+                "role" => {
+                    crate::role_value(kind, winning.as_str().expect("typed role"))?;
+                    after["role"] = winning.clone();
+                }
+                "unit_type" => {
+                    if !reg_core::is_slug(winning.as_str().expect("typed unit type")) {
+                        return Err("set unit_type requires a catalog slug".into());
+                    }
+                    after["unit_type"] = winning.clone();
+                }
+                "name" if winning.as_str().is_none_or(|v| v.trim().is_empty()) => {
+                    return Err("set name requires a nonblank entity name".into());
+                }
+                "sentinels" => {
+                    let Record::Occurrence(occurrence) = record else {
+                        unreachable!("sentinels apply only to occurrences")
+                    };
+                    let hashes: BTreeSet<_> = occurrence
+                        .valueset
+                        .iter()
+                        .chain(occurrence.population_valuesets.iter().map(|p| &p.valueset))
+                        .collect();
+                    if hashes.is_empty() {
+                        return Err("set sentinels requires an occurrence with a value set".into());
+                    }
+                    let codes = metadata_fields
+                        .sentinels
+                        .as_ref()
+                        .expect("typed sentinel list")
+                        .iter()
+                        .cloned()
+                        .collect::<BTreeSet<_>>();
+                    for hash in hashes {
+                        let items = premise
+                            .objects
+                            .iter()
+                            .find_map(|p| {
+                                (p.fields.get("hash").and_then(Value::as_str) == Some(hash))
+                                    .then(|| p.fields.get("items").and_then(Value::as_array))
+                                    .flatten()
+                            })
+                            .ok_or_else(|| {
+                                format!("set sentinels has no reviewed value set {hash:?}")
+                            })?;
+                        let items: Vec<reg_frame::Item> =
+                            serde_json::from_value(Value::Array(items.clone()))
+                                .map_err(|e| e.to_string())?;
+                        validate_sentinels(hash, &items, &codes)?;
+                        out.sentinels.insert(hash.clone(), codes.clone());
+                    }
+                }
+                "facets" | "synonyms" | "notice" => {}
                 "description" if kind == "occurrence" => {}
                 "period" | "coverage" => {
                     let period = winning
@@ -1170,10 +1322,34 @@ fn apply_fields(
                     value: MetadataValue::Sets(sets.iter().cloned().collect()),
                 });
             }
+            if let Some(facets) = &metadata_fields.facets {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Facets {
+                        facets: facets.clone(),
+                        at: at.clone(),
+                    },
+                });
+            }
             if let Some(tags) = &metadata_fields.tags {
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Tags(tags.iter().cloned().collect()),
+                });
+            }
+            if let Some(synonyms) = &metadata_fields.synonyms {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Synonyms(synonyms.iter().cloned().collect()),
+                });
+            }
+            if let Some(description) = &metadata_fields.description {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Description {
+                        text: description.clone(),
+                        at: at.clone(),
+                    },
                 });
             }
             if let Some(notice) = &metadata_fields.notice {

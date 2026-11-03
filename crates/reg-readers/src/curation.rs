@@ -39,6 +39,9 @@ pub struct Classification {
     pub family_name: Option<String>,
     pub publisher: Option<String>,
     pub period: Option<reg_frame::address::PeriodSet>,
+    /// Known non-canonical codes in occurrence value sets bound to this version.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sentinel_codes: Option<Vec<String>>,
     #[serde(default)]
     pub succeeds: Vec<String>,
 }
@@ -97,6 +100,10 @@ pub fn load_classifications(root: &Path) -> Result<Vec<LocatedClassification>, R
         }
         c.succeeds.sort();
         c.succeeds.dedup();
+        if let Some(codes) = &mut c.sentinel_codes {
+            codes.sort();
+            codes.dedup();
+        }
         for predecessor in &c.succeeds {
             if !matches!(
                 predecessor.parse::<reg_core::Fqid>(),

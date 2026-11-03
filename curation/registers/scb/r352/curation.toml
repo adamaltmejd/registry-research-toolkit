@@ -1,0 +1,672 @@
+
+[[statement]]
+kind = "set"
+subject = "var:avgangen"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller avgång från gymnasieskolan.\ncatalog:variable_text:22351:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangen"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller avgång från gymnasieskolan.\ncatalog:variable_text:22351:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-stamde-inte-lasaret-2013-2014"
+fields = { "sets" = [] }
+evidence = "F0aTXT är en ogenomskinlig frågekod; etiketten kolliderar och behöver disambigueras enligt D-12.\ncatalog:variable_text:22353:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-stamde-inte-lasaret-2013-2014"
+fields = { "tags" = ["education"] }
+evidence = "F0aTXT är en ogenomskinlig frågekod; etiketten kolliderar och behöver disambigueras enligt D-12.\ncatalog:variable_text:22353:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-stamde-inte-lasaret-2013-2014"
+fields = { "sets" = [] }
+evidence = "F0bTXT är en ogenomskinlig frågekod; etiketten kolliderar och behöver disambigueras enligt D-12.\ncatalog:variable_text:22354:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-stamde-inte-lasaret-2013-2014"
+fields = { "tags" = ["education"] }
+evidence = "F0bTXT är en ogenomskinlig frågekod; etiketten kolliderar och behöver disambigueras enligt D-12.\ncatalog:variable_text:22354:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-arskurs-3-lasaret-2013-2014"
+fields = { "sets" = [] }
+evidence = "F1 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22355:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesprogram-arskurs-3-lasaret-2013-2014"
+fields = { "tags" = ["education"] }
+evidence = "F1 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22355:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:normal-arbetstid-heltid-deltid-6-12-april"
+fields = { "sets" = [] }
+evidence = "F10 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22356:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:normal-arbetstid-heltid-deltid-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F10 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22356:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-fler-farre-lagom-arbetstimmar-6-12-april"
+fields = { "sets" = [] }
+evidence = "F11 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22357:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:onskemal-fler-farre-lagom-arbetstimmar-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F11 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22357:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:helt-utan-arbete-januari-mars-2015"
+fields = { "sets" = [] }
+evidence = "F12 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22358:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:helt-utan-arbete-januari-mars-2015"
+fields = { "tags" = ["employment"] }
+evidence = "F12 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22358:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f13"
+fields = { "sets" = [] }
+evidence = "F13 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22359:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f13"
+fields = { "tags" = ["employment"] }
+evidence = "F13 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22359:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f13grupp"
+fields = { "sets" = [] }
+evidence = "F13Grupp bygger på en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22360:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f13grupp"
+fields = { "tags" = ["employment"] }
+evidence = "F13Grupp bygger på en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22360:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemotivation-arskurs-3-lasaret-2013-2014"
+fields = { "sets" = [] }
+evidence = "F14 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22361:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemotivation-arskurs-3-lasaret-2013-2014"
+fields = { "tags" = ["education"] }
+evidence = "F14 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22361:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-nagon-arskurs-1-2-3"
+fields = { "sets" = [] }
+evidence = "F15 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22362:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-nagon-arskurs-1-2-3"
+fields = { "tags" = ["education"] }
+evidence = "F15 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22362:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-1"
+fields = { "sets" = [] }
+evidence = "F16A är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22363:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-1"
+fields = { "tags" = ["education"] }
+evidence = "F16A är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22363:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-2"
+fields = { "sets" = [] }
+evidence = "F16B är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22364:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-2"
+fields = { "tags" = ["education"] }
+evidence = "F16B är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22364:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-3"
+fields = { "sets" = [] }
+evidence = "F16C är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22365:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larlingsutbildning-arskurs-3"
+fields = { "tags" = ["education"] }
+evidence = "F16C är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22365:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-minst-6-manader-utan-avbrott-efter-gymnasiet"
+fields = { "sets" = [] }
+evidence = "F2 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22366:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-minst-6-manader-utan-avbrott-efter-gymnasiet"
+fields = { "tags" = ["employment"] }
+evidence = "F2 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22366:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-till-forsta-arbete-minst-6-manader-utan-avbrott"
+fields = { "sets" = [] }
+evidence = "F3 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22367:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-till-forsta-arbete-minst-6-manader-utan-avbrott"
+fields = { "tags" = ["employment"] }
+evidence = "F3 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22367:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsgrupp-till-forsta-arbete-minst-6-manader-utan-avbrott"
+fields = { "sets" = [] }
+evidence = "F3 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22368:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsgrupp-till-forsta-arbete-minst-6-manader-utan-avbrott"
+fields = { "tags" = ["employment"] }
+evidence = "F3 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22368:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-6-12-april-2015"
+fields = { "sets" = [] }
+evidence = "F4 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22369:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-6-12-april-2015"
+fields = { "tags" = ["employment"] }
+evidence = "F4 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22369:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:harlett-nagot-arbete-overhuvudtaget"
+fields = { "sets" = [] }
+evidence = "F4_6_7 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22370:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:harlett-nagot-arbete-overhuvudtaget"
+fields = { "tags" = ["employment"] }
+evidence = "F4_6_7 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22370:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f4kodad"
+fields = { "sets" = [] }
+evidence = "F4 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22371:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:f4kodad"
+fields = { "tags" = ["employment"] }
+evidence = "F4 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22371:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-huvudsaklig-sysselsattning-fritext-6-12-april"
+fields = { "sets" = [] }
+evidence = "F4TXT är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22372:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-huvudsaklig-sysselsattning-fritext-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F4TXT är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22372:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-studier-6-12-april"
+fields = { "sets" = [] }
+evidence = "F5 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22373:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-studier-6-12-april"
+fields = { "tags" = ["education"] }
+evidence = "F5 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22373:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-utbildning-beskrivning-fritext"
+fields = { "sets" = [] }
+evidence = "F5TXT är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22374:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:annan-utbildning-beskrivning-fritext"
+fields = { "tags" = ["education"] }
+evidence = "F5TXT är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22374:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-pengar-arbetsgivare-eller-kunder-6-12-april"
+fields = { "sets" = [] }
+evidence = "F6 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22375:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-pengar-arbetsgivare-eller-kunder-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F6 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22375:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning-aven-om-inte-arbetade-6-12-april"
+fields = { "sets" = [] }
+evidence = "F7 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22376:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning-aven-om-inte-arbetade-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F7 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22376:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-stammer-med-inriktning"
+fields = { "sets" = [] }
+evidence = "F8A är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22377:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-stammer-med-inriktning"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F8A är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22377:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-stammer-med-yrkesprogrammets-yrkesomrade"
+fields = { "sets" = [] }
+evidence = "F8B är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22378:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-stammer-med-yrkesprogrammets-yrkesomrade"
+fields = { "tags" = ["education", "employment"] }
+evidence = "F8B är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22378:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsakligt-arbete-anstallningstyp-6-12-april"
+fields = { "sets" = [] }
+evidence = "F9 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22379:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsakligt-arbete-anstallningstyp-6-12-april"
+fields = { "tags" = ["employment"] }
+evidence = "F9 är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22379:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-grupp"
+fields = { "sets" = [] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:22380:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-grupp"
+fields = { "tags" = ["demographics"] }
+evidence = "Födelseland är en demografisk uppgift.\ncatalog:variable_text:22380:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:folkhsk-ht14-niva"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "Uppgiften gäller studiedeltagande i folkhögskola.\ncatalog:variable_text:22381:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:folkhsk-ht14-niva"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller studiedeltagande i folkhögskola.\ncatalog:variable_text:22381:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser föräldrarnas utbildningsnivå.\ncatalog:variable_text:22382:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser föräldrarnas utbildningsnivå.\ncatalog:variable_text:22382:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-behorighet-hogskola"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser högskolebehörighet.\ncatalog:variable_text:22383:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-behorighet-hogskola"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser högskolebehörighet.\ncatalog:variable_text:22383:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp-andra-fas-urval"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller urvalets andra fas.\ncatalog:variable_text:22384:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:grupp-andra-fas-urval"
+fields = { "tags" = ["methods"] }
+evidence = "Uppgiften gäller urvalets andra fas.\ncatalog:variable_text:22384:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebetyg"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller gymnasiebetyg.\ncatalog:variable_text:22385:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebetyg"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller gymnasiebetyg.\ncatalog:variable_text:22385:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hreght2014"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "HREG är en ogenomskinlig registerkod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22386:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hreght2014"
+fields = { "tags" = ["education"] }
+evidence = "HREG är en ogenomskinlig registerkod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22386:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hregvt2015"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "HREG är en ogenomskinlig registerkod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22387:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hregvt2015"
+fields = { "tags" = ["education"] }
+evidence = "HREG är en ogenomskinlig registerkod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22387:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser skolans huvudman.\ncatalog:variable_text:22388:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser skolans huvudman.\ncatalog:variable_text:22388:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktningklartext"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser programmets inriktning.\ncatalog:variable_text:22389:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktningklartext"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser programmets inriktning.\ncatalog:variable_text:22389:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "sets" = ["insamlingsmetod"] }
+evidence = "Kodning av undersökningens insamlingsmetod.\ncatalog:variable_text:22390:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:insamlingsmetod"
+fields = { "tags" = ["methods"] }
+evidence = "Kodning av undersökningens insamlingsmetod.\ncatalog:variable_text:22390:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvikt"
+fields = { "sets" = [] }
+evidence = "Kalibreringsvikten är en statistisk vikt.\ncatalog:variable_text:22391:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvikt"
+fields = { "tags" = ["methods"] }
+evidence = "Kalibreringsvikten är en statistisk vikt.\ncatalog:variable_text:22391:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppnamnskl"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller kommungruppsindelning.\ncatalog:variable_text:22392:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungruppnamnskl"
+fields = { "tags" = ["geography"] }
+evidence = "Uppgiften gäller kommungruppsindelning.\ncatalog:variable_text:22392:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser kön.\ncatalog:variable_text:22393:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "Uppgiften avser kön.\ncatalog:variable_text:22393:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerad-komvux"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "KVX är en ogenomskinlig kod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22394:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerad-komvux"
+fields = { "tags" = ["education"] }
+evidence = "KVX är en ogenomskinlig kod; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22394:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larling"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller lärlingsutbildning.\ncatalog:variable_text:22395:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:larling"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller lärlingsutbildning.\ncatalog:variable_text:22395:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metod-for-intervju"
+fields = { "sets" = ["insamlingsmetod"] }
+evidence = "Kodningen avser intervjuuppföljning och insamlingsmetod.\ncatalog:variable_text:22396:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:metod-for-intervju"
+fields = { "tags" = ["methods"] }
+evidence = "Kodningen avser intervjuuppföljning och insamlingsmetod.\ncatalog:variable_text:22396:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:programklartext"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Uppgiften avser gymnasieprogram i årskurs 3.\ncatalog:variable_text:22398:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:programklartext"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser gymnasieprogram i årskurs 3.\ncatalog:variable_text:22398:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:programkorr"
+fields = { "sets" = ["gymnasieprogram"] }
+evidence = "Uppgiften avser korrigerat gymnasieprogram i årskurs 3.\ncatalog:variable_text:22399:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:programkorr"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser korrigerat gymnasieprogram i årskurs 3.\ncatalog:variable_text:22399:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-2"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratum och källkolumnens suffix är läsbara. Variabeln kodar stratum i andra urvalsfasen och hör till urvalsstratum och statistisk metod.\ncatalog:occurrence-locators:variable:22400\ncatalog:occurrence:205696\ncatalog:variable_text:22400:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-2"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum och källkolumnens suffix är läsbara. Variabeln kodar stratum i andra urvalsfasen och hör till urvalsstratum och statistisk metod.\ncatalog:occurrence-locators:variable:22400\ncatalog:occurrence:205696\ncatalog:variable_text:22400:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-462"
+fields = { "sets" = ["urvalsstratum"] }
+evidence = "Stratum är läsbart och familjen behålls konsekvent. Variabeln kodar stratum i urvalsramen och hör till urvalsstratum och statistisk metod.\ncatalog:occurrence-locators:variable:22401\ncatalog:occurrence:205695\ncatalog:variable_text:22401:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-462"
+fields = { "tags" = ["methods"] }
+evidence = "Stratum är läsbart och familjen behålls konsekvent. Variabeln kodar stratum i urvalsramen och hör till urvalsstratum och statistisk metod.\ncatalog:occurrence-locators:variable:22401\ncatalog:occurrence:205695\ncatalog:variable_text:22401:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studerar-ht14"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "Härledd uppgift om studiedeltagande i flera skolformer.\ncatalog:variable_text:22402:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studerar-ht14"
+fields = { "tags" = ["education"] }
+evidence = "Härledd uppgift om studiedeltagande i flera skolformer.\ncatalog:variable_text:22402:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser studieväg i gymnasieskolan.\ncatalog:variable_text:22403:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:studievag-gymnasieskolan"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser studieväg i gymnasieskolan.\ncatalog:variable_text:22403:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-poang-slutbetyg"
+fields = { "sets" = [] }
+evidence = "Uppgiften avser utbildningspoäng enligt slutbetyget.\ncatalog:variable_text:22404:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-poang-slutbetyg"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften avser utbildningspoäng enligt slutbetyget.\ncatalog:variable_text:22404:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:traffelevreg1415"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "Uppgiften gäller registrering i gymnasieskolan.\ncatalog:variable_text:22405:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:traffelevreg1415"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller registrering i gymnasieskolan.\ncatalog:variable_text:22405:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-betyg"
+fields = { "sets" = [] }
+evidence = "Uppgiften gäller typ av gymnasiebetyg.\ncatalog:variable_text:22406:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Uppgiften gäller typ av gymnasiebetyg.\ncatalog:variable_text:22406:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-bakgrund"
+fields = { "sets" = [] }
+evidence = "Uppgiften beskriver svensk eller utländsk bakgrund.\ncatalog:variable_text:22408:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-bakgrund"
+fields = { "tags" = ["demographics"] }
+evidence = "Uppgiften beskriver svensk eller utländsk bakgrund.\ncatalog:variable_text:22408:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerad-yrkeshogskola"
+fields = { "sets" = ["studiedeltagande-i-skolform"] }
+evidence = "YH är en bokstavskod som inte förekommer i etiketten; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22409:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerad-yrkeshogskola"
+fields = { "tags" = ["education"] }
+evidence = "YH är en bokstavskod som inte förekommer i etiketten; den gemensamma etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:22409:16436:16801"
