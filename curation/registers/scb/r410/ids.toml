@@ -10,7 +10,6 @@ public = "esk"
 "branschgrupp" = ["Lagerinvesteringar: Bgrupp"]
 "statuskod-klartext" = ["Lagerinvesteringar: CU_Status_text"]
 "status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period" = ["Lagerinvesteringar: CU_StatusParent"]
-"firmanamn" = ["Fasta bruttoinvesteringar: namn"]
 "imputeringsstatus" = ["Lagerinvesteringar: Kalla"]
 "kvartal" = ["Fasta bruttoinvesteringar: referenskvartal"]
 "kvartal-period" = ["Lagerinvesteringar: Referenskvartal"]

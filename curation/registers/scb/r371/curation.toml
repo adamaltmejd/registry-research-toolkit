@@ -18957,18 +18957,6 @@ evidence = "Karensersättningsbelopp ingår i gruppen.\ncatalog:variable_text:92
 
 [[statement]]
 kind = "set"
-subject = "var:karenstid-sjukforsakringsavgift"
-fields = { "sets" = [] }
-evidence = "Karenstid för sjukförsäkringsavgift.\ncatalog:variable_text:9239:14610:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:karenstid-sjukforsakringsavgift"
-fields = { "tags" = ["taxation"] }
-evidence = "Karenstid för sjukförsäkringsavgift.\ncatalog:variable_text:9239:14610:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:karenstid-sjukforsakringsavgift-bkarens"
 fields = { "sets" = [] }
 evidence = "Karenstid för sjukförsäkringsavgift.\ncatalog:variable_text:9240:13149:19723"
@@ -26913,18 +26901,6 @@ evidence = "Barnets växelvisa boende ingår i kandidatgruppen.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:vaxelvist-boende-barn-bbrnvx"
-fields = { "sets" = ["barnets-boendeforhallanden"] }
-evidence = "Källan anger barnets boendeförhållande.\ncatalog:variable_text:9952:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:vaxelvist-boende-barn-bbrnvx"
-fields = { "tags" = ["family-household"] }
-evidence = "Källan anger barnets boendeförhållande.\ncatalog:variable_text:9952:17532:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:verkligt-omkostnadsbelopp"
 fields = { "sets" = ["omkostnadsbelopp-for-andelar"] }
 evidence = "Verkligt omkostnadsbelopp på K10 ingår med alternativa andelsbelopp.\ncatalog:variable_text:9953:13514:17532\ncatalog:variable_text:9953:17897:19723"
@@ -31782,3 +31758,15 @@ kind = "set"
 subject = "var:tvarda"
 fields = { "label" = "Vårdbidrag (enligt kontrolluppgift, TVARDA)" }
 evidence = "#2102 same-label cluster 'Vårdbidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TKUVARD and TVARD swap deklarationsuppgift/kontrolluppgift opdefs in 2018, so neither opdef holds for all occurrences and the code is used; TVARDA's opdef is kontrolluppgift in every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: karens @2010-01-01..2011-12-31 where key = 'v27032'"
+fields = { "variable" = "karenstid-sjukforsakringsavgift-bkarens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BKARENS in individregister; KARENS in arbetsloshetsregister: same definition and code list, never concurrent under another spelling in one table; folded into karenstid-sjukforsakringsavgift-bkarens."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bbrnvx @2018-01-01..2023-12-31 where key = 'v42258'"
+fields = { "variable" = "vaxelvist-boende-barn" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BBAVX in barnregister; BBRNVX in individregister: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only one member has an opdef (regression by BV/BEV with own adjustments); the other has none, so no conflict); folded into vaxelvist-boende-barn."

@@ -3838,18 +3838,6 @@ evidence = "Kodning av nyinskriven elev, med en motsvarande variabel för kursde
 
 [[statement]]
 kind = "set"
-subject = "var:nyinskriven-elev-nyelev"
-fields = { "sets" = ["nyinskriven-elev"] }
-evidence = "Kodning av nyinskriven elev, med en motsvarande elevvariabel.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nyinskriven-elev-nyelev"
-fields = { "tags" = ["education"] }
-evidence = "Kodning av nyinskriven elev, med en motsvarande elevvariabel.\ncatalog:variable_text:34711:10043:20089\ncatalog:variable_text:34712:19539:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:orsak-ej-inrapporterat-betyg"
 fields = { "sets" = [] }
 evidence = "Variabeln beskriver rapportering av kursbetyg.\ncatalog:valueset:9766\ncatalog:variable_text:34715:19905:20089"
@@ -4705,3 +4693,9 @@ kind = "set"
 subject = "var:kursdeltid"
 fields = { "label" = "Löpnummer för kursdeltagaren (LopNr/KursDeltID)" }
 evidence = "#2102 fold: the label names every folded column. LopNr (1996/97) and KursDeltId (1997/98-) in kursdeltagare-vartermin: same definition (course participant serial; PersonNr is a separate column), adjacent at 1997-07-01."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: nyelev @2021-01-01..2024-12-31 where key = 'v32756'"
+fields = { "variable" = "nyinskriven-elev" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): NyInsk/Nyinsk in elever-vartermin; Nyelev in kursdeltagare-vartermin: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'determined from previous term's collection' text; one adds the source collection); folded into nyinskriven-elev."

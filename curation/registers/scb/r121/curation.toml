@@ -4213,18 +4213,6 @@ evidence = "Posten är en företagsuppgift i kronor.\ncatalog:variable_text:1483
 
 [[statement]]
 kind = "set"
-subject = "var:anstalld-personal-v0671"
-fields = { "sets" = [] }
-evidence = "Posten är en företagsuppgift i kronor.\ncatalog:variable_text:14836:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:anstalld-personal-v0671"
-fields = { "tags" = ["business"] }
-evidence = "Posten är en företagsuppgift i kronor.\ncatalog:variable_text:14836:10957:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-aktier"
 fields = { "sets" = [] }
 evidence = "Aktier är finansiella instrument.\ncatalog:variable_text:14838:16801:19723"
@@ -53329,30 +53317,6 @@ evidence = "Variabeln avser skogs- och substansminskningsavdrag.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:skogsavdrag-substansminskningsavdrag-v7706"
-fields = { "sets" = [] }
-evidence = "Fältet avser avdrag i deklarationen.\ncatalog:variable_text:19186:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:skogsavdrag-substansminskningsavdrag-v7706"
-fields = { "tags" = ["taxation"] }
-evidence = "Fältet avser avdrag i deklarationen.\ncatalog:variable_text:19186:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:skogsavdrag-substansminskningsavdrag-v7761"
-fields = { "sets" = [] }
-evidence = "Fältet avser avdrag i deklarationen.\ncatalog:variable_text:19187:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:skogsavdrag-substansminskningsavdrag-v7761"
-fields = { "tags" = ["taxation"] }
-evidence = "Fältet avser avdrag i deklarationen.\ncatalog:variable_text:19187:13514:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:skogskot"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter skotning i skogsbruk.\ncatalog:variable_text:19188:13879:16071\ncatalog:variable_text:19188:17897:19723"
@@ -53422,18 +53386,6 @@ kind = "set"
 subject = "var:skulder-till-kreditinstitut"
 fields = { "tags" = ["finance"] }
 evidence = "Skulder till kreditinstitut är krediter.\ncatalog:variable_text:19194:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:skulder-till-kreditinstitut-va17"
-fields = { "sets" = [] }
-evidence = "Katalogen visar perioduppdelat ägarskap.\ncatalog:occurrence:160649\ncatalog:occurrence:161285"
-
-[[statement]]
-kind = "set"
-subject = "var:skulder-till-kreditinstitut-va17"
-fields = { "tags" = ["finance"] }
-evidence = "Katalogen visar perioduppdelat ägarskap.\ncatalog:occurrence:160649\ncatalog:occurrence:161285"
 
 [[statement]]
 kind = "set"
@@ -57589,30 +57541,6 @@ evidence = "Fastighetsskattens underlag.\ncatalog:variable_text:19554:13514:1972
 
 [[statement]]
 kind = "set"
-subject = "var:underlag-for-avkastningsskatt-15-forsakringsforetag-aavkastf"
-fields = { "sets" = [] }
-evidence = "Källan anger ett underlag för avkastningsskatt.\ncatalog:variable_text:19555:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-for-avkastningsskatt-15-forsakringsforetag-aavkastf"
-fields = { "tags" = ["taxation"] }
-evidence = "Källan anger ett underlag för avkastningsskatt.\ncatalog:variable_text:19555:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-for-avkastningsskatt-30-aavkastf2"
-fields = { "sets" = [] }
-evidence = "Skatteunderlag.\ncatalog:variable_text:19556:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-for-avkastningsskatt-30-aavkastf2"
-fields = { "tags" = ["taxation"] }
-evidence = "Skatteunderlag.\ncatalog:variable_text:19556:17897:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:underlag-for-sjukforsakringsavgift-asjuk1"
 fields = { "sets" = [] }
 evidence = "Id:t överstiger 60 tecken; etiketten kolliderar och målet kräver R6-prövning.\ncatalog:variable_text:19557:13149:13514"
@@ -57730,18 +57658,6 @@ kind = "set"
 subject = "var:underskott-7770"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Underskott i företagsdeklaration.\ncatalog:variable_text:19566:14975:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-aktiv-naringsverksamhet"
-fields = { "sets" = [] }
-evidence = "Näringsunderskott.\ncatalog:variable_text:19567:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-aktiv-naringsverksamhet"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Näringsunderskott.\ncatalog:variable_text:19567:16071:16436"
 
 [[statement]]
 kind = "set"
@@ -69817,18 +69733,6 @@ evidence = "Räntor på värdepapper.\ncatalog:variable_text:20607:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:vardet-av-uttagna-varor-och-tjanster-m-m-v0663"
-fields = { "sets" = [] }
-evidence = "Värde av uttagna varor och tjänster.\ncatalog:variable_text:20608:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:vardet-av-uttagna-varor-och-tjanster-m-m-v0663"
-fields = { "tags" = ["business"] }
-evidence = "Värde av uttagna varor och tjänster.\ncatalog:variable_text:20608:10957:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:vardnadsbidrag-utbetalt-belopp"
 fields = { "sets" = [] }
 evidence = "Utbetalt vårdnadsbidrag.\ncatalog:variable_text:20609:16801:17167"
@@ -69853,18 +69757,6 @@ evidence = "Företagets bokslutspost.\ncatalog:variable_text:20610:13514:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:varor-och-legoarbeten-v7500"
-fields = { "sets" = [] }
-evidence = "Företagets bokslutspost.\ncatalog:variable_text:20611:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:varor-och-legoarbeten-v7500"
-fields = { "tags" = ["business"] }
-evidence = "Företagets bokslutspost.\ncatalog:variable_text:20611:13514:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:varor-och-material-m-m"
 fields = { "sets" = [] }
 evidence = "Företagets bokslutspost.\ncatalog:variable_text:20612:10957:13514"
@@ -69874,18 +69766,6 @@ kind = "set"
 subject = "var:varor-och-material-m-m"
 fields = { "tags" = ["business"] }
 evidence = "Företagets bokslutspost.\ncatalog:variable_text:20612:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:varor-och-material-m-m-v0670"
-fields = { "sets" = [] }
-evidence = "Företagets bokslutspost.\ncatalog:variable_text:20613:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:varor-och-material-m-m-v0670"
-fields = { "tags" = ["business"] }
-evidence = "Företagets bokslutspost.\ncatalog:variable_text:20613:10957:13514"
 
 [[statement]]
 kind = "set"
@@ -73522,18 +73402,6 @@ kind = "set"
 subject = "var:vinst-tas-upp-inkomstslaget-kapital"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Vinst i inkomstslaget kapital.\ncatalog:variable_text:20933:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-v0550"
-fields = { "sets" = [] }
-evidence = "Företagets vinst vid avyttring av anläggningstillgångar.\ncatalog:variable_text:20934:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:vinst-vid-avyttring-av-anlaggningstillgangar-ej-v0550"
-fields = { "tags" = ["business"] }
-evidence = "Företagets vinst vid avyttring av anläggningstillgångar.\ncatalog:variable_text:20934:10957:13514"
 
 [[statement]]
 kind = "set"
@@ -93672,3 +93540,75 @@ kind = "set"
 subject = "var:arets-resultat-l26-laa"
 fields = { "label" = "Årets resultat (LAA11)" }
 evidence = "#2102 D1: after L27 2016-24 folds into arets-resultat-l27, LAA11 (2017, forsakringsbolag) and L26 still share the source label 'Årets resultat (L26)'; LAA11 takes its column code."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: v0671 @2000-01-01..2006-12-31 where key = 'v17266'"
+fields = { "variable" = "anstalld-personal" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0171 in deklarationsuppgifter; V0671 in handelsbolag: same definition and code list, never concurrent under another spelling in one table; folded into anstalld-personal."
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: va17 @2022-01-01..2023-12-31 where key = 'v20906'"
+fields = { "variable" = "skulder-till-kreditinstitut" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V7352 in aktiebolag; VA17 in finansbolag: same definition and code list, never concurrent under another spelling in one table; folded into skulder-till-kreditinstitut."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: btaxaru @2005-01-01..2006-12-31 where key = 'v16275'"
+fields = { "variable" = "taxeringsar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): TAXAR in bilaga-k10a, bilaga-n3a, deklarationsuppgifter, handelsbolag; BTAXARU in individtabeller: same definition and code list, never concurrent under another spelling in one table; folded into taxeringsar."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: aavkastf @2019-01-01..2023-12-31 where key = 'v38426'"
+fields = { "variable" = "underlag-avkastningsskatt-15-pens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): AAVKASTF2 in aktiebolag; AAVKASTF in handelsbolag: same definition and code list, never concurrent under another spelling in one table; folded into underlag-avkastningsskatt-15-pens."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: aavkastf2 @2019-01-01..2023-12-31 where key = 'v38425'"
+fields = { "variable" = "underlag-avkastningsskatt-30-forsak" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): AAVKASTF in aktiebolag; AAVKASTF2 in handelsbolag: same definition and code list, never concurrent under another spelling in one table; folded into underlag-avkastningsskatt-30-forsak."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: nunder @2014-01-01..2014-12-31 where key = 'v645'"
+fields = { "variable" = "underskott-av-aktiv-naringsverksamhet-nundat1" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): NUNDAT1 in bilaga-n3a, deklarationsuppgifter, individtabeller; NUNDER in aktiebolag: same definition and code list, never concurrent under another spelling in one table; folded into underskott-av-aktiv-naringsverksamhet-nundat1."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: v7500 @2007-01-01..2023-12-31 where key = 'v20724'"
+fields = { "variable" = "varor-och-legoarbeten" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V7512 in aktiebolag; V7500 in deklarationsuppgifter: same definition and code list, never concurrent under another spelling in one table; folded into varor-och-legoarbeten."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: v0670 @2000-01-01..2006-12-31 where key = 'v17265'"
+fields = { "variable" = "varor-och-material-m-m" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0170 in deklarationsuppgifter; V0670 in handelsbolag: same definition and code list, never concurrent under another spelling in one table; folded into varor-och-material-m-m."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: v0550 @2000-01-01..2006-12-31 where key = 'v4314'"
+fields = { "variable" = "vinst-avyttring-anlaggningstillgangar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0552 in aktiebolag, handelsbolag; V0550 in deklarationsuppgifter: same definition and code list, never concurrent under another spelling in one table; folded into vinst-avyttring-anlaggningstillgangar."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: v0663 @2000-01-01..2006-12-31 where key = 'v17264'"
+fields = { "variable" = "varde-uttagna-varor-tjanster" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0152 in deklarationsuppgifter; V0663 in handelsbolag: same definition and code list, never concurrent under another spelling in one table; folded into varde-uttagna-varor-tjanster."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: v7706 @2007-01-01..2023-12-31 where key = 'v16774'"
+fields = { "variable" = "skogsavdrag-substansminskningsavdrag" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0781 in aktiebolag, deklarationsuppgifter, handelsbolag; V7706 in deklarationsuppgifter; V7761 in aktiebolag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'Specifieras på blankett N8' where present; other occurrences have no opdef); folded into skogsavdrag-substansminskningsavdrag."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: v7761 @2007-01-01..2023-12-31 where key = 'v16774'"
+fields = { "variable" = "skogsavdrag-substansminskningsavdrag" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0781 in aktiebolag, deklarationsuppgifter, handelsbolag; V7706 in deklarationsuppgifter; V7761 in aktiebolag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'Specifieras på blankett N8' where present; other occurrences have no opdef); folded into skogsavdrag-substansminskningsavdrag."

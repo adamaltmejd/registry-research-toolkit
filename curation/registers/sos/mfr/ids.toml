@@ -55,7 +55,6 @@
 "barnets-diagnoskod-bk-7" = ["MFR_FOK: BDIAG_BK7"]
 "barnets-diagnoskod-bk-8" = ["MFR_FOK: BDIAG_BK8"]
 "barnets-fodelselangd" = ["MFR_FOK: BLANGD"]
-"barnets-fodelselangd-cm" = ["MFR: BLANGDF2"]
 "barnets-fodelsevikt" = ["MFR: BVIKT"]
 "barnets-huvudomfang" = ["MFR: HOMF"]
 "bdiagnos" = ["MFR: BDIAGNOS"]

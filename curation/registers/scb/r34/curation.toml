@@ -8708,18 +8708,6 @@ evidence = "Antal sysselsatta på arbetsstället.\ncatalog:variable_text:37495:1
 
 [[statement]]
 kind = "set"
-subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsys"
-fields = { "sets" = ["antal-personer-pa-arbetsstallet"] }
-evidence = "Antal sysselsatta på arbetsstället.\ncatalog:variable_text:37496:18993:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsys"
-fields = { "tags" = ["employment"] }
-evidence = "Antal sysselsatta på arbetsstället.\ncatalog:variable_text:37496:18993:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:antalab"
 fields = { "sets" = ["antal-foretag"] }
 evidence = "Antal och AB är läsbara; variabeln hör till antalet företag knutna till individen.\ncatalog:variable_text:37497:18993:19723"
@@ -17562,12 +17550,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsys"
-fields = { "description" = "Antal sysselsatta på arbetsstället. Antalet avser arbetsstället för personens huvudsakliga sysselsättning enligt RAMS, senare BAS." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A173\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376112:opdef_text; rel070-base/reg_meta.db:occurrence:373620:opdef_text; rel070-base/reg_meta.db:occurrence:375438:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:antalab"
 fields = { "description" = "Antal företag i eget aktiebolag individen har haft under året" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A195\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
@@ -23903,3 +23885,15 @@ kind = "set"
 subject = "var:person-organisationsnummer-huvudsaklig-sysselsattning"
 fields = { "label" = "Person-/organisationsnummer (huvudsaklig sysselsättning, PeOrgNrSreg)" }
 evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; PeOrgNrSreg and PeOrgNr_LISA (individer) carry the same \"huvudsaklig sysselsättning\" opdef; PeOrgNr is in arbetsstallen and foretag tables. Qualifier of the proposal kept; the code separates the individual-table column."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: antalsys @2010-01-01..2023-12-31 where key = 'v15532'"
+fields = { "variable" = "antal-sysselsatta-ast" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ast_AntalSys in arbetsstallen; AntalSys in individer-15plus, individer-16plus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both define the number of employed at the arbetsställe (person-level variant says the workplace of main activity), derived from BAS Årsuppgifter); folded into antal-sysselsatta-ast."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: antalsys @1990-01-01..2009-12-31 where key = 'v15532'"
+fields = { "variable" = "antal-sysselsatta-ast" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ast_AntalSys in arbetsstallen; AntalSys in individer-15plus, individer-16plus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both define the number of employed at the arbetsställe (person-level variant says the workplace of main activity), derived from BAS Årsuppgifter); folded into antal-sysselsatta-ast."

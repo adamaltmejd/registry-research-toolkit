@@ -619,18 +619,6 @@ evidence = "Födelselängd i en registertabell.\ncatalog:variable_text:57052:-18
 
 [[statement]]
 kind = "set"
-subject = "var:barnets-fodelselangd-cm"
-fields = { "sets" = ["barnets-fodelselangd"] }
-evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:barnets-fodelselangd-cm"
-fields = { "tags" = ["pregnancy-birth"] }
-evidence = "Suffixet 2 är en tilldelad räknare, inte källkolumnens suffix F2.\ncatalog:variable_text:57053:1096:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:barnets-fodelsevikt"
 fields = { "sets" = [] }
 evidence = "Barnets födelsevikt.\ncatalog:variable_text:57054:-1826:1096\ncatalog:variable_text:57054:1096:2932897"
@@ -3556,3 +3544,9 @@ kind = "set"
 subject = "var:graviditetslangd-dagar-utover-veckor-ul"
 fields = { "label" = "Graviditetslängd i dagar utöver veckor (ultraljud)" }
 evidence = "#2102 same-label cluster 'Graviditetslängd i dagar utöver veckor' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: GRDSM utgår från sista mensdatum, GRDUL från ultraljud."
+
+[[statement]]
+kind = "set"
+subject = "mfr: blangdf2 @1973-01-01..9999-12-31 where key = 'n:blangdf2'"
+fields = { "variable" = "barnets-fodelselangd" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BLANGD in mfr-fok; BLANGDF2 in mfr: same definition and code list, never concurrent under another spelling in one table; folded into barnets-fodelselangd."

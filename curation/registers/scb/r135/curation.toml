@@ -121,18 +121,6 @@ evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33813:17
 
 [[statement]]
 kind = "set"
-subject = "var:antal-anstallda-vid-rapportenheten-antanst"
-fields = { "sets" = ["antal-anstallda"] }
-evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33814:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-vid-rapportenheten-antanst"
-fields = { "tags" = ["employment"] }
-evidence = "Antal anställda vid rapportenheten.\ncatalog:variable_text:33814:18262:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:asni"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/naringsgren-arbetsstalle.\ncatalog:occurrence:293311\ncatalog:occurrence:293340\ncatalog:variable_text:33815:17532:20089"
@@ -996,3 +984,9 @@ kind = "set"
 subject = "var:vsni-4027"
 fields = { "label" = "Näringsgren (varunummer)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, high confidence; Opdefs say Asni avser arbetsställets, Vsni varunumrets and VEngs verksamhetsenhetens bransch; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "returravara: antanst @2020-01-01..2024-12-31 where key = 'v2478'"
+fields = { "variable" = "antal-anstallda" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Anst in industrins-varuproduktion; AntAnst in returravara: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both say employees counted at the rapportenhet (aggregated from LVE); returravara has no opdef); folded into antal-anstallda."

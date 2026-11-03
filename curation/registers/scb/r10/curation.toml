@@ -851,18 +851,6 @@ evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:357
 
 [[statement]]
 kind = "set"
-subject = "var:antal-kvigor-kviga"
-fields = { "sets" = ["antal-kvigor"] }
-evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35753:9131:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-kvigor-kviga"
-fields = { "tags" = ["agriculture"] }
-evidence = "Antalet kvigor hör till kandidatgruppen.\ncatalog:variable_text:35753:9131:9496"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-mjolkkor"
 fields = { "sets" = ["antal-kor"] }
 evidence = "Mjölkkor är en del av antalet kor.\ncatalog:variable_text:35754:6940:10227"
@@ -980,18 +968,6 @@ kind = "set"
 subject = "var:antal-svin-over-20-kg"
 fields = { "tags" = ["agriculture"] }
 evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35763:8766:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svin-over-20-kg-svino-2"
-fields = { "sets" = ["antal-svin"] }
-evidence = "Suffixet 2 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:330281\ncatalog:variable_text:35764:8035:8766"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svin-over-20-kg-svino-2"
-fields = { "tags" = ["agriculture"] }
-evidence = "Suffixet 2 är en tilldelad räknare och inte en del av källkolumnen.\ncatalog:occurrence:330281\ncatalog:variable_text:35764:8035:8766"
 
 [[statement]]
 kind = "set"
@@ -5522,3 +5498,15 @@ kind = "set"
 subject = "var:friland"
 fields = { "label" = "Totala frilandssareal i hektar (friland)" }
 evidence = "#2102 same-label cluster 'Totala frilandssareal i hektar' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; tradgard and friland are concurrent in uppdragsregistret 2014-2019 with identical definition and opdefs, and Sumfriland (2000-2001) is a third spelling; nothing separates them, so each keeps its own spelling."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: kviga @1995-01-01..1995-12-31 where key = 'v44584'"
+fields = { "variable" = "antal-kvigor" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): kvigor in djur; kviga in uppdragsregistret: same definition and code list, never concurrent under another spelling in one table; folded into antal-kvigor."
+
+[[statement]]
+kind = "set"
+subject = "djur: svinö @1992-01-01..1993-12-31 where key = 'v44589'"
+fields = { "variable" = "antal-svin-over-20-kg" }
+evidence = "#2141 Q4 (evidence rule): svinö (1992-1994) then svin2050 (1994-1998) in djur: same definition, no value set, adjacent, one column on each side of the boundary; folded into antal-svin-over-20-kg."

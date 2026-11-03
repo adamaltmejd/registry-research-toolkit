@@ -337,30 +337,6 @@ evidence = "Vatten- och avloppskostnader hör till kandidatgruppen.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:driftkostnader-vatten-och-avlopp-v4050"
-fields = { "sets" = ["vatten-och-avloppskostnader"] }
-evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
-
-[[statement]]
-kind = "set"
-subject = "var:driftkostnader-vatten-och-avlopp-v4050"
-fields = { "tags" = ["business", "environment", "housing"] }
-evidence = "Identitetsfaktet kopplar vattenkostnader till en senare post för vatten och avlopp.\ncatalog:occurrence:242840\ncatalog:occurrence:242891"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-fastighetsel"
-fields = { "sets" = ["fastighetselkostnader"] }
-evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27402:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-fastighetsel"
-fields = { "tags" = ["energy"] }
-evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27402:16436:16801"
-
-[[statement]]
-kind = "set"
 subject = "var:driftskostnader-for-fastighetsel-v4030"
 fields = { "sets" = ["fastighetselkostnader"] }
 evidence = "Källan anger driftkostnader för fastighetsel.\ncatalog:variable_text:27403:16436:16801"
@@ -382,18 +358,6 @@ kind = "set"
 subject = "var:driftskostnader-for-uppvarmning-v4020"
 fields = { "tags" = ["energy"] }
 evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27404:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-ovrigt"
-fields = { "sets" = ["ovriga-driftkostnader"] }
-evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27405:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-ovrigt"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger övriga driftkostnader.\ncatalog:variable_text:27405:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -442,18 +406,6 @@ kind = "set"
 subject = "var:driftskostnader-underhall"
 fields = { "tags" = ["business"] }
 evidence = "Identitetsfaktumet visar överlapp mellan underhåll och reparationer.\ncatalog:occurrence:243014\ncatalog:occurrence:243015"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-uppvarmning"
-fields = { "sets" = ["uppvarmningskostnader"] }
-evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27410:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-uppvarmning"
-fields = { "tags" = ["energy"] }
-evidence = "Källan anger uppvärmningskostnader.\ncatalog:variable_text:27410:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -490,18 +442,6 @@ kind = "set"
 subject = "var:fastighetslan"
 fields = { "tags" = ["finance"] }
 evidence = "Fastighetslånet ingår i lånegruppernas omfattning.\ncatalog:variable_text:27414:16436:16801\ncatalog:variable_text:27529:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetslan-v6010"
-fields = { "sets" = ["fastighetslan"] }
-evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801\n\nSingle-group ruling 2026-11-02: The documented quantity belongs to fastighetslan; the other candidates are broader context or a different dimension."
-
-[[statement]]
-kind = "set"
-subject = "var:fastighetslan-v6010"
-fields = { "tags" = ["finance"] }
-evidence = "Fastighetslånet är en komponent i långfristiga lån.\ncatalog:variable_text:27415:16436:16801\ncatalog:variable_text:27529:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -805,18 +745,6 @@ evidence = "Identitetsfaktumet visar överlapp mellan nettointäkt och reduktion
 
 [[statement]]
 kind = "set"
-subject = "var:intakter-garage-bilplatser"
-fields = { "sets" = ["garage-och-bilplatsintakter"] }
-evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27441:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-garage-bilplatser"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27441:16436:16801"
-
-[[statement]]
-kind = "set"
 subject = "var:intakter-garage-och-bilplatser-v1030"
 fields = { "sets" = ["garage-och-bilplatsintakter"] }
 evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
@@ -826,18 +754,6 @@ kind = "set"
 subject = "var:intakter-garage-och-bilplatser-v1030"
 fields = { "tags" = ["business"] }
 evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variable_text:27442:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-lokaler"
-fields = { "sets" = ["lokalintakter"] }
-evidence = "Lokalintäkter hör till kandidatgruppen.\ncatalog:variable_text:27443:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-lokaler"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Lokalintäkter hör till kandidatgruppen.\ncatalog:variable_text:27443:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -898,18 +814,6 @@ kind = "set"
 subject = "var:intakter-rantebidrag"
 fields = { "tags" = ["housing", "transfers"] }
 evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27448:13514:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-rantebidrag-v2070"
-fields = { "sets" = ["rantebidrag"] }
-evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27449:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-rantebidrag-v2070"
-fields = { "tags" = ["housing", "transfers"] }
-evidence = "Posten avser erhållna räntebidrag.\ncatalog:variable_text:27449:15340:15706"
 
 [[statement]]
 kind = "set"
@@ -1078,18 +982,6 @@ kind = "set"
 subject = "var:kommunregion-regkod"
 fields = { "tags" = ["geography"] }
 evidence = "Källan anger en gruppering av kommuner.\ncatalog:variable_text:27463:15340:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnader-tomtrattsavgald-v2020"
-fields = { "sets" = ["tomtrattsavgald"] }
-evidence = "Identitetsfaktumet visar överlapp med ett kombinationsbelopp.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
-
-[[statement]]
-kind = "set"
-subject = "var:kostnader-tomtrattsavgald-v2020"
-fields = { "tags" = ["property"] }
-evidence = "Identitetsfaktumet visar överlapp med ett kombinationsbelopp.\ncatalog:occurrence:243050\ncatalog:occurrence:243051"
 
 [[statement]]
 kind = "set"
@@ -1198,18 +1090,6 @@ kind = "set"
 subject = "var:ombyggnad"
 fields = { "tags" = ["property"] }
 evidence = "Källan anger ombyggnad under räkenskapsperioden.\ncatalog:variable_text:27474:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:ombyggnad-under-aktuell-rakenskapsperiod-v7010"
-fields = { "sets" = ["ombyggnad-under-rakenskapsperioden"] }
-evidence = "Identitetsfaktumet kopplar ombyggnadsuppgiften till ett anskaffningsbelopp.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
-
-[[statement]]
-kind = "set"
-subject = "var:ombyggnad-under-aktuell-rakenskapsperiod-v7010"
-fields = { "tags" = ["property"] }
-evidence = "Identitetsfaktumet kopplar ombyggnadsuppgiften till ett anskaffningsbelopp.\ncatalog:occurrence:242658\ncatalog:occurrence:242706"
 
 [[statement]]
 kind = "set"
@@ -1879,14 +1759,6 @@ evidence = "Both define premises floor area in square metres. In the privately o
 
 [[statement]]
 kind = "link"
-subject = "var:driftkostnader-vatten-och-avlopp-v4050"
-relation = "continues"
-object = "scb/iku/v4050"
-at = "2012-01-01.."
-evidence = "IKU V4050: water operating costs (2007-11) -> water and sewerage fixed+variable charges (2012-15), KSEK; broadened."
-
-[[statement]]
-kind = "link"
 subject = "var:driftskostnader-reparationer-underhall"
 relation = "continues"
 object = "scb/iku/driftskostnader-reparationer"
@@ -2420,3 +2292,69 @@ kind = "set"
 subject = "var:kommun-kommunnamn"
 fields = { "label" = "Kommun (Kommunnamn)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All four have the same municipality code list and no opdef; they overlap in the same tables, so only the code separates them."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: hyrabil @2007-01-01..2015-12-31 where key = 'v16588'"
+fields = { "variable" = "intakter-garage-och-bilplatser-v1030" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V1030 in bostadsrattsforeningar, privatagda-flerbostadshus; HYRABIL in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; folded into intakter-garage-och-bilplatser-v1030."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: v2020 @2007-01-01..2011-12-31 where key = 'v16599'"
+fields = { "variable" = "tomtrattsavgald" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): TOMT in allmannyttiga-bostadsforetag; V2020 in privatagda-flerbostadshus: same definition and code list, never concurrent under another spelling in one table; folded into tomtrattsavgald."
+
+[[statement]]
+kind = "set"
+subject = "bostadsrattsforeningar: v7010 @2007-01-01..2007-12-31 where key = 'v16471'"
+fields = { "variable" = "ombyggnad" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): OmBygg in privatagda-flerbostadshus; V7010 in bostadsrattsforeningar: same definition and code list, never concurrent under another spelling in one table; folded into ombyggnad."
+
+[[statement]]
+kind = "set"
+subject = "bostadsrattsforeningar: v4050 @2012-01-01..2015-12-31 where key = 'v16609'"
+fields = { "variable" = "driftkostnader-vatten-avlopp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): VATTENFO in allmannyttiga-bostadsforetag; V4050 in bostadsrattsforeningar, privatagda-flerbostadshus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only note is that the variable is a component of Taxebundna kostnader; other occurrences have no opdef); folded into driftkostnader-vatten-avlopp."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: v4050 @2012-01-01..2015-12-31 where key = 'v16609'"
+fields = { "variable" = "driftkostnader-vatten-avlopp" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): VATTENFO in allmannyttiga-bostadsforetag; V4050 in bostadsrattsforeningar, privatagda-flerbostadshus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only note is that the variable is a component of Taxebundna kostnader; other occurrences have no opdef); folded into driftkostnader-vatten-avlopp."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: elst @2007-01-01..2015-12-31 where key = 'v16504'"
+fields = { "variable" = "driftskostnader-for-fastighetsel-v4030" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V4030 in bostadsrattsforeningar, privatagda-flerbostadshus; ELST in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both state household electricity is excluded from fastighetsel and booked under övriga kostnader; the bostadsrätt text only adds how that is done); folded into driftskostnader-for-fastighetsel-v4030."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: uppvarmn @2007-01-01..2015-12-31 where key = 'v16503'"
+fields = { "variable" = "driftskostnader-for-uppvarmning-v4020" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V4020 in bostadsrattsforeningar, privatagda-flerbostadshus; UPPVARMN in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Opdef only on allmännyttiga (uppvärmning incl. personnel and other costs, with a spelling fix); others have none); folded into driftskostnader-for-uppvarmning-v4020."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: odko @2007-01-01..2015-12-31 where key = 'v16507'"
+fields = { "variable" = "driftskostnader-ovrigt-v4070" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V4070 in bostadsrattsforeningar, privatagda-flerbostadshus; ODKO in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both describe the residual 'övrigt' operating-cost item with examples (kabel-tv, hushållsel, insurance), differing in example lists); folded into driftskostnader-ovrigt-v4070."
+
+[[statement]]
+kind = "set"
+subject = "bostadsrattsforeningar: v6010 @2007-01-01..2015-12-31 where key = 'v16517'"
+fields = { "variable" = "fastighetslan" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): ILAN in allmannyttiga-bostadsforetag; V6010 in bostadsrattsforeningar: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Opdef only on allmännyttiga (all long-term debts); the other has none); folded into fastighetslan."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: v2070 @2007-01-01..2012-12-31 where key = 'v16604'"
+fields = { "variable" = "intakter-rantebidrag" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): RANTEBID in allmannyttiga-bostadsforetag; V2070 in privatagda-flerbostadshus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Privatägda opdef says only ny-/om-/tillbyggnad interest subsidy; allmännyttiga has none, so no conflict); folded into intakter-rantebidrag."
+
+[[statement]]
+kind = "set"
+subject = "allmannyttiga-bostadsforetag: vhylok @2007-01-01..2015-12-31 where key = 'v16587'"
+fields = { "variable" = "intakter-lokaler-v1020" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V1020 in bostadsrattsforeningar, privatagda-flerbostadshus; VHYLOK in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All say gross income before rent loss and rebates incl. estimated rent loss; extra text only says garage/parking rent is excluded or what premises are covered); folded into intakter-lokaler-v1020."

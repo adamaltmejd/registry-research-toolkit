@@ -1054,7 +1054,6 @@ public = "iot"
 "patp" = ["Individer och dödsbon: PATP"]
 "pbarnsk" = ["Individer och dödsbon: PBARNSK"]
 "barnpension-livranta-och-pension-skattefri-del" = ["Individer och dödsbon: PBLIVSF"]
-"pdel" = ["Individer och dödsbon: PDEL"]
 "allman-pension-enbart-atp" = ["Individer och dödsbon: PEATP"]
 "efterlevandepension-till-barn-familj" = ["Individer och dödsbon: PEFLEVBH"]
 "efterlevandepension-skapad" = ["Individer och dödsbon: PEFLEVP"]

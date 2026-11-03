@@ -11,7 +11,6 @@ public = "allmanna-val-valresultat"
 "antal-avgivna-roster" = ["Regionfullmäktige- /landstingsfullmäktigeval: antrost"]
 "antal-giltiga-roster-apk" = ["Kommunfullmäktigeval: apk_antrost"]
 "antal-giltiga-roster-folkpartiet" = ["Kommunfullmäktigeval: fp_antrost @ 1976-01-01"]
-"antal-giltiga-roster-kristdemokraterna" = ["Kommunfullmäktigeval: kd_antrost"]
 "antal-giltiga-roster-liberalerna" = ["Kommunfullmäktigeval: fp_antrost @ 2018-01-01"]
 "antal-giltiga-roster-vansterpartiet" = ["Kommunfullmäktigeval: v_antrost"]
 "antal-mandat-folkpartiet" = ["Kommunfullmäktigeval: fp_antmand @ 1973-01-01"]

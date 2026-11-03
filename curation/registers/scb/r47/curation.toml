@@ -1041,30 +1041,6 @@ evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolum
 
 [[statement]]
 kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-3"
-fields = { "sets" = ["amnesgruppens-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26245:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26245:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-4"
-fields = { "sets" = ["amnesgruppens-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26246:16436:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-4"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26246:16436:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2"
 fields = { "sets" = ["amnesgruppens-utbildningsinriktning"] }
 evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26247:8401:20089"
@@ -1074,30 +1050,6 @@ kind = "set"
 subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26247:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-3"
-fields = { "sets" = ["amnesgruppens-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26248:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26248:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-4"
-fields = { "sets" = ["amnesgruppens-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26249:16436:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-4"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare och förekommer inte i källkolumnen.\ncatalog:variable_text:26249:16436:20089"
 
 [[statement]]
 kind = "set"
@@ -2709,18 +2661,6 @@ evidence = "Kursort och programort anger undervisningsort.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sifferniva-sun2000inr-lprog"
-fields = { "sets" = ["programmets-utbildningsinriktning"] }
-evidence = "Programmets utbildningsinriktning.\ncatalog:variable_text:26399:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sifferniva-sun2000inr-lprog"
-fields = { "tags" = ["education"] }
-evidence = "Programmets utbildningsinriktning.\ncatalog:variable_text:26399:13514:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:programmets-suninriktning-pa-3-sun2000inr3-lprog-2"
 fields = { "sets" = ["programmets-utbildningsinriktning"] }
 evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26400:8401:20089"
@@ -2733,18 +2673,6 @@ evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26400:840
 
 [[statement]]
 kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2000inr3-lprog-3"
-fields = { "sets" = ["programmets-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26401:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2000inr3-lprog-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26401:8401:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-2"
 fields = { "sets" = ["programmets-utbildningsinriktning"] }
 evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26402:8401:20089"
@@ -2754,30 +2682,6 @@ kind = "set"
 subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-2"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26402:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-3"
-fields = { "sets" = ["programmets-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26403:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26403:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-4"
-fields = { "sets" = ["programmets-utbildningsinriktning"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26404:16436:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-suninriktning-pa-3-sun2020inr3-lprog-4"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26404:16436:20089"
 
 [[statement]]
 kind = "set"
@@ -2805,30 +2709,6 @@ evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26406:840
 
 [[statement]]
 kind = "set"
-subject = "var:programmets-sunniva-sun2000-sun2000niva-lprog-3"
-fields = { "sets" = ["programmets-utbildningsniva"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26407:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-sunniva-sun2000-sun2000niva-lprog-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26407:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-sunniva-sun2000-sun2000niva-lprog-4"
-fields = { "sets" = ["programmets-utbildningsniva"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26408:16436:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-sunniva-sun2000-sun2000niva-lprog-4"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26408:16436:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:programmets-sunniva-sun2020-sun2020niva-lprog-2"
 fields = { "sets" = ["programmets-utbildningsniva"] }
 evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26409:8401:20089"
@@ -2838,18 +2718,6 @@ kind = "set"
 subject = "var:programmets-sunniva-sun2020-sun2020niva-lprog-2"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26409:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-sunniva-sun2020-sun2020niva-lprog-3"
-fields = { "sets" = ["programmets-utbildningsniva"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26410:8401:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:programmets-sunniva-sun2020-sun2020niva-lprog-3"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet är en tilldelad räknare.\ncatalog:variable_text:26410:8401:20089"
 
 [[statement]]
 kind = "set"
@@ -4111,3 +3979,69 @@ kind = "set"
 subject = "var:ar-for-tillgodoraknande"
 fields = { "label" = "År (tillgodoräknande)" }
 evidence = "#2102 same-label cluster 'År' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Ar opdef: 'Endast ett värde: referensåret' (personal-1995-2000 table); KAr opdef: calendar year when the doctoral student received credit transfer (forskarutbildning-tillgodoraknande)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2000inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:8bfeb70777173e4a949d68652442da2009feed81abb937396064a5420f90f0ee'"
+fields = { "variable" = "programmets-suninriktning-pa-3-sun2000inr3-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_lprog in grundutbildning-poang; sun2000inr3_lprog in grundutbildning-1993; sun2000inr_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2000inr3-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sun2000inr_lprog @2007-01-01..2024-12-31 where key = 'stmt:b7dadb11a0bf71e4049da92064700ab566a6a683fc072be13165ae49c5542742'"
+fields = { "variable" = "programmets-suninriktning-pa-3-sun2000inr3-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_lprog in grundutbildning-poang; sun2000inr3_lprog in grundutbildning-1993; sun2000inr_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2000inr3-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2020inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:60c1118e16f4a8b019365b8255005117df4232f5901da8ca4a0ba6e00a929626'"
+fields = { "variable" = "programmets-suninriktning-pa-3-sun2020inr3-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_lprog in grundutbildning-poang; sun2020inr3_lprog in grundutbildning-1993; sun2020inr3_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2020inr3-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sun2020inr3_lprog @2015-01-01..2024-12-31 where key = 'stmt:8bd5a4a4b93cec8d7ee5bc17322e936b1e5fcd7d801b609fdeb5390225e25687'"
+fields = { "variable" = "programmets-suninriktning-pa-3-sun2020inr3-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_lprog in grundutbildning-poang; sun2020inr3_lprog in grundutbildning-1993; sun2020inr3_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2020inr3-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2000niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:67af5e1e87f3ed2567976bee355021d5eb4245a0b01a962248e287306b0105e6'"
+fields = { "variable" = "programmets-sunniva-sun2000-sun2000niva-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000niva_lprog in grundutbildning-poang; sun2000niva_lprog in grundutbildning-1993; sun2000niva_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2000-sun2000niva-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sun2000niva_lprog @2015-01-01..2024-12-31 where key = 'stmt:67069b66eaee562ac2e732e60c853a81eb394fb4dade0aff947b53c417c26a07'"
+fields = { "variable" = "programmets-sunniva-sun2000-sun2000niva-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000niva_lprog in grundutbildning-poang; sun2000niva_lprog in grundutbildning-1993; sun2000niva_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2000-sun2000niva-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2020niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:5d87b6c7fec78fc8bec28a8dd076d43407b988384db6b1de1b1130f6d6dc2ad4'"
+fields = { "variable" = "programmets-sunniva-sun2020-sun2020niva-lprog-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020niva_lprog in grundutbildning-poang; sun2020niva_lprog in grundutbildning-1993: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2020-sun2020niva-lprog-2."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2000inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:0207f44a8813665cb413a62beadc6ce17ce2581d568938e7d9888f6d27f0e79b'"
+fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_amnegrupp in grundutbildning-poang; sun2000inr3_amnegrupp in grundutbildning-1993; sun2000inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sun2000inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:79ae0e72d20265bfc3682d76db086886f2b986337bc531a120f327e4c2e0bd12'"
+fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_amnegrupp in grundutbildning-poang; sun2000inr3_amnegrupp in grundutbildning-1993; sun2000inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: sun2020inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:3a9bfe2f584b267f047d3dbfab75e210b82fcf0d9d7ba4545536764135664dda'"
+fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_amnegrupp in grundutbildning-poang; sun2020inr3_amnegrupp in grundutbildning-1993; sun2020inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sun2020inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:b12c785749ccf052a785d1589b17815d32b0f738100ed3a48f861f2cee1fc921'"
+fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_amnegrupp in grundutbildning-poang; sun2020inr3_amnegrupp in grundutbildning-1993; sun2020inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2."

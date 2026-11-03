@@ -312,30 +312,6 @@ evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55744:-
 
 [[statement]]
 kind = "set"
-subject = "var:fodelseland-namn"
-fields = { "sets" = ["fodelseland"] }
-evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelseland-namn"
-fields = { "tags" = ["demographics"] }
-evidence = "Barnets eller den ungas födelseland.\ncatalog:variable_text:55745:-3653:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamnfar"
-fields = { "sets" = ["faderns-fodelseland"] }
-evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamnfar"
-fields = { "tags" = ["demographics"] }
-evidence = "Faderns födelseland i namnform.\ncatalog:variable_text:55746:-3653:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:fodelselandnamnmor"
 fields = { "sets" = ["moderns-fodelseland"] }
 evidence = "Moderns födelseland i namnform.\ncatalog:variable_text:55747:-3653:17167"
@@ -441,18 +417,6 @@ kind = "set"
 subject = "var:kon"
 fields = { "tags" = ["demographics"] }
 evidence = "Barnets eller den ungas kön.\ncatalog:variable_text:55757:-3653:11323\ncatalog:variable_text:55757:11323:16436\ncatalog:variable_text:55757:16436:17167\ncatalog:variable_text:55757:17532:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:mfodland"
-fields = { "sets" = ["moderns-fodelseland"] }
-evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:mfodland"
-fields = { "tags" = ["demographics"] }
-evidence = "M är en enskild bokstavskod för moderns; den delade etiketten kräver disambiguering.\ncatalog:variable_text:55758:-3653:16071"
 
 [[statement]]
 kind = "set"
@@ -1002,3 +966,21 @@ kind = "set"
 subject = "set:vardnadshavare-vid-insats"
 fields = { "label" = "Vårdnadshavare vid insats" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-pnrq0: fodelselandnamnfar @1960-01-01..2016-12-31 where key = 'n:fodelselandnamnfar'"
+fields = { "variable" = "ffodland" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): FFODLAND in bu-barn-19602013; FODELSELANDNAMNFAR in bu-barn-pnrq0: same definition and code list, never concurrent under another spelling in one table; folded into ffodland."
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-pnrq0: fodelselandnamn @1960-01-01..2016-12-31 where key = 'n:fodelselandnamn'"
+fields = { "variable" = "fodelseland" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): FODLAND in bu-barn-19602013; FODELSELANDNAMN in bu-barn-pnrq0: same definition and code list, never concurrent under another spelling in one table; folded into fodelseland."
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-19602013: mfodland @1960-01-01..2013-12-31 where key = 'n:mfodland'"
+fields = { "variable" = "fodelselandnamnmor" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): FODELSELANDNAMNMOR in bu-barn-pnrq0; MFODLAND in bu-barn-19602013: same definition and code list, never concurrent under another spelling in one table; folded into fodelselandnamnmor."

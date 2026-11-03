@@ -214,3 +214,9 @@ kind = "set"
 subject = "var:statuskod-klartext"
 fields = { "label" = "Status (statuskod i klartext)" }
 evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; Opdefs: CU_StatusParent shows whether the operating unit answered the SIV survey this period, CU_Status_text is the status code in plain text."
+
+[[statement]]
+kind = "set"
+subject = "fasta-bruttoinvesteringar: namn @2024-01-01..2025-12-31 where key = 'v4042'"
+fields = { "variable" = "firmanamn-scbidnamn" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): SCBIDNAMN in lagerinvesteringar; namn in fasta-bruttoinvesteringar: same definition and code list, never concurrent under another spelling in one table; folded into firmanamn-scbidnamn."

@@ -1520,18 +1520,6 @@ evidence = "Antal månader och förekomst mäter tillfällig frånvaro.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:ar-a"
-fields = { "sets" = ["arbetsstallets-startar"] }
-evidence = "Den ensamma bokstaven A är en opak källkolumnskod. Startåret hör till gruppen för arbetsställets startår.\ncatalog:variable_text:41145:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-a"
-fields = { "tags" = [] }
-evidence = "Den ensamma bokstaven A är en opak källkolumnskod. Startåret hör till gruppen för arbetsställets startår.\ncatalog:variable_text:41145:17897:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:ar-ny"
 fields = { "sets" = ["arbetsstallets-startar"] }
 evidence = "Startår för arbetsställe hör till den angivna gruppen; årtal för en händelse får ingen tematisk tagg.\ncatalog:variable_text:41146:17532:19358"
@@ -3494,18 +3482,6 @@ evidence = "Variabeln anger förekomst av små barn.\ncatalog:variable_text:4134
 
 [[statement]]
 kind = "set"
-subject = "var:startar-foretag-i-fad-ar-f"
-fields = { "sets" = ["foretagets-startar"] }
-evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:41344:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:startar-foretag-i-fad-ar-f"
-fields = { "tags" = [] }
-evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:41344:17897:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:startar-ftg-fad"
 fields = { "sets" = ["foretagets-startar"] }
 evidence = "Variabeln anger företagets startår i FAD.\ncatalog:variable_text:41345:12053:19358"
@@ -4983,3 +4959,15 @@ kind = "set"
 subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
 fields = { "label" = "Antal sysselsatta på arbetsstället (fasta arbetsställen, AntalSysC)" }
 evidence = "#2102 same-label cluster 'Antal sysselsatta på arbetsstället' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: AntalSys sums employed from the employment register, AntalSysC sums them for fixed workplaces only; they come from different tables (arbetsstallen, individer) and overlap 2019-2022."
+
+[[statement]]
+kind = "set"
+subject = "individer: ar_a @2019-01-01..2021-12-31 where key = 'v16041'"
+fields = { "variable" = "ar-ny" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ar_Ny in fad-arbetsstallen, fad-nedlagda-arbetsstallen; Ar_A in individer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All occurrences carry the same FAD arbetsställe new/continuing definition with spacing and spelling differences); folded into ar-ny."
+
+[[statement]]
+kind = "set"
+subject = "individer: ar_f @2019-01-01..2021-12-31 where key = 'v16019'"
+fields = { "variable" = "startar-ftg-fad" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): AR_Ny/Ar_Ny in fad-foretag, fad-nedlagda-foretag; Ar_F in individer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same FAD new/continuing definition; older copies say 'arbetsställen' where newer say 'företag' (copy error), plus a short 'derived from source register' note); folded into startar-ftg-fad."

@@ -125,7 +125,6 @@ public = "komvux"
 "betyg-kursbet" = ["Nationella prov: KURSBET"]
 "fodelseland-rtb-fland" = ["Nationella prov: FLAND"]
 "lopnummer-for-kursdeltagaren-kdeltid" = ["Kursdeltagare i kommunal vuxenutbildning: KDeltID"]
-"nyinskriven-elev-nyelev" = ["Kursdeltagare i kommunal vuxenutbildning: Nyelev"]
 "termin-for-kursen-utl" = ["Kursdeltagare i kommunal vuxenutbildning: Utl"]
 "termin-for-kursen-utlagg" = ["Kursdeltagare i kommunal vuxenutbildning: Utlagg"]
 "tidigare-utbildning-tutb" = ["Kursdeltagare i kommunal vuxenutbildning: Tutb"]

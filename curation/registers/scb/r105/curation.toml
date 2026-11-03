@@ -566,18 +566,6 @@ evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy e
 
 [[statement]]
 kind = "set"
-subject = "var:alder-18-24-ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11464:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-18-24-ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11464:14245:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-18-24-ar-folkhogskolan-ald1824"
 fields = { "sets" = ["deltagarnas-aldersfordelning"] }
 evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11465:16071:18262"
@@ -587,18 +575,6 @@ kind = "set"
 subject = "var:alder-18-24-ar-folkhogskolan-ald1824"
 fields = { "tags" = ["education"] }
 evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11465:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-18-ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11466:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-18-ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11466:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -614,18 +590,6 @@ evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11467:1607
 
 [[statement]]
 kind = "set"
-subject = "var:alder-25-29-ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11468:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-25-29-ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11468:14245:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-25-29-ar-folkhogskolan-ald2529"
 fields = { "sets" = ["deltagarnas-aldersfordelning"] }
 evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11469:16071:18262"
@@ -635,18 +599,6 @@ kind = "set"
 subject = "var:alder-25-29-ar-folkhogskolan-ald2529"
 fields = { "tags" = ["education"] }
 evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11469:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-30-45-ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11470:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-30-45-ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass.\ncatalog:variable_text:11470:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -686,18 +638,6 @@ evidence = "Individuell ålder vid årets slut.\ncatalog:variable_text:11473:142
 
 [[statement]]
 kind = "set"
-subject = "var:alder-46-60-ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass; källhistoriken bevarar variationen i åldersgränsen.\ncatalog:variable_text:11474:14610:15706\ncatalog:variable_text:11474:15706:16071\ncatalog:variable_text:11474:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-46-60-ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass; källhistoriken bevarar variationen i åldersgränsen.\ncatalog:variable_text:11474:14610:15706\ncatalog:variable_text:11474:15706:16071\ncatalog:variable_text:11474:16071:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-46-60-ar-folkhogskolan-ald4660"
 fields = { "sets" = ["deltagarnas-aldersfordelning"] }
 evidence = "Antal deltagare i en åldersklass; källhistoriken bevarar variationen i åldersgränsen.\ncatalog:variable_text:11475:14245:14610\ncatalog:variable_text:11475:16071:18262"
@@ -707,18 +647,6 @@ kind = "set"
 subject = "var:alder-46-60-ar-folkhogskolan-ald4660"
 fields = { "tags" = ["education"] }
 evidence = "Antal deltagare i en åldersklass; källhistoriken bevarar variationen i åldersgränsen.\ncatalog:variable_text:11475:14245:14610\ncatalog:variable_text:11475:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-60ar-folkhogskolan"
-fields = { "sets" = ["deltagarnas-aldersfordelning"] }
-evidence = "Antal deltagare i en åldersklass; id:t återger källetiketten.\ncatalog:variable_text:11476:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-60ar-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare i en åldersklass; id:t återger källetiketten.\ncatalog:variable_text:11476:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -938,18 +866,6 @@ evidence = "Deltidsstudiernas omfattning.\ncatalog:variable_text:11496:19723:200
 
 [[statement]]
 kind = "set"
-subject = "var:deltagare-folkhogskolan"
-fields = { "sets" = ["deltagarantal"] }
-evidence = "Antal deltagare.\ncatalog:variable_text:11497:12784:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:deltagare-folkhogskolan"
-fields = { "tags" = ["education"] }
-evidence = "Antal deltagare.\ncatalog:variable_text:11497:12784:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:deltagare-folkhogskolan-deltagaretot"
 fields = { "sets" = ["deltagarantal"] }
 evidence = "Totalt deltagarantal.\ncatalog:variable_text:11498:16071:18262"
@@ -959,18 +875,6 @@ kind = "set"
 subject = "var:deltagare-folkhogskolan-deltagaretot"
 fields = { "tags" = ["education"] }
 evidence = "Totalt deltagarantal.\ncatalog:variable_text:11498:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:deltagare-folkhogskolan-totantdel"
-fields = { "sets" = ["deltagarantal"] }
-evidence = "Totalt deltagarantal.\ncatalog:variable_text:11499:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:deltagare-folkhogskolan-totantdel"
-fields = { "tags" = ["education"] }
-evidence = "Totalt deltagarantal.\ncatalog:variable_text:11499:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -1310,18 +1214,6 @@ evidence = "Gäststuderandestatus.\ncatalog:variable_text:11531:17532:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:gaststuderande-europa"
-fields = { "sets" = ["gaststuderande"] }
-evidence = "Antal gäststuderande från Europa.\ncatalog:variable_text:11532:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:gaststuderande-europa"
-fields = { "tags" = ["education"] }
-evidence = "Antal gäststuderande från Europa.\ncatalog:variable_text:11532:14245:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:gaststuderande-europa-gasteuropa"
 fields = { "sets" = ["gaststuderande"] }
 evidence = "Antal gäststuderande från Europa.\ncatalog:variable_text:11533:16071:18262"
@@ -1331,18 +1223,6 @@ kind = "set"
 subject = "var:gaststuderande-europa-gasteuropa"
 fields = { "tags" = ["education"] }
 evidence = "Antal gäststuderande från Europa.\ncatalog:variable_text:11533:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:gaststuderande-norden"
-fields = { "sets" = ["gaststuderande"] }
-evidence = "Antal gäststuderande från Norden.\ncatalog:variable_text:11534:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:gaststuderande-norden"
-fields = { "tags" = ["education"] }
-evidence = "Antal gäststuderande från Norden.\ncatalog:variable_text:11534:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -1694,18 +1574,6 @@ evidence = "Internatboende under utbildningen.\ncatalog:variable_text:11564:1753
 
 [[statement]]
 kind = "set"
-subject = "var:internatboende"
-fields = { "sets" = ["internatboende"] }
-evidence = "Antal internatboende deltagare.\ncatalog:variable_text:11565:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:internatboende"
-fields = { "tags" = ["housing"] }
-evidence = "Antal internatboende deltagare.\ncatalog:variable_text:11565:16071:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:internatboende-folkhogskolan-internat"
 fields = { "sets" = ["internatboende"] }
 evidence = "Antal internatboende deltagare.\ncatalog:variable_text:11566:16071:18262"
@@ -1859,18 +1727,6 @@ kind = "set"
 subject = "var:kursniva-folkhogskolan"
 fields = { "tags" = ["education"] }
 evidence = "Kursens utbildningsnivå.\ncatalog:variable_text:11584:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:kursniva-folkhogskolan-niva"
-fields = { "sets" = ["kursniva"] }
-evidence = "Kursens utbildningsnivå.\ncatalog:variable_text:11585:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:kursniva-folkhogskolan-niva"
-fields = { "tags" = ["education"] }
-evidence = "Kursens utbildningsnivå.\ncatalog:variable_text:11585:14610:14975"
 
 [[statement]]
 kind = "set"
@@ -2468,18 +2324,6 @@ evidence = "Deltagarens utbildningsbakgrund.\ncatalog:variable_text:11645:12784:
 
 [[statement]]
 kind = "set"
-subject = "var:utbbak-ej-grundskola"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal utan grundskolekompetens.\ncatalog:variable_text:11646:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbbak-ej-grundskola"
-fields = { "tags" = ["education"] }
-evidence = "Antal utan grundskolekompetens.\ncatalog:variable_text:11646:14245:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:utbbak-grundskolekompetens"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Antal med grundskolekompetens.\ncatalog:variable_text:11647:16071:18262"
@@ -2504,18 +2348,6 @@ evidence = "Antal med tvåårigt gymnasium.\ncatalog:variable_text:11648:16071:1
 
 [[statement]]
 kind = "set"
-subject = "var:utbbak-gymnasium-3ar"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med treårigt gymnasium.\ncatalog:variable_text:11649:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utbbak-gymnasium-3ar"
-fields = { "tags" = ["education"] }
-evidence = "Antal med treårigt gymnasium.\ncatalog:variable_text:11649:16071:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:utbbak-hogre-utbildning"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Antal med högre utbildning.\ncatalog:variable_text:11650:16071:18262"
@@ -2525,18 +2357,6 @@ kind = "set"
 subject = "var:utbbak-hogre-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Antal med högre utbildning.\ncatalog:variable_text:11650:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:utbbak-paborjad-gymnasium"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med påbörjat gymnasium.\ncatalog:variable_text:11651:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbbak-paborjad-gymnasium"
-fields = { "tags" = ["education"] }
-evidence = "Antal med påbörjat gymnasium.\ncatalog:variable_text:11651:14245:16436"
 
 [[statement]]
 kind = "set"
@@ -2564,30 +2384,6 @@ evidence = "Typ av utbildningsanordnare.\ncatalog:variable_text:11653:17532:1789
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-gymnasium-m2gy"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med tvåårigt gymnasium.\ncatalog:variable_text:11654:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-gymnasium-m2gy"
-fields = { "tags" = ["education"] }
-evidence = "Antal med tvåårigt gymnasium.\ncatalog:variable_text:11654:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-utbbak4-2"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11655:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-2-arigt-utbbak4-2"
-fields = { "tags" = ["education"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11655:13879:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Antal med treårigt gymnasium.\ncatalog:variable_text:11656:14245:16436"
@@ -2597,18 +2393,6 @@ kind = "set"
 subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy"
 fields = { "tags" = ["education"] }
 evidence = "Antal med treårigt gymnasium.\ncatalog:variable_text:11656:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-utbbak5-2"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11657:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-3-arigt-utbbak5-2"
-fields = { "tags" = ["education"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11657:13879:14610"
 
 [[statement]]
 kind = "set"
@@ -2624,54 +2408,6 @@ evidence = "Antal utan grundskolekompetens.\ncatalog:variable_text:11658:16071:1
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-ej-grundskola-utbbak1"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11659:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-ej-grundskola-utbbak1"
-fields = { "tags" = ["education"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11659:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-grundskolekompetens-mgr"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med grundskolekompetens.\ncatalog:variable_text:11660:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-grundskolekompetens-mgr"
-fields = { "tags" = ["education"] }
-evidence = "Antal med grundskolekompetens.\ncatalog:variable_text:11660:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-hogre-utbildning-mho"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med högre utbildning.\ncatalog:variable_text:11661:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-hogre-utbildning-mho"
-fields = { "tags" = ["education"] }
-evidence = "Antal med högre utbildning.\ncatalog:variable_text:11661:14245:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-hogre-utbildning-utbbak6"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11662:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-hogre-utbildning-utbbak6"
-fields = { "tags" = ["education"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11662:13879:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1"
 fields = { "sets" = ["utbildningsbakgrund"] }
 evidence = "Antal med påbörjad gymnasieutbildning.\ncatalog:variable_text:11663:16071:18262"
@@ -2681,30 +2417,6 @@ kind = "set"
 subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1"
 fields = { "tags" = ["education"] }
 evidence = "Antal med påbörjad gymnasieutbildning.\ncatalog:variable_text:11663:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-utbbak3-2"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11664:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-paborjad-utbbak3-2"
-fields = { "tags" = ["education"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:11664:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-utbbak2"
-fields = { "sets" = ["utbildningsbakgrund"] }
-evidence = "Antal med grundskolekompetens.\ncatalog:variable_text:11665:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbakgrund-folkhogskolan-utbbak2"
-fields = { "tags" = ["education"] }
-evidence = "Antal med grundskolekompetens.\ncatalog:variable_text:11665:13879:14610"
 
 [[statement]]
 kind = "set"
@@ -3271,3 +2983,285 @@ kind = "set"
 subject = "var:invandrade-folkhogskolan-utrikesfodda"
 fields = { "label" = "Invandrade folkhögskolan" }
 evidence = "#2102 fold: the label names every folded column. Invandrare (2005-10), Inva (2007-14) and Utrikesfodda (2014-) in grupper-hostterminen/-varterminen: same definition and opdef (opdefs differ by one space), never concurrent in a table, adjacent per table."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: totantdel @2007-01-01..2013-12-31 where key = 'v8609'"
+fields = { "variable" = "deltagare-folkhogskolan-deltagaretot" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): DeltagareTot in grupper-hostterminen, grupper-varterminen; TotAntDel in grupper-hostterminen, grupper-varterminen; Delt in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into deltagare-folkhogskolan-deltagaretot."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: totantdel @2010-01-01..2014-12-31 where key = 'v8609'"
+fields = { "variable" = "deltagare-folkhogskolan-deltagaretot" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): DeltagareTot in grupper-hostterminen, grupper-varterminen; TotAntDel in grupper-hostterminen, grupper-varterminen; Delt in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into deltagare-folkhogskolan-deltagaretot."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: delt @2005-01-01..2008-12-31 where key = 'v8609'"
+fields = { "variable" = "deltagare-folkhogskolan-deltagaretot" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): DeltagareTot in grupper-hostterminen, grupper-varterminen; TotAntDel in grupper-hostterminen, grupper-varterminen; Delt in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into deltagare-folkhogskolan-deltagaretot."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: delt @2005-01-01..2009-12-31 where key = 'v8609'"
+fields = { "variable" = "deltagare-folkhogskolan-deltagaretot" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): DeltagareTot in grupper-hostterminen, grupper-varterminen; TotAntDel in grupper-hostterminen, grupper-varterminen; Delt in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into deltagare-folkhogskolan-deltagaretot."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: gasteu @2007-01-01..2013-12-31 where key = 'v8612'"
+fields = { "variable" = "gaststuderande-europa-gasteuropa" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): GastEuropa in grupper-hostterminen, grupper-varterminen; GastEu/Gasteu in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into gaststuderande-europa-gasteuropa."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: gasteu @2010-01-01..2014-12-31 where key = 'v8612'"
+fields = { "variable" = "gaststuderande-europa-gasteuropa" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): GastEuropa in grupper-hostterminen, grupper-varterminen; GastEu/Gasteu in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into gaststuderande-europa-gasteuropa."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: gastn @2007-01-01..2013-12-31 where key = 'v8613'"
+fields = { "variable" = "gaststuderande-norden-gastnord" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): GastNord in grupper-hostterminen, grupper-varterminen; GastN/Gastn in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into gaststuderande-norden-gastnord."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: gastn @2010-01-01..2014-12-31 where key = 'v8613'"
+fields = { "variable" = "gaststuderande-norden-gastnord" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): GastNord in grupper-hostterminen, grupper-varterminen; GastN/Gastn in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into gaststuderande-norden-gastnord."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: intern @2007-01-01..2013-12-31 where key = 'v8627'"
+fields = { "variable" = "internatboende-folkhogskolan-internat" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Internat in grupper-hostterminen, grupper-varterminen; Intern in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into internatboende-folkhogskolan-internat."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: intern @2010-01-01..2014-12-31 where key = 'v8627'"
+fields = { "variable" = "internatboende-folkhogskolan-internat" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Internat in grupper-hostterminen, grupper-varterminen; Intern in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into internatboende-folkhogskolan-internat."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: m2gy @2007-01-01..2013-12-31 where key = 'v8606'"
+fields = { "variable" = "utbbak-gymnasium-2ar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym2 in grupper-hostterminen, grupper-varterminen; M2gy in grupper-hostterminen, grupper-varterminen; UtbBak4 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-gymnasium-2ar."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: m2gy @2010-01-01..2014-12-31 where key = 'v8606'"
+fields = { "variable" = "utbbak-gymnasium-2ar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym2 in grupper-hostterminen, grupper-varterminen; M2gy in grupper-hostterminen, grupper-varterminen; UtbBak4 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-gymnasium-2ar."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak4 @2005-01-01..2008-12-31 where key = 'v8606'"
+fields = { "variable" = "utbbak-gymnasium-2ar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym2 in grupper-hostterminen, grupper-varterminen; M2gy in grupper-hostterminen, grupper-varterminen; UtbBak4 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-gymnasium-2ar."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak4 @2005-01-01..2009-12-31 where key = 'v8606'"
+fields = { "variable" = "utbbak-gymnasium-2ar" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym2 in grupper-hostterminen, grupper-varterminen; M2gy in grupper-hostterminen, grupper-varterminen; UtbBak4 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-gymnasium-2ar."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak5 @2005-01-01..2008-12-31 where key = 'v8607'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): M3gy in grupper-hostterminen, grupper-varterminen; UtbBak5 in grupper-hostterminen, grupper-varterminen; Gym3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak5 @2005-01-01..2009-12-31 where key = 'v8607'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): M3gy in grupper-hostterminen, grupper-varterminen; UtbBak5 in grupper-hostterminen, grupper-varterminen; Gym3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: gym3 @2010-01-01..2016-12-31 where key = 'v8607'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): M3gy in grupper-hostterminen, grupper-varterminen; UtbBak5 in grupper-hostterminen, grupper-varterminen; Gym3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: gym3 @2015-01-01..2016-12-31 where key = 'v8607'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): M3gy in grupper-hostterminen, grupper-varterminen; UtbBak5 in grupper-hostterminen, grupper-varterminen; Gym3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-3-arigt-gymnasium-m3gy."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: ejgr @2007-01-01..2013-12-31 where key = 'v8580'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): EjGrund in grupper-hostterminen, grupper-varterminen; EjGr/Ejgr in grupper-hostterminen, grupper-varterminen; UtbBak1 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: ejgr @2010-01-01..2014-12-31 where key = 'v8580'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): EjGrund in grupper-hostterminen, grupper-varterminen; EjGr/Ejgr in grupper-hostterminen, grupper-varterminen; UtbBak1 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak1 @2005-01-01..2008-12-31 where key = 'v8580'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): EjGrund in grupper-hostterminen, grupper-varterminen; EjGr/Ejgr in grupper-hostterminen, grupper-varterminen; UtbBak1 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak1 @2005-01-01..2009-12-31 where key = 'v8580'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): EjGrund in grupper-hostterminen, grupper-varterminen; EjGr/Ejgr in grupper-hostterminen, grupper-varterminen; UtbBak1 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-ej-grundskola-ejgrund."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: mgr @2007-01-01..2013-12-31 where key = 'v8599'"
+fields = { "variable" = "utbbak-grundskolekompetens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Grund in grupper-hostterminen, grupper-varterminen; Mgr in grupper-hostterminen, grupper-varterminen; UtbBak2 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-grundskolekompetens."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: mgr @2010-01-01..2014-12-31 where key = 'v8599'"
+fields = { "variable" = "utbbak-grundskolekompetens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Grund in grupper-hostterminen, grupper-varterminen; Mgr in grupper-hostterminen, grupper-varterminen; UtbBak2 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-grundskolekompetens."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak2 @2005-01-01..2008-12-31 where key = 'v8599'"
+fields = { "variable" = "utbbak-grundskolekompetens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Grund in grupper-hostterminen, grupper-varterminen; Mgr in grupper-hostterminen, grupper-varterminen; UtbBak2 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-grundskolekompetens."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak2 @2005-01-01..2009-12-31 where key = 'v8599'"
+fields = { "variable" = "utbbak-grundskolekompetens" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Grund in grupper-hostterminen, grupper-varterminen; Mgr in grupper-hostterminen, grupper-varterminen; UtbBak2 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-grundskolekompetens."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: mhö @2007-01-01..2013-12-31 where key = 'v8581'"
+fields = { "variable" = "utbbak-hogre-utbildning" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Hog in grupper-hostterminen, grupper-varterminen; Mhö in grupper-hostterminen, grupper-varterminen; UtbBak6 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-hogre-utbildning."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: mhö @2010-01-01..2014-12-31 where key = 'v8581'"
+fields = { "variable" = "utbbak-hogre-utbildning" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Hog in grupper-hostterminen, grupper-varterminen; Mhö in grupper-hostterminen, grupper-varterminen; UtbBak6 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-hogre-utbildning."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak6 @2005-01-01..2008-12-31 where key = 'v8581'"
+fields = { "variable" = "utbbak-hogre-utbildning" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Hog in grupper-hostterminen, grupper-varterminen; Mhö in grupper-hostterminen, grupper-varterminen; UtbBak6 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-hogre-utbildning."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak6 @2005-01-01..2009-12-31 where key = 'v8581'"
+fields = { "variable" = "utbbak-hogre-utbildning" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Hog in grupper-hostterminen, grupper-varterminen; Mhö in grupper-hostterminen, grupper-varterminen; UtbBak6 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbbak-hogre-utbildning."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: ejgy @2007-01-01..2013-12-31 where key = 'v8605'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym1 in grupper-hostterminen, grupper-varterminen; EjGy/Ejgy in grupper-hostterminen, grupper-varterminen; UtbBak3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: ejgy @2010-01-01..2014-12-31 where key = 'v8605'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym1 in grupper-hostterminen, grupper-varterminen; EjGy/Ejgy in grupper-hostterminen, grupper-varterminen; UtbBak3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: utbbak3 @2005-01-01..2008-12-31 where key = 'v8605'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym1 in grupper-hostterminen, grupper-varterminen; EjGy/Ejgy in grupper-hostterminen, grupper-varterminen; UtbBak3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: utbbak3 @2005-01-01..2009-12-31 where key = 'v8605'"
+fields = { "variable" = "utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Gym1 in grupper-hostterminen, grupper-varterminen; EjGy/Ejgy in grupper-hostterminen, grupper-varterminen; UtbBak3 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into utbildningsbakgrund-folkhogskolan-paborjad-gymnasium-gym1."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-29 @2007-01-01..2013-12-31 where key = 'v8630'"
+fields = { "variable" = "alder-25-29-ar-folkhogskolan-ald2529" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald2529 in grupper-hostterminen, grupper-varterminen; A-29 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-25-29-ar-folkhogskolan-ald2529."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-29 @2010-01-01..2014-12-31 where key = 'v8630'"
+fields = { "variable" = "alder-25-29-ar-folkhogskolan-ald2529" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald2529 in grupper-hostterminen, grupper-varterminen; A-29 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-25-29-ar-folkhogskolan-ald2529."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-45 @2007-01-01..2013-12-31 where key = 'v8631'"
+fields = { "variable" = "alder-30-45-ar-folkhogskolan-ald3045" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald3045 in grupper-hostterminen, grupper-varterminen; A-45 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-30-45-ar-folkhogskolan-ald3045."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-45 @2010-01-01..2014-12-31 where key = 'v8631'"
+fields = { "variable" = "alder-30-45-ar-folkhogskolan-ald3045" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald3045 in grupper-hostterminen, grupper-varterminen; A-45 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-30-45-ar-folkhogskolan-ald3045."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-60 @2007-01-01..2013-12-31 where key = 'v8632'"
+fields = { "variable" = "alder-46-60-ar-folkhogskolan-ald4660" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald4660 in grupper-hostterminen, grupper-varterminen; A-60 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-46-60-ar-folkhogskolan-ald4660."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-60 @2010-01-01..2014-12-31 where key = 'v8632'"
+fields = { "variable" = "alder-46-60-ar-folkhogskolan-ald4660" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald4660 in grupper-hostterminen, grupper-varterminen; A-60 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-46-60-ar-folkhogskolan-ald4660."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-18 @2007-01-01..2013-12-31 where key = 'v8623'"
+fields = { "variable" = "alder-18-ar-folkhogskolan-ald18" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald18 in grupper-hostterminen, grupper-varterminen; A-18 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-18-ar-folkhogskolan-ald18."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-18 @2010-01-01..2014-12-31 where key = 'v8623'"
+fields = { "variable" = "alder-18-ar-folkhogskolan-ald18" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald18 in grupper-hostterminen, grupper-varterminen; A-18 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-18-ar-folkhogskolan-ald18."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-60w @2007-01-01..2013-12-31 where key = 'v8624'"
+fields = { "variable" = "alder-60ar-folkhogskolan-ald60" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald60 in grupper-hostterminen, grupper-varterminen; A-60w in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-60ar-folkhogskolan-ald60."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-60w @2010-01-01..2014-12-31 where key = 'v8624'"
+fields = { "variable" = "alder-60ar-folkhogskolan-ald60" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald60 in grupper-hostterminen, grupper-varterminen; A-60w in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; folded into alder-60ar-folkhogskolan-ald60."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: niva @2010-01-01..2010-12-31 where key = 'v8619'"
+fields = { "variable" = "kursniva-folkhogskolan" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): KursNiva/Kursniva/kursniva in deltagarregister, grupper-hostterminen, grupper-varterminen; Niva in grupper-hostterminen: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All opdefs give the same course-type definitions, differing only in 'Arbetsförmedlingen' capitalisation); folded into kursniva-folkhogskolan."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: a-24 @2007-01-01..2013-12-31 where key = 'v8625'"
+fields = { "variable" = "alder-18-24-ar-folkhogskolan-ald1824" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald1824 in grupper-hostterminen, grupper-varterminen; A-24 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Opdefs are identical apart from capitalisation of 'arbetsförmedlingen' and a trailing full stop); folded into alder-18-24-ar-folkhogskolan-ald1824."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: a-24 @2010-01-01..2014-12-31 where key = 'v8625'"
+fields = { "variable" = "alder-18-24-ar-folkhogskolan-ald1824" }
+evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald1824 in grupper-hostterminen, grupper-varterminen; A-24 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Opdefs are identical apart from capitalisation of 'arbetsförmedlingen' and a trailing full stop); folded into alder-18-24-ar-folkhogskolan-ald1824."
