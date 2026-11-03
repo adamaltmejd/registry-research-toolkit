@@ -8,7 +8,9 @@
 #
 # SWECOV defaults off: all four SWECOV jobs require repository variable
 # SWECOV_DEPLOY to equal exactly "on". After the paired release exists, the
-# maintainer enables it with `gh variable set SWECOV_DEPLOY --body on`.
+# maintainer first runs `gh variable set SWECOV_DEPLOY --body on`, then
+# `gh workflow run container-build.yml` (dispatch); never wait for the next push.
+# SWECOV origin and edge always deploy together, including frontend-only pushes.
 # Unset or any other value skips those jobs; turning it off again stops SWECOV
 # redeploys on later pushes without affecting global.
 #
@@ -364,6 +366,7 @@ jobs:
       needs.schema-guard.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
       (needs.changes.outputs.image == 'true' ||
+      needs.changes.outputs.edge_swecov == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     env:
@@ -634,8 +637,8 @@ jobs:
       needs.wait-ci.result == 'success' &&
       needs.schema-guard.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
-      needs.build-swecov-image.result != 'failure' &&
-      needs.deploy-swecov.result != 'failure' &&
+      needs.build-swecov-image.result == 'success' &&
+      needs.deploy-swecov.result == 'success' &&
       (needs.changes.outputs.edge_swecov == 'true' ||
       needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')

@@ -315,10 +315,17 @@ hosted MCP through its own origin and worker.
   repository variable `SWECOV_DEPLOY` to equal exactly `on`. It defaults off: unset or
   any other value skips all four jobs without affecting global. Only after the paired
   release exists, the maintainer enables it with
-  `gh variable set SWECOV_DEPLOY --body on`. Turning it off again stops SWECOV redeploys
-  on later pushes. Merging with it unset leaves the running 0.64 app and edge worker on
-  `data.swecov.se` unchanged; global redeploys once because the `__edge_v` restoration
-  changed `crates/**` and the global content digest.
+  `gh variable set SWECOV_DEPLOY --body on`, then dispatches
+  `gh workflow run container-build.yml` for first activation; never wait for the next
+  push. Turning it off again stops SWECOV redeploys on later pushes. Merging with it
+  unset leaves the running 0.64 app and edge worker on `data.swecov.se` unchanged;
+  global redeploys once because the `__edge_v` restoration changed `crates/**` and the
+  global content digest.
+- **SWECOV paired deploys**: origin and edge always deploy together. Image-affecting or
+  SWECOV edge changes trigger the image build, origin deploy and edge deploy in
+  sequence; the edge requires a successful origin deploy and cannot follow a skipped
+  origin. Frontend-only pushes therefore also rebuild and redeploy the SWECOV image,
+  paying the image-build cost and origin replacement even when server code is unchanged.
 - **SWECOV asset guard**: `schema-guard` resolves the optional paired asset digest,
   warning when absent. The push/dispatch-only `swecov-asset-guard` emits an error naming
   the tag and missing asset and sets no `ok` output on failure. It uses
