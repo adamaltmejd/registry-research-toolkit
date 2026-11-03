@@ -132,15 +132,15 @@ dependency.
 **Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
 fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
 digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
-arm64 and Linux x86_64 with SHA-256 checksums, and one catalog asset, `reg_meta.db.zst`,
-documents included. There is no separate docs asset; SWECOV's asset is not produced
-until milestone E. The binaries serve local HTTP or MCP; the catalog is downloaded with
-`curl` and `zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use
-hosted MCP; a local Windows binary is added only if it builds and runs without special
-effort. The `microdata-tools-se` plugin declares one hosted MCP server whose URL is a
-user setting: the global catalog by default, a hosted steward catalog
-(`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the agent's
-MCP configuration by hand.
+arm64 and Linux x86_64 with SHA-256 checksums, and two DB assets, `reg_meta.db.zst`
+(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
+holdings pin the base's `catalog_sha256`). There is no separate docs asset. The binaries
+serve local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no
+PyPI package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows
+binary is added only if it builds and runs without special effort. The
+`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
+the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
+instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
 
 ## The catalog builder
 
@@ -2538,9 +2538,9 @@ and not FQID kinds.
 - **Contract version.** `CONTRACT_VERSION` versions the operation set and its JSON
   shapes, and `meta` reports it on every response.
 - **Releases** are tagged per package (`reg_meta/vX.Y.Z`); each release carries the
-  single `reg_meta.db.zst` catalog asset (documents included) and the binaries. SWECOV's
-  asset is not produced until E. `project_data.json` records the catalog release it was
-  written against in that tag form.
+  `reg_meta.db.zst` catalog asset (documents included), the paired SWECOV holdings asset
+  `reg_meta_swecov.db.zst` and the binaries. `project_data.json` records the catalog
+  release it was written against in that tag form.
 - **Determinism.** The same request on the same artifact returns the same bytes: stable
   ordering with a unique final tie-breaker, sorted JSON keys where the contract says so,
   no timing in `meta`, cursors bound to the generation.
