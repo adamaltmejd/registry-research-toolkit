@@ -2583,14 +2583,14 @@ REBUILT_TEXT = {
     "variable definition": (
         "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.definition_text"
     ),
+    "variable description": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.description_text"
+    ),
+    "table description": (
+        "SELECT t.pid, x.body FROM tbl t JOIN text x ON x.id = t.description_text"
+    ),
     "register description": (
         "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text"
-    ),
-    # Keyed by curation file and kind, not by hash: the hash covers the whole statement,
-    # so any non-text edit would read as a removed and an added text.
-    "statement": (
-        "SELECT s.file || ' ' || s.kind, json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
-        " LEFT JOIN text e ON e.id = s.evidence_text LEFT JOIN text c ON c.id = s.caveat_text"
     ),
 }
 # Finding subjects by kind, as SQL returning (id, key that survives a rebuild).
@@ -2608,7 +2608,33 @@ REBUILT_SUBJECTS = {
         " JOIN tbl t ON t.id = o.table_id"
     ),
     "valueset": "SELECT id, hash FROM valueset",
+    "set": "SELECT id, pid FROM var_set",
+    "class_version": "SELECT id, pid FROM class_version",
 }
+_SUBJECT = " UNION ALL ".join(
+    f"SELECT '{kind}', * FROM ({sql})" for kind, sql in REBUILT_SUBJECTS.items()
+)
+# A statement is keyed by its file, kind and the stable keys of what it won (overrides,
+# relations, acks), not by its hash: the hash covers the whole statement, so a non-text
+# edit would read as removed and added text, and file and kind alone merge statements.
+REBUILT_TEXT["statement"] = (
+    f"WITH subject(kind, id, key) AS ({_SUBJECT}),"
+    " target(sid, t) AS ("
+    "SELECT o.statement_id, o.subject_kind || ':' || ifnull(k.key, o.subject_id) || '.' || o.field"
+    " FROM override o LEFT JOIN subject k ON k.kind = o.subject_kind AND k.id = o.subject_id"
+    " WHERE o.statement_id IS NOT NULL"
+    " UNION SELECT r.statement_id, r.kind || ' ' || ifnull(a.key, r.subject_id) || ' -> ' || ifnull(b.key, r.object_id)"
+    " FROM relation r LEFT JOIN subject a ON a.kind = r.subject_kind AND a.id = r.subject_id"
+    " LEFT JOIN subject b ON b.kind = r.object_kind AND b.id = r.object_id"
+    " WHERE r.statement_id IS NOT NULL"
+    " UNION SELECT f.ack_statement_id, 'ack ' || f.code || ' ' || ifnull(k.key, f.subject_id)"
+    " FROM finding f LEFT JOIN subject k ON k.kind = f.subject_kind AND k.id = f.subject_id"
+    " WHERE f.ack_statement_id IS NOT NULL)"
+    " SELECT s.file || ' ' || s.kind || ' ' || ifnull((SELECT group_concat(t, '; ')"
+    " FROM (SELECT t FROM target WHERE sid = s.id ORDER BY t)), ''),"
+    " json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
+    " LEFT JOIN text e ON e.id = s.evidence_text LEFT JOIN text c ON c.id = s.caveat_text"
+)
 
 
 def rebuilt_schema(db) -> tuple[int, str | None]:
