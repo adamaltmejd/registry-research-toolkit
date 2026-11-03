@@ -7,6 +7,8 @@
     uv run --no-project scripts/rebuild_compare.py holdings --old-db OLD_SWECOV.db \
         --new-base reg_meta.db --new-holdings reg_meta_swecov.db --out DIR \
         --old-census-sha256 SHA256 --new-census-sha256 SHA256
+    uv run --no-project scripts/rebuild_compare.py rebuilt --old-db OLD_SWECOV.db \
+        --new-db NEW_SWECOV.db [--out DIR]
 
 Temporary (REBUILD.md, milestone A; deleted at F). `<old db>` is a released
 `reg_meta.db`, `<new db>` a `reg-build` catalog and `<report.json>` its build report.
@@ -51,6 +53,7 @@ from urllib.request import Request, urlopen
 EXAMPLES = 8
 TIMELESS_START = -719162
 TIMELESS_END = 2932897
+REBUILT_ROWS = 30
 # The old catalog's name for a register's one unnamed table, the new implicit table.
 OLD_IMPLICIT = "_default"
 
@@ -2566,6 +2569,244 @@ def holdings(args) -> int:
     return 0
 
 
+# Reader-visible text by kind, as SQL returning (stable key, resolved body). Text ids
+# renumber between builds, so bodies are compared, never ids.
+REBUILT_TEXT = {
+    "occurrence definition": (
+        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''),"
+        " d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id"
+        " JOIN text d ON d.id = o.definition_text"
+    ),
+    "variable label": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text"
+    ),
+    "variable definition": (
+        "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.definition_text"
+    ),
+    "register description": (
+        "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text"
+    ),
+    "statement": (
+        "SELECT s.hash, json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s"
+        " LEFT JOIN text e ON e.id = s.evidence_text LEFT JOIN text c ON c.id = s.caveat_text"
+    ),
+}
+# Finding subjects by kind, as SQL returning (id, key that survives a rebuild).
+REBUILT_SUBJECTS = {
+    "register": "SELECT id, pid FROM register",
+    "table": "SELECT id, pid FROM tbl",
+    "release": "SELECT r.id, t.pid || '/' || r.source_key FROM release r JOIN tbl t ON t.id = r.table_id",
+    "variable": "SELECT id, pid FROM variable",
+    "segment": (
+        "SELECT s.id, v.pid || '@' || t.pid || '@' || s.start FROM segment s"
+        " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
+    ),
+    "occurrence": (
+        "SELECT o.id, t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') FROM occurrence o"
+        " JOIN tbl t ON t.id = o.table_id"
+    ),
+    "valueset": "SELECT id, hash FROM valueset",
+}
+
+
+def rebuilt_schema(db) -> tuple[int, str | None]:
+    row = db.execute("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
+    return db.execute("PRAGMA user_version").fetchone()[0], row and row[0]
+
+
+def rebuilt_placements(db):
+    """(physical table, column) -> (disposition, {(table_pid, variable_pid)})."""
+    columns = {
+        cid: (table, name, disposition)
+        for cid, table, name, disposition in db.execute(
+            "SELECT c.id, t.physical_name, c.name, c.disposition FROM holding_column c"
+            " JOIN holding_table t ON t.id = c.holding_id"
+        )
+    }
+    placed = defaultdict(set)
+    for cid, table_pid, variable_pid in db.execute(
+        "SELECT column_id, table_pid, variable_pid FROM holding_mapping"
+    ):
+        placed[cid].add((table_pid, variable_pid))
+    return {
+        (table, name): (disposition, placed[cid])
+        for cid, (table, name, disposition) in columns.items()
+    }
+
+
+def rebuilt_status(disposition, placement) -> str:
+    if placement:
+        return "placed"
+    return "held" if disposition in ("hold", "unmap") else "unmatched"
+
+
+def rebuilt_text(db, sql):
+    found = defaultdict(set)
+    for key, body in db.execute(sql):
+        found[key].add(body)
+    return found
+
+
+def rebuilt_findings(db):
+    subjects = {
+        (kind, ident): key
+        for kind, sql in REBUILT_SUBJECTS.items()
+        for ident, key in db.execute(sql)
+    }
+    return Counter(
+        (code, f"{kind}:{subjects[kind, ident]}", (lo, hi))
+        for code, kind, ident, lo, hi in db.execute(
+            "SELECT code, subject_kind, subject_id, start, end FROM finding"
+        )
+    )
+
+
+def rebuilt(args) -> int:
+    if args.out and args.out.exists():
+        raise ValueError("--out already exists; choose a fresh report directory")
+    with (
+        closing(connect_ro(args.old_db)) as old_db,
+        closing(connect_ro(args.new_db)) as new_db,
+    ):
+        old_schema, new_schema = rebuilt_schema(old_db), rebuilt_schema(new_db)
+        if old_schema != new_schema:
+            raise ValueError(
+                "holdings schema mismatch: (user_version, schema_version) "
+                f"old {old_schema}, new {new_schema}"
+            )
+        meta = {
+            side: dict(db.execute("SELECT key, value FROM meta"))
+            for side, db in (("old", old_db), ("new", new_db))
+        }
+        old, new = rebuilt_placements(old_db), rebuilt_placements(new_db)
+        totals = {
+            side: Counter(rebuilt_status(*value) for value in placements.values())
+            for side, placements in (("old", old), ("new", new))
+        }
+        changed = {
+            key: (old[key][1], new[key][1])
+            for key in sorted(old.keys() & new.keys())
+            if old[key][1] != new[key][1]
+        }
+        moves = Counter(
+            (
+                ", ".join(sorted({t for t, _ in before})) or "(none)",
+                ", ".join(sorted({t for t, _ in after})) or "(none)",
+            )
+            for before, after in changed.values()
+        )
+        texts = {}
+        for kind, sql in REBUILT_TEXT.items():
+            before, after = rebuilt_text(old_db, sql), rebuilt_text(new_db, sql)
+            texts[kind] = {
+                "old": len(before),
+                "new": len(after),
+                "changed": {
+                    key: {"old": sorted(before[key]), "new": sorted(after[key])}
+                    for key in before.keys() & after.keys()
+                    if before[key] != after[key]
+                },
+                "added": sorted(after.keys() - before.keys()),
+                "removed": sorted(before.keys() - after.keys()),
+            }
+        old_findings, new_findings = rebuilt_findings(old_db), rebuilt_findings(new_db)
+        added, removed = new_findings - old_findings, old_findings - new_findings
+        by_code = {
+            code: {
+                "old": sum(n for k, n in old_findings.items() if k[0] == code),
+                "new": sum(n for k, n in new_findings.items() if k[0] == code),
+                "added": sum(n for k, n in added.items() if k[0] == code),
+                "removed": sum(n for k, n in removed.items() if k[0] == code),
+            }
+            for code in sorted({k[0] for k in old_findings | new_findings})
+        }
+    summary = [
+        "# Rebuilt holdings comparison",
+        "",
+        f"Schema: user_version {old_schema[0]}, schema_version {old_schema[1]} on both sides.",
+        *(
+            f"{side.capitalize()}: generation {m.get('generation_id')}; steward {m.get('steward_commit')}; compiler {m.get('compiler_digest')}."
+            for side, m in meta.items()
+        ),
+        "",
+        "## Census placement",
+        "",
+        "Placed: at least one holding_mapping row. Held: hold/unmap disposition, no mapping. Unmatched: candidate, no mapping.",
+        "",
+        "| side | columns | placed | held | unmatched |",
+        "|---|---:|---:|---:|---:|",
+        *(
+            f"| {side} | {sum(c.values())} | {c['placed']} | {c['held']} | {c['unmatched']} |"
+            for side, c in totals.items()
+        ),
+        "",
+        f"Columns in both: {len(old.keys() & new.keys())}; placement changed: {len(changed)}; only in old: {len(old.keys() - new.keys())}; only in new: {len(new.keys() - old.keys())}.",
+        "",
+        "## Changed placements",
+        "",
+        "| old table_pid | new table_pid | columns |",
+        "|---|---|---:|",
+        *(
+            f"| {before} | {after} | {count} |"
+            for (before, after), count in moves.most_common(REBUILT_ROWS)
+        ),
+    ]
+    if len(moves) > REBUILT_ROWS:
+        summary.append(f"| … {len(moves) - REBUILT_ROWS} more groups | | |")
+    if not moves:
+        summary.append("| none | | |")
+    summary += [
+        "",
+        "## Reader-visible text",
+        "",
+        "| kind | old | new | changed | added | removed |",
+        "|---|---:|---:|---:|---:|---:|",
+        *(
+            f"| {kind} | {t['old']} | {t['new']} | {len(t['changed'])} | {len(t['added'])} | {len(t['removed'])} |"
+            for kind, t in texts.items()
+        ),
+        "",
+        "## Findings",
+        "",
+        f"Compared by (code, subject, period): {sum(added.values())} added, {sum(removed.values())} removed.",
+        "",
+        "| code | old | new | added | removed |",
+        "|---|---:|---:|---:|---:|",
+        *(
+            f"| {code} | {n['old']} | {n['new']} | {n['added']} | {n['removed']} |"
+            for code, n in by_code.items()
+            if n["added"] or n["removed"]
+        ),
+    ]
+    if not (added or removed):
+        summary.append("| none | | | | |")
+    if args.out:
+        args.out.mkdir(parents=True, exist_ok=False)
+        details = {
+            "schema": list(old_schema),
+            "meta": meta,
+            "placement_totals": totals,
+            "placement_moves": [
+                {"old": before, "new": after, "columns": count}
+                for (before, after), count in moves.most_common()
+            ],
+            "placement_changes": [
+                {"table": table, "column": column, "old": sorted(b), "new": sorted(a)}
+                for (table, column), (b, a) in sorted(changed.items())
+            ],
+            "text": texts,
+            "findings": by_code,
+            "findings_added": sorted(map(list, added), key=repr),
+            "findings_removed": sorted(map(list, removed), key=repr),
+        }
+        (args.out / "rebuilt.json").write_text(
+            json.dumps(details, ensure_ascii=False, indent=1, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    print("\n".join(summary))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -2609,6 +2850,15 @@ def main() -> int:
         help="census pin from the holdings build report's steward.input_pins",
     )
     holding.set_defaults(run=holdings)
+    rebuilt_cmd = commands.add_parser(
+        "rebuilt", help="compare two rebuilt holdings DBs (release step 8g)"
+    )
+    for flag in ("old-db", "new-db"):
+        rebuilt_cmd.add_argument(f"--{flag}", type=Path, required=True)
+    rebuilt_cmd.add_argument(
+        "--out", type=Path, help="new directory for rebuilt.json with the details"
+    )
+    rebuilt_cmd.set_defaults(run=rebuilt)
     args = parser.parse_args()
     try:
         return args.run(args)
