@@ -621,6 +621,7 @@ fn build_with_provenance(
         provenance,
         classifications: applied.classifications,
         external_relations,
+        occurrence_locators: admitted_pin.is_none(),
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({

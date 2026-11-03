@@ -1,5 +1,6 @@
 //! Explicit same-identity supplemental occurrences. Public ids cross the pair;
-//! source occurrences, their local ids and provenance remain in the steward file.
+//! source occurrences, their local ids and provenance (locator, evidence) remain in
+//! the steward file and only locate refusals.
 use super::{compile, input};
 use rusqlite::{Connection, params};
 use serde::Deserialize;
@@ -43,17 +44,17 @@ pub(super) fn read(root: &Path, config: &input::Config) -> Result<BTreeSet<Occur
     Ok(out)
 }
 
-pub(super) fn stored(db: &Connection) -> Result<BTreeSet<Occurrence>, String> {
-    db.prepare("SELECT table_pid,variable_pid,locator,evidence FROM holding_reference_occurrence")
+/// The (table, variable) pairs the declarations publish.
+pub(super) fn keys(rows: &BTreeSet<Occurrence>) -> BTreeSet<(String, String)> {
+    rows.iter()
+        .map(|r| (r.table_pid.clone(), r.variable_pid.clone()))
+        .collect()
+}
+
+pub(super) fn stored(db: &Connection) -> Result<BTreeSet<(String, String)>, String> {
+    db.prepare("SELECT table_pid,variable_pid FROM holding_reference_occurrence")
         .map_err(|e| e.to_string())?
-        .query_map([], |r| {
-            Ok(Occurrence {
-                table_pid: r.get(0)?,
-                variable_pid: r.get(1)?,
-                locator: r.get(2)?,
-                evidence: r.get(3)?,
-            })
-        })
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))
         .map_err(|e| e.to_string())?
         .collect::<Result<_, _>>()
         .map_err(|e| e.to_string())
@@ -62,27 +63,29 @@ pub(super) fn stored(db: &Connection) -> Result<BTreeSet<Occurrence>, String> {
 pub(super) fn write(db: &Connection, rows: &BTreeSet<Occurrence>) -> Result<(), String> {
     db.execute_batch(
         "CREATE TABLE holding_reference_occurrence (
-      table_pid TEXT NOT NULL, variable_pid TEXT NOT NULL, locator TEXT NOT NULL,
-      evidence TEXT NOT NULL, PRIMARY KEY(table_pid,variable_pid)) STRICT, WITHOUT ROWID;",
+      table_pid TEXT NOT NULL, variable_pid TEXT NOT NULL,
+      PRIMARY KEY(table_pid,variable_pid)) STRICT, WITHOUT ROWID;",
     )
     .map_err(|e| e.to_string())?;
     for r in rows {
         db.execute(
-            "INSERT INTO holding_reference_occurrence VALUES (?,?,?,?)",
-            params![r.table_pid, r.variable_pid, r.locator, r.evidence],
+            "INSERT INTO holding_reference_occurrence VALUES (?,?)",
+            params![r.table_pid, r.variable_pid],
         )
         .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
 
-pub(super) fn admitted(db: &Connection, base: &Connection) -> Result<BTreeSet<String>, String> {
+/// `rows` are the authored declarations; the caller has matched them to the stored keys.
+pub(super) fn admitted(
+    db: &Connection,
+    base: &Connection,
+    rows: &BTreeSet<Occurrence>,
+) -> Result<BTreeSet<String>, String> {
     let mut allowed = BTreeSet::new();
-    for r in stored(db)? {
+    for r in rows {
         let refuse = |code| format!("{}: {code}", r.locator);
-        if r.locator.trim().is_empty() || r.evidence.trim().is_empty() {
-            return Err(refuse("holdings_reference_occurrence_invalid"));
-        }
         let query = "SELECT v.register_id=t.register_id,r.pid,p.pid,t.timeless
          FROM variable v JOIN tbl t ON t.pid=? JOIN register r ON r.id=v.register_id
          JOIN provider p ON p.id=r.provider_id WHERE v.pid=?";
@@ -137,7 +140,7 @@ pub(super) fn admitted(db: &Connection, base: &Connection) -> Result<BTreeSet<St
         if other {
             return Err(refuse("holdings_reference_occurrence_undeclared"));
         }
-        allowed.extend([r.variable_pid, r.table_pid, a.1]);
+        allowed.extend([r.variable_pid.clone(), r.table_pid.clone(), a.1]);
     }
     Ok(allowed)
 }
