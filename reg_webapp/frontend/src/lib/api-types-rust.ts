@@ -414,7 +414,7 @@ export interface components {
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
             steward?: components["schemas"]["Steward"] | null;
-            steward_config?: Record<string, never>;
+            steward_config?: components["schemas"]["StewardConfig"];
             steward_sizes?: components["schemas"]["Sizes"] | null;
         };
         /** @description `shape.Coverage`. */
@@ -1291,6 +1291,28 @@ export interface components {
             holdings_generation: string;
             owner: string;
             schema_version: string;
+        };
+        /**
+         * @description `Context.steward_config`: the steward's compiled presentation, logo and scope. The
+         *     server passes the admitted JSON through; this type is its API schema and the
+         *     admission check that keeps the schema true.
+         */
+        StewardConfig: {
+            /** @description The logo's SVG markup. */
+            logo: string;
+            presentation: components["schemas"]["StewardPresentation"];
+            /** @description The steward's `scope.toml` as JSON; its shape is the steward spec's, not this API's. */
+            scope: Record<string, never>;
+        };
+        /** @description The steward's `steward.json`. Other keys pass through untyped. */
+        StewardPresentation: {
+            /** @description Inline markdown: emphasis and `[text](https://…)` links. */
+            description?: string | null;
+            id: string;
+            long_name?: string | null;
+            name: string;
+            /** @description How a researcher hands in an order. */
+            order_instructions?: string | null;
         };
         StewardRegisterFacets: {
             owner: string;

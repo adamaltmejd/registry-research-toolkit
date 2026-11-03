@@ -7,7 +7,7 @@ use std::io::Read as _;
 use std::path::{Path, PathBuf};
 
 use rusqlite::{Connection, OptionalExtension};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
@@ -25,6 +25,36 @@ pub struct Steward {
     pub catalog_generation: String,
     pub holdings_generation: String,
     pub schema_version: String,
+}
+
+/// `Context.steward_config`: the steward's compiled presentation, logo and scope. The
+/// server passes the admitted JSON through; this type is its API schema and the
+/// admission check that keeps the schema true.
+#[derive(ToSchema)]
+#[expect(
+    dead_code,
+    reason = "schema only; the served value is the admitted JSON"
+)]
+pub struct StewardConfig {
+    presentation: StewardPresentation,
+    /// The logo's SVG markup.
+    logo: String,
+    /// The steward's `scope.toml` as JSON; its shape is the steward spec's, not this API's.
+    #[schema(value_type = Object)]
+    scope: serde_json::Value,
+}
+
+/// The steward's `steward.json`. Other keys pass through untyped.
+#[derive(Deserialize, ToSchema)]
+#[expect(dead_code, reason = "deserialized only to check the admitted JSON")]
+pub struct StewardPresentation {
+    id: String,
+    name: String,
+    long_name: Option<String>,
+    /// Inline markdown: emphasis and `[text](https://…)` links.
+    description: Option<String>,
+    /// How a researcher hands in an order.
+    order_instructions: Option<String>,
 }
 
 fn file_digest(path: &Path) -> std::io::Result<String> {
@@ -108,14 +138,21 @@ impl Catalog {
         {
             return Err(refuse("malformed generation_id"));
         }
-        for key in ["steward", "scope"] {
-            if meta
-                .get(key)
-                .and_then(|value| serde_json::from_str::<serde_json::Value>(value).ok())
-                .is_none_or(|value| !value.is_object())
-            {
-                return Err(refuse(&format!("{key} must be a JSON object")));
-            }
+        if meta
+            .get("steward")
+            .and_then(|value| serde_json::from_str::<StewardPresentation>(value).ok())
+            .is_none()
+        {
+            return Err(refuse(
+                "steward must be a JSON object with string id and name",
+            ));
+        }
+        if meta
+            .get("scope")
+            .and_then(|value| serde_json::from_str::<serde_json::Value>(value).ok())
+            .is_none_or(|value| !value.is_object())
+        {
+            return Err(refuse("scope must be a JSON object"));
         }
         if meta.get("logo").is_none_or(|value| value.trim().is_empty()) {
             return Err(refuse("missing logo"));

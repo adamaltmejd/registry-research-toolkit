@@ -349,7 +349,7 @@ document = "doc, title, heading, page"
 
 [shape.Context]
 steward = "paired mode only: selected steward identity; as Meta.steward"
-steward_config = "paired mode only: compiled {presentation, logo, scope}; runtime reads no steward TOML"
+steward_config = "paired mode only: StewardConfig {presentation: {id, name, long_name?, description?, order_instructions?}, logo (SVG markup), scope (object)}; admission refuses a presentation without string id and name; runtime reads no steward TOML"
 steward_sizes = "paired mode only: supplemental {providers, registers, tables, variables}"
 catalog_version = "string"
 schema_version = "string"

@@ -33,7 +33,7 @@ pub struct Context {
     #[serde(skip_serializing_if = "Option::is_none")]
     steward: Option<crate::Steward>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(value_type = Object)]
+    #[schema(value_type = crate::holdings::StewardConfig)]
     steward_config: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     steward_sizes: Option<Sizes>,
