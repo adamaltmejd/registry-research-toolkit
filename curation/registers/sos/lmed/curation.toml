@@ -1456,4 +1456,4 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:fodelsedatum-numerisk"
 fields = { "label" = "Födelsedatum (numeriskt)" }
-evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samma datum i olika format; FODDATN är den numeriska varianten."
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samtidiga kolumner i samma tabell; N-suffixet anger numeriskt format (pid: numerisk)."

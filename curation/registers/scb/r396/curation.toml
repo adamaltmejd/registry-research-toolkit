@@ -381,22 +381,22 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:regionala-statistikomraden-kod"
 fields = { "label" = "Regionala statistikområden (kod, format 0114R001)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; regso_varde has RegSO-prefixed codes, RegSOkod the newer code format (0114R001), regso_namn the municipality plus area name and RegSO the area name."
+evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; Two different RegSO code formats (RegSO0114001 and 0114R001), plus a combined kommun-and-area name and a plain area name (opdefs)."
 
 [[statement]]
 kind = "set"
 subject = "var:regionala-statistikomraden-kod-registerdata-integration"
 fields = { "label" = "Regionala statistikområden (kod, format RegSO0114001)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; regso_varde has RegSO-prefixed codes, RegSOkod the newer code format (0114R001), regso_namn the municipality plus area name and RegSO the area name."
+evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; Two different RegSO code formats (RegSO0114001 and 0114R001), plus a combined kommun-and-area name and a plain area name (opdefs)."
 
 [[statement]]
 kind = "set"
 subject = "var:regionala-statistikomraden-kommun-omradesnamn"
 fields = { "label" = "Regionala statistikområden (kommun och områdesnamn)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; regso_varde has RegSO-prefixed codes, RegSOkod the newer code format (0114R001), regso_namn the municipality plus area name and RegSO the area name."
+evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; Two different RegSO code formats (RegSO0114001 and 0114R001), plus a combined kommun-and-area name and a plain area name (opdefs)."
 
 [[statement]]
 kind = "set"
 subject = "var:regionala-statistikomraden-omradesnamn"
 fields = { "label" = "Regionala statistikområden (områdesnamn)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; regso_varde has RegSO-prefixed codes, RegSOkod the newer code format (0114R001), regso_namn the municipality plus area name and RegSO the area name."
+evidence = "#2102 same-label cluster 'Regionala statistikområden' (4 variables): judged different meaning, medium confidence; Two different RegSO code formats (RegSO0114001 and 0114R001), plus a combined kommun-and-area name and a plain area name (opdefs)."

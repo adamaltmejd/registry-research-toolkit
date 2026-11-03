@@ -814,3 +814,51 @@ kind = "set"
 subject = "set:upplatelseform"
 fields = { "label" = "Upplåtelseform" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-antlghbt"
+fields = { "label" = "Antal lägenheter totalt (AntLghBT)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (2 variables): judged different meaning, low confidence; AntLgh and AntLghBT coexist in 2004-2009; AntLghBT has no opdef, definition or value set, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:huskat"
+fields = { "label" = "Hustyp (småhus eller flerbostadshus)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp"
+fields = { "label" = "Hustyp (småhus, detaljerad indelning)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustyp-5092"
+fields = { "label" = "Hustyp (småhus, detaljerad indelning)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:hustypns"
+fields = { "label" = "Hustyp (flerbostadshus, detaljerad indelning)" }
+evidence = "#2102 same-label cluster 'Hustyp' (4 variables): judged different meaning, medium confidence; HusKat is the småhus/flerbostadshus split; Hustyp2 (to 2008) and HusTyp (from 2008, opdef 'Småhus, detaljerad indelning') follow each other; HusTypNS has opdef 'Flerbostadshus, detaljerad indelning'."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform"
+fields = { "label" = "Upplåtelseform (UpplatelseForm)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform"
+fields = { "label" = "Upplåtelseform (Upplatform)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:upplatelseform-upplatform2"
+fields = { "label" = "Upplåtelseform (UpplatForm2)" }
+evidence = "#2102 same-label cluster 'Upplåtelseform' (3 variables): judged different meaning, low confidence; Three columns with identical code lists and overlapping periods; nothing says how they differ, so raw column codes."

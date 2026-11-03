@@ -147,70 +147,70 @@ evidence = "The variable counts other customers changing natural gas supplier.\n
 kind = "set"
 subject = "var:husanl"
 fields = { "label" = "Naturgas, byte leverantör (hushållskunder, antal anläggningar)" }
-evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Two measures (customers, installations) for two customer groups (hushåll, övriga), concurrent in one table."
+evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Opdefs give two measures (antal kunder, antal anläggningar) for two customer groups (hushållskunder, övriga kunder), concurrent in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:huskund"
 fields = { "label" = "Naturgas, byte leverantör (hushållskunder, antal kunder)" }
-evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Two measures (customers, installations) for two customer groups (hushåll, övriga), concurrent in one table."
+evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Opdefs give two measures (antal kunder, antal anläggningar) for two customer groups (hushållskunder, övriga kunder), concurrent in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-hushallskunder-5500-till-55000-kwh"
-fields = { "label" = "Nätpris för hushållskunder (5 500 till 55 000 kWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category (D1-D3, named by kWh range in the pids)."
+fields = { "label" = "Nätpris för hushållskunder (förbrukning 5 500–55 000 kWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category D1-D3, given in kWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-hushallskunder-lika-med-55000-kwh"
-fields = { "label" = "Nätpris för hushållskunder (lika med 55 000 kWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category (D1-D3, named by kWh range in the pids)."
+fields = { "label" = "Nätpris för hushållskunder (förbrukning 55 000 kWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category D1-D3, given in kWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-hushallskunder-under-5500-kwh"
-fields = { "label" = "Nätpris för hushållskunder (under 5 500 kWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category (D1-D3, named by kWh range in the pids)."
+fields = { "label" = "Nätpris för hushållskunder (förbrukning under 5 500 kWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för hushållskunder' (3 variables): judged different meaning, high confidence; One price per consumption category D1-D3, given in kWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-industrikunder-300-till-3000-mwh"
-fields = { "label" = "Nätpris för industrikunder (300 till 3 000 MWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category (I1-I5, named by MWh range in the pids)."
+fields = { "label" = "Nätpris för industrikunder (förbrukning 300–3 000 MWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category I1-I5, given in MWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-industrikunder-3000-till-30000-mwh"
-fields = { "label" = "Nätpris för industrikunder (3 000 till 30 000 MWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category (I1-I5, named by MWh range in the pids)."
+fields = { "label" = "Nätpris för industrikunder (förbrukning 3 000–30 000 MWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category I1-I5, given in MWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-industrikunder-30000-till-300000-mwh"
-fields = { "label" = "Nätpris för industrikunder (30 000 till 300 000 MWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category (I1-I5, named by MWh range in the pids)."
+fields = { "label" = "Nätpris för industrikunder (förbrukning 30 000–300 000 MWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category I1-I5, given in MWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-industrikunder-300000-till-1100000-mwh"
-fields = { "label" = "Nätpris för industrikunder (300 000 till 1 100 000 MWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category (I1-I5, named by MWh range in the pids)."
+fields = { "label" = "Nätpris för industrikunder (förbrukning 300 000–1 100 000 MWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category I1-I5, given in MWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:natpris-ore-per-kwh-industrikunder-under-300-mwh"
-fields = { "label" = "Nätpris för industrikunder (under 300 MWh)" }
-evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category (I1-I5, named by MWh range in the pids)."
+fields = { "label" = "Nätpris för industrikunder (förbrukning under 300 MWh)" }
+evidence = "#2102 same-label cluster 'Nätpris för industrikunder' (5 variables): judged different meaning, high confidence; One price per consumption category I1-I5, given in MWh in the opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:naturgas-byte-leverantor-ovranl"
 fields = { "label" = "Naturgas, byte leverantör (övriga kunder, antal anläggningar)" }
-evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Two measures (customers, installations) for two customer groups (hushåll, övriga), concurrent in one table."
+evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Opdefs give two measures (antal kunder, antal anläggningar) for two customer groups (hushållskunder, övriga kunder), concurrent in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:naturgas-byte-leverantor-ovrkund"
 fields = { "label" = "Naturgas, byte leverantör (övriga kunder, antal kunder)" }
-evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Two measures (customers, installations) for two customer groups (hushåll, övriga), concurrent in one table."
+evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Opdefs give two measures (antal kunder, antal anläggningar) for two customer groups (hushållskunder, övriga kunder), concurrent in one table."

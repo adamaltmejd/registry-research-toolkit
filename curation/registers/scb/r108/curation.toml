@@ -2661,83 +2661,89 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "var:gymnasieprogram-fem-grupper-introduktionsprogram"
-fields = { "label" = "Gymnasieprogram, grupperat (fem grupper, med introduktionsprogram)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (5 grupper, med introduktionsprogram)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:gymnasieprogram-fyra-grupper-2009-10"
-fields = { "label" = "Gymnasieprogram, grupperat (fyra grupper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:gymnasieprogram-grupperat"
-fields = { "label" = "Gymnasieprogram, grupperat (tre programtyper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (3 programtyper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
-fields = { "label" = "Gymnasieprogram, grupperat (fem grupper, med yrkesprogram)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (5 grupper, med yrkesprogram)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:kalibrerad-vikt-experimenturval-ordinarie-urval"
 fields = { "label" = "Vikt (experimenturval och ordinarie urval)" }
-evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Kalvikt_Alla and Kalvikt_Nya are concurrent 2003-2004; Vikt, kalvikt and wk are the calibrated weight over time; wk_sam and wk_ord are concurrent 2019-2020 (pid names them as experiment+ordinary sample and ordinary sample)."
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
 
 [[statement]]
 kind = "set"
 subject = "var:kalvikt-alla"
-fields = { "label" = "Vikt (alla)" }
-evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Kalvikt_Alla and Kalvikt_Nya are concurrent 2003-2004; Vikt, kalvikt and wk are the calibrated weight over time; wk_sam and wk_ord are concurrent 2019-2020 (pid names them as experiment+ordinary sample and ordinary sample)."
+fields = { "label" = "Vikt (alla, sex hjälpvariabler)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
 
 [[statement]]
 kind = "set"
 subject = "var:kalvikt-nya"
-fields = { "label" = "Vikt (nya)" }
-evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Kalvikt_Alla and Kalvikt_Nya are concurrent 2003-2004; Vikt, kalvikt and wk are the calibrated weight over time; wk_sam and wk_ord are concurrent 2019-2020 (pid names them as experiment+ordinary sample and ordinary sample)."
+fields = { "label" = "Vikt (nya enkäten)" }
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."
+
+[[statement]]
+kind = "set"
+subject = "var:lillan-nya"
+fields = { "label" = "Lilla n per stratum (nya enkäten, grupp N)" }
+evidence = "#2102 same-label cluster 'Lilla n per stratum' (2 variables): judged different meaning, medium confidence; Opdefs: Lillan counts individuals in the sample per stratum, Lillan_Nya only those who got the new questionnaire (group N)."
 
 [[statement]]
 kind = "set"
 subject = "var:pgm"
-fields = { "label" = "Gymnasieprogram, grupperat (fyra grupper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:pgrgrp"
-fields = { "label" = "Gymnasieprogram, grupperat (fyra grupper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Different groupings: four groups (PgrGrp, PGMgrp, pgm; same variable over time), five groups with introduktionsprogram (pgm2), three program types (typpgm), five groups with yrkesprogram (PrgGrp)."
+fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-gymnasieprogram"
-fields = { "label" = "Typ av gymnasieprogram (fem grupper, med introduktionsprogram)" }
-evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Four different groupings: three program types (typpgm), five groups incl. introduktionsprogram (pgm), program codes (program) and two program types (TypPgr, concurrent with program in 2021-2022)."
+fields = { "label" = "Typ av gymnasieprogram (5 grupper, med introduktionsprogram)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-gymnasieprogram-program"
 fields = { "label" = "Typ av gymnasieprogram (programkod)" }
-evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Four different groupings: three program types (typpgm), five groups incl. introduktionsprogram (pgm), program codes (program) and two program types (TypPgr, concurrent with program in 2021-2022)."
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-gymnasieprogram-typpgm"
-fields = { "label" = "Typ av gymnasieprogram (tre programtyper)" }
-evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Four different groupings: three program types (typpgm), five groups incl. introduktionsprogram (pgm), program codes (program) and two program types (TypPgr, concurrent with program in 2021-2022)."
+fields = { "label" = "Typ av gymnasieprogram (3 programtyper)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
 
 [[statement]]
 kind = "set"
 subject = "var:typpgr"
-fields = { "label" = "Typ av gymnasieprogram (två programtyper)" }
-evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Four different groupings: three program types (typpgm), five groups incl. introduktionsprogram (pgm), program codes (program) and two program types (TypPgr, concurrent with program in 2021-2022)."
+fields = { "label" = "Typ av gymnasieprogram (2 programtyper)" }
+evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
 
 [[statement]]
 kind = "set"
 subject = "var:wk-ord"
 fields = { "label" = "Vikt (ordinarie urval)" }
-evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Kalvikt_Alla and Kalvikt_Nya are concurrent 2003-2004; Vikt, kalvikt and wk are the calibrated weight over time; wk_sam and wk_ord are concurrent 2019-2020 (pid names them as experiment+ordinary sample and ordinary sample)."
+evidence = "#2102 same-label cluster 'Vikt' (7 variables): judged different meaning, medium confidence; Opdefs: Kalvikt_Alla and Kalvikt_Nya (new questionnaire) are concurrent; Vikt, kalvikt and wk are the general calibrated weight over time; wk_sam is for experimental plus ordinary sample, wk_ord for the ordinary sample."

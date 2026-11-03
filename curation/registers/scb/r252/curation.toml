@@ -1387,298 +1387,532 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 kind = "set"
 subject = "var:bortfallskod-objektsbortfall-starkelsepotatis"
 fields = { "label" = "Bortfallskod, objektsbortfall (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for stärkelsepotatis, ekologisk matpotatis or matpotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-fordeladareal"
+fields = { "label" = "Total färskpotatisareal enligt brukaren (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total färskpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-hektarskordkg"
+fields = { "label" = "Färskpotatisskörd per skördad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Färskpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: fkpot is the total, darf is 'därav ekologisk', a subset."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-obargadareal"
+fields = { "label" = "Obärgad färskpotatisareal (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset; fkpot is the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-osattareal"
+fields = { "label" = "Osatt färskpotatisareal (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Osatt färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av färskpotatis (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av färskpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darf is 'därav ekologisk' (a subset), eptf certified ecological, ovrf under conversion, fkpot all färskpotatis; concurrent flags with the same Nej/Ja value set."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-skordadareal"
+fields = { "label" = "Skördad areal av färskpotatis (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad areal av färskpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darf-totalskordton"
+fields = { "label" = "Total färskpotatisskörd (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total färskpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-fordeladareal"
+fields = { "label" = "Total höst-/vinterpotatisareal enligt brukaren (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-hektarskordkg"
+fields = { "label" = "Höst-/vinterpotatisskörd per skördad hektar (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: mpot is the total, darm is 'därav ekologisk', a subset."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-obargadareal"
+fields = { "label" = "Obärgad höst-/vinterpotatisareal (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Obärgad höst-/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset; mpot is the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-osattareal"
+fields = { "label" = "Osatt höst-/vinterpotatisareal (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Osatt höst-/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av höst-/vinterpotatis (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av höst-/vinterpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darm is 'därav ekologisk' (a subset), epot certified ecological, ovrm under conversion, mpot all höst-/vinterpotatis; concurrent flags with the same Nej/Ja value set."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-skordadareal"
+fields = { "label" = "Skördad areal av höst-/vinterpotatis (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Skördad areal av höst-/vinterpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:darm-totalskordton"
+fields = { "label" = "Total höst-/vinterpotatisskörd (därav ekologisk)" }
+evidence = "#2102 same-label cluster 'Total höst-/vinterpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-arealenlsam"
-fields = { "label" = "Areal enligt SAM-blanketten (epot)" }
-evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Areal enligt SAM-blanketten (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, high confidence; Opdefs differ: register area from the SAM application for ekologisk matpotatis, matpotatis or stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-bortfallskod"
-fields = { "label" = "Bortfallskod, objektsbortfall (epot)" }
-evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Bortfallskod, objektsbortfall (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for stärkelsepotatis, ekologisk matpotatis or matpotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-fordeladareal"
 fields = { "label" = "Total ekologisk höst-/vinterpotatisareal enligt brukaren (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: total certified ecological (epot) versus total under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-hektarskordkg"
 fields = { "label" = "Ekologisk höst-/vinterpotatisskörd per skördad hektar (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Ekologisk höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Ekologisk höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: epot is certified ecological höst-/vinterpotatis, ovrm is under conversion."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-ingenekoodling"
 fields = { "label" = "Ingen Ekologisk areal (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Ingen Ekologisk areal' (2 variables): judged different meaning, medium confidence; epot_IngenEkoOdling and ovr_IngenEkoOdling are the flags for the certified and in-conversion organic categories (same prefix pairing as the described eptf/ovrf columns)."
+evidence = "#2102 same-label cluster 'Ingen Ekologisk areal' (2 variables): judged different meaning, high confidence; Opdefs differ: no certified ecological matpotatis (epot) versus no matpotatis under conversion (ovr)."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-lillan"
-fields = { "label" = "LillaN (epot)" }
-evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+fields = { "label" = "LillaN (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, high confidence; Opdefs differ: sample counts for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-obargadareal"
 fields = { "label" = "Obärgad ekologisk höst/vinterpotatsiareal (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Obärgad ekologisk höst/vinterpotatsiareal' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Obärgad ekologisk höst/vinterpotatsiareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
+
+[[statement]]
+kind = "set"
+subject = "var:epot-ordlan"
+fields = { "label" = "Län (ekologisk matpotatis, där odlingen är belägen)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Opdefs differ: län of cultivation for ekologisk matpotatis, of the area used in estimation, and brukningscentrum län for stärkelsepotatis and matpotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-ordpo8"
-fields = { "label" = "Produktionsområde (8 områden, epot)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; po8 and the per-category OrdPo8 columns use the eight-area division, po18 the eighteen-area division (Skåne-Hallands slättbygd, Södra Bergslagen...); the epot/mpot/sta columns are one per potato category."
+fields = { "label" = "Produktionsområde (8 områden, ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; Opdefs differ: PO8 for ekologisk matpotatis, matpotatis, stärkelsepotatis, PO8 of the estimation area, and PO18 for brukningscentrum."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-ordsko"
-fields = { "label" = "Skördeområde (epot)" }
-evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; sko is the plain harvest-area column; epot_OrdSko, mpot_OrdSko and sta_OrdSko are per-category columns with the same value set."
+fields = { "label" = "Skördeområde (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; Opdefs differ: skördeområde of cultivation for ekologisk matpotatis, matpotatis, stärkelsepotatis, and of the area used in estimation (sko)."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-osattareal"
 fields = { "label" = "Osatt  ekologisk höst/vinterpotatisareal (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Osatt  ekologisk höst/vinterpotatisareal' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Osatt  ekologisk höst/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
+
+[[statement]]
+kind = "set"
+subject = "var:epot-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av höst-/vinterpotatis (certifierad ekologisk odling)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av höst-/vinterpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darm is 'därav ekologisk' (a subset), epot certified ecological, ovrm under conversion, mpot all höst-/vinterpotatis; concurrent flags with the same Nej/Ja value set."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-skordadareal"
 fields = { "label" = "Skördad areal av ekologisk höst/vinterpotatis (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Skördad areal av ekologisk höst/vinterpotatis' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Skördad areal av ekologisk höst/vinterpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-skotsavannanbrukare"
-fields = { "label" = "Annan brukare (epot)" }
-evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and sta = stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Annan brukare (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, high confidence; Opdefs differ: the area managed by another operator is for ekologisk matpotatis, matpotatis or stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-storan"
-fields = { "label" = "StoraN (epot)" }
-evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+fields = { "label" = "StoraN (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-stratum"
-fields = { "label" = "Stratum (epot)" }
-evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; The three columns have different stratum code lists (areal/PO groups for epot, groups over 100 ha for mpot, odlingsområde sizes for starch potatoes)."
+fields = { "label" = "Stratum (ekologisk matpotatis)" }
+evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; Opdefs and value sets differ: separate strata for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:epot-totalskordton"
 fields = { "label" = "Total ekologisk höst-/vinterpotatisskörd (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisskörd' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-fordeladareal"
+fields = { "label" = "Total ekologisk färskpotatisareal enligt brukaren (certifierad ekologisk odling)" }
+evidence = "#2102 same-label cluster 'Total ekologisk färskpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: total certified ecological (eptf) versus total under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-hektarskordkg"
 fields = { "label" = "Ekologisk färskpotatiskskörd per skördad hektar (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Ekologisk färskpotatiskskörd per skördad hektar' (2 variables): judged different meaning, high confidence; The descriptions separate eptf (certified organic cultivation) from ovrf (cultivation in conversion)."
+evidence = "#2102 same-label cluster 'Ekologisk färskpotatiskskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs/descriptions differ: eptf is certified ecological färskpotatis, ovrf is färskpotatis under conversion to ecological farming."
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-obargadareal"
 fields = { "label" = "Obärgad ekologisk färskpotatisareal (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Obärgad ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Obärgad ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-osattareal"
 fields = { "label" = "Osatt ekologisk färskpotatisareal (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Osatt ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Osatt ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
+
+[[statement]]
+kind = "set"
+subject = "var:eptf-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av färskpotatis (certifierad ekologisk odling)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av färskpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darf is 'därav ekologisk' (a subset), eptf certified ecological, ovrf under conversion, fkpot all färskpotatis; concurrent flags with the same Nej/Ja value set."
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-skordadareal"
 fields = { "label" = "Skördad areal av ekologisk  färskpotatis (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Skördad areal av ekologisk  färskpotatis' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Skördad areal av ekologisk  färskpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:eptf-totalskordton"
 fields = { "label" = "Total ekologisk färskpotatiskskörd (certifierad ekologisk odling)" }
-evidence = "#2102 same-label cluster 'Total ekologisk färskpotatiskskörd' (2 variables): judged different meaning, high confidence; The descriptions separate eptf (certified organic cultivation) from ovrf (cultivation in conversion)."
+evidence = "#2102 same-label cluster 'Total ekologisk färskpotatiskskörd' (2 variables): judged different meaning, high confidence; Opdefs/descriptions differ: certified ecological (eptf) versus under conversion (ovrf)."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-fordeladareal"
+fields = { "label" = "Total färskpotatisareal enligt brukaren (totalt)" }
+evidence = "#2102 same-label cluster 'Total färskpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-hektarskordkg"
+fields = { "label" = "Färskpotatisskörd per skördad hektar (totalt)" }
+evidence = "#2102 same-label cluster 'Färskpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: fkpot is the total, darf is 'därav ekologisk', a subset."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-obargadareal"
+fields = { "label" = "Obärgad färskpotatisareal (totalt)" }
+evidence = "#2102 same-label cluster 'Obärgad färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset; fkpot is the total."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-osattareal"
+fields = { "label" = "Osatt färskpotatisareal (totalt)" }
+evidence = "#2102 same-label cluster 'Osatt färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av färskpotatis (totalt)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av färskpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darf is 'därav ekologisk' (a subset), eptf certified ecological, ovrf under conversion, fkpot all färskpotatis; concurrent flags with the same Nej/Ja value set."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-skordadareal"
+fields = { "label" = "Skördad areal av färskpotatis (totalt)" }
+evidence = "#2102 same-label cluster 'Skördad areal av färskpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-totalskordton"
+fields = { "label" = "Total färskpotatisskörd (totalt)" }
+evidence = "#2102 same-label cluster 'Total färskpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: darf is 'därav ekologisk', a subset of fkpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "label" = "Län (där odlingsarealen är belägen, används vid skattningarna)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Opdefs differ: län of cultivation for ekologisk matpotatis, of the area used in estimation, and brukningscentrum län for stärkelsepotatis and matpotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-brukningscentrum-starkelsepotatis"
+fields = { "label" = "Län (stärkelsepotatis, brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Opdefs differ: län of cultivation for ekologisk matpotatis, of the area used in estimation, and brukningscentrum län for stärkelsepotatis and matpotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-arealenlsam"
-fields = { "label" = "Areal enligt SAM-blanketten (mpot)" }
-evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Areal enligt SAM-blanketten (matpotatis)" }
+evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, high confidence; Opdefs differ: register area from the SAM application for ekologisk matpotatis, matpotatis or stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-bortfallskod"
-fields = { "label" = "Bortfallskod, objektsbortfall (mpot)" }
-evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Bortfallskod, objektsbortfall (matpotatis)" }
+evidence = "#2102 same-label cluster 'Bortfallskod, objektsbortfall' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for stärkelsepotatis, ekologisk matpotatis or matpotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-fordeladareal"
+fields = { "label" = "Total höst-/vinterpotatisareal enligt brukaren (totalt)" }
+evidence = "#2102 same-label cluster 'Total höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-hektarskordkg"
+fields = { "label" = "Höst-/vinterpotatisskörd per skördad hektar (totalt)" }
+evidence = "#2102 same-label cluster 'Höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: mpot is the total, darm is 'därav ekologisk', a subset."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-lillan"
-fields = { "label" = "LillaN (mpot)" }
-evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+fields = { "label" = "LillaN (matpotatis)" }
+evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, high confidence; Opdefs differ: sample counts for ekologisk matpotatis, matpotatis and stärkelsepotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-obargadareal"
+fields = { "label" = "Obärgad höst-/vinterpotatisareal (totalt)" }
+evidence = "#2102 same-label cluster 'Obärgad höst-/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset; mpot is the total."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-ordlan"
+fields = { "label" = "Län (matpotatis, brukningscentrum)" }
+evidence = "#2102 same-label cluster 'Län' (4 variables): judged different meaning, medium confidence; Opdefs differ: län of cultivation for ekologisk matpotatis, of the area used in estimation, and brukningscentrum län for stärkelsepotatis and matpotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-ordpo8"
-fields = { "label" = "Produktionsområde (8 områden, mpot)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; po8 and the per-category OrdPo8 columns use the eight-area division, po18 the eighteen-area division (Skåne-Hallands slättbygd, Södra Bergslagen...); the epot/mpot/sta columns are one per potato category."
+fields = { "label" = "Produktionsområde (8 områden, matpotatis)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; Opdefs differ: PO8 for ekologisk matpotatis, matpotatis, stärkelsepotatis, PO8 of the estimation area, and PO18 for brukningscentrum."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-ordsko"
-fields = { "label" = "Skördeområde (mpot)" }
-evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; sko is the plain harvest-area column; epot_OrdSko, mpot_OrdSko and sta_OrdSko are per-category columns with the same value set."
+fields = { "label" = "Skördeområde (matpotatis)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; Opdefs differ: skördeområde of cultivation for ekologisk matpotatis, matpotatis, stärkelsepotatis, and of the area used in estimation (sko)."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-osattareal"
+fields = { "label" = "Osatt höst-/vinterpotatisareal (totalt)" }
+evidence = "#2102 same-label cluster 'Osatt höst-/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av höst-/vinterpotatis (totalt)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av höst-/vinterpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darm is 'därav ekologisk' (a subset), epot certified ecological, ovrm under conversion, mpot all höst-/vinterpotatis; concurrent flags with the same Nej/Ja value set."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-skordadareal"
+fields = { "label" = "Skördad areal av höst-/vinterpotatis (totalt)" }
+evidence = "#2102 same-label cluster 'Skördad areal av höst-/vinterpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-skotsavannanbrukare"
-fields = { "label" = "Annan brukare (mpot)" }
-evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and sta = stärkelsepotatis per its pid), one per potato category."
+fields = { "label" = "Annan brukare (matpotatis)" }
+evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, high confidence; Opdefs differ: the area managed by another operator is for ekologisk matpotatis, matpotatis or stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-storan"
-fields = { "label" = "StoraN (mpot)" }
-evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+fields = { "label" = "StoraN (matpotatis)" }
+evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:mpot-stratum"
-fields = { "label" = "Stratum (mpot)" }
-evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; The three columns have different stratum code lists (areal/PO groups for epot, groups over 100 ha for mpot, odlingsområde sizes for starch potatoes)."
+fields = { "label" = "Stratum (matpotatis)" }
+evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; Opdefs and value sets differ: separate strata for ekologisk matpotatis, matpotatis and stärkelsepotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-totalskordton"
+fields = { "label" = "Total höst-/vinterpotatisskörd (totalt)" }
+evidence = "#2102 same-label cluster 'Total höst-/vinterpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: darm is 'därav ekologisk', a subset of mpot, the total."
 
 [[statement]]
 kind = "set"
 subject = "var:ovr-ingenekoodling"
 fields = { "label" = "Ingen Ekologisk areal (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Ingen Ekologisk areal' (2 variables): judged different meaning, medium confidence; epot_IngenEkoOdling and ovr_IngenEkoOdling are the flags for the certified and in-conversion organic categories (same prefix pairing as the described eptf/ovrf columns)."
+evidence = "#2102 same-label cluster 'Ingen Ekologisk areal' (2 variables): judged different meaning, high confidence; Opdefs differ: no certified ecological matpotatis (epot) versus no matpotatis under conversion (ovr)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-fordeladareal"
+fields = { "label" = "Total ekologisk färskpotatisareal enligt brukaren (odling under omställning)" }
+evidence = "#2102 same-label cluster 'Total ekologisk färskpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: total certified ecological (eptf) versus total under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-hektarskordkg"
 fields = { "label" = "Ekologisk färskpotatiskskörd per skördad hektar (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Ekologisk färskpotatiskskörd per skördad hektar' (2 variables): judged different meaning, high confidence; The descriptions separate eptf (certified organic cultivation) from ovrf (cultivation in conversion)."
+evidence = "#2102 same-label cluster 'Ekologisk färskpotatiskskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs/descriptions differ: eptf is certified ecological färskpotatis, ovrf is färskpotatis under conversion to ecological farming."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-obargadareal"
 fields = { "label" = "Obärgad ekologisk färskpotatisareal (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Obärgad ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Obärgad ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-osattareal"
 fields = { "label" = "Osatt ekologisk färskpotatisareal (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Osatt ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Osatt ekologisk färskpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrf-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av färskpotatis (odling under omställning)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av färskpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darf is 'därav ekologisk' (a subset), eptf certified ecological, ovrf under conversion, fkpot all färskpotatis; concurrent flags with the same Nej/Ja value set."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-skordadareal"
 fields = { "label" = "Skördad areal av ekologisk  färskpotatis (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Skördad areal av ekologisk  färskpotatis' (2 variables): judged different meaning, high confidence; eptf is certified organic cultivation and ovrf cultivation in conversion, per the described eptf/ovrf columns."
+evidence = "#2102 same-label cluster 'Skördad areal av ekologisk  färskpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (eptf) versus under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrf-totalskordton"
 fields = { "label" = "Total ekologisk färskpotatiskskörd (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Total ekologisk färskpotatiskskörd' (2 variables): judged different meaning, high confidence; The descriptions separate eptf (certified organic cultivation) from ovrf (cultivation in conversion)."
+evidence = "#2102 same-label cluster 'Total ekologisk färskpotatiskskörd' (2 variables): judged different meaning, high confidence; Opdefs/descriptions differ: certified ecological (eptf) versus under conversion (ovrf)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-fordeladareal"
 fields = { "label" = "Total ekologisk höst-/vinterpotatisareal enligt brukaren (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisareal enligt brukaren' (2 variables): judged different meaning, high confidence; Opdefs differ: total certified ecological (epot) versus total under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-hektarskordkg"
 fields = { "label" = "Ekologisk höst-/vinterpotatisskörd per skördad hektar (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Ekologisk höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Ekologisk höst-/vinterpotatisskörd per skördad hektar' (2 variables): judged different meaning, high confidence; Opdefs differ: epot is certified ecological höst-/vinterpotatis, ovrm is under conversion."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-obargadareal"
 fields = { "label" = "Obärgad ekologisk höst/vinterpotatsiareal (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Obärgad ekologisk höst/vinterpotatsiareal' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Obärgad ekologisk höst/vinterpotatsiareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-osattareal"
 fields = { "label" = "Osatt  ekologisk höst/vinterpotatisareal (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Osatt  ekologisk höst/vinterpotatisareal' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Osatt  ekologisk höst/vinterpotatisareal' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrm-partielltbortfall"
+fields = { "label" = "Partiellt bortfall av höst-/vinterpotatis (odling under omställning)" }
+evidence = "#2102 same-label cluster 'Partiellt bortfall av höst-/vinterpotatis' (4 variables): judged different meaning, medium confidence; Opdefs differ: darm is 'därav ekologisk' (a subset), epot certified ecological, ovrm under conversion, mpot all höst-/vinterpotatis; concurrent flags with the same Nej/Ja value set."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-skordadareal"
 fields = { "label" = "Skördad areal av ekologisk höst/vinterpotatis (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Skördad areal av ekologisk höst/vinterpotatis' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Skördad areal av ekologisk höst/vinterpotatis' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrm-totalskordton"
 fields = { "label" = "Total ekologisk höst-/vinterpotatisskörd (odling under omställning)" }
-evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisskörd' (2 variables): judged different meaning, medium confidence; By analogy with the described eptf/ovrf pair, epot is certified organic and ovrm is cultivation in conversion; no descriptions here."
+evidence = "#2102 same-label cluster 'Total ekologisk höst-/vinterpotatisskörd' (2 variables): judged different meaning, high confidence; Opdefs differ: certified ecological (epot) versus under conversion (ovrm)."
 
 [[statement]]
 kind = "set"
 subject = "var:produktionsomrade-18-brukningscentrum"
 fields = { "label" = "Produktionsområde (18 områden, brukningscentrum)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; po8 and the per-category OrdPo8 columns use the eight-area division, po18 the eighteen-area division (Skåne-Hallands slättbygd, Södra Bergslagen...); the epot/mpot/sta columns are one per potato category."
+evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; Opdefs differ: PO8 for ekologisk matpotatis, matpotatis, stärkelsepotatis, PO8 of the estimation area, and PO18 for brukningscentrum."
 
 [[statement]]
 kind = "set"
 subject = "var:produktionsomrade-8-areal-skattning"
-fields = { "label" = "Produktionsområde (8 områden, arealskattning)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; po8 and the per-category OrdPo8 columns use the eight-area division, po18 the eighteen-area division (Skåne-Hallands slättbygd, Södra Bergslagen...); the epot/mpot/sta columns are one per potato category."
+fields = { "label" = "Produktionsområde (8 områden, där arealen finns, används vid skattningarna)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; Opdefs differ: PO8 for ekologisk matpotatis, matpotatis, stärkelsepotatis, PO8 of the estimation area, and PO18 for brukningscentrum."
 
 [[statement]]
 kind = "set"
 subject = "var:produktionsomrade-8-starkelsepotatis"
 fields = { "label" = "Produktionsområde (8 områden, stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; po8 and the per-category OrdPo8 columns use the eight-area division, po18 the eighteen-area division (Skåne-Hallands slättbygd, Södra Bergslagen...); the epot/mpot/sta columns are one per potato category."
+evidence = "#2102 same-label cluster 'Produktionsområde' (5 variables): judged different meaning, medium confidence; Opdefs differ: PO8 for ekologisk matpotatis, matpotatis, stärkelsepotatis, PO8 of the estimation area, and PO18 for brukningscentrum."
 
 [[statement]]
 kind = "set"
 subject = "var:registerareal-starkelsepotatis-sam"
 fields = { "label" = "Areal enligt SAM-blanketten (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and stärkelsepotatis per its pid), one per potato category."
+evidence = "#2102 same-label cluster 'Areal enligt SAM-blanketten' (3 variables): judged different meaning, high confidence; Opdefs differ: register area from the SAM application for ekologisk matpotatis, matpotatis or stärkelsepotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:sko"
+fields = { "label" = "Skördeområde (där arealen finns, används vid skattningarna)" }
+evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; Opdefs differ: skördeområde of cultivation for ekologisk matpotatis, matpotatis, stärkelsepotatis, and of the area used in estimation (sko)."
 
 [[statement]]
 kind = "set"
 subject = "var:skordeomrade-starkelsepotatis"
 fields = { "label" = "Skördeområde (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; sko is the plain harvest-area column; epot_OrdSko, mpot_OrdSko and sta_OrdSko are per-category columns with the same value set."
+evidence = "#2102 same-label cluster 'Skördeområde' (4 variables): judged different meaning, medium confidence; Opdefs differ: skördeområde of cultivation for ekologisk matpotatis, matpotatis, stärkelsepotatis, and of the area used in estimation (sko)."
 
 [[statement]]
 kind = "set"
 subject = "var:sta-lillan"
 fields = { "label" = "LillaN (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+evidence = "#2102 same-label cluster 'LillaN' (3 variables): judged different meaning, high confidence; Opdefs differ: sample counts for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:sta-storan"
 fields = { "label" = "StoraN (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, medium confidence; Three concurrent stratum counts with different prefixes (epot, mpot, sta), one per potato category."
+evidence = "#2102 same-label cluster 'StoraN' (3 variables): judged different meaning, high confidence; Opdefs differ: the sample for ekologisk matpotatis, matpotatis and stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:starkelsepotatisareal-skots-av-annan-brukare"
 fields = { "label" = "Annan brukare (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, medium confidence; Three concurrent columns with different prefixes (epot, mpot, and sta = stärkelsepotatis per its pid), one per potato category."
+evidence = "#2102 same-label cluster 'Annan brukare' (3 variables): judged different meaning, high confidence; Opdefs differ: the area managed by another operator is for ekologisk matpotatis, matpotatis or stärkelsepotatis."
 
 [[statement]]
 kind = "set"
 subject = "var:stratum-starkelsepotatis"
 fields = { "label" = "Stratum (stärkelsepotatis)" }
-evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; The three columns have different stratum code lists (areal/PO groups for epot, groups over 100 ha for mpot, odlingsområde sizes for starch potatoes)."
+evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; Opdefs and value sets differ: separate strata for ekologisk matpotatis, matpotatis and stärkelsepotatis."

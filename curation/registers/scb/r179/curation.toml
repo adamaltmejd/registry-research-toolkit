@@ -249,4 +249,4 @@ evidence = "Variabeln avser preliminär A-skatt.\ncatalog:variable_text:35311:14
 kind = "set"
 subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
 fields = { "label" = "Arbetsgivaravgift, ambassad (USA och Kanada)" }
-evidence = "#2102 same-label cluster 'Arbetsgivaravgift, ambassad' (2 variables): judged different meaning, medium confidence; KAVGUSAKANADA is a separate concurrent column for the USA and Canada embassies (column name); KAVGAMBASSAD is the general one."
+evidence = "#2102 same-label cluster 'Arbetsgivaravgift, ambassad' (2 variables): judged different meaning, medium confidence; KAVGAMBASSAD is the general ambassador contribution; KAVGUSAKANADA is a separate concurrent column, by its name for USA and Kanada."

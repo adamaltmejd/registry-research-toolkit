@@ -358,22 +358,22 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 kind = "set"
 subject = "var:upprakningstal"
 fields = { "label" = "Uppräkningstal (företag)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-a51"
-fields = { "label" = "Uppräkningstal (företag)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+fields = { "label" = "Uppräkningstal (företag och organisationer)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-b42"
-fields = { "label" = "Uppräkningstal (individer)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+fields = { "label" = "Uppräkningstal (individer i privat sektor)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-b52"
 fields = { "label" = "Uppräkningstal (individer)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, high confidence; A41 (2002-2003) and A51 (2006-2007) are the weights for companies, B42 and B52 the weights for individuals, each pair renamed between survey years."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."

@@ -2301,659 +2301,719 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:f07-korr"
-fields = { "label" = "Studietid korrigerad (fråga F07)" }
-evidence = "#2102 same-label cluster 'Studietid korrigerad' (2 variables): judged different meaning, medium confidence; Two concurrent corrected study-time columns (F07_korr and F08_korr) in one table."
+fields = { "label" = "Studietid korrigerad (F07_korr)" }
+evidence = "#2102 same-label cluster 'Studietid korrigerad' (2 variables): judged different meaning, medium confidence; Derived variable in two columns (F07_korr, F08_korr) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-01"
-fields = { "label" = "Grad av nöjdhet med kursinnehåll (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursinnehåll' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_01 and F09_01) in one table."
+fields = { "label" = "Grad av nöjdhet med kursinnehåll (F08_01)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursinnehåll' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-02"
-fields = { "label" = "Grad av nöjdhet med kursens svårighetsgrad (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens svårighetsgrad' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_02 and F09_02) in one table."
+fields = { "label" = "Grad av nöjdhet med kursens svårighetsgrad (F08_02)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens svårighetsgrad' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-03"
-fields = { "label" = "Grad av nöjdhet med kursens utformning/upplägg (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens utformning/upplägg' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_03 and F09_03) in one table."
+fields = { "label" = "Grad av nöjdhet med kursens utformning/upplägg (F08_03)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens utformning/upplägg' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-04"
-fields = { "label" = "Grad av nöjdhet med möjlighet att påverka kursupplägg (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med möjlighet att påverka kursupplägg' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_04 and F09_04) in one table."
+fields = { "label" = "Grad av nöjdhet med möjlighet att påverka kursupplägg (F08_04)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med möjlighet att påverka kursupplägg' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-05"
-fields = { "label" = "Grad av nöjdhet med form av examination (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med form av examination' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_05 and F09_05) in one table."
+fields = { "label" = "Grad av nöjdhet med form av examination (F08_05)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med form av examination' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-06"
-fields = { "label" = "Grad av nöjdhet med kurslitteraturens innehåll (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kurslitteraturens innehåll' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_06 and F09_06) in one table."
+fields = { "label" = "Grad av nöjdhet med kurslitteraturens innehåll (F08_06)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kurslitteraturens innehåll' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-07"
-fields = { "label" = "Grad av nöjdhet med den studietid som krävdes (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med den studietid som krävdes' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_07 and F09_07) in one table."
+fields = { "label" = "Grad av nöjdhet med den studietid som krävdes (F08_07)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med den studietid som krävdes' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-08"
-fields = { "label" = "Grad av nöjdhet med stöd från lärare (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med stöd från lärare' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_08 and F09_08) in one table."
+fields = { "label" = "Grad av nöjdhet med stöd från lärare (F08_08)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med stöd från lärare' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-09"
-fields = { "label" = "Grad av nöjdhet med stödresurser för studierna (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med stödresurser för studierna' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_09 and F09_09) in one table."
+fields = { "label" = "Grad av nöjdhet med stödresurser för studierna (F08_09)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med stödresurser för studierna' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f08-10"
-fields = { "label" = "Grad av nöjdhet med det studiesociala stödet (fråga F08)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med det studiesociala stödet' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_10 and F09_10) in one table."
+fields = { "label" = "Grad av nöjdhet med det studiesociala stödet (F08_10)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med det studiesociala stödet' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f09"
-fields = { "label" = "Tekniska stöd (fråga F09)" }
-evidence = "#2102 same-label cluster 'Tekniska stöd' (2 variables): judged different meaning, medium confidence; Same yes/no question appears twice (F09 and F11) in one table."
+fields = { "label" = "Tekniska stöd (F09)" }
+evidence = "#2102 same-label cluster 'Tekniska stöd' (2 variables): judged different meaning, medium confidence; Same question in two columns (F09, F11) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f10-1"
-fields = { "label" = "Lärplattformens funktioner (fråga F10)" }
-evidence = "#2102 same-label cluster 'Lärplattformens funktioner' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_1 and F12_1) in one table."
+fields = { "label" = "Lärplattformens funktioner (F10_1)" }
+evidence = "#2102 same-label cluster 'Lärplattformens funktioner' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f10-2"
-fields = { "label" = "Tekniska baskunskaper (fråga F10)" }
-evidence = "#2102 same-label cluster 'Tekniska baskunskaper' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_2 and F12_2) in one table."
+fields = { "label" = "Tekniska baskunskaper (F10_2)" }
+evidence = "#2102 same-label cluster 'Tekniska baskunskaper' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f10-3"
-fields = { "label" = "Kommunikationsfunktioner (fråga F10)" }
-evidence = "#2102 same-label cluster 'Kommunikationsfunktioner' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_3 and F12_3) in one table."
+fields = { "label" = "Kommunikationsfunktioner (F10_3)" }
+evidence = "#2102 same-label cluster 'Kommunikationsfunktioner' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f10-4"
-fields = { "label" = "Nytta av tekniska stöd (fråga F10)" }
-evidence = "#2102 same-label cluster 'Nytta av tekniska stöd' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_4 and F12_4) in one table."
+fields = { "label" = "Nytta av tekniska stöd (F10_4)" }
+evidence = "#2102 same-label cluster 'Nytta av tekniska stöd' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-1"
-fields = { "label" = "Nöjdhet med lärplattformens information (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens information' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_1 and F13_1) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens information (F11_1)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens information' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-2"
-fields = { "label" = "Nöjdhet med lärplattformens kursmaterial (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kursmaterial' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_2 and F13_2) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens kursmaterial (F11_2)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kursmaterial' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-3"
-fields = { "label" = "Nöjdhet med lärplattformens föreläsningar (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens föreläsningar' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_3 and F13_3) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens föreläsningar (F11_3)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens föreläsningar' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-4"
-fields = { "label" = "Nöjdhet med lärplattformens möjlighet att skicka material (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens möjlighet att skicka material' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_4 and F13_4) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens möjlighet att skicka material (F11_4)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens möjlighet att skicka material' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-5"
-fields = { "label" = "Nöjdhet med lärplattformens diskussionsmöjligheter (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens diskussionsmöjligheter' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_5 and F13_5) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens diskussionsmöjligheter (F11_5)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens diskussionsmöjligheter' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f11-6"
-fields = { "label" = "Nöjdhet med lärplattformens kommunikationsmöjligheter (fråga F11)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kommunikationsmöjligheter' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_6 and F13_6) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens kommunikationsmöjligheter (F11_6)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kommunikationsmöjligheter' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f12"
-fields = { "label" = "Obligatorisk samarbete (fråga F12)" }
-evidence = "#2102 same-label cluster 'Obligatorisk samarbete' (2 variables): judged different meaning, medium confidence; Same yes/no question appears twice (F12 and F17) in one table."
+fields = { "label" = "Obligatorisk samarbete (F12)" }
+evidence = "#2102 same-label cluster 'Obligatorisk samarbete' (2 variables): judged different meaning, medium confidence; Same question in two columns (F12, F17) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-1"
-fields = { "label" = "Obligatoriskt samarbete genom fysisk träff (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom fysisk träff' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_1 and F18_1) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom fysisk träff (F13_1)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom fysisk träff' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-2"
-fields = { "label" = "Obligatoriskt samarbete genom e-post (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom e-post' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_2 and F18_2) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom e-post (F13_2)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom e-post' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-3"
-fields = { "label" = "Obligatoriskt samarbete genom diskussionsforum (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom diskussionsforum' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_3 and F18_3) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom diskussionsforum (F13_3)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom diskussionsforum' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-4"
-fields = { "label" = "Obligatoriskt samarbete genom videolänk/-konferens (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom videolänk/-konferens' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_4 and F18_4) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom videolänk/-konferens (F13_4)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom videolänk/-konferens' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-5"
-fields = { "label" = "Obligatoriskt samarbete genom samtal via telefon (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom samtal via telefon' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_5 and F18_5) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom samtal via telefon (F13_5)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom samtal via telefon' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f13-txt"
-fields = { "label" = "Obligatoriskt samarbete på annat sätt (fråga F13)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (2 variables): judged different meaning, medium confidence; Same 'other' item in two concurrent question blocks (F13_txt and F18_txt) in one table."
+fields = { "label" = "Obligatoriskt samarbete på annat sätt (F13_txt)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f14-1"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via e-post (fråga F14)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via e-post' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_1 and F19_1) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via e-post (F14_1)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via e-post' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f14-2"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum (fråga F14)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_2 and F19_2) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum (F14_2)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f14-3"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via telefon (fråga F14)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via telefon' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_3 and F19_3) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via telefon (F14_3)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via telefon' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f14-4"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet på campus (fråga F14)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet på campus' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_4 and F19_4) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet på campus (F14_4)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet på campus' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:f15-1"
+fields = { "label" = "Färdighetsträning i skriftliga presentationer (F15_1)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i skriftliga presentationer' (2 variables): judged different meaning, medium confidence; F15_1 and F20_1 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:f15-2"
+fields = { "label" = "Färdighetsträning i muntliga presentationer (F15_2)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i muntliga presentationer' (2 variables): judged different meaning, medium confidence; F15_2 and F20_2 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:f15-3"
+fields = { "label" = "Färdighetsträning i att samarbeta med andra (F15_3)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i att samarbeta med andra' (2 variables): judged different meaning, medium confidence; F15_3 and F20_3 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:f15-4"
+fields = { "label" = "Färdighetsträning i problemlösning (F15_4)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i problemlösning' (2 variables): judged different meaning, medium confidence; F15_4 and F20_4 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:f15-5"
+fields = { "label" = "Färdighetsträning i förmåga till kritiskt tänkande (F15_5)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i förmåga till kritiskt tänkande' (2 variables): judged different meaning, medium confidence; F15_5 and F20_5 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f16"
-fields = { "label" = "Helhetsintryck av kurs (fråga F16)" }
-evidence = "#2102 same-label cluster 'Helhetsintryck av kurs' (2 variables): judged different meaning, medium confidence; Same item in two concurrent questions (F16 and F21) in one table."
+fields = { "label" = "Helhetsintryck av kurs (F16)" }
+evidence = "#2102 same-label cluster 'Helhetsintryck av kurs' (2 variables): judged different meaning, medium confidence; Same question in two columns (F16, F21) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f17"
-fields = { "label" = "Retrospektivt val (fråga F22)" }
-evidence = "#2102 same-label cluster 'Retrospektivt val' (2 variables): judged different meaning, medium confidence; Same question twice (F22 and F17) in one table; pid f17 holds column F22 and retrospektivt-val-f17 holds F17."
+fields = { "label" = "Retrospektivt val (F22)" }
+evidence = "#2102 same-label cluster 'Retrospektivt val' (2 variables): judged different meaning, medium confidence; Same question in two columns (F22, F17) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:f19"
-fields = { "label" = "Försörjning - annat (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Two item blocks (F19 and F24) in the same table, each with an 'Annat' item and an 'Arbetsgivaren betalade' item, so four distinct columns."
+fields = { "label" = "Försörjning - annat (annat, F19)" }
+evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-i-att-samarbeta-med-andra-f20-3"
+fields = { "label" = "Färdighetsträning i att samarbeta med andra (F20_3)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i att samarbeta med andra' (2 variables): judged different meaning, medium confidence; F15_3 and F20_3 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-i-formaga-till-kritiskt-tankande-f20-5"
+fields = { "label" = "Färdighetsträning i förmåga till kritiskt tänkande (F20_5)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i förmåga till kritiskt tänkande' (2 variables): judged different meaning, medium confidence; F15_5 and F20_5 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-i-muntliga-presentationer-f20-2"
+fields = { "label" = "Färdighetsträning i muntliga presentationer (F20_2)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i muntliga presentationer' (2 variables): judged different meaning, medium confidence; F15_2 and F20_2 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-i-problemlosning-f20-4"
+fields = { "label" = "Färdighetsträning i problemlösning (F20_4)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i problemlösning' (2 variables): judged different meaning, medium confidence; F15_4 and F20_4 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-i-skriftliga-presentationer-f20-1"
+fields = { "label" = "Färdighetsträning i skriftliga presentationer (F20_1)" }
+evidence = "#2102 same-label cluster 'Färdighetsträning i skriftliga presentationer' (2 variables): judged different meaning, medium confidence; F15_1 and F20_1 are concurrent columns with the same question text and scale; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-annat-f19-4"
-fields = { "label" = "Försörjning - arbetsgivaren betalade studierna (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Two item blocks (F19 and F24) in the same table, each with an 'Annat' item and an 'Arbetsgivaren betalade' item, so four distinct columns."
+fields = { "label" = "Försörjning - annat (arbetsgivaren betalade, F19_4)" }
+evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-annat-f24"
-fields = { "label" = "Försörjning - annat (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Two item blocks (F19 and F24) in the same table, each with an 'Annat' item and an 'Arbetsgivaren betalade' item, so four distinct columns."
+fields = { "label" = "Försörjning - annat (annat, F24)" }
+evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-annat-f24-04"
-fields = { "label" = "Försörjning - arbetsgivaren betalade studierna (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Two item blocks (F19 and F24) in the same table, each with an 'Annat' item and an 'Arbetsgivaren betalade' item, so four distinct columns."
+fields = { "label" = "Försörjning - annat (arbetsgivaren betalade, F24_04)" }
+evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-barnbidrag"
-fields = { "label" = "Försörjning - barnbidrag (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - barnbidrag' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_6 and F24_06) in one table."
+fields = { "label" = "Försörjning - barnbidrag (F19_6)" }
+evidence = "#2102 same-label cluster 'Försörjning - barnbidrag' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-barnbidrag-f24-06"
-fields = { "label" = "Försörjning - barnbidrag (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - barnbidrag' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_6 and F24_06) in one table."
+fields = { "label" = "Försörjning - barnbidrag (F24_06)" }
+evidence = "#2102 same-label cluster 'Försörjning - barnbidrag' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-bostadsbidrag"
-fields = { "label" = "Försörjning - bostadsbidrag (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - bostadsbidrag' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_7 and F24_07) in one table."
+fields = { "label" = "Försörjning - bostadsbidrag (F19_7)" }
+evidence = "#2102 same-label cluster 'Försörjning - bostadsbidrag' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-bostadsbidrag-f24-07"
-fields = { "label" = "Försörjning - bostadsbidrag (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - bostadsbidrag' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_7 and F24_07) in one table."
+fields = { "label" = "Försörjning - bostadsbidrag (F24_07)" }
+evidence = "#2102 same-label cluster 'Försörjning - bostadsbidrag' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-egna-sparade-pengar"
-fields = { "label" = "Försörjning - egna sparade pengar (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - egna sparade pengar' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_9 and F24_09) in one table."
+fields = { "label" = "Försörjning - egna sparade pengar (F19_9)" }
+evidence = "#2102 same-label cluster 'Försörjning - egna sparade pengar' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-egna-sparade-pengar-f24-09"
-fields = { "label" = "Försörjning - egna sparade pengar (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - egna sparade pengar' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_9 and F24_09) in one table."
+fields = { "label" = "Försörjning - egna sparade pengar (F24_09)" }
+evidence = "#2102 same-label cluster 'Försörjning - egna sparade pengar' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-foraldrapenning"
-fields = { "label" = "Försörjning - föräldrapenning (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - föräldrapenning' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_5 and F24_05) in one table."
+fields = { "label" = "Försörjning - föräldrapenning (F19_5)" }
+evidence = "#2102 same-label cluster 'Försörjning - föräldrapenning' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-foraldrapenning-f24-05"
-fields = { "label" = "Försörjning - föräldrapenning (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - föräldrapenning' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_5 and F24_05) in one table."
+fields = { "label" = "Försörjning - föräldrapenning (F24_05)" }
+evidence = "#2102 same-label cluster 'Försörjning - föräldrapenning' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-lon"
-fields = { "label" = "Försörjning - lön (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_03 and F19_3) in one table."
+fields = { "label" = "Försörjning - lön (F24_03)" }
+evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-lon-f19-3"
-fields = { "label" = "Försörjning - lön (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_03 and F19_3) in one table."
+fields = { "label" = "Försörjning - lön (F19_3)" }
+evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-sjukpenning"
-fields = { "label" = "Försörjning - sjukpenning (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - sjukpenning' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_8 and F24_08) in one table."
+fields = { "label" = "Försörjning - sjukpenning (F19_8)" }
+evidence = "#2102 same-label cluster 'Försörjning - sjukpenning' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-sjukpenning-f24-08"
-fields = { "label" = "Försörjning - sjukpenning (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - sjukpenning' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F19_8 and F24_08) in one table."
+fields = { "label" = "Försörjning - sjukpenning (F24_08)" }
+evidence = "#2102 same-label cluster 'Försörjning - sjukpenning' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-stod-fran-sambo-make-maka-f24-10"
-fields = { "label" = "Försörjning - stöd från sambo/make/maka (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - stöd från sambo/make/maka' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_10 and F19_10) in one table."
+fields = { "label" = "Försörjning - stöd från sambo/make/maka (F24_10)" }
+evidence = "#2102 same-label cluster 'Försörjning - stöd från sambo/make/maka' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-stod-sambo-make"
-fields = { "label" = "Försörjning - stöd från sambo/make/maka (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - stöd från sambo/make/maka' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_10 and F19_10) in one table."
+fields = { "label" = "Försörjning - stöd från sambo/make/maka (F19_10)" }
+evidence = "#2102 same-label cluster 'Försörjning - stöd från sambo/make/maka' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-bidrag"
-fields = { "label" = "Försörjning - studiemedel (bidrag) (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_02 and F19_2) in one table."
+fields = { "label" = "Försörjning - studiemedel (bidrag) (F24_02)" }
+evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-bidrag-f19-2"
-fields = { "label" = "Försörjning - studiemedel (bidrag) (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_02 and F19_2) in one table."
+fields = { "label" = "Försörjning - studiemedel (bidrag) (F19_2)" }
+evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag"
-fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (fråga F24)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_01 and F19_1) in one table."
+fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (F24_01)" }
+evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag-f19-1"
-fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (fråga F19)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item asked in two concurrent questions (F24_01 and F19_1) in one table."
+fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (F19_1)" }
+evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-den-studietid-som-kravdes-f09-07"
-fields = { "label" = "Grad av nöjdhet med den studietid som krävdes (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med den studietid som krävdes' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_07 and F09_07) in one table."
+fields = { "label" = "Grad av nöjdhet med den studietid som krävdes (F09_07)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med den studietid som krävdes' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-det-studiesociala-stodet-f09-10"
-fields = { "label" = "Grad av nöjdhet med det studiesociala stödet (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med det studiesociala stödet' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_10 and F09_10) in one table."
+fields = { "label" = "Grad av nöjdhet med det studiesociala stödet (F09_10)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med det studiesociala stödet' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-form-av-examination-f09-05"
-fields = { "label" = "Grad av nöjdhet med form av examination (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med form av examination' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_05 and F09_05) in one table."
+fields = { "label" = "Grad av nöjdhet med form av examination (F09_05)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med form av examination' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-kursens-svarighetsgrad-f09-02"
-fields = { "label" = "Grad av nöjdhet med kursens svårighetsgrad (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens svårighetsgrad' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_02 and F09_02) in one table."
+fields = { "label" = "Grad av nöjdhet med kursens svårighetsgrad (F09_02)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens svårighetsgrad' (2 variables): judged different meaning, medium confidence; Same item in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-kursens-utformning-upplagg-f09-03"
-fields = { "label" = "Grad av nöjdhet med kursens utformning/upplägg (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens utformning/upplägg' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_03 and F09_03) in one table."
+fields = { "label" = "Grad av nöjdhet med kursens utformning/upplägg (F09_03)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursens utformning/upplägg' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-kursinnehall-f09-01"
-fields = { "label" = "Grad av nöjdhet med kursinnehåll (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursinnehåll' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_01 and F09_01) in one table."
+fields = { "label" = "Grad av nöjdhet med kursinnehåll (F09_01)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kursinnehåll' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-kurslitteraturens-innehall-f09-06"
-fields = { "label" = "Grad av nöjdhet med kurslitteraturens innehåll (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med kurslitteraturens innehåll' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_06 and F09_06) in one table."
+fields = { "label" = "Grad av nöjdhet med kurslitteraturens innehåll (F09_06)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med kurslitteraturens innehåll' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-lararens-tillganglighet-pa-campus-f19-4"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet på campus (fråga F19)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet på campus' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_4 and F19_4) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet på campus (F19_4)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet på campus' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-lararens-tillganglighet-via-e-post-f19-1"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via e-post (fråga F19)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via e-post' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_1 and F19_1) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via e-post (F19_1)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via e-post' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-lararens-tillganglighet-via-f19-2"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum (fråga F19)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_2 and F19_2) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum (F19_2)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-lararens-tillganglighet-via-f19-3"
-fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via telefon (fråga F19)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via telefon' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F14_3 and F19_3) in one table."
+fields = { "label" = "Grad av nöjdhet med lärarens tillgänglighet via telefon (F19_3)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med lärarens tillgänglighet via telefon' (2 variables): judged different meaning, medium confidence; Same question in the F14 and F19 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-mojlighet-att-paverka-kursupplagg-f09-04"
-fields = { "label" = "Grad av nöjdhet med möjlighet att påverka kursupplägg (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med möjlighet att påverka kursupplägg' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_04 and F09_04) in one table."
+fields = { "label" = "Grad av nöjdhet med möjlighet att påverka kursupplägg (F09_04)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med möjlighet att påverka kursupplägg' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-stod-fran-larare-f09-08"
-fields = { "label" = "Grad av nöjdhet med stöd från lärare (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med stöd från lärare' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_08 and F09_08) in one table."
+fields = { "label" = "Grad av nöjdhet med stöd från lärare (F09_08)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med stöd från lärare' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:grad-av-nojdhet-med-stodresurser-for-studierna-f09-09"
-fields = { "label" = "Grad av nöjdhet med stödresurser för studierna (fråga F09)" }
-evidence = "#2102 same-label cluster 'Grad av nöjdhet med stödresurser för studierna' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F08_09 and F09_09) in one table."
+fields = { "label" = "Grad av nöjdhet med stödresurser för studierna (F09_09)" }
+evidence = "#2102 same-label cluster 'Grad av nöjdhet med stödresurser för studierna' (2 variables): judged different meaning, medium confidence; Same question in the F08 and F09 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:helhetsintryck-av-kurs-f21"
-fields = { "label" = "Helhetsintryck av kurs (fråga F21)" }
-evidence = "#2102 same-label cluster 'Helhetsintryck av kurs' (2 variables): judged different meaning, medium confidence; Same item in two concurrent questions (F16 and F21) in one table."
+fields = { "label" = "Helhetsintryck av kurs (F21)" }
+evidence = "#2102 same-label cluster 'Helhetsintryck av kurs' (2 variables): judged different meaning, medium confidence; Same question in two columns (F16, F21) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunikationsfunktioner-f12-3"
-fields = { "label" = "Kommunikationsfunktioner (fråga F12)" }
-evidence = "#2102 same-label cluster 'Kommunikationsfunktioner' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_3 and F12_3) in one table."
+fields = { "label" = "Kommunikationsfunktioner (F12_3)" }
+evidence = "#2102 same-label cluster 'Kommunikationsfunktioner' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:larplattformens-funktioner-f12-1"
-fields = { "label" = "Lärplattformens funktioner (fråga F12)" }
-evidence = "#2102 same-label cluster 'Lärplattformens funktioner' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_1 and F12_1) in one table."
+fields = { "label" = "Lärplattformens funktioner (F12_1)" }
+evidence = "#2102 same-label cluster 'Lärplattformens funktioner' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-diskussionsmojligheter-f13-5"
-fields = { "label" = "Nöjdhet med lärplattformens diskussionsmöjligheter (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens diskussionsmöjligheter' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_5 and F13_5) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens diskussionsmöjligheter (F13_5)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens diskussionsmöjligheter' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-forelasningar-f13-3"
-fields = { "label" = "Nöjdhet med lärplattformens föreläsningar (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens föreläsningar' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_3 and F13_3) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens föreläsningar (F13_3)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens föreläsningar' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-information-f13-1"
-fields = { "label" = "Nöjdhet med lärplattformens information (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens information' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_1 and F13_1) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens information (F13_1)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens information' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-kommunikationsmojligheter-f13-6"
-fields = { "label" = "Nöjdhet med lärplattformens kommunikationsmöjligheter (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kommunikationsmöjligheter' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_6 and F13_6) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens kommunikationsmöjligheter (F13_6)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kommunikationsmöjligheter' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-kursmaterial-f13-2"
-fields = { "label" = "Nöjdhet med lärplattformens kursmaterial (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kursmaterial' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_2 and F13_2) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens kursmaterial (F13_2)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens kursmaterial' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-larplattformens-mojlighet-att-skicka-f13-4"
-fields = { "label" = "Nöjdhet med lärplattformens möjlighet att skicka material (fråga F13)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens möjlighet att skicka material' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F11_4 and F13_4) in one table."
+fields = { "label" = "Nöjdhet med lärplattformens möjlighet att skicka material (F13_4)" }
+evidence = "#2102 same-label cluster 'Nöjdhet med lärplattformens möjlighet att skicka material' (2 variables): judged different meaning, medium confidence; Same question in the F11 and F13 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:nytta-av-tekniska-stod-f12-4"
-fields = { "label" = "Nytta av tekniska stöd (fråga F12)" }
-evidence = "#2102 same-label cluster 'Nytta av tekniska stöd' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_4 and F12_4) in one table."
+fields = { "label" = "Nytta av tekniska stöd (F12_4)" }
+evidence = "#2102 same-label cluster 'Nytta av tekniska stöd' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatorisk-samarbete-f17"
-fields = { "label" = "Obligatorisk samarbete (fråga F17)" }
-evidence = "#2102 same-label cluster 'Obligatorisk samarbete' (2 variables): judged different meaning, medium confidence; Same yes/no question appears twice (F12 and F17) in one table."
+fields = { "label" = "Obligatorisk samarbete (F17)" }
+evidence = "#2102 same-label cluster 'Obligatorisk samarbete' (2 variables): judged different meaning, medium confidence; Same question in two columns (F12, F17) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-genom-diskussionsforum-f18-3"
-fields = { "label" = "Obligatoriskt samarbete genom diskussionsforum (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom diskussionsforum' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_3 and F18_3) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom diskussionsforum (F18_3)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom diskussionsforum' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-genom-e-post-f18-2"
-fields = { "label" = "Obligatoriskt samarbete genom e-post (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom e-post' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_2 and F18_2) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom e-post (F18_2)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom e-post' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-genom-fysisk-traff-f18-1"
-fields = { "label" = "Obligatoriskt samarbete genom fysisk träff (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom fysisk träff' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_1 and F18_1) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom fysisk träff (F18_1)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom fysisk träff' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-genom-samtal-via-telefon-f18-5"
-fields = { "label" = "Obligatoriskt samarbete genom samtal via telefon (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom samtal via telefon' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_5 and F18_5) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom samtal via telefon (F18_5)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom samtal via telefon' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-genom-videolank-konferens-f18-4"
-fields = { "label" = "Obligatoriskt samarbete genom videolänk/-konferens (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom videolänk/-konferens' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F13_4 and F18_4) in one table."
+fields = { "label" = "Obligatoriskt samarbete genom videolänk/-konferens (F18_4)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom videolänk/-konferens' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:obligatoriskt-samarbete-pa-annat-satt-f18-txt"
-fields = { "label" = "Obligatoriskt samarbete på annat sätt (fråga F18)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (2 variables): judged different meaning, medium confidence; Same 'other' item in two concurrent question blocks (F13_txt and F18_txt) in one table."
+fields = { "label" = "Obligatoriskt samarbete på annat sätt (F18_txt)" }
+evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:retrospektivt-val-f17"
-fields = { "label" = "Retrospektivt val (fråga F17)" }
-evidence = "#2102 same-label cluster 'Retrospektivt val' (2 variables): judged different meaning, medium confidence; Same question twice (F22 and F17) in one table; pid f17 holds column F22 and retrospektivt-val-f17 holds F17."
+fields = { "label" = "Retrospektivt val (F17)" }
+evidence = "#2102 same-label cluster 'Retrospektivt val' (2 variables): judged different meaning, medium confidence; Same question in two columns (F22, F17) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:studietid"
-fields = { "label" = "Studietid (fråga F08)" }
-evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Two concurrent questions (F08 and F07) with the same hour bands; the corrected counterparts F07_korr/F08_korr show both exist."
+fields = { "label" = "Studietid (F08)" }
+evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Same question in two columns (F08, F07) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:studietid-f07"
-fields = { "label" = "Studietid (fråga F07)" }
-evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Two concurrent questions (F08 and F07) with the same hour bands; the corrected counterparts F07_korr/F08_korr show both exist."
+fields = { "label" = "Studietid (F07)" }
+evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Same question in two columns (F08, F07) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:studietid-korrigerad-f08-korr"
-fields = { "label" = "Studietid korrigerad (fråga F08)" }
-evidence = "#2102 same-label cluster 'Studietid korrigerad' (2 variables): judged different meaning, medium confidence; Two concurrent corrected study-time columns (F07_korr and F08_korr) in one table."
+fields = { "label" = "Studietid korrigerad (F08_korr)" }
+evidence = "#2102 same-label cluster 'Studietid korrigerad' (2 variables): judged different meaning, medium confidence; Derived variable in two columns (F07_korr, F08_korr) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp"
-fields = { "label" = "Sysselsättningstyp: annat (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (annat, F18)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-1"
-fields = { "label" = "Sysselsättningstyp: studerade heltid (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (studerade heltid, F18_1)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-2"
-fields = { "label" = "Sysselsättningstyp: studerade deltid (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (studerade deltid, F18_2)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-3"
-fields = { "label" = "Sysselsättningstyp: arbetade heltid (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetade heltid, F18_3)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-4"
-fields = { "label" = "Sysselsättningstyp: arbetade deltid (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetade deltid, F18_4)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-5"
-fields = { "label" = "Sysselsättningstyp: föräldraledig (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (föräldraledig, F18_5)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-6"
-fields = { "label" = "Sysselsättningstyp: arbetssökande/arbetsmarknadspolitisk åtgärd (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetssökande eller arbetsmarknadspolitisk åtgärd, F18_6)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f18-7"
-fields = { "label" = "Sysselsättningstyp: sjukskriven (fråga F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (sjukskriven, F18_7)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23"
-fields = { "label" = "Sysselsättningstyp: annat (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (annat, F23)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-1"
-fields = { "label" = "Sysselsättningstyp: studerade heltid (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (studerade heltid, F23_1)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-2"
-fields = { "label" = "Sysselsättningstyp: studerade deltid (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (studerade deltid, F23_2)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-3"
-fields = { "label" = "Sysselsättningstyp: arbetade heltid (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetade heltid, F23_3)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-4"
-fields = { "label" = "Sysselsättningstyp: arbetade deltid (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetade deltid, F23_4)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-5"
-fields = { "label" = "Sysselsättningstyp: föräldraledig (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (föräldraledig, F23_5)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-6"
-fields = { "label" = "Sysselsättningstyp: arbetssökande/arbetsmarknadspolitisk åtgärd (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (arbetssökande eller arbetsmarknadspolitisk åtgärd, F23_6)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningstyp-f23-7"
-fields = { "label" = "Sysselsättningstyp: sjukskriven (fråga F23)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, high confidence; Eight separate yes/no items (annat, studerade heltid/deltid, arbetade heltid/deltid, föräldraledig, arbetssökande, sjukskriven) in each of two question blocks F18 and F23."
+fields = { "label" = "Sysselsättningstyp (sjukskriven, F23_7)" }
+evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]
 kind = "set"
 subject = "var:tekniska-baskunskaper-f12-2"
-fields = { "label" = "Tekniska baskunskaper (fråga F12)" }
-evidence = "#2102 same-label cluster 'Tekniska baskunskaper' (2 variables): judged different meaning, medium confidence; Same item in two concurrent question blocks (F10_2 and F12_2) in one table."
+fields = { "label" = "Tekniska baskunskaper (F12_2)" }
+evidence = "#2102 same-label cluster 'Tekniska baskunskaper' (2 variables): judged different meaning, medium confidence; Same question in the F10 and F12 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:tekniska-stod-f11"
-fields = { "label" = "Tekniska stöd (fråga F11)" }
-evidence = "#2102 same-label cluster 'Tekniska stöd' (2 variables): judged different meaning, medium confidence; Same yes/no question appears twice (F09 and F11) in one table."
+fields = { "label" = "Tekniska stöd (F11)" }
+evidence = "#2102 same-label cluster 'Tekniska stöd' (2 variables): judged different meaning, medium confidence; Same question in two columns (F09, F11) of one table; no text says how they differ, so raw column codes."

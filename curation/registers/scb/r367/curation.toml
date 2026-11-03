@@ -8458,683 +8458,851 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:aldersgrupp-aldgrup2"
-fields = { "label" = "Åldersgrupp (<20, 20-24, 25-44, 45-64, 65+)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; ALDGRUP2 uses age bands <20/20-24/25-44/45-64/65+, while ALDGRUP1 and ALDGRP1 (a rename) use <20/20-34/35-49/50-64/65+."
+fields = { "label" = "Åldersgrupp (<20, 20–24, 25–44, 45–64, 65+)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; Opdefs and code lists: ALDGRUP2 uses bands <20/20-24/25-44/45-64/65+, ALDGRUP1 and ALDGRP1 (same bands, successive surveys) use <20/20-34/35-49/50-64/65+."
 
 [[statement]]
 kind = "set"
 subject = "var:aldgrp"
-fields = { "label" = "Åldersgrupp (<20, 20-34, 35-49, 50-64, 65+)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; ALDGRUP2 uses age bands <20/20-24/25-44/45-64/65+, while ALDGRUP1 and ALDGRP1 (a rename) use <20/20-34/35-49/50-64/65+."
+fields = { "label" = "Åldersgrupp (<20, 20–34, 35–49, 50–64, 65+)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; Opdefs and code lists: ALDGRUP2 uses bands <20/20-24/25-44/45-64/65+, ALDGRUP1 and ALDGRP1 (same bands, successive surveys) use <20/20-34/35-49/50-64/65+."
 
 [[statement]]
 kind = "set"
 subject = "var:aldgrup"
-fields = { "label" = "Åldersgrupp (<20, 20-34, 35-49, 50-64, 65+)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; ALDGRUP2 uses age bands <20/20-24/25-44/45-64/65+, while ALDGRUP1 and ALDGRP1 (a rename) use <20/20-34/35-49/50-64/65+."
+fields = { "label" = "Åldersgrupp (<20, 20–34, 35–49, 50–64, 65+)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; Opdefs and code lists: ALDGRUP2 uses bands <20/20-24/25-44/45-64/65+, ALDGRUP1 and ALDGRP1 (same bands, successive surveys) use <20/20-34/35-49/50-64/65+."
 
 [[statement]]
 kind = "set"
 subject = "var:annhelpant"
-fields = { "label" = "Hjälp med annan hjälp-antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-antal gånger' (2 variables): judged different meaning, medium confidence; gannhelpant (g = gett) and annhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med annan hjälp-antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gannhelpant counts help the household gave, annhelpant help it had."
 
 [[statement]]
 kind = "set"
 subject = "var:annhelpofta"
-fields = { "label" = "Hjälp med annan hjälp-hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-hur ofta' (2 variables): judged different meaning, medium confidence; gannhelpofta (g = gett) and annhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med annan hjälp-hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gannhelpofta is how often the household gave help, annhelpofta how often it had help."
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-skola-utomhus-minuter"
-fields = { "label" = "Arbetstid utomhus, minuter" }
-evidence = "#2102 same-label cluster 'Arbetstid utomhus' (3 variables): judged different meaning, medium confidence; fr10min and fr10tim are the minutes and hours parts of the 2000-2001 answer; F14 (2010-2011) is the later survey item with no stated unit."
+fields = { "label" = "Arbetstid utomhus (minuter)" }
+evidence = "#2102 same-label cluster 'Arbetstid utomhus' (3 variables): judged different meaning, medium confidence; Opdefs: fr10min is the minutes part and fr10tim the hours part of the 2000-2001 answer; F14 (2010-2011) is the later survey item with no stated unit."
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-skola-utomhus-timmar"
-fields = { "label" = "Arbetstid utomhus, timmar" }
-evidence = "#2102 same-label cluster 'Arbetstid utomhus' (3 variables): judged different meaning, medium confidence; fr10min and fr10tim are the minutes and hours parts of the 2000-2001 answer; F14 (2010-2011) is the later survey item with no stated unit."
+fields = { "label" = "Arbetstid utomhus (timmar)" }
+evidence = "#2102 same-label cluster 'Arbetstid utomhus' (3 variables): judged different meaning, medium confidence; Opdefs: fr10min is the minutes part and fr10tim the hours part of the 2000-2001 answer; F14 (2010-2011) is the later survey item with no stated unit."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsinkomst-familj-carbh00"
-fields = { "label" = "Arbetsinkomst, familj, 2000" }
-evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; carbh99, carbh00 and carbh01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Arbetsinkomst, familj (2000)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family work income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsinkomst-familj-carbh01"
-fields = { "label" = "Arbetsinkomst, familj, 2001" }
-evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; carbh99, carbh00 and carbh01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Arbetsinkomst, familj (2001)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family work income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsinkomst-familj-carbh99"
-fields = { "label" = "Arbetsinkomst, familj, 1999" }
-evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; carbh99, carbh00 and carbh01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Arbetsinkomst, familj (1999)" }
+evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family work income for 1999, 2000 and 2001 in three concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:arendhelp"
+fields = { "label" = "Hjälp med aktiviteter (fått hjälp med ärenden)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:arendhelpant"
-fields = { "label" = "Hjälp med ärende- antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med ärende- antal gånger' (2 variables): judged different meaning, medium confidence; garendhelpant (g = gett) and arendhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med ärende- antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med ärende- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: garendhelpant counts help given, arendhelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:arendhelpofta"
-fields = { "label" = "Hjälp med ärende- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med ärende- hur ofta' (2 variables): judged different meaning, medium confidence; garendhelpofta (g = gett) and arendhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med ärende- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med ärende- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: garendhelpofta is how often help was given, arendhelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:barnarb"
 fields = { "label" = "Familjecykel (barn och förvärvsarbete)" }
-evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Four different family-type classifications with different code lists: BARNARB (1990-91, work and children), FAMCYK, FAMCYK2 and FAMCYK3."
+evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Opdefs name familjecykel 1, 2 and 3 for famcyk, famcyk2 and famcyk3 with different code lists; BARNARB (1990-91) has a work-and-children code list although its opdef also says 3."
 
 [[statement]]
 kind = "set"
 subject = "var:biaktivitet-aggregerad"
 fields = { "label" = "Biaktivitet (aggregerad)" }
-evidence = "#2102 same-label cluster 'Biaktivitet' (3 variables): judged different meaning, high confidence; BA is the detailed secondary-activity code, baind1 an aggregated version and ba91 a recoding to the 1990-91 scheme."
+evidence = "#2102 same-label cluster 'Biaktivitet' (3 variables): judged different meaning, high confidence; Opdefs: BA is the detailed code, baind1 an aggregation of ba91, ba91 a recoding to the 1990-91 scheme."
 
 [[statement]]
 kind = "set"
 subject = "var:biaktivitet-omkodad-90-91"
-fields = { "label" = "Biaktivitet (omkodad till 1990-91 års indelning)" }
-evidence = "#2102 same-label cluster 'Biaktivitet' (3 variables): judged different meaning, high confidence; BA is the detailed secondary-activity code, baind1 an aggregated version and ba91 a recoding to the 1990-91 scheme."
+fields = { "label" = "Biaktivitet (omkodad till 1990–91 års indelning)" }
+evidence = "#2102 same-label cluster 'Biaktivitet' (3 variables): judged different meaning, high confidence; Opdefs: BA is the detailed code, baind1 an aggregation of ba91, ba91 a recoding to the 1990-91 scheme."
 
 [[statement]]
 kind = "set"
 subject = "var:bomshelpant"
-fields = { "label" = "Hjälp med barnpassning- Antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med barnpassning- Antal gånger' (2 variables): judged different meaning, medium confidence; gbomshelpant (g = gett) and bomshelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med barnpassning- Antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med barnpassning- Antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gbomshelpant counts help given, bomshelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:bomshelpofta"
-fields = { "label" = "Hjälp med barnpassning- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med barnpassning- hur ofta' (2 variables): judged different meaning, medium confidence; gbomshelpofta (g = gett) and bomshelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med barnpassning- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med barnpassning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gbomshelpofta is how often help was given, bomshelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadstyp"
-fields = { "label" = "Bostadstyp (text)" }
-evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostadstyptxt is a text column without code list, hustyp a coded 1-6 housing type."
+fields = { "label" = "Bostadstyp (fritext)" }
+evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostadstyptxt is an open free-text answer (opdef), hustyp a coded 1-6 housing type."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadstyp-2"
 fields = { "label" = "Bostadstyp (kodad)" }
-evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostadstyptxt is a text column without code list, hustyp a coded 1-6 housing type."
+evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostadstyptxt is an open free-text answer (opdef), hustyp a coded 1-6 housing type."
+
+[[statement]]
+kind = "set"
+subject = "var:dsg-vikt"
+fields = { "label" = "Urvalvikt_TID (ursprungsvikt, alla urvalspersoner)" }
+evidence = "#2102 same-label cluster 'Urvalvikt_TID' (2 variables): judged different meaning, high confidence; Opdefs: dsg_vikt is the original weight for all sampled persons computed at sampling; dsg_vikt_M is the weight for respondents computed after collection."
+
+[[statement]]
+kind = "set"
+subject = "var:dsg-vikt-m"
+fields = { "label" = "Urvalvikt_TID (vikt för svarande)" }
+evidence = "#2102 same-label cluster 'Urvalvikt_TID' (2 variables): judged different meaning, high confidence; Opdefs: dsg_vikt is the original weight for all sampled persons computed at sampling; dsg_vikt_M is the weight for respondents computed after collection."
+
+[[statement]]
+kind = "set"
+subject = "var:famcyk"
+fields = { "label" = "Familjecykel (indelning 1)" }
+evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Opdefs name familjecykel 1, 2 and 3 for famcyk, famcyk2 and famcyk3 with different code lists; BARNARB (1990-91) has a work-and-children code list although its opdef also says 3."
 
 [[statement]]
 kind = "set"
 subject = "var:familjecykel-famcyk2"
 fields = { "label" = "Familjecykel (indelning 2)" }
-evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Four different family-type classifications with different code lists: BARNARB (1990-91, work and children), FAMCYK, FAMCYK2 and FAMCYK3."
+evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Opdefs name familjecykel 1, 2 and 3 for famcyk, famcyk2 and famcyk3 with different code lists; BARNARB (1990-91) has a work-and-children code list although its opdef also says 3."
 
 [[statement]]
 kind = "set"
 subject = "var:familjecykel-famcyk3"
 fields = { "label" = "Familjecykel (indelning 3)" }
-evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Four different family-type classifications with different code lists: BARNARB (1990-91, work and children), FAMCYK, FAMCYK2 and FAMCYK3."
+evidence = "#2102 same-label cluster 'Familjecykel' (4 variables): judged different meaning, medium confidence; Opdefs name familjecykel 1, 2 and 3 for famcyk, famcyk2 and famcyk3 with different code lists; BARNARB (1990-91) has a work-and-children code list although its opdef also says 3."
+
+[[statement]]
+kind = "set"
+subject = "var:flex1"
+fields = { "label" = "Fasta arbetstider/flex (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Fasta arbetstider/flex' (2 variables): judged different meaning, high confidence; Opdefs: flex1 is how the sampled person works, flex1ms how the sampled person's partner works."
 
 [[statement]]
 kind = "set"
 subject = "var:flex1ms"
-fields = { "label" = "Fasta arbetstider/flex, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Fasta arbetstider/flex' (2 variables): judged different meaning, medium confidence; flex1ms is the spouse/partner (MS) counterpart of flex1 for the sampled person."
+fields = { "label" = "Fasta arbetstider/flex (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Fasta arbetstider/flex' (2 variables): judged different meaning, high confidence; Opdefs: flex1 is how the sampled person works, flex1ms how the sampled person's partner works."
 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear"
-fields = { "label" = "Födelseår, urvalsperson" }
-evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; MSBORN is the spouse/partner, UPBORN the sampled person; born (2000-01) is taken as the sampled person's birth year in the later survey."
+fields = { "label" = "Födelseår (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; Opdefs: UPBORN is the sampled person's birth year, MSBORN the partner's; born (2000-01) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-maka-make-sambo"
-fields = { "label" = "Födelseår, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; MSBORN is the spouse/partner, UPBORN the sampled person; born (2000-01) is taken as the sampled person's birth year in the later survey."
+fields = { "label" = "Födelseår (urvalspersonens make/maka/sambo)" }
+evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; Opdefs: UPBORN is the sampled person's birth year, MSBORN the partner's; born (2000-01) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:fodelsear-urvalsperson"
-fields = { "label" = "Födelseår, urvalsperson" }
-evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; MSBORN is the spouse/partner, UPBORN the sampled person; born (2000-01) is taken as the sampled person's birth year in the later survey."
+fields = { "label" = "Födelseår (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; Opdefs: UPBORN is the sampled person's birth year, MSBORN the partner's; born (2000-01) is taken as the sampled person's."
+
+[[statement]]
+kind = "set"
+subject = "var:gannhelp"
+fields = { "label" = "Hjälp med aktiviteter (gett annan hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gannhelpant"
-fields = { "label" = "Hjälp med annan hjälp-antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-antal gånger' (2 variables): judged different meaning, medium confidence; gannhelpant (g = gett) and annhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med annan hjälp-antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gannhelpant counts help the household gave, annhelpant help it had."
 
 [[statement]]
 kind = "set"
 subject = "var:gannhelpofta"
-fields = { "label" = "Hjälp med annan hjälp-hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-hur ofta' (2 variables): judged different meaning, medium confidence; gannhelpofta (g = gett) and annhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med annan hjälp-hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gannhelpofta is how often the household gave help, annhelpofta how often it had help."
+
+[[statement]]
+kind = "set"
+subject = "var:garendhelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med ärenden)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:garendhelpant"
-fields = { "label" = "Hjälp med ärende- antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med ärende- antal gånger' (2 variables): judged different meaning, medium confidence; garendhelpant (g = gett) and arendhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med ärende- antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med ärende- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: garendhelpant counts help given, arendhelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:garendhelpofta"
-fields = { "label" = "Hjälp med ärende- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med ärende- hur ofta' (2 variables): judged different meaning, medium confidence; garendhelpofta (g = gett) and arendhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med ärende- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med ärende- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: garendhelpofta is how often help was given, arendhelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gbomshelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med barnomsorg)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gbomshelpant"
-fields = { "label" = "Hjälp med barnpassning- Antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med barnpassning- Antal gånger' (2 variables): judged different meaning, medium confidence; gbomshelpant (g = gett) and bomshelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med barnpassning- Antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med barnpassning- Antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gbomshelpant counts help given, bomshelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gbomshelpofta"
-fields = { "label" = "Hjälp med barnpassning- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med barnpassning- hur ofta' (2 variables): judged different meaning, medium confidence; gbomshelpofta (g = gett) and bomshelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med barnpassning- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med barnpassning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gbomshelpofta is how often help was given, bomshelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:gett-personlig-hjalp-antal-ganger-senaste-manaden"
-fields = { "label" = "Hjälp med personlig hjälp- antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- antal gånger' (2 variables): judged different meaning, high confidence; gpershelpant is named gett in its pid; pershelpant is the received counterpart."
+fields = { "label" = "Hjälp med personlig hjälp- antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gpershelpant counts help given, pershelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gett-personlig-hjalp-hur-ofta"
-fields = { "label" = "Hjälp med personlig hjälp- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- hur ofta' (2 variables): judged different meaning, high confidence; gpershelpofta is named gett in its pid; pershelpofta is the received counterpart."
+fields = { "label" = "Hjälp med personlig hjälp- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gpershelpofta is how often help was given, pershelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gett-personlig-hjalp-utan-ersattning"
+fields = { "label" = "Hjälp med aktiviteter (gett personlig hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
+
+[[statement]]
+kind = "set"
+subject = "var:gkophelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med att handla)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gkophelpant"
-fields = { "label" = "Hjälp med mathandling- antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med mathandling- antal gånger' (2 variables): judged different meaning, medium confidence; gkophelpant (g = gett) and kophelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med mathandling- antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med mathandling- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gkophelpant counts help given, kophelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gkophelpofta"
-fields = { "label" = "Hjälp med mathandling- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med mathandling- hur ofta' (2 variables): judged different meaning, medium confidence; gkophelpofta (g = gett) and kophelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med mathandling- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med mathandling- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gkophelpofta is how often help was given, kophelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gmathelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med matlagning)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gmathelpant"
-fields = { "label" = "Hjälp med matlagning (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med matlagning' (2 variables): judged different meaning, medium confidence; gmathelpant (g = gett) and mathelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med matlagning (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med matlagning' (2 variables): judged different meaning, high confidence; Opdefs: gmathelpant counts help given, mathelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gmathelpofta"
-fields = { "label" = "Hjälp med matlagning- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med matlagning- hur ofta' (2 variables): judged different meaning, medium confidence; gmathelpofta (g = gett) and mathelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med matlagning- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med matlagning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gmathelpofta is how often help was given, mathelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:grephelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med reparationer)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:grephelpant"
-fields = { "label" = "Hjälp med reparationer-antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med reparationer-antal gånger' (2 variables): judged different meaning, medium confidence; grephelpant (g = gett) and rephelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med reparationer-antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med reparationer-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: grephelpant counts help given, rephelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:grephelpofta"
-fields = { "label" = "Hjälp med reparationer- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med reparationer- hur ofta' (2 variables): judged different meaning, medium confidence; grephelpofta (g = gett) and rephelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med reparationer- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med reparationer- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: grephelpofta is how often help was given, rephelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gstadhelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med städning)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gstadhelpant"
-fields = { "label" = "Hjälp med städning- antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med städning- antal gånger' (2 variables): judged different meaning, medium confidence; gstadhelpant (g = gett) and stadhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med städning- antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med städning- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gstadhelpant counts help given, stadhelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gstadhelpofta"
-fields = { "label" = "Hjälp med städning- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med städning- hur ofta' (2 variables): judged different meaning, medium confidence; gstadhelpofta (g = gett) and stadhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med städning- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med städning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gstadhelpofta is how often help was given, stadhelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gtradghelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med trädgårdsarbete)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gtradghelpant"
-fields = { "label" = "Hjälp med trädgårdsarbete-antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete-antal gånger' (2 variables): judged different meaning, medium confidence; gtradghelpant (g = gett) and tradghelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med trädgårdsarbete-antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtradghelpant counts help given, tradghelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gtradghelpofta"
-fields = { "label" = "Hjälp med trädgårdsarbete- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete- hur ofta' (2 variables): judged different meaning, medium confidence; gtradghelpofta (g = gett) and tradghelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med trädgårdsarbete- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtradghelpofta is how often help was given, tradghelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gtranshelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med transport)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gtranshelpant"
-fields = { "label" = "Hjälp med transport-antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med transport-antal gånger' (2 variables): judged different meaning, medium confidence; gtranshelpant (g = gett) and transhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med transport-antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med transport-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtranshelpant counts help given, transhelpant help received."
+
+[[statement]]
+kind = "set"
+subject = "var:gtranshelpofta"
+fields = { "label" = "Hjälp med transport- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med transport- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtranshelpofta is how often help was given, transhelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:gtvatthelp"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med tvätt)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
 
 [[statement]]
 kind = "set"
 subject = "var:gtvatthelpant"
-fields = { "label" = "Hjälp med tvättning- antal gånger (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med tvättning- antal gånger' (2 variables): judged different meaning, medium confidence; gtvatthelpant (g = gett) and tvatthelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med tvättning- antal gånger (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med tvättning- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtvatthelpant counts help given, tvatthelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:gtvatthelpofta"
-fields = { "label" = "Hjälp med tvättning- hur ofta (gett)" }
-evidence = "#2102 same-label cluster 'Hjälp med tvättning- hur ofta' (2 variables): judged different meaning, medium confidence; gtvatthelpofta (g = gett) and tvatthelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med tvättning- hur ofta (gett hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med tvättning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtvatthelpofta is how often help was given, tvatthelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:helpmed"
+fields = { "label" = "Hjälp med aktiviteter (fått hjälp med någon aktivitet)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
+
+[[statement]]
+kind = "set"
+subject = "var:helputhh"
+fields = { "label" = "Hjälp med aktiviteter (gett hjälp med någon aktivitet)" }
+evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): judged different meaning, high confidence; Opdefs: one column per kind of help given (g prefix) or received, plus 2010-2011 any-activity items for received and given help."
+
+[[statement]]
+kind = "set"
+subject = "var:hinnamed1"
+fields = { "label" = "Mycket att göra (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
 
 [[statement]]
 kind = "set"
 subject = "var:hinnamed1ms"
-fields = { "label" = "Mycket att göra, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; hinnamed1ms is the spouse/partner counterpart (MS) of hinnamed1; F21 in the 2021 time study is taken as the same question for the sampled person."
+fields = { "label" = "Mycket att göra (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
+
+[[statement]]
+kind = "set"
+subject = "var:hinnamed2"
+fields = { "label" = "Tidsbrist (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; Opdef: hinnamed2ms is the partner's answer; hinnamed2 and F19 (2021 tidsstudien, same question and scale) are the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:hinnamed2ms"
-fields = { "label" = "Tidsbrist, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; hinnamed2ms is the spouse/partner counterpart (MS) of hinnamed2; F19 in the 2021 time study is taken as the same question for the sampled person."
+fields = { "label" = "Tidsbrist (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; Opdef: hinnamed2ms is the partner's answer; hinnamed2 and F19 (2021 tidsstudien, same question and scale) are the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:idannanant"
-fields = { "label" = "Annan förening (antal)" }
-evidence = "#2102 same-label cluster 'Annan förening' (2 variables): judged different meaning, medium confidence; idannan is the Ja/Nej answer; idannanant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Annan förening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Annan förening' (2 variables): judged different meaning, high confidence; idannan is the Ja/Nej answer; opdef of idannanant says it is the number of times in the four weeks."
 
 [[statement]]
 kind = "set"
 subject = "var:idboant"
-fields = { "label" = "Aktiv i boendeförening (antal)" }
-evidence = "#2102 same-label cluster 'Aktiv i boendeförening' (2 variables): judged different meaning, medium confidence; idbo is the Ja/Nej answer; idboant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Aktiv i boendeförening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Aktiv i boendeförening' (2 variables): judged different meaning, high confidence; Opdefs: idbo is the Ja/Nej answer, idboant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idfackant"
-fields = { "label" = "Deltagande i fackförening, studentorganisation eller lantbruksorganisation (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i fackförening, studentorganisation eller lantbruksorganisation' (2 variables): judged different meaning, medium confidence; idfack is the Ja/Nej answer; idfackant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i fackförening, studentorganisation eller lantbruksorganisation (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i fackförening, studentorganisation eller lantbruksorganisation' (2 variables): judged different meaning, high confidence; Opdefs: idfack is the Ja/Nej answer, idfackant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idforaldant"
-fields = { "label" = "Deltagande i föräldraförening (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i föräldraförening' (2 variables): judged different meaning, medium confidence; idforald is the Ja/Nej answer; idforaldant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i föräldraförening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i föräldraförening' (2 variables): judged different meaning, high confidence; Opdefs: idforald is the Ja/Nej answer, idforaldant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idhumant"
-fields = { "label" = "Deltagande i förening för humanitär verksamhet (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i förening för humanitär verksamhet' (2 variables): judged different meaning, medium confidence; idhum is the Ja/Nej answer; idhumant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i förening för humanitär verksamhet (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i förening för humanitär verksamhet' (2 variables): judged different meaning, high confidence; Opdefs: idhum is the Ja/Nej answer, idhumant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:ididrant"
-fields = { "label" = "Deltagande i idrotts- och friluftsförening (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i idrotts- och friluftsförening' (2 variables): judged different meaning, medium confidence; ididr is the Ja/Nej answer; ididrant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i idrotts- och friluftsförening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i idrotts- och friluftsförening' (2 variables): judged different meaning, medium confidence; ididr has a Ja/Nej code list, ididrant none; the companion ant columns elsewhere count occasions, but no text here says so for this pair."
 
 [[statement]]
 kind = "set"
 subject = "var:idinvant"
-fields = { "label" = "Deltagande i invandrarorganisationer (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i invandrarorganisationer' (2 variables): judged different meaning, medium confidence; idinv is the Ja/Nej answer; idinvant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i invandrarorganisationer (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i invandrarorganisationer' (2 variables): judged different meaning, high confidence; Opdefs: idinv is the Ja/Nej answer, idinvant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idkultant"
-fields = { "label" = "Deltagande i kultur- och hobbyföreningar (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i kultur- och hobbyföreningar' (2 variables): judged different meaning, medium confidence; idkult is the Ja/Nej answer; idkultant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i kultur- och hobbyföreningar (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i kultur- och hobbyföreningar' (2 variables): judged different meaning, high confidence; Opdefs: idkult is the Ja/Nej answer, idkultant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idnaturant"
-fields = { "label" = "Deltagande i natur- och miljöföreningar (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i natur- och miljöföreningar' (2 variables): judged different meaning, medium confidence; idnatur is the Ja/Nej answer; idnaturant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i natur- och miljöföreningar (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i natur- och miljöföreningar' (2 variables): judged different meaning, high confidence; Opdefs: idnatur is the Ja/Nej answer, idnaturant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idpensant"
-fields = { "label" = "Deltagande i pensionärsorganisationer (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i pensionärsorganisationer' (2 variables): judged different meaning, medium confidence; idpens is the Ja/Nej answer; idpensant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i pensionärsorganisationer (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i pensionärsorganisationer' (2 variables): judged different meaning, high confidence; Opdefs: idpens is the Ja/Nej answer, idpensant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idpolant"
-fields = { "label" = "Deltagande i politiskt parti eller politisk förening (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i politiskt parti eller politisk förening' (2 variables): judged different meaning, medium confidence; idpol is the Ja/Nej answer; idpolant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i politiskt parti eller politisk förening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i politiskt parti eller politisk förening' (2 variables): judged different meaning, high confidence; Opdefs: idpol is the Ja/Nej answer, idpolant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:idrelant"
-fields = { "label" = "Deltagande i religiöst samfund eller religiös förening (antal)" }
-evidence = "#2102 same-label cluster 'Deltagande i religiöst samfund eller religiös förening' (2 variables): judged different meaning, medium confidence; idrel is the Ja/Nej answer; idrelant (no code list) is the companion ant column, most likely a count (antal)."
+fields = { "label" = "Deltagande i religiöst samfund eller religiös förening (antal gånger)" }
+evidence = "#2102 same-label cluster 'Deltagande i religiöst samfund eller religiös förening' (2 variables): judged different meaning, high confidence; Opdefs: idrel is the Ja/Nej answer, idrelant the number of times."
 
 [[statement]]
 kind = "set"
 subject = "var:kon"
-fields = { "label" = "Kön, urvalsperson" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; MSSEX and konms hold the spouse/partner's sex (MS), UPSEX, sex and kon the sampled person's; the later kon is in the 2021 time study."
+fields = { "label" = "Kön (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:kon-maka-make-sambo"
-fields = { "label" = "Kön, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; MSSEX and konms hold the spouse/partner's sex (MS), UPSEX, sex and kon the sampled person's; the later kon is in the 2021 time study."
+fields = { "label" = "Kön (urvalspersonens make/maka/sambo)" }
+evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:kon-urvalsperson"
-fields = { "label" = "Kön, urvalsperson" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; MSSEX and konms hold the spouse/partner's sex (MS), UPSEX, sex and kon the sampled person's; the later kon is in the 2021 time study."
+fields = { "label" = "Kön (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:konms"
-fields = { "label" = "Kön, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; MSSEX and konms hold the spouse/partner's sex (MS), UPSEX, sex and kon the sampled person's; the later kon is in the 2021 time study."
+fields = { "label" = "Kön (urvalspersonens make/maka/sambo)" }
+evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:kophelpant"
-fields = { "label" = "Hjälp med mathandling- antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med mathandling- antal gånger' (2 variables): judged different meaning, medium confidence; gkophelpant (g = gett) and kophelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med mathandling- antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med mathandling- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gkophelpant counts help given, kophelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:kophelpofta"
-fields = { "label" = "Hjälp med mathandling- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med mathandling- hur ofta' (2 variables): judged different meaning, medium confidence; gkophelpofta (g = gett) and kophelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med mathandling- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med mathandling- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gkophelpofta is how often help was given, kophelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-familj-tlonth00"
-fields = { "label" = "Löneinkomst, familj, 2000" }
-evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; tlonth99, tlonth00 and tlonth01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst, familj (2000)" }
+evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-familj-tlonth01"
-fields = { "label" = "Löneinkomst, familj, 2001" }
-evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; tlonth99, tlonth00 and tlonth01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst, familj (2001)" }
+evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-familj-tlonth99"
-fields = { "label" = "Löneinkomst, familj, 1999" }
-evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; tlonth99, tlonth00 and tlonth01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst, familj (1999)" }
+evidence = "#2102 same-label cluster 'Löneinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-tlont00"
-fields = { "label" = "Löneinkomst, 2000" }
-evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; tlont99, tlont00 and tlont01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst (2000)" }
+evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-tlont01"
-fields = { "label" = "Löneinkomst, 2001" }
-evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; tlont99, tlont00 and tlont01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst (2001)" }
+evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:loneinkomst-tlont99"
-fields = { "label" = "Löneinkomst, 1999" }
-evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; tlont99, tlont00 and tlont01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Löneinkomst (1999)" }
+evidence = "#2102 same-label cluster 'Löneinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual wage income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:lonper"
 fields = { "label" = "Löneform (lönens tidsenhet)" }
-evidence = "#2102 same-label cluster 'Löneform' (2 variables): judged different meaning, medium confidence; lonform codes the form of pay (fixed monthly, weekly, hourly, with OB), lonper the time unit the wage refers to (month, hour, week, year)."
+evidence = "#2102 same-label cluster 'Löneform' (2 variables): judged different meaning, high confidence; lonform codes the form of pay under agreement; lonper (opdef) is the time unit the stated amount refers to."
 
 [[statement]]
 kind = "set"
 subject = "var:mathelpant"
-fields = { "label" = "Hjälp med matlagning (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med matlagning' (2 variables): judged different meaning, medium confidence; gmathelpant (g = gett) and mathelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med matlagning (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med matlagning' (2 variables): judged different meaning, high confidence; Opdefs: gmathelpant counts help given, mathelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:mathelpofta"
-fields = { "label" = "Hjälp med matlagning- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med matlagning- hur ofta' (2 variables): judged different meaning, medium confidence; gmathelpofta (g = gett) and mathelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med matlagning- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med matlagning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gmathelpofta is how often help was given, mathelpofta received."
+
+[[statement]]
+kind = "set"
+subject = "var:mycket-gora-svart-hinna-vardagar"
+fields = { "label" = "Mycket att göra (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts-nomenclature-des-unites-territoriales-nuts2-old"
-fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), NUTS 2 äldre indelning" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Four concurrent columns: NUTS 2 and NUTS 3, each in the old and the 2008 classification version."
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques) (NUTS 2, före 2008)" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Opdefs: NUTS 2 and NUTS 3, each in the classification before 2008 and from 2008 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts-nomenclature-des-unites-territoriales-nuts3-old"
-fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), NUTS 3 äldre indelning" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Four concurrent columns: NUTS 2 and NUTS 3, each in the old and the 2008 classification version."
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques) (NUTS 3, före 2008)" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Opdefs: NUTS 2 and NUTS 3, each in the classification before 2008 and from 2008 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts2"
-fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), NUTS 2 (2008)" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Four concurrent columns: NUTS 2 and NUTS 3, each in the old and the 2008 classification version."
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques) (NUTS 2, från 2008)" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Opdefs: NUTS 2 and NUTS 3, each in the classification before 2008 and from 2008 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts3"
-fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), NUTS 3 (2008)" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Four concurrent columns: NUTS 2 and NUTS 3, each in the old and the 2008 classification version."
+fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques) (NUTS 3, från 2008)" }
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (4 variables): judged different meaning, high confidence; Opdefs: NUTS 2 and NUTS 3, each in the classification before 2008 and from 2008 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:pershelpant"
-fields = { "label" = "Hjälp med personlig hjälp- antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- antal gånger' (2 variables): judged different meaning, high confidence; gpershelpant is named gett in its pid; pershelpant is the received counterpart."
+fields = { "label" = "Hjälp med personlig hjälp- antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gpershelpant counts help given, pershelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:pershelpofta"
-fields = { "label" = "Hjälp med personlig hjälp- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- hur ofta' (2 variables): judged different meaning, high confidence; gpershelpofta is named gett in its pid; pershelpofta is the received counterpart."
+fields = { "label" = "Hjälp med personlig hjälp- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med personlig hjälp- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gpershelpofta is how often help was given, pershelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:rephelpant"
-fields = { "label" = "Hjälp med reparationer-antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med reparationer-antal gånger' (2 variables): judged different meaning, medium confidence; grephelpant (g = gett) and rephelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med reparationer-antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med reparationer-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: grephelpant counts help given, rephelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:rephelpofta"
-fields = { "label" = "Hjälp med reparationer- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med reparationer- hur ofta' (2 variables): judged different meaning, medium confidence; grephelpofta (g = gett) and rephelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med reparationer- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med reparationer- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: grephelpofta is how often help was given, rephelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-kapitalinkomst-familj-2000"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, familj, 2000" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (familj, 2000)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-och-kapitalinkomst"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, 2000" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (individ, 2000)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-och-kapitalinkomst-cfviki01"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, 2001" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (individ, 2001)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-och-kapitalinkomst-cfviki99"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, 1999" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (individ, 1999)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-och-kapitalinkomst-cfvikih01"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, familj, 2001" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (familj, 2001)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvs-och-kapitalinkomst-cfvikih99"
-fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst, familj, 1999" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Individual (cfviki) and family-level (cfvikih) income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst (familj, 1999)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvs- och kapitalinkomst' (6 variables): judged different meaning, high confidence; Opdefs: individual (cfviki) and family (cfvikih) income for each of 1999, 2000 and 2001 in six concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-csfvi00"
-fields = { "label" = "Sammanräknad förvärvsinkomst, 2000" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; csfvi99, csfvi00 and csfvi01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst (2000)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-csfvi01"
-fields = { "label" = "Sammanräknad förvärvsinkomst, 2001" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; csfvi99, csfvi00 and csfvi01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst (2001)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-csfvi99"
-fields = { "label" = "Sammanräknad förvärvsinkomst, 1999" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; csfvi99, csfvi00 and csfvi01 are the same income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst (1999)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (3 variables): judged different meaning, high confidence; Opdefs: individual income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-familj-csfvih00"
-fields = { "label" = "Sammanräknad förvärvsinkomst, familj, 2000" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; csfvih99, csfvih00 and csfvih01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj (2000)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-familj-csfvih01"
-fields = { "label" = "Sammanräknad förvärvsinkomst, familj, 2001" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; csfvih99, csfvih00 and csfvih01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj (2001)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family income for 1999, 2000 and 2001 in three concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-familj-csfvih99"
-fields = { "label" = "Sammanräknad förvärvsinkomst, familj, 1999" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; csfvih99, csfvih00 and csfvih01 are the family-level income for the years 1999, 2000 and 2001."
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj (1999)" }
+evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst, familj' (3 variables): judged different meaning, high confidence; Opdefs: family income for 1999, 2000 and 2001 in three concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sei"
+fields = { "label" = "SEI_TA2000 (urvalsperson)" }
+evidence = "#2102 same-label cluster 'SEI_TA2000' (4 variables): judged different meaning, medium confidence; Opdefs: sei and seims are auto-coded SEI for the sampled person and the partner; seiarb and seiarbms are variants recoded using the activity variable syss."
+
+[[statement]]
+kind = "set"
+subject = "var:seiarb"
+fields = { "label" = "SEI_TA2000 (urvalsperson, omkodad utifrån sysselsättning)" }
+evidence = "#2102 same-label cluster 'SEI_TA2000' (4 variables): judged different meaning, medium confidence; Opdefs: sei and seims are auto-coded SEI for the sampled person and the partner; seiarb and seiarbms are variants recoded using the activity variable syss."
+
+[[statement]]
+kind = "set"
+subject = "var:seiarbms"
+fields = { "label" = "SEI_TA2000 (urvalspersonens partner, omkodad utifrån sysselsättning)" }
+evidence = "#2102 same-label cluster 'SEI_TA2000' (4 variables): judged different meaning, medium confidence; Opdefs: sei and seims are auto-coded SEI for the sampled person and the partner; seiarb and seiarbms are variants recoded using the activity variable syss."
+
+[[statement]]
+kind = "set"
+subject = "var:seims"
+fields = { "label" = "SEI_TA2000 (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'SEI_TA2000' (4 variables): judged different meaning, medium confidence; Opdefs: sei and seims are auto-coded SEI for the sampled person and the partner; seiarb and seiarbms are variants recoded using the activity variable syss."
 
 [[statement]]
 kind = "set"
 subject = "var:sex"
-fields = { "label" = "Kön, urvalsperson" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; MSSEX and konms hold the spouse/partner's sex (MS), UPSEX, sex and kon the sampled person's; the later kon is in the 2021 time study."
+fields = { "label" = "Kön (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:skiftform"
-fields = { "label" = "Huvudsaklig arbetstidsform, undersökningsperson" }
-evidence = "#2102 same-label cluster 'Huvudsaklig arbetstidsform' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table with slightly different value sets; suffix ms is read as partner by analogy with the sibling clusters, which is not documented here."
+fields = { "label" = "Huvudsaklig arbetstidsform (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig arbetstidsform' (2 variables): judged different meaning, high confidence; Opdefs: skiftform describes the sampled person, skiftformms the sampled person's partner."
 
 [[statement]]
 kind = "set"
 subject = "var:skiftformms"
-fields = { "label" = "Huvudsaklig arbetstidsform, partner" }
-evidence = "#2102 same-label cluster 'Huvudsaklig arbetstidsform' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table with slightly different value sets; suffix ms is read as partner by analogy with the sibling clusters, which is not documented here."
+fields = { "label" = "Huvudsaklig arbetstidsform (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig arbetstidsform' (2 variables): judged different meaning, high confidence; Opdefs: skiftform describes the sampled person, skiftformms the sampled person's partner."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk"
-fields = { "label" = "Yrke (SSYK), urvalsperson" }
-evidence = "#2102 same-label cluster 'Yrke (SSYK)' (2 variables): judged different meaning, medium confidence; ssykms is the spouse/partner's occupation (MS), ssyk the sampled person's."
+fields = { "label" = "Yrke (SSYK) (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Yrke (SSYK)' (2 variables): judged different meaning, high confidence; Opdef: ssykms is the respondent's partner's 3-digit SSYK, ssyk the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:ssykms"
-fields = { "label" = "Yrke (SSYK), make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Yrke (SSYK)' (2 variables): judged different meaning, medium confidence; ssykms is the spouse/partner's occupation (MS), ssyk the sampled person's."
+fields = { "label" = "Yrke (SSYK) (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Yrke (SSYK)' (2 variables): judged different meaning, high confidence; Opdef: ssykms is the respondent's partner's 3-digit SSYK, ssyk the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:stadhelpant"
-fields = { "label" = "Hjälp med städning- antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med städning- antal gånger' (2 variables): judged different meaning, medium confidence; gstadhelpant (g = gett) and stadhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med städning- antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med städning- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gstadhelpant counts help given, stadhelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:stadhelpofta"
-fields = { "label" = "Hjälp med städning- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med städning- hur ofta' (2 variables): judged different meaning, medium confidence; gstadhelpofta (g = gett) and stadhelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med städning- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med städning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gstadhelpofta is how often help was given, stadhelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000nivams"
-fields = { "label" = "Utbildningsgrupp enl SUN 2000, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp enl SUN 2000' (2 variables): judged different meaning, medium confidence; SUN2000Nivams is the spouse/partner's (MS), sun2000niva presumably the sampled person's."
+fields = { "label" = "Utbildningsgrupp enl SUN 2000 (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp enl SUN 2000' (2 variables): judged different meaning, high confidence; Opdefs: SUN2000Nivams is the respondent's partner, sun2000niva the respondent."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-grov"
-fields = { "label" = "Utbildningsnivå, SUN 2020, grov nivå" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Partner column versus respondent column, both with 5-digit SUN codes in 2000-2001, and a coarse SUN 2020 level from the 2021 study."
+fields = { "label" = "Utbildningsnivå (SUN 2020, grov nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Opdefs: SUNms is the partner's and sun the respondent's 5-digit SUN code; SUN2020Niva_Grov is a coarse level from the 2021 study."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsbrist-avsta-saker-vardagar"
+fields = { "label" = "Tidsbrist (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; Opdef: hinnamed2ms is the partner's answer; hinnamed2 and F19 (2021 tidsstudien, same question and scale) are the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:tradghelpant"
-fields = { "label" = "Hjälp med trädgårdsarbete-antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete-antal gånger' (2 variables): judged different meaning, medium confidence; gtradghelpant (g = gett) and tradghelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med trädgårdsarbete-antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtradghelpant counts help given, tradghelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:tradghelpofta"
-fields = { "label" = "Hjälp med trädgårdsarbete- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete- hur ofta' (2 variables): judged different meaning, medium confidence; gtradghelpofta (g = gett) and tradghelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med trädgårdsarbete- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med trädgårdsarbete- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtradghelpofta is how often help was given, tradghelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:transhelpant"
-fields = { "label" = "Hjälp med transport-antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med transport-antal gånger' (2 variables): judged different meaning, medium confidence; gtranshelpant (g = gett) and transhelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med transport-antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med transport-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtranshelpant counts help given, transhelpant help received."
+
+[[statement]]
+kind = "set"
+subject = "var:transhelpofta"
+fields = { "label" = "Hjälp med transport- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med transport- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtranshelpofta is how often help was given, transhelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:tvatthelpant"
-fields = { "label" = "Hjälp med tvättning- antal gånger (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med tvättning- antal gånger' (2 variables): judged different meaning, medium confidence; gtvatthelpant (g = gett) and tvatthelpant are concurrent counts for given versus received help."
+fields = { "label" = "Hjälp med tvättning- antal gånger (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med tvättning- antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gtvatthelpant counts help given, tvatthelpant help received."
 
 [[statement]]
 kind = "set"
 subject = "var:tvatthelpofta"
-fields = { "label" = "Hjälp med tvättning- hur ofta (fått)" }
-evidence = "#2102 same-label cluster 'Hjälp med tvättning- hur ofta' (2 variables): judged different meaning, medium confidence; gtvatthelpofta (g = gett) and tvatthelpofta are concurrent columns for given versus received help."
+fields = { "label" = "Hjälp med tvättning- hur ofta (fått hjälp)" }
+evidence = "#2102 same-label cluster 'Hjälp med tvättning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gtvatthelpofta is how often help was given, tvatthelpofta received."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsgrupp-enl-sun-2000"
-fields = { "label" = "Utbildningsgrupp enl SUN 2000, urvalsperson" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp enl SUN 2000' (2 variables): judged different meaning, medium confidence; SUN2000Nivams is the spouse/partner's (MS), sun2000niva presumably the sampled person's."
+fields = { "label" = "Utbildningsgrupp enl SUN 2000 (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp enl SUN 2000' (2 variables): judged different meaning, high confidence; Opdefs: SUN2000Nivams is the respondent's partner, sun2000niva the respondent."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-partner"
-fields = { "label" = "Utbildningsnivå, partner, 5-siffrig SUN-kod" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Partner column versus respondent column, both with 5-digit SUN codes in 2000-2001, and a coarse SUN 2020 level from the 2021 study."
+fields = { "label" = "Utbildningsnivå (urvalspersonens partner, 5-siffrig SUN-kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Opdefs: SUNms is the partner's and sun the respondent's 5-digit SUN code; SUN2020Niva_Grov is a coarse level from the 2021 study."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-sun-1996"
-fields = { "label" = "Utbildningsnivå, undersökningsperson, 5-siffrig SUN-kod" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Partner column versus respondent column, both with 5-digit SUN codes in 2000-2001, and a coarse SUN 2020 level from the 2021 study."
+fields = { "label" = "Utbildningsnivå (urvalsperson, 5-siffrig SUN-kod)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Opdefs: SUNms is the partner's and sun the respondent's 5-digit SUN code; SUN2020Niva_Grov is a coarse level from the 2021 study."
 
 [[statement]]
 kind = "set"
 subject = "var:utbms"
-fields = { "label" = "Utbildning_TA1990, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Utbildning_TA1990' (2 variables): judged different meaning, medium confidence; UTBMS is the spouse/partner's education (MS), UTBUP the sampled person's (UP)."
+fields = { "label" = "Utbildning_TA1990 (urvalspersonens partner)" }
+evidence = "#2102 same-label cluster 'Utbildning_TA1990' (2 variables): judged different meaning, high confidence; Opdefs: utbms is the partner's education level, utbup the sampled person's."
 
 [[statement]]
 kind = "set"
 subject = "var:utbup"
-fields = { "label" = "Utbildning_TA1990, urvalsperson" }
-evidence = "#2102 same-label cluster 'Utbildning_TA1990' (2 variables): judged different meaning, medium confidence; UTBMS is the spouse/partner's education (MS), UTBUP the sampled person's (UP)."
+fields = { "label" = "Utbildning_TA1990 (urvalsperson)" }
+evidence = "#2102 same-label cluster 'Utbildning_TA1990' (2 variables): judged different meaning, high confidence; Opdefs: utbms is the partner's education level, utbup the sampled person's."

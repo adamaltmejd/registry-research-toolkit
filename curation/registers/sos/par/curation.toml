@@ -1622,11 +1622,23 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:klinik"
-fields = { "label" = "Inrapporterad klinikkod, vid inventeringstidpunkten" }
-evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; The definitions differ: the clinic where the patient has been admitted versus the clinic where the patient is admitted at the inventory date."
+fields = { "label" = "Inrapporterad klinikkod (inskriven vid inventeringstidpunkten)" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: klinik där patienten varit inskriven respektive där patienten är inskriven vid inventeringstidpunkten."
 
 [[statement]]
 kind = "set"
 subject = "var:lt-klin"
-fields = { "label" = "Inrapporterad klinikkod, där patienten varit inskriven" }
-evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; The definitions differ: the clinic where the patient has been admitted versus the clinic where the patient is admitted at the inventory date."
+fields = { "label" = "Inrapporterad klinikkod (där patienten varit inskriven)" }
+evidence = "#2102 same-label cluster 'Inrapporterad klinikkod' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: klinik där patienten varit inskriven respektive där patienten är inskriven vid inventeringstidpunkten."
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandring-1"
+fields = { "label" = "Senaste invandring (SENINV1)" }
+evidence = "#2102 same-label cluster 'Senaste invandring' (2 variables): judged different meaning, low confidence; SENINV och SENINV1 löper samtidigt 2015-2016 i par-sv; definitionen nämner två datumformat men inte vilken kolumn som har vilket, så rå kolumnkod används."
+
+[[statement]]
+kind = "set"
+subject = "var:typ"
+fields = { "label" = "Psykiatrisk vårdform (TYP)" }
+evidence = "#2102 same-label cluster 'Psykiatrisk vårdform' (2 variables): judged different meaning, low confidence; PSVARD och TYP löper samtidigt i par-tv 2011-2015; ingen källtext anger vad TYP innehåller, så rå kolumnkod används."

@@ -17774,101 +17774,197 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:ampp4bes"
-fields = { "label" = "Annan ersättning än angivna svarsalternativ (inte inskrivna vid AF)" }
-evidence = "#2102 same-label cluster 'Annan ersättning än angivna svarsalternativ' (2 variables): judged different meaning, medium confidence; AMPP4 is asked of persons not registered at the employment service, AMPP5b of registered/programme participants (per the sibling AMPP4/AMPP5b clusters)."
+fields = { "label" = "Annan ersättning än angivna svarsalternativ (AMPP4Bes)" }
+evidence = "#2102 same-label cluster 'Annan ersättning än angivna svarsalternativ' (2 variables): judged different meaning, low confidence; AMPP4Bes and AMPP5bBes are concurrent free-text columns; no source text states how they differ, so raw column codes qualify."
 
 [[statement]]
 kind = "set"
 subject = "var:annan-ersattning-an-angivna-svarsalternativ-ampp5bbes"
-fields = { "label" = "Annan ersättning än angivna svarsalternativ (inskrivna vid AF eller programdeltagare)" }
-evidence = "#2102 same-label cluster 'Annan ersättning än angivna svarsalternativ' (2 variables): judged different meaning, medium confidence; AMPP4 is asked of persons not registered at the employment service, AMPP5b of registered/programme participants (per the sibling AMPP4/AMPP5b clusters)."
+fields = { "label" = "Annan ersättning än angivna svarsalternativ (AMPP5bBes)" }
+evidence = "#2102 same-label cluster 'Annan ersättning än angivna svarsalternativ' (2 variables): judged different meaning, low confidence; AMPP4Bes and AMPP5bBes are concurrent free-text columns; no source text states how they differ, so raw column codes qualify."
+
+[[statement]]
+kind = "set"
+subject = "var:benamning-pa-up-s-senaste-arbetsplats-personer-uarbbenamn-3"
+fields = { "label" = "Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UarbBenamn)" }
+evidence = "#2102 same-label cluster 'Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UarbBenamn and UARBBENAMNKU are concurrent columns 2005-2011 with no source text on how they differ; raw column code qualifies."
+
+[[statement]]
+kind = "set"
+subject = "var:benamning-pa-up-s-senaste-arbetsplats-personer-uarbbenamnku"
+fields = { "label" = "Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UARBBENAMNKU)" }
+evidence = "#2102 same-label cluster 'Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UarbBenamn and UARBBENAMNKU are concurrent columns 2005-2011 with no source text on how they differ; raw column code qualifies."
 
 [[statement]]
 kind = "set"
 subject = "var:bisni"
 fields = { "label" = "Näringsgren i bisysslan (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): judged different meaning, high confidence; Different industry classification versions (SNI 92 vs SNI 69)."
+evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 92 (linked from SNI 69 coding) versus SNI 69."
 
 [[statement]]
 kind = "set"
 subject = "var:ersattningsform-af-inskrivna-eller-programdeltagare"
-fields = { "label" = "Ersättning från Försäkringskassan (inskrivna vid AF eller programdeltagare)" }
-evidence = "#2102 same-label cluster 'Ersättning från Försäkringskassan' (2 variables): judged different meaning, high confidence; AMPP5b is asked of registered/programme participants, AMPP4 of those not registered at the employment service."
+fields = { "label" = "Ersättning från Försäkringskassan (inskrivna på Arbetsförmedlingen eller programdeltagare)" }
+evidence = "#2102 same-label cluster 'Ersättning från Försäkringskassan' (2 variables): judged different meaning, high confidence; Opdefs: AMPP5b is asked of those registered at Arbetsförmedlingen or in a programme, AMPP4 of those not registered."
 
 [[statement]]
 kind = "set"
 subject = "var:ersattningsform-inte-inskrivna-af"
-fields = { "label" = "Ersättning från Försäkringskassan (inte inskrivna vid AF)" }
-evidence = "#2102 same-label cluster 'Ersättning från Försäkringskassan' (2 variables): judged different meaning, high confidence; AMPP5b is asked of registered/programme participants, AMPP4 of those not registered at the employment service."
-
-[[statement]]
-kind = "set"
-subject = "var:hsyrke"
-fields = { "label" = "Yrke i huvudsysslan (utan kodlista)" }
-evidence = "#2102 same-label cluster 'Yrke i huvudsysslan' (3 variables): judged different meaning, medium confidence; HsSSYK2012 has an SSYK 2012 code list; HuYrke and its successor HsYrke have none and are a rename of each other."
+fields = { "label" = "Ersättning från Försäkringskassan (inte inskrivna på Arbetsförmedlingen)" }
+evidence = "#2102 same-label cluster 'Ersättning från Försäkringskassan' (2 variables): judged different meaning, high confidence; Opdefs: AMPP5b is asked of those registered at Arbetsförmedlingen or in a programme, AMPP4 of those not registered."
 
 [[statement]]
 kind = "set"
 subject = "var:hu-overtidstim-ejers"
 fields = { "label" = "Antal övertidstimmar utan ersättning i huvudsysslan, anställda (ja/nej)" }
-evidence = "#2102 same-label cluster 'Antal övertidstimmar utan ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, high confidence; HUOTEJERSTIM/HsOtEjErsTim are hour counts (a rename); HUOTEJERS is a Ja/Nej flag."
+evidence = "#2102 same-label cluster 'Antal övertidstimmar utan ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, high confidence; HUOTEJERSTIM and HsOtEjErsTim are hour counts (a rename); HUOTEJERS is a Ja/Nej flag."
+
+[[statement]]
+kind = "set"
+subject = "var:huarbhem"
+fields = { "label" = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEM)" }
+evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsysslan, frekvens' (3 variables): judged different meaning, low confidence; HUARBHEMANT and HUARBHEMMAANT are a rename (2008 overlap); HUARBHEM runs concurrently with HUARBHEMANT and nothing states how it differs, so the raw column code qualifies."
 
 [[statement]]
 kind = "set"
 subject = "var:husni"
 fields = { "label" = "Näringsgren i huvudsysslan (SNI 69)" }
-evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Different industry classification versions (SNI 69 vs SNI 92)."
+evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 69 versus SNI 92."
 
 [[statement]]
 kind = "set"
-subject = "var:huyrke"
-fields = { "label" = "Yrke i huvudsysslan (utan kodlista)" }
-evidence = "#2102 same-label cluster 'Yrke i huvudsysslan' (3 variables): judged different meaning, medium confidence; HsSSYK2012 has an SSYK 2012 code list; HuYrke and its successor HsYrke have none and are a rename of each other."
+subject = "var:kurs-aktivitet-pa-fritiden-under-referensveckan-studbettim"
+fields = { "label" = "Kurs/aktivitet på fritiden under referensveckan, antal timmar (STUDBETTIM)" }
+evidence = "#2102 same-label cluster 'Kurs/aktivitet på fritiden under referensveckan, antal timmar' (3 variables): judged different meaning, medium confidence; STUDFRIT is a Ja/Nej participation flag; STUDFRITTIM and STUDBETTIM both hold hours and overlap in 2010-2011, with no source text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetag"
+fields = { "label" = "Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UarbForetag)" }
+evidence = "#2102 same-label cluster 'Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UARBFORETAGKU and UarbForetag are concurrent 2009-2011 with no source text on how they differ; raw column code qualifies."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetagku"
+fields = { "label" = "Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UARBFORETAGKU)" }
+evidence = "#2102 same-label cluster 'Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UARBFORETAGKU and UarbForetag are concurrent 2009-2011 with no source text on how they differ; raw column code qualifies."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-arbete-ett-ar-sedan-sni2002-huvudgrupp"
 fields = { "label" = "Näringsgren arbete för ett år sedan (SNI 2002, huvudgrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren arbete för ett år sedan' (2 variables): judged different meaning, medium confidence; Both SNI 2002 but different aggregation levels: two-digit huvudgrupp vs letter avdelning (the second column is also named UarbSNI)."
+evidence = "#2102 same-label cluster 'Näringsgren arbete för ett år sedan' (2 variables): judged different meaning, high confidence; Both SNI 2002 but different aggregation: two-digit huvudgrupp versus letter avdelning."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-i-bisysslan-sni69"
 fields = { "label" = "Näringsgren i bisysslan (SNI 69)" }
-evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): judged different meaning, high confidence; Different industry classification versions (SNI 92 vs SNI 69)."
+evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 92 (linked from SNI 69 coding) versus SNI 69."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-i-huvudsysslan-sni92"
 fields = { "label" = "Näringsgren i huvudsysslan (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Different industry classification versions (SNI 69 vs SNI 92)."
+evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 69 versus SNI 92."
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-i-huvudsysslan-frekvens-huarbnatt"
+fields = { "label" = "Nattarbete i huvudsysslan, frekvens (HuArbNatt)" }
+evidence = "#2102 same-label cluster 'Nattarbete i huvudsysslan, frekvens' (2 variables): judged different meaning, low confidence; HUARBNATTANT and HuArbNatt are concurrent 2009-2011 with identical value lists and no source text on the difference; raw column code qualifies."
+
+[[statement]]
+kind = "set"
+subject = "var:senarsa1"
+fields = { "label" = "Arbete 1-3 månader före mätmånaden (fråga G32)" }
+evidence = "#2102 same-label cluster 'Arbete 1-3 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarsa2"
+fields = { "label" = "Arbete 4-6 månader före mätmånaden (fråga G32)" }
+evidence = "#2102 same-label cluster 'Arbete 4-6 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarsa3"
+fields = { "label" = "Arbete 7-9 månader före mätmånaden (fråga G32)" }
+evidence = "#2102 same-label cluster 'Arbete 7-9 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarsa4"
+fields = { "label" = "Arbete 10-12 månader före mätmånaden (fråga G32)" }
+evidence = "#2102 same-label cluster 'Arbete 10-12 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarta1"
+fields = { "label" = "Arbete 1-3 månader före mätmånaden (fråga G23)" }
+evidence = "#2102 same-label cluster 'Arbete 1-3 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarta2"
+fields = { "label" = "Arbete 4-6 månader före mätmånaden (fråga G23)" }
+evidence = "#2102 same-label cluster 'Arbete 4-6 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarta3"
+fields = { "label" = "Arbete 7-9 månader före mätmånaden (fråga G23)" }
+evidence = "#2102 same-label cluster 'Arbete 7-9 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
+
+[[statement]]
+kind = "set"
+subject = "var:senarta4"
+fields = { "label" = "Arbete 10-12 månader före mätmånaden (fråga G23)" }
+evidence = "#2102 same-label cluster 'Arbete 10-12 månader före mätmånaden' (2 variables): judged different meaning, medium confidence; Opdefs give different questionnaire items (G32 versus G23) for concurrent columns with the same value list."
 
 [[statement]]
 kind = "set"
 subject = "var:studfrit-refvecka"
-fields = { "label" = "Kurs/aktivitet på fritiden under referensveckan (ja/nej)" }
-evidence = "#2102 same-label cluster 'Kurs/aktivitet på fritiden under referensveckan, antal timmar' (3 variables): judged different meaning, medium confidence; STUDFRIT is a Ja/Nej participation flag; STUDFRITTIM holds hours. The STUDBETTIM-spelled member in 2010-2011 also holds hours and is probably a duplicate of STUDFRITTIM."
+fields = { "label" = "Kurs/aktivitet på fritiden under referensveckan, antal timmar (deltagit ja/nej)" }
+evidence = "#2102 same-label cluster 'Kurs/aktivitet på fritiden under referensveckan, antal timmar' (3 variables): judged different meaning, medium confidence; STUDFRIT is a Ja/Nej participation flag; STUDFRITTIM and STUDBETTIM both hold hours and overlap in 2010-2011, with no source text on the difference."
+
+[[statement]]
+kind = "set"
+subject = "var:syssokt8"
+fields = { "label" = "Vet ej om sökt annat arbete, sysselsatta (SysSokt8)" }
+evidence = "#2102 same-label cluster 'Vet ej om sökt annat arbete, sysselsatta' (2 variables): judged different meaning, medium confidence; Concurrent columns with different codings (0/8 versus 0/88); only raw column codes distinguish them."
 
 [[statement]]
 kind = "set"
 subject = "var:uarbsni2002-1"
 fields = { "label" = "Näringsgren arbete för ett år sedan (SNI 2002, avdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren arbete för ett år sedan' (2 variables): judged different meaning, medium confidence; Both SNI 2002 but different aggregation levels: two-digit huvudgrupp vs letter avdelning (the second column is also named UarbSNI)."
+evidence = "#2102 same-label cluster 'Näringsgren arbete för ett år sedan' (2 variables): judged different meaning, high confidence; Both SNI 2002 but different aggregation: two-digit huvudgrupp versus letter avdelning."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-4-positioner"
 fields = { "label" = "Utbildningsinriktning (4 positioner, SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Different classification versions: SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020 classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-4-positioner-sun2020inr"
 fields = { "label" = "Utbildningsinriktning (4 positioner, SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Different classification versions: SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; SUN 2000 versus SUN 2020 classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:vet-ej-om-sokt-annat-arbete-sysselsatta-syssoksatt88"
+fields = { "label" = "Vet ej om sökt annat arbete, sysselsatta (SysSokSatt88)" }
+evidence = "#2102 same-label cluster 'Vet ej om sökt annat arbete, sysselsatta' (2 variables): judged different meaning, medium confidence; Concurrent columns with different codings (0/8 versus 0/88); only raw column codes distinguish them."
 
 [[statement]]
 kind = "set"
 subject = "var:yrke-huvudsysslan-yrkesklassificering-2012"
 fields = { "label" = "Yrke i huvudsysslan (SSYK 2012)" }
-evidence = "#2102 same-label cluster 'Yrke i huvudsysslan' (3 variables): judged different meaning, medium confidence; HsSSYK2012 has an SSYK 2012 code list; HuYrke and its successor HsYrke have none and are a rename of each other."
+evidence = "#2102 same-label cluster 'Yrke i huvudsysslan' (3 variables): judged different meaning, medium confidence; HsSSYK2012 has an SSYK 2012 code list; HuYrke and its successor HsYrke are a rename of each other without a code list."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall"
+fields = { "label" = "Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren (UARBSOKTYRKSTALL)" }
+evidence = "#2102 same-label cluster 'Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren' (2 variables): judged different meaning, low confidence; UARBYRKSTALL and UARBSOKTYRKSTALL are concurrent in 2008-2009 with the same definition and value list; no source text says how they differ, so the raw column code qualifies."

@@ -386,10 +386,10 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:kommun"
 fields = { "label" = "Kommun (kod)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the code, KOMMUNNAMN the name."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the kommunkod, KOMMUNNAMN the kommunnamn (opdef: kommunkod och kommunnamn i två olika kolumner)."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunnamn"
 fields = { "label" = "Kommun (namn)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the code, KOMMUNNAMN the name."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the kommunkod, KOMMUNNAMN the kommunnamn (opdef: kommunkod och kommunnamn i två olika kolumner)."

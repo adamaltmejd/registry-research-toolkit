@@ -651,52 +651,184 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:ansvarig-databas"
 fields = { "label" = "Registeransvarig (ansvarig databas)" }
-evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; ANSVARIG_DATABAS (responsible database) vs REGISTRERANDE_MYNDIGHET (registering authority), overlapping periods."
+evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; Two columns with overlapping periods; the opdef says Naturvårdsregistret holds the registering authority and Natura 2000 the party responsible for the database."
 
 [[statement]]
 kind = "set"
 subject = "var:ansvarig-skotsel"
 fields = { "label" = "Förvaltare (ansvarig för skötsel)" }
-evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; ANSVARIG_SKOTSEL (responsible for management) and FORVALTARE__NAMN (manager name) are separate columns that coexist in 2020-2021."
+evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; Two concurrent columns; the shared opdef says the Naturvårdsregistret holds the manager's name and Natura 2000 the party responsible for management."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-sci"
+fields = { "label" = "Beslutsdatum för skyddad natur (SCI)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-spa"
+fields = { "label" = "Beslutsdatum för skyddad natur (SPA)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-for-skyddad-natur-beslutsstatus"
+fields = { "label" = "Beslutsdatum för skyddad natur (beslutsstatus)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:beteckn"
+fields = { "label" = "Namn på geografiskt objekt (Beteckn)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:datbeslut"
+fields = { "label" = "Beslutsdatum för skyddad natur (Datbeslut)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-bevarandeomr-datum"
+fields = { "label" = "Beslutsdatum för skyddad natur (EU:s beslut, bevarandeområde)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:eu-besl-skyddsomr-datum"
+fields = { "label" = "Beslutsdatum för skyddad natur (EU:s beslut, skyddsområde)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
 
 [[statement]]
 kind = "set"
 subject = "var:forvaltare-namn-3817"
 fields = { "label" = "Förvaltare (namn)" }
-evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; ANSVARIG_SKOTSEL (responsible for management) and FORVALTARE__NAMN (manager name) are separate columns that coexist in 2020-2021."
+evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; Two concurrent columns; the shared opdef says the Naturvårdsregistret holds the manager's name and Natura 2000 the party responsible for management."
 
 [[statement]]
 kind = "set"
 subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
 fields = { "label" = "Gällandedatum för skyddad natur (SCI)" }
-evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
 fields = { "label" = "Gällandedatum för skyddad natur (SPA)" }
-evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:inlamn-datum"
+fields = { "label" = "Beslutsdatum för skyddad natur (inlämningsdatum)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "label" = "Namn på geografiskt objekt (NAMN)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-1"
+fields = { "label" = "Namn på geografiskt objekt (NAMN_1)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-12"
+fields = { "label" = "Namn på geografiskt objekt (NAMN_12)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:objektnamn"
+fields = { "label" = "Namn på geografiskt objekt (OBJEKTNAMN)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:prec-syfte"
+fields = { "label" = "Syfte för registerobjekt (preciserat syfte)" }
+evidence = "#2102 same-label cluster 'Syfte för registerobjekt' (2 variables): judged different meaning, high confidence; Opdefs say SYFTE is the primary purpose and PREC_SYFTE the specified (preciserat) purpose."
 
 [[statement]]
 kind = "set"
 subject = "var:registrerande-myndighet"
 fields = { "label" = "Registeransvarig (registrerande myndighet)" }
-evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; ANSVARIG_DATABAS (responsible database) vs REGISTRERANDE_MYNDIGHET (registering authority), overlapping periods."
+evidence = "#2102 same-label cluster 'Registeransvarig' (2 variables): judged different meaning, medium confidence; Two columns with overlapping periods; the opdef says Naturvårdsregistret holds the registering authority and Natura 2000 the party responsible for the database."
+
+[[statement]]
+kind = "set"
+subject = "var:sci-43151"
+fields = { "label" = "Typ av Natura 2000-område (SCI)" }
+evidence = "#2102 same-label cluster 'Typ av Natura 2000-område' (5 variables): judged different meaning, medium confidence; TYP holds the combined type code list; SCI and SPA are separate columns (opdef: value 1 means that type); TYP_1 and TYP_12 have no text saying what the suffix means, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-beslutsdat"
+fields = { "label" = "Beslutsdatum för skyddad natur (senaste beslut)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:site-name"
+fields = { "label" = "Namn på geografiskt objekt (SITE_NAME)" }
+evidence = "#2102 same-label cluster 'Namn på geografiskt objekt' (6 variables): judged different meaning, low confidence; Six name columns in one table with no definition or opdef separating them; qualified by raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:sitecode-1"
-fields = { "label" = "SITECODE (nr 1)" }
-evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, medium confidence; SITECODE plus numbered variants SITECODE_1 and SITECODE_12."
+fields = { "label" = "SITECODE (SITECODE_1)" }
+evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, low confidence; Unnumbered and numbered SITECODE columns coexist in 2024-2025; nothing says what the suffixes mean, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:sitecode-12"
-fields = { "label" = "SITECODE (nr 12)" }
-evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, medium confidence; SITECODE plus numbered variants SITECODE_1 and SITECODE_12."
+fields = { "label" = "SITECODE (SITECODE_12)" }
+evidence = "#2102 same-label cluster 'SITECODE' (3 variables): judged different meaning, low confidence; Unnumbered and numbered SITECODE columns coexist in 2024-2025; nothing says what the suffixes mean, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:spa"
+fields = { "label" = "Typ av Natura 2000-område (SPA)" }
+evidence = "#2102 same-label cluster 'Typ av Natura 2000-område' (5 variables): judged different meaning, medium confidence; TYP holds the combined type code list; SCI and SPA are separate columns (opdef: value 1 means that type); TYP_1 and TYP_12 have no text saying what the suffix means, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:syfte"
+fields = { "label" = "Syfte för registerobjekt (primärt syfte)" }
+evidence = "#2102 same-label cluster 'Syfte för registerobjekt' (2 variables): judged different meaning, high confidence; Opdefs say SYFTE is the primary purpose and PREC_SYFTE the specified (preciserat) purpose."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-1"
+fields = { "label" = "Typ av Natura 2000-område (TYP_1)" }
+evidence = "#2102 same-label cluster 'Typ av Natura 2000-område' (5 variables): judged different meaning, medium confidence; TYP holds the combined type code list; SCI and SPA are separate columns (opdef: value 1 means that type); TYP_1 and TYP_12 have no text saying what the suffix means, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-12"
+fields = { "label" = "Typ av Natura 2000-område (TYP_12)" }
+evidence = "#2102 same-label cluster 'Typ av Natura 2000-område' (5 variables): judged different meaning, medium confidence; TYP holds the combined type code list; SCI and SPA are separate columns (opdef: value 1 means that type); TYP_1 and TYP_12 have no text saying what the suffix means, so raw code."
+
+[[statement]]
+kind = "set"
+subject = "var:uppd-datum"
+fields = { "label" = "Beslutsdatum för skyddad natur (uppdateringsdatum)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
+
+[[statement]]
+kind = "set"
+subject = "var:urspr-beslutsdatum"
+fields = { "label" = "Beslutsdatum för skyddad natur (ursprungligt beslut)" }
+evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
 
 [[statement]]
 kind = "set"
 subject = "var:urspr-gallandedatum"
 fields = { "label" = "Gällandedatum för skyddad natur (ursprungligt)" }
-evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; SCI, SPA and original-validity-date columns."
+evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."

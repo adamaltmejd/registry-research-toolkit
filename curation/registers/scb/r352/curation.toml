@@ -699,214 +699,226 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 kind = "set"
 subject = "var:annan-huvudsaklig-sysselsattning-fritext-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: annan huvudsaklig sysselsättning 6–12 april, fritext" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:annan-utbildning-beskrivning-fritext"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: annan utbildning, beskrivning i fritext" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:anstallning-aven-om-inte-arbetade-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: anställning 6–12 april även om inte arbetade" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-minst-6-manader-utan-avbrott-efter-gymnasiet"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: arbete minst 6 månader utan avbrott efter gymnasiet" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-pengar-arbetsgivare-eller-kunder-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: arbete mot betalning 6–12 april" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsuppgifter-stammer-med-inriktning"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: arbetsuppgifter stämmer med inriktning" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsuppgifter-stammer-med-yrkesprogrammets-yrkesomrade"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: arbetsuppgifter stämmer med yrkesområde" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:f13"
-fields = { "label" = "Variabler om gymnasial yrkesutbildning: fråga 13" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+fields = { "label" = "Variabler om gymnasial yrkesutbildning: veckor helt utan arbete januari–mars 2015" }
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:f13grupp"
-fields = { "label" = "Variabler om gymnasial yrkesutbildning: fråga 13, grupperad" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+fields = { "label" = "Variabler om gymnasial yrkesutbildning: veckor helt utan arbete januari–mars 2015, grupperad" }
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:f4kodad"
-fields = { "label" = "Variabler om gymnasial yrkesutbildning: huvudsaklig sysselsättning 6–12 april, kodad" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+fields = { "label" = "Variabler om gymnasial yrkesutbildning: huvudsaklig sysselsättning 6–12 april 2015, korrigerad och kodad" }
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:folkhsk-ht14-niva"
-fields = { "label" = "Elev i skolform (folkhögskola, kursnivå HT 2014)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: folkhögskola (kursnivå)" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:harlett-nagot-arbete-overhuvudtaget"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: har haft något arbete överhuvudtaget" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:helt-utan-arbete-januari-mars-2015"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: helt utan arbete januari–mars 2015" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:hreght2014"
-fields = { "label" = "Elev i skolform (HREG, HT 2014)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: högskola/universitet (HT 2014)" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:hregvt2015"
-fields = { "label" = "Elev i skolform (HREG, VT 2015)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: högskola/universitet (VT 2015)" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:huvudsaklig-sysselsattning-6-12-april-2015"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: huvudsaklig sysselsättning 6–12 april 2015" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:huvudsakligt-arbete-anstallningstyp-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: anställningstyp i huvudsakligt arbete 6–12 april" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:inriktning-stamde-inte-lasaret-2013-2014"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: inriktning stämde inte läsåret 2013/14, fritext" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:larlingsutbildning-arskurs-1"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: lärlingsutbildning årskurs 1" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:larlingsutbildning-arskurs-2"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: lärlingsutbildning årskurs 2" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:larlingsutbildning-arskurs-3"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: lärlingsutbildning årskurs 3" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:larlingsutbildning-nagon-arskurs-1-2-3"
-fields = { "label" = "Variabler om gymnasial yrkesutbildning: lärlingsutbildning någon av årskurs 1-3" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+fields = { "label" = "Variabler om gymnasial yrkesutbildning: lärlingsutbildning någon av årskurs 1–3" }
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:manader-till-forsta-arbete-minst-6-manader-utan-avbrott"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: månader till första arbete på minst 6 månader" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:manadsgrupp-till-forsta-arbete-minst-6-manader-utan-avbrott"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: månader till första arbete på minst 6 månader, grupperad" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:normal-arbetstid-heltid-deltid-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: normal arbetstid, heltid eller deltid, 6–12 april" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:onskemal-fler-farre-lagom-arbetstimmar-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: önskemål om fler eller färre arbetstimmar 6–12 april" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:programklartext"
 fields = { "label" = "Gymnasieprogram årskurs 3 (klartext)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram årskurs 3' (2 variables): judged different meaning, medium confidence; programklartext has no value set (text) while ProgramKORR is a coded program variable."
+evidence = "#2102 same-label cluster 'Gymnasieprogram årskurs 3' (2 variables): judged different meaning, high confidence; programklartext is the register programme in text; ProgramKORR is the programme code as corrected by the respondent (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:programkorr"
-fields = { "label" = "Gymnasieprogram årskurs 3 (programkod, korrigerad)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram årskurs 3' (2 variables): judged different meaning, medium confidence; programklartext has no value set (text) while ProgramKORR is a coded program variable."
+fields = { "label" = "Gymnasieprogram årskurs 3 (korrigerad programkod)" }
+evidence = "#2102 same-label cluster 'Gymnasieprogram årskurs 3' (2 variables): judged different meaning, high confidence; programklartext is the register programme in text; ProgramKORR is the programme code as corrected by the respondent (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:registrerad-komvux"
-fields = { "label" = "Elev i skolform (Komvux, HT 2014)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: Komvux" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:registrerad-yrkeshogskola"
-fields = { "label" = "Elev i skolform (yrkeshögskola, HT 2014)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: yrkeshögskola" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-2"
+fields = { "label" = "Stratum (andra fasens urval)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdefs: stratum of the ordinary sample vs stratum of the second-phase sample (telephone follow-up)."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-462"
+fields = { "label" = "Stratum (ordinarie urval)" }
+evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdefs: stratum of the ordinary sample vs stratum of the second-phase sample (telephone follow-up)."
 
 [[statement]]
 kind = "set"
 subject = "var:studerar-ht14"
-fields = { "label" = "Elev i skolform (studerar, HT 2014)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: studerar i någon skolform (härledd)" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:studiemotivation-arskurs-3-lasaret-2013-2014"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: studiemotivation årskurs 3 läsåret 2013/14" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:traffelevreg1415"
-fields = { "label" = "Elev i skolform (träff i elevregister 2014/15)" }
-evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, medium confidence; Seven concurrent flags/levels for different school forms and registers (folkhögskola, HREG, Komvux, yrkeshögskola, studerar, elevregister); HREG is not decoded in the data."
+fields = { "label" = "Elev i skolform: gymnasieskola (träff i elevregister)" }
+evidence = "#2102 same-label cluster 'Elev i skolform' (7 variables): judged different meaning, high confidence; Opdefs name different school forms/registers (folkhögskola, högskola HT 2014 and VT 2015, Komvux, yrkeshögskola, derived any-form flag, gymnasieskolans elevregister)."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-studier-6-12-april"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: typ av studier 6–12 april" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkesprogram-arskurs-3-lasaret-2013-2014"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: yrkesprogram årskurs 3 läsåret 2013/14" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkesprogram-stamde-inte-lasaret-2013-2014"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: yrkesprogram stämde inte läsåret 2013/14, fritext" }
-evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions, grouped/coded/free-text variants) whose meaning is in the pid names."
+evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."

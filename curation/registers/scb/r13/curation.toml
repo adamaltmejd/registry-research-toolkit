@@ -1206,3 +1206,27 @@ kind = "set"
 subject = "set:varuforvarv-fran-eg"
 fields = { "label" = "Varuförvärv från EG" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (gällande i januari aktuellt år)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; Sni92 and Sni2002 are explicit SNI versions; Ng1 is the näringsgren from the FDB match when the declaration arrived (SNI 2002 to 2006, SNI 2007 after); Ng0 is the näringsgren valid in January of the year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-2002"
+fields = { "label" = "Näringsgren (SNI 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; Sni92 and Sni2002 are explicit SNI versions; Ng1 is the näringsgren from the FDB match when the declaration arrived (SNI 2002 to 2006, SNI 2007 after); Ng0 is the näringsgren valid in January of the year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-92"
+fields = { "label" = "Näringsgren (SNI 92)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; Sni92 and Sni2002 are explicit SNI versions; Ng1 is the näringsgren from the FDB match when the declaration arrived (SNI 2002 to 2006, SNI 2007 after); Ng0 is the näringsgren valid in January of the year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
+fields = { "label" = "Näringsgren (vid momsdeklarationens matchning mot FDB)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; Sni92 and Sni2002 are explicit SNI versions; Ng1 is the näringsgren from the FDB match when the declaration arrived (SNI 2002 to 2006, SNI 2007 after); Ng0 is the näringsgren valid in January of the year (opdefs)."

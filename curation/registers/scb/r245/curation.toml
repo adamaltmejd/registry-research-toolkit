@@ -1314,42 +1314,90 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
+subject = "var:fodelseland-varldsdel"
+fields = { "label" = "Födelseland, världsdel/landgrupp (klartext)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): judged different meaning, medium confidence; Opdefs: fodelselandVD is the code, fodelselandVDnamn the plain-text name; FodelselandGrp (2019-) has no value set and the same derivation text, read as the later text column."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-varldsdel-2"
+fields = { "label" = "Födelseland, världsdel/landgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): judged different meaning, medium confidence; Opdefs: fodelselandVD is the code, fodelselandVDnamn the plain-text name; FodelselandGrp (2019-) has no value set and the same derivation text, read as the later text column."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselandvdnamn"
+fields = { "label" = "Födelseland, världsdel/landgrupp (klartext)" }
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (3 variables): judged different meaning, medium confidence; Opdefs: fodelselandVD is the code, fodelselandVDnamn the plain-text name; FodelselandGrp (2019-) has no value set and the same derivation text, read as the later text column."
+
+[[statement]]
+kind = "set"
 subject = "var:kgruppnamn2011"
-fields = { "label" = "Kommungruppsindelning 2011 (namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2011, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:kgruppnr2011"
-fields = { "label" = "Kommungruppsindelning 2011 (kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2011, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-2017-namn"
-fields = { "label" = "Kommungruppsindelning 2017 (namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2017, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-klartext"
-fields = { "label" = "Kommungruppsindelning (klartext)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2023, klartext)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-kod"
-fields = { "label" = "Kommungruppsindelning (nio grupper, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2005, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-namn"
-fields = { "label" = "Kommungruppsindelning (nio grupper, namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Three classification versions (nine groups, 2011, 2017/later), each with a code and a name column."
+fields = { "label" = "Kommungruppsindelning (2005, namn)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, high confidence; Opdefs: code and name columns for the 2005, 2011, 2017 and 2023 SKL classification versions."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel"
+fields = { "label" = "Medborgarland, världsdel/landsgrupp (klartext)" }
+evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (3 variables): judged different meaning, high confidence; Opdefs: medborgarlandVD is the code, medborgarlandVDnamn and MedblandGrp (2019-) the plain-text name."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel-2"
+fields = { "label" = "Medborgarland, världsdel/landsgrupp (kod)" }
+evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (3 variables): judged different meaning, high confidence; Opdefs: medborgarlandVD is the code, medborgarlandVDnamn and MedblandGrp (2019-) the plain-text name."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland-varldsdel-namn"
+fields = { "label" = "Medborgarland, världsdel/landsgrupp (klartext)" }
+evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (3 variables): judged different meaning, high confidence; Opdefs: medborgarlandVD is the code, medborgarlandVDnamn and MedblandGrp (2019-) the plain-text name."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "label" = "Valdistrikt (åttasiffrig kod med län och kommun)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, medium confidence; valdistrikt is a four-digit code unique with municipality code, llkkdddd an eight-digit code with county and municipality, valdistnamn the name."
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt-2"
+fields = { "label" = "Valdistrikt (fyrsiffrig distriktskod)" }
+evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, medium confidence; valdistrikt is a four-digit code unique with municipality code, llkkdddd an eight-digit code with county and municipality, valdistnamn the name."
 
 [[statement]]
 kind = "set"
 subject = "var:valdistriktsnamn"
 fields = { "label" = "Valdistrikt (namn)" }
-evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, high confidence; valdistrikt (1999-2015) and llkkdddd (2019-2025) are the same code over time; valdistnamn is the name column."
+evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, medium confidence; valdistrikt is a four-digit code unique with municipality code, llkkdddd an eight-digit code with county and municipality, valdistnamn the name."

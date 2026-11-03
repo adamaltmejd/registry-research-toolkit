@@ -1002,46 +1002,58 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:bransleforbrukning-elprod"
 fields = { "label" = "Bränsleförbrukning elprod (industri)" }
-evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl is the heating plants' fuel use for electricity, BrEl the industry's, from two different surveys."
+evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl sits in the heating-plant table and BrEl in the industry table; two surveys with the same wording."
 
 [[statement]]
 kind = "set"
 subject = "var:bransleforbrukning-elprod-elel"
 fields = { "label" = "Bränsleförbrukning elprod (värmeverk)" }
-evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl is the heating plants' fuel use for electricity, BrEl the industry's, from two different surveys."
+evidence = "#2102 same-label cluster 'Bränsleförbrukning elprod' (2 variables): judged different meaning, medium confidence; ElEl sits in the heating-plant table and BrEl in the industry table; two surveys with the same wording."
 
 [[statement]]
 kind = "set"
 subject = "var:identitet-koppling-industrins-energianvandning"
 fields = { "label" = "Identitet (koppling till industrins energianvändning)" }
-evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is replaced by SCBid (from 2008) and share a label; ReKnr is a separate key linking to industrial energy use."
+evidence = "#2102 same-label cluster 'Identitet' (3 variables): judged different meaning, medium confidence; IdNr (to 2008) is followed by SCBid (from 2008), so one series; ReKnr is a separate id linking to the industrial energy-use survey."
+
+[[statement]]
+kind = "set"
+subject = "var:import-19494"
+fields = { "label" = "Importerad kvantitet (Import)" }
+evidence = "#2102 same-label cluster 'Importerad kvantitet' (2 variables): judged different meaning, low confidence; Import and Kvant are concurrent columns in both tables with identical opdefs; nothing says how they differ, so raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:kvant"
+fields = { "label" = "Importerad kvantitet (Kvant)" }
+evidence = "#2102 same-label cluster 'Importerad kvantitet' (2 variables): judged different meaning, low confidence; Import and Kvant are concurrent columns in both tables with identical opdefs; nothing says how they differ, so raw column codes."
 
 [[statement]]
 kind = "set"
 subject = "var:land-for-import-export"
-fields = { "label" = "Land för import/export, kod" }
-evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid holds country codes, LNamn the country name as a concurrent column."
+fields = { "label" = "Land för import/export (kod)" }
+evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid is the country code (opdef: Landkod), LNamn the country name (opdef: Landnamn)."
 
 [[statement]]
 kind = "set"
 subject = "var:landnamn-import-export"
-fields = { "label" = "Land för import/export, namn" }
-evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid holds country codes, LNamn the country name as a concurrent column."
+fields = { "label" = "Land för import/export (namn)" }
+evidence = "#2102 same-label cluster 'Land för import/export' (2 variables): judged different meaning, high confidence; Lid is the country code (opdef: Landkod), LNamn the country name (opdef: Landnamn)."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-arbetsstalle"
 fields = { "label" = "Näringsgren för arbetsställe (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng (to 2009) and Ng2002 use the same five-digit code list and follow each other, so they are one SNI 2002 series; Ng2007 is the SNI 2007 code list."
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
 
 [[statement]]
 kind = "set"
 subject = "var:ng"
 fields = { "label" = "Näringsgren för arbetsställe (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng (to 2009) and Ng2002 use the same five-digit code list and follow each other, so they are one SNI 2002 series; Ng2007 is the SNI 2007 code list."
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."
 
 [[statement]]
 kind = "set"
 subject = "var:ng2002"
 fields = { "label" = "Näringsgren för arbetsställe (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng (to 2009) and Ng2002 use the same five-digit code list and follow each other, so they are one SNI 2002 series; Ng2007 is the SNI 2007 code list."
+evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (3 variables): judged different meaning, medium confidence; Ng and Ng2002 share the SNI 2002 code list and follow each other; Ng2007 is the SNI 2007 code list."

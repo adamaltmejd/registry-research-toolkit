@@ -402,70 +402,70 @@ evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: 
 kind = "set"
 subject = "var:hade-hsl-april"
 fields = { "label" = "Hade HSL i månad, april" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-augusti"
 fields = { "label" = "Hade HSL i månad, augusti" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-december"
 fields = { "label" = "Hade HSL i månad, december" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-februari"
 fields = { "label" = "Hade HSL i månad, februari" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-januari"
 fields = { "label" = "Hade HSL i månad, januari" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-juli"
 fields = { "label" = "Hade HSL i månad, juli" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-juni"
 fields = { "label" = "Hade HSL i månad, juni" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-maj"
 fields = { "label" = "Hade HSL i månad, maj" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-mars"
 fields = { "label" = "Hade HSL i månad, mars" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-november"
 fields = { "label" = "Hade HSL i månad, november" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-oktober"
 fields = { "label" = "Hade HSL i månad, oktober" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
 
 [[statement]]
 kind = "set"
 subject = "var:hade-hsl-september"
 fields = { "label" = "Hade HSL i månad, september" }
-evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad, varje definition anger sin månad."
+evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."

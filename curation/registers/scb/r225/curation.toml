@@ -534,35 +534,29 @@ evidence = "Land and water areas SP_Geometry: labelled 'Totalareal land och vatt
 [[statement]]
 kind = "set"
 subject = "var:objekt-id"
-fields = { "label" = "Objekt-ID (löpnummer)" }
-evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, medium confidence; OBJECTID is a running number and UUID a universally unique id (pid), concurrent from 2024."
+fields = { "label" = "Objekt-ID (heltalslöpnummer, OBJECTID)" }
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; Opdefs: OBJECTID is an integer identity number; UUID is a unique id per object and reference year, concurrent from 2024."
 
 [[statement]]
 kind = "set"
 subject = "var:objekt-referensar-lopnummer"
 fields = { "label" = "Objekt-ID (UUID)" }
-evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, medium confidence; OBJECTID is a running number and UUID a universally unique id (pid), concurrent from 2024."
-
-[[statement]]
-kind = "set"
-subject = "var:regso"
-fields = { "label" = "Regionala statistikområden (RegSO) (namn)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (2 variables): judged different meaning, medium confidence; RegSOkod holds the RegSO code with names as value labels; RegSO has no value set and reads as the name."
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; Opdefs: OBJECTID is an integer identity number; UUID is a unique id per object and reference year, concurrent from 2024."
 
 [[statement]]
 kind = "set"
 subject = "var:regsokod"
-fields = { "label" = "Regionala statistikområden (RegSO) (kod)" }
-evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (2 variables): judged different meaning, medium confidence; RegSOkod holds the RegSO code with names as value labels; RegSO has no value set and reads as the name."
+fields = { "label" = "Regionala statistikområden (RegSO), kod" }
+evidence = "#2102 same-label cluster 'Regionala statistikområden (RegSO)' (2 variables): judged different meaning, medium confidence; RegSOkod holds the RegSO codes with names as value labels; RegSO has no value set or text, so only the code column is qualified."
 
 [[statement]]
 kind = "set"
 subject = "var:sjonamn"
 fields = { "label" = "De fyra största insjöarna (sjönamn)" }
-evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name, storasjo a 0/1 marker."
+evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name; storasjo is a 0/1 marker (value set) that the object belongs to one of the four largest lakes (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:storasjo"
-fields = { "label" = "De fyra största insjöarna (markering ja/nej)" }
-evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name, storasjo a 0/1 marker."
+fields = { "label" = "De fyra största insjöarna (ja/nej-markering)" }
+evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name; storasjo is a 0/1 marker (value set) that the object belongs to one of the four largest lakes (opdef)."

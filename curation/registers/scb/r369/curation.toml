@@ -111,10 +111,10 @@ evidence = "Svarskoden beskriver undersökningens svar och bortfall.\ncatalog:va
 kind = "set"
 subject = "var:land"
 fields = { "label" = "Land (kod)" }
-evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land carries country codes; Land_Text is the plain-text country name column."
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land holds country codes; Land_Text holds the country name filled in automatically from the code (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:land-text"
 fields = { "label" = "Land (text)" }
-evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land carries country codes; Land_Text is the plain-text country name column."
+evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land holds country codes; Land_Text holds the country name filled in automatically from the code (opdef)."

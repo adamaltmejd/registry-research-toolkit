@@ -956,155 +956,215 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:andel-arbetstid-annat-av-total-arbetstid"
-fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet: annat" }
-evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate shares of working time, named in the pids."
+fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet (annat)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate survey items (grundforskning, tillämpad forskning, utvecklingsarbete, annat)."
 
 [[statement]]
 kind = "set"
 subject = "var:andel-arbetstid-grundforskning-av-total-arbetstid"
-fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet: grundforskning" }
-evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate shares of working time, named in the pids."
+fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet (grundforskning)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate survey items (grundforskning, tillämpad forskning, utvecklingsarbete, annat)."
 
 [[statement]]
 kind = "set"
 subject = "var:andel-arbetstid-tillampad-forskning-av-total-arbetstid"
-fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet: tillämpad forskning" }
-evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate shares of working time, named in the pids."
+fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet (tillämpad forskning)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate survey items (grundforskning, tillämpad forskning, utvecklingsarbete, annat)."
 
 [[statement]]
 kind = "set"
 subject = "var:andel-arbetstid-utvecklingsarbete-av-total-arbetstid"
-fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet: utvecklingsarbete" }
-evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate shares of working time, named in the pids."
+fields = { "label" = "Andel av arbetstid som ägnades åt olika verksamhet (utvecklingsarbete)" }
+evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt olika verksamhet' (4 variables): judged different meaning, high confidence; F6_1..F6_4 are four separate survey items (grundforskning, tillämpad forskning, utvecklingsarbete, annat)."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-hemmavarande-barn-0-5-ar"
-fields = { "label" = "Antal hemmavarande barn, 0–5 år" }
-evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Three counts by child age group, named in the pids."
+fields = { "label" = "Antal hemmavarande barn (0–5 år)" }
+evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Opdefs give three counts by child age group."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-hemmavarande-barn-13-16-ar"
-fields = { "label" = "Antal hemmavarande barn, 13–16 år" }
-evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Three counts by child age group, named in the pids."
+fields = { "label" = "Antal hemmavarande barn (13–16 år)" }
+evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Opdefs give three counts by child age group."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-hemmavarande-barn-6-12-ar"
-fields = { "label" = "Antal hemmavarande barn, 6–12 år" }
-evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Three counts by child age group, named in the pids."
+fields = { "label" = "Antal hemmavarande barn (6–12 år)" }
+evidence = "#2102 same-label cluster 'Antal hemmavarande barn' (3 variables): judged different meaning, high confidence; Opdefs give three counts by child age group."
 
 [[statement]]
 kind = "set"
 subject = "var:arbete-universitet-hogskola-31-mars-6-april-2003"
-fields = { "label" = "Arbete efter utbildning: arbete vid universitet/högskola 31 mars–6 april 2003" }
-evidence = "#2102 same-label cluster 'Arbete efter utbildning' (2 variables): judged different meaning, high confidence; F8 (work at university/college in a given week) and F5 (R&D in work after education) are different survey items."
+fields = { "label" = "Arbete efter utbildning (arbete vid universitet/högskola 31 mars–6 april 2003)" }
+evidence = "#2102 same-label cluster 'Arbete efter utbildning' (2 variables): judged different meaning, high confidence; F8 and F5 are different survey questions per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-kommunikation-engelska-annat-frammande-sprak"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: kommunikation på engelska/annat främmande språk" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (kommunikation på engelska/annat främmande språk)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-kritiskt-vetenskapligt-tankande"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: kritiskt vetenskapligt tänkande" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (kritiskt vetenskapligt tänkande)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-kunskaper-aktuella-forskningsresultat"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: kunskaper om aktuella forskningsresultat" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (kunskaper om aktuella forskningsresultat)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-kunskaper-amnes-vetenskapsomrade"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: kunskaper inom ämnes-/vetenskapsområdet" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (kunskaper inom ämnes-/vetenskapsområdet)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-ledarskap-projektledning"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: ledarskap/projektledning" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (ledarskap/projektledning)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-skriftliga-presentationer"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: skriftliga presentationer" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (skriftliga presentationer)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetskrav-specialistkunskaper-avhandlingsomrade"
-fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer: specialistkunskaper inom avhandlingsområdet" }
-evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirements, named in the pids."
+fields = { "label" = "Arbetsuppgifter i arbete som ställer krav på olika faktorer (specialistkunskaper inom avhandlingsområdet)" }
+evidence = "#2102 same-label cluster 'Arbetsuppgifter i arbete som ställer krav på olika faktorer' (7 variables): judged different meaning, high confidence; F14A..F14G are seven separate rated requirement items per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:f25"
+fields = { "label" = "Arbete utomlands, inom Norden (F25)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f25-2"
+fields = { "label" = "Arbete utomlands, inom EU utom Norden (F25)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f25-3"
+fields = { "label" = "Arbete utomlands, i USA (F25)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f25-4"
+fields = { "label" = "Arbete utomlands, i övriga världen (F25)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f25-5"
+fields = { "label" = "Arbete utomlands, inte arbetat utomlands (F25)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f26"
+fields = { "label" = "Arbete utomlands, inom Norden (F26)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f26-2"
+fields = { "label" = "Arbete utomlands, inom EU utom Norden (F26)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f26-3"
+fields = { "label" = "Arbete utomlands, i USA (F26)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f26-4"
+fields = { "label" = "Arbete utomlands, i övriga världen (F26)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
+
+[[statement]]
+kind = "set"
+subject = "var:f26-5"
+fields = { "label" = "Arbete utomlands, inte arbetat utomlands (F26)" }
+evidence = "#2102 same-label cluster 'Arbete utomlands' (10 variables): judged different meaning, medium confidence; Ten checkbox items: five regions in each of F25 and F26; opdefs give identical wording for both questions, so the question number is the only distinguisher between the two series."
 
 [[statement]]
 kind = "set"
 subject = "var:forskning-utveckling-i-arbete-efter-utbildning"
-fields = { "label" = "Arbete efter utbildning: forskning och utveckling" }
-evidence = "#2102 same-label cluster 'Arbete efter utbildning' (2 variables): judged different meaning, high confidence; F8 (work at university/college in a given week) and F5 (R&D in work after education) are different survey items."
+fields = { "label" = "Arbete efter utbildning (forskning och utveckling i arbetet)" }
+evidence = "#2102 same-label cluster 'Arbete efter utbildning' (2 variables): judged different meaning, high confidence; F8 and F5 are different survey questions per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:handledning-studenter-universitet-hogskola"
-fields = { "label" = "Arbete inom olika områden: handledning av studenter" }
-evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no items, named in the pids."
+fields = { "label" = "Arbete inom olika områden (handledning av studenter)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no work tasks per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:har-hemmavarande-barn-0-5-ar"
-fields = { "label" = "Hemmavarande barn: 0–5 år" }
-evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, named in the pids."
+fields = { "label" = "Hemmavarande barn (0–5 år)" }
+evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, or none under 17."
 
 [[statement]]
 kind = "set"
 subject = "var:har-hemmavarande-barn-13-16-ar"
-fields = { "label" = "Hemmavarande barn: 13–16 år" }
-evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, named in the pids."
+fields = { "label" = "Hemmavarande barn (13–16 år)" }
+evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, or none under 17."
 
 [[statement]]
 kind = "set"
 subject = "var:har-hemmavarande-barn-6-12-ar"
-fields = { "label" = "Hemmavarande barn: 6–12 år" }
-evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, named in the pids."
+fields = { "label" = "Hemmavarande barn (6–12 år)" }
+evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, or none under 17."
 
 [[statement]]
 kind = "set"
 subject = "var:inte-hemmavarande-barn-under-17-ar"
-fields = { "label" = "Hemmavarande barn: inga under 17 år" }
-evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, named in the pids."
+fields = { "label" = "Hemmavarande barn (inga under 17 år)" }
+evidence = "#2102 same-label cluster 'Hemmavarande barn' (4 variables): judged different meaning, high confidence; F28_1..F28_4 are separate checkboxes by child age group, or none under 17."
 
 [[statement]]
 kind = "set"
 subject = "var:inte-postdoc-tjanst-efter-forskarexamen-sverige-utomlands"
-fields = { "label" = "Post doc-tjänst efter forskarexamen: ingen" }
+fields = { "label" = "Post doc-tjänst efter forskarexamen (ingen, varken i Sverige eller utomlands)" }
 evidence = "#2102 same-label cluster 'Post doc-tjänst efter forskarexamen' (3 variables): judged different meaning, high confidence; F24_1..F24_3 are separate checkboxes: in Sweden, abroad, none."
 
 [[statement]]
 kind = "set"
 subject = "var:postdoc-tjanst-efter-forskarexamen-sverige"
-fields = { "label" = "Post doc-tjänst efter forskarexamen: Sverige" }
+fields = { "label" = "Post doc-tjänst efter forskarexamen (i Sverige)" }
 evidence = "#2102 same-label cluster 'Post doc-tjänst efter forskarexamen' (3 variables): judged different meaning, high confidence; F24_1..F24_3 are separate checkboxes: in Sweden, abroad, none."
 
 [[statement]]
 kind = "set"
 subject = "var:postdoc-tjanst-efter-forskarexamen-utomlands"
-fields = { "label" = "Post doc-tjänst efter forskarexamen: utomlands" }
+fields = { "label" = "Post doc-tjänst efter forskarexamen (utomlands)" }
 evidence = "#2102 same-label cluster 'Post doc-tjänst efter forskarexamen' (3 variables): judged different meaning, high confidence; F24_1..F24_3 are separate checkboxes: in Sweden, abroad, none."
 
 [[statement]]
 kind = "set"
 subject = "var:undervisning-forskarutbildning-universitet-hogskola"
-fields = { "label" = "Arbete inom olika områden: undervisning på forskarutbildning" }
-evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no items, named in the pids."
+fields = { "label" = "Arbete inom olika områden (undervisning, forskarutbildning)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no work tasks per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:undervisning-grundutbildning-universitet-hogskola"
-fields = { "label" = "Arbete inom olika områden: undervisning på grundutbildning" }
-evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no items, named in the pids."
+fields = { "label" = "Arbete inom olika områden (undervisning, grundutbildning)" }
+evidence = "#2102 same-label cluster 'Arbete inom olika områden' (3 variables): judged different meaning, high confidence; F9_1..F9_3 are three separate yes/no work tasks per opdef."

@@ -410,54 +410,60 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
+subject = "var:byggnadstyp"
+fields = { "label" = "Byggnadstyp (förfinat ändamål)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP is the förfinade ändamål with a detailed list; TYPBEBYGG is the ändamål with a short list (Bostad, Industri, ...), concurrent."
+
+[[statement]]
+kind = "set"
 subject = "var:fastighetsnyckel-3d-omrade-eller-agarlagenhetsfastighet"
 fields = { "label" = "Fastighetsnyckel (3D-område eller ägarlägenhetsfastighet)" }
-evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; FNR_Lgh is the key for 3D-område or ägarlägenhetsfastighet, FNR for markfastighet (pids)."
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; Opdefs: FNR_Lgh is the key for 3D-område or ägarlägenhetsfastighet, FNR for markfastighet."
 
 [[statement]]
 kind = "set"
 subject = "var:fastighetsnyckel-markfastighet"
 fields = { "label" = "Fastighetsnyckel (markfastighet)" }
-evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; FNR_Lgh is the key for 3D-område or ägarlägenhetsfastighet, FNR for markfastighet (pids)."
+evidence = "#2102 same-label cluster 'Fastighetsnyckel' (2 variables): judged different meaning, high confidence; Opdefs: FNR_Lgh is the key for 3D-område or ägarlägenhetsfastighet, FNR for markfastighet."
 
 [[statement]]
 kind = "set"
 subject = "var:typbebygg"
-fields = { "label" = "Byggnadstyp (typ av bebyggelse)" }
-evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP is the detailed building type list; TYPBEBYGG is a coarse built-environment type (Bostad, Industri, ...)."
+fields = { "label" = "Byggnadstyp (grov indelning)" }
+evidence = "#2102 same-label cluster 'Byggnadstyp' (2 variables): judged different meaning, high confidence; BYGGTYP is the förfinade ändamål with a detailed list; TYPBEBYGG is the ändamål with a short list (Bostad, Industri, ...), concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:unik-identitet-3d-utrymme-eller-agarlagenhetsfastighet"
 fields = { "label" = "Universalt unik identitet (3D-utrymme eller ägarlägenhetsfastighet)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
 
 [[statement]]
 kind = "set"
 subject = "var:unik-identitet-entre"
 fields = { "label" = "Universalt unik identitet (entré)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
 
 [[statement]]
 kind = "set"
 subject = "var:unik-identitet-lagenhet"
 fields = { "label" = "Universalt unik identitet (lägenhet)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
 
 [[statement]]
 kind = "set"
 subject = "var:unik-identitet-registerbyggnad"
 fields = { "label" = "Universalt unik identitet (registerbyggnad)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
 
 [[statement]]
 kind = "set"
 subject = "var:unik-identitet-registerenhet"
 fields = { "label" = "Universalt unik identitet (registerenhet)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
 
 [[statement]]
 kind = "set"
 subject = "var:uuidadrpl"
 fields = { "label" = "Universalt unik identitet (adressplats)" }
-evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Six concurrent UUID columns, each identifying a different object type (lägenhet, entré, registerbyggnad, registerenhet, adressplats, 3D-utrymme eller ägarlägenhetsfastighet)."
+evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."

@@ -1710,3 +1710,21 @@ kind = "set"
 subject = "set:urvalsstratum"
 fields = { "label" = "Urvalsstratum" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
+fields = { "label" = "Antal objekt per stratum enligt Företagsdatabasen (FDB) (storanks)" }
+evidence = "#2102 same-label cluster 'Antal objekt per stratum enligt Företagsdatabasen (FDB)' (2 variables): judged different meaning, low confidence; storanks (2006-2007) runs concurrently with StoraN and no text explains the difference; qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-nsvarrfv"
+fields = { "label" = "Antal svarande objekt (nsvarrfv)" }
+evidence = "#2102 same-label cluster 'Antal svarande objekt' (2 variables): judged different meaning, low confidence; nsvarrfv (2006-2007) runs concurrently with nsvar and no text explains the difference; qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-matmanad"
+fields = { "label" = "Referensmånad (matmanad)" }
+evidence = "#2102 same-label cluster 'Referensmånad' (2 variables): judged different meaning, low confidence; manad and matmanad are concurrent with the same month list and no text separates them; matmanad is qualified by code."

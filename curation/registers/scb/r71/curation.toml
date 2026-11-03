@@ -1700,221 +1700,215 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-akermark-antveakerlant"
-fields = { "label" = "Antal värderingsenheter med åkermark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Antal värderingsenheter med åkermark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-antveskogsimplant"
-fields = { "label" = "Antal värderingsenheter med skogsimpediment (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Antal värderingsenheter med skogsimpediment (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-betesmark-antvebetelant"
-fields = { "label" = "Antal värderingsenheter med betesmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group (cf. the Sma and Hyr siblings)."
+fields = { "label" = "Antal värderingsenheter med betesmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-ekonomibyggnad-antveekbygglant"
-fields = { "label" = "Antal värderingsenheter med ekonomibyggnad (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med ekonomibyggnad' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-varderingsenheter-med-mark-for-antvesmamarkllant"
-fields = { "label" = "Antal värderingsenheter med mark för småhus på lantbruk (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med mark för småhus på lantbruk' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Antal värderingsenheter med ekonomibyggnad (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med ekonomibyggnad' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-varderingsenheter-med-skogsmark-antveskoglant"
-fields = { "label" = "Antal värderingsenheter med skogsmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-varderingsenheter-med-smahusbyggnad-antvesmabyggllant"
-fields = { "label" = "Antal värderingsenheter med småhusbyggnad på lantbruk (lantbruk)" }
-evidence = "#2102 same-label cluster 'Antal värderingsenheter med småhusbyggnad på lantbruk' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Antal värderingsenheter med skogsmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Antal värderingsenheter med skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:areal-akermark-arealakerlant"
-fields = { "label" = "Areal, åkermark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Areal, åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Areal, åkermark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Areal, åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:areal-betesmark-arealbetelant"
-fields = { "label" = "Areal, betesmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Areal, betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Areal, betesmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Areal, betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:areal-ovrig-mark-arealomarklant"
-fields = { "label" = "Areal, övrig mark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Areal, övrig mark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Areal, övrig mark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Areal, övrig mark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:areal-skogsimpediment"
-fields = { "label" = "Areal, skogsimpediment (lantbruk)" }
-evidence = "#2102 same-label cluster 'Areal, skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Areal, skogsimpediment (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Areal, skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:areal-skogsmark-arealskoglant"
-fields = { "label" = "Areal, skogsmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Areal, skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Areal, skogsmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Areal, skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:aret-da-byggnaden-togs-i-bruk-arbygghyr"
-fields = { "label" = "Året då byggnaden togs i bruk (hyreshus)" }
-evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk' (3 variables): judged different meaning, medium confidence; Concurrent columns; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
+fields = { "label" = "Året då byggnaden togs i bruk (hyreshus, ArByggHyr)" }
+evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk' (3 variables): judged different meaning, medium confidence; ArByggSma has opdef 'Avser småhus'; ArBygg and ArByggHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:aret-da-byggnaden-togs-i-bruk-arbyggsma"
 fields = { "label" = "Året då byggnaden togs i bruk (småhus)" }
-evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk' (3 variables): judged different meaning, medium confidence; Concurrent columns; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
-
-[[statement]]
-kind = "set"
-subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
-fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (småhus)" }
-evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): judged different meaning, medium confidence; Concurrent columns; the Sma suffix marks the småhus property group."
+evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk' (3 variables): judged different meaning, medium confidence; ArByggSma has opdef 'Avser småhus'; ArBygg and ArByggHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbhyr"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad, hyreshus" }
-evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillb is the general year; ArTillbHyr and ArTillbSma are concurrent columns whose suffixes decode to hyreshus and småhus."
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (hyreshus, ArTillbHyr)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillbSma has opdef 'Avser småhus'; ArTillb and ArTillbHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbsma"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad, småhus" }
-evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillb is the general year; ArTillbHyr and ArTillbSma are concurrent columns whose suffixes decode to hyreshus and småhus."
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (småhus)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillbSma has opdef 'Avser småhus'; ArTillb and ArTillbHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:biutrymmesyta-i-smahus-ytabisma"
 fields = { "label" = "Biutrymmesyta i småhus (småhusenheter)" }
-evidence = "#2102 same-label cluster 'Biutrymmesyta i småhus' (2 variables): judged different meaning, medium confidence; Concurrent columns; the Sma suffix marks the småhus property group."
+evidence = "#2102 same-label cluster 'Biutrymmesyta i småhus' (2 variables): judged different meaning, medium confidence; Concurrent columns YtaBi and YtaBiSma; suffix Sma marks the småhus property group (cf. 'Avser småhus' opdefs of the Sma siblings)."
 
 [[statement]]
 kind = "set"
 subject = "var:byggnad-under-uppforande-kodubygghyr"
 fields = { "label" = "Byggnad under uppförande (hyreshus)" }
-evidence = "#2102 same-label cluster 'Byggnad under uppförande' (3 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
+evidence = "#2102 same-label cluster 'Byggnad under uppförande' (3 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; suffixes Hyr and Sma mark the hyreshus and småhus groups (cf. 'Avser hyreshus'/'Avser småhus' opdefs of siblings)."
 
 [[statement]]
 kind = "set"
 subject = "var:byggnad-under-uppforande-kodubyggsma"
 fields = { "label" = "Byggnad under uppförande (småhus)" }
-evidence = "#2102 same-label cluster 'Byggnad under uppförande' (3 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
+evidence = "#2102 same-label cluster 'Byggnad under uppförande' (3 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; suffixes Hyr and Sma mark the hyreshus and småhus groups (cf. 'Avser hyreshus'/'Avser småhus' opdefs of siblings)."
+
+[[statement]]
+kind = "set"
+subject = "var:byggnadsar"
+fields = { "label" = "Året då byggnaden togs i bruk (hyreshus, ArBygg)" }
+evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk' (3 variables): judged different meaning, medium confidence; ArByggSma has opdef 'Avser småhus'; ArBygg and ArByggHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:glesbygd-glesbygdlant"
-fields = { "label" = "Glesbygd (lantbruk)" }
-evidence = "#2102 same-label cluster 'Glesbygd' (2 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Glesbygd (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Glesbygd' (2 variables): judged different meaning, medium confidence; Concurrent flags with identical codes; suffix Lant marks lantbruksfastigheter."
 
 [[statement]]
 kind = "set"
-subject = "var:koordinat-nord"
-fields = { "label" = "Koordinat i vertikal riktning för fastigheten (östkoordinat)" }
-evidence = "#2102 same-label cluster 'Koordinat i vertikal riktning för fastigheten' (2 variables): judged different meaning, medium confidence; The pid 'koordinat-nord' holds the column Ostkoordinat (2001-2002), concurrent with Nordkoordinat; the shared definition (vertical direction) fits only the north coordinate."
-
-[[statement]]
-kind = "set"
-subject = "var:nordkoordinat"
-fields = { "label" = "Koordinat i vertikal riktning för fastigheten (nordkoordinat)" }
-evidence = "#2102 same-label cluster 'Koordinat i vertikal riktning för fastigheten' (2 variables): judged different meaning, medium confidence; The pid 'koordinat-nord' holds the column Ostkoordinat (2001-2002), concurrent with Nordkoordinat; the shared definition (vertical direction) fits only the north coordinate."
+subject = "var:om-eller-tillbyggnar"
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (hyreshus, ArTillb)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (3 variables): judged different meaning, medium confidence; ArTillbSma has opdef 'Avser småhus'; ArTillb and ArTillbHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:produktionsomrade-prodomrlant"
-fields = { "label" = "Produktionsområde (lantbruk)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, medium confidence; Concurrent columns with the same code list; the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Produktionsområde (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, medium confidence; Concurrent columns with the same code list; suffix Lant marks lantbruksfastigheter."
 
 [[statement]]
 kind = "set"
 subject = "var:summa-standardpoang-stdsumsma"
-fields = { "label" = "Summa standardpoäng (småhus)" }
-evidence = "#2102 same-label cluster 'Summa standardpoäng' (2 variables): judged different meaning, medium confidence; Concurrent columns; the Sma suffix marks the småhus property group."
+fields = { "label" = "Summa standardpoäng (småhusenheter)" }
+evidence = "#2102 same-label cluster 'Summa standardpoäng' (2 variables): judged different meaning, medium confidence; Concurrent columns StdSum and StdSumSma; suffix Sma marks the småhus property group."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-byggnader"
-fields = { "label" = "Taxeringsvärde för byggnader (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för byggnader' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för byggnader (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för byggnader' (2 variables): judged different meaning, high confidence; Opdefs: VardeBygg 'Avser annan fastighet än lantbruk', VardeByggLant 'Avser lantbruksfastigheter'."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-akermark-vardeakerlant"
-fields = { "label" = "Taxeringsvärde för åkermark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för åkermark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för åkermark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-betesmark-vardebetelant"
-fields = { "label" = "Taxeringsvärde för betesmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för betesmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för betesmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-byggnader-vardebygg"
+fields = { "label" = "Taxeringsvärde för byggnader (annan fastighet än lantbruk)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för byggnader' (2 variables): judged different meaning, high confidence; Opdefs: VardeBygg 'Avser annan fastighet än lantbruk', VardeByggLant 'Avser lantbruksfastigheter'."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-ekonomibyggnader-vardeekbygglant"
-fields = { "label" = "Taxeringsvärde för ekonomibyggnader (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för ekonomibyggnader' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för ekonomibyggnader (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för ekonomibyggnader' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-skogsimpediment"
-fields = { "label" = "Taxeringsvärde för skogsimpediment (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för skogsimpediment (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för skogsimpediment' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-for-skogsmark-vardeskoglant"
-fields = { "label" = "Taxeringsvärde för skogsmark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för skogsmark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för skogsmark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:taxeringsvarde-mark"
-fields = { "label" = "Taxeringsvärde för mark (lantbruk)" }
-evidence = "#2102 same-label cluster 'Taxeringsvärde för mark' (2 variables): judged different meaning, medium confidence; Concurrent columns where the suffix Lant marks the lantbruk property group."
+fields = { "label" = "Taxeringsvärde för mark (lantbruksfastigheter)" }
+evidence = "#2102 same-label cluster 'Taxeringsvärde för mark' (2 variables): judged different meaning, medium confidence; Concurrent columns; suffix Lant marks lantbruksfastigheter (cf. opdef of VardeByggLant in the same register)."
 
 [[statement]]
 kind = "set"
 subject = "var:total-bostadsyta"
-fields = { "label" = "Total bostadsyta (småhus)" }
-evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): judged different meaning, medium confidence; Concurrent columns; the Sma suffix marks the småhus property group."
+fields = { "label" = "Total bostadsyta (småhusenheter)" }
+evidence = "#2102 same-label cluster 'Total bostadsyta' (2 variables): judged different meaning, medium confidence; Concurrent columns YtaBost and YtaBostSma; suffix Sma marks the småhus property group."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-smahusbebyggelse-typbebyggnsma"
 fields = { "label" = "Typ av småhusbebyggelse (småhusenheter)" }
-evidence = "#2102 same-label cluster 'Typ av småhusbebyggelse' (2 variables): judged different meaning, medium confidence; Concurrent columns with the same code list; the Sma suffix marks the småhus property group."
+evidence = "#2102 same-label cluster 'Typ av småhusbebyggelse' (2 variables): judged different meaning, medium confidence; Concurrent columns with the same code list; suffix Sma marks the småhus property group."
 
 [[statement]]
 kind = "set"
 subject = "var:vardear"
-fields = { "label" = "Värdeår (hyreshus)" }
-evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; Concurrent columns; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
+fields = { "label" = "Värdeår (hyreshus, ArVardeHyr)" }
+evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; ArVardeSma has opdef 'Avser småhus'; ArVarde and ArVardeHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:vardear-arvarde"
+fields = { "label" = "Värdeår (hyreshus, ArVarde)" }
+evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; ArVardeSma has opdef 'Avser småhus'; ArVarde and ArVardeHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:vardear-arvardesma"
 fields = { "label" = "Värdeår (småhus)" }
-evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; Concurrent columns; the suffixes Hyr and Sma mark the hyreshus and småhus property groups."
+evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; ArVardeSma has opdef 'Avser småhus'; ArVarde and ArVardeHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:vardegrundande-yta-i-smahus-ytavardesma"
 fields = { "label" = "Värdegrundande yta i småhus (småhusenheter)" }
-evidence = "#2102 same-label cluster 'Värdegrundande yta i småhus' (2 variables): judged different meaning, medium confidence; Concurrent columns; the Sma suffix marks the småhus property group."
+evidence = "#2102 same-label cluster 'Värdegrundande yta i småhus' (2 variables): judged different meaning, medium confidence; Concurrent columns YtaVarde and YtaVardeSma; suffix Sma marks the småhus property group."

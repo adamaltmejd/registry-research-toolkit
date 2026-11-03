@@ -122,29 +122,29 @@ evidence = "Vikten används vid beräkning av aggregerade index.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:beskrivnsv"
-fields = { "label" = "Delkostnadsslag (beskrivning)" }
-evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+fields = { "label" = "Delkostnadsslag (numrering 1–6)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
 
 [[statement]]
 kind = "set"
 subject = "var:lokalvariant"
-fields = { "label" = "Produkttyp, lokal variant" }
-evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table: ProdKod holds coded products, LokalVariant has no value set and is a local variant of the product."
+fields = { "label" = "Produkttyp (lokal variant)" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; ProdKod is a code set by SCB with a value set; LokalVariant describes the product measured at the company and has no value set."
 
 [[statement]]
 kind = "set"
 subject = "var:namnsv"
-fields = { "label" = "Delkostnadsslag (namn)" }
-evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+fields = { "label" = "Delkostnadsslag (namn i klartext)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
 
 [[statement]]
 kind = "set"
 subject = "var:prodgrpkod"
-fields = { "label" = "Delkostnadsslag (kod)" }
-evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, high confidence; Concurrent columns hold the description, the name and the code of the cost category."
+fields = { "label" = "Delkostnadsslag (produktgruppskod)" }
+evidence = "#2102 same-label cluster 'Delkostnadsslag' (3 variables): judged different meaning, medium confidence; Opdef: BeskrivnSV gives a numbering 1-6, NamnSV the name in plain text, ProdGrpKod is an SCB code linked to product type."
 
 [[statement]]
 kind = "set"
 subject = "var:prodkod"
-fields = { "label" = "Produkttyp, produktkod" }
-evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; Concurrent columns in one table: ProdKod holds coded products, LokalVariant has no value set and is a local variant of the product."
+fields = { "label" = "Produkttyp (kod)" }
+evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; ProdKod is a code set by SCB with a value set; LokalVariant describes the product measured at the company and has no value set."

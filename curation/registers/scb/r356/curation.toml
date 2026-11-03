@@ -675,59 +675,59 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:faderns-utbildningsniva"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA (2008-2009) and SunNiva_Far_Omkodad share the 3-level code list; 3-digit SUN 2000, 7 levels (SunNiva_Far) and older coding (old) are concurrent from 2009."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:moderns-utbildningsniva-7-nivaer"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 7 nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA (2008-2009) and SunNiva_Mor_Omkodad share the 3-level code list; 7 levels (SunNiva_Mor), 3-digit SUN 2000 and older coding (old) are concurrent from 2009."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, sju nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA and SunNiva_Mor_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA (2008-2009) and SunNiva_Mor_Omkodad share the 3-level code list; 7 levels (SunNiva_Mor), 3-digit SUN 2000 and older coding (old) are concurrent from 2009."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA and SunNiva_Mor_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA (2008-2009) and SunNiva_Mor_Omkodad share the 3-level code list; 7 levels (SunNiva_Mor), 3-digit SUN 2000 and older coding (old) are concurrent from 2009."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA and SunNiva_Mor_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-omkodad"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA (2008-2009) and SunNiva_Mor_Omkodad share the 3-level code list; 7 levels (SunNiva_Mor), 3-digit SUN 2000 and older coding (old) are concurrent from 2009."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA and SunNiva_Mor_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-old-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, äldre kodning)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA (2008-2009) and SunNiva_Mor_Omkodad share the 3-level code list; 7 levels (SunNiva_Mor), 3-digit SUN 2000 and older coding (old) are concurrent from 2009."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; MUNIVA and SunNiva_Mor_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA (2008-2009) and SunNiva_Far_Omkodad share the 3-level code list; 3-digit SUN 2000, 7 levels (SunNiva_Far) and older coding (old) are concurrent from 2009."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 7 nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA (2008-2009) and SunNiva_Far_Omkodad share the 3-level code list; 3-digit SUN 2000, 7 levels (SunNiva_Far) and older coding (old) are concurrent from 2009."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, sju nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far-omkodad"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA (2008-2009) and SunNiva_Far_Omkodad share the 3-level code list; 3-digit SUN 2000, 7 levels (SunNiva_Far) and older coding (old) are concurrent from 2009."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sunniva-old-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre kodning)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA (2008-2009) and SunNiva_Far_Omkodad share the 3-level code list; 3-digit SUN 2000, 7 levels (SunNiva_Far) and older coding (old) are concurrent from 2009."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."

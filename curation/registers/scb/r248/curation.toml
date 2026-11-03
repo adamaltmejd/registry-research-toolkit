@@ -2579,180 +2579,162 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:ar-verkar"
-fields = { "label" = "År (verksamhetsår)" }
-evidence = "#2102 same-label cluster 'År' (2 variables): judged different meaning, medium confidence; Ar is a calendar year in the nationella prov table; VERKAR is verksamhetsår in both tables, running concurrently."
-
-[[statement]]
-kind = "set"
 subject = "var:flandlan"
-fields = { "label" = "Födelseland RTB (län, kod)" }
-evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn is the country name; FlandLan and FlandLan_klartext (1997-1998) hold county codes and their names, a different geography."
+fields = { "label" = "Födelseland RTB (länskod, FlandLan)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn has country names; FlandLan (1997-1998) has county codes in its value set and FlandLan_klartext the names, a different geography under the same opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:flandlan-klartext"
-fields = { "label" = "Födelseland RTB (län, klartext)" }
-evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn is the country name; FlandLan and FlandLan_klartext (1997-1998) hold county codes and their names, a different geography."
+fields = { "label" = "Födelseland RTB (län i klartext, FlandLan_klartext)" }
+evidence = "#2102 same-label cluster 'Födelseland RTB' (3 variables): judged different meaning, medium confidence; FodelseLandNamn has country names; FlandLan (1997-1998) has county codes in its value set and FlandLan_klartext the names, a different geography under the same opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:komgrupp23"
-fields = { "label" = "Kommungruppsindelning (2023, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, high confidence; Komgrupp17 and Komgrupp23 are different versions of the SKR classification; Kommungrupp_text holds the names."
+fields = { "label" = "Kommungruppsindelning (2023 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id"
-fields = { "label" = "Kommunalförbund (id)" }
-evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, medium confidence; ID vs name; GyfId/KFID and GyfNamn/KFNAMN look like the same pair under two spellings (as in komvux, where KFID precedes Gyfid)."
+fields = { "label" = "Kommunalförbund (kod)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-id-2"
-fields = { "label" = "Kommunalförbund (id)" }
-evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, medium confidence; ID vs name; GyfId/KFID and GyfNamn/KFNAMN look like the same pair under two spellings (as in komvux, where KFID precedes Gyfid)."
+fields = { "label" = "Kommunalförbund (kod)" }
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn"
 fields = { "label" = "Kommunalförbund (namn)" }
-evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, medium confidence; ID vs name; GyfId/KFID and GyfNamn/KFNAMN look like the same pair under two spellings (as in komvux, where KFID precedes Gyfid)."
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunalforbund-namn-2"
 fields = { "label" = "Kommunalförbund (namn)" }
-evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, medium confidence; ID vs name; GyfId/KFID and GyfNamn/KFNAMN look like the same pair under two spellings (as in komvux, where KFID precedes Gyfid)."
+evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged different meaning, high confidence; Opdefs: Gyfid/KFID are the code, Gyfnamn/KFNAMN the name; KFID and KFNAMN repeat the same opdefs as the Gyf pair."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-kod"
-fields = { "label" = "Kommungruppsindelning (2017, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, high confidence; Komgrupp17 and Komgrupp23 are different versions of the SKR classification; Kommungrupp_text holds the names."
+fields = { "label" = "Kommungruppsindelning (2017 års indelning)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-text"
 fields = { "label" = "Kommungruppsindelning (klartext)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, high confidence; Komgrupp17 and Komgrupp23 are different versions of the SKR classification; Kommungrupp_text holds the names."
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
-fields = { "label" = "Län (hemlän)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Skollan is the school's county; LAN in the nationella prov table pairs with Kommun (home) and is taken as the home county."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-skollan"
-fields = { "label" = "Län (skolans län)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Skollan is the school's county; LAN in the nationella prov table pairs with Kommun (home) and is taken as the home county."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Komgrupp17 and Komgrupp23 are different classification years with coded lists; Kommungrupp_text is the clear-text version spanning both."
 
 [[statement]]
 kind = "set"
 subject = "var:provbet"
-fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (provbetyg)" }
-evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Concurrent grade columns: PROVBET for the test as a whole and BETH/BETL/BETS/BETT for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (sammanvägt provbetyg)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-betyg-hor"
-fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (hörförståelse)" }
-evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Concurrent grade columns: PROVBET for the test as a whole and BETH/BETL/BETS/BETT for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov hörförståelse)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-betyg-las"
-fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (läsförståelse)" }
-evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Concurrent grade columns: PROVBET for the test as a whole and BETH/BETL/BETS/BETT for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov läsförståelse)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-betyg-skrift"
-fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (skriftlig del)" }
-evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Concurrent grade columns: PROVBET for the test as a whole and BETH/BETL/BETS/BETT for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov skriftlig produktion)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-betyg-tal"
-fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (muntlig del)" }
-evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Concurrent grade columns: PROVBET for the test as a whole and BETH/BETL/BETS/BETT for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Betyg inom nationella prov i svenska för invandrare (delprov muntlig interaktion och produktion)" }
+evidence = "#2102 same-label cluster 'Betyg inom nationella prov i svenska för invandrare' (5 variables): judged different meaning, high confidence; Opdefs: PROVBET is the sammanvägda provbetyget; BETH, BETL, BETS and BETT are grades for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-poang-hor"
-fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (hörförståelse)" }
-evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Four concurrent point columns for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov hörförståelse)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-poang-las"
-fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (läsförståelse)" }
-evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Four concurrent point columns for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov läsförståelse)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-poang-skrift"
-fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (skriftlig del)" }
-evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Four concurrent point columns for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov skriftlig produktion)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:sfi-prov-poang-tal"
-fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (muntlig del)" }
-evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Four concurrent point columns for the hör, läs, skrift and tal parts (pids)."
+fields = { "label" = "Poäng inom nationella prov i svenska för invandrare (delprov muntlig interaktion och produktion)" }
+evidence = "#2102 same-label cluster 'Poäng inom nationella prov i svenska för invandrare' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent point columns for hörförståelse, läsförståelse, skriftlig produktion and muntlig interaktion och produktion."
 
 [[statement]]
 kind = "set"
 subject = "var:skola-skolenhetskod"
 fields = { "label" = "Skola (skolenhetskod)" }
-evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, medium confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit school-unit codes) are different code systems that overlap in 2013-2014."
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit skolenhet codes) are different code systems that overlap in 2013-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:skolkod"
 fields = { "label" = "Skola (skolkod)" }
-evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, medium confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit school-unit codes) are different code systems that overlap in 2013-2014."
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Skolkod (seven-digit school codes) and Skolenhetskod (eight-digit skolenhet codes) are different code systems that overlap in 2013-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
 fields = { "label" = "Kommun för skola/skolenhet (kod)" }
-evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name."
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun-text"
 fields = { "label" = "Kommun för skola/skolenhet (klartext)" }
-evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name."
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolKommun holds the code, SkolKommun_text the name in clear text (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:skollan"
 fields = { "label" = "Län för skola/skolenhet (kod)" }
-evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name."
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:skollan-text"
 fields = { "label" = "Län för skola/skolenhet (klartext)" }
-evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name."
+evidence = "#2102 same-label cluster 'Län för skola/skolenhet' (2 variables): judged different meaning, high confidence; SkolLan holds the code, SkolLan_text the name in clear text (opdef)."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva"
 fields = { "label" = "Utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, and SUN2020Niva_2 with a two-digit level code list."
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-sun2020niva"
 fields = { "label" = "Utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, and SUN2020Niva_2 with a two-digit level code list."
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsniva-sun2020niva-2"
-fields = { "label" = "Utbildningsnivå (SUN 2020, 2-siffrig nivå)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, and SUN2020Niva_2 with a two-digit level code list."
+fields = { "label" = "Utbildningsnivå (SUN 2020, 2-ställig nivå)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020 three-digit lists, and SUN2020Niva_2 with a two-digit list."

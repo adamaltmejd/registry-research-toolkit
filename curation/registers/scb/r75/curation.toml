@@ -892,3 +892,27 @@ kind = "set"
 subject = "set:varmvattenforbrukning"
 fields = { "label" = "Varmvattenförbrukning" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:graddag"
+fields = { "label" = "Graddagar aktuellt år (Graddag)" }
+evidence = "#2102 same-label cluster 'Graddagar aktuellt år' (2 variables): judged different meaning, low confidence; Graddag (2005-2007) and GdAkt (2005-2009) coexist in one table with no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:graddagar"
+fields = { "label" = "Graddagar aktuellt år (GdAkt)" }
+evidence = "#2102 same-label cluster 'Graddagar aktuellt år' (2 variables): judged different meaning, low confidence; Graddag (2005-2007) and GdAkt (2005-2009) coexist in one table with no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:varmkall-7873"
+fields = { "label" = "Total energianvändning (VarmKall)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (2 variables): judged different meaning, low confidence; VarmKall and VarmTot coexist in one table with no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "var:varmtot"
+fields = { "label" = "Total energianvändning (VarmTot)" }
+evidence = "#2102 same-label cluster 'Total energianvändning' (2 variables): judged different meaning, low confidence; VarmKall and VarmTot coexist in one table with no opdef; raw column codes."

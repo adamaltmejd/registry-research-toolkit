@@ -3196,586 +3196,586 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 kind = "set"
 subject = "var:dodsorsak-1"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 1" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-10"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 10" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-11"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 11" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-12"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 12" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-13"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 13" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-14"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 14" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-15"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 15" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-16"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 16" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-17"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 17" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-18"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 18" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-19"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 19" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-2"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 2" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-20"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 20" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-21"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 21" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-22"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 22" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-23"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 23" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-24"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 24" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-25"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 25" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-26"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 26" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-27"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 27" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-28"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 28" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-29"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 29" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-3"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 3" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-30"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 30" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-31"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 31" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-32"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 32" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-33"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 33" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-34"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 34" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-35"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 35" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-36"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 36" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-37"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 37" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-38"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 38" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-39"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 39" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-4"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 4" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-40"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 40" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-41"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 41" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-42"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 42" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-43"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 43" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-44"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 44" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-45"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 45" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-46"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 46" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-47"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 47" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-48"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 48" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-5"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 5" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-6"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 6" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-7"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 7" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-8"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 8" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:dodsorsak-9"
 fields = { "label" = "ICD-kod för multipel dödsorsak, nr 9" }
-evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är numrerade positioner för dödsorsaker på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'ICD-kod för multipel dödsorsak' (48 variables): judged different meaning, high confidence; MORSAK1-MORSAK48 är 48 samtidiga numrerade kolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:skadans-natur-kap19"
-fields = { "label" = "Skadans natur, ICD-10 kapitel 19" }
-evidence = "#2102 same-label cluster 'Skadans natur' (2 variables): judged different meaning, high confidence; The definitions name ICD-10 chapter 19 (KAP19) and ICD-11 chapter 22 (KAP22), different code systems."
+fields = { "label" = "Skadans natur (ICD-10 kapitel 19)" }
+evidence = "#2102 same-label cluster 'Skadans natur' (2 variables): judged different meaning, high confidence; Definitionerna anger ICD-10 kapitel 19 (KAP19) respektive ICD-11 kapitel 22 (KAP22), olika kodsystem."
 
 [[statement]]
 kind = "set"
 subject = "var:skadans-natur-kap22"
-fields = { "label" = "Skadans natur, ICD-11 kapitel 22" }
-evidence = "#2102 same-label cluster 'Skadans natur' (2 variables): judged different meaning, high confidence; The definitions name ICD-10 chapter 19 (KAP19) and ICD-11 chapter 22 (KAP22), different code systems."
+fields = { "label" = "Skadans natur (ICD-11 kapitel 22)" }
+evidence = "#2102 same-label cluster 'Skadans natur' (2 variables): judged different meaning, high confidence; Definitionerna anger ICD-10 kapitel 19 (KAP19) respektive ICD-11 kapitel 22 (KAP22), olika kodsystem."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-1"
 fields = { "label" = "Substans, nr 1" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-10"
 fields = { "label" = "Substans, nr 10" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-11"
 fields = { "label" = "Substans, nr 11" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-12"
 fields = { "label" = "Substans, nr 12" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-13"
 fields = { "label" = "Substans, nr 13" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-14"
 fields = { "label" = "Substans, nr 14" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-15"
 fields = { "label" = "Substans, nr 15" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-16"
 fields = { "label" = "Substans, nr 16" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-17"
 fields = { "label" = "Substans, nr 17" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-18"
 fields = { "label" = "Substans, nr 18" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-19"
 fields = { "label" = "Substans, nr 19" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-2"
 fields = { "label" = "Substans, nr 2" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-20"
 fields = { "label" = "Substans, nr 20" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-21"
 fields = { "label" = "Substans, nr 21" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-22"
 fields = { "label" = "Substans, nr 22" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-23"
 fields = { "label" = "Substans, nr 23" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-24"
 fields = { "label" = "Substans, nr 24" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-25"
 fields = { "label" = "Substans, nr 25" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-26"
 fields = { "label" = "Substans, nr 26" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-27"
 fields = { "label" = "Substans, nr 27" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-28"
 fields = { "label" = "Substans, nr 28" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-29"
 fields = { "label" = "Substans, nr 29" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-3"
 fields = { "label" = "Substans, nr 3" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-30"
 fields = { "label" = "Substans, nr 30" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-31"
 fields = { "label" = "Substans, nr 31" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-32"
 fields = { "label" = "Substans, nr 32" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-33"
 fields = { "label" = "Substans, nr 33" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-34"
 fields = { "label" = "Substans, nr 34" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-35"
 fields = { "label" = "Substans, nr 35" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-36"
 fields = { "label" = "Substans, nr 36" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-37"
 fields = { "label" = "Substans, nr 37" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-38"
 fields = { "label" = "Substans, nr 38" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-39"
 fields = { "label" = "Substans, nr 39" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-4"
 fields = { "label" = "Substans, nr 4" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-40"
 fields = { "label" = "Substans, nr 40" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-41"
 fields = { "label" = "Substans, nr 41" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-42"
 fields = { "label" = "Substans, nr 42" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-43"
 fields = { "label" = "Substans, nr 43" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-44"
 fields = { "label" = "Substans, nr 44" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-45"
 fields = { "label" = "Substans, nr 45" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-46"
 fields = { "label" = "Substans, nr 46" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-47"
 fields = { "label" = "Substans, nr 47" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-48"
 fields = { "label" = "Substans, nr 48" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-5"
 fields = { "label" = "Substans, nr 5" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-6"
 fields = { "label" = "Substans, nr 6" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-7"
 fields = { "label" = "Substans, nr 7" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-8"
 fields = { "label" = "Substans, nr 8" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
 
 [[statement]]
 kind = "set"
 subject = "var:substans-9"
 fields = { "label" = "Substans, nr 9" }
-evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är numrerade fritextfält för substanser på intyget, samtidiga kolumner."
+evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."

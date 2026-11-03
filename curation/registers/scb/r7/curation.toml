@@ -4207,53 +4207,77 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad, ombyggnad" }
-evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; ArOmbygg is the year of rebuilding and ArTillbygg the year of extension (slugs)."
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (ombyggnad)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
 
 [[statement]]
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad, tillbyggnad" }
-evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; ArOmbygg is the year of rebuilding and ArTillbygg the year of extension (slugs)."
+fields = { "label" = "Årsangivelse för om- eller tillbyggnad (tillbyggnad)" }
+evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
 
 [[statement]]
 kind = "set"
 subject = "var:h-nivafaktor"
-fields = { "label" = "H-nivåfaktor, bostäder" }
-evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; NivaFaktBost is the level factor for bostäder and NivaFaktLokal for lokaler (slug), concurrent in fastigheter."
+fields = { "label" = "H-nivåfaktor (bostäder)" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; Shared opdef: NivaFaktBost comes from NivaBH (bostäder) and NivaFaktLokal from NivaLH (lokaler)."
 
 [[statement]]
 kind = "set"
 subject = "var:h-nivafaktor-literal-nivafaktlokal"
-fields = { "label" = "H-nivåfaktor, lokaler" }
-evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; NivaFaktBost is the level factor for bostäder and NivaFaktLokal for lokaler (slug), concurrent in fastigheter."
+fields = { "label" = "H-nivåfaktor (lokaler)" }
+evidence = "#2102 same-label cluster 'H-nivåfaktor' (2 variables): judged different meaning, high confidence; Shared opdef: NivaFaktBost comes from NivaBH (bostäder) and NivaFaktLokal from NivaLH (lokaler)."
 
 [[statement]]
 kind = "set"
 subject = "var:hyreskod-literal-typhyraovriglok"
-fields = { "label" = "Hyreskod, övriga lokaler" }
-evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, high confidence; TypHyraOvrigLok is the rent code for other premises and TypHyraOvrigBost for other dwellings, concurrent in fastigheter."
+fields = { "label" = "Hyreskod (övriga lokaler)" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, medium confidence; Column names separate övriga lokaler (TypHyraOvrigLok) from övriga bostäder (TypHyraOvrigBost), concurrent in fastigheter."
 
 [[statement]]
 kind = "set"
 subject = "var:identitetsnummer-for-vardeomradet-literal-idvobost"
-fields = { "label" = "Identitetsnummer för värdeområdet, bostäder" }
-evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; IdVo, IdVoBost and IdVoLokal are concurrent: general, dwelling and premises value-area identities."
+fields = { "label" = "Identitetsnummer för värdeområdet (bostad, typkod 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
 
 [[statement]]
 kind = "set"
 subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
-fields = { "label" = "Identitetsnummer för värdeområdet, lokaler" }
-evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; IdVo, IdVoBost and IdVoLokal are concurrent: general, dwelling and premises value-area identities."
+fields = { "label" = "Identitetsnummer för värdeområdet (lokal, typkod 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
+
+[[statement]]
+kind = "set"
+subject = "var:idvo"
+fields = { "label" = "Identitetsnummer för värdeområdet (typkod 100- och 200-serien)" }
+evidence = "#2102 same-label cluster 'Identitetsnummer för värdeområdet' (3 variables): judged different meaning, high confidence; Opdefs: IdVo for typkod 100- and 200-serien, IdVoBost and IdVoLokal for the 300- and 500-serien from the Bostad and Lokal tables."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-literal-sni2002"
 fields = { "label" = "Näringsgren (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, medium confidence; SNI holds the industry code under several SNI versions over time, SNI2002 is explicitly the SNI 2002 coding, concurrent 2008-2010."
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, medium confidence; SNI2002 is explicitly the SNI 2002 coding and is concurrent with SNI in 2008-2010."
 
 [[statement]]
 kind = "set"
 subject = "var:typhyraovrigbost"
-fields = { "label" = "Hyreskod, övriga bostäder" }
-evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, high confidence; TypHyraOvrigLok is the rent code for other premises and TypHyraOvrigBost for other dwellings, concurrent in fastigheter."
+fields = { "label" = "Hyreskod (övriga bostäder)" }
+evidence = "#2102 same-label cluster 'Hyreskod' (2 variables): judged different meaning, medium confidence; Column names separate övriga lokaler (TypHyraOvrigLok) from övriga bostäder (TypHyraOvrigBost), concurrent in fastigheter."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idavkast"
+fields = { "label" = "Värderingsenhetens identitetsnummer (avkastningsmetoden, 400- och 600-serien)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idhyrbygg"
+fields = { "label" = "Värderingsenhetens identitetsnummer (hyreshusbyggnader, 300- och 500-serien)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."
+
+[[statement]]
+kind = "set"
+subject = "var:varderingsenhetens-identitetsnummer-idve"
+fields = { "label" = "Värderingsenhetens identitetsnummer (100- och 200-serien samt produktionsmetoden)" }
+evidence = "#2102 same-label cluster 'Värderingsenhetens identitetsnummer' (3 variables): judged different meaning, high confidence; Opdefs: IDAvkast for avkastningsmetoden (400/600), Idhyrbygg for hyreshusbyggnader (300/500), IDVE for 100/200 and produktionsmetoden."

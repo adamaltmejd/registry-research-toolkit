@@ -1318,11 +1318,11 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:agrupp"
-fields = { "label" = "Åldersgrupp (femårsgrupper)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; agrupp has five-year classes, agrupp2 mostly ten-year classes, concurrent 2014-2018."
+fields = { "label" = "Åldersgrupp (5-årsintervall)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; Opdefs: 5-year vs 10-year age intervals, concurrent 2014-2018."
 
 [[statement]]
 kind = "set"
 subject = "var:agrupp2"
-fields = { "label" = "Åldersgrupp (tioårsgrupper)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; agrupp has five-year classes, agrupp2 mostly ten-year classes, concurrent 2014-2018."
+fields = { "label" = "Åldersgrupp (10-årsintervall)" }
+evidence = "#2102 same-label cluster 'Åldersgrupp' (2 variables): judged different meaning, high confidence; Opdefs: 5-year vs 10-year age intervals, concurrent 2014-2018."

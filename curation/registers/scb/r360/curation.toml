@@ -99,4 +99,4 @@ evidence = "Variabeln anger om körsträckan är modellskattad.\ncatalog:variabl
 kind = "set"
 subject = "var:foregaendears-stracka"
 fields = { "label" = "Körsträcka (föregående år)" }
-evidence = "#2102 same-label cluster 'Körsträcka' (2 variables): judged different meaning, high confidence; foregaendears_stracka is the previous year's distance, concurrent with KORSTRACKA."
+evidence = "#2102 same-label cluster 'Körsträcka' (2 variables): judged different meaning, high confidence; Opdefs: KORSTRACKA is the calculated distance during the year, foregaendears_stracka during the preceding year."

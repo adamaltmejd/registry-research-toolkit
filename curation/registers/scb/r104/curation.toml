@@ -1127,160 +1127,184 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:elevvalht"
 fields = { "label" = "Elevens val (höstterminen)" }
-evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; ElevValHT and ElevValVT are concurrent columns for the autumn and spring term."
+evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; Opdefs: ElevValHT is the elective subject in the autumn term, ElevValVT in the spring term."
 
 [[statement]]
 kind = "set"
 subject = "var:elevvalvt"
 fields = { "label" = "Elevens val (vårterminen)" }
-evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; ElevValHT and ElevValVT are concurrent columns for the autumn and spring term."
+evidence = "#2102 same-label cluster 'Elevens val' (2 variables): judged different meaning, high confidence; Opdefs: ElevValHT is the elective subject in the autumn term, ElevValVT in the spring term."
 
 [[statement]]
 kind = "set"
 subject = "var:ml-betyg"
 fields = { "label" = "Modersmål, ämne (betyg)" }
-evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; Opdefs: ML_betyg is the grade, ML_spr the language in the subject."
 
 [[statement]]
 kind = "set"
 subject = "var:ml-sprak"
 fields = { "label" = "Modersmål, ämne (språk)" }
-evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; Opdefs: ML_betyg is the grade, ML_spr the language in the subject."
 
 [[statement]]
 kind = "set"
 subject = "var:moderna-sprak-elevens-val-betyg"
 fields = { "label" = "Moderna språk inom ramen för elevens val (betyg)" }
-evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; Opdefs: M1_betyg is the grade, M1_spr the language studied."
 
 [[statement]]
 kind = "set"
 subject = "var:moderna-sprak-elevens-val-sprak"
 fields = { "label" = "Moderna språk inom ramen för elevens val (språk)" }
-evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; One column holds the grade, the other the language."
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (2 variables): judged different meaning, high confidence; Opdefs: M1_betyg is the grade, M1_spr the language studied."
 
 [[statement]]
 kind = "set"
 subject = "var:moderna-sprak-sprakval"
 fields = { "label" = "Moderna språk inom ramen för språkval (språk)" }
-evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Opdefs: Sprakval is participation (2005), M2_spr the language studied and M2_betyg the grade (2013)."
 
 [[statement]]
 kind = "set"
 subject = "var:moderna-sprak-sprakval-betyg"
 fields = { "label" = "Moderna språk inom ramen för språkval (betyg)" }
-evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Opdefs: Sprakval is participation (2005), M2_spr the language studied and M2_betyg the grade (2013)."
 
 [[statement]]
 kind = "set"
 subject = "var:ny-skolenhetskod"
-fields = { "label" = "Skolenhet (ny skolenhet)" }
-evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Skolenhetskod (2013) and Skolenhkod (2014-2020) are the same variable renamed; NySkolEnhKod is a concurrent 'new school unit' column with an 'Eleven har ej flyttat' code."
+fields = { "label" = "Skolenhet (skolenhet eleven flyttat till)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Opdefs: NySkolEnhKod is the school unit the pupil moved to, Skolenhkod the current spring-term school unit; Skolenhetskod (2013, no opdef) precedes Skolenhkod (2014-) as the current unit."
 
 [[statement]]
 kind = "set"
 subject = "var:nykommun"
-fields = { "label" = "Kommun för skola/skolenhet (ny skola)" }
-evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, medium confidence; NyKommun and Kommun are concurrent in elevpanel-8 2015-2020; the 'Ny' columns in sibling variables mean the new school after a move."
+fields = { "label" = "Kommun för skola/skolenhet (skolkommun eleven flyttat till)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; Opdefs: NyKommun is the school municipality the pupil moved to, Kommun the school municipality in the current spring term."
 
 [[statement]]
 kind = "set"
 subject = "var:nyskolkod"
-fields = { "label" = "Skola (ny skola)" }
-evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, medium confidence; NySkolkod and Skolkod overlap in 2002-2004 in elevpanel-6; 'Ny' marks the new school after a move (cf. 'Eleven har ej flyttat' in NySkolEnhKod)."
+fields = { "label" = "Skola (skola eleven flyttat till)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Opdefs: NySkolkod is the school the pupil moved to (2002-2004), Skolkod the school the pupil attends in the current spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "label" = "Skolenhet (aktuell skolenhet)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Opdefs: NySkolEnhKod is the school unit the pupil moved to, Skolenhkod the current spring-term school unit; Skolenhetskod (2013, no opdef) precedes Skolenhkod (2014-) as the current unit."
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod-2"
+fields = { "label" = "Skolenhet (aktuell skolenhet)" }
+evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, medium confidence; Opdefs: NySkolEnhKod is the school unit the pupil moved to, Skolenhkod the current spring-term school unit; Skolenhetskod (2013, no opdef) precedes Skolenhkod (2014-) as the current unit."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "label" = "Skola (aktuell skola)" }
+evidence = "#2102 same-label cluster 'Skola' (2 variables): judged different meaning, high confidence; Opdefs: NySkolkod is the school the pupil moved to (2002-2004), Skolkod the school the pupil attends in the current spring term."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun för skola/skolenhet (aktuell skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (2 variables): judged different meaning, high confidence; Opdefs: NyKommun is the school municipality the pupil moved to, Kommun the school municipality in the current spring term."
 
 [[statement]]
 kind = "set"
 subject = "var:sprakval"
 fields = { "label" = "Moderna språk inom ramen för språkval (deltagande)" }
-evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Sprakval is a participation flag (2005); M2_spr is the language and M2_betyg the grade (2013)."
+evidence = "#2102 same-label cluster 'Moderna språk inom ramen för språkval' (3 variables): judged different meaning, high confidence; Opdefs: Sprakval is participation (2005), M2_spr the language studied and M2_betyg the grade (2013)."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod"
 fields = { "label" = "Svarskod (årskurs 8)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak3"
 fields = { "label" = "Svarskod (årskurs 3)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak4"
 fields = { "label" = "Svarskod (årskurs 4)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak5"
 fields = { "label" = "Svarskod (årskurs 5)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak6"
 fields = { "label" = "Svarskod (årskurs 6)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak7"
 fields = { "label" = "Svarskod (årskurs 7)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:svarskod-statuselevak9"
 fields = { "label" = "Svarskod (årskurs 9)" }
-evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, high confidence; Seven status columns, one per school year (årskurs 3 to 9)."
+evidence = "#2102 same-label cluster 'Svarskod' (7 variables): judged different meaning, medium confidence; Status code per pupil survey round, one column per grade (StatusElevAk3-AK9) decoded from the column name; periods are disjoint but the grades are different panels."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal"
 fields = { "label" = "Uppräkningstal (årskurs 3)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-elevvikt"
-fields = { "label" = "Uppräkningstal (elevvikt)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+fields = { "label" = "Uppräkningstal (Elevvikt)" }
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak4"
 fields = { "label" = "Uppräkningstal (årskurs 4)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak5"
 fields = { "label" = "Uppräkningstal (årskurs 5)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak6"
 fields = { "label" = "Uppräkningstal (årskurs 6)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak7"
 fields = { "label" = "Uppräkningstal (årskurs 7)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak8"
 fields = { "label" = "Uppräkningstal (årskurs 8)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-viktak9"
 fields = { "label" = "Uppräkningstal (årskurs 9)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, high confidence; One weight per panel year (ViktAK3 to ViktAK9) plus a separate Elevvikt."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."

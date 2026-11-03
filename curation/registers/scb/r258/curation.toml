@@ -19958,6 +19958,12 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
+subject = "var:c2ftxt"
+fields = { "label" = "Myndghetskontakter: inte skickat in blanketter pga något annat (fritext)" }
+evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanketter pga något annat' (6 variables): judged different meaning, medium confidence; DatD2F, GOV12RTX_OTH, C2g/D2g, C2f and C2h are the same item renumbered over the years (identical definition, adjacent periods); C2ftxt is the free-text specification."
+
+[[statement]]
+kind = "set"
 subject = "var:koper-fillagring-som-molntjanst-cc-pay"
 fields = { "label" = "Köper fillagring som molntjänst (privatperson)" }
 evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 variables): judged different meaning, high confidence; CC_PAY is in the befolkningens survey, CC_PFIL in the företag survey."
@@ -19972,19 +19978,19 @@ evidence = "#2102 same-label cluster 'Köper fillagring som molntjänst' (2 vari
 kind = "set"
 subject = "var:lan"
 fields = { "label" = "Län (kod)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn appears to be the county name."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
 
 [[statement]]
 kind = "set"
 subject = "var:lan-lannamn"
 fields = { "label" = "Län (namn)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn appears to be the county name."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, medium confidence; Concurrent in 2017-2018 in one table: Lan is the code, lannamn the county name."
 
 [[statement]]
 kind = "set"
 subject = "var:lart-datorer-internet-annat-satt-klartext"
 fields = { "label" = "Lärt om datorer och internet på annat sätt (fritext)" }
-evidence = "#2102 same-label cluster 'Lärt om datorer och internet på annat sätt' (2 variables): judged different meaning, high confidence; DatF5G is the coded answer, DatF5Gtxt the free-text specification."
+evidence = "#2102 same-label cluster 'Lärt om datorer och internet på annat sätt' (2 variables): judged different meaning, high confidence; DatF5G is the coded answer, DatF5Gtxt the free-text specification (opdef: anges i klartext)."
 
 [[statement]]
 kind = "set"

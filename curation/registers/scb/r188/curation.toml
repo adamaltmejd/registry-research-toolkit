@@ -465,22 +465,22 @@ evidence = "#2100 group name: the slug read as words; kept on review."
 kind = "set"
 subject = "var:sitc"
 fields = { "label" = "SITC (detaljerad varukod)" }
-evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 har huvudavdelningar (0-9), SITC5 har detaljerade varukoder."
+evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 (volymutveckling) has main divisions 0-9 in its value set, SITC5 (trade tables) detailed product codes."
 
 [[statement]]
 kind = "set"
 subject = "var:sitc-sitc3"
 fields = { "label" = "SITC (huvudavdelning)" }
-evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 har huvudavdelningar (0-9), SITC5 har detaljerade varukoder."
+evidence = "#2102 same-label cluster 'SITC' (2 variables): judged different meaning, medium confidence; SITC3 (volymutveckling) has main divisions 0-9 in its value set, SITC5 (trade tables) detailed product codes."
 
 [[statement]]
 kind = "set"
 subject = "var:sni97-5"
 fields = { "label" = "SPIN (SNI 97, 5 siffror)" }
-evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Olika klassifikationsversioner: SNI 97 på 5 siffror respektive SPIN 2007."
+evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Different classification versions: SNI 97 at 5 digits (value labels 01111...) versus SPIN 2007 (01.110...), an update of SPIN 2002 per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:spin"
 fields = { "label" = "SPIN (SPIN 2007)" }
-evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Olika klassifikationsversioner: SNI 97 på 5 siffror respektive SPIN 2007."
+evidence = "#2102 same-label cluster 'SPIN' (2 variables): judged different meaning, high confidence; Different classification versions: SNI 97 at 5 digits (value labels 01111...) versus SPIN 2007 (01.110...), an update of SPIN 2002 per opdef."

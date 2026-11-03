@@ -1312,4 +1312,4 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:fodelsedatum-numerisk"
 fields = { "label" = "Födelsedatum (numeriskt SAS-datum)" }
-evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, high confidence; FODDATN är födelsedatum som numeriskt SAS-datum, FODDAT är textformen."
+evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, high confidence; Beskrivningen anger att FODDATN är numeriskt SAS-datum; FODDAT är den andra kolumnen i samma tabeller."

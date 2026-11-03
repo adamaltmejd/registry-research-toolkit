@@ -918,7 +918,7 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 kind = "set"
 subject = "var:foraldrarnas-hogsta-utbildningsniva-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 and detailed vs grouped; the specialskola-only Sun2020Niva_Mor_Grupperad column complements sun2020niva-for-grupperad (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
 
 [[statement]]
 kind = "set"
@@ -934,114 +934,138 @@ evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different 
 
 [[statement]]
 kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunfth"
+fields = { "label" = "Kommun (fritidshemmets kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
+
+[[statement]]
+kind = "set"
 subject = "var:moderns-utbildningsniva"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:moderns-utbildningsniva-sju-nivaer"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, sju nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:skom"
+fields = { "label" = "Kommun (skolkommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-old-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, äldre indelning)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, sju nivåer, äldre indelning)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-sv-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, tre nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different coding granularities and SUN 2000 vs SUN 2020; the specialskola-only Sun2020Niva_For_Grupperad column complements sun-niva-mor-grupperad-2 (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020 per opdefs and value sets; the specialskola column Sun2020Niva_For_Grupperad has the opdef (biologisk mor, grupperad) and period of sun-niva-mor-grupperad-2, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-1-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, sju nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-for"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 and detailed vs grouped; the specialskola-only Sun2020Niva_Mor_Grupperad column complements sun2020niva-for-grupperad (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 and detailed vs grouped; the specialskola-only Sun2020Niva_Mor_Grupperad column complements sun2020niva-for-grupperad (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-old-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, sju nivåer, äldre indelning)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-sv-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, tre nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different coding granularities (7 levels, 3 levels, old grouping, detailed, grouped) and SUN 2000 vs SUN 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Different groupings (7 levels, 3 levels, older 7-level, grouped, detailed) and SUN 2000 vs SUN 2020, per opdefs and value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-for"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 and detailed vs grouped; the specialskola-only Sun2020Niva_Mor_Grupperad column complements sun2020niva-for-grupperad (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 and detailed vs grouped; the specialskola-only Sun2020Niva_Mor_Grupperad column complements sun2020niva-for-grupperad (same period, other tables) and is the same variable under a mis-spelled name."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (5 variables): judged different meaning, high confidence; Detailed vs grouped and SUN 2000 vs SUN 2020; the specialskola Sun2020Niva_Mor_Grupperad column has the same opdef and value set as sun2020niva-for-grupperad in the same period, so it is the same variable."

@@ -1104,56 +1104,56 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "var:moderns-utbildningsniva-3-nivaer"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels, 3-digit SUN 2000, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:modersmal-betyg"
-fields = { "label" = "Modersmål, ämne, betyg" }
-evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; ML_Betyg is the grade (description) and ML_Sprak the language (description)."
+fields = { "label" = "Modersmål, ämne (betyg)" }
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; Opdefs: ML_Betyg is the grade, ML_Sprak the language."
 
 [[statement]]
 kind = "set"
 subject = "var:modersmal-sprak"
-fields = { "label" = "Modersmål, ämne, språk" }
-evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; ML_Betyg is the grade (description) and ML_Sprak the language (description)."
+fields = { "label" = "Modersmål, ämne (språk)" }
+evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; Opdefs: ML_Betyg is the grade, ML_Sprak the language."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels, 3-digit SUN 2000, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels, 3-digit SUN 2000, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels, 3-digit SUN 2000, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels, 3-digit SUN 2000, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels (Omkodad), grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels (Omkodad), grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
@@ -1171,13 +1171,13 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 kind = "set"
 subject = "var:sun2020niva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels (Omkodad), grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels (Omkodad), grouped 2000, SUN 2020 and grouped 2020."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels, grouped SUN 2000, SUN 2020, grouped SUN 2020."
 
 [[statement]]
 kind = "set"
@@ -1194,5 +1194,23 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 [[statement]]
 kind = "set"
 subject = "var:sunniva-far-omkodad"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels (Omkodad), grouped 2000, SUN 2020 and grouped 2020."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3-digit SUN 2000, 3 levels, grouped SUN 2000, SUN 2020, grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (saknat födelseland räknas som Sverige)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "label" = "Utländsk/svensk bakgrund (uppgift saknas som egen kod)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (härledd variabel)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige, UtlBakGr2 has an 'Uppgift saknas' code, UtlSvBakg is a derived variable with a different code list."

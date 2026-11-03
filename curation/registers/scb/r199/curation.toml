@@ -1223,131 +1223,239 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-co-adress-aco"
-fields = { "label" = "Ägarens CO-adress" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens CO-adress' (2 variables): judged different meaning, medium confidence; ACO (owner) and FCO (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens CO-adress (ägare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens CO-adress' (2 variables): judged different meaning, medium confidence; ACO holds the owner's CO address and FCO the manager's (sibling opdefs state Ägarens/Förvaltarens); both are concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-co-adress-fco"
-fields = { "label" = "Förvaltarens CO-adress" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens CO-adress' (2 variables): judged different meaning, medium confidence; ACO (owner) and FCO (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens CO-adress (förvaltare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens CO-adress' (2 variables): judged different meaning, medium confidence; ACO holds the owner's CO address and FCO the manager's (sibling opdefs state Ägarens/Förvaltarens); both are concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-namn-anamn"
-fields = { "label" = "Ägarens namn" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens namn' (2 variables): judged different meaning, medium confidence; ANamn (owner) and FNamn (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens namn (ägare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens namn' (2 variables): judged different meaning, high confidence; Opdefs: ANamn is the owner's name, FNamn the manager's."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-namn-fnamn"
-fields = { "label" = "Förvaltarens namn" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens namn' (2 variables): judged different meaning, medium confidence; ANamn (owner) and FNamn (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens namn (förvaltare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens namn' (2 variables): judged different meaning, high confidence; Opdefs: ANamn is the owner's name, FNamn the manager's."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-postnummer-apostnr"
-fields = { "label" = "Ägarens postnummer" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postnummer' (2 variables): judged different meaning, medium confidence; APostNr (owner) and FPostNr (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens postnummer (ägare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postnummer' (2 variables): judged different meaning, medium confidence; APostNr holds the owner's postnummer and FPostNr the manager's (opdef of FPostNr says Förvaltarens); both are concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-postnummer-fpostnr"
-fields = { "label" = "Förvaltarens postnummer" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postnummer' (2 variables): judged different meaning, medium confidence; APostNr (owner) and FPostNr (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens postnummer (förvaltare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postnummer' (2 variables): judged different meaning, medium confidence; APostNr holds the owner's postnummer and FPostNr the manager's (opdef of FPostNr says Förvaltarens); both are concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-postort-apostort"
-fields = { "label" = "Ägarens postort" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postort' (2 variables): judged different meaning, medium confidence; APostOrt (owner) and FPostOrt (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens postort (ägare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postort' (2 variables): judged different meaning, high confidence; Opdefs: APostOrt is the owner's postort, FPostOrt the manager's."
 
 [[statement]]
 kind = "set"
 subject = "var:agarens-forvaltarens-postort-fpostort"
-fields = { "label" = "Förvaltarens postort" }
-evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postort' (2 variables): judged different meaning, medium confidence; APostOrt (owner) and FPostOrt (manager) are concurrent columns for different parties."
+fields = { "label" = "Ägarens/förvaltarens postort (förvaltare)" }
+evidence = "#2102 same-label cluster 'Ägarens/förvaltarens postort' (2 variables): judged different meaning, high confidence; Opdefs: APostOrt is the owner's postort, FPostOrt the manager's."
 
 [[statement]]
 kind = "set"
 subject = "var:bransle"
-fields = { "label" = "Ingår kostnader för uppvärmning i hyran (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för uppvärmning i hyran' (3 variables): judged different meaning, medium confidence; BRANSLE (2007-2026) plus concurrent BRANSLE0 and BRANSLE1 for alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för uppvärmning i hyran (undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för uppvärmning i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: BRANSLE0 refers to undersökningsåret and BRANSLE1 to the year after; BRANSLE (2007-2026) is the plain column concurrent with them in 2010-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:fastighetsagarens-fastighetsforvaltarens-adress-aadress"
-fields = { "label" = "Fastighetsägarens adress" }
-evidence = "#2102 same-label cluster 'Fastighetsägarens/fastighetsförvaltarens adress' (2 variables): judged different meaning, medium confidence; AAdress (owner) and FAdress (manager) are concurrent columns for different parties."
+fields = { "label" = "Fastighetsägarens/fastighetsförvaltarens adress (ägare)" }
+evidence = "#2102 same-label cluster 'Fastighetsägarens/fastighetsförvaltarens adress' (2 variables): judged different meaning, medium confidence; AAdress holds the owner's address and FAdress the manager's (opdefs of the sibling columns state Ägarens/Förvaltarens); both are concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:fastighetsagarens-fastighetsforvaltarens-adress-fadress"
-fields = { "label" = "Fastighetsförvaltarens adress" }
-evidence = "#2102 same-label cluster 'Fastighetsägarens/fastighetsförvaltarens adress' (2 variables): judged different meaning, medium confidence; AAdress (owner) and FAdress (manager) are concurrent columns for different parties."
+fields = { "label" = "Fastighetsägarens/fastighetsförvaltarens adress (förvaltare)" }
+evidence = "#2102 same-label cluster 'Fastighetsägarens/fastighetsförvaltarens adress' (2 variables): judged different meaning, medium confidence; AAdress holds the owner's address and FAdress the manager's (opdefs of the sibling columns state Ägarens/Förvaltarens); both are concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forhandling-om-manadshyra-forhandl0"
-fields = { "label" = "Förhandling om månadshyra (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Förhandling om månadshyra' (2 variables): judged different meaning, medium confidence; Forhandl0 and Forhandl1 are concurrent columns for rent alternatives 0 and 1."
+fields = { "label" = "Förhandling om månadshyra (undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Förhandling om månadshyra' (2 variables): judged different meaning, high confidence; Opdefs: Forhandl0 refers to undersökningsåret, Forhandl1 to the year after."
 
 [[statement]]
 kind = "set"
 subject = "var:forhandling-om-manadshyra-forhandl1"
-fields = { "label" = "Förhandling om månadshyra (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Förhandling om månadshyra' (2 variables): judged different meaning, medium confidence; Forhandl0 and Forhandl1 are concurrent columns for rent alternatives 0 and 1."
+fields = { "label" = "Förhandling om månadshyra (året efter undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Förhandling om månadshyra' (2 variables): judged different meaning, high confidence; Opdefs: Forhandl0 refers to undersökningsåret, Forhandl1 to the year after."
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltarens-person-organisationsnummer"
+fields = { "label" = "Person-/organisationsnummer (förvaltare)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): judged different meaning, high confidence; Opdefs: FPeOrgNr is the manager's number, APeOrgNr the property owner's."
 
 [[statement]]
 kind = "set"
 subject = "var:garage"
-fields = { "label" = "Ingår kostnader för garage/bilplats i hyran (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för garage/bilplats i hyran' (3 variables): judged different meaning, medium confidence; GARAGE (2007-2026) plus concurrent GARAGE0 and GARAGE1 for rent alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för garage/bilplats i hyran (undersökningsåret, år 0)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för garage/bilplats i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: GARAGE0 refers to undersökningsåret (år 0) and GARAGE1 to the year after (år 1); GARAGE (2007-2026) is the plain column concurrent with them in 2010-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:hyra-avgift-hyraalt0"
-fields = { "label" = "Hyra/avgift (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Hyra/avgift' (2 variables): judged different meaning, medium confidence; HyraAlt0 and HyraAlt1 are concurrent columns for rent alternatives 0 and 1."
+fields = { "label" = "Hyra/avgift (alternativ hyra under undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Hyra/avgift' (2 variables): judged different meaning, high confidence; Opdefs: HyraAlt0 is the alternative rent during undersökningsåret, HyraAlt1 the alternative rent during the year after."
 
 [[statement]]
 kind = "set"
 subject = "var:hyra-avgift-hyraalt1"
-fields = { "label" = "Hyra/avgift (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Hyra/avgift' (2 variables): judged different meaning, medium confidence; HyraAlt0 and HyraAlt1 are concurrent columns for rent alternatives 0 and 1."
+fields = { "label" = "Hyra/avgift (alternativ hyra året efter undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Hyra/avgift' (2 variables): judged different meaning, high confidence; Opdefs: HyraAlt0 is the alternative rent during undersökningsåret, HyraAlt1 the alternative rent during the year after."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyraapril0"
+fields = { "label" = "Hyror i bostadslägenheter (april)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyraaug0"
+fields = { "label" = "Hyror i bostadslägenheter (augusti)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyradec0"
+fields = { "label" = "Hyror i bostadslägenheter (december)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyrafeb0"
+fields = { "label" = "Hyror i bostadslägenheter (februari)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyraja0"
+fields = { "label" = "Hyror i bostadslägenheter (januari)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyraja1"
+fields = { "label" = "Hyror i bostadslägenheter (januari, HYRAJA1)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyrajuli0"
+fields = { "label" = "Hyror i bostadslägenheter (juli)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyrajuni0"
+fields = { "label" = "Hyror i bostadslägenheter (juni)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyramaj0"
+fields = { "label" = "Hyror i bostadslägenheter (maj)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyramars0"
+fields = { "label" = "Hyror i bostadslägenheter (mars)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyranov0"
+fields = { "label" = "Hyror i bostadslägenheter (november)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyraokt0"
+fields = { "label" = "Hyror i bostadslägenheter (oktober)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
+
+[[statement]]
+kind = "set"
+subject = "var:hyror-i-bostadslagenheter-hyrasept0"
+fields = { "label" = "Hyror i bostadslägenheter (september)" }
+evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
 
 [[statement]]
 kind = "set"
 subject = "var:ingar-kostnader-for-garage-bilplats-i-hyran-garage1"
-fields = { "label" = "Ingår kostnader för garage/bilplats i hyran (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för garage/bilplats i hyran' (3 variables): judged different meaning, medium confidence; GARAGE (2007-2026) plus concurrent GARAGE0 and GARAGE1 for rent alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för garage/bilplats i hyran (året efter undersökningsåret, år 1)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för garage/bilplats i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: GARAGE0 refers to undersökningsåret (år 0) and GARAGE1 to the year after (år 1); GARAGE (2007-2026) is the plain column concurrent with them in 2010-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:ingar-kostnader-for-hushallsel-i-hyran-strom1"
-fields = { "label" = "Ingår kostnader för hushållsel i hyran (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för hushållsel i hyran' (3 variables): judged different meaning, medium confidence; STROM (2007-2026) plus concurrent STROM0 and STROM1 (with extra 'Uppgift saknas' code) for alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för hushållsel i hyran (året efter undersökningsåret, år 1)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för hushållsel i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: STROM0 refers to undersökningsåret (år 0) and STROM1 to the year after (år 1); STROM (2007-2026) is the plain column concurrent with them in 2010-2014."
 
 [[statement]]
 kind = "set"
 subject = "var:ingar-kostnader-for-uppvarmning-i-hyran-bransle1"
-fields = { "label" = "Ingår kostnader för uppvärmning i hyran (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för uppvärmning i hyran' (3 variables): judged different meaning, medium confidence; BRANSLE (2007-2026) plus concurrent BRANSLE0 and BRANSLE1 for alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för uppvärmning i hyran (året efter undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för uppvärmning i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: BRANSLE0 refers to undersökningsåret and BRANSLE1 to the year after; BRANSLE (2007-2026) is the plain column concurrent with them in 2010-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:komment-komp"
+fields = { "label" = "Kommentar från uppgiftslämnaren (blankett med kompletteringsfråga)" }
+evidence = "#2102 same-label cluster 'Kommentar från uppgiftslämnaren' (2 variables): judged different meaning, high confidence; Opdefs: Komment_Komp is the comment on the form with the follow-up question on negotiated rent, Komment the comment on the ordinary form."
+
+[[statement]]
+kind = "set"
+subject = "var:kommentar-uppgiftslamnaren"
+fields = { "label" = "Kommentar från uppgiftslämnaren (ordinarie blankett)" }
+evidence = "#2102 same-label cluster 'Kommentar från uppgiftslämnaren' (2 variables): judged different meaning, high confidence; Opdefs: Komment_Komp is the comment on the form with the follow-up question on negotiated rent, Komment the comment on the ordinary form."
 
 [[statement]]
 kind = "set"
 subject = "var:man"
-fields = { "label" = "Månad (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Månad' (3 variables): judged different meaning, medium confidence; Man0 and Man1 are concurrent columns for rent alternatives 0 and 1; Man (2016-2026) is the later single column."
+fields = { "label" = "Månad (alternativ hyra, undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Månad' (3 variables): judged different meaning, medium confidence; Opdefs: Man0 is the month the alternative rent applies from in undersökningsåret, Man1 the same for the year after; Man (2016-2026) is the month the new rent started, possibly continuing Man0 but not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "label" = "Månad (ny hyra gäller från)" }
+evidence = "#2102 same-label cluster 'Månad' (3 variables): judged different meaning, medium confidence; Opdefs: Man0 is the month the alternative rent applies from in undersökningsåret, Man1 the same for the year after; Man (2016-2026) is the month the new rent started, possibly continuing Man0 but not stated."
 
 [[statement]]
 kind = "set"
 subject = "var:manad-man1"
-fields = { "label" = "Månad (alternativ 1)" }
-evidence = "#2102 same-label cluster 'Månad' (3 variables): judged different meaning, medium confidence; Man0 and Man1 are concurrent columns for rent alternatives 0 and 1; Man (2016-2026) is the later single column."
+fields = { "label" = "Månad (alternativ hyra, året efter undersökningsåret)" }
+evidence = "#2102 same-label cluster 'Månad' (3 variables): judged different meaning, medium confidence; Opdefs: Man0 is the month the alternative rent applies from in undersökningsåret, Man1 the same for the year after; Man (2016-2026) is the month the new rent started, possibly continuing Man0 but not stated."
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "label" = "Person-/organisationsnummer (fastighetsägare)" }
+evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): judged different meaning, high confidence; Opdefs: FPeOrgNr is the manager's number, APeOrgNr the property owner's."
 
 [[statement]]
 kind = "set"
 subject = "var:strom"
-fields = { "label" = "Ingår kostnader för hushållsel i hyran (alternativ 0)" }
-evidence = "#2102 same-label cluster 'Ingår kostnader för hushållsel i hyran' (3 variables): judged different meaning, medium confidence; STROM (2007-2026) plus concurrent STROM0 and STROM1 (with extra 'Uppgift saknas' code) for alternatives 0 and 1."
+fields = { "label" = "Ingår kostnader för hushållsel i hyran (undersökningsåret, år 0)" }
+evidence = "#2102 same-label cluster 'Ingår kostnader för hushållsel i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: STROM0 refers to undersökningsåret (år 0) and STROM1 to the year after (år 1); STROM (2007-2026) is the plain column concurrent with them in 2010-2014."

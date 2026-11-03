@@ -724,30 +724,54 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
+subject = "var:ant"
+fields = { "label" = "Antal lägenheter totalt (i byggnadsprojektet)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (2 variables): judged different meaning, high confidence; Opdefs: Ant is the total in the building project, TotLgh the number according to the building permit; they coexist 2007-2015."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "label" = "Antal lägenheter totalt (enligt bygglovet)" }
+evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (2 variables): judged different meaning, high confidence; Opdefs: Ant is the total in the building project, TotLgh the number according to the building permit; they coexist 2007-2015."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsarea"
+fields = { "label" = "Bostadsarea (enligt bygglovet)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: LghAreor is the area according to the building permit, Yta the area in the building project; they coexist 2007-2015."
+
+[[statement]]
+kind = "set"
 subject = "var:bygghtyp"
 fields = { "label" = "Ägarkategori (detaljerad indelning)" }
-evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; bygghtyp2 is a coarse three-way owner category, bygghtyp a detailed owner classification (kommun, landsting, HSB, Riksbyggen and so on)."
+evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; Opdefs: bygghtyp2 is the coarse division of the builder into owner categories, bygghtyp the detailed one."
 
 [[statement]]
 kind = "set"
 subject = "var:bygghtyp2"
 fields = { "label" = "Ägarkategori (grov indelning)" }
-evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; bygghtyp2 is a coarse three-way owner category, bygghtyp a detailed owner classification (kommun, landsting, HSB, Riksbyggen and so on)."
+evidence = "#2102 same-label cluster 'Ägarkategori' (2 variables): judged different meaning, high confidence; Opdefs: bygghtyp2 is the coarse division of the builder into owner categories, bygghtyp the detailed one."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts01"
 fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 1" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01, NUTS02 and NUTS03 are three regional levels with different value sets in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts02"
 fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 2" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01, NUTS02 and NUTS03 are three regional levels with different value sets in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:nuts03"
 fields = { "label" = "NUTS (Nomenclature des Unités Territoriales Statistiques), nivå 3" }
-evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01/02/03 are different regional levels with different value sets, concurrent in one table."
+evidence = "#2102 same-label cluster 'NUTS (Nomenclature des Unités Territoriales Statistiques)' (3 variables): judged different meaning, high confidence; NUTS01, NUTS02 and NUTS03 are three regional levels with different value sets in one table."
+
+[[statement]]
+kind = "set"
+subject = "var:yta"
+fields = { "label" = "Bostadsarea (i byggnadsprojektet)" }
+evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: LghAreor is the area according to the building permit, Yta the area in the building project; they coexist 2007-2015."

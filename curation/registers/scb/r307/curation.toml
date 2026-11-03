@@ -957,15 +957,27 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
+subject = "var:barnomfatt"
+fields = { "label" = "Tjänstgöringsomfattning (förskolechefs arbete med barn)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): judged different meaning, medium confidence; Omfatt is total scope; Barnomfatt is the scope in work with children for förskolechefer (0 otherwise), while ChefOmf and the adjacent RektorOmf have parallel opdefs (chefs-/rektorsbefattning, same variable renamed)."
+
+[[statement]]
+kind = "set"
 subject = "var:chef"
-fields = { "label" = "Typ av tjänst: chef" }
-evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, high confidence; Separate yes/no flags: chef, förskollärare, resurs/stödpersonal, rektor."
+fields = { "label" = "Typ av tjänst (förskolechef)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:chefomf"
+fields = { "label" = "Tjänstgöringsomfattning (chefs- eller rektorsbefattning)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): judged different meaning, medium confidence; Omfatt is total scope; Barnomfatt is the scope in work with children for förskolechefer (0 otherwise), while ChefOmf and the adjacent RektorOmf have parallel opdefs (chefs-/rektorsbefattning, same variable renamed)."
 
 [[statement]]
 kind = "set"
 subject = "var:forsk"
-fields = { "label" = "Typ av tjänst: förskollärare" }
-evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, high confidence; Separate yes/no flags: chef, förskollärare, resurs/stödpersonal, rektor."
+fields = { "label" = "Typ av tjänst (förskollärare)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
 
 [[statement]]
 kind = "set"
@@ -983,124 +995,142 @@ evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different 
 kind = "set"
 subject = "var:kommun"
 fields = { "label" = "Kommun (kommungrupp)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp is a municipality group; VerkKom is the municipality itself."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp is the SKL municipality group; VerkKom is the municipality of the unit."
+
+[[statement]]
+kind = "set"
+subject = "var:omfatt"
+fields = { "label" = "Tjänstgöringsomfattning (totalt)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): judged different meaning, medium confidence; Omfatt is total scope; Barnomfatt is the scope in work with children for förskolechefer (0 otherwise), while ChefOmf and the adjacent RektorOmf have parallel opdefs (chefs-/rektorsbefattning, same variable renamed)."
 
 [[statement]]
 kind = "set"
 subject = "var:rektor"
-fields = { "label" = "Typ av tjänst: rektor" }
-evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, high confidence; Separate yes/no flags: chef, förskollärare, resurs/stödpersonal, rektor."
+fields = { "label" = "Typ av tjänst (förskolechef)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:rektoromf"
+fields = { "label" = "Tjänstgöringsomfattning (chefs- eller rektorsbefattning)" }
+evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): judged different meaning, medium confidence; Omfatt is total scope; Barnomfatt is the scope in work with children for förskolechefer (0 otherwise), while ChefOmf and the adjacent RektorOmf have parallel opdefs (chefs-/rektorsbefattning, same variable renamed)."
 
 [[statement]]
 kind = "set"
 subject = "var:resurs"
-fields = { "label" = "Typ av tjänst: resurs/stödpersonal" }
-evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, high confidence; Separate yes/no flags: chef, förskollärare, resurs/stödpersonal, rektor."
+fields = { "label" = "Typ av tjänst (resurs/stödpersonal)" }
+evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum"
+fields = { "label" = "Startdatum (på nuvarande förskola)" }
+evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged different meaning, medium confidence; InskrDat is the enrolment date in förskolan; StartDat is the date enrolled at the current förskola; concurrent columns in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:startdatum-inskr"
-fields = { "label" = "Startdatum (inskrivning)" }
-evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged different meaning, medium confidence; InskrDat (enrolment date) and StartDat (start date) are concurrent columns in the same table."
+fields = { "label" = "Startdatum (inskrivning i förskolan)" }
+evidence = "#2102 same-label cluster 'Startdatum' (2 variables): judged different meaning, medium confidence; InskrDat is the enrolment date in förskolan; StartDat is the date enrolled at the current förskola; concurrent columns in one table."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2000, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr-prio"
-fields = { "label" = "Utbildningsinriktning (SUN 2000), prioritet 1" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2000, högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr-prio2"
-fields = { "label" = "Utbildningsinriktning (SUN 2000), prioritet 2" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2000, näst högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr-prio3"
-fields = { "label" = "Utbildningsinriktning (SUN 2000), prioritet 3" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2000, tredje högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva"
-fields = { "label" = "Utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2000, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-prio"
-fields = { "label" = "Utbildningsnivå (SUN 2000), prioritet 1" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2000, högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-prio2"
-fields = { "label" = "Utbildningsnivå (SUN 2000), prioritet 2" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2000, näst högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-prio3"
-fields = { "label" = "Utbildningsnivå (SUN 2000), prioritet 3" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2000, tredje högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2020, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr-prio"
-fields = { "label" = "Utbildningsinriktning (SUN 2020), prioritet 1" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2020, högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr-prio2"
-fields = { "label" = "Utbildningsinriktning (SUN 2020), prioritet 2" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2020, näst högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr-prio3"
-fields = { "label" = "Utbildningsinriktning (SUN 2020), prioritet 3" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsinriktning (SUN 2020, tredje högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest orientation and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2020, högsta)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-prio"
-fields = { "label" = "Utbildningsnivå (SUN 2020), prioritet 1" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2020, högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-prio2"
-fields = { "label" = "Utbildningsnivå (SUN 2020), prioritet 2" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2020, näst högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-prio3"
-fields = { "label" = "Utbildningsnivå (SUN 2020), prioritet 3" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; SUN 2000 vs SUN 2020 versions, each with a main column and prio1-3 columns (priority of the person's education)."
+fields = { "label" = "Utbildningsnivå (SUN 2020, tredje högsta för arbete med barn)" }
+evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each with the person's highest level and three priority columns (relevant for work with children) per opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:verksamhetskommun"
 fields = { "label" = "Kommun (verksamhetskommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp is a municipality group; VerkKom is the municipality itself."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp is the SKL municipality group; VerkKom is the municipality of the unit."

@@ -1048,178 +1048,202 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:a-poang-merit"
 fields = { "label" = "Poäng på betygsnivå A (matematik, muntlig del)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, medium confidence; Concurrent MA_A_POM (oral part, per sibling pids) and MA_A_POT (total)."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: A points in the oral part vs total A points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:delprov-poang-lasa-lyssna"
 fields = { "label" = "Resultat på nationellt delprov (läsa och lyssna)" }
-evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Three concurrent score columns for different sub-tests (PoangRL, PoangS, PoangMU)."
+evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Opdefs: points on the reading/listening, writing and speaking sub-tests."
 
 [[statement]]
 kind = "set"
 subject = "var:delprov-poang-skriva"
 fields = { "label" = "Resultat på nationellt delprov (skriva)" }
-evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Three concurrent score columns for different sub-tests (PoangRL, PoangS, PoangMU)."
+evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Opdefs: points on the reading/listening, writing and speaking sub-tests."
 
 [[statement]]
 kind = "set"
 subject = "var:matematik-poang-betygsniva-a-totalt"
 fields = { "label" = "Poäng på betygsnivå A (matematik, totalt)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, medium confidence; Concurrent MA_A_POM (oral part, per sibling pids) and MA_A_POT (total)."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; Opdefs: A points in the oral part vs total A points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:matematik-poang-betygsniva-c-muntlig-del"
 fields = { "label" = "Poäng på betygsnivå C (matematik, muntlig del)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Concurrent MA_C_POM (muntlig del) and MA_C_POT (totalt) per the pids."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: C points in the oral part vs total C points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:matematik-poang-betygsniva-c-totalt"
 fields = { "label" = "Poäng på betygsnivå C (matematik, totalt)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Concurrent MA_C_POM (muntlig del) and MA_C_POT (totalt) per the pids."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå C' (2 variables): judged different meaning, high confidence; Opdefs: C points in the oral part vs total C points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:matematik-poang-betygsniva-e-muntlig-del"
 fields = { "label" = "Poäng på betygsnivå E (matematik, muntlig del)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Concurrent MA_E_POM (muntlig del) and MA_E_POT (totalt) per the pids."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: E points in the oral part vs total E points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:matematik-poang-betygsniva-e-totalt"
 fields = { "label" = "Poäng på betygsnivå E (matematik, totalt)" }
-evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Concurrent MA_E_POM (muntlig del) and MA_E_POT (totalt) per the pids."
+evidence = "#2102 same-label cluster 'Poäng på betygsnivå E' (2 variables): judged different meaning, high confidence; Opdefs: E points in the oral part vs total E points in the mathematics courses."
 
 [[statement]]
 kind = "set"
 subject = "var:poangmu"
-fields = { "label" = "Resultat på nationellt delprov (muntligt)" }
-evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Three concurrent score columns for different sub-tests (PoangRL, PoangS, PoangMU)."
+fields = { "label" = "Resultat på nationellt delprov (tala, muntligt)" }
+evidence = "#2102 same-label cluster 'Resultat på nationellt delprov' (3 variables): judged different meaning, high confidence; Opdefs: points on the reading/listening, writing and speaking sub-tests."
 
 [[statement]]
 kind = "set"
 subject = "var:provversion-delprov-skriva"
 fields = { "label" = "Provversion (delprov skriva)" }
-evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per sub-test or the whole test (PROV_S, _RL, _MU, _MA, _PB)."
+evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Opdefs: test version for five different sub-tests/courses (skriva, engelska läsa/lyssna, engelska muntligt, matematik, sammanlagt)."
 
 [[statement]]
 kind = "set"
 subject = "var:provversion-engelska-lasa-lyssna"
 fields = { "label" = "Provversion (engelska, läsa och lyssna)" }
-evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per sub-test or the whole test (PROV_S, _RL, _MU, _MA, _PB)."
+evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Opdefs: test version for five different sub-tests/courses (skriva, engelska läsa/lyssna, engelska muntligt, matematik, sammanlagt)."
 
 [[statement]]
 kind = "set"
 subject = "var:provversion-engelska-muntligt"
 fields = { "label" = "Provversion (engelska, muntligt)" }
-evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per sub-test or the whole test (PROV_S, _RL, _MU, _MA, _PB)."
+evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Opdefs: test version for five different sub-tests/courses (skriva, engelska läsa/lyssna, engelska muntligt, matematik, sammanlagt)."
 
 [[statement]]
 kind = "set"
 subject = "var:provversion-matematik"
 fields = { "label" = "Provversion (matematik)" }
-evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per sub-test or the whole test (PROV_S, _RL, _MU, _MA, _PB)."
+evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Opdefs: test version for five different sub-tests/courses (skriva, engelska läsa/lyssna, engelska muntligt, matematik, sammanlagt)."
 
 [[statement]]
 kind = "set"
 subject = "var:provversion-sammanlagt"
 fields = { "label" = "Provversion (sammanlagt)" }
-evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Five concurrent columns, one per sub-test or the whole test (PROV_S, _RL, _MU, _MA, _PB)."
+evidence = "#2102 same-label cluster 'Provversion' (5 variables): judged different meaning, high confidence; Opdefs: test version for five different sub-tests/courses (skriva, engelska läsa/lyssna, engelska muntligt, matematik, sammanlagt)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-1-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 1-siffrig nivå)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-2"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2020, detaljerad)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-mor-grupperad-2"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun-niva-sv-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, tre nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 grupper)" }
+evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-1-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 1-siffrig nivå)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-for"
-fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped."
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, detaljerad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped, with distinct value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2000, grupperad)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped, with distinct value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000niva-sv-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, tre nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2000, 3 grupper)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+fields = { "label" = "Faderns utbildningsnivå (SUN 2020, detaljerad)" }
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-far-grupperad"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Concurrent 1-digit and 3-state coarse SUN 2000 variants, detailed and grouped SUN 2000, and SUN 2020 detailed/grouped."
+evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (6 variables): judged different meaning, high confidence; Opdefs/value sets: 1-position SUN 2000 level, 3-group SUN 2000, SUN 2000 detailed/grouped, SUN 2020 detailed/grouped (6 levels)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-for"
-fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped."
+fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, detaljerad)" }
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped, with distinct value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020niva-for-grupperad"
 fields = { "label" = "Föräldrarnas utbildningsnivå (SUN 2020, grupperad)" }
-evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped."
+evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped, with distinct value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift antas född i Sverige)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier, saknad uppgift ger blankt värde)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
+evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."

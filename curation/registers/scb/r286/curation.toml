@@ -393,23 +393,23 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "var:parti-kort"
-fields = { "label" = "Parti (kort namn)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, high confidence; Short name, EP party code, party name and a separate riksdag party code list (Ripartikod)."
+fields = { "label" = "Parti (kortnamn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; pnamn_kort is a short name, partinamn the name, partikod a code list with full party names; Ripartikod is a second code list with no opdef difference, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:partikod"
 fields = { "label" = "Parti (kod)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, high confidence; Short name, EP party code, party name and a separate riksdag party code list (Ripartikod)."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; pnamn_kort is a short name, partinamn the name, partikod a code list with full party names; Ripartikod is a second code list with no opdef difference, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:partinamn"
 fields = { "label" = "Parti (namn)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, high confidence; Short name, EP party code, party name and a separate riksdag party code list (Ripartikod)."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; pnamn_kort is a short name, partinamn the name, partikod a code list with full party names; Ripartikod is a second code list with no opdef difference, so raw column code."
 
 [[statement]]
 kind = "set"
 subject = "var:ripartikod"
-fields = { "label" = "Parti (riksdagspartikod)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, high confidence; Short name, EP party code, party name and a separate riksdag party code list (Ripartikod)."
+fields = { "label" = "Parti (Ripartikod)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; pnamn_kort is a short name, partinamn the name, partikod a code list with full party names; Ripartikod is a second code list with no opdef difference, so raw column code."

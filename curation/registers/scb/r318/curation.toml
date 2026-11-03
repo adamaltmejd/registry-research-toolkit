@@ -124,16 +124,16 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 kind = "set"
 subject = "var:kortnamn"
 fields = { "label" = "Näringsgren (kortnamn)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Opdefs differ: Kortnamn shows which SNI codes belong to a delindex, TAggBranschgrN lists the SNI ranges per delindex, TAggBranschgr is the shorter aggregated branch name with a value set."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni-koder-delindex"
 fields = { "label" = "Näringsgren (SNI-koder för delindex)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Opdefs differ: Kortnamn shows which SNI codes belong to a delindex, TAggBranschgrN lists the SNI ranges per delindex, TAggBranschgr is the shorter aggregated branch name with a value set."
 
 [[statement]]
 kind = "set"
 subject = "var:taggbranschgr"
-fields = { "label" = "Näringsgren (branschgrupp, TAggBranschgr)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Kortnamn, TAggBranschgrN (SNI codes for the sub-index per its pid) and TAggBranschgr (coded branch letters) are three concurrent columns with different content."
+fields = { "label" = "Näringsgren (aggregerad branschgrupp)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Opdefs differ: Kortnamn shows which SNI codes belong to a delindex, TAggBranschgrN lists the SNI ranges per delindex, TAggBranschgr is the shorter aggregated branch name with a value set."

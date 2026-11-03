@@ -5089,264 +5089,264 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:afdagararadbiofar"
-fields = { "label" = "Inskriven vid Arbetsförmedlingen dagar under året, fader (adoptiv- och biologisk fader)" }
-evidence = "#2102 same-label cluster 'Inskriven vid Arbetsförmedlingen dagar under året, fader' (2 variables): judged different meaning, medium confidence; AFDagarArFar and AFDagarArAdBioFar (2022-2023) are separate columns; AdBio read as adoptive and biological."
-
-[[statement]]
-kind = "set"
-subject = "var:afdagararadbiomor"
-fields = { "label" = "Inskriven vid Arbetsförmedlingen dagar under året, moder (adoptiv- och biologisk moder)" }
-evidence = "#2102 same-label cluster 'Inskriven vid Arbetsförmedlingen dagar under året, moder' (2 variables): judged different meaning, medium confidence; AFDagarArMor and AFDagarArAdBioMor (2022-2023) are separate columns; AdBio read as adoptive and biological."
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsmarknadsstatus-alt"
-fields = { "label" = "Arbetsmarknadsstatus (alternativ definition)" }
-evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS and BASAlt are concurrent with different code lists (alternative definition without student, pensioner, sick categories)."
+fields = { "label" = "Arbetsmarknadsstatus (grov gruppering)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; Opdef: BASAlt is a coarse grouping with students, pensioners and sick merged; code lists differ."
 
 [[statement]]
 kind = "set"
 subject = "var:astkommunnymet"
 fields = { "label" = "Kommun för arbetsställe (ny metod)" }
-evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): judged different meaning, medium confidence; AstKommunNyMet runs concurrently with AstKommun in 2003-2004 with the same code list; the NyMet suffix marks a separate new-method column."
+evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): judged different meaning, medium confidence; AstKommunNyMet (ny metod) runs concurrently with AstKommun in 2003-2004."
 
 [[statement]]
 kind = "set"
 subject = "var:astsni2007"
 fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007); AstSNI2002NyMet is a concurrent new-method column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed over time."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhet-gy"
+fields = { "label" = "Belägenhet för gymnasieskola (DeSO)" }
+evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variables): judged different meaning, medium confidence; Opdefs separate SAMS vs DeSO area and (Avg) the school the pupil finished from the school attended."
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhet-gy-avg"
+fields = { "label" = "Belägenhet för gymnasieskola (DeSO, avslutad gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variables): judged different meaning, medium confidence; Opdefs separate SAMS vs DeSO area and (Avg) the school the pupil finished from the school attended."
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhet-gy-sams"
+fields = { "label" = "Belägenhet för gymnasieskola (SAMS-område, avslutad gymnasieskola)" }
+evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variables): judged different meaning, medium confidence; Opdefs separate SAMS vs DeSO area and (Avg) the school the pupil finished from the school attended."
 
 [[statement]]
 kind = "set"
 subject = "var:beslutsar-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "label" = "Beslutsår för uppehållstillstånd som föranledde mottagning (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Beslutsår för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, medium confidence; UtAr_Fel (2023-2024) is a parallel column of erroneous values; its pid slug says felaktiga."
+evidence = "#2102 same-label cluster 'Beslutsår för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, high confidence; UtAr_Fel opdef: contains erroneous values and is no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:beslutsdatum-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "label" = "Beslutsdatum för uppehållstillstånd som föranledde mottagning (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Beslutsdatum för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, medium confidence; UtDatum_Fel (2023-2024) is a parallel column of erroneous values; its pid slug says felaktiga."
+evidence = "#2102 same-label cluster 'Beslutsdatum för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, high confidence; UtDatum_Fel opdef: contains erroneous values and is no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:beslutstyp-uppehallstillstand-kommunmottagning-felaktiga"
 fields = { "label" = "Beslutstyp för uppehållstillstånd som föranledde mottagning (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Beslutstyp för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, medium confidence; UtTyp_Fel (2023-2024) is a parallel column of erroneous values; its pid slug says felaktiga."
+evidence = "#2102 same-label cluster 'Beslutstyp för uppehållstillstånd som föranledde mottagning' (2 variables): judged different meaning, high confidence; UtTyp_Fel opdef: contains erroneous values and is no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsersattning-obearb"
 fields = { "label" = "Bostadsersättning (obearbetad)" }
-evidence = "#2102 same-label cluster 'Bostadsersättning' (2 variables): judged different meaning, medium confidence; BostadErs_obearb is the unprocessed version of BostadErs, both over 2011-2024."
+evidence = "#2102 same-label cluster 'Bostadsersättning' (2 variables): judged different meaning, medium confidence; Concurrent columns BostadErs and BostadErs_obearb (obearbetad) over 2011-2024; opdefs are near identical."
 
 [[statement]]
 kind = "set"
 subject = "var:cfar-nummer-2"
 fields = { "label" = "CFAR-Nummer (ny metod)" }
-evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, medium confidence; CfarNrNyMet (2003-2004) is a new-method variant coexisting with CfarNr."
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, medium confidence; CfarNrNyMet (ny metod) runs concurrently with CfarNr in 2003-2004."
 
 [[statement]]
 kind = "set"
 subject = "var:civiladbiofar"
 fields = { "label" = "Civilstånd far (adoptiv- och biologisk far)" }
-evidence = "#2102 same-label cluster 'Civilstånd far' (2 variables): judged different meaning, medium confidence; CivilFar and CivilAdBioFar (2022-2023) have different code lists; AdBio read as adoptive and biological."
+evidence = "#2102 same-label cluster 'Civilstånd far' (2 variables): judged different meaning, medium confidence; CivilAdBioFar (2022-2023) has a different letter-coded code list from CivilFar's numeric one and runs beside it."
 
 [[statement]]
 kind = "set"
 subject = "var:civiladbiomor"
 fields = { "label" = "Civilstånd mor (adoptiv- och biologisk mor)" }
-evidence = "#2102 same-label cluster 'Civilstånd mor' (2 variables): judged different meaning, medium confidence; CivilMor and CivilAdBioMor (2022-2023) have different code lists; AdBio read as adoptive and biological."
+evidence = "#2102 same-label cluster 'Civilstånd mor' (2 variables): judged different meaning, medium confidence; CivilAdBioMor (2022-2023) has a different letter-coded code list from CivilMor's numeric one and runs beside it."
 
 [[statement]]
 kind = "set"
 subject = "var:epa-tidgrp"
 fields = { "label" = "Tid med etableringsplan (grupperad)" }
-evidence = "#2102 same-label cluster 'Tid med etableringsplan' (2 variables): judged different meaning, high confidence; EPA_Tid is the number of months; EPA_TidGrp is the grouped version."
+evidence = "#2102 same-label cluster 'Tid med etableringsplan' (2 variables): judged different meaning, high confidence; EPA_Tid is the number of months; EPA_TidGrp is its grouped version (column name _Grp)."
+
+[[statement]]
+kind = "set"
+subject = "var:etabl-status1"
+fields = { "label" = "Status efter avslutad etablering (en dag efter)" }
+evidence = "#2102 same-label cluster 'Status efter avslutad etablering' (2 variables): judged different meaning, high confidence; Opdefs: status one day vs 90 days after the person last left the establishment assignment."
+
+[[statement]]
+kind = "set"
+subject = "var:etabl-status90"
+fields = { "label" = "Status efter avslutad etablering (90 dagar efter)" }
+evidence = "#2102 same-label cluster 'Status efter avslutad etablering' (2 variables): judged different meaning, high confidence; Opdefs: status one day vs 90 days after the person last left the establishment assignment."
 
 [[statement]]
 kind = "set"
 subject = "var:flykat-fel"
 fields = { "label" = "Flyktingkategori (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Flyktingkategori' (2 variables): judged different meaning, medium confidence; Flykat_Fel (2023-2024) is a parallel column of erroneous values (pid slug fel)."
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamnadbiofar"
-fields = { "label" = "Födelseland far (adoptiv- och biologisk far)" }
-evidence = "#2102 same-label cluster 'Födelseland far' (2 variables): judged different meaning, medium confidence; FodelseLandNamnFar and FodelseLandNamnAdBioFar (2022-2023) have different label sets; AdBio read as adoptive and biological."
-
-[[statement]]
-kind = "set"
-subject = "var:fodelselandnamnadbiomor"
-fields = { "label" = "Födelseland mor (adoptiv- och biologisk mor)" }
-evidence = "#2102 same-label cluster 'Födelseland mor' (2 variables): judged different meaning, medium confidence; FodelseLandNamnMor and FodelseLandNamnAdBioMor (2022-2023) have different label sets; AdBio read as adoptive and biological."
+evidence = "#2102 same-label cluster 'Flyktingkategori' (2 variables): judged different meaning, high confidence; Flykat_Fel opdef: erroneous values, no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:forsta-startdatum-samhallsorientering-etableringsplan"
-fields = { "label" = "Start för samhällsorientering enligt beslut om rätt till etableringsplan, första" }
-evidence = "#2102 same-label cluster 'Start för samhällsorientering enligt beslut om rätt till etableringsplan' (2 variables): judged different meaning, high confidence; Concurrent columns; the pids name them as first (EPA_SamhOrgStartdatum) and latest (EPA_SamhOrgSendatum) start date."
+fields = { "label" = "Start för samhällsorientering enligt beslut om rätt till etableringsplan (första startdatum)" }
+evidence = "#2102 same-label cluster 'Start för samhällsorientering enligt beslut om rätt till etableringsplan' (2 variables): judged different meaning, high confidence; Opdefs: first start date vs latest start date of samhällsorientering within the establishment plan."
 
 [[statement]]
 kind = "set"
 subject = "var:gfb-klassgruppadbiofar"
 fields = { "label" = "Grund för bosättning, grupperad, fader (klassgrupp, adoptiv- och biologisk fader)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfb-klassgruppadbiomor"
 fields = { "label" = "Grund för bosättning, grupperad, moder (klassgrupp, adoptiv- och biologisk moder)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfb-klassgruppfar"
 fields = { "label" = "Grund för bosättning, grupperad, fader (klassgrupp)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfb-klassgruppmor"
 fields = { "label" = "Grund för bosättning, grupperad, moder (klassgrupp)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfbgruppfar"
 fields = { "label" = "Grund för bosättning, grupperad, fader (äldre gruppering)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, fader' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:gfbgruppmor"
 fields = { "label" = "Grund för bosättning, grupperad, moder (äldre gruppering)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Newer class groups, older grouping (to 2011) and a separate AdBio version (2022-2023)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad, moder' (3 variables): judged different meaning, medium confidence; Class-group codes vs older one-digit grouping (different code lists) plus a separate AdBio column in 2022-2023."
 
 [[statement]]
 kind = "set"
 subject = "var:grund-for-bosattning-grupperad"
 fields = { "label" = "Grund för bosättning, grupperad (klassgrupp)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, high confidence; GFB_KlassGrupp uses the newer two-digit class groups, GFBGrupp the older one-digit grouping (1997-2011)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, high confidence; GFB_KlassGrupp uses the newer class groups; GFBGrupp is the older one-digit grouping with a different code list."
 
 [[statement]]
 kind = "set"
 subject = "var:grund-for-bosattning-grupperad-2"
 fields = { "label" = "Grund för bosättning, grupperad (äldre gruppering)" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, high confidence; GFB_KlassGrupp uses the newer two-digit class groups, GFBGrupp the older one-digit grouping (1997-2011)."
+evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, high confidence; GFB_KlassGrupp uses the newer class groups; GFBGrupp is the older one-digit grouping with a different code list."
+
+[[statement]]
+kind = "set"
+subject = "var:langtidsarbetslos"
+fields = { "label" = "Långtidsarbetslös (felaktiga uppgifter)" }
+evidence = "#2102 same-label cluster 'Långtidsarbetslös' (2 variables): judged different meaning, medium confidence; AfLang_Fel opdef: contains erroneous values, no longer used; runs beside AfLang 2007-2018."
 
 [[statement]]
 kind = "set"
 subject = "var:motar-fel"
 fields = { "label" = "Flyktingsmottagningsår (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Flyktingsmottagningsår' (2 variables): judged different meaning, medium confidence; MotAr_Fel (2023-2024) is a parallel column of erroneous values (pid slug fel)."
+evidence = "#2102 same-label cluster 'Flyktingsmottagningsår' (2 variables): judged different meaning, high confidence; MotAr_Fel opdef: erroneous values, no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:motdatum-fel"
 fields = { "label" = "Flyktingsmottagningsdatum (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Flyktingsmottagningsdatum' (2 variables): judged different meaning, medium confidence; MotDatum_Fel (2023-2024) is a parallel column of erroneous values (pid slug fel)."
+evidence = "#2102 same-label cluster 'Flyktingsmottagningsdatum' (2 variables): judged different meaning, high confidence; MotDatum_Fel opdef: erroneous values, no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:motkommun-fel"
 fields = { "label" = "Flyktingsmottagningskommun (felaktiga uppgifter)" }
-evidence = "#2102 same-label cluster 'Flyktingsmottagningskommun' (2 variables): judged different meaning, medium confidence; MotKommun_Fel (2023-2024) is a parallel column of erroneous values (pid slug fel)."
+evidence = "#2102 same-label cluster 'Flyktingsmottagningskommun' (2 variables): judged different meaning, high confidence; MotKommun_Fel opdef: erroneous values, no longer used."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren"
 fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007); AstSNI2002NyMet is a concurrent new-method column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed over time."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2002-nymet"
 fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2002, ny metod)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007); AstSNI2002NyMet is a concurrent new-method column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed over time."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni2007"
 fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007); AstSNI2002NyMet is a concurrent new-method column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed over time."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-sni92"
 fields = { "label" = "Näringsgren för statistiken, huvudsaklig (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007); AstSNI2002NyMet is a concurrent new-method column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed over time."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken, huvudsaklig' (5 variables): judged different meaning, high confidence; Different SNI versions (92, 2002, 2007) and a concurrent ny-metod column; AstSNI2007 and AstNgS07 are the same SNI 2007 variable renamed."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-ankn"
+fields = { "label" = "Personnummer (anknuten person)" }
+evidence = "#2102 same-label cluster 'Personnummer' (2 variables): judged different meaning, high confidence; Opdef: PersonNrAnkn is the personal number of the person that the connection (anknytning) is made to."
+
+[[statement]]
+kind = "set"
+subject = "var:samsgy"
+fields = { "label" = "Belägenhet för gymnasieskola (SAMS-område)" }
+evidence = "#2102 same-label cluster 'Belägenhet för gymnasieskola' (4 variables): judged different meaning, medium confidence; Opdefs separate SAMS vs DeSO area and (Avg) the school the pupil finished from the school attended."
 
 [[statement]]
 kind = "set"
 subject = "var:senaste-startdatum-samhallsorientering-etableringsplan"
-fields = { "label" = "Start för samhällsorientering enligt beslut om rätt till etableringsplan, senaste" }
-evidence = "#2102 same-label cluster 'Start för samhällsorientering enligt beslut om rätt till etableringsplan' (2 variables): judged different meaning, high confidence; Concurrent columns; the pids name them as first (EPA_SamhOrgStartdatum) and latest (EPA_SamhOrgSendatum) start date."
-
-[[statement]]
-kind = "set"
-subject = "var:seninvaradbiofar"
-fields = { "label" = "Senaste invandringsår fader (adoptiv- och biologisk fader)" }
-evidence = "#2102 same-label cluster 'Senaste invandringsår fader' (2 variables): judged different meaning, medium confidence; SenInvArAdBioFar (2022-2023) runs beside SenInvArFar; AdBio in the column name points to adoptive and biological father."
-
-[[statement]]
-kind = "set"
-subject = "var:seninvaradbiomor"
-fields = { "label" = "Senaste invandringsår moder (adoptiv- och biologisk moder)" }
-evidence = "#2102 same-label cluster 'Senaste invandringsår moder' (2 variables): judged different meaning, medium confidence; SenInvArAdBioMor (2022-2023) runs beside SenInvArMor; AdBio in the column name points to adoptive and biological mother."
+fields = { "label" = "Start för samhällsorientering enligt beslut om rätt till etableringsplan (senaste startdatum)" }
+evidence = "#2102 same-label cluster 'Start för samhällsorientering enligt beslut om rätt till etableringsplan' (2 variables): judged different meaning, high confidence; Opdefs: first start date vs latest start date of samhällsorientering within the establishment plan."
 
 [[statement]]
 kind = "set"
 subject = "var:sokandekategori"
 fields = { "label" = "Sökandekategori (grupperad)" }
-evidence = "#2102 same-label cluster 'Sökandekategori' (2 variables): judged different meaning, high confidence; AFSokKat has 12 detailed categories, AFSokKat_Grupp a 5-group version."
+evidence = "#2102 same-label cluster 'Sökandekategori' (2 variables): judged different meaning, high confidence; AFSokKat has 12 detailed categories; AFSokKat_Grupp is the grouped version (opdef: grupperad utifrån sökandekategori)."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020grp"
 fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2000Grp and Sun2020Grp overlap 2020-2022 and use different SUN classification versions."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldadbiofar"
-fields = { "label" = "Utbildningsnivå, far (adoptiv- och biologisk far)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå, far' (2 variables): judged different meaning, medium confidence; The AdBio column (2022-2023) runs beside the plain Far column with identical code lists; AdBio points to adoptive and biological father."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-oldadbiomor"
-fields = { "label" = "Utbildningsnivå, mor (adoptiv- och biologisk mor)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå, mor' (2 variables): judged different meaning, medium confidence; The AdBio column (2022-2023) runs beside the plain Mor column with identical code lists; AdBio points to adoptive and biological mother."
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2000Grp and Sun2020Grp group codes from different SUN versions and overlap 2020-2022."
 
 [[statement]]
 kind = "set"
 subject = "var:syssstatnymet"
 fields = { "label" = "Sysselsättningsstatus, november (ny metod)" }
-evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, medium confidence; SyssStatNyMet is a concurrent new-method column (2003-2004) beside SyssStat with the same code list."
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, medium confidence; SyssStatNyMet (ny metod) runs concurrently with SyssStat in 2003-2004."
 
 [[statement]]
 kind = "set"
 subject = "var:typ-av-boende-grupp"
 fields = { "label" = "Typ av boende (grupperad)" }
-evidence = "#2102 same-label cluster 'Typ av boende' (2 variables): judged different meaning, high confidence; BoForm is the detailed housing-type code list, BoFormGrupp a 4-group version."
+evidence = "#2102 same-label cluster 'Typ av boende' (2 variables): judged different meaning, high confidence; Opdef: BoFormGrupp groups the BoForm codes into four groups."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsgrupp"
 fields = { "label" = "Utbildningsgrupp (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2000Grp and Sun2020Grp overlap 2020-2022 and use different SUN classification versions."
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2000Grp and Sun2020Grp group codes from different SUN versions and overlap 2020-2022."
 
 [[statement]]
 kind = "set"
 subject = "var:utvers-obearb"
 fields = { "label" = "Utvecklingsersättning, belopp (obearbetat)" }
-evidence = "#2102 same-label cluster 'Utvecklingsersättning, belopp' (2 variables): judged different meaning, medium confidence; UtvErs_obearb (unprocessed) runs concurrently with UtvErs from 2022."
+evidence = "#2102 same-label cluster 'Utvecklingsersättning, belopp' (2 variables): judged different meaning, medium confidence; UtvErs_obearb (unprocessed) runs concurrently with UtvErs from 2022 under the same opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkstallnnymet"
 fields = { "label" = "Yrkesställning (ny metod)" }
-evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, medium confidence; YrkStallnNyMet is a concurrent new-method column (2003-2004) beside YrkStalln with the same code list."
+evidence = "#2102 same-label cluster 'Yrkesställning' (2 variables): judged different meaning, medium confidence; YrkStallnNyMet (ny metod) runs concurrently with YrkStalln in 2003-2004."

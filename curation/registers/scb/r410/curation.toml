@@ -206,11 +206,11 @@ evidence = "Koderna anger investeringsslag som hör till investeringsvärdet.\nc
 [[statement]]
 kind = "set"
 subject = "var:status-verksamhetsenhet-besvarat-siv-enkat-aktuell-period"
-fields = { "label" = "Status (överordnad enhet)" }
-evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; CU_StatusParent is the status code of the parent unit; CU_Status_text is the status in plain text."
+fields = { "label" = "Status (verksamhetsenhet har besvarat SIV-enkäten aktuell period)" }
+evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; Opdefs: CU_StatusParent shows whether the operating unit answered the SIV survey this period, CU_Status_text is the status code in plain text."
 
 [[statement]]
 kind = "set"
 subject = "var:statuskod-klartext"
-fields = { "label" = "Status (klartext)" }
-evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; CU_StatusParent is the status code of the parent unit; CU_Status_text is the status in plain text."
+fields = { "label" = "Status (statuskod i klartext)" }
+evidence = "#2102 same-label cluster 'Status' (2 variables): judged different meaning, medium confidence; Opdefs: CU_StatusParent shows whether the operating unit answered the SIV survey this period, CU_Status_text is the status code in plain text."

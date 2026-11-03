@@ -127,6 +127,12 @@ evidence = "The variable classifies credit instruments.\ncatalog:valueset:12613\
 
 [[statement]]
 kind = "set"
+subject = "var:outstandingnominalamount"
+fields = { "label" = "Utestående nominellt belopp (totalt per instrument)" }
+evidence = "#2102 same-label cluster 'Utestående nominellt belopp' (2 variables): judged different meaning, high confidence; Opdefs: OutstandingNominalAmount is the total per instrument, the CreditorView column is distributed per låntagare."
+
+[[statement]]
+kind = "set"
 subject = "var:outstandingnominalamountcreditorview"
-fields = { "label" = "Utestående nominellt belopp (kreditgivarens vy)" }
-evidence = "#2102 same-label cluster 'Utestående nominellt belopp' (2 variables): judged different meaning, medium confidence; OutstandingNominalAmountCreditorView is a separate concurrent column reported from the creditor's view."
+fields = { "label" = "Utestående nominellt belopp (per låntagare)" }
+evidence = "#2102 same-label cluster 'Utestående nominellt belopp' (2 variables): judged different meaning, high confidence; Opdefs: OutstandingNominalAmount is the total per instrument, the CreditorView column is distributed per låntagare."

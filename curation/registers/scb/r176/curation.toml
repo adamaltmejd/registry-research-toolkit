@@ -1448,131 +1448,149 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "var:coicop4"
-fields = { "label" = "Klassificering av konsumtion (COICOP), nivå 4" }
-evidence = "#2102 same-label cluster 'Klassificering av konsumtion (COICOP)' (2 variables): judged different meaning, medium confidence; COICOP4 and COICOP5 are two concurrent columns for different levels of the classification; only COICOP5 has a code list."
+fields = { "label" = "Klassificering av konsumtion (COICOP, 4-siffernivå)" }
+evidence = "#2102 same-label cluster 'Klassificering av konsumtion (COICOP)' (2 variables): judged different meaning, high confidence; Opdefs: COICOP4 is the code at 4-digit level, COICOP5 at 5-digit level; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:coicop5"
-fields = { "label" = "Klassificering av konsumtion (COICOP), nivå 5" }
-evidence = "#2102 same-label cluster 'Klassificering av konsumtion (COICOP)' (2 variables): judged different meaning, medium confidence; COICOP4 and COICOP5 are two concurrent columns for different levels of the classification; only COICOP5 has a code list."
+fields = { "label" = "Klassificering av konsumtion (COICOP, 5-siffernivå)" }
+evidence = "#2102 same-label cluster 'Klassificering av konsumtion (COICOP)' (2 variables): judged different meaning, high confidence; Opdefs: COICOP4 is the code at 4-digit level, COICOP5 at 5-digit level; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-exklusive-moms-ags"
 fields = { "label" = "Försäljning AGS (exklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning AGS' (2 variables): judged different meaning, high confidence; FSGE_AGSS excludes and FSG_AGSS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning AGS' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_AGSS excludes and FSG_AGSS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-exklusive-moms-prisextra"
 fields = { "label" = "Försäljning Prisextra (exklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning Prisextra' (2 variables): judged different meaning, high confidence; FSGE_PXS excludes and FSG_PXS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning Prisextra' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_PXS excludes and FSG_PXS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-exklusive-moms-vi"
 fields = { "label" = "Försäljning Vi (exklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning Vi' (2 variables): judged different meaning, high confidence; FSGE_VIS excludes and FSG_VIS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning Vi' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_VIS excludes and FSG_VIS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-inklusive-moms-ags"
 fields = { "label" = "Försäljning AGS (inklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning AGS' (2 variables): judged different meaning, high confidence; FSGE_AGSS excludes and FSG_AGSS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning AGS' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_AGSS excludes and FSG_AGSS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-inklusive-moms-prisextra"
 fields = { "label" = "Försäljning Prisextra (inklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning Prisextra' (2 variables): judged different meaning, high confidence; FSGE_PXS excludes and FSG_PXS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning Prisextra' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_PXS excludes and FSG_PXS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:forsaljning-inklusive-moms-vi"
 fields = { "label" = "Försäljning Vi (inklusive moms)" }
-evidence = "#2102 same-label cluster 'Försäljning Vi' (2 variables): judged different meaning, high confidence; FSGE_VIS excludes and FSG_VIS includes VAT (pids), concurrent in the same table."
+evidence = "#2102 same-label cluster 'Försäljning Vi' (2 variables): judged different meaning, high confidence; Opdefs: FSGE_VIS excludes and FSG_VIS includes VAT; concurrent in the same table."
 
 [[statement]]
 kind = "set"
 subject = "var:hem-uppr"
 fields = { "label" = "Uppräkningstal (Hemköp)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren (äldre femsiffrig kod)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Ng1 (2003-04) has older five-digit codes; opdefs say Ng1Samu is the industry per företagsregistret and Ng1Moms per momsregistret, both SNI 2007 from 2015."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-foretagsregistret"
 fields = { "label" = "Näringsgren (företagsregistret, SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Ng1 (2003-04) has older five-digit codes; Ng1Samu and Ng1Moms (2015-24) hold SNI 2007 names from the företagsregistret and the momsregistret respectively."
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Ng1 (2003-04) has older five-digit codes; opdefs say Ng1Samu is the industry per företagsregistret and Ng1Moms per momsregistret, both SNI 2007 from 2015."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-momsregistret"
 fields = { "label" = "Näringsgren (momsregistret, SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Ng1 (2003-04) has older five-digit codes; Ng1Samu and Ng1Moms (2015-24) hold SNI 2007 names from the företagsregistret and the momsregistret respectively."
+evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Ng1 (2003-04) has older five-digit codes; opdefs say Ng1Samu is the industry per företagsregistret and Ng1Moms per momsregistret, both SNI 2007 from 2015."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-statistiken-fe"
 fields = { "label" = "Näringsgren för statistiken (företagsenhet)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken' (2 variables): judged different meaning, medium confidence; ngs (pid fe) and NgS1Je (pid je) run concurrently 2015-21 with different code lists; fe and je read as företagsenhet and juridisk enhet."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken' (2 variables): judged different meaning, medium confidence; Opdefs: ngs is the industry of the företagsenhet (FE), NgS1Je that of the juridisk enhet (JE); concurrent 2015-21 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-statistiken-je"
 fields = { "label" = "Näringsgren för statistiken (juridisk enhet)" }
-evidence = "#2102 same-label cluster 'Näringsgren för statistiken' (2 variables): judged different meaning, medium confidence; ngs (pid fe) and NgS1Je (pid je) run concurrently 2015-21 with different code lists; fe and je read as företagsenhet and juridisk enhet."
+evidence = "#2102 same-label cluster 'Näringsgren för statistiken' (2 variables): judged different meaning, medium confidence; Opdefs: ngs is the industry of the företagsenhet (FE), NgS1Je that of the juridisk enhet (JE); concurrent 2015-21 with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:spar-uppr"
 fields = { "label" = "Uppräkningstal (Spar)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftkommentar"
+fields = { "label" = "Kommentar från uppgiftslämnare (uppgiftkommentar)" }
+evidence = "#2102 same-label cluster 'Kommentar från uppgiftslämnare' (2 variables): judged different meaning, low confidence; Kommentar and uppgiftkommentar are concurrent columns in the same table with one definition and no stated difference, so qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-ags"
 fields = { "label" = "Uppräkningstal (AGS)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-cgs"
 fields = { "label" = "Uppräkningstal (CGS)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-coop-butiker"
 fields = { "label" = "Uppräkningstal (Coop butiker)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-coop-stormarknad"
 fields = { "label" = "Uppräkningstal (Coop stormarknad)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-ica-butiker"
 fields = { "label" = "Uppräkningstal (ICA butiker)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-ica-stormarknad"
 fields = { "label" = "Uppräkningstal (ICA stormarknad)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
 
 [[statement]]
 kind = "set"
 subject = "var:upprakningstal-willys-hemma"
 fields = { "label" = "Uppräkningstal (Willys Hemma)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."
+
+[[statement]]
+kind = "set"
+subject = "var:v2tom"
+fields = { "label" = "Redovisningsperiodens slut (V2Tom)" }
+evidence = "#2102 same-label cluster 'Redovisningsperiodens slut' (2 variables): judged different meaning, low confidence; RedPerSlut and V2Tom are concurrent 2018-19 columns in one table with one definition and no stated difference, so V2Tom is qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:wil-uppr"
 fields = { "label" = "Uppräkningstal (Willys)" }
-evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; 2004-05 has one uppräkningstal column per store chain (pids and column prefixes name the chain), beside the general UpprfTot, upprf and Uppräkningsfaktor over time."
+evidence = "#2102 same-label cluster 'Uppräkningstal' (13 variables): judged different meaning, medium confidence; Opdefs: 2004-05 has one uppräkningstal column per store chain (Hemköp, Spar, AGS, CGS, Coop, ICA, Willys), beside the general stratum factor (UpprfTot, upprf, Uppräkningsfaktor) which is the same variable over time."

@@ -739,76 +739,94 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:kommunkod-nominering-kommunfullmaktige"
 fields = { "label" = "Kommun (kod)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: municipality code versus municipality name in plain text."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunnamn"
 fields = { "label" = "Kommun (namn)" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Municipality code (with code list) versus municipality name."
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Opdefs: municipality code versus municipality name in plain text."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets"
+fields = { "label" = "Kommunvalkrets (namn)" }
+evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: name in plain text versus constituency number; the 1998-1999 column has the code opdef and overlaps the code column, so it gets the code label."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "label" = "Kommunvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: name in plain text versus constituency number; the 1998-1999 column has the code opdef and overlaps the code column, so it gets the code label."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kommunvalkrets"
+fields = { "label" = "Kommunvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Kommunvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: name in plain text versus constituency number; the 1998-1999 column has the code opdef and overlaps the code column, so it gets the code label."
 
 [[statement]]
 kind = "set"
 subject = "var:lan"
 fields = { "label" = "Län (namn)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; County name versus county code (with code list)."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: county name versus county code (with code list)."
 
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-kod"
 fields = { "label" = "Landstingsvalkrets (kod)" }
-evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Constituency code versus constituency name."
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Opdefs: constituency number versus constituency name."
 
 [[statement]]
 kind = "set"
 subject = "var:landstingsvalkrets-namn"
 fields = { "label" = "Landstingsvalkrets (namn)" }
-evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Constituency code versus constituency name."
+evidence = "#2102 same-label cluster 'Landstingsvalkrets' (2 variables): judged different meaning, high confidence; Opdefs: constituency number versus constituency name."
 
 [[statement]]
 kind = "set"
 subject = "var:lanskod-nominering-kommunfullmaktige"
 fields = { "label" = "Län (kod)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; County name versus county code (with code list)."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; Opdefs: county name versus county code (with code list)."
 
 [[statement]]
 kind = "set"
 subject = "var:parti-kort"
 fields = { "label" = "Parti (kortnamn)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name, and a second code list with different labels (column Ripartikod, riksdag party list)."
 
 [[statement]]
 kind = "set"
 subject = "var:partikod"
 fields = { "label" = "Parti (kod)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name, and a second code list with different labels (column Ripartikod, riksdag party list)."
 
 [[statement]]
 kind = "set"
 subject = "var:partinamn"
 fields = { "label" = "Parti (namn)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name, and a second code list with different labels (column Ripartikod, riksdag party list)."
 
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-kod"
 fields = { "label" = "Riksdagsvalkrets (kod)" }
-evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code versus name; the 1998-1999 column repeats the code list and gets the code label."
 
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-namn"
 fields = { "label" = "Riksdagsvalkrets (namn)" }
-evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code versus name; the 1998-1999 column repeats the code list and gets the code label."
 
 [[statement]]
 kind = "set"
 subject = "var:riksdagsvalkrets-riksdagsvalkrets"
-fields = { "label" = "Riksdagsvalkrets (kod, 1998-1999)" }
-evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Constituency code versus name; the 1998-1999 riksdagsvalkrets column repeats the code list and may duplicate the code column."
+fields = { "label" = "Riksdagsvalkrets (kod)" }
+evidence = "#2102 same-label cluster 'Riksdagsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code versus name; the 1998-1999 column repeats the code list and gets the code label."
 
 [[statement]]
 kind = "set"
 subject = "var:ripartikod"
 fields = { "label" = "Parti (riksdagspartikod)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name and a second (riksdag) party code list with different labels."
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name, and a second code list with different labels (column Ripartikod, riksdag party list)."

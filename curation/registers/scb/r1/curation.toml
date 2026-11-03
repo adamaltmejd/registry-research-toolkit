@@ -1636,39 +1636,3 @@ kind = "set"
 subject = "set:verksamhetsstatus"
 fields = { "label" = "Verksamhetsstatus" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "var:pgata"
-fields = { "label" = "Gatudelen av postadress (P-adress)" }
-evidence = "#2102 same-label cluster 'Gatudelen av postadress' (2 variables): judged different meaning, medium confidence; Gata (since 1999) and PGata (since 2019) are concurrent in the same tables; the P prefix is read as postadress."
-
-[[statement]]
-kind = "set"
-subject = "var:pgatulittera"
-fields = { "label" = "Gatulittera till postadress. (P-adress)" }
-evidence = "#2102 same-label cluster 'Gatulittera till postadress.' (2 variables): judged different meaning, medium confidence; Gatulittera and PGatulittera are concurrent in juridiska-enheter; the P prefix is read as postadress."
-
-[[statement]]
-kind = "set"
-subject = "var:pgatunr"
-fields = { "label" = "Gatunummer till postadress (P-adress)" }
-evidence = "#2102 same-label cluster 'Gatunummer till postadress' (2 variables): judged different meaning, medium confidence; GatuNr and PGatuNr are concurrent in the same tables; the P prefix is read as postadress."
-
-[[statement]]
-kind = "set"
-subject = "var:pgaturest"
-fields = { "label" = "Ytterligare specificering av enhetens postadress gatudel (P-adress)" }
-evidence = "#2102 same-label cluster 'Ytterligare specificering av enhetens postadress gatudel' (2 variables): judged different meaning, medium confidence; GatuRest and PGaturest are concurrent in the same tables; the P prefix is read as postadress."
-
-[[statement]]
-kind = "set"
-subject = "var:ppostnr"
-fields = { "label" = "Postnummer (P-adress)" }
-evidence = "#2102 same-label cluster 'Postnummer' (2 variables): judged different meaning, medium confidence; PostNr and PPostNr are concurrent in the same tables; the P prefix is read as postadress."
-
-[[statement]]
-kind = "set"
-subject = "var:ppostort"
-fields = { "label" = "Postort (P-adress)" }
-evidence = "#2102 same-label cluster 'Postort' (2 variables): judged different meaning, medium confidence; PostOrt and PPostOrt are concurrent in the same tables; the P prefix is read as postadress."

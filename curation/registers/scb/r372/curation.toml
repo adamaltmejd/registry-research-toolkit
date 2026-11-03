@@ -1451,240 +1451,318 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
+subject = "var:a-region"
+fields = { "label" = "A-region (enhetens egen)" }
+evidence = "#2102 same-label cluster 'A-region' (2 variables): judged different meaning, high confidence; Opdefs: ARegion is derived from the unit's own kommunkod, HAEARegion from the main workplace's kommunkod."
+
+[[statement]]
+kind = "set"
+subject = "var:adress"
+fields = { "label" = "Adress (enhetens egen)" }
+evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, high confidence; Opdefs: Adress is the unit's own postal street address, HAEAdress that of the main workplace."
+
+[[statement]]
+kind = "set"
 subject = "var:avregdatktid"
-fields = { "label" = "Källtid, avregistreringsdatum" }
-evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Four different source-date fields: start, end, registration and deregistration."
+fields = { "label" = "Källtid (avregistrering av juridisk enhet)" }
+evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Opdefs describe four different dates: deregistration, registration, end (inactive) and start (active)."
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress"
+fields = { "label" = "Belägenhetsadress (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Belägenhetsadress' (2 variables): judged different meaning, high confidence; Opdefs: BAdress is the workplace's address (arbetsställeenheter), HAEBAdress the address of the main workplace (juridiska enheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:belagenhetsadress-haebadress"
-fields = { "label" = "Belägenhetsadress, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Belägenhetsadress' (2 variables): judged different meaning, medium confidence; BAdress is the workplace's own address; HAEBAdress is the legal unit's main workplace address."
+fields = { "label" = "Belägenhetsadress (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Belägenhetsadress' (2 variables): judged different meaning, high confidence; Opdefs: BAdress is the workplace's address (arbetsställeenheter), HAEBAdress the address of the main workplace (juridiska enheter)."
+
+[[statement]]
+kind = "set"
+subject = "var:belagenhetsadress-postnr"
+fields = { "label" = "Belägenhetsadress, postnummer (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Belägenhetsadress, postnummer' (2 variables): judged different meaning, high confidence; Opdef: HAEBPostNr applies to the main workplace; BPostNr is in arbetsstalleenheter."
 
 [[statement]]
 kind = "set"
 subject = "var:belagenhetsadress-postnummer-haebpostnr"
-fields = { "label" = "Belägenhetsadress, postnummer, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Belägenhetsadress, postnummer' (2 variables): judged different meaning, medium confidence; BPostNr is the workplace's own; HAEBPostNr is the main workplace's."
+fields = { "label" = "Belägenhetsadress, postnummer (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Belägenhetsadress, postnummer' (2 variables): judged different meaning, high confidence; Opdef: HAEBPostNr applies to the main workplace; BPostNr is in arbetsstalleenheter."
+
+[[statement]]
+kind = "set"
+subject = "var:benamning"
+fields = { "label" = "Benämning (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Benämning' (2 variables): judged different meaning, high confidence; Opdefs: Ben is the workplace's name (arbetsstalleenheter), HAEBen the name of the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:benamning-haeben"
-fields = { "label" = "Benämning, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Benämning' (2 variables): judged different meaning, medium confidence; Ben is the workplace's own name; HAEBen is the main workplace's."
+fields = { "label" = "Benämning (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Benämning' (2 variables): judged different meaning, high confidence; Opdefs: Ben is the workplace's name (arbetsstalleenheter), HAEBen the name of the main workplace."
+
+[[statement]]
+kind = "set"
+subject = "var:besokspostort"
+fields = { "label" = "Besökspostort (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Besökspostort' (2 variables): judged different meaning, high confidence; Opdef: HAEBPostOrt applies to the main workplace; BPostOrt is in arbetsstalleenheter."
 
 [[statement]]
 kind = "set"
 subject = "var:besokspostort-haebpostort"
-fields = { "label" = "Besökspostort, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Besökspostort' (2 variables): judged different meaning, medium confidence; BPostOrt is the workplace's own; HAEBPostOrt is the main workplace's."
+fields = { "label" = "Besökspostort (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Besökspostort' (2 variables): judged different meaning, high confidence; Opdef: HAEBPostOrt applies to the main workplace; BPostOrt is in arbetsstalleenheter."
+
+[[statement]]
+kind = "set"
+subject = "var:c-o-adress"
+fields = { "label" = "C/O-adress (enhetens egen)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (2 variables): judged different meaning, high confidence; Opdefs: COAdress is the c/o address of the legal unit's postal address, HAECOAdress applies to the main workplace."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "label" = "CFAR-Nummer (arbetsställe)" }
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, high confidence; Opdef: HAECfarNr applies to the legal unit's main workplace; CfarNr is in arbetsstalleenheter."
 
 [[statement]]
 kind = "set"
 subject = "var:cfar-nummer-haecfarnr"
-fields = { "label" = "CFAR-Nummer, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, medium confidence; CfarNr identifies the workplace itself; HAECfarNr identifies the legal unit's main workplace."
+fields = { "label" = "CFAR-Nummer (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, high confidence; Opdef: HAECfarNr applies to the legal unit's main workplace; CfarNr is in arbetsstalleenheter."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr1"
-fields = { "label" = "Landområde: handel med Norden" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Norden)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr2"
-fields = { "label" = "Landområde: handel med EU-länder utanför Norden" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (EU-länder utanför Norden)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr3"
-fields = { "label" = "Landområde: handel med övriga Europa" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (övriga Europa)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr4"
-fields = { "label" = "Landområde: handel med Asien" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Asien)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr5"
-fields = { "label" = "Landområde: handel med Fjärran östern" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Fjärran östern)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr6"
-fields = { "label" = "Landområde: handel med Nord- och Centralamerika" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Nord- och Centralamerika)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr7"
-fields = { "label" = "Landområde: handel med Sydamerika" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Sydamerika)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
 
 [[statement]]
 kind = "set"
 subject = "var:eilandomr8"
-fields = { "label" = "Landområde: handel med Afrika" }
-evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Eight trade flags, one per country area, named in each description."
+fields = { "label" = "Landområde (Afrika)" }
+evidence = "#2102 same-label cluster 'Landområde' (8 variables): judged different meaning, high confidence; Descriptions name eight different country areas, one trade flag each."
+
+[[statement]]
+kind = "set"
+subject = "var:epost"
+fields = { "label" = "Elektronisk postadress (juridisk enhet)" }
+evidence = "#2102 same-label cluster 'Elektronisk postadress' (2 variables): judged different meaning, high confidence; Opdefs: Epost is the legal unit's address, HAEEpost applies to the main workplace."
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "label" = "Faxnummer (juridisk enhet)" }
+evidence = "#2102 same-label cluster 'Faxnummer' (2 variables): judged different meaning, high confidence; Opdefs and descriptions: Fax is the legal unit's number, HAEFax applies to the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:haeadress"
-fields = { "label" = "Adress, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, high confidence; HAEAdress is the main workplace's address; Adress is the unit's own."
+fields = { "label" = "Adress (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, high confidence; Opdefs: Adress is the unit's own postal street address, HAEAdress that of the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:haearegion"
-fields = { "label" = "A-region, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'A-region' (2 variables): judged different meaning, high confidence; HAE prefix marks the main workplace (huvudarbetsstället), as in HAEFax's description; ARegion is the unit's own."
+fields = { "label" = "A-region (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'A-region' (2 variables): judged different meaning, high confidence; Opdefs: ARegion is derived from the unit's own kommunkod, HAEARegion from the main workplace's kommunkod."
 
 [[statement]]
 kind = "set"
 subject = "var:haecoadress"
-fields = { "label" = "C/O-adress, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'C/O-adress' (2 variables): judged different meaning, high confidence; HAECOAdress is the main workplace's c/o address; COAdress is the unit's own."
+fields = { "label" = "C/O-adress (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'C/O-adress' (2 variables): judged different meaning, high confidence; Opdefs: COAdress is the c/o address of the legal unit's postal address, HAECOAdress applies to the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:haeepost"
-fields = { "label" = "Elektronisk postadress, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Elektronisk postadress' (2 variables): judged different meaning, high confidence; HAEEpost is the main workplace's; Epost is the unit's own."
+fields = { "label" = "Elektronisk postadress (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Elektronisk postadress' (2 variables): judged different meaning, high confidence; Opdefs: Epost is the legal unit's address, HAEEpost applies to the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:haefax"
-fields = { "label" = "Faxnummer, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Faxnummer' (2 variables): judged different meaning, high confidence; Descriptions state Fax refers to the legal unit and HAEFax to the main workplace."
+fields = { "label" = "Faxnummer (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Faxnummer' (2 variables): judged different meaning, high confidence; Opdefs and descriptions: Fax is the legal unit's number, HAEFax applies to the main workplace."
 
 [[statement]]
 kind = "set"
 subject = "var:haepostnr"
-fields = { "label" = "Postnummer, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Postnummer' (2 variables): judged different meaning, high confidence; HAEPostNr is the main workplace's postal code; PostNr is the unit's own."
+fields = { "label" = "Postnummer (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Postnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAEPostNr applies to the main workplace, PostNr is the postnummer of the unit's own postadress."
 
 [[statement]]
 kind = "set"
 subject = "var:haepostort"
-fields = { "label" = "Postort, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Postort' (2 variables): judged different meaning, high confidence; HAEPostOrt is the main workplace's postal town; PostOrt is the unit's own."
+fields = { "label" = "Postort (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Postort' (2 variables): judged different meaning, high confidence; Opdefs: HAEPostOrt applies to the main workplace, PostOrt is the unit's own postanstalt."
 
 [[statement]]
 kind = "set"
 subject = "var:haetel"
-fields = { "label" = "Telefonnummer, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; HAETel is the main workplace's number; Tel is the unit's own."
+fields = { "label" = "Telefonnummer (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAETel is the main workplace's number, Tel is the legal unit's number."
 
 [[statement]]
 kind = "set"
 subject = "var:jenamnkoncmod"
-fields = { "label" = "Namn, koncernmoder" }
-evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, high confidence; JENamn and Namn are the legal unit's name; JENamnKoncMod and NamnKoncMod are the group parent's name."
+fields = { "label" = "Namn, juridiska enheten (koncernmoder)" }
+evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, medium confidence; Opdefs: JENamn and Namn are the legal unit's name (same variable in the workplace and legal-unit tables), JENamnKoncMod and NamnKoncMod the group parent's legal name (likewise); the two pairs share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:kommun-for-arbetsstalle-haekommun"
-fields = { "label" = "Kommun för arbetsställe, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): judged different meaning, medium confidence; Kommun is the workplace's municipality; HAEKommun is the main workplace's."
+fields = { "label" = "Kommun för arbetsställe (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): judged different meaning, high confidence; Opdef: HAEKommun applies to the main workplace; Kommun is the workplace's own (arbetsstalleenheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:lan-for-arbetsstallet-haelan"
-fields = { "label" = "Län för arbetsstället, huvudarbetsställe" }
-evidence = "#2102 same-label cluster 'Län för arbetsstället' (2 variables): judged different meaning, medium confidence; Lan is the workplace's county; HAELan is the main workplace's."
+fields = { "label" = "Län för arbetsstället (huvudarbetsställe)" }
+evidence = "#2102 same-label cluster 'Län för arbetsstället' (2 variables): judged different meaning, high confidence; Opdef: HAELan applies to the main workplace; Lan is the workplace's own (arbetsstalleenheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:namnkoncmod"
-fields = { "label" = "Namn, koncernmoder" }
-evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, high confidence; JENamn and Namn are the legal unit's name; JENamnKoncMod and NamnKoncMod are the group parent's name."
+fields = { "label" = "Namn, juridiska enheten (koncernmoder)" }
+evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, medium confidence; Opdefs: JENamn and Namn are the legal unit's name (same variable in the workplace and legal-unit tables), JENamnKoncMod and NamnKoncMod the group parent's legal name (likewise); the two pairs share labels."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-andra-avdelning"
 fields = { "label" = "Näringsgren, andra (avdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren, andra' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two classification levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, andra' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng2Avd holds the section letters, Ng2 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-andra-detaljgrupp"
 fields = { "label" = "Näringsgren, andra (detaljgrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren, andra' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two classification levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, andra' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng2Avd holds the section letters, Ng2 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-femte-avdelning"
 fields = { "label" = "Näringsgren, femte (avdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren, femte' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, femte' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng5Avd holds the section letters, Ng5 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-femte-detaljgrupp"
 fields = { "label" = "Näringsgren, femte (detaljgrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren, femte' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, femte' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng5Avd holds the section letters, Ng5 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-fjarde-avdelning"
 fields = { "label" = "Näringsgren, fjärde (avdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren, fjärde' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, fjärde' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng4Avd holds the section letters, Ng4 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-fjarde-detaljgrupp"
 fields = { "label" = "Näringsgren, fjärde (detaljgrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren, fjärde' (2 variables): judged different meaning, high confidence; Same ranked näringsgren at two levels: avdelning (letters) vs detaljgrupp (5-digit)."
+evidence = "#2102 same-label cluster 'Näringsgren, fjärde' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng4Avd holds the section letters, Ng4 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvudsaklig-avdelning"
 fields = { "label" = "Näringsgren, huvudsaklig (avdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Same main näringsgren at three levels: avdelning, detaljgrupp and underavdelning (to 2008)."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Opdefs and value sets: Ng1Avd (avdelning), Ng1 (detaljgrupp) and Ng1UAvd (underavdelning, to 2008)."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvudsaklig-detaljgrupp"
 fields = { "label" = "Näringsgren, huvudsaklig (detaljgrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Same main näringsgren at three levels: avdelning, detaljgrupp and underavdelning (to 2008)."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Opdefs and value sets: Ng1Avd (avdelning), Ng1 (detaljgrupp) and Ng1UAvd (underavdelning, to 2008)."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvudsaklig-underavdelning"
 fields = { "label" = "Näringsgren, huvudsaklig (underavdelning)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Same main näringsgren at three levels: avdelning, detaljgrupp and underavdelning (to 2008)."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (3 variables): judged different meaning, high confidence; Opdefs and value sets: Ng1Avd (avdelning), Ng1 (detaljgrupp) and Ng1UAvd (underavdelning, to 2008)."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-tredje-avdelning"
-fields = { "label" = "Näringsgren, tredje, avdelning" }
-evidence = "#2102 same-label cluster 'Näringsgren, tredje' (2 variables): judged different meaning, high confidence; Ng3Avd holds the section letters (A, B, C ...), Ng3 the detailed 5-digit codes; concurrent in the same tables."
+fields = { "label" = "Näringsgren, tredje (avdelning)" }
+evidence = "#2102 same-label cluster 'Näringsgren, tredje' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng3Avd holds the section letters, Ng3 the detailed 5-digit codes."
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-tredje-detaljgrupp"
-fields = { "label" = "Näringsgren, tredje, detaljgrupp" }
-evidence = "#2102 same-label cluster 'Näringsgren, tredje' (2 variables): judged different meaning, high confidence; Ng3Avd holds the section letters (A, B, C ...), Ng3 the detailed 5-digit codes; concurrent in the same tables."
+fields = { "label" = "Näringsgren, tredje (detaljgrupp)" }
+evidence = "#2102 same-label cluster 'Näringsgren, tredje' (2 variables): judged different meaning, high confidence; Opdefs and value sets: Ng3Avd holds the section letters, Ng3 the detailed 5-digit codes."
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "label" = "Postnummer (enhetens egen)" }
+evidence = "#2102 same-label cluster 'Postnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAEPostNr applies to the main workplace, PostNr is the postnummer of the unit's own postadress."
+
+[[statement]]
+kind = "set"
+subject = "var:postort"
+fields = { "label" = "Postort (enhetens egen)" }
+evidence = "#2102 same-label cluster 'Postort' (2 variables): judged different meaning, high confidence; Opdefs: HAEPostOrt applies to the main workplace, PostOrt is the unit's own postanstalt."
 
 [[statement]]
 kind = "set"
 subject = "var:regdatktid"
-fields = { "label" = "Källtid, registreringsdatum" }
-evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Four different source-date fields: start, end, registration and deregistration."
+fields = { "label" = "Källtid (registrering av juridisk enhet)" }
+evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Opdefs describe four different dates: deregistration, registration, end (inactive) and start (active)."
 
 [[statement]]
 kind = "set"
 subject = "var:slutdatktid"
-fields = { "label" = "Källtid, slutdatum" }
-evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Four different source-date fields: start, end, registration and deregistration."
+fields = { "label" = "Källtid (slutdatum, företaget blev inaktivt)" }
+evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Opdefs describe four different dates: deregistration, registration, end (inactive) and start (active)."
 
 [[statement]]
 kind = "set"
 subject = "var:startdatktid"
-fields = { "label" = "Källtid, startdatum" }
-evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Four different source-date fields: start, end, registration and deregistration."
+fields = { "label" = "Källtid (startdatum, företaget blev aktivt)" }
+evidence = "#2102 same-label cluster 'Källtid' (4 variables): judged different meaning, high confidence; Opdefs describe four different dates: deregistration, registration, end (inactive) and start (active)."
+
+[[statement]]
+kind = "set"
+subject = "var:tel"
+fields = { "label" = "Telefonnummer (juridisk enhet)" }
+evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged different meaning, high confidence; Opdefs: HAETel is the main workplace's number, Tel is the legal unit's number."

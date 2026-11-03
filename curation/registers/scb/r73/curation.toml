@@ -1983,142 +1983,196 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:antal-trapphus-per-byggnadsprojekt"
 fields = { "label" = "Antal trapphus (per byggnadsprojekt)" }
-evidence = "#2102 same-label cluster 'Antal trapphus' (2 variables): judged different meaning, medium confidence; B_AntalTrapphus is named per building project in the pid, AntTrapphus is the plain column (the B_ columns are project level, the plain ones per house type per the Uppgiften avser respektive hustyp descriptions)."
+evidence = "#2102 same-label cluster 'Antal trapphus' (2 variables): judged different meaning, high confidence; Opdefs: B_AntalTrapphus is derived per byggnadsprojekt, AntTrapphus is the original variable per hustyp."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-vaningsplan-flerbostadshus"
-fields = { "label" = "Antal våningsplan (flerbostadshus)" }
-evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Three concurrent columns for flerbostadshus (AntVaningsplanFH), the project with most apartments (B_FAntVaningsplan) and småhus with a coded value set (VaningsplanSmahus)."
+fields = { "label" = "Antal våningsplan (flerbostadshus, per hustyp)" }
+evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Opdefs: AntVaningsplanFH is per hustyp for flerbostadshus, B_FAntVaningsplan the most common value in the project, VaningsplanSmahus per hustyp for gruppbyggda småhus with a coded value set."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-vaningsplan-flest-lagenheter-projekt"
-fields = { "label" = "Antal våningsplan (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Three concurrent columns for flerbostadshus (AntVaningsplanFH), the project with most apartments (B_FAntVaningsplan) and småhus with a coded value set (VaningsplanSmahus)."
+fields = { "label" = "Antal våningsplan (mest förekommande i projektet)" }
+evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Opdefs: AntVaningsplanFH is per hustyp for flerbostadshus, B_FAntVaningsplan the most common value in the project, VaningsplanSmahus per hustyp for gruppbyggda småhus with a coded value set."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-vaningsplan-smahus"
-fields = { "label" = "Antal våningsplan (småhus)" }
-evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Three concurrent columns for flerbostadshus (AntVaningsplanFH), the project with most apartments (B_FAntVaningsplan) and småhus with a coded value set (VaningsplanSmahus)."
+fields = { "label" = "Antal våningsplan (gruppbyggda småhus, per hustyp)" }
+evidence = "#2102 same-label cluster 'Antal våningsplan' (3 variables): judged different meaning, high confidence; Opdefs: AntVaningsplanFH is per hustyp for flerbostadshus, B_FAntVaningsplan the most common value in the project, VaningsplanSmahus per hustyp for gruppbyggda småhus with a coded value set."
+
+[[statement]]
+kind = "set"
+subject = "var:anttrapphus"
+fields = { "label" = "Antal trapphus (per hustyp)" }
+evidence = "#2102 same-label cluster 'Antal trapphus' (2 variables): judged different meaning, high confidence; Opdefs: B_AntalTrapphus is derived per byggnadsprojekt, AntTrapphus is the original variable per hustyp."
 
 [[statement]]
 kind = "set"
 subject = "var:b-fluftbehandling"
-fields = { "label" = "Luftbehandlingsinstallation (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Luftbehandlingsinstallation' (2 variables): judged different meaning, medium confidence; Luftbehandling is the per house type column and B_FLuftbehandling the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Luftbehandlingsinstallation (härledd)" }
+evidence = "#2102 same-label cluster 'Luftbehandlingsinstallation' (2 variables): judged different meaning, medium confidence; Opdefs separate the derived B_FLuftbehandling from the original Luftbehandling; identical value sets."
 
 [[statement]]
 kind = "set"
 subject = "var:b-fuppvarmning"
-fields = { "label" = "Huvudsakligt uppvärmningssystem (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Huvudsakligt uppvärmningssystem' (2 variables): judged different meaning, medium confidence; Uppvarmning is the per house type column and B_FUppvarmning the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Huvudsakligt uppvärmningssystem (härledd)" }
+evidence = "#2102 same-label cluster 'Huvudsakligt uppvärmningssystem' (2 variables): judged different meaning, medium confidence; Opdefs separate the derived B_FUppvarmning from the original Uppvarmning; same value set and same unit text (för hustypen)."
 
 [[statement]]
 kind = "set"
 subject = "var:b-fvarmeanlaggning"
-fields = { "label" = "Värmeanläggning (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Värmeanläggning' (2 variables): judged different meaning, medium confidence; Varmeanlaggning is the per house type column and B_FVarmeanlaggning the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Värmeanläggning (härledd)" }
+evidence = "#2102 same-label cluster 'Värmeanläggning' (2 variables): judged different meaning, medium confidence; Opdefs separate the derived B_FVarmeanlaggning from the original Varmeanlaggning; identical value sets."
+
+[[statement]]
+kind = "set"
+subject = "var:energi"
+fields = { "label" = "Energislag (per hustyp)" }
+evidence = "#2102 same-label cluster 'Energislag' (2 variables): judged different meaning, high confidence; Opdefs: Energi is per hustyp, B_FEnergi is the most common energy source in the project (the one with most lägenheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:energikomplement"
 fields = { "label" = "Kompletterande energislag (förekomst)" }
-evidence = "#2102 same-label cluster 'Kompletterande energislag' (2 variables): judged different meaning, high confidence; EnergiKomplement is a Nej/Ja flag; EnergiKomplementText is a text column without value set."
+evidence = "#2102 same-label cluster 'Kompletterande energislag' (2 variables): judged different meaning, high confidence; EnergiKomplement is a Nej/Ja flag; EnergiKomplementText holds the energy source in clear text (opdef 'I klartext')."
 
 [[statement]]
 kind = "set"
 subject = "var:energikomplementtext"
-fields = { "label" = "Kompletterande energislag (fritext)" }
-evidence = "#2102 same-label cluster 'Kompletterande energislag' (2 variables): judged different meaning, high confidence; EnergiKomplement is a Nej/Ja flag; EnergiKomplementText is a text column without value set."
+fields = { "label" = "Kompletterande energislag (i klartext)" }
+evidence = "#2102 same-label cluster 'Kompletterande energislag' (2 variables): judged different meaning, high confidence; EnergiKomplement is a Nej/Ja flag; EnergiKomplementText holds the energy source in clear text (opdef 'I klartext')."
 
 [[statement]]
 kind = "set"
 subject = "var:energislag-varmeanlaggning-flest-lagenheter-projekt"
-fields = { "label" = "Energislag (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Energislag' (2 variables): judged different meaning, medium confidence; Energi is the per house type column and B_FEnergi the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Energislag (mest förekommande i projektet)" }
+evidence = "#2102 same-label cluster 'Energislag' (2 variables): judged different meaning, high confidence; Opdefs: Energi is per hustyp, B_FEnergi is the most common energy source in the project (the one with most lägenheter)."
+
+[[statement]]
+kind = "set"
+subject = "var:fasadbekladnad"
+fields = { "label" = "Fasadbeklädnad (per hustyp)" }
+evidence = "#2102 same-label cluster 'Fasadbeklädnad' (2 variables): judged different meaning, high confidence; Opdefs: Fasadbekladnad is per hustyp, B_FFasadbekladnad is the most common facade cladding in the project (the one with most lägenheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:fasadbekladnad-flest-lagenheter-projekt"
-fields = { "label" = "Fasadbeklädnad (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Fasadbeklädnad' (2 variables): judged different meaning, medium confidence; Fasadbekladnad is the per house type column and B_FFasadbekladnad the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Fasadbeklädnad (mest förekommande i projektet)" }
+evidence = "#2102 same-label cluster 'Fasadbeklädnad' (2 variables): judged different meaning, high confidence; Opdefs: Fasadbekladnad is per hustyp, B_FFasadbekladnad is the most common facade cladding in the project (the one with most lägenheter)."
 
 [[statement]]
 kind = "set"
 subject = "var:hiss-finns-finns-ej-flerbostadshusprojekt"
-fields = { "label" = "Hiss finns/finns ej (flerbostadshusprojekt)" }
-evidence = "#2102 same-label cluster 'Hiss finns/finns ej' (2 variables): judged different meaning, medium confidence; Hiss is a Nej/Ja flag while B_FHiss has project-level codes (finns i projektet) and is named for flerbostadshusprojekt in the pid."
+fields = { "label" = "Hiss finns/finns ej (i flerbostadshusprojektet)" }
+evidence = "#2102 same-label cluster 'Hiss finns/finns ej' (2 variables): judged different meaning, high confidence; Hiss is the original variable (only for flerbostadshus); B_FHiss is derived and computed only for flerbostadshusprojekt, with project-level codes."
+
+[[statement]]
+kind = "set"
+subject = "var:husblankettnr"
+fields = { "label" = "Husblankettnummer (BYS-systemvariabel)" }
+evidence = "#2102 same-label cluster 'Husblankettnummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: HusblankettNr is a BYS system variable, HusblankettNrEnkat is the number from the SIV form."
+
+[[statement]]
+kind = "set"
+subject = "var:husblankettnrenkat"
+fields = { "label" = "Husblankettnummer (från SIV-blankett)" }
+evidence = "#2102 same-label cluster 'Husblankettnummer' (2 variables): judged different meaning, medium confidence; Opdefs differ: HusblankettNr is a BYS system variable, HusblankettNrEnkat is the number from the SIV form."
+
+[[statement]]
+kind = "set"
+subject = "var:husform"
+fields = { "label" = "Husform (per delobjekt)" }
+evidence = "#2102 same-label cluster 'Husform' (2 variables): judged different meaning, high confidence; Husform is the original variable per delobjekt; B_FHusform is derived for the whole object from the husform with most apartments."
 
 [[statement]]
 kind = "set"
 subject = "var:husform-flest-lagenheter-projekt"
-fields = { "label" = "Husform (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Husform' (2 variables): judged different meaning, medium confidence; Husform is the per house type column and B_FHusform the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Husform (den med flest lägenheter i projektet)" }
+evidence = "#2102 same-label cluster 'Husform' (2 variables): judged different meaning, high confidence; Husform is the original variable per delobjekt; B_FHusform is derived for the whole object from the husform with most apartments."
 
 [[statement]]
 kind = "set"
 subject = "var:hustyp-flest-lagenheter-projekt"
-fields = { "label" = "Hustyp (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Hustyp' (3 variables): judged different meaning, medium confidence; HusTyp and B_FHustyp have the same two codes; HusTypProjekt adds a third code (both småhus and flerbostadshus), i.e. a project-level type."
+fields = { "label" = "Hustyp (den med flest lägenheter i projektet)" }
+evidence = "#2102 same-label cluster 'Hustyp' (3 variables): judged different meaning, medium confidence; B_FHustyp is derived (hustyp with most apartments in the project); HusTypProjekt has an extra code 'Både småhus och flerbostadshus' for mixed projects; HusTyp has only two codes."
 
 [[statement]]
 kind = "set"
 subject = "var:hustypprojekt"
-fields = { "label" = "Hustyp (projektets hustyp, även både småhus och flerbostadshus)" }
-evidence = "#2102 same-label cluster 'Hustyp' (3 variables): judged different meaning, medium confidence; HusTyp and B_FHustyp have the same two codes; HusTypProjekt adds a third code (both småhus and flerbostadshus), i.e. a project-level type."
+fields = { "label" = "Hustyp (projektets, även både småhus och flerbostadshus)" }
+evidence = "#2102 same-label cluster 'Hustyp' (3 variables): judged different meaning, medium confidence; B_FHustyp is derived (hustyp with most apartments in the project); HusTypProjekt has an extra code 'Både småhus och flerbostadshus' for mixed projects; HusTyp has only two codes."
 
 [[statement]]
 kind = "set"
 subject = "var:inredd-vind-flesta-lagenheter-smahusprojekt"
 fields = { "label" = "Förekomst av inredd vind (de flesta lägenheterna i småhusprojektet)" }
-evidence = "#2102 same-label cluster 'Förekomst av inredd vind' (2 variables): judged different meaning, high confidence; InreddVind is a Nej/Ja flag; B_FInreddVind has de-flesta-lägenheterna codes for the small-house project, a different unit and coding."
+evidence = "#2102 same-label cluster 'Förekomst av inredd vind' (2 variables): judged different meaning, high confidence; InreddVind is the original Nej/Ja flag; B_FInreddVind is derived, set to 1 when most apartments in a småhus project have inredd vind."
 
 [[statement]]
 kind = "set"
 subject = "var:inredningsbar-vind-flesta-lagenheter-smahusprojekt"
 fields = { "label" = "Förekomst av inredningsbar vind (de flesta lägenheterna i småhusprojektet)" }
-evidence = "#2102 same-label cluster 'Förekomst av inredningsbar vind' (2 variables): judged different meaning, high confidence; InredningsbarVind is a Nej/Ja flag; B_FInredningsbarVind has de-flesta-lägenheterna codes for the small-house project, a different unit and coding."
+evidence = "#2102 same-label cluster 'Förekomst av inredningsbar vind' (2 variables): judged different meaning, high confidence; InredningsbarVind is the original Nej/Ja flag; B_FInredningsbarVind is derived, set to 1 when most apartments in a småhus project have inredningsbar vind."
 
 [[statement]]
 kind = "set"
 subject = "var:ljudklass-a-flesta-lagenheter-projekt"
 fields = { "label" = "Förekomst av ljudklass A (de flesta lägenheterna i projektet)" }
-evidence = "#2102 same-label cluster 'Förekomst av ljudklass A' (2 variables): judged different meaning, high confidence; LjudKlassA is a Nej/Ja flag; B_FLjudklassA has de-flesta-lägenheterna codes for the project, a different unit and coding."
+evidence = "#2102 same-label cluster 'Förekomst av ljudklass A' (2 variables): judged different meaning, high confidence; LjudKlassA is the original Nej/Ja flag; B_FLjudklassA is derived, set to 1 when most apartments in the project have ljudklass A."
 
 [[statement]]
 kind = "set"
 subject = "var:ljudklass-b-flesta-lagenheter-projekt"
-fields = { "label" = "Förekomst av ljudklass B, de flesta lägenheterna i projektet" }
-evidence = "#2102 same-label cluster 'Förekomst av ljudklass B' (2 variables): judged different meaning, medium confidence; Concurrent columns with different value labels: a project-level statement about most apartments versus a plain Ja/Nej."
-
-[[statement]]
-kind = "set"
-subject = "var:ljudklassb"
-fields = { "label" = "Förekomst av ljudklass B, ja/nej" }
-evidence = "#2102 same-label cluster 'Förekomst av ljudklass B' (2 variables): judged different meaning, medium confidence; Concurrent columns with different value labels: a project-level statement about most apartments versus a plain Ja/Nej."
+fields = { "label" = "Förekomst av ljudklass B (de flesta lägenheterna i projektet)" }
+evidence = "#2102 same-label cluster 'Förekomst av ljudklass B' (2 variables): judged different meaning, high confidence; LjudKlassB is the original Nej/Ja flag; B_FLjudklassB is derived, set to 1 when most apartments in the project have ljudklass B."
 
 [[statement]]
 kind = "set"
 subject = "var:stommaterial-flest-lagenheter-projekt"
-fields = { "label" = "Material i byggnadens stomme (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Material i byggnadens stomme' (2 variables): judged different meaning, medium confidence; StommeMaterial is the per house type column and B_FStommeMaterial the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Material i byggnadens stomme (det vanligaste i projektet)" }
+evidence = "#2102 same-label cluster 'Material i byggnadens stomme' (2 variables): judged different meaning, high confidence; StommeMaterial is the original per hustyp; B_FStommeMaterial is derived as the most common stommaterial in the project."
+
+[[statement]]
+kind = "set"
+subject = "var:stommematerial"
+fields = { "label" = "Material i byggnadens stomme (per hustyp)" }
+evidence = "#2102 same-label cluster 'Material i byggnadens stomme' (2 variables): judged different meaning, high confidence; StommeMaterial is the original per hustyp; B_FStommeMaterial is derived as the most common stommaterial in the project."
+
+[[statement]]
+kind = "set"
+subject = "var:takbelaggning"
+fields = { "label" = "Takbeläggning (per hustyp)" }
+evidence = "#2102 same-label cluster 'Takbeläggning' (2 variables): judged different meaning, high confidence; Takbelaggning is the original per hustyp; B_FTakbelaggning is derived as the most common takbeläggning in the project."
 
 [[statement]]
 kind = "set"
 subject = "var:takbelaggning-flest-lagenheter-projekt"
-fields = { "label" = "Takbeläggning (projektet med flest lägenheter)" }
-evidence = "#2102 same-label cluster 'Takbeläggning' (2 variables): judged different meaning, medium confidence; Takbelaggning is the per house type column and B_FTakbelaggning the project column for the flest-lägenheter project, concurrent with identical value sets."
+fields = { "label" = "Takbeläggning (den vanligaste i projektet)" }
+evidence = "#2102 same-label cluster 'Takbeläggning' (2 variables): judged different meaning, high confidence; Takbelaggning is the original per hustyp; B_FTakbelaggning is derived as the most common takbeläggning in the project."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-husblankett"
+fields = { "label" = "Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)" }
+evidence = "#2102 same-label cluster 'Tidsåtgång för husblanketterna' (2 variables): judged different meaning, high confidence; Tidsatgang is minutes for the form Uppgifter om hus; B_TidsatgangHus is the calculated total over all hustypsblanketter in the byggprojekt."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-husblanketter-totalt-minuter-byggprojekt"
+fields = { "label" = "Tidsåtgång för husblanketterna (totalt för byggprojektet)" }
+evidence = "#2102 same-label cluster 'Tidsåtgång för husblanketterna' (2 variables): judged different meaning, high confidence; Tidsatgang is minutes for the form Uppgifter om hus; B_TidsatgangHus is the calculated total over all hustypsblanketter in the byggprojekt."
 
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningkomplement"
 fields = { "label" = "Kompletterande uppvärmning (förekomst)" }
-evidence = "#2102 same-label cluster 'Kompletterande uppvärmning' (2 variables): judged different meaning, high confidence; UppvarmningKomplement is a Nej/Ja flag; UppvarmningKomplementText is a text column without value set."
+evidence = "#2102 same-label cluster 'Kompletterande uppvärmning' (2 variables): judged different meaning, high confidence; UppvarmningKomplement is a Nej/Ja flag; UppvarmningKomplementText holds the installation in clear text (opdef 'i klartext')."
 
 [[statement]]
 kind = "set"
 subject = "var:uppvarmningkomplementtext"
-fields = { "label" = "Kompletterande uppvärmning (fritext)" }
-evidence = "#2102 same-label cluster 'Kompletterande uppvärmning' (2 variables): judged different meaning, high confidence; UppvarmningKomplement is a Nej/Ja flag; UppvarmningKomplementText is a text column without value set."
+fields = { "label" = "Kompletterande uppvärmning (i klartext)" }
+evidence = "#2102 same-label cluster 'Kompletterande uppvärmning' (2 variables): judged different meaning, high confidence; UppvarmningKomplement is a Nej/Ja flag; UppvarmningKomplementText holds the installation in clear text (opdef 'i klartext')."

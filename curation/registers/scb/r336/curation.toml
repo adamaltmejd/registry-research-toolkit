@@ -2734,3 +2734,15 @@ kind = "set"
 subject = "set:utlandsstudier-inom-forskarutbildningen"
 fields = { "label" = "Utlandsstudier inom forskarutbildningen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:f17-0"
+fields = { "label" = "Handledares insats (egna intressen styrde val av avhandlingsämne)" }
+evidence = "#2102 same-label cluster 'Handledares insats' (2 variables): judged different meaning, high confidence; Opdefs: F17_01 asks to what degree the supervisor let own interests steer the thesis topic, F18_01 whether supervision was received to the desired extent."
+
+[[statement]]
+kind = "set"
+subject = "var:f18-0"
+fields = { "label" = "Handledares insats (handledning i önskad omfattning)" }
+evidence = "#2102 same-label cluster 'Handledares insats' (2 variables): judged different meaning, high confidence; Opdefs: F17_01 asks to what degree the supervisor let own interests steer the thesis topic, F18_01 whether supervision was received to the desired extent."

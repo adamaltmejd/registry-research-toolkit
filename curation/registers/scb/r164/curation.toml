@@ -2499,101 +2499,101 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "var:bostadstyp"
-fields = { "label" = "Bostadstyp (med hyresrätt/äganderätt)" }
-evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostt separates hyresrätt and äganderätt among lägenheter; Fr27 is a survey question with a coarser code list (Småhus, Lägenhet, Annat)."
+fields = { "label" = "Bostadstyp (härledd, med hyresrätt/äganderätt)" }
+evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, high confidence; bostt is derived from questions 27 and 28 with rent/ownership split; fr27 is the survey item itself (småhus or lägenhet)."
 
 [[statement]]
 kind = "set"
 subject = "var:civilstand"
 fields = { "label" = "Civilstånd (formellt civilstånd)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, medium confidence; civilst holds the formal civil status codes (G, OG, EP...); Fr18 is a survey question with gift/sammanboende vs ensamstående."
+evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, high confidence; civilst holds the formal civil status codes; fr18 is the survey item gift/sammanboende or ensamstående, asked only of a selected group."
 
 [[statement]]
 kind = "set"
 subject = "var:fr-euro-folkdel"
-fields = { "label" = "Röstat i folkomröstning (euron, deltagande)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (euron 2003, deltagande)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:fr-euro-folkrost"
-fields = { "label" = "Röstat i folkomröstning (euron, röstalternativ)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (euron 2003, röstalternativ)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:fr11xa"
 fields = { "label" = "Opinionsundersökningars påverkan vid val av parti (man påverkas)" }
-evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, medium confidence; Three survey items fr11xa/b/c with different answer wordings (man påverkas, betydelse för mig, väljarna påverkas)."
+evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, high confidence; fr11xa, fr11xb and fr11xc are three different survey items with different wording and answer options."
 
 [[statement]]
 kind = "set"
 subject = "var:fr11xb"
-fields = { "label" = "Opinionsundersökningars påverkan vid val av parti (betydelse för mig)" }
-evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, medium confidence; Three survey items fr11xa/b/c with different answer wordings (man påverkas, betydelse för mig, väljarna påverkas)."
+fields = { "label" = "Opinionsundersökningars påverkan vid val av parti (spelar roll för mig)" }
+evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, high confidence; fr11xa, fr11xb and fr11xc are three different survey items with different wording and answer options."
 
 [[statement]]
 kind = "set"
 subject = "var:fr11xc"
 fields = { "label" = "Opinionsundersökningars påverkan vid val av parti (väljarna påverkas)" }
-evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, medium confidence; Three survey items fr11xa/b/c with different answer wordings (man påverkas, betydelse för mig, väljarna påverkas)."
+evidence = "#2102 same-label cluster 'Opinionsundersökningars påverkan vid val av parti' (3 variables): judged different meaning, high confidence; fr11xa, fr11xb and fr11xc are three different survey items with different wording and answer options."
 
 [[statement]]
 kind = "set"
 subject = "var:fr18"
 fields = { "label" = "Civilstånd (enkätfråga 18, gift/sammanboende eller ensamstående)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, medium confidence; civilst holds the formal civil status codes (G, OG, EP...); Fr18 is a survey question with gift/sammanboende vs ensamstående."
+evidence = "#2102 same-label cluster 'Civilstånd' (2 variables): judged different meaning, high confidence; civilst holds the formal civil status codes; fr18 is the survey item gift/sammanboende or ensamstående, asked only of a selected group."
 
 [[statement]]
 kind = "set"
 subject = "var:fr27"
 fields = { "label" = "Bostadstyp (enkätfråga 27)" }
-evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, medium confidence; bostt separates hyresrätt and äganderätt among lägenheter; Fr27 is a survey question with a coarser code list (Småhus, Lägenhet, Annat)."
+evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged different meaning, high confidence; bostt is derived from questions 27 and 28 with rent/ownership split; fr27 is the survey item itself (småhus or lägenhet)."
 
 [[statement]]
 kind = "set"
 subject = "var:fr29"
-fields = { "label" = "Röstat i folkomröstning (euron, deltagande)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (euron 2003, deltagande)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:fr29-emu"
-fields = { "label" = "Röstat i folkomröstning (EMU, röstar för eller mot anslutning)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (EMU, hur man skulle rösta)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:fr30"
-fields = { "label" = "Röstat i folkomröstning (euron, röstalternativ)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (euron 2003, röstalternativ)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:fr31-eufolk"
-fields = { "label" = "Röstat i folkomröstning (EU-medlemskap)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Different referendums and items: fr29_emu (EMU, röstar för/mot anslutning), fr31_eufolk (EU membership), and the euro vote as a participation item (fr29, renamed fr_euro_folkdel) and a vote-option item (fr30, renamed fr_euro_folkrost)."
+fields = { "label" = "Röstat i folkomröstning (EU-medlemskap 1994, röstalternativ)" }
+evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
 kind = "set"
 subject = "var:nast-basta-parti-fraga"
-fields = { "label" = "Näst bästa parti (enkätfråga)" }
-evidence = "#2102 same-label cluster 'Näst bästa parti' (2 variables): judged different meaning, high confidence; The pids distinguish the survey question (Fr4X) from the derived variable (pnbsymp)."
+fields = { "label" = "Näst bästa parti (enkätfråga 4X)" }
+evidence = "#2102 same-label cluster 'Näst bästa parti' (2 variables): judged different meaning, high confidence; Fr4X is the survey question; pnbsymp is derived from 4x and reskont with extra codes for refusal and absence."
 
 [[statement]]
 kind = "set"
 subject = "var:nast-basta-parti-harledd"
 fields = { "label" = "Näst bästa parti (härledd)" }
-evidence = "#2102 same-label cluster 'Näst bästa parti' (2 variables): judged different meaning, high confidence; The pids distinguish the survey question (Fr4X) from the derived variable (pnbsymp)."
+evidence = "#2102 same-label cluster 'Näst bästa parti' (2 variables): judged different meaning, high confidence; Fr4X is the survey question; pnbsymp is derived from 4x and reskont with extra codes for refusal and absence."
 
 [[statement]]
 kind = "set"
 subject = "var:valdeltagande-senaste-riksdagsval-fraga"
-fields = { "label" = "Valdeltagande vid senaste riksdagsval (enkätfråga)" }
-evidence = "#2102 same-label cluster 'Valdeltagande vid senaste riksdagsval' (2 variables): judged different meaning, high confidence; The pids distinguish the survey question (Fr5) from the derived variable (valdrv_sen), with different code lists."
+fields = { "label" = "Valdeltagande vid senaste riksdagsval (enkätfråga 5)" }
+evidence = "#2102 same-label cluster 'Valdeltagande vid senaste riksdagsval' (2 variables): judged different meaning, high confidence; Fr5 is the survey question; valdrv_sen is derived from fr5, first-time voter code and reskont with extra codes."
 
 [[statement]]
 kind = "set"
 subject = "var:valdeltagande-senaste-riksdagsval-harledd"
 fields = { "label" = "Valdeltagande vid senaste riksdagsval (härledd)" }
-evidence = "#2102 same-label cluster 'Valdeltagande vid senaste riksdagsval' (2 variables): judged different meaning, high confidence; The pids distinguish the survey question (Fr5) from the derived variable (valdrv_sen), with different code lists."
+evidence = "#2102 same-label cluster 'Valdeltagande vid senaste riksdagsval' (2 variables): judged different meaning, high confidence; Fr5 is the survey question; valdrv_sen is derived from fr5, first-time voter code and reskont with extra codes."

@@ -5920,3 +5920,237 @@ kind = "set"
 subject = "set:varulager"
 fields = { "label" = "Varulager" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
+fields = { "label" = "Årets anskaffningar därav köp av bostäder (bl3332)" }
+evidence = "#2102 same-label cluster 'Årets anskaffningar därav köp av bostäder' (2 variables): judged different meaning, medium confidence; bl3332 and bl3342 are concurrent columns in the same tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-totala-fakturering"
+fields = { "label" = "Årets totala fakturering (bl0100)" }
+evidence = "#2102 same-label cluster 'Årets totala fakturering' (2 variables): judged different meaning, medium confidence; bl0100 and bl0454 are different items in different tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:arets-totala-fakturering-bl0454"
+fields = { "label" = "Årets totala fakturering (bl0454)" }
+evidence = "#2102 same-label cluster 'Årets totala fakturering' (2 variables): judged different meaning, medium confidence; bl0100 and bl0454 are different items in different tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:bl0299"
+fields = { "label" = "Övrigt FS (under nettoomsättningen)" }
+evidence = "#2102 same-label cluster 'Övrigt FS' (2 variables): judged different meaning, high confidence; Opdefs say bl0299 is Övrigt under Nettoomsättningen and bl0599 is Övrigt under Övrig verksamhet."
+
+[[statement]]
+kind = "set"
+subject = "var:bl0604"
+fields = { "label" = "Industriverksamhet (bl0604)" }
+evidence = "#2102 same-label cluster 'Industriverksamhet' (4 variables): judged different meaning, low confidence; bl0604, gem0201, har0004 and bl0201 are different items in different tables with generic opdefs; bl0201 and gem0201 may be the same item in two table families but nothing says so, so all are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bl2312"
+fields = { "label" = "Skulder till kreditinstitut, ej checkkredit (bl2312)" }
+evidence = "#2102 same-label cluster 'Skulder till kreditinstitut' (2 variables): judged different meaning, medium confidence; bl2312 and bl2321 are concurrent columns in one table with identical text; no source says how they differ, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:bl2321"
+fields = { "label" = "Skulder till kreditinstitut, ej checkkredit (bl2321)" }
+evidence = "#2102 same-label cluster 'Skulder till kreditinstitut' (2 variables): judged different meaning, medium confidence; bl2312 and bl2321 are concurrent columns in one table with identical text; no source says how they differ, so raw column codes qualify them."
+
+[[statement]]
+kind = "set"
+subject = "var:bl33"
+fields = { "label" = "Årets anskaffningar därav köp av bostäder (bl3342)" }
+evidence = "#2102 same-label cluster 'Årets anskaffningar därav köp av bostäder' (2 variables): judged different meaning, medium confidence; bl3332 and bl3342 are concurrent columns in the same tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:bl3308"
+fields = { "label" = "Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i byggnader totalt (bl3308)" }
+evidence = "#2102 same-label cluster 'Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i byggnader totalt' (2 variables): judged different meaning, low confidence; bl3308 and bl3358 are different items coexisting in one table in 1999-2000; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bl3358"
+fields = { "label" = "Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i ny-, till- o ombyggnad (bl3358)" }
+evidence = "#2102 same-label cluster 'Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i ny-, till- o ombyggnad' (2 variables): judged different meaning, low confidence; bl3358 and bl3308 are different items coexisting in one table in 1999-2000; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bostader"
+fields = { "label" = "Bostäder (bl0600)" }
+evidence = "#2102 same-label cluster 'Bostäder' (2 variables): judged different meaning, low confidence; bl0600 and bl2013 are different blankett items in different tables; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bostader-bl2013"
+fields = { "label" = "Bostäder (bl2013)" }
+evidence = "#2102 same-label cluster 'Bostäder' (2 variables): judged different meaning, low confidence; bl0600 and bl2013 are different blankett items in different tables; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvestering-i-ovrig-pagaende-nybyggnation-del-bl3308"
+fields = { "label" = "Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i ny-, till- o ombyggnad (bl3308)" }
+evidence = "#2102 same-label cluster 'Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i ny-, till- o ombyggnad' (2 variables): judged different meaning, low confidence; bl3358 and bl3308 are different items coexisting in one table in 1999-2000; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinvestering-i-ovrig-pagaende-nybyggnation-del-bl3358"
+fields = { "label" = "Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i byggnader totalt (bl3358)" }
+evidence = "#2102 same-label cluster 'Bruttoinvestering i övrig pågående nybyggnation, del av bruttoinv i byggnader totalt' (2 variables): judged different meaning, low confidence; bl3308 and bl3358 are different items coexisting in one table in 1999-2000; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-av-lager-av-produkter-i-arbete-fardiga-gem0452"
+fields = { "label" = "Förändring av lager av produkter i arbete, färdiga varor och pågående arbete för annans räkning (gem0452)" }
+evidence = "#2102 same-label cluster 'Förändring av lager av produkter i arbete, färdiga varor och pågående arbete för annans räkning' (2 variables): judged different meaning, low confidence; gem0452 and gem0106 are different items in different tables; nothing in the data says how they differ, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:forskning-och-utveckling-bl0980"
+fields = { "label" = "Forskning och utveckling (bl0980)" }
+evidence = "#2102 same-label cluster 'Forskning och utveckling' (2 variables): judged different meaning, low confidence; bl0980 and bl0282 are different items in different tables; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:forskning-utveckling"
+fields = { "label" = "Forskning och utveckling (bl0282)" }
+evidence = "#2102 same-label cluster 'Forskning och utveckling' (2 variables): judged different meaning, low confidence; bl0980 and bl0282 are different items in different tables; the shared definition and opdef are generic, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:gem0190"
+fields = { "label" = "Årets resultat (resultaträkning)" }
+evidence = "#2102 same-label cluster 'Årets resultat' (2 variables): judged different meaning, high confidence; Opdefs say gem0190 is årets resultat in resultaträkningen and gem2209 in balansräkningen."
+
+[[statement]]
+kind = "set"
+subject = "var:gem0201"
+fields = { "label" = "Industriverksamhet (gem0201)" }
+evidence = "#2102 same-label cluster 'Industriverksamhet' (4 variables): judged different meaning, low confidence; bl0604, gem0201, har0004 and bl0201 are different items in different tables with generic opdefs; bl0201 and gem0201 may be the same item in two table families but nothing says so, so all are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:gem2209"
+fields = { "label" = "Årets resultat (balansräkning)" }
+evidence = "#2102 same-label cluster 'Årets resultat' (2 variables): judged different meaning, high confidence; Opdefs say gem0190 is årets resultat in resultaträkningen and gem2209 in balansräkningen."
+
+[[statement]]
+kind = "set"
+subject = "var:har0004"
+fields = { "label" = "Industriverksamhet (har0004)" }
+evidence = "#2102 same-label cluster 'Industriverksamhet' (4 variables): judged different meaning, low confidence; bl0604, gem0201, har0004 and bl0201 are different items in different tables with generic opdefs; bl0201 and gem0201 may be the same item in two table families but nothing says so, so all are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:industriverksamhet"
+fields = { "label" = "Industriverksamhet (bl0201)" }
+evidence = "#2102 same-label cluster 'Industriverksamhet' (4 variables): judged different meaning, low confidence; bl0604, gem0201, har0004 and bl0201 are different items in different tables with generic opdefs; bl0201 and gem0201 may be the same item in two table families but nothing says so, so all are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:lagerforandring-produkter"
+fields = { "label" = "Förändring av lager av produkter i arbete, färdiga varor och pågående arbete för annans räkning (gem0106)" }
+evidence = "#2102 same-label cluster 'Förändring av lager av produkter i arbete, färdiga varor och pågående arbete för annans räkning' (2 variables): judged different meaning, low confidence; gem0452 and gem0106 are different items in different tables; nothing in the data says how they differ, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda"
+fields = { "label" = "Medelantal anställda (företagsenhet)" }
+evidence = "#2102 same-label cluster 'Medelantal anställda' (3 variables): judged different meaning, medium confidence; gem5000 is in the företagsenhet table, gem5100 in the lokal table, gem5200 in the general fs-slutdata table; opdefs are generic, so gem5200 is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda-gem5100"
+fields = { "label" = "Medelantal anställda (lokal)" }
+evidence = "#2102 same-label cluster 'Medelantal anställda' (3 variables): judged different meaning, medium confidence; gem5000 is in the företagsenhet table, gem5100 in the lokal table, gem5200 in the general fs-slutdata table; opdefs are generic, so gem5200 is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda-gem5200"
+fields = { "label" = "Medelantal anställda (gem5200)" }
+evidence = "#2102 same-label cluster 'Medelantal anställda' (3 variables): judged different meaning, medium confidence; gem5000 is in the företagsenhet table, gem5100 in the lokal table, gem5200 in the general fs-slutdata table; opdefs are generic, so gem5200 is told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "label" = "Näringsgren, 5-siffrig (Ng_5)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; NgS_2..NgS_5 are the same näringsgren at 2-5 digit level; Ng_5 is a concurrent 5-digit column in the resultaträkning table whose difference from NgS_5 is not stated, so both are qualified with the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattning-aktiekapital"
+fields = { "label" = "Nedsättning av aktiekapital (gem2714)" }
+evidence = "#2102 same-label cluster 'Nedsättning av aktiekapital' (2 variables): judged different meaning, low confidence; gem2714 and bl2738 are different items in the same table family; nothing in the data says how they differ, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:nedsattning-av-aktiekapital-bl2738"
+fields = { "label" = "Nedsättning av aktiekapital (bl2738)" }
+evidence = "#2102 same-label cluster 'Nedsättning av aktiekapital' (2 variables): judged different meaning, low confidence; gem2714 and bl2738 are different items in the same table family; nothing in the data says how they differ, so they are told apart by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ngs"
+fields = { "label" = "Näringsgren, 2-siffrig" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; NgS_2..NgS_5 are the same näringsgren at 2-5 digit level; Ng_5 is a concurrent 5-digit column in the resultaträkning table whose difference from NgS_5 is not stated, so both are qualified with the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-3-4027"
+fields = { "label" = "Näringsgren, 3-siffrig" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; NgS_2..NgS_5 are the same näringsgren at 2-5 digit level; Ng_5 is a concurrent 5-digit column in the resultaträkning table whose difference from NgS_5 is not stated, so both are qualified with the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-4-4027"
+fields = { "label" = "Näringsgren, 4-siffrig" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; NgS_2..NgS_5 are the same näringsgren at 2-5 digit level; Ng_5 is a concurrent 5-digit column in the resultaträkning table whose difference from NgS_5 is not stated, so both are qualified with the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ngs-5"
+fields = { "label" = "Näringsgren, 5-siffrig (NgS_5)" }
+evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, medium confidence; NgS_2..NgS_5 are the same näringsgren at 2-5 digit level; Ng_5 is a concurrent 5-digit column in the resultaträkning table whose difference from NgS_5 is not stated, so both are qualified with the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-fordringar"
+fields = { "label" = "Övriga fordringar (gem2121)" }
+evidence = "#2102 same-label cluster 'Övriga fordringar' (2 variables): judged different meaning, medium confidence; gem2121 and bl2123 are different items in different tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-fordringar-bl2123"
+fields = { "label" = "Övriga fordringar (bl2123)" }
+evidence = "#2102 same-label cluster 'Övriga fordringar' (2 variables): judged different meaning, medium confidence; gem2121 and bl2123 are different items in different tables with identical text; no source says how they differ."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-ovrig-verksamhet"
+fields = { "label" = "Övrigt FS (under övrig verksamhet)" }
+evidence = "#2102 same-label cluster 'Övrigt FS' (2 variables): judged different meaning, high confidence; Opdefs say bl0299 is Övrigt under Nettoomsättningen and bl0599 is Övrigt under Övrig verksamhet."
+
+[[statement]]
+kind = "set"
+subject = "var:ravaror-fornodenheter"
+fields = { "label" = "Råvaror och förnödenheter, företagsenhet" }
+evidence = "#2102 same-label cluster 'Råvaror och förnödenheter' (3 variables): judged different meaning, medium confidence; Three different item numbers in the company-unit, general and local-unit tables; only the table distinguishes them, and the general-table item has no further source text."
+
+[[statement]]
+kind = "set"
+subject = "var:ravaror-och-fornodenheter-gem0851"
+fields = { "label" = "Råvaror och förnödenheter (gem0851)" }
+evidence = "#2102 same-label cluster 'Råvaror och förnödenheter' (3 variables): judged different meaning, medium confidence; Three different item numbers in the company-unit, general and local-unit tables; only the table distinguishes them, and the general-table item has no further source text."
+
+[[statement]]
+kind = "set"
+subject = "var:ravaror-och-fornodenheter-har0006"
+fields = { "label" = "Råvaror och förnödenheter, lokal enhet" }
+evidence = "#2102 same-label cluster 'Råvaror och förnödenheter' (3 variables): judged different meaning, medium confidence; Three different item numbers in the company-unit, general and local-unit tables; only the table distinguishes them, and the general-table item has no further source text."

@@ -1094,95 +1094,149 @@ evidence = "#2100 group name: the slug read as words; kept on review."
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus-far"
-fields = { "label" = "Arbetsmarknadsstatus, far" }
-evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS_Far and BAS_Mor are the father's and the mother's labour-market status with the same coding."
+fields = { "label" = "Arbetsmarknadsstatus (biologisk far)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; Opdefs: BAS_Far refers to biologisk far, BAS_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus-mor"
-fields = { "label" = "Arbetsmarknadsstatus, mor" }
-evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS_Far and BAS_Mor are the father's and the mother's labour-market status with the same coding."
+fields = { "label" = "Arbetsmarknadsstatus (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; Opdefs: BAS_Far refers to biologisk far, BAS_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:datumatgslut"
-fields = { "label" = "Slutdatum (åtgärdens slut)" }
-evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, medium confidence; DatumAtgSlut is the end of the åtgärd, DatumAvreg the date of avregistrering."
+fields = { "label" = "Slutdatum (åtgärd)" }
+evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, high confidence; Opdefs: DatumAtgSlut is when the åtgärd ended, DatumAvreg when the person was avregistrerad from aktivitetsansvaret."
 
 [[statement]]
 kind = "set"
 subject = "var:datumavreg"
-fields = { "label" = "Slutdatum (avregistrering)" }
-evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, medium confidence; DatumAtgSlut is the end of the åtgärd, DatumAvreg the date of avregistrering."
+fields = { "label" = "Slutdatum (avregistrering från aktivitetsansvaret)" }
+evidence = "#2102 same-label cluster 'Slutdatum' (2 variables): judged different meaning, high confidence; Opdefs: DatumAtgSlut is when the åtgärd ended, DatumAvreg when the person was avregistrerad from aktivitetsansvaret."
 
 [[statement]]
 kind = "set"
 subject = "var:dispink-far"
-fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (faderns)" }
-evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (biologisk far)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Opdefs: DispInk_Far refers to biologisk far, DispInk_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:dispink-mor"
-fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (moderns)" }
-evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Delkomponent till disponibel inkomst, 2004 års definition' (2 variables): judged different meaning, high confidence; Opdefs: DispInk_Far refers to biologisk far, DispInk_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:europeisk-socioekonomisk-gruppering-biologisk-far"
 fields = { "label" = "Europeisk socioekonomisk gruppering (biologisk far)" }
-evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Biological father (Far) vs biological mother (Mor)."
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdefs: ESEG_Far refers to biologisk far, ESEG_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:europeisk-socioekonomisk-gruppering-biologisk-mor"
 fields = { "label" = "Europeisk socioekonomisk gruppering (biologisk mor)" }
-evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Biological father (Far) vs biological mother (Mor)."
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdefs: ESEG_Far refers to biologisk far, ESEG_Mor to biologisk mor."
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokford-rapporterande-kommun-halvar-eller-inte"
+fields = { "label" = "Kommun, folkbokförd i rapporterande kommun under halvåret" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom"
+fields = { "label" = "Kommun, folkbokföringskommun (Hkom)" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom30jun"
+fields = { "label" = "Kommun, folkbokföringskommun 30 juni" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom30sep"
+fields = { "label" = "Kommun, folkbokföringskommun 30 september" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom31dec"
+fields = { "label" = "Kommun, folkbokföringskommun 31 december" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:hkom31mars"
+fields = { "label" = "Kommun, folkbokföringskommun 31 mars" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunreg"
+fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:registrerande-kommun-aktivitetsansvar"
+fields = { "label" = "Kommun, registrerande kommun i aktivitetsansvaret" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:sektorkod-far"
-fields = { "label" = "Sektorkod (faderns)" }
-evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Sektorkod (biologisk far)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Opdefs: SektorKod_Far refers to biologisk far, SektorKod_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:sektorkod-mor"
-fields = { "label" = "Sektorkod (moderns)" }
-evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Sektorkod (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, high confidence; Opdefs: SektorKod_Far refers to biologisk far, SektorKod_Mor to biologisk mor."
+
+[[statement]]
+kind = "set"
+subject = "var:skom-sen"
+fields = { "label" = "Kommun, skolkommun vid senaste utbildningens slut" }
+evidence = "#2102 same-label cluster 'Kommun' (9 variables): judged different meaning, medium confidence; Different municipality concepts: folkbokföringskommun at 31 mars/30 juni/30 sep/31 dec, registrerande kommun (KommunReg and Rkom share an opdef and adjacent periods), skolkommun, and a folkbokförd-i-rapporterande-kommun flag; Hkom has no stated date so it is qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningsstatus-november-far"
-fields = { "label" = "Sysselsättningsstatus, november (faderns)" }
-evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Sysselsättningsstatus, november (biologisk far)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Opdefs: _Far refers to biologisk far, _Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:sysselsattningsstatus-november-mor"
-fields = { "label" = "Sysselsättningsstatus, november (moderns)" }
-evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Sysselsättningsstatus, november (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (2 variables): judged different meaning, high confidence; Opdefs: _Far refers to biologisk far, _Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:utbild-byte"
-fields = { "label" = "Gymnasieutbildning (bytt program)" }
-evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, medium confidence; Utbild_Byte flags a change of program (description); Utbild_Sen holds the program code (Sen taken as senaste)."
+fields = { "label" = "Gymnasieutbildning (programbyte)" }
+evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, high confidence; Utbild_Byte flags a program change (opdef); Utbild_Sen holds the latest program code (opdef, value set)."
 
 [[statement]]
 kind = "set"
 subject = "var:utbild-sen"
 fields = { "label" = "Gymnasieutbildning (senaste program)" }
-evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, medium confidence; Utbild_Byte flags a change of program (description); Utbild_Sen holds the program code (Sen taken as senaste)."
+evidence = "#2102 same-label cluster 'Gymnasieutbildning' (2 variables): judged different meaning, high confidence; Utbild_Byte flags a program change (opdef); Utbild_Sen holds the latest program code (opdef, value set)."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkesbaserad-seg-far"
-fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (faderns)" }
-evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (biologisk far)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdefs: YSEG_Far refers to biologisk far, YSEG_Mor to biologisk mor."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkesbaserad-seg-mor"
-fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (moderns)" }
-evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Father's (Far) vs mother's (Mor) value."
+fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (biologisk mor)" }
+evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdefs: YSEG_Far refers to biologisk far, YSEG_Mor to biologisk mor."

@@ -14371,30 +14371,36 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
+subject = "var:antal-anstallda-emp2022"
+fields = { "label" = "Antal anställda (EMP2022)" }
+evidence = "#2102 same-label cluster 'Antal anställda' (2 variables): judged different meaning, low confidence; EMP and EMP2022 are concurrent 2020-2023 with the same opdef; no text explains the year tag."
+
+[[statement]]
+kind = "set"
 subject = "var:logistikinnovation-annat-hinder"
 fields = { "label" = "Logistikinnovationer - Hinder (annat hinder)" }
-evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:logistikinnovation-ekonomiskt-hinder"
 fields = { "label" = "Logistikinnovationer - Hinder (ekonomiskt hinder)" }
-evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:logistikinnovation-rattsligt-hinder"
 fields = { "label" = "Logistikinnovationer - Hinder (rättsligt hinder)" }
-evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:logistikinnovation-tekniskt-hinder"
 fields = { "label" = "Logistikinnovationer - Hinder (tekniskt hinder)" }
-evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."
 
 [[statement]]
 kind = "set"
 subject = "var:logistikinnovation-utebliven-huvudorsak"
-fields = { "label" = "Logistikinnovationer - Hinder (utebliven huvudorsak)" }
-evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
+fields = { "label" = "Logistikinnovationer - Hinder (LG)" }
+evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, medium confidence; Separate ja/nej flags per barrier type decoded from the column names (annat, ekonomiskt, rättsligt, tekniskt); LG has no text."

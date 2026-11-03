@@ -911,34 +911,34 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "var:fodelseland-varldsdel"
 fields = { "label" = "Födelseland, världsdel/landgrupp (kod)" }
-evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (2 variables): judged different meaning, high confidence; fodelselandVD is the code, fodelselandVDnamn the name."
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (2 variables): judged different meaning, high confidence; fodelselandVD holds the code (value set), fodelselandVDnamn the name."
 
 [[statement]]
 kind = "set"
 subject = "var:fodelselandvdnamn"
 fields = { "label" = "Födelseland, världsdel/landgrupp (namn)" }
-evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (2 variables): judged different meaning, high confidence; fodelselandVD is the code, fodelselandVDnamn the name."
+evidence = "#2102 same-label cluster 'Födelseland, världsdel/landgrupp' (2 variables): judged different meaning, high confidence; fodelselandVD holds the code (value set), fodelselandVDnamn the name."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-kod"
 fields = { "label" = "Kommungruppsindelning (kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (2 variables): judged different meaning, high confidence; Kgruppnr is the code, Kgruppnamn the name."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (2 variables): judged different meaning, high confidence; Opdefs: Kgruppnr gives the municipality group as a code, Kgruppnamn as a name."
 
 [[statement]]
 kind = "set"
 subject = "var:kommungrupp-namn"
 fields = { "label" = "Kommungruppsindelning (namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (2 variables): judged different meaning, high confidence; Kgruppnr is the code, Kgruppnamn the name."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (2 variables): judged different meaning, high confidence; Opdefs: Kgruppnr gives the municipality group as a code, Kgruppnamn as a name."
 
 [[statement]]
 kind = "set"
 subject = "var:medborgarland-varldsdel"
 fields = { "label" = "Medborgarland, världsdel/landsgrupp (kod)" }
-evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (2 variables): judged different meaning, high confidence; medborgarlandVD is the code, medborgarlandVDnamn the name."
+evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (2 variables): judged different meaning, high confidence; medborgarlandVD holds the code (value set), medborgarlandVDnamn the name."
 
 [[statement]]
 kind = "set"
 subject = "var:medborgarland-varldsdel-namn"
 fields = { "label" = "Medborgarland, världsdel/landsgrupp (namn)" }
-evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (2 variables): judged different meaning, high confidence; medborgarlandVD is the code, medborgarlandVDnamn the name."
+evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (2 variables): judged different meaning, high confidence; medborgarlandVD holds the code (value set), medborgarlandVDnamn the name."

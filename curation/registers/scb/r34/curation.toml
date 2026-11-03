@@ -22924,115 +22924,127 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 kind = "set"
 subject = "var:agi1faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:agi2faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:agi3faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:alu-fran-akassa"
 fields = { "label" = "Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS (EES-avtal)" }
-evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; ALUEES is ALU under the EES agreement via unemployment insurance, ALUKAS is ALU paid as KAS by RFV; both run concurrently 1994-98."
+evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; Opdefs: ALUEES is ALU under the EES agreement (retained unemployment benefit), ALUKAS is ALU paid as KAS by RFV; concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:alukas"
 fields = { "label" = "Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS (kontant arbetsmarknadsstöd)" }
-evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; ALUEES is ALU under the EES agreement via unemployment insurance, ALUKAS is ALU paid as KAS by RFV; both run concurrently 1994-98."
+evidence = "#2102 same-label cluster 'Arbetslivsutveckling (ALU) från arbetslöshetskassa och KAS' (2 variables): judged different meaning, high confidence; Opdefs: ALUEES is ALU under the EES agreement (retained unemployment benefit), ALUKAS is ALU paid as KAS by RFV; concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus-alt"
-fields = { "label" = "Arbetsmarknadsstatus (alternativ definition)" }
-evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BASAlt merges students, pensioners and sick into one group; its code list differs from BAS."
+fields = { "label" = "Arbetsmarknadsstatus (grov gruppering)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BASAlt is a coarse grouping that merges studerande, pensionär, sjuk and övrigt; its code list differs from BAS."
 
 [[statement]]
 kind = "set"
 subject = "var:arbstidlopnr"
 fields = { "label" = "Löpnummer, arbetsställe-id" }
-evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, high confidence; Opdefs: three serial numbers for different identities: the workplace id in FAD, the CFAR number and the company's organisation number."
 
 [[statement]]
 kind = "set"
 subject = "var:ast-ftgtyp"
 fields = { "label" = "Typ av företag (arbetsställetabell)" }
-evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_Typ is derived from the number of workplaces per BAS and Org_TypBAS from FDB (with code 9 = not in FDB) in the company table; Ast_FtgTyp is the same classification in the workplace table."
+
+[[statement]]
+kind = "set"
+subject = "var:ast-sektorkod"
+fields = { "label" = "Sektorkod (arbetsställe)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (4 variables): judged different meaning, medium confidence; One column per table (arbetsställe, individ, företag) with a different code list in the company table; the concurrent individual columns SektorKod (employed per RAMS) and SektorKodSReg (main employment only) differ in their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsbidrag-barnfamiljer-mfl"
 fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (huvudsökande)" }
-evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; BostBidr is the main applicant's component, BostBidrU is split between main applicant and co-applicant; they run concurrently."
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; Opdefs: BostBidr exists for the main applicant only, BostBidrU is split between applicant and co-applicant; concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-sarskilt-pensionarer"
 fields = { "label" = "Bostadstillägg och särskilt bostadstillägg för pensionärer (individ)" }
-evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component; BostTillHB (HB = hushåll) is the household total in hundreds of kronor."
+evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component, BostTillHB the household total in hundreds of kronor."
 
 [[statement]]
 kind = "set"
 subject = "var:bostbidru"
-fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (uppdelad huvud-/medsökande)" }
-evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; BostBidr is the main applicant's component, BostBidrU is split between main applicant and co-applicant; they run concurrently."
+fields = { "label" = "Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år (sökande och medsökande)" }
+evidence = "#2102 same-label cluster 'Bostadsbidrag för barnfamiljer samt makar och ensamstående yngre än 29 år' (2 variables): judged different meaning, high confidence; Opdefs: BostBidr exists for the main applicant only, BostBidrU is split between applicant and co-applicant; concurrent."
 
 [[statement]]
 kind = "set"
 subject = "var:bosttillhb"
 fields = { "label" = "Bostadstillägg och särskilt bostadstillägg för pensionärer (hushåll)" }
-evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component; BostTillHB (HB = hushåll) is the household total in hundreds of kronor."
+evidence = "#2102 same-label cluster 'Bostadstillägg och särskilt bostadstillägg för pensionärer' (2 variables): judged different meaning, high confidence; BostTill is the individual's component, BostTillHB the household total in hundreds of kronor."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-3"
+fields = { "label" = "CFAR-Nummer (CfarNrSreg)" }
+evidence = "#2102 same-label cluster 'CFAR-Nummer' (2 variables): judged different meaning, low confidence; CfarNrSreg runs concurrently with CfarNr in 2013-16 in the individual tables with no stated difference, so qualified by column code."
 
 [[statement]]
 kind = "set"
 subject = "var:cfarlopnr"
 fields = { "label" = "Löpnummer, CFAR-nummer" }
-evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, high confidence; Opdefs: three serial numbers for different identities: the workplace id in FAD, the CFAR number and the company's organisation number."
 
 [[statement]]
 kind = "set"
 subject = "var:europeisk-socioekonomisk-grupp-inkl-harledda-foretagaryrken"
 fields = { "label" = "Europeisk socioekonomisk gruppering (inklusive härledda yrken för företagare)" }
-evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, medium confidence; ESeG_J16 includes derived occupations for business owners (description), concurrent with ESeG in 2016-17."
+evidence = "#2102 same-label cluster 'Europeisk socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdef: ESeG_J16 also includes the derived occupations of business owners; concurrent with ESeG in 2016-17."
 
 [[statement]]
 kind = "set"
 subject = "var:hushallsst-iot"
 fields = { "label" = "Hushållsställning (enligt IoT)" }
-evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits."
+evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits per their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:hushallsst-rtb"
 fields = { "label" = "Hushållsställning (enligt RTB)" }
-evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits."
+evidence = "#2102 same-label cluster 'Hushållsställning' (2 variables): judged different meaning, high confidence; HushallsSt_IoT and HushallsSt_RTB have different code lists and child age limits per their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:huvinkkallaalt"
-fields = { "label" = "Huvudsaklig inkomstkälla (alternativ definition)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its alternative have three different code lists and definitions."
+fields = { "label" = "Huvudsaklig inkomstkälla (grov gruppering)" }
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its coarse alternative have three different code lists and definitions."
 
 [[statement]]
 kind = "set"
 subject = "var:inkomst-av-rorelse-inkomst-av-jordbruksfastighet-fink90"
-fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (1990)" }
-evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different years (1990 and 1989) delivered side by side."
+fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (inkomståret 1990)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different income years (1990 and 1989), delivered side by side."
 
 [[statement]]
 kind = "set"
 subject = "var:inkomst-foranledd-arbetsloshet-2"
 fields = { "label" = "Summa inkomst föranledd av arbetslöshet (RAKS)" }
-evidence = "#2102 same-label cluster 'Summa inkomst föranledd av arbetslöshet' (2 variables): judged different meaning, high confidence; Raks_ArblosInk is the RAKS calendar-year income (2016-17), ArbLos the IoT-based sum over income year."
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av arbetslöshet' (2 variables): judged different meaning, high confidence; Raks_ArblosInk is the RAKS calendar-year income (2016-17), ArbLos the income-year sum from the source registers."
 
 [[statement]]
 kind = "set"
@@ -23044,97 +23056,97 @@ evidence = "#2102 same-label cluster 'Summa inkomst föranledd av förtidspensio
 kind = "set"
 subject = "var:inkomst-foranledd-sjukdom"
 fields = { "label" = "Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering (RAKS)" }
-evidence = "#2102 same-label cluster 'Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering' (2 variables): judged different meaning, high confidence; Raks_SjukInk is the RAKS calendar-year income (2016-17), SjukRe the IoT-based sum."
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering' (2 variables): judged different meaning, high confidence; Raks_SjukInk is the RAKS calendar-year income (2016-17), SjukRe the income-year sum from the source registers."
 
 [[statement]]
 kind = "set"
 subject = "var:inkomst-foranledd-studier"
 fields = { "label" = "Summa inkomst föranledd av studier (RAKS)" }
-evidence = "#2102 same-label cluster 'Summa inkomst föranledd av studier' (2 variables): judged different meaning, high confidence; Raks_StudInk is the RAKS calendar-year income (2016-17), Stud the IoT-based sum."
+evidence = "#2102 same-label cluster 'Summa inkomst föranledd av studier' (2 variables): judged different meaning, high confidence; Raks_StudInk is the RAKS calendar-year income (2016-17), Stud the income-year sum from the source registers."
 
 [[statement]]
 kind = "set"
 subject = "var:inkomst-rorelse-jordbruksfastighet-1989"
-fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (1989)" }
-evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different years (1990 and 1989) delivered side by side."
+fields = { "label" = "Inkomst av rörelse/Inkomst av jordbruksfastighet (inkomståret 1989)" }
+evidence = "#2102 same-label cluster 'Inkomst av rörelse/Inkomst av jordbruksfastighet' (2 variables): judged different meaning, high confidence; FInk90 and FInk89 are the same income for different income years (1990 and 1989), delivered side by side."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag"
 fields = { "label" = "Institutionell sektorkod (företag), 5-siffrig kod, företagstabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-instkod"
 fields = { "label" = "Institutionell sektorkod (företag), 5-siffrig kod, individtabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-instkod10"
 fields = { "label" = "Institutionell sektorkod (företag), 10-siffrig kod, individtabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-instkod6"
 fields = { "label" = "Institutionell sektorkod (företag), 6-siffrig kod, individtabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-instkod7"
 fields = { "label" = "Institutionell sektorkod (företag), 7-siffrig kod, individtabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-org-instkod10"
 fields = { "label" = "Institutionell sektorkod (företag), 10-siffrig kod, företagstabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-org-instkod6"
 fields = { "label" = "Institutionell sektorkod (företag), 6-siffrig kod, företagstabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektorkod-foretag-org-instkod7"
 fields = { "label" = "Institutionell sektorkod (företag), 7-siffrig kod, företagstabell" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, high confidence; Successive code lists of 5, 6, 7 and 10 digits (different classification versions), each present both in the företag table (Org_ prefix) and in the individ tables."
+evidence = "#2102 same-label cluster 'Institutionell sektorkod (företag)' (8 variables): judged different meaning, medium confidence; Successive 5-, 6-, 7- and 10-digit code lists (classification versions), each in the företag table (Org_ prefix, the firm's own) and in the individ tables (the firm of the person's main employment)."
 
 [[statement]]
 kind = "set"
 subject = "var:kalla-yrke-huvudsaklig-inkl-harledda-foretagare"
-fields = { "label" = "Källa för yrkesuppgift, huvudsaklig sysselsättning (inklusive härledda företagare)" }
-evidence = "#2102 same-label cluster 'Källa för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, medium confidence; SsykKalla_J16 is the variant including derived occupations for business owners (pid), concurrent with SsykKalla in 2016-17."
+fields = { "label" = "Källa för yrkesuppgift, huvudsaklig sysselsättning (inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Källa för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, high confidence; Opdef: SsykKalla_J16 also includes the derived occupations of business owners; concurrent with SsykKalla in 2016-17."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:ku2faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (näst största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:ku3faman"
 fields = { "label" = "Förekomst av delägarskap i fåmansaktiebolag (tredje största förvärvskällan)" }
-evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Three variables for the largest, second and third largest income source; KU columns are replaced by AGI columns in 2019."
+evidence = "#2102 same-label cluster 'Förekomst av delägarskap i fåmansaktiebolag' (6 variables): judged different meaning, high confidence; Opdefs: markers for the largest, second and third largest income source; KU columns are replaced by AGI columns with the same opdef in 2019."
 
 [[statement]]
 kind = "set"
 subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
-fields = { "label" = "Mätår för yrkesuppgift, huvudsaklig sysselsättning, inkl. härledda yrken för företagare" }
-evidence = "#2102 same-label cluster 'Mätår för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, medium confidence; SsykAr_J16 is a concurrent column in the same table (2016-2017) whose description adds derived occupations for entrepreneurs."
+fields = { "label" = "Mätår för yrkesuppgift, huvudsaklig sysselsättning (inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Mätår för yrkesuppgift, huvudsaklig sysselsättning' (2 variables): judged different meaning, high confidence; Opdef: SsykAr_J16 also includes the derived occupations of business owners; concurrent with SsykAr in 2016-17."
 
 [[statement]]
 kind = "set"
@@ -23152,100 +23164,130 @@ evidence = "#2102 same-label cluster 'Medborgarskapsland, grupperad EU(27)' (2 v
 kind = "set"
 subject = "var:opftgledare"
 fields = { "label" = "Operativ företagsledare (markering för individ)" }
-evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic version (older method without income) and a justerad-method (J) version."
 
 [[statement]]
 kind = "set"
 subject = "var:opftgledarej"
 fields = { "label" = "Operativ företagsledare (markering för individ, justerad metod)" }
-evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic version (older method without income) and a justerad-method (J) version."
+
+[[statement]]
+kind = "set"
+subject = "var:org-sektorkod"
+fields = { "label" = "Sektorkod (företag)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (4 variables): judged different meaning, medium confidence; One column per table (arbetsställe, individ, företag) with a different code list in the company table; the concurrent individual columns SektorKod (employed per RAMS) and SektorKodSReg (main employment only) differ in their opdefs."
 
 [[statement]]
 kind = "set"
 subject = "var:org-typ"
-fields = { "label" = "Typ av företag (företagstabell)" }
-evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+fields = { "label" = "Typ av företag (företagstabell, enligt BAS)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_Typ is derived from the number of workplaces per BAS and Org_TypBAS from FDB (with code 9 = not in FDB) in the company table; Ast_FtgTyp is the same classification in the workplace table."
 
 [[statement]]
 kind = "set"
 subject = "var:org-typbas"
-fields = { "label" = "Typ av företag (BAS-variant)" }
-evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_TypBAS runs beside Org_Typ in 2022-24 with a different code list (9 = not in FDB); Ast_FtgTyp is the same classification in the workplace table."
+fields = { "label" = "Typ av företag (företagstabell, enligt FDB)" }
+evidence = "#2102 same-label cluster 'Typ av företag' (3 variables): judged different meaning, medium confidence; Org_Typ is derived from the number of workplaces per BAS and Org_TypBAS from FDB (with code 9 = not in FDB) in the company table; Ast_FtgTyp is the same classification in the workplace table."
 
 [[statement]]
 kind = "set"
 subject = "var:peorglopnr"
 fields = { "label" = "Löpnummer, företagets organisationsnummer" }
-evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, medium confidence; Three concurrent serial numbers replacing three different identifiers: workplace id (ArbstId), CFAR number and the company's organisation number (PeOrg)."
+evidence = "#2102 same-label cluster 'Löpnummer' (3 variables): judged different meaning, high confidence; Opdefs: three serial numbers for different identities: the workplace id in FAD, the CFAR number and the company's organisation number."
 
 [[statement]]
 kind = "set"
 subject = "var:personnr-opf"
 fields = { "label" = "Operativ företagsledare (person-id i företagstabell)" }
-evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic version (older method without income) and a justerad-method (J) version."
 
 [[statement]]
 kind = "set"
 subject = "var:personnr-opfj"
 fields = { "label" = "Operativ företagsledare (person-id i företagstabell, justerad metod)" }
-evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic and a justerad-method (J) version."
+evidence = "#2102 same-label cluster 'Operativ företagsledare' (4 variables): judged different meaning, high confidence; Two individual 0/1 markers and two company-table person identifiers, each in a basic version (older method without income) and a justerad-method (J) version."
 
 [[statement]]
 kind = "set"
 subject = "var:raks-huvinkkalla"
 fields = { "label" = "Huvudsaklig inkomstkälla (RAKS)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its alternative have three different code lists and definitions."
+evidence = "#2102 same-label cluster 'Huvudsaklig inkomstkälla' (3 variables): judged different meaning, high confidence; RAKS version, the 2022 definition and its coarse alternative have three different code lists and definitions."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "label" = "Sektorkod (individ, förvärvsarbetande enligt RAMS)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (4 variables): judged different meaning, medium confidence; One column per table (arbetsställe, individ, företag) with a different code list in the company table; the concurrent individual columns SektorKod (employed per RAMS) and SektorKodSReg (main employment only) differ in their opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkodsreg"
+fields = { "label" = "Sektorkod (individ, SReg)" }
+evidence = "#2102 same-label cluster 'Sektorkod' (4 variables): judged different meaning, medium confidence; One column per table (arbetsställe, individ, företag) with a different code list in the company table; the concurrent individual columns SektorKod (employed per RAMS) and SektorKodSReg (main employment only) differ in their opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3"
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 includes derived occupations for business owners per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk3-2012"
 fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012)" }
-evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 adds derived occupations for business owners."
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 includes derived occupations for business owners per its opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk4"
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 1996)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 includes derived occupations for business owners per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk4-2012"
 fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012)" }
-evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 adds derived occupations for business owners."
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 includes derived occupations for business owners per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk4-2012-j16"
-fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inkl. härledda företagaryrken)" }
-evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 adds derived occupations for business owners."
+fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk4_2012_J16 includes derived occupations for business owners per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2000, 4 positioner)" }
+fields = { "label" = "Utbildningsinriktning (4 positioner, SUN 2000)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Sun2000Inr and Sun2020Inr are different SUN versions that run concurrently 2019-22."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020grp"
-fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2020Grp has about 100 groups, Sun2020Grp_Detalj about 130 with finer codes."
+fields = { "label" = "Utbildningsgrupp (SUN 2020, cirka 100 grupper)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Opdefs: Sun2020Grp groups SUN 2020 codes into about 100 groups, Sun2020Grp_Detalj into about 130 groups."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2020, 4 positioner)" }
+fields = { "label" = "Utbildningsinriktning (4 positioner, SUN 2020)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 variables): judged different meaning, high confidence; Sun2000Inr and Sun2020Inr are different SUN versions that run concurrently 2019-22."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsgrupp-detaljerad-sun-2020"
-fields = { "label" = "Utbildningsgrupp (SUN 2020, detaljerad)" }
-evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2020Grp has about 100 groups, Sun2020Grp_Detalj about 130 with finer codes."
+fields = { "label" = "Utbildningsgrupp (SUN 2020, cirka 130 grupper, detaljerad)" }
+evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Opdefs: Sun2020Grp groups SUN 2020 codes into about 100 groups, Sun2020Grp_Detalj into about 130 groups."
 
 [[statement]]
 kind = "set"
 subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
-fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inkl. härledda företagaryrken)" }
-evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 adds derived occupations for business owners."
+fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (SSYK 2012, inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, high confidence; SSYK before and after the 2012 revision have different code lists, and Ssyk3_2012_J16 includes derived occupations for business owners per its opdef."
 
 [[statement]]
 kind = "set"
 subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
-fields = { "label" = "Yrkeskodens överensstämmelse med organisationsnumret (inkl. härledda företagaryrken)" }
-evidence = "#2102 same-label cluster 'Yrkeskodens överensstämmelse med organisationsnumret' (2 variables): judged different meaning, medium confidence; SsykStatus_J16 has a different imputation code list (1, 11, ...) and includes derived occupations for business owners; it runs beside SsykStatus 2016-17."
+fields = { "label" = "Yrkeskodens överensstämmelse med organisationsnumret (inklusive härledda yrken för företagare)" }
+evidence = "#2102 same-label cluster 'Yrkeskodens överensstämmelse med organisationsnumret' (2 variables): judged different meaning, high confidence; Opdef: SsykStatus_J16 includes derived occupations for business owners and has a different code list; it runs beside SsykStatus in 2016-17."

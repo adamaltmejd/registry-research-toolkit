@@ -685,18 +685,24 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
+subject = "var:lonepopulation-2"
+fields = { "label" = "Lönepopulation (LonePopMan)" }
+evidence = "#2102 same-label cluster 'Lönepopulation' (2 variables): judged different meaning, low confidence; LonePop and LonePopMan overlap 2018-2026 with the same flag values; no text says what the Man variant is, so it is qualified by its column code."
+
+[[statement]]
+kind = "set"
 subject = "var:lopnummer-myndighet-redovisningsenhet"
 fields = { "label" = "Löpnummer för myndighet (redovisningsenhet)" }
-evidence = "#2102 same-label cluster 'Löpnummer för myndighet' (2 variables): judged different meaning, medium confidence; LNrM and LNrS are concurrent; the pid of LNrS names the redovisningsenhet level, LNrM the myndighet."
+evidence = "#2102 same-label cluster 'Löpnummer för myndighet' (2 variables): judged different meaning, medium confidence; LNrM numbers the myndighet; opdef of LNrS says it refers to a part of a myndighet (redovisningsenhet); concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:sni2007"
 fields = { "label" = "Näringsgren (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI92 vs SNI2007 classification versions with different code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:sni92"
 fields = { "label" = "Näringsgren (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."
+evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI92 vs SNI2007 classification versions with different code lists."

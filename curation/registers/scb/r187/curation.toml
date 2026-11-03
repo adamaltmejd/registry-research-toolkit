@@ -1100,3 +1100,39 @@ kind = "set"
 subject = "set:urvalsstorlek"
 fields = { "label" = "Urvalsstorlek" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:ateranskhandelsvaror"
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:ateranskins"
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:fft0-ater"
+fields = { "label" = "Lagervärde, handelsvaror (återanskaffningsvärde)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:ins0-ater"
+fields = { "label" = "Lagervärde, insatsprodukter (återanskaffningsvärde)" }
+evidence = "#2102 same-label cluster 'Lagervärde' (4 variables): judged different meaning, high confidence; Opdefs: handelsvaror (främmande produkter) vs insatsprodukter, both at återanskaffningsvärde; FFT0_Ater/AteranskHandelsvaror and INS0_Ater/AteranskINS are consecutive renames of the same two."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde"
+fields = { "label" = "Produktionsvärde (ProdVarde)" }
+evidence = "#2102 same-label cluster 'Produktionsvärde' (2 variables): judged different meaning, low confidence; ProdVarde and ProdVardeT run concurrently in one table 1998-2000 with no text; qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "var:prodvardet"
+fields = { "label" = "Produktionsvärde (ProdVardeT)" }
+evidence = "#2102 same-label cluster 'Produktionsvärde' (2 variables): judged different meaning, low confidence; ProdVarde and ProdVardeT run concurrently in one table 1998-2000 with no text; qualified by column code."

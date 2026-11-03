@@ -1578,72 +1578,162 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
+subject = "var:k-rtb"
+fields = { "label" = "Kommun (enligt RTB)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; k_rtb has its own coded municipality (RTB); kommun (name, no code list) and kommunkod/llkk (codes, consecutive) all carry the opdef 'region i vilken förtroendeuppdraget utförs'."
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { "label" = "Nämnd (kod)" }
+evidence = "#2102 same-label cluster 'Nämnd' (3 variables): judged different meaning, medium confidence; Kod holds nämnd codes, Namnd the name text; namnd_uppd runs concurrently with Namnd 2015-2016 and no source describes it, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun för förtroendeuppdrag (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; k_rtb has its own coded municipality (RTB); kommun (name, no code list) and kommunkod/llkk (codes, consecutive) all carry the opdef 'region i vilken förtroendeuppdraget utförs'."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fortroendeuppdrag"
+fields = { "label" = "Kommun för förtroendeuppdrag (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; k_rtb has its own coded municipality (RTB); kommun (name, no code list) and kommunkod/llkk (codes, consecutive) all carry the opdef 'region i vilken förtroendeuppdraget utförs'."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunindelning"
+fields = { "label" = "Kommun för förtroendeuppdrag (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; k_rtb has its own coded municipality (RTB); kommun (name, no code list) and kommunkod/llkk (codes, consecutive) all carry the opdef 'region i vilken förtroendeuppdraget utförs'."
+
+[[statement]]
+kind = "set"
 subject = "var:landsting-old"
-fields = { "label" = "Landstingets namn (gammal namnsättning)" }
-evidence = "#2102 same-label cluster 'Landstingets namn' (2 variables): judged different meaning, medium confidence; Landsting uses the new naming (per its slug) and Landsting_old the old naming; they overlap in 2007-2008."
+fields = { "label" = "Landstingets namn (tidigare namnsättning)" }
+evidence = "#2102 same-label cluster 'Landstingets namn' (2 variables): judged different meaning, high confidence; Opdefs: Landsting is the name under the new naming, Landsting_old under the previous naming; they overlap in 2007-2008."
 
 [[statement]]
 kind = "set"
 subject = "var:landstingsnamn-ny-namnsattning"
 fields = { "label" = "Landstingets namn (ny namnsättning)" }
-evidence = "#2102 same-label cluster 'Landstingets namn' (2 variables): judged different meaning, medium confidence; Landsting uses the new naming (per its slug) and Landsting_old the old naming; they overlap in 2007-2008."
+evidence = "#2102 same-label cluster 'Landstingets namn' (2 variables): judged different meaning, high confidence; Opdefs: Landsting is the name under the new naming, Landsting_old under the previous naming; they overlap in 2007-2008."
+
+[[statement]]
+kind = "set"
+subject = "var:namnd"
+fields = { "label" = "Nämnd (namn)" }
+evidence = "#2102 same-label cluster 'Nämnd' (3 variables): judged different meaning, medium confidence; Kod holds nämnd codes, Namnd the name text; namnd_uppd runs concurrently with Namnd 2015-2016 and no source describes it, so it is qualified with its column code."
+
+[[statement]]
+kind = "set"
+subject = "var:namnd-uppd"
+fields = { "label" = "Nämnd (namnd_uppd)" }
+evidence = "#2102 same-label cluster 'Nämnd' (3 variables): judged different meaning, medium confidence; Kod holds nämnd codes, Namnd the name text; namnd_uppd runs concurrently with Namnd 2015-2016 and no source describes it, so it is qualified with its column code."
 
 [[statement]]
 kind = "set"
 subject = "var:parti"
-fields = { "label" = "Parti, kod" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Parti holds party codes, partinamn the full name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods and share a label."
+fields = { "label" = "Parti (kod)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:parti-kort"
-fields = { "label" = "Parti, kortnamn" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Parti holds party codes, partinamn the full name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods and share a label."
+fields = { "label" = "Parti (kortnamn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:partikortnamn"
-fields = { "label" = "Parti, kortnamn" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Parti holds party codes, partinamn the full name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods and share a label."
+fields = { "label" = "Parti (kortnamn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
 
 [[statement]]
 kind = "set"
 subject = "var:partinamn"
-fields = { "label" = "Parti, namn" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Parti holds party codes, partinamn the full name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods and share a label."
+fields = { "label" = "Parti (namn)" }
+evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
+
+[[statement]]
+kind = "set"
+subject = "var:pos"
+fields = { "label" = "Position i nämnd (text)" }
+evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:position"
+fields = { "label" = "Position i nämnd (kod)" }
+evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:position-position-text"
+fields = { "label" = "Position i nämnd (text)" }
+evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:positionstext"
+fields = { "label" = "Position i nämnd (text)" }
+evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:poskod"
+fields = { "label" = "Position i nämnd (grupperad kod)" }
+evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
+
+[[statement]]
+kind = "set"
+subject = "var:r-syssst"
+fields = { "label" = "Sysselsättningsstatus, november (definition 2001)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (3 variables): judged different meaning, medium confidence; r_syssSt01 (2-code, 2001 definition) and r_syssSt97 (1997 definition, more categories) are concurrent with SyssStat (codes 1, 4, 5); SyssStat has no further source text."
+
+[[statement]]
+kind = "set"
+subject = "var:r-syssst97"
+fields = { "label" = "Sysselsättningsstatus, november (definition 1997)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (3 variables): judged different meaning, medium confidence; r_syssSt01 (2-code, 2001 definition) and r_syssSt97 (1997 definition, more categories) are concurrent with SyssStat (codes 1, 4, 5); SyssStat has no further source text."
 
 [[statement]]
 kind = "set"
 subject = "var:skl-grupp"
 fields = { "label" = "Kommungruppsindelning (SKL, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:skl-grupp-2011"
 fields = { "label" = "Kommungruppsindelning (SKL 2011, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:skl-gruppnamn"
 fields = { "label" = "Kommungruppsindelning (SKL, namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:skl-gruppnamn-2011"
 fields = { "label" = "Kommungruppsindelning (SKL 2011, namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:skr-grupp"
-fields = { "label" = "Kommungruppsindelning (SKR 2023, kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+fields = { "label" = "Kommungruppsindelning (SKR, kod)" }
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
 
 [[statement]]
 kind = "set"
 subject = "var:skr-grupp-namn"
 fields = { "label" = "Kommungruppsindelning (SKR, namn)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
+evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns vs name columns, and SKL, SKL 2011 and SKR classification versions, from column names and code lists."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "label" = "Sysselsättningsstatus, november (SyssStat)" }
+evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (3 variables): judged different meaning, medium confidence; r_syssSt01 (2-code, 2001 definition) and r_syssSt97 (1997 definition, more categories) are concurrent with SyssStat (codes 1, 4, 5); SyssStat has no further source text."

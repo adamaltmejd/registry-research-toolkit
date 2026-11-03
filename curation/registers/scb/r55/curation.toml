@@ -2618,173 +2618,161 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstatus-alt"
-fields = { "label" = "Arbetsmarknadsstatus (alternativ definition)" }
-evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS och BASAlt har olika kategoriuppsättningar i samma tabeller; BASAlt är en alternativ definition."
+fields = { "label" = "Arbetsmarknadsstatus (grov gruppering)" }
+evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; Opdefs: BAS är hierarkisk klassificering, BASAlt en grov gruppering där studerande, pensionär, sjuk och övrigt slagits samman."
 
 [[statement]]
 kind = "set"
 subject = "var:astngs07"
 fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:astsni"
-fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 1992 och 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:astsni0"
 fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:astsni07"
 fields = { "label" = "Näringsgren, huvudsaklig sysselsättning (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig sysselsättning' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); AstSni07 och AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1astngs07"
 fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1astsni"
-fields = { "label" = "Näringsgren, största förvärvskälla (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+fields = { "label" = "Näringsgren, största förvärvskälla (SNI 1992 och 2002)" }
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1astsni0"
 fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1astsni07"
 fields = { "label" = "Näringsgren, största förvärvskälla (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika näringsgrensindelningar över tid (SNI 92, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
+evidence = "#2102 same-label cluster 'Näringsgren, största förvärvskälla' (4 variables): judged different meaning, medium confidence; Olika SNI-versioner enligt opdefs (SNI 1992/2002, SNI 2002, SNI 2007); KU1AstSNI07 och KU1AstNgS07 är SNI 2007 under två namn i angränsande perioder."
 
 [[statement]]
 kind = "set"
 subject = "var:ku1sektor"
-fields = { "label" = "Sektor (institutionell sektor, största förvärvskälla)" }
-evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Två sektorindelningar (äldre SektorKod, nyare med icke-finansiella bolag m.fl. från 2022), var och en för huvudsaklig sysselsättning respektive största förvärvskälla (KU1)."
-
-[[statement]]
-kind = "set"
-subject = "var:ku1sektorkod"
-fields = { "label" = "Sektorkod (största förvärvskälla)" }
-evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, medium confidence; SektorKod gäller huvudsaklig sysselsättning i november, KU1SektorKod största förvärvskälla."
+fields = { "label" = "Sektor, största förvärvskälla (ny sektorindelning)" }
+evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Äldre sektorindelning (SektorKod, KU1SektorKod) skiljer sig från den nya (Sektor, KU1Sektor, koder som 111000) och opdefs skiljer huvudsaklig sysselsättning från största förvärvskälla."
 
 [[statement]]
 kind = "set"
 subject = "var:ku2ssyk3-2012"
 fields = { "label" = "Yrke, näst största förvärvskällan (SSYK 2012, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, näst största förvärvskällan' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, näst största förvärvskällan' (2 variables): judged different meaning, high confidence; KU2Ssyk3_2012 och KU2Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:ku2ssyk4-2012"
 fields = { "label" = "Yrke, näst största förvärvskällan (SSYK 2012, 4-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, näst största förvärvskällan' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, näst största förvärvskällan' (2 variables): judged different meaning, high confidence; KU2Ssyk3_2012 och KU2Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:nov2ssyk3"
 fields = { "label" = "Yrke, jobb två i november (äldre SSYK, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 är en äldre SSYK-version på 3-siffernivå, de övriga SSYK 2012 på 3- respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 har en äldre SSYK-version (andra kodtexter), de övriga SSYK 2012 på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:nov2ssyk3-2012"
 fields = { "label" = "Yrke, jobb två i november (SSYK 2012, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 är en äldre SSYK-version på 3-siffernivå, de övriga SSYK 2012 på 3- respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 har en äldre SSYK-version (andra kodtexter), de övriga SSYK 2012 på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:nov2ssyk4-2012"
 fields = { "label" = "Yrke, jobb två i november (SSYK 2012, 4-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 är en äldre SSYK-version på 3-siffernivå, de övriga SSYK 2012 på 3- respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, jobb två i november' (3 variables): judged different meaning, medium confidence; Nov2Ssyk3 har en äldre SSYK-version (andra kodtexter), de övriga SSYK 2012 på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrssyk3-2012"
 fields = { "label" = "Yrke, övrigt jobb (SSYK 2012, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, övrigt jobb' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, övrigt jobb' (2 variables): judged different meaning, high confidence; OvrSsyk3_2012 och OvrSsyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:ovrssyk4-2012"
 fields = { "label" = "Yrke, övrigt jobb (SSYK 2012, 4-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, övrigt jobb' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, övrigt jobb' (2 variables): judged different meaning, high confidence; OvrSsyk3_2012 och OvrSsyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:sektor-huvud"
-fields = { "label" = "Sektor (institutionell sektor, huvudsaklig sysselsättning)" }
-evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Två sektorindelningar (äldre SektorKod, nyare med icke-finansiella bolag m.fl. från 2022), var och en för huvudsaklig sysselsättning respektive största förvärvskälla (KU1)."
+fields = { "label" = "Sektor, huvudsaklig sysselsättning (ny sektorindelning)" }
+evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Äldre sektorindelning (SektorKod, KU1SektorKod) skiljer sig från den nya (Sektor, KU1Sektor, koder som 111000) och opdefs skiljer huvudsaklig sysselsättning från största förvärvskälla."
 
 [[statement]]
 kind = "set"
 subject = "var:sektor-ku1"
-fields = { "label" = "Sektor (sektorkod, största förvärvskälla)" }
-evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Två sektorindelningar (äldre SektorKod, nyare med icke-finansiella bolag m.fl. från 2022), var och en för huvudsaklig sysselsättning respektive största förvärvskälla (KU1)."
-
-[[statement]]
-kind = "set"
-subject = "var:sektorkod-1819"
-fields = { "label" = "Sektorkod (huvudsaklig sysselsättning)" }
-evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): judged different meaning, medium confidence; SektorKod gäller huvudsaklig sysselsättning i november, KU1SektorKod största förvärvskälla."
+fields = { "label" = "Sektor, största förvärvskälla (sektorkod)" }
+evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Äldre sektorindelning (SektorKod, KU1SektorKod) skiljer sig från den nya (Sektor, KU1Sektor, koder som 111000) och opdefs skiljer huvudsaklig sysselsättning från största förvärvskälla."
 
 [[statement]]
 kind = "set"
 subject = "var:sektorkod-2"
-fields = { "label" = "Sektor (sektorkod, huvudsaklig sysselsättning)" }
-evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Två sektorindelningar (äldre SektorKod, nyare med icke-finansiella bolag m.fl. från 2022), var och en för huvudsaklig sysselsättning respektive största förvärvskälla (KU1)."
+fields = { "label" = "Sektor, huvudsaklig sysselsättning (sektorkod)" }
+evidence = "#2102 same-label cluster 'Sektor' (4 variables): judged different meaning, medium confidence; Äldre sektorindelning (SektorKod, KU1SektorKod) skiljer sig från den nya (Sektor, KU1Sektor, koder som 111000) och opdefs skiljer huvudsaklig sysselsättning från största förvärvskälla."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk3-2012"
 fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Ssyk3_2012 och Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå, olika värdeförråd."
 
 [[statement]]
 kind = "set"
 subject = "var:ssyk4-2012"
 fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012, 4-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Ssyk3_2012 och Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå, olika värdeförråd."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2000inr"
-fields = { "label" = "Utbildningsinriktning, SUN 2000" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 code lists overlap in time; the third column holds district codes with place names, a different thing."
+fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; Sun2000Inr och SUN2020Inr är olika SUN-versioner enligt opdefs; Distriktskod innehåller distriktskoder med ortnamn."
 
 [[statement]]
 kind = "set"
 subject = "var:sun2020inr"
-fields = { "label" = "Utbildningsinriktning, SUN 2020" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 code lists overlap in time; the third column holds district codes with place names, a different thing."
+fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; Sun2000Inr och SUN2020Inr är olika SUN-versioner enligt opdefs; Distriktskod innehåller distriktskoder med ortnamn."
 
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning"
-fields = { "label" = "Utbildningsinriktning, distriktskod" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 code lists overlap in time; the third column holds district codes with place names, a different thing."
+fields = { "label" = "Utbildningsinriktning (distriktskod)" }
+evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; Sun2000Inr och SUN2020Inr är olika SUN-versioner enligt opdefs; Distriktskod innehåller distriktskoder med ortnamn."
 
 [[statement]]
 kind = "set"
 subject = "var:yrke-ssyk3-storsta"
 fields = { "label" = "Yrke, största förvärvskällan (SSYK 2012, 3-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; KU1Ssyk3_2012 och KU1Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
 
 [[statement]]
 kind = "set"
 subject = "var:yrke-ssyk4-storsta"
 fields = { "label" = "Yrke, största förvärvskällan (SSYK 2012, 4-siffernivå)" }
-evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; SSYK 2012 på 3-siffernivå respektive 4-siffernivå."
+evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; KU1Ssyk3_2012 och KU1Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."

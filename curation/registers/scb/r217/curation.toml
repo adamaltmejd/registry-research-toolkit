@@ -450,106 +450,106 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:e20"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2014)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:etom20"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (till och med 2013)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2015"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2015)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2016"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2016)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2017"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2017)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2018"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2018)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2019"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2019)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2020"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2020)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2021"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2021)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2022-strandlinje-2024"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2022, strandlinje 2024)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-2023-strandlinje-2024"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (2023, strandlinje 2024)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:exploaterad-havsstrand-inlandsstrand-till-och-med-2020"
 fields = { "label" = "Exploaterad havsstrand eller inlandsstrand (till och med 2020)" }
-evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, medium confidence; One indicator column per reference year (E2014 to E2023), plus two cumulative ones (ETOM2013, ETOM2020 = up to and including that year); the 2022 and 2023 columns are tied to the 2024 shoreline."
+evidence = "#2102 same-label cluster 'Exploaterad havsstrand eller inlandsstrand' (12 variables): judged different meaning, high confidence; Opdefs: one indicator column per reference year (E2014 to E2023) plus two cumulative columns (ETOM2013, ETOM2020 = up to and including that year)."
 
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "label" = "Kommun, kod" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds municipality codes (value set); KOMMUNNAMN holds the name as text."
+fields = { "label" = "Kommun (kod)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds municipality codes (value set), KOMMUNNAMN the name as text."
 
 [[statement]]
 kind = "set"
 subject = "var:kommunnamn"
-fields = { "label" = "Kommun, namn" }
-evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds municipality codes (value set); KOMMUNNAMN holds the name as text."
+fields = { "label" = "Kommun (namn)" }
+evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds municipality codes (value set), KOMMUNNAMN the name as text."
 
 [[statement]]
 kind = "set"
 subject = "var:lan"
 fields = { "label" = "Län (kod)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN holds the county code, LANNAMN the county name."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN holds the county code (value set), LANNAMN the county name as text."
 
 [[statement]]
 kind = "set"
 subject = "var:lannamn"
 fields = { "label" = "Län (namn)" }
-evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN holds the county code, LANNAMN the county name."
+evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN holds the county code (value set), LANNAMN the county name as text."
 
 [[statement]]
 kind = "set"
 subject = "var:objekt-id"
 fields = { "label" = "Objekt-ID (löpnummer)" }
-evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; OBJECTID is a running object number, UUID a universally unique identifier; both are concurrent columns."
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; OBJECTID is a running number per object in the register, UUID a unique id per object and reference year; concurrent columns."
 
 [[statement]]
 kind = "set"
 subject = "var:uuid"
 fields = { "label" = "Objekt-ID (UUID)" }
-evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; OBJECTID is a running object number, UUID a universally unique identifier; both are concurrent columns."
+evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; OBJECTID is a running number per object in the register, UUID a unique id per object and reference year; concurrent columns."
