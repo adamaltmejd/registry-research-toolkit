@@ -247,6 +247,12 @@ evidence = "Variabeln anger pris per energienhet för förbrukat bränsle.\ncata
 
 [[statement]]
 kind = "set"
+subject = "var:pris-for-forbrukat-bransle"
+fields = { "description" = "Pris för förbrukat bränsle i kr/MWh, exklusive skatter. Från 2021 levereras två kolumner med samma källnyckel: pris (bränslepris, total kostnad för förbrukat bränsle delat med bränsleförbrukningen) och Pris (avfallspris, total intäkt för förbrukat avfall delat med avfallsförbrukningen). Kolumnerna skiljer sig bara i stor och liten begynnelsebokstav." }
+evidence = "#2074 Pris/pris: v35334 has one label and definition; from release r17951 (2021) through 2025 each release carries both spellings, with operational definitions 'Total kostnad för förbrukat bränsle samt Bränsleförbrukning' (pris) and 'Total intäkt för förbrukat bränsle (avfall) samt Bränsleförbrukning (avfallsförbrukning)' (Pris). Selectors cannot separate them, so one variable is kept and the description names both columns. Operator ruling 2026-11-03, maintainer delegated overnight."
+
+[[statement]]
+kind = "set"
 subject = "var:stratum"
 fields = { "sets" = [] }
 evidence = "Variabeln anger stratum vid urval.\ncatalog:variable_text:45853:16071:18262"
