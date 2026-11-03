@@ -149,15 +149,20 @@ function filterNodes(
 }
 
 /** With `heldOnly` (a steward deployment's default scope), the providers and
- * registers the steward holds anything in; the rest stay reachable through
- * search, links and the "All matches" scope. */
+ * registers the steward holds anything in, plus the current page's register
+ * and provider (`current`), so a page opened by link keeps its row; the rest
+ * stay reachable through the palette, links and the "All matches" scope. */
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
   heldOnly: boolean,
+  current: string | null,
 ): BrowseNode[] {
-  const kept = <T extends { held?: boolean }>(items: T[]) =>
-    heldOnly ? items.filter((item) => item.held !== false) : items;
+  const pinned = new Set(current === null ? [] : [current, current.split("/")[0]]);
+  const kept = <T extends { fqid: string; held?: boolean }>(items: T[]) =>
+    heldOnly
+      ? items.filter((item) => item.held !== false || pinned.has(item.fqid))
+      : items;
   return kept(root).map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
@@ -230,10 +235,13 @@ export function BrowseTree({
           : [],
     ),
   );
+  const current = currentRow(route);
+  const currentKey = current?.key ?? null;
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
     scope === "steward",
+    currentKey,
   );
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.
@@ -280,8 +288,6 @@ export function BrowseTree({
     return () => browseOrder.set([]);
   }, [order]);
 
-  const current = currentRow(route);
-  const currentKey = current?.key ?? null;
   const hrefs = new Map(
     allNodes.flatMap((node) => [
       [node.id, node.href] as const,
