@@ -466,7 +466,16 @@ fn check_source(
         own.sort_by_key(Issue::key);
         checked.findings = own;
         for (b, binding) in source.bindings.iter().enumerate() {
-            let mut found = window::refs(conn, index, b, source, binding, table_pid.as_deref())?.1;
+            let mut found = window::refs(
+                conn,
+                composed,
+                index,
+                b,
+                source,
+                binding,
+                table_pid.as_deref(),
+            )?
+            .1;
             found.sort_by_key(Issue::key);
             checked.findings.extend(found);
         }

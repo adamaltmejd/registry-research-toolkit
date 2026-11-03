@@ -1,0 +1,10 @@
+# Defined only in the steward repository: the base catalog has no such class version.
+[[classification]]
+family = "received"
+version = "v1"
+name = "Received synthetic edition"
+family_name = "Received synthetic kinds"
+publisher = "Fixture publisher"
+value_set = "inputs/reference/codes/kind.csv"
+period = "2015.."
+evidence = "Synthetic edition documented only in the earlier delivery."

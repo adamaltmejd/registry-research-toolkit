@@ -4,14 +4,14 @@
 
 use reg_core::project::{Binding, Source};
 use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
-use rusqlite::{Connection, Row};
+use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
     Issue, OrderClip, OrderEntry, OrderValueSet, Serving, day, interval, iso_day, period, refused,
     span,
 };
-use crate::Error;
 use crate::ops::{Server, refs};
+use crate::{Code, Error};
 
 /// What a binding is checked against: its source and the source's serving tables.
 pub(super) struct Scope<'a> {
@@ -105,9 +105,11 @@ fn segments(scope: &Scope) -> String {
 /// The binding's variable and its classification pin, and the findings refusing them
 /// (`fqid_unresolved`, `retired_ref`), located at the field. A resolved variable is
 /// returned even when its pin is refused, so its window checks still run: a blocked
-/// order reports every finding at once.
+/// order reports every finding at once. In the composed view (`composed`) a pin the base
+/// does not know may name a class version defined only in the holdings database.
 pub(super) fn refs(
     conn: &Connection,
+    composed: bool,
     index: usize,
     b: usize,
     source: &Source,
@@ -159,11 +161,22 @@ pub(super) fn refs(
                 pid,
                 unresolved(pin, "classification version"),
             ),
-            Err(err) => issue(
-                "classification",
-                pid,
-                refused(conn, pin, "classification version", &err)?,
-            ),
+            Err(err) => {
+                // The base wins when it knows the id; only a miss falls through.
+                let held = if composed && err.kind() == Code::NotFound {
+                    held_class_version(conn, pin)?
+                } else {
+                    None
+                };
+                match held {
+                    Some(pid) => classification = Some(pid),
+                    None => issue(
+                        "classification",
+                        pid,
+                        refused(conn, pin, "classification version", &err)?,
+                    ),
+                }
+            }
         }
     }
     let variable = variable.map(|(id, pid)| Variable {
@@ -174,10 +187,22 @@ pub(super) fn refs(
     Ok((variable, findings))
 }
 
+/// A class version of the attached holdings database, by exact public id.
+fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT pid FROM held.ident WHERE pid = ?1 AND kind = 'class_version'",
+            [pin],
+            |row| row.get(0),
+        )
+        .optional()?)
+}
+
 /// One binding over its source's serving tables.
 pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
     let (variable, findings) = refs(
         scope.conn,
+        scope.composed,
         scope.index,
         b,
         scope.source,

@@ -269,7 +269,7 @@
   },
   "held_key_unmatched_columns": "1",
   "attested_order": {
-    "note": "reference-extension/held.csv attests demo/held/value as ReceivedOld (integer) and demo/held/id as Id over 2015..2016, before the base's 2017 start; topology.toml's Attested maps Old and declares demo/held/id as its entity key.",
+    "note": "reference-extension/held.csv attests demo/held/value as ReceivedOld (integer, codes 1=First;2=Second) and demo/held/id as Id over 2015..2016, before the base's 2017 start; topology.toml's Attested maps Old and declares demo/held/id as its entity key. classifications.toml defines class/received/v1 only in the steward repository, over the same two codes, and curation.toml binds it to ReceivedOld; the base has no such class version, so the binding pins a held-only id.",
     "project": {
       "schema_version": "5.2.0",
       "reg_meta_version": "0.64.0",
@@ -279,7 +279,13 @@
           "name": "s",
           "table": "demo/held",
           "period": {"from": 2015, "to": 2016},
-          "bindings": [{"variable": "demo/held/value", "type": "numeric"}]
+          "bindings": [
+            {
+              "variable": "demo/held/value",
+              "type": "numeric",
+              "classification": "class/received/v1"
+            }
+          ]
         }
       ]
     },
@@ -297,8 +303,11 @@
           "spelling": "ReceivedOld",
           "type": "int",
           "length": null,
-          "value_set": null,
-          "classification": null
+          "value_set": {
+            "hash": "a59303823d8dcad4eadf3098f87d0adfb752dfcb097fba316d51f989508f053e",
+            "n_items": 2
+          },
+          "classification": "class/received/v1"
         }
       ],
       "row_keys": [

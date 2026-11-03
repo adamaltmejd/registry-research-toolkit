@@ -144,12 +144,21 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
     owner_ledger = ledger.parent.parent / "owners/ids.toml"
     owner_ledger.parent.mkdir()
     shutil.copyfile(case / "owners-ids.toml", owner_ledger)
+    # A class version defined only here, bound to the attested earlier occurrence.
+    (source / "codes").mkdir()
+    shutil.copyfile(case / "kind.csv", source / "codes/kind.csv")
+    curation = root / "curation"
+    shutil.copyfile(case / "classifications.toml", curation / "classifications.toml")
+    shutil.copyfile(
+        case / "classification-csv.toml", curation / "readers/classification-csv.toml"
+    )
+    shutil.copyfile(case / "curation.toml", ledger.parent / "curation.toml")
     shutil.copyfile(
         case / "reference-occurrences.toml", root / "reference-occurrences.toml"
     )
     with (root / "curation/inputs.toml").open("a") as f:
         f.write(
-            '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n'
+            '\n[[provider]]\npid = "demo"\nname = "Demo"\n\n[[input]]\nname = "reference-extension"\nreader = "transcription"\npath = "inputs/reference"\nprovider = "demo"\n\n[[input]]\nname = "reference-codes"\nreader = "classification-csv"\npath = "inputs/reference/codes"\n'
         )
     with (root / "census.csv").open("a") as f:
         f.write(
@@ -234,6 +243,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         )
         # Fails if steward-mode order reads only base segments: the base attests
         # demo/held/value from 2017, so 2015..2016 would be outside_availability.
+        # The binding pins the class version only the attested occurrence carries;
+        # it fails if that pin, resolved in the base alone, blocks with
+        # fqid_unresolved.
         ordered = pool.client(artifact_env(output)).post(
             "/api/project/order", json=expected["attested_order"]["project"]
         )

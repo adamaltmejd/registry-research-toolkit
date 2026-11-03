@@ -54,7 +54,15 @@ def pin_steward(root: Path, registry: Path) -> None:
         "curation/readers/holdings.toml",
     ]
     if (root / "reference-occurrences.toml").exists():
-        roles.extend(["reference-occurrences.toml", "inputs/reference"])
+        # The classification reader's directory is pinned by file, as the compiler
+        # checks an unpinned consumed directory.
+        roles.extend(
+            [
+                "reference-occurrences.toml",
+                "inputs/reference",
+                "inputs/reference/codes/kind.csv",
+            ]
+        )
     hashes = {}
     for role in roles:
         path = root / role
