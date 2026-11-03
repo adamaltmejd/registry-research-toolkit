@@ -4,6 +4,7 @@
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
+import { addRegisterVariablesCase } from "./register_add_flow.mjs";
 
 // Where playwright looks for its browsers. An explicit PLAYWRIGHT_BROWSERS_PATH
 // always wins; inside a prepared container Chromium is baked at /opt/pw-browsers,
@@ -743,6 +744,11 @@ const scenarios = {
     shots: 2,
     route: "/project",
     run: sourceCardsCase,
+  },
+  "add-register-variables": {
+    shots: 2,
+    route: "/project",
+    run: (page, shoot) => addRegisterVariablesCase(page, shoot, { open, settled, check }),
   },
   "browse-pages": {
     shots: 2,

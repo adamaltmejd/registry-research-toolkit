@@ -37,7 +37,9 @@ columns show their in-project state without a checkbox. Source cards author bind
 type, classification pin, removal and source period through checked candidates and the
 same sources write path. Each table supplies a coverage row over its binding lanes on
 one shared data axis. Stored periods are never narrowed on load. Succession lanes remain
-deferred.
+deferred. Register-page row ticks lazily read and add all eligible delivery columns in
+the study window through the same checked candidate and one sources write, without
+topping up variables already bound in any source.
 
 The order page reads the logical order, grouping entry rows by source and table.
 Secondary fields are in each row's Details popover, so the table fits the narrow detail
