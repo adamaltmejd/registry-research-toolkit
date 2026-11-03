@@ -9,6 +9,7 @@ import {
 } from "react-aria-components";
 import {
   type CatalogSegment,
+  type Context,
   getSegments,
   getVariableEvidence,
   type VariableShow,
@@ -35,6 +36,7 @@ import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
+import { useVariableCoverage } from "./VariableCoverage";
 import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 
@@ -103,7 +105,13 @@ export function ValueSetLabel({
   );
 }
 
-export function VariableView({ node }: { node: VariableShow }) {
+export function VariableView({
+  node,
+  context,
+}: {
+  node: VariableShow;
+  context: Context | null;
+}) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
   const segments = useAsyncResource(node.fqid, (signal) =>
@@ -115,6 +123,12 @@ export function VariableView({ node }: { node: VariableShow }) {
     evidenceRequested ? node.fqid : null,
     (signal) => getVariableEvidence(node.fqid, { signal }),
   );
+  const coverage = useVariableCoverage({
+    node,
+    segments: segments.data ?? [],
+    names,
+    context,
+  });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>
     facts.every((row) => row[index].value === fact.value),
@@ -172,6 +186,7 @@ export function VariableView({ node }: { node: VariableShow }) {
             : []),
         ]}
       />
+      {coverage.graph}
       {node.description ? (
         <Panel title="Description">
           <p className={styles.prose}>{node.description}</p>
@@ -345,6 +360,7 @@ export function VariableView({ node }: { node: VariableShow }) {
           </>
         )}
       </Disclosure>
+      {coverage.addBar}
     </article>
   );
 }

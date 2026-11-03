@@ -412,6 +412,63 @@ async function projectPagesCase(page, shoot) {
   await shoot("project-invalid");
 }
 
+// Project + catalog → saved project boundary. Fails if a variable-page add
+// confuses identical spellings in different tables, loses the binding/type or
+// add-window years, or leaves an already-bound column selectable. The older
+// project case opens complete files; none adds a column from the catalog.
+// Names, tables and numeric type are from webapp-dev.jsonl; the window is this
+// readable fixture project's explicit study window.
+async function addVariableColumnsCase(page, shoot) {
+  const main = page.getByRole("main");
+  const fixture = JSON.parse(readFileSync(new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  ), "utf8"));
+  fixture.window = { from: 2021, to: 2022 };
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await (await chooser).setFiles({
+    name: "study-window.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await open(page, "/catalog/demo/hush/antal");
+  await settled(page);
+  const familyColumn = main.getByRole("checkbox", { name: /Antal.*Familjer/ });
+  const individualColumn = main.getByRole("checkbox", { name: /Antal.*Individer/ });
+  const addWindow = main.getByRole("group", { name: "Add window (years)", exact: true });
+  await addWindow.getByRole("slider", { name: /^From year/ }).press("ArrowRight");
+  await familyColumn.focus();
+  await familyColumn.press("Space");
+  check(await familyColumn.isChecked(), "the column did not tick from the keyboard");
+  check(!(await individualColumn.isChecked()), "selecting Familjer also selected the same spelling in Individer");
+  await shoot("add-variable-selected");
+  await main.getByRole("button", { name: "Add 1 column to project", exact: true }).click();
+  await familyColumn.waitFor({ state: "detached" });
+  await main.getByText(/Antal.*Familjer.*in project/i).waitFor();
+  check((await individualColumn.count()) === 1, "adding Familjer also marked Individer as in project");
+  check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
+    "the add bar kept the committed selection staged");
+
+  await open(page, "/project");
+  await settled(page);
+  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  const source = sources.locator("section").filter({ has: page.getByRole("heading", { name: "fam", exact: true }) });
+  await source.getByRole("link", { name: "Familjer", exact: true }).waitFor();
+  await source.getByRole("link", { name: "Antal personer", exact: true }).waitFor();
+  await source.getByText("Period: 2022", { exact: true }).waitFor();
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
+  const added = saved.sources.filter((item) => item.table === "demo/hush/fam");
+  check(added.length === 1 && added[0].bindings.length === 1 &&
+    added[0].bindings[0].variable === "demo/hush/antal" && added[0].bindings[0].type === "numeric",
+  "the downloaded project lost the selected table, binding or numeric type");
+  check(saved.sources.length === fixture.sources.length + 1,
+    "adding a column changed unrelated project sources");
+  await shoot("add-variable-project");
+}
+
 // #2056, browser boundary over webapp-dev's Antal occurrences, provider text
 // and variable notice. Fails if variable dispatch or cross-table segments are
 // lost, named table links/storage are lost in the compact layout, evidence is
@@ -564,6 +621,11 @@ const scenarios = {
     shots: 3,
     route: "/project",
     run: projectPagesCase,
+  },
+  "add-variable-columns": {
+    shots: 2,
+    route: "/project",
+    run: addVariableColumnsCase,
   },
   "browse-pages": {
     shots: 2,

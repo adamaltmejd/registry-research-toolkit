@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useId, useState } from "react";
+import { Checkbox } from "react-aria-components";
 import styles from "./LaneGraph.module.css";
 import {
   COVERAGE_HEIGHT,
@@ -41,13 +42,12 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** "2015–2019", "2020–", or "year-independent". */
   years: string;
   state: ColumnChipState;
-  /** A pending change to the project, shown until Apply. */
+  /** A pending change to the project, shown until committed. */
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
   /** How the committed column relates to the study window, where it is more
-   * than "in project": shown as the span's tooltip and listed under the
-   * graph by the consumer. */
+   * than "in project": shown in its tooltip and accessible name. */
   note?: { text: string; tone: "info" | "error" } | null;
   /** Years the column's coding changed under the same name. */
   changes?: number[];
@@ -96,7 +96,7 @@ interface Props {
   addWindow?: [number, number] | null;
   coverage?: LaneCoverage;
   /** Laid over the coverage row's track (the period slider), on `axis`. */
-  overlay?: (axis: [number, number]) => ReactNode;
+  overlay?: ReactNode;
   isDisabled?: boolean;
   onToggle: (spanId: string) => void;
 }
@@ -206,7 +206,7 @@ export function LaneGraph({
                   height: COVERAGE_HEIGHT,
                 }}
               >
-                {overlay(axis)}
+                {overlay}
               </div>
             )}
             {!geometry.stacked && (
@@ -299,6 +299,7 @@ export function LaneGraph({
         selectable={spans.some((s) => s.selectable)}
         inProject={spans.some((s) => s.state === "in")}
         blocked={spans.some((s) => s.blocked)}
+        changes={spans.some((s) => s.changes?.length)}
       />
     </div>
   );
@@ -634,6 +635,7 @@ function Span({
   onToggle: (id: string) => void;
   onActive: (id: string | null) => void;
 }) {
+  const inputId = useId();
   const showYears =
     at.label === "inside" &&
     at.segments.length === 1 &&
@@ -692,6 +694,7 @@ function Span({
         <span
           key={year}
           className={styles.change}
+          title={`Coding change in ${year}`}
           style={{
             left: Math.max(
               0,
@@ -700,7 +703,7 @@ function Span({
           }}
           aria-hidden="true"
         >
-          ▲ {year}
+          ▲
         </span>
       ))}
     </>
@@ -712,34 +715,32 @@ function Span({
   };
   if (!span.selectable) {
     return (
-      <span className={styles.span} title={span.note?.text} {...attributes}>
+      <span className={styles.span} title={span.accessibleName} {...attributes}>
         {body}
         <span className="visually-hidden">{span.accessibleName}</span>
       </span>
     );
   }
   return (
-    <label
+    <Checkbox
+      id={inputId}
       className={`${styles.span} ${styles.pick}`}
       style={{ height: SPAN_HEIGHT }}
-      title={span.note?.text}
-      data-disabled={isDisabled || undefined}
+      aria-label={span.accessibleName}
+      render={(props) => (
+        <label {...props} htmlFor={inputId} title={span.accessibleName} />
+      )}
+      isSelected={span.isSelected ?? false}
+      isDisabled={isDisabled}
+      onChange={() => onToggle(span.id)}
+      onHoverStart={() => onActive(span.id)}
+      onHoverEnd={() => onActive(null)}
+      onFocus={() => onActive(span.id)}
+      onBlur={() => onActive(null)}
       {...attributes}
     >
       {body}
-      <input
-        type="checkbox"
-        className={styles.hit}
-        aria-label={span.accessibleName}
-        checked={span.isSelected ?? false}
-        disabled={isDisabled}
-        onChange={() => onToggle(span.id)}
-        onMouseEnter={() => onActive(span.id)}
-        onMouseLeave={() => onActive(null)}
-        onFocus={() => onActive(span.id)}
-        onBlur={() => onActive(null)}
-      />
-    </label>
+    </Checkbox>
   );
 }
 
@@ -751,6 +752,7 @@ function Legend({
   rename,
   inProject,
   blocked,
+  changes,
 }: {
   coverage: LaneCoverage | undefined;
   addWindow: boolean;
@@ -759,6 +761,7 @@ function Legend({
   rename: boolean;
   inProject: boolean;
   blocked: boolean;
+  changes: boolean;
 }) {
   return (
     <ul className={styles.legend} aria-hidden="true">
@@ -806,6 +809,11 @@ function Legend({
         <li>
           <span className={styles.keyBlocked}>✕</span> In project, outside the
           study window
+        </li>
+      )}
+      {changes && (
+        <li>
+          <span className={styles.keyChange}>▲</span> Coding change
         </li>
       )}
     </ul>
