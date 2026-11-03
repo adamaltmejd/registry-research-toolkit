@@ -1507,11 +1507,13 @@ The generic compiler does the following against the exact catalog/semantic-view 
    coordinate; it yields two valid placements, not two rival variables. Different
    variable ids claiming the same folded column in one routed table/window remain
    `ambiguous_delivered_owners`: a publish-time notice/worklist row with no orderable
-   placement over the contested interval (Operator F2). Do not select by longest
-   coverage, first id or label. Uncontested intervals remain independently eligible.
-   Explicit `select_owner` names an evidence-backed variable per column/table/window; it
-   cannot clear an ambiguous catalog segment. Partition/projection and duplicate
-   placement checks still apply after owner grouping.
+   placement over the contested interval (Operator F2). The notice records its rival
+   `(table_pid, variable_pid)` pairs (`holding_notice_candidate`), so the contested cell
+   stays linked to its variables even where no placement of them survives. Do not select
+   by longest coverage, first id or label. Uncontested intervals remain independently
+   eligible. Explicit `select_owner` names an evidence-backed variable per
+   column/table/window; it cannot clear an ambiguous catalog segment.
+   Partition/projection and duplicate placement checks still apply after owner grouping.
 5. Emit keys `(table_pid, variable_pid, interval)` pointing to the literal physical
    column. An unmatched or empty-intersection column is retained with a
    `mapping_missing` notice and worklist row, without an orderable mapping. It does
@@ -1871,10 +1873,11 @@ binds artifact identity to the result. It first calls the logical check, then in
 each resulting table/variable/form interval with accepted holdings windows. Partial
 possession is an explicit physical clip and wholly unheld selections block. A
 publish-time `ambiguous_delivered_owners` notice has no accepted contested placement; a
-request for that cell therefore blocks as `mapping_missing`, not a second runtime
-holdings-rival resolution. Catalog ambiguity remains blocking even if only one rival is
-held. Physical findings never disappear into the logical `validate.ok` result. The
-separate physical operation reports its own success/refusal.
+request for a variable among its recorded rivals therefore blocks over that interval as
+`mapping_missing`, not a second runtime holdings-rival resolution. Catalog ambiguity
+remains blocking even if only one rival is held. Physical findings never disappear into
+the logical `validate.ok` result. The separate physical operation reports its own
+success/refusal.
 
 Select all explicit partition members needed for the requested interval. Projection
 duplicates use the parent's serving placement for an ordered shared key and retain the
@@ -2060,11 +2063,11 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   placement holds is a `coverage_gap` warning plus a clip when the binding holds some
   day, and `mapping_missing` (error) when it holds none. A day a routing table delivers
   but only a column `window` leaves out is `column_window_unavailable` under the same
-  partial-vs-whole rule. A day of a column carrying an `ambiguous_delivered_owners`
-  notice that places the variable is `mapping_missing` even when the rest is held. A
-  clip is the binding's own: its requested days are the logical clip recorded under the
-  project binding's variable, so a `follow_successor` binding whose entries name only
-  successors still reports the days lost between hops.
+  partial-vs-whole rule. A day of an `ambiguous_delivered_owners` notice that names the
+  variable among its rivals is `mapping_missing` even when the rest is held. A clip is
+  the binding's own: its requested days are the logical clip recorded under the project
+  binding's variable, so a `follow_successor` binding whose entries name only successors
+  still reports the days lost between hops.
 - A partition member is selected when it places a requested entry; a sibling without
   that column is no gap. A projection serves a (table, variable) only over the requested
   days its parent does not place it; a request the parent covers selects no projection
@@ -2083,6 +2086,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is
   `physical_schema_missing`. Both block, located at the file's first binding.
+  `reg-build holdings` already refuses such a name at publication
+  (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
 - Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
   than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
   `row_filter_union` (a source whose days are narrower than its shared file's union).

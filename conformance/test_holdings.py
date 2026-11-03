@@ -73,6 +73,16 @@ def test_compiled_holdings_accounting_and_pair(tmp_path):
         assert ("Code", "narrower") in notices
         assert ("Unknown", "mapping_missing") in notices
         assert ("Shared", "ambiguous_delivered_owners") in notices
+        # Fails if a contested notice loses its rivals: orders then read the
+        # contested interval as an ordinary gap instead of refusing it.
+        rivals = db.execute(
+            """SELECT c.name,r.table_pid,r.variable_pid FROM holding_notice_candidate r
+               JOIN holding_notice n ON n.id=r.notice_id
+               JOIN holding_column c ON c.id=n.column_id
+               WHERE n.code='ambiguous_delivered_owners'
+               ORDER BY c.name,r.table_pid,r.variable_pid"""
+        ).fetchall()
+        assert [list(row) for row in rivals] == expected["contested_rivals"]
         assert db.execute("SELECT pid FROM provider").fetchall() == [("steward",)]
         commit = run(["git", "rev-parse", "HEAD"], cwd=root).stdout.strip()
         assert db.execute("SELECT repo,commit_sha FROM input").fetchall() == [
@@ -384,6 +394,7 @@ def test_census_replacement_preserves_routes_and_refuses_vanished_columns(tmp_pa
         ("projection-held-parent", "holdings_projection_key_missing"),
         ("duplicate-placement", "inventory_cell_conflict"),
         ("overlapping-key-scopes", "holdings_row_key_undeclared_or_ambiguous"),
+        ("device-file-name", "holdings_filename_invalid"),
     ],
 )
 def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
@@ -392,6 +403,8 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
     # refusal beside the allowed physical fixture, at the publication boundary.
     # The key twins fail if disjoint deliveries supply one implicit period, a
     # column key lacks its column, or malformed/combined held claims are admitted.
+    # The file-name row fails if a name the runner refuses is published, deferring
+    # the refusal to every order that selects the table.
     _, root, command = prepare_holdings(tmp_path)
     path = root / "holdings.toml"
     text = path.read_text()
@@ -449,6 +462,15 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
         if mutation == "mixed-held-key":
             held += 'locator = "fixture:held-key"\n\n[[table.key]]\n' + declaration
         text = text.replace(declaration, held, 1)
+    elif mutation == "device-file-name":
+        # `CON` slugs to `con`, a Windows device name the runner cannot write.
+        census = root / "census.csv"
+        census.write_text(
+            census.read_text().replace(
+                "Synthetic,Lookup,Lookup,", "Synthetic,Lookup,CON,"
+            )
+        )
+        text = text.replace('physical_name = "Lookup"', 'physical_name = "CON"', 1)
     elif mutation == "blank-hold":
         text = text.replace('hold = "Await reviewed association"', 'hold = " "')
     elif mutation == "mixed-schema":
@@ -473,7 +495,9 @@ def test_holdings_refuses_invalid_authored_inputs(tmp_path, mutation, refusal):
     result = run([*command, "--out", output])
     assert result.returncode == 1
     assert refusal in result.stderr
-    if refusal.startswith(("holdings_period_key", "holdings_row_key")):
+    if refusal.startswith(
+        ("holdings_period_key", "holdings_row_key", "holdings_filename")
+    ):
         assert "holdings:table=" in result.stderr
         if mutation != "overlapping-key-scopes":
             assert "fixture:" in result.stderr

@@ -194,27 +194,40 @@ def splice_slot_family(root: Path) -> None:
 
 
 def prepare_materialize(directory: Path) -> tuple[Path, Path]:
-    """The materialize cases' steward: the slot family, a long header on Part B and a
-    first-half Parent amount."""
+    """The materialize cases' steward: the slot family, a long header on Part B, a
+    first-half Parent amount and a wholly contested Owners column."""
     base, root, command = prepare_holdings(directory)
     splice_slot_family(root)
     extension = CASES / "materialize/fixture"
     census = root / "census.csv"
     census.write_text(
-        census.read_text().replace(
+        census.read_text()
+        .replace(
             "Synthetic,Partition,Part B,Id,New,",
             "Synthetic,Partition,Part B,Id,New,Relative identifier as received in the delivery",
+        )
+        .replace(
+            "Synthetic,Rivals,Owners,Shared,Id,Unmatched,,",
+            "Synthetic,Rivals,Owners,Shared,Id,Unmatched,Gamma,Rival",
         )
     )
     storage = root / "storage.csv"
     storage.write_text(
-        storage.read_text() + (extension / "long-column-storage.csv").read_text()
+        storage.read_text()
+        + (extension / "long-column-storage.csv").read_text()
+        + (extension / "contested-column-storage.csv").read_text()
     )
     holdings = root / "holdings.toml"
     anchor = 'locator = "fixture:partition-b"\n'
     holdings.write_text(
         holdings.read_text().replace(
             anchor, anchor + "\n" + (extension / "long-column.toml").read_text(), 1
+        )
+    )
+    anchor = 'locator = "fixture:interval-local-owners"\n'
+    holdings.write_text(
+        holdings.read_text().replace(
+            anchor, anchor + "\n" + (extension / "contested-column.toml").read_text(), 1
         )
     )
     anchor = 'locator = "fixture:parent"\n'

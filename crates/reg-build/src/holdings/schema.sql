@@ -87,3 +87,11 @@ CREATE TABLE holding_notice (
  CHECK(start IS NULL OR start < end)
 ) STRICT;
 CREATE INDEX holding_notice_column ON holding_notice(column_id,code);
+-- The rival (table, variable) owners a blocked placement notice leaves unplaced.
+CREATE TABLE holding_notice_candidate (
+ notice_id INTEGER NOT NULL REFERENCES holding_notice(id),
+ table_pid TEXT NOT NULL,
+ variable_pid TEXT NOT NULL,
+ PRIMARY KEY(notice_id,table_pid,variable_pid)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX holding_notice_candidate_logical ON holding_notice_candidate(table_pid,variable_pid);

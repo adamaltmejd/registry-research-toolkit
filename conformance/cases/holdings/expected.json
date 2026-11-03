@@ -320,5 +320,9 @@
       ],
       "clips": []
     }
-  }
+  },
+  "contested_rivals": [
+    ["Shared", "demo/owners", "demo/owners/first"],
+    ["Shared", "demo/owners", "demo/owners/second"]
+  ]
 }

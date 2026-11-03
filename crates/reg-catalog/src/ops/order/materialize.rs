@@ -515,8 +515,8 @@ fn span(server: &Server, (lo, hi): Days) -> String {
 }
 
 /// The holdings findings for the days of `entry` no placement holds. A contested cell
-/// (a publish-time `ambiguous_delivered_owners` notice on a column that places this
-/// variable) is `mapping_missing` and blocks; a day inside a routing table's delivery
+/// (a publish-time `ambiguous_delivered_owners` notice naming this variable among its
+/// rivals) is `mapping_missing` and blocks; a day inside a routing table's delivery
 /// that only a column window leaves out is `column_window_unavailable`; any other is a
 /// `coverage_gap`. Whether the last two block is decided per binding in [`clip`].
 fn gaps(
@@ -541,9 +541,9 @@ fn gaps(
     let contested: Vec<Days> = merge_days(
         held.prepare(
             "SELECT n.start, n.end FROM holding_notice n
-             WHERE n.code = 'ambiguous_delivered_owners' AND n.start IS NOT NULL
-               AND EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id = n.column_id
-                 AND m.table_pid = ? AND m.variable_pid = ?)",
+             JOIN holding_notice_candidate c ON c.notice_id = n.id
+             WHERE n.code = 'ambiguous_delivered_owners'
+               AND c.table_pid = ? AND c.variable_pid = ?",
         )?
         .query_map([&entry.table, &entry.variable], |r| {
             Ok((r.get(0)?, r.get(1)?))

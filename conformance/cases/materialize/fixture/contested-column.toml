@@ -1,0 +1,25 @@
+# Synthetic: Owners places the third owner from its own column over 2017 only, while a
+# second column is claimed by the third owner and the identity over 2018..2019 alone, so
+# no placement of either survives there. Spliced after Owners' locator.
+[[table.column]]
+name = "Gamma"
+locator = "fixture:third-owner-2017"
+[[table.column.mapping]]
+table_pid = "demo/owners"
+variable_pid = "demo/owners/third"
+delivery = "2017"
+locator = "fixture:third-owner-2017"
+
+[[table.column]]
+name = "Rival"
+locator = "fixture:rival-column"
+[[table.column.mapping]]
+table_pid = "demo/owners"
+variable_pid = "demo/owners/third"
+delivery = "2018..2019"
+locator = "fixture:rival-third"
+[[table.column.mapping]]
+table_pid = "demo/owners"
+variable_pid = "demo/owners/id"
+delivery = "2018..2019"
+locator = "fixture:rival-identity"
