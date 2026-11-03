@@ -74,8 +74,6 @@ FOOTER_RE = re.compile(
 )
 PAGE_NUM_RE = re.compile(r"^\d{1,3}\s*$")
 
-# HTML tags injected by marker (span anchors, sup footnotes, bold/italic)
-HTML_TAG_RE = re.compile(r"</?(?:span|sup)[^>]*>")
 # Bare URLs/emails (MD034) — wrap in angle brackets
 BARE_EMAIL_RE = re.compile(
     r"(?<![<\[(/])(\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)(?![>\]])"
@@ -197,10 +195,6 @@ REMOVE_EMPLOYMENT: list[str] = [
     r"^Liv(Arb|ArbF|Yrke|Annan|Rta)$",
     r"^(SumEftPens|SocInk)$",
 ]
-
-# Topic file consolidation: section heading slug → (target_slug, display_name, tags)
-# Sections whose slugs match a key get merged into the target file.
-TOPIC_CONSOLIDATION: dict[str, tuple[str, str, list[str]]] = {}
 
 # Build consolidation map from target definitions
 _CONSOLIDATION_TARGETS: list[tuple[str, str, list[str], list[str]]] = [
@@ -416,7 +410,6 @@ class DocEntry:
     column_name: str | None  # None for topic files
     tags: list[str] = field(default_factory=list)
     lines: list[str] = field(default_factory=list)
-    start_line: int = 0
     source_file: str | None = None
 
 
@@ -766,7 +759,6 @@ def parse_bakgrundsfakta(md_text: str, known_cols: set[str]) -> list[DocEntry]:
             column_name=col,
             tags=tags,
             lines=content_lines,
-            start_line=start,
         )
         entries.append(entry)
 
@@ -895,7 +887,6 @@ def fill_missing_variables(
                 column_name=col,
                 tags=tags,
                 lines=content_lines,
-                start_line=best_start or 0,
             )
         )
 
