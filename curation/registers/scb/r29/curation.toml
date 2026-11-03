@@ -19247,12 +19247,6 @@ evidence = "#2102 same-label cluster 'Allmänna avdrag' (3 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:bfpmark"
-fields = { "label" = "Pensionsmarkering (folkpension)" }
-evidence = "#2102 same-label cluster 'Pensionsmarkering' (3 variables): judged different meaning, medium confidence; BFPMARK/FPMARK (folkpension marker, no code list) runs concurrently with PENMARK and BPENS; PENMARK to BPENS is a rename with the same code list."
-
-[[statement]]
-kind = "set"
 subject = "var:binjo"
 fields = { "label" = "Inkomst av jordbruksfastighet (person B)" }
 evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, medium confidence; Unprefixed INJO/INSJOR, A-prefixed and B-prefixed columns run concurrently in the household tables (INSJOR beside INASJOR and INBSJOR), so they are separate amounts per person A, person B and total."

@@ -24660,12 +24660,6 @@ evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:ags-sarskild-loneskatt-hushall"
-fields = { "label" = "AGS m.m., särskild löneskatt på förvärvsinkomster, bostadshushåll" }
-evidence = "#2102 same-label cluster 'AGS m.m., särskild löneskatt på förvärvsinkomster' (2 variables): judged different meaning, medium confidence; PAGSFT is on individ level (individer-och-dodsbon) and PAGSFTHB on bostadshushåll level; different observation units."
-
-[[statement]]
-kind = "set"
 subject = "var:ainro"
 fields = { "label" = "Inkomst av rörelse (A-inkomst)" }
 evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged different meaning, medium confidence; INSROR is the total; AINRO/INASROR are the A-income and BINRO/INBSROR the B-income, each pair a rename (same pattern as farm property income)."
@@ -24744,18 +24738,6 @@ evidence = "#2102 same-label cluster 'Änkepension, skapad' (2 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:arbetsinkomst-carb-2"
-fields = { "label" = "Arbetsinkomst (individ)" }
-evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (ARBINK/CARB) and per household (CARBHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsinkomst-carbhb"
-fields = { "label" = "Arbetsinkomst (hushåll)" }
-evidence = "#2102 same-label cluster 'Arbetsinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (ARBINK/CARB) and per household (CARBHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsmarknadsforsakringar-hushall"
 fields = { "label" = "Arbetsmarknadsförsäkringar (arbetslöshet och sjukdom) (hushåll)" }
 evidence = "#2102 same-label cluster 'Arbetsmarknadsförsäkringar (arbetslöshet och sjukdom)' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (TARBFOR) and per household (TARBFORHB)."
@@ -24783,18 +24765,6 @@ kind = "set"
 subject = "var:asfavg-delperiod-3"
 fields = { "label" = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 % (delperiod 3)" }
 evidence = "#2102 same-label cluster 'Underlag för beräkning av föräldraförsäkringsavgift, 2,20 %' (4 variables): judged different meaning, high confidence; ASFAVG is the base column; ASFAVG1-3 are concurrent delperiod columns (2015-2017)."
-
-[[statement]]
-kind = "set"
-subject = "var:aterbetalt-studielan-hushall"
-fields = { "label" = "Återbetalt belopp, studielån (hushåll)" }
-evidence = "#2102 same-label cluster 'Återbetalt belopp, studielån' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
-
-[[statement]]
-kind = "set"
-subject = "var:aterbetalt-studielan-individ"
-fields = { "label" = "Återbetalt belopp, studielån (individ)" }
-evidence = "#2102 same-label cluster 'Återbetalt belopp, studielån' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
 
 [[statement]]
 kind = "set"
@@ -24840,12 +24810,6 @@ evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:avkext"
-fields = { "label" = "Extra avdrag (kommunal skatt)" }
-evidence = "#2102 same-label cluster 'Extra avdrag' (2 variables): judged different meaning, medium confidence; AVSEXT/SEA is named as the state extra deduction; AVKEXT runs concurrently in 1990-1991 and the S/K prefixes elsewhere in IoT stand for state and municipal tax."
-
-[[statement]]
-kind = "set"
 subject = "var:avkforl"
 fields = { "label" = "Förlustavdrag (kommunal skatt)" }
 evidence = "#2102 same-label cluster 'Förlustavdrag' (8 variables): judged different meaning, medium confidence; Pairs of concurrent columns in each period: municipal and state (KFOAV/SFOAV, AVKFORL/AVSFORL, prefixes K and S as in the extra deduction), then earned income and capital (AVFORLF/AVFORLK, AFORFVI/AFORKAP)."
@@ -24882,30 +24846,6 @@ evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (5 variable
 
 [[statement]]
 kind = "set"
-subject = "var:barnbidrag-forlangt-flerbarnstillagg-hushall"
-fields = { "label" = "Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (hushåll)" }
-evidence = "#2102 same-label cluster 'Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BBIDR/IBARNB) and per household (IBARNBHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:barnbidrag-forlangt-flerbarnstillagg-individ"
-fields = { "label" = "Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (individ)" }
-evidence = "#2102 same-label cluster 'Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BBIDR/IBARNB) and per household (IBARNBHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:barnpension-livranta-och-pension-skattefri-hushall"
-fields = { "label" = "Barnpension, skattefri del (hushåll, inklusive livränta och pension)" }
-evidence = "#2102 same-label cluster 'Barnpension, skattefri del' (2 variables): judged different meaning, medium confidence; Individual column holds only the tax-free part of child pension; the household column (own description) also includes livränta and pension."
-
-[[statement]]
-kind = "set"
-subject = "var:barnpension-skattefri-del-individ"
-fields = { "label" = "Barnpension, skattefri del (individ)" }
-evidence = "#2102 same-label cluster 'Barnpension, skattefri del' (2 variables): judged different meaning, medium confidence; Individual column holds only the tax-free part of child pension; the household column (own description) also includes livränta and pension."
-
-[[statement]]
-kind = "set"
 subject = "var:barnpension-skattepliktig-och-skattefri-hushall"
 fields = { "label" = "Barnpension skattepliktig och skattefri (hushåll)" }
 evidence = "#2102 same-label cluster 'Barnpension skattepliktig och skattefri' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PBARN) and per household (PBARNHB)."
@@ -24915,18 +24855,6 @@ kind = "set"
 subject = "var:barnpension-skattepliktig-och-skattefri-individ"
 fields = { "label" = "Barnpension skattepliktig och skattefri (individ)" }
 evidence = "#2102 same-label cluster 'Barnpension skattepliktig och skattefri' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PBARN) and per household (PBARNHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:beskattningsbar-kapitalinkomst-hushall"
-fields = { "label" = "Beskattningsbar inkomst av kapital, bostadshushåll" }
-evidence = "#2102 same-label cluster 'Beskattningsbar inkomst av kapital' (2 variables): judged different meaning, medium confidence; KBESK/SBESKK are on individ and dödsbo level; KBESKHB is on bostadshushåll level; different observation units."
-
-[[statement]]
-kind = "set"
-subject = "var:beskattningsbar-kapitalinkomst-individ"
-fields = { "label" = "Beskattningsbar inkomst av kapital, individ" }
-evidence = "#2102 same-label cluster 'Beskattningsbar inkomst av kapital' (2 variables): judged different meaning, medium confidence; KBESK/SBESKK are on individ and dödsbo level; KBESKHB is on bostadshushåll level; different observation units."
 
 [[statement]]
 kind = "set"
@@ -25158,18 +25086,6 @@ evidence = "#2102 same-label cluster 'Efterlevandepension till barn' (2 variable
 
 [[statement]]
 kind = "set"
-subject = "var:egenavgifter-hushall"
-fields = { "label" = "Egenavgifter, bostadshushåll" }
-evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): judged different meaning, medium confidence; AVEGEN/SEGEN are on individ and dödsbo level, SEGENHB on bostadshushåll level; different observation units."
-
-[[statement]]
-kind = "set"
-subject = "var:egenavgifter-individ"
-fields = { "label" = "Egenavgifter, individ" }
-evidence = "#2102 same-label cluster 'Egenavgifter' (2 variables): judged different meaning, medium confidence; AVEGEN/SEGEN are on individ and dödsbo level, SEGENHB on bostadshushåll level; different observation units."
-
-[[statement]]
-kind = "set"
 subject = "var:elstod-belopp-elavtalsinnehavare"
 fields = { "label" = "Elstöd (belopp till elavtalsinnehavare)" }
 evidence = "#2102 same-label cluster 'Elstöd' (2 variables): judged different meaning, high confidence; IELSTOD is the amount to the electricity-contract holder; IELSTODU (own description) is the household total divided over the adults in the household."
@@ -25179,18 +25095,6 @@ kind = "set"
 subject = "var:elstod-hushallsbelopp-per-antal-vuxna-i-hushallet"
 fields = { "label" = "Elstöd (hushållsbelopp fördelat på vuxna i hushållet)" }
 evidence = "#2102 same-label cluster 'Elstöd' (2 variables): judged different meaning, high confidence; IELSTOD is the amount to the electricity-contract holder; IELSTODU (own description) is the household total divided over the adults in the household."
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-forsakringskassa-ku-hushall"
-fields = { "label" = "Ersättning från allmän försäkringskassa enligt KU (hushåll)" }
-evidence = "#2102 same-label cluster 'Ersättning från allmän försäkringskassa enligt KU' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CFKASS/SJUKPEN) and per household (CFKASSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-forsakringskassa-ku-individ"
-fields = { "label" = "Ersättning från allmän försäkringskassa enligt KU (individ)" }
-evidence = "#2102 same-label cluster 'Ersättning från allmän försäkringskassa enligt KU' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CFKASS/SJUKPEN) and per household (CFKASSHB)."
 
 [[statement]]
 kind = "set"
@@ -25209,30 +25113,6 @@ kind = "set"
 subject = "var:faktorinkomst-exkl-kapitalvinst-2004-bostadshushall"
 fields = { "label" = "Faktorinkomst från och med 2004 (exklusive kapitalvinst)" }
 evidence = "#2102 same-label cluster 'Faktorinkomst från och med 2004' (2 variables): judged different meaning, high confidence; CFAKT04HB is the household factor income from 2004; CFAKT504HB is the same definition excluding capital gains."
-
-[[statement]]
-kind = "set"
-subject = "var:faktorinkomst-hushall"
-fields = { "label" = "Faktorinkomst (hushåll)" }
-evidence = "#2102 same-label cluster 'Faktorinkomst' (2 variables): judged different meaning, high confidence; Individual column with the 2003 definition (CFAKT03) versus the household column (CFAKTHB), different unit."
-
-[[statement]]
-kind = "set"
-subject = "var:faktorinkomst-individ-2003"
-fields = { "label" = "Faktorinkomst (individ, definition 2003)" }
-evidence = "#2102 same-label cluster 'Faktorinkomst' (2 variables): judged different meaning, high confidence; Individual column with the 2003 definition (CFAKT03) versus the household column (CFAKTHB), different unit."
-
-[[statement]]
-kind = "set"
-subject = "var:familjetyp-bfamtyp"
-fields = { "label" = "Familjetyp, efter förvärvsarbete (1978-1998)" }
-evidence = "#2102 same-label cluster 'Familjetyp' (2 variables): judged different meaning, high confidence; Different classifications: 1978-98 codes based on spouses' earned income against basbelopp; 1998+ Famtyp codes on household composition and children."
-
-[[statement]]
-kind = "set"
-subject = "var:familjetyp-famtyp"
-fields = { "label" = "Familjetyp, efter familjesammansättning (från 1998)" }
-evidence = "#2102 same-label cluster 'Familjetyp' (2 variables): judged different meaning, high confidence; Different classifications: 1978-98 codes based on spouses' earned income against basbelopp; 1998+ Famtyp codes on household composition and children."
 
 [[statement]]
 kind = "set"
@@ -25284,18 +25164,6 @@ evidence = "#2102 same-label cluster 'Förlängd omställningspension, summerad'
 
 [[statement]]
 kind = "set"
-subject = "var:forvarvs-och-kapitalinkomst-cfviki-2"
-fields = { "label" = "Förvärvs- och kapitalinkomst (individ)" }
-evidence = "#2102 same-label cluster 'Förvärvs- och kapitalinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CFVIKI/FINK) and per household (CFVIKIHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:forvarvs-och-kapitalinkomst-cfvikihb"
-fields = { "label" = "Förvärvs- och kapitalinkomst (hushåll)" }
-evidence = "#2102 same-label cluster 'Förvärvs- och kapitalinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CFVIKI/FINK) and per household (CFVIKIHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:fpekod"
 fields = { "label" = "Folkpension, egen förmån, kod 1990-1993" }
 evidence = "#2102 same-label cluster 'Folkpension, egen förmån' (4 variables): judged different meaning, medium confidence; FPKOD1 and FPKOD2 coexist 1981-90 (first and second benefit per pid) with the same code list; FPEKOD (1990-93) and BFPE (1993-2003) are later columns with other code lists."
@@ -25338,18 +25206,6 @@ evidence = "#2102 same-label cluster 'Garantipension' (2 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:givet-underhallsbidrag-aterbetalt-hushall"
-fields = { "label" = "Givet underhållsbidrag, återbetalt bidragsförskott (hushåll)" }
-evidence = "#2102 same-label cluster 'Givet underhållsbidrag, återbetalt bidragsförskott' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BFGBEL/UBDF) and per household (UBDFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:givet-underhallsbidrag-aterbetalt-individ"
-fields = { "label" = "Givet underhållsbidrag, återbetalt bidragsförskott (individ)" }
-evidence = "#2102 same-label cluster 'Givet underhållsbidrag, återbetalt bidragsförskott' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BFGBEL/UBDF) and per household (UBDFHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:givet-underhallsbidrag-hushall"
 fields = { "label" = "Givet underhållsbidrag (hushåll)" }
 evidence = "#2102 same-label cluster 'Givet underhållsbidrag' (2 variables): judged different meaning, high confidence; Same modelled amount for different units: per household (UUHBIDHB) and per individual (UUHBID)."
@@ -25359,18 +25215,6 @@ kind = "set"
 subject = "var:givet-underhallsbidrag-individ"
 fields = { "label" = "Givet underhållsbidrag (individ)" }
 evidence = "#2102 same-label cluster 'Givet underhållsbidrag' (2 variables): judged different meaning, high confidence; Same modelled amount for different units: per household (UUHBIDHB) and per individual (UUHBID)."
-
-[[statement]]
-kind = "set"
-subject = "var:handikappersattning-hushall"
-fields = { "label" = "Handikappersättning, bostadshushåll" }
-evidence = "#2102 same-label cluster 'Handikappersättning' (2 variables): judged different meaning, medium confidence; HKAP/IHKAP is the individual's amount (individ table), IHKAPHB the household's amount (bostadshushåll table), per the descriptions."
-
-[[statement]]
-kind = "set"
-subject = "var:handikappersattning-individ"
-fields = { "label" = "Handikappersättning, individ" }
-evidence = "#2102 same-label cluster 'Handikappersättning' (2 variables): judged different meaning, medium confidence; HKAP/IHKAP is the individual's amount (individ table), IHKAPHB the household's amount (bostadshushåll table), per the descriptions."
 
 [[statement]]
 kind = "set"
@@ -25410,18 +25254,6 @@ evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 vari
 
 [[statement]]
 kind = "set"
-subject = "var:inkomst-av-naringsverksamhet-hushall"
-fields = { "label" = "Inkomst av näringsverksamhet (hushåll)" }
-evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (INNRV/NRV) and per household (NRVHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomst-av-naringsverksamhet-individ"
-fields = { "label" = "Inkomst av näringsverksamhet (individ)" }
-evidence = "#2102 same-label cluster 'Inkomst av näringsverksamhet' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (INNRV/NRV) and per household (NRVHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:inkomst-av-tjanst-punkt-1"
 fields = { "label" = "Deklarerad inkomst av tjänst (punkt 1)" }
 evidence = "#2102 same-label cluster 'Deklarerad inkomst av tjänst' (2 variables): judged different meaning, medium confidence; Two concurrent columns INDTJ1 and INDTJ2 (the pids name them point 1 and point 2 of the declaration)."
@@ -25443,18 +25275,6 @@ kind = "set"
 subject = "var:inkomstpensionstillagg-individ"
 fields = { "label" = "Inkomstpensionstillägg (individ)" }
 evidence = "#2102 same-label cluster 'Inkomstpensionstillägg' (2 variables): judged different meaning, high confidence; Same amount for different units: per household (PIPTHB) and per individual (PIPT)."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomstranta-och-utdelning-kapital-kaprta-2"
-fields = { "label" = "Inkomstränta och utdelning, kapital (individ)" }
-evidence = "#2102 same-label cluster 'Inkomstränta och utdelning, kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KAPRTA/KIRANTA) and per household (KIRANTAHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomstranta-och-utdelning-kapital-kirantahb"
-fields = { "label" = "Inkomstränta och utdelning, kapital (hushåll)" }
-evidence = "#2102 same-label cluster 'Inkomstränta och utdelning, kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KAPRTA/KIRANTA) and per household (KIRANTAHB)."
 
 [[statement]]
 kind = "set"
@@ -25485,18 +25305,6 @@ kind = "set"
 subject = "var:kapitalforlust-brutto-individ"
 fields = { "label" = "Kapitalförlust, brutto (individ)" }
 evidence = "#2102 same-label cluster 'Kapitalförlust, brutto' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KFBRUT) and per household (KFBRUTHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalinkomster-bank-aktier-hushall"
-fields = { "label" = "Kapitalinkomster från bank, aktier och andra värdepapper (hushåll)" }
-evidence = "#2102 same-label cluster 'Kapitalinkomster från bank, aktier och andra värdepapper' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KAPINK/KKUKAP) and per household (KKUKAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:kapitalinkomster-bank-aktier-individ"
-fields = { "label" = "Kapitalinkomster från bank, aktier och andra värdepapper (individ)" }
-evidence = "#2102 same-label cluster 'Kapitalinkomster från bank, aktier och andra värdepapper' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KAPINK/KKUKAP) and per household (KKUKAPHB)."
 
 [[statement]]
 kind = "set"
@@ -25590,30 +25398,6 @@ evidence = "#2102 same-label cluster 'Livränta, härledd' (2 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:livranta-hushall"
-fields = { "label" = "Livränta (hushåll)" }
-evidence = "#2102 same-label cluster 'Livränta' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PLIVDS/PLIVSP) and per household (PLIVDSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:livranta-individ"
-fields = { "label" = "Livränta (individ)" }
-evidence = "#2102 same-label cluster 'Livränta' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PLIVDS/PLIVSP) and per household (PLIVDSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:loneinkomst-lon-2"
-fields = { "label" = "Löneinkomst (individ)" }
-evidence = "#2102 same-label cluster 'Löneinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (LON/TLONT) and per household (TLONTHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:loneinkomst-tlonthb"
-fields = { "label" = "Löneinkomst (hushåll)" }
-evidence = "#2102 same-label cluster 'Löneinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (LON/TLONT) and per household (TLONTHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:markering-nolltaxering"
 fields = { "label" = "Markering för nolltaxering (kommunal)" }
 evidence = "#2102 same-label cluster 'Markering för nolltaxering' (2 variables): judged different meaning, medium confidence; KTAXNOL and STAXNOL are concurrent with identical value sets; by the K/S prefix pattern used elsewhere in IoT they are the municipal and state versions."
@@ -25635,18 +25419,6 @@ kind = "set"
 subject = "var:medgiven-skattereduktion-sjoinkomst-individ"
 fields = { "label" = "Medgiven skattereduktion för sjöinkomst (individ)" }
 evidence = "#2102 same-label cluster 'Medgiven skattereduktion för sjöinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SREDSJO) and per household (SREDSJOHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:mottaget-bidragsforskott-hushall"
-fields = { "label" = "Mottaget bidragsförskott (hushåll)" }
-evidence = "#2102 same-label cluster 'Mottaget bidragsförskott' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BFMBEL/IBDF) and per household (IBDFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:mottaget-bidragsforskott-individ"
-fields = { "label" = "Mottaget bidragsförskott (individ)" }
-evidence = "#2102 same-label cluster 'Mottaget bidragsförskott' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (BFMBEL/IBDF) and per household (IBDFHB)."
 
 [[statement]]
 kind = "set"
@@ -25800,12 +25572,6 @@ evidence = "#2102 same-label cluster 'Övriga positiva transfereringar, skattefr
 
 [[statement]]
 kind = "set"
-subject = "var:pagsft"
-fields = { "label" = "AGS m.m., särskild löneskatt på förvärvsinkomster, individ" }
-evidence = "#2102 same-label cluster 'AGS m.m., särskild löneskatt på förvärvsinkomster' (2 variables): judged different meaning, medium confidence; PAGSFT is on individ level (individer-och-dodsbon) and PAGSFTHB on bostadshushåll level; different observation units."
-
-[[statement]]
-kind = "set"
 subject = "var:penmg"
 fields = { "label" = "Pensionsmarkering (gifta och sambo)" }
 evidence = "#2102 same-label cluster 'Pensionsmarkering' (8 variables): judged different meaning, medium confidence; Three markers in parallel with successors after 1993: the pension-type marker (PENMARK, BPENS), the marker for married/cohabiting (PENMG, BPMRKG), the marker for single persons (PENMOG, BPMRKOG), plus the state pension marker FPMARK/BFPMARK (FP read as folkpension)."
@@ -25875,18 +25641,6 @@ kind = "set"
 subject = "var:pensioner-utlandskt-beskattade-individ"
 fields = { "label" = "Pensioner, utländskt beskattade, individ" }
 evidence = "#2102 same-label cluster 'Pensioner, utländskt beskattade' (2 variables): judged different meaning, medium confidence; TPENSAU is on individ level, TPENSAUHB on bostadshushåll level in different tables."
-
-[[statement]]
-kind = "set"
-subject = "var:pensionsbeloppskontroll-per-person-penst-2"
-fields = { "label" = "Pensionsbeloppskontroll, per person (individ)" }
-evidence = "#2102 same-label cluster 'Pensionsbeloppskontroll, per person' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PENST/PKONTR) and per household (PKONTRHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:pensionsbeloppskontroll-per-person-pkontrhb"
-fields = { "label" = "Pensionsbeloppskontroll, per person (hushåll)" }
-evidence = "#2102 same-label cluster 'Pensionsbeloppskontroll, per person' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (PENST/PKONTR) and per household (PKONTRHB)."
 
 [[statement]]
 kind = "set"
@@ -25986,18 +25740,6 @@ evidence = "#2102 same-label cluster 'Samfundskod' (2 variables): judged differe
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-csfvi-2"
-fields = { "label" = "Sammanräknad förvärvsinkomst (individ)" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CSFVI/SINKF) and per household (CSFVIHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-csfvihb"
-fields = { "label" = "Sammanräknad förvärvsinkomst (hushåll)" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CSFVI/SINKF) and per household (CSFVIHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:savkutsek"
 fields = { "label" = "Avkastningskatt, uttag omräknat till kronor" }
 evidence = "#2102 same-label cluster 'Avkastningskatt, uttag i den aktuella valutan' (2 variables): judged different meaning, medium confidence; SAVKUT holds the tax in the foreign currency; SAVKUTSEK (own description) holds it converted to kronor, concurrent in 2015-2016."
@@ -26064,18 +25806,6 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av sjukförsäkri
 
 [[statement]]
 kind = "set"
-subject = "var:skatt-hek-hushall"
-fields = { "label" = "Skatt enligt hushållens ekonomi, HEK (hushåll)" }
-evidence = "#2102 same-label cluster 'Skatt enligt hushållens ekonomi, HEK' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (STOTEX) and per household (STOTEXHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-hek-individ"
-fields = { "label" = "Skatt enligt hushållens ekonomi, HEK (individ)" }
-evidence = "#2102 same-label cluster 'Skatt enligt hushållens ekonomi, HEK' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (STOTEX) and per household (STOTEXHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:skatt-utlandsk-hushall"
 fields = { "label" = "Skatt, utländsk (hushåll)" }
 evidence = "#2102 same-label cluster 'Skatt, utländsk' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SSLUTU) and per household (SSLUTUHB)."
@@ -26085,18 +25815,6 @@ kind = "set"
 subject = "var:skatt-utlandsk-individ"
 fields = { "label" = "Skatt, utländsk (individ)" }
 evidence = "#2102 same-label cluster 'Skatt, utländsk' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SSLUTU) and per household (SSLUTUHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:skattefri-del-av-livranta-och-pension-livskf-2"
-fields = { "label" = "Skattefri del av livränta och pension (individ)" }
-evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (LIVSKF/PKUSLSF/PSLSF) and per household (PSLSFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:skattefri-del-av-livranta-och-pension-pslsfhb"
-fields = { "label" = "Skattefri del av livränta och pension (hushåll)" }
-evidence = "#2102 same-label cluster 'Skattefri del av livränta och pension' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (LIVSKF/PKUSLSF/PSLSF) and per household (PSLSFHB)."
 
 [[statement]]
 kind = "set"
@@ -26160,42 +25878,6 @@ evidence = "#2102 same-label cluster 'Skattereduktion för sjuk- och aktivitetse
 
 [[statement]]
 kind = "set"
-subject = "var:skattereduktion-underskott-kapital-hushall"
-fields = { "label" = "Skattereduktion för underskott av kapital (hushåll)" }
-evidence = "#2102 same-label cluster 'Skattereduktion för underskott av kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKRKAP/SREDKAP) and per household (SREDKAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:skattereduktion-underskott-kapital-individ"
-fields = { "label" = "Skattereduktion för underskott av kapital (individ)" }
-evidence = "#2102 same-label cluster 'Skattereduktion för underskott av kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKRKAP/SREDKAP) and per household (SREDKAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:slutlig-skatt-exkl-egenavgifter-hushall"
-fields = { "label" = "Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter (hushåll)" }
-evidence = "#2102 same-label cluster 'Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKSLUTX/SSLUTEX) and per household (SSLUTEXHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:slutlig-skatt-exkl-egenavgifter-individ"
-fields = { "label" = "Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter (individ)" }
-evidence = "#2102 same-label cluster 'Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKSLUTX/SSLUTEX) and per household (SSLUTEXHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:sociala-formaner-tjanst-hushall"
-fields = { "label" = "Summa sociala förmåner, tjänst (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa sociala förmåner, tjänst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SOCERS/TSOCERS) and per household (TSOCERSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:sociala-formaner-tjanst-individ"
-fields = { "label" = "Summa sociala förmåner, tjänst (individ)" }
-evidence = "#2102 same-label cluster 'Summa sociala förmåner, tjänst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SOCERS/TSOCERS) and per household (TSOCERSHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:socialbidrag-inkl-introduktion"
 fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (individ)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Individual (SOCB, then ISOCBID) and family (SOCBF, then ISOCBIDH) versions, each pair following the other in time."
@@ -26217,60 +25899,6 @@ kind = "set"
 subject = "var:socialbidrag-introduktionsersattning-flyktingar-familj"
 fields = { "label" = "Socialbidrag inkl. introduktionsersättning till flyktingar (familj)" }
 evidence = "#2102 same-label cluster 'Socialbidrag inkl. introduktionsersättning till flyktingar' (4 variables): judged different meaning, high confidence; Individual (SOCB, then ISOCBID) and family (SOCBF, then ISOCBIDH) versions, each pair following the other in time."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-inkomstskatt-forvarv-hushall"
-fields = { "label" = "Statlig inkomstskatt på förvärvsinkomster (hushåll)" }
-evidence = "#2102 same-label cluster 'Statlig inkomstskatt på förvärvsinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKSINF/SSFVI) and per household (SSFVIHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-inkomstskatt-forvarv-individ"
-fields = { "label" = "Statlig inkomstskatt på förvärvsinkomster (individ)" }
-evidence = "#2102 same-label cluster 'Statlig inkomstskatt på förvärvsinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKSINF/SSFVI) and per household (SSFVIHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-inkomstskatt-kapitalinkomster-hushall"
-fields = { "label" = "Statlig inkomstskatt på kapitalinkomster (hushåll)" }
-evidence = "#2102 same-label cluster 'Statlig inkomstskatt på kapitalinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKAP/SKKAP) and per household (SKAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-inkomstskatt-kapitalinkomster-individ"
-fields = { "label" = "Statlig inkomstskatt på kapitalinkomster (individ)" }
-evidence = "#2102 same-label cluster 'Statlig inkomstskatt på kapitalinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SKAP/SKKAP) and per household (SKAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-kommunal-inkomstskatt-hushall"
-fields = { "label" = "Statlig och kommunal inkomstskatt på förvärvsinkomster (hushåll)" }
-evidence = "#2102 same-label cluster 'Statlig och kommunal inkomstskatt på förvärvsinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SFORV/SKFINK) and per household (SFORVHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-kommunal-inkomstskatt-individ"
-fields = { "label" = "Statlig och kommunal inkomstskatt på förvärvsinkomster (individ)" }
-evidence = "#2102 same-label cluster 'Statlig och kommunal inkomstskatt på förvärvsinkomster' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (SFORV/SKFINK) and per household (SFORVHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-taxerad-kapitalinkomst-hushall"
-fields = { "label" = "Statlig taxerad inkomst av kapital (hushåll)" }
-evidence = "#2102 same-label cluster 'Statlig taxerad inkomst av kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KKAPS/STAXKAP) and per household (KKAPSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statlig-taxerad-kapitalinkomst-individ"
-fields = { "label" = "Statlig taxerad inkomst av kapital (individ)" }
-evidence = "#2102 same-label cluster 'Statlig taxerad inkomst av kapital' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KKAPS/STAXKAP) and per household (KKAPSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:statligt-extra-avdrag"
-fields = { "label" = "Extra avdrag (statlig skatt)" }
-evidence = "#2102 same-label cluster 'Extra avdrag' (2 variables): judged different meaning, medium confidence; AVSEXT/SEA is named as the state extra deduction; AVKEXT runs concurrently in 1990-1991 and the S/K prefixes elsewhere in IoT stand for state and municipal tax."
 
 [[statement]]
 kind = "set"
@@ -26328,18 +25956,6 @@ evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (2 variables): 
 
 [[statement]]
 kind = "set"
-subject = "var:studiemedel-studiehjalp-lan-och-bidrag-istud-2"
-fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (individ)" }
-evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (ISTUD/STUD) and per household (ISTUDHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiehjalp-lan-och-bidrag-istudhb"
-fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (hushåll)" }
-evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (ISTUD/STUD) and per household (ISTUDHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:studiemedel-studiehjalp-summering"
 fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (summering) (individ)" }
 evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag (summering)' (3 variables): judged different meaning, medium confidence; Household (ISTUDSFHB) and individual (ISTUDSF) sums; ISTUDSFH in the individual table follows the H = family convention used by CSFVIH and CFVIKIH, which is inferred."
@@ -26358,24 +25974,6 @@ evidence = "#2102 same-label cluster 'Studiestöd' (2 variables): judged differe
 
 [[statement]]
 kind = "set"
-subject = "var:summa-allman-pension-tjanstepension-tjanst-kuapens-2"
-fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (individ)" }
-evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): judged different meaning, high confidence; Individual column (KUAPENS/PKUSSP, then PSSP from the 2019 source change) versus the household column (PSSPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-allman-pension-tjanstepension-tjanst-pssp"
-fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (individ)" }
-evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): judged different meaning, high confidence; Individual column (KUAPENS/PKUSSP, then PSSP from the 2019 source change) versus the household column (PSSPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-allman-pension-tjanstepension-tjanst-pssphb"
-fields = { "label" = "Summa allmän pension/tjänstepension, tjänst (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa allmän pension/tjänstepension, tjänst' (3 variables): judged different meaning, high confidence; Individual column (KUAPENS/PKUSSP, then PSSP from the 2019 source change) versus the household column (PSSPHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:summa-bostadstillagg-hushall"
 fields = { "label" = "Summa bostadstillägg (hushåll)" }
 evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (IBTP) and per household (IBTPHB)."
@@ -26388,48 +25986,6 @@ evidence = "#2102 same-label cluster 'Summa bostadstillägg' (2 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf-2"
-fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (individ)" }
-evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): judged different meaning, high confidence; Individual column (CKULONF/KULONS/WKULONF, then CLONF from the 2019 source change) versus the household column (TLONFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-clonf"
-fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (individ)" }
-evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): judged different meaning, high confidence; Individual column (CKULONF/KULONS/WKULONF, then CLONF from the 2019 source change) versus the household column (TLONFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-lon-och-formaner-enligt-kontrolluppgifter-tlonfhb"
-fields = { "label" = "Summa lön och förmåner enligt kontrolluppgifter (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa lön och förmåner enligt kontrolluppgifter' (3 variables): judged different meaning, high confidence; Individual column (CKULONF/KULONS/WKULONF, then CLONF from the 2019 source change) versus the household column (TLONFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-pension-enligt-kontrolluppgift-kupenst-2"
-fields = { "label" = "Summa pension (enligt kontrolluppgift) (individ)" }
-evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): judged different meaning, high confidence; Individual column (KUPENST/PKUPENS, then PAPENS from the 2019 source change) versus the household column (PKUPENSHB, then PAPENSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-pension-enligt-kontrolluppgift-papens"
-fields = { "label" = "Summa pension (enligt kontrolluppgift) (individ)" }
-evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): judged different meaning, high confidence; Individual column (KUPENST/PKUPENS, then PAPENS from the 2019 source change) versus the household column (PKUPENSHB, then PAPENSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-pension-enligt-kontrolluppgift-papenshb"
-fields = { "label" = "Summa pension (enligt kontrolluppgift) (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): judged different meaning, high confidence; Individual column (KUPENST/PKUPENS, then PAPENS from the 2019 source change) versus the household column (PKUPENSHB, then PAPENSHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-pension-enligt-kontrolluppgift-pkupenshb"
-fields = { "label" = "Summa pension (enligt kontrolluppgift) (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa pension (enligt kontrolluppgift)' (4 variables): judged different meaning, high confidence; Individual column (KUPENST/PKUPENS, then PAPENS from the 2019 source change) versus the household column (PKUPENSHB, then PAPENSHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:summa-positiva-transfereringar-hushall"
 fields = { "label" = "Summa positiva transfereringar, skattepliktiga och skattefria (hushåll)" }
 evidence = "#2102 same-label cluster 'Summa positiva transfereringar, skattepliktiga och skattefria' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CTRAP) and per household (CTRAPHB)."
@@ -26439,18 +25995,6 @@ kind = "set"
 subject = "var:summa-positiva-transfereringar-individ"
 fields = { "label" = "Summa positiva transfereringar, skattepliktiga och skattefria (individ)" }
 evidence = "#2102 same-label cluster 'Summa positiva transfereringar, skattepliktiga och skattefria' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (CTRAP) and per household (CTRAPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-privat-pensionsforsakring-skattepliktig-kuppens-2"
-fields = { "label" = "Summa privat pensionsförsäkring/skattepliktig livränta, tjänst (individ)" }
-evidence = "#2102 same-label cluster 'Summa privat pensionsförsäkring/skattepliktig livränta, tjänst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KUPPENS/PKUSLSP/PKUSSPL/PSLSP) and per household (PSLSPHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-privat-pensionsforsakring-skattepliktig-pslsphb"
-fields = { "label" = "Summa privat pensionsförsäkring/skattepliktig livränta, tjänst (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa privat pensionsförsäkring/skattepliktig livränta, tjänst' (2 variables): judged different meaning, high confidence; Same amount for different units: per individual (KUPPENS/PKUSLSP/PKUSSPL/PSLSP) and per household (PSLSPHB)."
 
 [[statement]]
 kind = "set"
@@ -26469,24 +26013,6 @@ kind = "set"
 subject = "var:summa-studiemedel-studiehjalp-lan-bidrag-bostadshushall"
 fields = { "label" = "Studiemedel/studiehjälp, lån och bidrag (summering) (hushåll)" }
 evidence = "#2102 same-label cluster 'Studiemedel/studiehjälp, lån och bidrag (summering)' (3 variables): judged different meaning, medium confidence; Household (ISTUDSFHB) and individual (ISTUDSF) sums; ISTUDSFH in the individual table follows the H = family convention used by CSFVIH and CFVIKIH, which is inferred."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-vissa-skattepliktiga-formaner-clonfhb"
-fields = { "label" = "Summa vissa skattepliktiga förmåner (hushåll)" }
-evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): judged different meaning, high confidence; Individual column (KULONF/TKULONF, then TLONF from the 2019 source change) versus the household column (CLONFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-vissa-skattepliktiga-formaner-kulonf-2"
-fields = { "label" = "Summa vissa skattepliktiga förmåner (individ)" }
-evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): judged different meaning, high confidence; Individual column (KULONF/TKULONF, then TLONF from the 2019 source change) versus the household column (CLONFHB)."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-vissa-skattepliktiga-formaner-tlonf"
-fields = { "label" = "Summa vissa skattepliktiga förmåner (individ)" }
-evidence = "#2102 same-label cluster 'Summa vissa skattepliktiga förmåner' (3 variables): judged different meaning, high confidence; Individual column (KULONF/TKULONF, then TLONF from the 2019 source change) versus the household column (CLONFHB)."
 
 [[statement]]
 kind = "set"
@@ -26640,18 +26166,6 @@ evidence = "#2102 same-label cluster 'Underlag för beräkning av skogsvårdsavg
 
 [[statement]]
 kind = "set"
-subject = "var:underskott-aktiv-naringsverksamhet-hushall"
-fields = { "label" = "Underskott av aktiv näringsverksamhet (hushåll)" }
-evidence = "#2102 same-label cluster 'Underskott av aktiv näringsverksamhet.' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-aktiv-naringsverksamhet-individ"
-fields = { "label" = "Underskott av aktiv näringsverksamhet (individ)" }
-evidence = "#2102 same-label cluster 'Underskott av aktiv näringsverksamhet.' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
-
-[[statement]]
-kind = "set"
 subject = "var:underskott-naringsverksamhet"
 fields = { "label" = "Underskott av näringsverksamhet (individ)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 variables): judged different meaning, medium confidence; UNRV, NUNDT and NUNDER are consecutive individ columns; USKNRV is a concurrent column in 100-tal kronor (pid); NUNDERHB is the hushåll version."
@@ -26667,18 +26181,6 @@ kind = "set"
 subject = "var:underskott-naringsverksamhet-bostadshushall"
 fields = { "label" = "Underskott av näringsverksamhet (hushåll)" }
 evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (5 variables): judged different meaning, medium confidence; UNRV, NUNDT and NUNDER are consecutive individ columns; USKNRV is a concurrent column in 100-tal kronor (pid); NUNDERHB is the hushåll version."
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-passiv-naringsverksamhet-hushall"
-fields = { "label" = "Underskott av passiv näringsverksamhet (hushåll)" }
-evidence = "#2102 same-label cluster 'Underskott av passiv näringsverksamhet' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-passiv-naringsverksamhet-individ"
-fields = { "label" = "Underskott av passiv näringsverksamhet (individ)" }
-evidence = "#2102 same-label cluster 'Underskott av passiv näringsverksamhet' (2 variables): judged different meaning, high confidence; Individ table vs bostadshushåll table (HB suffix)."
 
 [[statement]]
 kind = "set"

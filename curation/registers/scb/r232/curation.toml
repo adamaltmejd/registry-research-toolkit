@@ -6059,18 +6059,6 @@ evidence = "#2102 same-label cluster 'Yrkesämne' (4 variables): judged differen
 
 [[statement]]
 kind = "set"
-subject = "var:jurform"
-fields = { "label" = "Juridisk form (kod)" }
-evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): judged different meaning, high confidence; Descriptions: Jurform is the code, JuridiskForm the text."
-
-[[statement]]
-kind = "set"
-subject = "var:juridiskform"
-fields = { "label" = "Juridisk form (klartext)" }
-evidence = "#2102 same-label cluster 'Juridisk form' (2 variables): judged different meaning, high confidence; Descriptions: Jurform is the code, JuridiskForm the text."
-
-[[statement]]
-kind = "set"
 subject = "var:mmal"
 fields = { "label" = "Undervisning i modersmål (avser modersmål helt eller delvis)" }
 evidence = "#2102 same-label cluster 'Undervisning i modersmål' (13 variables): judged different meaning, medium confidence; Hemtim1-8 are hemspråk hours per tjänst (descriptions); Hemsp and MMalKod are the language taught (consecutive); MMal marks whether the tjänst is mother-tongue teaching; AmnMMAL and OmfMMAL are school years and share of tjänst."
@@ -6518,48 +6506,6 @@ kind = "set"
 subject = "var:tjanstgoring-pa-tillfalliga-timmar-ttftim6"
 fields = { "label" = "Tjänstgöring på tillfälliga timmar (sjätte tjänsten)" }
 evidence = "#2102 same-label cluster 'Tjänstgöring på tillfälliga timmar' (6 variables): judged different meaning, high confidence; Ttftim1-6 are the hours for the first to the sixth tjänst (descriptions)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-hosttermin"
-fields = { "label" = "Tjänstledig (hösttermin)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-tjltim2"
-fields = { "label" = "Tjänstledig (timmar, andra tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-tjltim3"
-fields = { "label" = "Tjänstledig (timmar, tredje tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-tjltim4"
-fields = { "label" = "Tjänstledig (timmar, fjärde tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-tjltim5"
-fields = { "label" = "Tjänstledig (timmar, femte tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstledig-tjltim6"
-fields = { "label" = "Tjänstledig (timmar, sjätte tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjltim"
-fields = { "label" = "Tjänstledig (timmar, första tjänsten)" }
-evidence = "#2102 same-label cluster 'Tjänstledig' (9 variables): judged different meaning, medium confidence; Tjltim1-6 are hours of leave per tjänst (descriptions); Tjl (to 1995) and TjLedig (from 1995, tjänsteregistret) are the leave marker over time; the personregistret column is the autumn-term version (pid)."
 
 [[statement]]
 kind = "set"

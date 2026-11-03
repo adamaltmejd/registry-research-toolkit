@@ -1865,21 +1865,3 @@ kind = "set"
 subject = "var:utb-form-start"
 fields = { "label" = "Utbildningsform gymnasieskolan (vid start)" }
 evidence = "#2102 same-label cluster 'Utbildningsform gymnasieskolan' (2 variables): judged different meaning, medium confidence; Utb_Form and Utb_form_Start are concurrent 2016-2024 with different value sets."
-
-[[statement]]
-kind = "set"
-subject = "var:utl-bakg"
-fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."
-
-[[statement]]
-kind = "set"
-subject = "var:utlbakgr"
-fields = { "label" = "Utländsk/svensk bakgrund (3 kategorier)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."
-
-[[statement]]
-kind = "set"
-subject = "var:utlsvbakg"
-fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, high confidence; Utl_BakG and UtlBakGr share the three-category coding in consecutive periods; UtlSvBakg has four categories and is concurrent with UtlBakGr."

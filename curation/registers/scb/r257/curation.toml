@@ -14371,24 +14371,6 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
-subject = "var:innovation-ej-kravd-i-upphandlingsavtal"
-fields = { "label" = "Typ av avtal (innovation ej krävd i upphandlingsavtal)" }
-evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): judged different meaning, high confidence; PBNOCT, PBINCT and PBINN are separate flags: innovation not required, innovation required, and innovation activity in a procurement contract."
-
-[[statement]]
-kind = "set"
-subject = "var:innovation-kravd-i-upphandlingsavtal"
-fields = { "label" = "Typ av avtal (innovation krävd i upphandlingsavtal)" }
-evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): judged different meaning, high confidence; PBNOCT, PBINCT and PBINN are separate flags: innovation not required, innovation required, and innovation activity in a procurement contract."
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsaktivitet-i-upphandlingsavtal"
-fields = { "label" = "Typ av avtal (innovationsaktivitet i upphandlingsavtal)" }
-evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): judged different meaning, high confidence; PBNOCT, PBINCT and PBINN are separate flags: innovation not required, innovation required, and innovation activity in a procurement contract."
-
-[[statement]]
-kind = "set"
 subject = "var:logistikinnovation-annat-hinder"
 fields = { "label" = "Logistikinnovationer - Hinder (annat hinder)" }
 evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
@@ -14416,75 +14398,3 @@ kind = "set"
 subject = "var:logistikinnovation-utebliven-huvudorsak"
 fields = { "label" = "Logistikinnovationer - Hinder (utebliven huvudorsak)" }
 evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variables): judged different meaning, high confidence; Separate barrier flags (other, financial, legal, technical, main cause missing) for logistics innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:processinnovation-anpassad-av-foretaget"
-fields = { "label" = "Utvecklare av processinnovation (anpassad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): judged different meaning, high confidence; INADPS, INOTHPS, INITPS and INTOPS are separate flags for who developed the process innovation (adapted by company, others, company, together with others)."
-
-[[statement]]
-kind = "set"
-subject = "var:processinnovation-utvecklad-av-andra"
-fields = { "label" = "Utvecklare av processinnovation (utvecklad av andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): judged different meaning, high confidence; INADPS, INOTHPS, INITPS and INTOPS are separate flags for who developed the process innovation (adapted by company, others, company, together with others)."
-
-[[statement]]
-kind = "set"
-subject = "var:processinnovation-utvecklad-av-foretaget"
-fields = { "label" = "Utvecklare av processinnovation (utvecklad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): judged different meaning, high confidence; INADPS, INOTHPS, INITPS and INTOPS are separate flags for who developed the process innovation (adapted by company, others, company, together with others)."
-
-[[statement]]
-kind = "set"
-subject = "var:processinnovation-utvecklad-med-andra"
-fields = { "label" = "Utvecklare av processinnovation (utvecklad tillsammans med andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): judged different meaning, high confidence; INADPS, INOTHPS, INITPS and INTOPS are separate flags for who developed the process innovation (adapted by company, others, company, together with others)."
-
-[[statement]]
-kind = "set"
-subject = "var:tjansteinnovation-anpassad-av-foretaget"
-fields = { "label" = "Utvecklare av produktinnovation, tjänster (anpassad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): judged different meaning, high confidence; INADSV, INOTHSV, INITSV and INTOSV are separate flags for who developed the service innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:tjansteinnovation-utvecklad-av-andra"
-fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): judged different meaning, high confidence; INADSV, INOTHSV, INITSV and INTOSV are separate flags for who developed the service innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:tjansteinnovation-utvecklad-av-foretaget"
-fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): judged different meaning, high confidence; INADSV, INOTHSV, INITSV and INTOSV are separate flags for who developed the service innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:tjansteinnovation-utvecklad-med-andra"
-fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad tillsammans med andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): judged different meaning, high confidence; INADSV, INOTHSV, INITSV and INTOSV are separate flags for who developed the service innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:varuinnovation-anpassad-av-foretaget"
-fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (anpassad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): judged different meaning, high confidence; INADGD, INOTHGD, INITGD and INTOGD are separate flags for who developed the goods innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:varuinnovation-utvecklad-av-andra"
-fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): judged different meaning, high confidence; INADGD, INOTHGD, INITGD and INTOGD are separate flags for who developed the goods innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:varuinnovation-utvecklad-av-foretaget"
-fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av företaget)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): judged different meaning, high confidence; INADGD, INOTHGD, INITGD and INTOGD are separate flags for who developed the goods innovation."
-
-[[statement]]
-kind = "set"
-subject = "var:varuinnovation-utvecklad-med-andra"
-fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)" }
-evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): judged different meaning, high confidence; INADGD, INOTHGD, INITGD and INTOGD are separate flags for who developed the goods innovation."

@@ -6605,30 +6605,6 @@ evidence = "#2102 same-label cluster 'Hälsa: trött i skolan' (5 variables): ju
 
 [[statement]]
 kind = "set"
-subject = "var:trygghet-i-bostadsomradet-dagtid"
-fields = { "label" = "Trygghet:i bostadsområdet dagtid, ja/nej" }
-evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): judged different meaning, high confidence; Binary ja/nej item (to 2016) versus a graded item (from 2016) with different value sets and question wording."
-
-[[statement]]
-kind = "set"
-subject = "var:trygghet-i-bostadsomradet-dagtid-grad"
-fields = { "label" = "Trygghet:i bostadsområdet dagtid, graderad" }
-evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): judged different meaning, high confidence; Binary ja/nej item (to 2016) versus a graded item (from 2016) with different value sets and question wording."
-
-[[statement]]
-kind = "set"
-subject = "var:trygghet-rasterna"
-fields = { "label" = "Trygghet: rasterna, ja/nej" }
-evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): judged different meaning, high confidence; Binary ja/nej item (to 2016) versus a graded item (from 2016) with different value sets and question wording."
-
-[[statement]]
-kind = "set"
-subject = "var:trygghet-rasterna-grad"
-fields = { "label" = "Trygghet: rasterna, graderad" }
-evidence = "#2102 same-label cluster 'Trygghet: rasterna' (2 variables): judged different meaning, high confidence; Binary ja/nej item (to 2016) versus a graded item (from 2016) with different value sets and question wording."
-
-[[statement]]
-kind = "set"
 subject = "var:work2a"
 fields = { "label" = "Ekonomi: arbetat för att tjäna pengar (delfråga A: ja/nej)" }
 evidence = "#2102 same-label cluster 'Ekonomi: arbetat för att tjäna pengar' (7 variables): judged different meaning, high confidence; work/work2/work3_H are the combined frequency question over time; from 2015 the A (yes/no) and B (how often) sub-questions are separate concurrent columns."

@@ -2747,12 +2747,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "var:bransch-branschgr"
-fields = { "label" = "Bransch (SNI 2007, kolumn branschgr)" }
-evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."
-
-[[statement]]
-kind = "set"
 subject = "var:bransch-enligt-uppgiftslamnaren"
 fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 2007)" }
 evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes."
@@ -2762,12 +2756,6 @@ kind = "set"
 subject = "var:bransch-enligt-uppgiftslamnaren-2"
 fields = { "label" = "Bransch enligt uppgiftslämnaren (SNI 92)" }
 evidence = "#2102 same-label cluster 'Bransch enligt uppgiftslämnaren' (2 variables): judged different meaning, high confidence; sni92upp uses SNI 92 codes and Sni2007Upp uses SNI 2007 codes."
-
-[[statement]]
-kind = "set"
-subject = "var:bransch-sni2007"
-fields = { "label" = "Bransch (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."
 
 [[statement]]
 kind = "set"
@@ -2918,9 +2906,3 @@ kind = "set"
 subject = "var:omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed"
 fields = { "label" = "Omsättning inkl. moms, hemmamarknaden, moms (PIN), imputerat" }
 evidence = "#2102 same-label cluster 'Omsättning inkl. moms, hemmamarknaden, moms (PIN)' (2 variables): judged different meaning, medium confidence; ClassId13MR is the VAT-derived turnover while ClassId13MR_Imputed is a separately named column in the tjänsteproduktionsindex table, the imputed counterpart."
-
-[[statement]]
-kind = "set"
-subject = "var:sni"
-fields = { "label" = "Bransch (SNI 92)" }
-evidence = "#2102 same-label cluster 'Bransch' (3 variables): judged different meaning, medium confidence; sni92 holds SNI 92 five-digit codes, Sni2007 holds SNI 2007 codes; branschgr (2009-2011) has the SNI 2007 style codes in a separately named column and is kept apart by its column name."

@@ -6957,18 +6957,6 @@ evidence = "#2102 same-label cluster 'Ålder vid händelsen' (8 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:avsandlan"
-fields = { "label" = "Län (AvSandLan, medborgarskapsändringar)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:avslan"
-fields = { "label" = "Län (AvsLan, dödsfall)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
 subject = "var:civilgrupp-eu"
 fields = { "label" = "Civilstånd (grupperad, CivilGrupp_EU)" }
 evidence = "#2102 same-label cluster 'Civilstånd' (3 variables): judged different meaning, high confidence; Civil is the civil status, TidCivil is the civil status at death (pid: vid dödsfall) and CivilGrupp_EU is a grouped version with fewer categories."
@@ -7029,18 +7017,6 @@ evidence = "#2102 same-label cluster 'Distrikt' (4 variables): judged different 
 
 [[statement]]
 kind = "set"
-subject = "var:familjestallning"
-fields = { "label" = "Familjeställning, 3-siffrig kod (från 1998)" }
-evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, high confidence; Code lists differ between the two family tables (11/12 versus 110/120), a coding version change."
-
-[[statement]]
-kind = "set"
-subject = "var:familjestallning-1990-1997"
-fields = { "label" = "Familjeställning, 2-siffrig kod (1990–1997)" }
-evidence = "#2102 same-label cluster 'Familjeställning' (2 variables): judged different meaning, high confidence; Code lists differ between the two family tables (11/12 versus 110/120), a coding version change."
-
-[[statement]]
-kind = "set"
 subject = "var:fastighetens-id-far"
 fields = { "label" = "Fastighetens identitetsnummer (faderns)" }
 evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Five concurrent columns for the person's property, father's (Far), mother's (Mor), relation person's (Rel) and the property before a move (pid: före flytt)."
@@ -7062,18 +7038,6 @@ kind = "set"
 subject = "var:fastighetens-identitetsnummer-fore-flytt"
 fields = { "label" = "Fastighetens identitetsnummer (före flytt)" }
 evidence = "#2102 same-label cluster 'Fastighetens identitetsnummer' (5 variables): judged different meaning, high confidence; Five concurrent columns for the person's property, father's (Far), mother's (Mor), relation person's (Rel) and the property before a move (pid: före flytt)."
-
-[[statement]]
-kind = "set"
-subject = "var:flyttningsgrans"
-fields = { "label" = "Flyttningsgräns, alla gränsnivåer (från 1998)" }
-evidence = "#2102 same-label cluster 'Flyttningsgräns' (2 variables): judged different meaning, high confidence; Posttyp only separates moves across and within parish boundary; FlyttGrans has the full hierarchy of boundary levels from property to country."
-
-[[statement]]
-kind = "set"
-subject = "var:flyttningsgrans-forsamling"
-fields = { "label" = "Flyttningsgräns, över eller inom församling (1968–1997)" }
-evidence = "#2102 same-label cluster 'Flyttningsgräns' (2 variables): judged different meaning, high confidence; Posttyp only separates moves across and within parish boundary; FlyttGrans has the full hierarchy of boundary levels from property to country."
 
 [[statement]]
 kind = "set"
@@ -7149,42 +7113,6 @@ evidence = "#2102 same-label cluster 'Födelseland far' (2 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:gfb-grupp-efb"
-fields = { "label" = "Grund för bosättning, klassningsgruppering, efter folkbokföring, textgrupper" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, efter folkbokföring' (2 variables): judged different meaning, high confidence; Disjoint periods but different groupings: text group names (2009-2011) versus numeric classification groups (2011-2026)."
-
-[[statement]]
-kind = "set"
-subject = "var:gfb-grupp-ffb"
-fields = { "label" = "Grund för bosättning, klassningsgruppering, före folkbokföring, textgrupper" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, före folkbokföring' (2 variables): judged different meaning, high confidence; Disjoint periods but different groupings: text group names (2009-2011) versus numeric classification groups (2011-2026)."
-
-[[statement]]
-kind = "set"
-subject = "var:gfb-klassgruppering-efb"
-fields = { "label" = "Grund för bosättning, klassningsgruppering, efter folkbokföring, numeriska klassgrupper" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, efter folkbokföring' (2 variables): judged different meaning, high confidence; Disjoint periods but different groupings: text group names (2009-2011) versus numeric classification groups (2011-2026)."
-
-[[statement]]
-kind = "set"
-subject = "var:gfb-klassgruppering-ffb"
-fields = { "label" = "Grund för bosättning, klassningsgruppering, före folkbokföring, numeriska klassgrupper" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, klassningsgruppering, före folkbokföring' (2 variables): judged different meaning, high confidence; Disjoint periods but different groupings: text group names (2009-2011) versus numeric classification groups (2011-2026)."
-
-[[statement]]
-kind = "set"
-subject = "var:grund-for-bosattning-grupperad-prioriterad"
-fields = { "label" = "Grund för bosättning, grupperad, prioriterad grund" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, medium confidence; The pids indicate different grouping rules (prioriterad versus senaste) from separate source columns; only the pids and an extra Ej relevant code tell them apart."
-
-[[statement]]
-kind = "set"
-subject = "var:grund-for-bosattning-grupperad-senaste"
-fields = { "label" = "Grund för bosättning, grupperad, senaste grund" }
-evidence = "#2102 same-label cluster 'Grund för bosättning, grupperad' (2 variables): judged different meaning, medium confidence; The pids indicate different grouping rules (prioriterad versus senaste) from separate source columns; only the pids and an extra Ej relevant code tell them apart."
-
-[[statement]]
-kind = "set"
 subject = "var:kon-samhorighet"
 fields = { "label" = "Kön (samhörighetspersonens)" }
 evidence = "#2102 same-label cluster 'Kön' (2 variables): judged different meaning, high confidence; KON is the person's sex; KonSamh is the sex of the samhörighetsperson per its description."
@@ -7221,48 +7149,6 @@ evidence = "#2102 same-label cluster 'Lägenhetsnyckel' (5 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:lan-efter-inrikes-flytt"
-fields = { "label" = "Län (efter inrikes flytt)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-civilstandsandring"
-fields = { "label" = "Län (vid civilståndsändring)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-dodsfall"
-fields = { "label" = "Län (vid dödsfall)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-fodelse"
-fields = { "label" = "Län (vid födelsen)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-invandring"
-fields = { "label" = "Län (vid invandring)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-medborgarskapsandring"
-fields = { "label" = "Län (vid medborgarskapsändring)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-vid-utvandring"
-fields = { "label" = "Län (vid utvandring)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
 subject = "var:mantalsskrivningsforsamling"
 fields = { "label" = "Församling (mantalsskrivningsförsamling)" }
 evidence = "#2102 same-label cluster 'Församling' (2 variables): judged different meaning, high confidence; Forsamling is the parish of registration while MantFors (pid: mantalsskrivningsförsamling) is a separate column in the folkbokförda-personer table with a different code list."
@@ -7278,18 +7164,6 @@ kind = "set"
 subject = "var:mantkommunfg"
 fields = { "label" = "Kommun (föregående mantalsskrivningskommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Kommun is the municipality in all tables; MantKommun (pid: mantalsskrivningskommun) and MantKommunFg (Fg read as föregående) are separate columns in the folkbokförda-personer table with their own code lists."
-
-[[statement]]
-kind = "set"
-subject = "var:mantlan"
-fields = { "label" = "Län (mantalsskrivningslän)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mantlanfg"
-fields = { "label" = "Län (föregående mantalsskrivningslän)" }
-evidence = "#2102 same-label cluster 'Län' (12 variables): judged different meaning, high confidence; Lan is the county at different events, each in its own table (birth, internal move, civil-status change, death, citizenship change, immigration, emigration) with its own description; Mant* and Avs* are separate columns."
 
 [[statement]]
 kind = "set"

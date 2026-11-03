@@ -5305,33 +5305,9 @@ evidence = "#2102 same-label cluster 'Sökandekategori' (2 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
-fields = { "label" = "Utbildningsnivå (SUN 2000, detaljerad)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Two SUN versions (2000, 2020), each with a coarse 1-digit level (_old) and a detailed 3-digit level."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2000, grov indelning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Two SUN versions (2000, 2020), each with a coarse 1-digit level (_old) and a detailed 3-digit level."
-
-[[statement]]
-kind = "set"
 subject = "var:sun2020grp"
 fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
 evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Sun2000Grp and Sun2020Grp overlap 2020-2022 and use different SUN classification versions."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020, detaljerad)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Two SUN versions (2000, 2020), each with a coarse 1-digit level (_old) and a detailed 3-digit level."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2020, grov indelning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Two SUN versions (2000, 2020), each with a coarse 1-digit level (_old) and a detailed 3-digit level."
 
 [[statement]]
 kind = "set"

@@ -110452,24 +110452,6 @@ evidence = "#2102 same-label cluster 'Hur ofta använt internet på fritiden' (3
 
 [[statement]]
 kind = "set"
-subject = "var:civilstand"
-fields = { "label" = "Civilstånd (gift man och kvinna särskiljs)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand-ba0021"
-fields = { "label" = "Civilstånd (gift man och kvinna särskiljs)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand-ba0170"
-fields = { "label" = "Civilstånd (grov indelning)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
-
-[[statement]]
-kind = "set"
 subject = "var:ekonomiskt-bistand"
 fields = { "label" = "Ekonomiskt bistånd, brutto" }
 evidence = "#2102 same-label cluster 'Ekonomiskt bistånd' (2 variables): judged different meaning, high confidence; Descriptions state HY060G is the gross amount and HY060N the net amount paid to the household."
@@ -110620,18 +110602,6 @@ evidence = "#2102 same-label cluster 'Årtal som statistiken gäller för' (4 va
 
 [[statement]]
 kind = "set"
-subject = "var:insamlingsmetod"
-fields = { "label" = "Insamlingsmetod, hushåll" }
-evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): judged different meaning, medium confidence; HB130 is the household-level collection method, PB270 the person-level one (HB and PB prefixes) in the same table."
-
-[[statement]]
-kind = "set"
-subject = "var:insamlingsmetod-2"
-fields = { "label" = "Insamlingsmetod, person" }
-evidence = "#2102 same-label cluster 'Insamlingsmetod' (2 variables): judged different meaning, medium confidence; HB130 is the household-level collection method, PB270 the person-level one (HB and PB prefixes) in the same table."
-
-[[statement]]
-kind = "set"
 subject = "var:intervju-ar-webbformular-hushall"
 fields = { "label" = "Intervju, år (även webbformulär), hushåll" }
 evidence = "#2102 same-label cluster 'Intervju, år  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB060 is the household-level and PB110 the person-level interview year (pid names hushåll for HB060)."
@@ -110725,12 +110695,6 @@ kind = "set"
 subject = "var:pb110"
 fields = { "label" = "Intervju, år (även webbformulär), person" }
 evidence = "#2102 same-label cluster 'Intervju, år  (även webbformulär)' (2 variables): judged different meaning, medium confidence; HB060 is the household-level and PB110 the person-level interview year (pid names hushåll for HB060)."
-
-[[statement]]
-kind = "set"
-subject = "var:pb190"
-fields = { "label" = "Civilstånd (aldrig gift, gift, separerat, änka/änkling, skild)" }
-evidence = "#2102 same-label cluster 'Civilstånd' (4 variables): judged different meaning, medium confidence; Different code lists: 6-category BA0019/BA0021 (gift man/kvinna), coarse 5-category BA0170, and the 2021 PB190 (aldrig gift, separerat, skild); the BA0021 pid shares its spelling with civilstand and may be a layout duplicate."
 
 [[statement]]
 kind = "set"
@@ -110833,18 +110797,6 @@ kind = "set"
 subject = "var:visttidar-grov"
 fields = { "label" = "Vistelsetid i Sverige (grov, 0-9 år / 10 år eller längre)" }
 evidence = "#2102 same-label cluster 'Vistelsetid i Sverige' (3 variables): judged different meaning, high confidence; Three different groupings of years in Sweden: 0-9 / 10+, the older 0-10 / 11+, and the finer 0-5 / 6-10 / 11+."
-
-[[statement]]
-kind = "set"
-subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-1996-4-siffrig"
-fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 1996)" }
-evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_1) and SSYK 2012 (SSYK12UP) per the pids; the two overlap in 2014-2016."
-
-[[statement]]
-kind = "set"
-subject = "var:yrke-huvudsaklig-sysselsattning-ssyk-2012-4-siffrig"
-fields = { "label" = "Yrke, huvudsakliga sysselsättningen (SSYK 2012)" }
-evidence = "#2102 same-label cluster 'Yrke, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Occupation coded in SSYK 1996 (SSYKUP_1) and SSYK 2012 (SSYK12UP) per the pids; the two overlap in 2014-2016."
 
 [[statement]]
 kind = "set"

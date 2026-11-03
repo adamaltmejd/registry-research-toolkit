@@ -1647,39 +1647,3 @@ kind = "set"
 subject = "var:skr-grupp-namn"
 fields = { "label" = "Kommungruppsindelning (SKR, namn)" }
 evidence = "#2102 same-label cluster 'Kommungruppsindelning' (6 variables): judged different meaning, medium confidence; Code columns (_grupp) vs name columns (_gruppnamn), and different classification versions (SKL, SKL 2011, SKR, SKR 2023)."
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk3-2012"
-fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen, SSYK 2012" }
-evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk3 uses the older SSYK 96 list (Militärer), ssyk3_2012 and ssyk3_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk3-2012-egf"
-fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen, SSYK 2012" }
-evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk3 uses the older SSYK 96 list (Militärer), ssyk3_2012 and ssyk3_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk4"
-fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen, SSYK 96" }
-evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk4 uses the older SSYK 96 list (Militärer), ssyk4_2012 and ssyk4_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk4-2012"
-fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen, SSYK 2012" }
-evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk4 uses the older SSYK 96 list (Militärer), ssyk4_2012 and ssyk4_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:ssyk4-2012-egf"
-fields = { "label" = "Yrke på 4-siffernivå, huvudsakliga sysselsättningen, SSYK 2012" }
-evidence = "#2102 same-label cluster 'Yrke på 4-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk4 uses the older SSYK 96 list (Militärer), ssyk4_2012 and ssyk4_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:yrke-ssyk3-huvud"
-fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen, SSYK 96" }
-evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (3 variables): judged different meaning, medium confidence; ssyk3 uses the older SSYK 96 list (Militärer), ssyk3_2012 and ssyk3_2012_egf share the SSYK 2012 list over disjoint periods and are one variable."

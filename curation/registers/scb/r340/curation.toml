@@ -1103,24 +1103,6 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
-subject = "var:antal"
-fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (kodad)" }
-evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): judged different meaning, medium confidence; Antal is a coded variable; AntalF counts subjects with grade F in 2015-2016 and subjects without a pass grade A-E from 2016 (the descriptions differ)."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-amnen-ej-natt"
-fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (antal med betyget F)" }
-evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): judged different meaning, medium confidence; Antal is a coded variable; AntalF counts subjects with grade F in 2015-2016 and subjects without a pass grade A-E from 2016 (the descriptions differ)."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-amnen-utan-godkant-betyg"
-fields = { "label" = "Antal ämnen i vilka eleven ej nått kunskapskraven (antal utan godkänt betyg)" }
-evidence = "#2102 same-label cluster 'Antal ämnen i vilka eleven ej nått kunskapskraven' (3 variables): judged different meaning, medium confidence; Antal is a coded variable; AntalF counts subjects with grade F in 2015-2016 and subjects without a pass grade A-E from 2016 (the descriptions differ)."
-
-[[statement]]
-kind = "set"
 subject = "var:moderns-utbildningsniva-3-nivaer"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, 3 nivåer)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; Different SUN codings: 3 levels (slug moderns-utbildningsniva-3-nivaer), 3-digit SUN 2000, grouped 2000, SUN 2020 and grouped 2020."

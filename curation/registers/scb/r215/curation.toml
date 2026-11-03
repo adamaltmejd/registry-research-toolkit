@@ -4343,18 +4343,6 @@ evidence = "#2102 same-label cluster 'Dödlighet, röding för konsumtion' (2 va
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetade-timmar-kvinnor-matfisk"
-fields = { "label" = "Antal arbetade timmar, kvinnor, matfisk" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-man-matfisk"
-fields = { "label" = "Antal arbetade timmar, män, matfisk" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
 subject = "var:antal-bassanger-matfisk-havet"
 fields = { "label" = "Bassänger för odling av matfisk, antal, i havet" }
 evidence = "#2102 same-label cluster 'Bassänger för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MBassa och MBassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
@@ -4403,54 +4391,6 @@ evidence = "#2102 same-label cluster 'Recirkulerande system för odling av sätt
 
 [[statement]]
 kind = "set"
-subject = "var:arbetade-timmar-foretagare-kvinnor"
-fields = { "label" = "Antal arbetade timmar, företagare, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetade-timmar-foretagare-man"
-fields = { "label" = "Antal arbetade timmar, företagare, män" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetade-timmar-kvinnor-rom-och-yngelverksamhet"
-fields = { "label" = "Antal arbetade timmar, kvinnor, rom- och yngelverksamhet" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetade-timmar-kvinnor-sattfisk"
-fields = { "label" = "Antal arbetade timmar, kvinnor, sättfisk" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetade-timmar-man-rom-och-yngelverksamhet"
-fields = { "label" = "Antal arbetade timmar, män, rom- och yngelverksamhet" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetade-timmar-man-sattfisk"
-fields = { "label" = "Antal arbetade timmar, män, sättfisk" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:av-arb"
-fields = { "label" = "Antal arbetade timmar, avlönad personal" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:av-arb-m"
-fields = { "label" = "Antal arbetade timmar, avlönad personal, män" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
 subject = "var:bassanger-sattfisk-antal-hav"
 fields = { "label" = "Bassänger för odling av sättfisk, antal, i havet" }
 evidence = "#2102 same-label cluster 'Bassänger för odling av sättfisk, antal' (2 variables): judged different meaning, medium confidence; SBassa och SBassa_salt är samtidiga kolumner från 2018; _salt avser odling i havet."
@@ -4484,12 +4424,6 @@ kind = "set"
 subject = "var:doda-av-total-produktion-roding-utsattning-havet-procent"
 fields = { "label" = "Dödlighet, röding för utsättning, i havet" }
 evidence = "#2102 same-label cluster 'Dödlighet, röding för utsättning' (2 variables): judged different meaning, medium confidence; SRodD och SRodD_salt är samtidiga kolumner från 2018; _salt avser produktion i havet."
-
-[[statement]]
-kind = "set"
-subject = "var:for-tot"
-fields = { "label" = "Antal arbetade timmar, företagare" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
 
 [[statement]]
 kind = "set"
@@ -4742,24 +4676,6 @@ kind = "set"
 subject = "var:mrodr-salt"
 fields = { "label" = "Rymlingar, röding för konsumtion, i havet" }
 evidence = "#2102 same-label cluster 'Rymlingar, röding för konsumtion' (2 variables): judged different meaning, high confidence; MRodR och MRodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
-
-[[statement]]
-kind = "set"
-subject = "var:oav-arb"
-fields = { "label" = "Antal arbetade timmar, oavlönad personal" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:oav-arb-k"
-fields = { "label" = "Antal arbetade timmar, oavlönad personal, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:oav-arb-m"
-fields = { "label" = "Antal arbetade timmar, oavlönad personal, män" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
 
 [[statement]]
 kind = "set"
@@ -5024,18 +4940,6 @@ kind = "set"
 subject = "var:srodr-salt"
 fields = { "label" = "Rymlingar, röding för utsättning, i havet" }
 evidence = "#2102 same-label cluster 'Rymlingar, röding för utsättning' (2 variables): judged different meaning, high confidence; SRodR och SRodR_salt är samtidiga kolumner från 2018; beskrivningen av _salt anger produktion i havet."
-
-[[statement]]
-kind = "set"
-subject = "var:sum-tot-tim-k"
-fields = { "label" = "Antal arbetade timmar, totalt, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
-
-[[statement]]
-kind = "set"
-subject = "var:sum-tot-tim-m"
-fields = { "label" = "Antal arbetade timmar, totalt, män" }
-evidence = "#2102 same-label cluster 'Antal arbetade timmar' (17 variables): judged different meaning, medium confidence; Samtidiga kolumner per kön, verksamhet (matfisk, rom och yngel, sättfisk) och personalkategori (avlönad, oavlönad, företagare, totalt); Av/Oav tolkade som avlönad/oavlönad."
 
 [[statement]]
 kind = "set"

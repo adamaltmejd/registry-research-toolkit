@@ -27909,12 +27909,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:aallmfl"
-fields = { "label" = "Allmänna avdrag samt förlustavdrag (individ)" }
-evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): judged different meaning, medium confidence; AALLMFL in individregister vs AALLMFLZ (Z = hushåll) in kosthushall."
-
-[[statement]]
-kind = "set"
 subject = "var:agande-andel-hyresfastighet-kfa1102"
 fields = { "label" = "Ägande andel hyresfastighet, nr 2" }
 evidence = "#2102 same-label cluster 'Ägande andel hyresfastighet' (2 variables): judged different meaning, medium confidence; KFA1101 and KFA1102 are numbered concurrent columns in the same table and period, i.e. separate slots (probably occurrences, as for the IFA208 columns)."
@@ -27960,12 +27954,6 @@ kind = "set"
 subject = "var:aktiva-rorelseidkare-jordbrukare-bforz"
 fields = { "label" = "Aktiva rörelseidkare, jordbrukare (hushåll)" }
 evidence = "#2102 same-label cluster 'Aktiva rörelseidkare, jordbrukare' (2 variables): judged different meaning, medium confidence; BFOR is in individregister, BFORZ (Z = hushåll, cf. CARBZ) in kosthushall: person-level vs household-level flag."
-
-[[statement]]
-kind = "set"
-subject = "var:allmanna-avdrag-samt-forlustavdrag"
-fields = { "label" = "Allmänna avdrag samt förlustavdrag (hushåll)" }
-evidence = "#2102 same-label cluster 'Allmänna avdrag samt förlustavdrag' (2 variables): judged different meaning, medium confidence; AALLMFL in individregister vs AALLMFLZ (Z = hushåll) in kosthushall."
 
 [[statement]]
 kind = "set"
@@ -29178,18 +29166,6 @@ kind = "set"
 subject = "var:kvarvarande-underskott"
 fields = { "label" = "Underskott, kvarvarande" }
 evidence = "#2102 same-label cluster 'Underskott' (3 variables): judged different meaning, medium confidence; The pids name distinct deficit types in the same table and period: kvarvarande, enskilda näringsidkare, utnyttjat vid vissa intäkter."
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedel-utgift-vuxna"
-fields = { "label" = "Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor (belopp)" }
-evidence = "#2102 same-label cluster 'Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor' (2 variables): judged different meaning, high confidence; UMED is an amount in kronor; BMED is a coded expenditure class (1-400 kr, 401-900 kr ...), per the descriptions."
-
-[[statement]]
-kind = "set"
-subject = "var:lakemedelsforman-utgiftsklass-vuxna"
-fields = { "label" = "Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor (utgiftsklass)" }
-evidence = "#2102 same-label cluster 'Läkemedel - Vuxna - Utgift för läkemedel m.m., kronor' (2 variables): judged different meaning, high confidence; UMED is an amount in kronor; BMED is a coded expenditure class (1-400 kr, 401-900 kr ...), per the descriptions."
 
 [[statement]]
 kind = "set"

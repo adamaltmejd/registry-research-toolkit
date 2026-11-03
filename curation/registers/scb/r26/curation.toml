@@ -4716,36 +4716,6 @@ evidence = "#2102 same-label cluster 'Föregående års arbetsställenummer' (3 
 
 [[statement]]
 kind = "set"
-subject = "var:ftgsni02"
-fields = { "label" = "Näringsgren för företag (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
-
-[[statement]]
-kind = "set"
-subject = "var:ftgsni07"
-fields = { "label" = "Näringsgren för företag (SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
-
-[[statement]]
-kind = "set"
-subject = "var:ftgsni69"
-fields = { "label" = "Näringsgren för företag (SNI 69)" }
-evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
-
-[[statement]]
-kind = "set"
-subject = "var:ftgsni92"
-fields = { "label" = "Näringsgren för företag (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren för företag' (4 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, 92, 2002, 2007) with different code lists, as named in the pids."
-
-[[statement]]
-kind = "set"
-subject = "var:ftgsni92-19053"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 92, företagets näringsgren)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
-
-[[statement]]
-kind = "set"
 subject = "var:gamsektorkod"
 fields = { "label" = "Sektorkod (GAMSektorKod)" }
 evidence = "#2102 same-label cluster 'Sektorkod' (3 variables): judged different meaning, medium confidence; SektorKod is the main column; GAMSektorKod is a concurrent 1993-1994 column; SektorKod2 is the FAD-table column with a different code list."
@@ -4845,36 +4815,6 @@ kind = "set"
 subject = "var:naringsgren-ftg-sni92-begransad"
 fields = { "label" = "Näringsgren (SNI 92, begränsad)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (5 variables): judged different meaning, high confidence; Company industry in successive SNI versions (SNI 69, SNI 92 limited and full, SNI 2002, SNI 2007) with different code lists, as named in the pids."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-huvud"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 69)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-huvud-fad-sni2007"
-fields = { "label" = "Näringsgren, huvudsaklig (FAD, SNI 2007)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-huvud-sni2002"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 2002)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-huvud-sni92"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-huvud-sni92-begransad"
-fields = { "label" = "Näringsgren, huvudsaklig (SNI 92, begränsad)" }
-evidence = "#2102 same-label cluster 'Näringsgren, huvudsaklig' (6 variables): judged different meaning, medium confidence; Workplace main industry in successive SNI versions (69, 92 limited and full, 2002, FAD 2007); FtgSni92 in the arbetsställen table is the company's industry, concurrent with AstSni92."
 
 [[statement]]
 kind = "set"

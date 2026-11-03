@@ -3868,12 +3868,6 @@ evidence = "#2102 same-label cluster 'Universitet/högskola' (4 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:ar-for-tillgodoraknande"
-fields = { "label" = "År (tillgodoräknande)" }
-evidence = "#2102 same-label cluster 'År' (2 variables): judged different meaning, medium confidence; Ar is the reference year of the 1995-2000 personnel table; KAr is the year of a credit-transfer decision in another table."
-
-[[statement]]
-kind = "set"
 subject = "var:examenstyp-klartext"
 fields = { "label" = "Examenstyp (klartext)" }
 evidence = "#2102 same-label cluster 'Examenstyp' (2 variables): judged different meaning, medium confidence; ExTyp holds a letter code list; ExTypGrpText is a text column without a code list, in another table."

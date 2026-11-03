@@ -2617,18 +2617,6 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 
 [[statement]]
 kind = "set"
-subject = "var:antal-sysselsatta-foretag-syssreg"
-fields = { "label" = "Antal sysselsatta på företaget enligt Sysselsättningsregistret (huvudsaklig sysselsättning)" }
-evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget enligt Sysselsättningsregistret' (2 variables): judged different meaning, medium confidence; AntalSysS hör till huvudsaklig sysselsättning, KU1AntalSysS (KU1-varianten) till största förvärvskälla, jämför näringsgrenarna ASTSNI och KU1ASTSNI."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-sysselsatta-pa-foretaget-enligt-ku1antalsyss"
-fields = { "label" = "Antal sysselsatta på företaget enligt Sysselsättningsregistret (största förvärvskälla)" }
-evidence = "#2102 same-label cluster 'Antal sysselsatta på företaget enligt Sysselsättningsregistret' (2 variables): judged different meaning, medium confidence; AntalSysS hör till huvudsaklig sysselsättning, KU1AntalSysS (KU1-varianten) till största förvärvskälla, jämför näringsgrenarna ASTSNI och KU1ASTSNI."
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsmarknadsstatus-alt"
 fields = { "label" = "Arbetsmarknadsstatus (alternativ definition)" }
 evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus' (2 variables): judged different meaning, high confidence; BAS och BASAlt har olika kategoriuppsättningar i samma tabeller; BASAlt är en alternativ definition."
@@ -2779,33 +2767,9 @@ evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva"
-fields = { "label" = "Utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med den äldre indelningen (_Old) som egen kolumn."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2000, äldre indelning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med den äldre indelningen (_Old) som egen kolumn."
-
-[[statement]]
-kind = "set"
 subject = "var:sun2020inr"
 fields = { "label" = "Utbildningsinriktning, SUN 2020" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; SUN 2000 and SUN 2020 code lists overlap in time; the third column holds district codes with place names, a different thing."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med den äldre indelningen (_Old) som egen kolumn."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2020, äldre indelning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; SUN 2000 respektive SUN 2020, var och en med den äldre indelningen (_Old) som egen kolumn."
 
 [[statement]]
 kind = "set"

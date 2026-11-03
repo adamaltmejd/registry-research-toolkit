@@ -1018,33 +1018,3 @@ kind = "set"
 subject = "set:yrke-och-tjanst"
 fields = { "label" = "Yrke och tjänst" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
-fields = { "label" = "Utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Older SUN levels, SUN 2000 and SUN 2020 detailed codes, and aggregated forms under SUN 2000 and SUN 2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2000, aggregerad)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Older SUN levels, SUN 2000 and SUN 2020 detailed codes, and aggregated forms under SUN 2000 and SUN 2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Older SUN levels, SUN 2000 and SUN 2020 detailed codes, and aggregated forms under SUN 2000 and SUN 2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "label" = "Utbildningsnivå (SUN 2020, aggregerad)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Older SUN levels, SUN 2000 and SUN 2020 detailed codes, and aggregated forms under SUN 2000 and SUN 2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva"
-fields = { "label" = "Utbildningsnivå (SUN, äldre version)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): judged different meaning, medium confidence; Older SUN levels, SUN 2000 and SUN 2020 detailed codes, and aggregated forms under SUN 2000 and SUN 2020."

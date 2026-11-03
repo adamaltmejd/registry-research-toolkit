@@ -551,18 +551,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:antal-ovriga-skolledare"
-fields = { "label" = "Antal övriga skolledare, män" }
-evidence = "#2102 same-label cluster 'Antal övriga skolledare' (2 variables): judged different meaning, medium confidence; SkollMan and SkollKv are concurrent counts, Man and Kv most likely meaning men and women."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-rektorer"
-fields = { "label" = "Antal rektorer, män" }
-evidence = "#2102 same-label cluster 'Antal rektorer' (2 variables): judged different meaning, medium confidence; RektMan and RektKv are concurrent counts, Man and Kv most likely meaning men and women."
-
-[[statement]]
-kind = "set"
 subject = "var:dist-und"
 fields = { "label" = "Skolform, distansundervisning" }
 evidence = "#2102 same-label cluster 'Skolform' (5 variables): judged different meaning, high confidence; Five concurrent Ja/Nej flags, one per school form (distans, grund, gymnasium, kompletterande, förskoleklass) by column name."
@@ -620,18 +608,6 @@ kind = "set"
 subject = "var:lararkategori-i-utlandsskola-larare-komp"
 fields = { "label" = "Lärarkategori i utlandsskola, kompletterande svenskundervisning" }
 evidence = "#2102 same-label cluster 'Lärarkategori i utlandsskola' (6 variables): judged different meaning, high confidence; Five Ja/Nej flags in skolor for the type of teaching (distans, grundskola, gymnasieskola, kompletterande svenskundervisning, förskoleklass) plus LarKat, a 6-category teacher type in the larare table."
-
-[[statement]]
-kind = "set"
-subject = "var:rektkv"
-fields = { "label" = "Antal rektorer, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal rektorer' (2 variables): judged different meaning, medium confidence; RektMan and RektKv are concurrent counts, Man and Kv most likely meaning men and women."
-
-[[statement]]
-kind = "set"
-subject = "var:skollkv"
-fields = { "label" = "Antal övriga skolledare, kvinnor" }
-evidence = "#2102 same-label cluster 'Antal övriga skolledare' (2 variables): judged different meaning, medium confidence; SkollMan and SkollKv are concurrent counts, Man and Kv most likely meaning men and women."
 
 [[statement]]
 kind = "set"

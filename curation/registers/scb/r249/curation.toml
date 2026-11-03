@@ -4540,24 +4540,6 @@ evidence = "#2102 same-label cluster 'Kommunalförbund' (4 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:kommungrupp"
-fields = { "label" = "Kommungruppsindelning (bokstavskod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Kommungrupp has letter-digit codes (A1...), Kommungrupp17/23 numeric codes (two classification years merged in one member), Kommungrupp_text the name."
-
-[[statement]]
-kind = "set"
-subject = "var:kommungrupp-kod"
-fields = { "label" = "Kommungruppsindelning (numerisk kod)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Kommungrupp has letter-digit codes (A1...), Kommungrupp17/23 numeric codes (two classification years merged in one member), Kommungrupp_text the name."
-
-[[statement]]
-kind = "set"
-subject = "var:kommungrupp-text"
-fields = { "label" = "Kommungruppsindelning (klartext)" }
-evidence = "#2102 same-label cluster 'Kommungruppsindelning' (3 variables): judged different meaning, medium confidence; Kommungrupp has letter-digit codes (A1...), Kommungrupp17/23 numeric codes (two classification years merged in one member), Kommungrupp_text the name."
-
-[[statement]]
-kind = "set"
 subject = "var:matematik-betygsniva-a-poang-totalt"
 fields = { "label" = "Poäng på betygsnivå A (matematik, totalt)" }
 evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): judged different meaning, high confidence; MA_A_POM is the oral part and MA_A_POT the total (pids), for mathematics."

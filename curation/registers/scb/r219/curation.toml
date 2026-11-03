@@ -384,18 +384,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "var:befadr"
-fields = { "label" = "Antal personer (adresskoordinater)" }
-evidence = "#2102 same-label cluster 'Antal personer' (2 variables): judged different meaning, high confidence; BefAdr counts persons at address coordinates, BefFast at property coordinates (descriptions)."
-
-[[statement]]
-kind = "set"
-subject = "var:beffast"
-fields = { "label" = "Antal personer (fastighetskoordinater)" }
-evidence = "#2102 same-label cluster 'Antal personer' (2 variables): judged different meaning, high confidence; BefAdr counts persons at address coordinates, BefFast at property coordinates (descriptions)."
-
-[[statement]]
-kind = "set"
 subject = "var:kommun"
 fields = { "label" = "Kommun (kod)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KOMMUN holds the code, KOMMUNNAMN the name."

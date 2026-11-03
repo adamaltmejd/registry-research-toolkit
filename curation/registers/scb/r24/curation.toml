@@ -2056,18 +2056,6 @@ evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:isced-f-2013"
-fields = { "label" = "Utbildningsinriktning (ISCED-F 2013)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different classifications: SUN 2020, SUN 2000, the older one-digit SUNInr, ISCED-F 2013, and YfieldMax (the vocational field with most completed points in Komvux)."
-
-[[statement]]
-kind = "set"
-subject = "var:isced2011niva"
-fields = { "label" = "Utbildningsnivå (ISCED 2011)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
 subject = "var:poangkat"
 fields = { "label" = "Poängomfattning, poängkategori" }
 evidence = "#2102 same-label cluster 'Poängomfattning' (7 variables): judged different meaning, medium confidence; Distinct measures: completed points in general vs vocational courses (APoang/YPoang, with _Num the current calculation), course-focus classification under the current (YAndel_Num) and earlier (YAndel) calculation, and the point category PoangKat."
@@ -2080,57 +2068,15 @@ evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different classifications: SUN 2020, SUN 2000, the older one-digit SUNInr, ISCED-F 2013, and YfieldMax (the vocational field with most completed points in Komvux)."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
-fields = { "label" = "Utbildningsnivå (SUN 2000)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-det"
-fields = { "label" = "Utbildningsnivå (SUN 2000, bokstavskod)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
 subject = "var:sun2020grp"
 fields = { "label" = "Utbildningsgrupp (SUN 2020)" }
 evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Different classification versions: SUNGrp (1997-2000, older SUN), SUN2000Grp, SUN2020Grp and the more detailed SUN2020Grp_Detalj."
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020inr"
-fields = { "label" = "Utbildningsinriktning (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different classifications: SUN 2020, SUN 2000, the older one-digit SUNInr, ISCED-F 2013, and YfieldMax (the vocational field with most completed points in Komvux)."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-det"
-fields = { "label" = "Utbildningsnivå (SUN 2020, bokstavskod)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
-subject = "var:sungrov"
-fields = { "label" = "Utbildningsnivå (äldre SUN-version, grov indelning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
 subject = "var:sungrp"
 fields = { "label" = "Utbildningsgrupp (äldre SUN-version)" }
 evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Different classification versions: SUNGrp (1997-2000, older SUN), SUN2000Grp, SUN2020Grp and the more detailed SUN2020Grp_Detalj."
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva"
-fields = { "label" = "Utbildningsnivå (äldre SUN-version)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
 
 [[statement]]
 kind = "set"
@@ -2149,27 +2095,3 @@ kind = "set"
 subject = "var:utbildningsgrupp-sun2020-detaljerad"
 fields = { "label" = "Utbildningsgrupp (SUN 2020, detaljerad)" }
 evidence = "#2102 same-label cluster 'Utbildningsgrupp' (4 variables): judged different meaning, high confidence; Different classification versions: SUNGrp (1997-2000, older SUN), SUN2000Grp, SUN2020Grp and the more detailed SUN2020Grp_Detalj."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsinriktning-sun-forsta-siffran-16-74-ar"
-fields = { "label" = "Utbildningsinriktning (SUN, första siffran)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different classifications: SUN 2020, SUN 2000, the older one-digit SUNInr, ISCED-F 2013, and YfieldMax (the vocational field with most completed points in Komvux)."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsinriktning-yrkeskurser-flest-avklarade-poang"
-fields = { "label" = "Utbildningsinriktning (yrkeskurser med flest avklarade poäng)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (5 variables): judged different meaning, high confidence; Different classifications: SUN 2020, SUN 2000, the older one-digit SUNInr, ISCED-F 2013, and YfieldMax (the vocational field with most completed points in Komvux)."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-forra-aret-tre-grupper"
-fields = { "label" = "Utbildningsnivå (föregående år, tre grupper)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-sun2020niva"
-fields = { "label" = "Utbildningsnivå (SUN 2020)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): judged different meaning, medium confidence; Eight distinct level columns: KXSunkat (last year's level, 3 groups), older SUNGrov and SUNNiva, SUN 2000 and SUN 2020 3-digit levels and their letter-coded counterparts, and ISCED 2011."

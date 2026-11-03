@@ -5249,18 +5249,6 @@ evidence = "#2102 same-label cluster 'Matpotatis (areal i ha)' (2 variables): ju
 
 [[statement]]
 kind = "set"
-subject = "var:po18"
-fields = { "label" = "Produktionsområde (18 områden)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, high confidence; po8 uses 8 produktionsområden and po18 uses 18, concurrent from 2007 with different value sets."
-
-[[statement]]
-kind = "set"
-subject = "var:po8"
-fields = { "label" = "Produktionsområde (8 områden)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (2 variables): judged different meaning, high confidence; po8 uses 8 produktionsområden and po18 uses 18, concurrent from 2007 with different value sets."
-
-[[statement]]
-kind = "set"
 subject = "var:ragvete-i-ragvet"
 fields = { "label" = "Rågvete (areal i ha, IAKS)" }
 evidence = "#2102 same-label cluster 'Rågvete (areal i ha)' (2 variables): judged different meaning, medium confidence; i_ragvet sits in the IAKS table iaks-arealer while Ragvete is in arealer and uppdragsregistret; different source, overlapping 1999-2000."

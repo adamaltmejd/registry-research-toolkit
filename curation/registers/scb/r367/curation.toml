@@ -8487,12 +8487,6 @@ evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-hur ofta' (2 varia
 
 [[statement]]
 kind = "set"
-subject = "var:arbetade-timmar-per-vecka"
-fields = { "label" = "Arbetade timmar per vecka, urvalsperson" }
-evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): judged different meaning, medium confidence; ARBTIMUP is the sampled person (urvalsperson) and ARBTIMMS the spouse/partner (MS); F10 in the 2021 tidsstudien is taken as the same variable as the urvalsperson one."
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-skola-utomhus-minuter"
 fields = { "label" = "Arbetstid utomhus, minuter" }
 evidence = "#2102 same-label cluster 'Arbetstid utomhus' (3 variables): judged different meaning, medium confidence; fr10min and fr10tim are the minutes and hours parts of the 2000-2001 answer; F14 (2010-2011) is the later survey item with no stated unit."
@@ -8520,30 +8514,6 @@ kind = "set"
 subject = "var:arbetsinkomst-familj-carbh99"
 fields = { "label" = "Arbetsinkomst, familj, 1999" }
 evidence = "#2102 same-label cluster 'Arbetsinkomst, familj' (3 variables): judged different meaning, high confidence; carbh99, carbh00 and carbh01 are the same income for the years 1999, 2000 and 2001."
-
-[[statement]]
-kind = "set"
-subject = "var:arbt"
-fields = { "label" = "Heltid eller deltid, undersökningsperson" }
-evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): judged different meaning, medium confidence; Respondent columns versus partner columns (suffix ms); the two survey periods hold the same variable with only small code-list changes, so they share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:arbtim"
-fields = { "label" = "Arbetade timmar per vecka, urvalsperson" }
-evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): judged different meaning, medium confidence; ARBTIMUP is the sampled person (urvalsperson) and ARBTIMMS the spouse/partner (MS); F10 in the 2021 tidsstudien is taken as the same variable as the urvalsperson one."
-
-[[statement]]
-kind = "set"
-subject = "var:arbtimms"
-fields = { "label" = "Arbetade timmar per vecka, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Arbetade timmar per vecka' (3 variables): judged different meaning, medium confidence; ARBTIMUP is the sampled person (urvalsperson) and ARBTIMMS the spouse/partner (MS); F10 in the 2021 tidsstudien is taken as the same variable as the urvalsperson one."
-
-[[statement]]
-kind = "set"
-subject = "var:arbtms"
-fields = { "label" = "Heltid eller deltid, partner" }
-evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): judged different meaning, medium confidence; Respondent columns versus partner columns (suffix ms); the two survey periods hold the same variable with only small code-list changes, so they share a label."
 
 [[statement]]
 kind = "set"
@@ -8760,18 +8730,6 @@ kind = "set"
 subject = "var:gtvatthelpofta"
 fields = { "label" = "Hjälp med tvättning- hur ofta (gett)" }
 evidence = "#2102 same-label cluster 'Hjälp med tvättning- hur ofta' (2 variables): judged different meaning, medium confidence; gtvatthelpofta (g = gett) and tvatthelpofta are concurrent columns for given versus received help."
-
-[[statement]]
-kind = "set"
-subject = "var:heldel"
-fields = { "label" = "Heltid eller deltid, undersökningsperson" }
-evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): judged different meaning, medium confidence; Respondent columns versus partner columns (suffix ms); the two survey periods hold the same variable with only small code-list changes, so they share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:heldelms"
-fields = { "label" = "Heltid eller deltid, partner" }
-evidence = "#2102 same-label cluster 'Heltid eller deltid' (4 variables): judged different meaning, medium confidence; Respondent columns versus partner columns (suffix ms); the two survey periods hold the same variable with only small code-list changes, so they share a label."
 
 [[statement]]
 kind = "set"
@@ -9120,18 +9078,6 @@ kind = "set"
 subject = "var:sun2020niva-grov"
 fields = { "label" = "Utbildningsnivå, SUN 2020, grov nivå" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Partner column versus respondent column, both with 5-digit SUN codes in 2000-2001, and a coarse SUN 2020 level from the 2021 study."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattning-aktivitet"
-fields = { "label" = "Sysselsättning/aktivitet, urvalsperson" }
-evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (2 variables): judged different meaning, medium confidence; SYSSUP/syss is the sampled person's activity, SYSSMS/syssms the spouse/partner's (MS); the latter has an extra Okänt code."
-
-[[statement]]
-kind = "set"
-subject = "var:syssms"
-fields = { "label" = "Sysselsättning/aktivitet, make/maka/sambo" }
-evidence = "#2102 same-label cluster 'Sysselsättning/aktivitet' (2 variables): judged different meaning, medium confidence; SYSSUP/syss is the sampled person's activity, SYSSMS/syssms the spouse/partner's (MS); the latter has an extra Okänt code."
 
 [[statement]]
 kind = "set"
