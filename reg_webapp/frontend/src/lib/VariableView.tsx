@@ -26,6 +26,7 @@ import {
 import { catalogWords, yesNo } from "./catalog_labels";
 import {
   loadRegister,
+  referenceRegisterRead,
   registerRead,
   registerSubjectNames,
   segmentsRead,
@@ -137,6 +138,10 @@ export function VariableView({
     (signal) => loadRegister(node.register, signal),
   );
   const register = registerResource.data;
+  const referenceRegister = useCatalogRead(
+    referenceRegisterRead,
+    context?.steward_config != null ? node.register : null,
+  );
   const segments = useAsyncResource(node.fqid, (signal) =>
     getSegments(node.fqid, { signal }),
   );
@@ -203,6 +208,10 @@ export function VariableView({
     succession: graph.data,
     neighbourColumns,
     successionError,
+    // simplify: steward-only registers are read-only until Release B composes order/validate.
+    allowAdd:
+      context !== null &&
+      (context.steward_config == null || referenceRegister.value === true),
   });
   const facts = (segments.data ?? []).map(segmentFacts);
   const common = (facts[0] ?? []).filter((fact, index) =>

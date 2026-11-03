@@ -22,6 +22,7 @@ import {
   allRegisterFacets,
   browseMatches,
   browseOrder,
+  browseScope,
   useBrowseFilter,
   useBrowseScope,
   useSettledFilter,
@@ -35,6 +36,7 @@ import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
 import columnStyles from "./ui/ColumnList.module.css";
 import { focusBrowseColumn } from "./ui/column_keys";
+import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
@@ -401,27 +403,46 @@ export function BrowseTree({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span id={labelId} className="micro-label">
+        <span
+          id={labelId}
+          className={config ? "visually-hidden" : "micro-label"}
+        >
           Registers
         </span>
         {/* How many registers the filter leaves: an actionable count. */}
-        {matchCount !== null && (
+        {!config && matchCount !== null && (
           <span className={styles.matchCount}>
             {matchCount === 1 ? "1 match" : `${matchCount} matches`}
           </span>
         )}
-        {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
+        <div className={config ? styles.controls : undefined}>
+          {config && (
+            <div className={styles.scope}>
+              <Select
+                label={`Variable search scope for ${config.presentation.name}`}
+                labelHidden
+                value={scope ?? "steward"}
+                options={[
+                  { id: "steward", name: "Held matches" },
+                  { id: "reference", name: "All matches" },
+                ]}
+                onChange={browseScope.set}
+              />
+            </div>
+          )}
+          {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
             group is open, and expands once all are closed. */}
-        <Button
-          variant="ghost"
-          onPress={() =>
-            onExpandedChange(
-              expandedKeys.size > 0 ? new Set() : new Set(expandable),
-            )
-          }
-        >
-          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
-        </Button>
+          <Button
+            variant="ghost"
+            onPress={() =>
+              onExpandedChange(
+                expandedKeys.size > 0 ? new Set() : new Set(expandable),
+              )
+            }
+          >
+            {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
+          </Button>
+        </div>
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>

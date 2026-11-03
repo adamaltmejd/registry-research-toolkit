@@ -797,14 +797,14 @@ async function stewardHeldCase(page, shoot) {
   await brand.waitFor();
   check(await page.title() === "Synthetic steward", "paired title did not use steward branding");
   check(await page.locator('link[rel="icon"]').getAttribute("href")?.then((href) => href.startsWith("data:image/svg+xml,")), "paired favicon is missing");
-  const scope = page.getByRole("button", { name: /Browse scope/ });
-  await scope.waitFor();
-  check((await scope.innerText()).includes("Held by Synthetic steward"), "paired scope did not default to steward");
-  const search = page.getByRole("searchbox", { name: /^Search registers/ });
   const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
+  if (narrow) await page.getByRole("link", { name: "Browse registers", exact: true }).click();
+  const scope = page.getByRole("button", { name: /Variable search scope/ });
+  await scope.waitFor();
+  check((await scope.innerText()).includes("Held matches"), "paired scope did not default to steward");
+  const search = page.getByRole("searchbox", { name: /^Search registers/ });
   if (narrow) await page.getByRole("button", { name: /^Search registers/ }).click();
   await search.fill("position");
-  if (narrow) await page.getByRole("link", { name: "Show matching registers", exact: true }).click();
   const tree = page.getByRole("treegrid", { name: "Registers", exact: true });
   const slots = tree.getByRole("row", { name: /^Delivery slots/ });
   await slots.waitFor();
@@ -839,9 +839,10 @@ async function stewardHeldCase(page, shoot) {
   await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });
   await settled(page);
   await shoot("steward-held");
+  if (narrow) await page.getByRole("link", { name: "Show matching registers", exact: true }).click();
   await scope.click();
-  await page.getByRole("option", { name: "All reference metadata", exact: true }).click();
-  check((await scope.innerText()).includes("All reference metadata"), "reference scope could not be selected");
+  await page.getByRole("option", { name: "All matches", exact: true }).click();
+  check((await scope.innerText()).includes("All matches"), "reference scope could not be selected");
   await open(page, "/project");
   const fixture = JSON.parse(readFileSync(new URL("../../conformance/cases/holdings/order-key-requirements.json", import.meta.url), "utf8"));
   const chooser = page.waitForEvent("filechooser");
@@ -852,12 +853,21 @@ async function stewardHeldCase(page, shoot) {
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
   await settled(page);
   await shoot("steward-order");
+  // A project must not make supplemental-only metadata selectable before the
+  // order server supports the composed catalog. Reference variables stay usable.
+  await open(page, "/catalog/steward/slots/slot2");
+  await settled(page);
+  check(await page.getByRole("main").getByRole("checkbox").count() === 0, "supplemental variable offers project selection");
+  check(await page.getByRole("button", { name: /^Add .* to project/ }).count() === 0, "supplemental variable offers an add bar");
+  await shoot("steward-readonly");
+  await open(page, "/catalog/demo/held/late");
+  await page.getByRole("main").getByRole("checkbox").first().waitFor();
 }
 
 const scenarios = {
   "steward-held": {
     fixture: "paired",
-    shots: 3,
+    shots: 4,
     route: "/catalog/demo/held",
     run: stewardHeldCase,
   },

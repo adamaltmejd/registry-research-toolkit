@@ -22,30 +22,38 @@ const MORE = "more:";
 /** Other registers' flat matches, already limited and ordered by the hook. */
 function otherRegisterSections(
   facets: readonly RegisterFacet[] | null,
+  seen: Set<string>,
   group?: string,
 ): ColumnSection[] {
   return (facets ?? [])
     .flatMap((facet) => {
       if (!facet.fqid || !facet.variables) return [];
       const name = facet.name ?? "Unnamed register";
-      const items: ColumnItem[] = facet.variables.map((variable) => ({
-        id: variable.fqid,
-        name: variable.name,
-        label: `${variable.name}, in ${name}`,
-        href: catalogHref(variable.fqid),
-        inProject: 0,
-        leaves: true,
-      }));
+      const items: ColumnItem[] = facet.variables
+        .filter((variable) => {
+          if (seen.has(variable.fqid)) return false;
+          seen.add(variable.fqid);
+          return true;
+        })
+        .map((variable) => ({
+          id: variable.fqid,
+          name: variable.name,
+          label: `${variable.name}, in ${name}`,
+          href: catalogHref(variable.fqid),
+          inProject: 0,
+          leaves: true,
+        }));
       const rest = facet.variable_matches - facet.variables.length;
       if (rest > 0) {
         items.push({
-          id: `${MORE}${facet.fqid}`,
+          id: `${MORE}${group === undefined ? "reference" : "steward"}:${facet.fqid}`,
           name: `${rest} more in ${name}`,
           href: catalogHref(facet.fqid),
           inProject: 0,
           leaves: true,
         });
       }
+      if (items.length === 0) return [];
       return [
         {
           id: `${group === undefined ? "register" : "steward-register"}:${facet.fqid}`,
@@ -127,10 +135,12 @@ export function VariableList({
       ),
     [needle],
   );
+  const seen = new Set(items.map((item) => item.id));
   const others = [
-    ...otherRegisterSections(otherMatches?.reference ?? null),
+    ...otherRegisterSections(otherMatches?.reference ?? null, seen),
     ...otherRegisterSections(
       otherMatches?.steward ?? null,
+      seen,
       config?.presentation.name,
     ),
   ];

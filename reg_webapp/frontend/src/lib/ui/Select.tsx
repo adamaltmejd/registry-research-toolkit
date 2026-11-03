@@ -11,6 +11,7 @@ import styles from "./Select.module.css";
 
 interface Props {
   label: string;
+  labelHidden?: boolean;
   "aria-label"?: string;
   value: string;
   options: { id: string; name: string }[];
@@ -20,6 +21,7 @@ interface Props {
 /** One choice, named in plain words; long option sets scroll in the popover. */
 export function Select({
   label,
+  labelHidden = false,
   "aria-label": ariaLabel,
   value,
   options,
@@ -34,7 +36,9 @@ export function Select({
         if (key !== null) onChange(String(key));
       }}
     >
-      <Label className="micro-label">{label}</Label>
+      <Label className={labelHidden ? "visually-hidden" : "micro-label"}>
+        {label}
+      </Label>
       <Button className={styles.trigger}>
         <SelectValue className={styles.value} />
         <span aria-hidden="true">▾</span>

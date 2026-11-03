@@ -55,52 +55,50 @@ function HeldGroup({
       {sameRole && (
         <KeyValue rows={[{ label: "Role", value: catalogWords(first.role) }]} />
       )}
-      {sameCarried && first.carried && <span>Carried forward</span>}
+      {sameCarried && first.carried && (
+        <KeyValue rows={[{ label: "Carried forward", value: "Yes" }]} />
+      )}
       {sameCaveat && first.caveat && <Caveat text={first.caveat} />}
-      <div className={styles.table}>
-        <DataTable
-          columns={[
-            ...(showVariable
-              ? [{ key: "variable" as const, label: "Variable", width: "30%" }]
-              : []),
-            {
-              key: "column",
-              label: "Column",
-              width: showVariable ? "25%" : "40%",
-            },
-            { key: "period", label: "Period", width: "25%" },
-            ...(!sameRole ? [{ key: "role" as const, label: "Role" }] : []),
-            ...(notesVary ? [{ key: "caveat" as const, label: "Notes" }] : []),
-          ]}
-          rows={rows}
-          getRowId={(row) => JSON.stringify(row)}
-          renderCell={(row, column) => {
-            switch (column.key) {
-              case "variable":
-                return (
-                  <a className="link" href={catalogHref(row.variable)}>
-                    {names.get(row.variable) ?? "Variable name unavailable"}
-                  </a>
-                );
-              case "column":
-                return <ColumnChip name={row.column} />;
-              case "period":
-                return <code>{catalogPeriodLabel(row.period)}</code>;
-              case "role":
-                return catalogWords(row.role);
-              case "caveat":
-                return (
-                  <span className={styles.notes}>
-                    {!sameCarried && row.carried && (
-                      <span>Carried forward</span>
-                    )}
-                    {!sameCaveat && row.caveat && <Caveat text={row.caveat} />}
-                  </span>
-                );
-            }
-          }}
-        />
-      </div>
+      <DataTable
+        columns={[
+          ...(showVariable
+            ? [{ key: "variable" as const, label: "Variable", width: "30%" }]
+            : []),
+          {
+            key: "column",
+            label: "Column",
+            width: showVariable ? "25%" : "40%",
+          },
+          { key: "period", label: "Period", width: "25%", mono: true },
+          ...(!sameRole ? [{ key: "role" as const, label: "Role" }] : []),
+          ...(notesVary ? [{ key: "caveat" as const, label: "Notes" }] : []),
+        ]}
+        rows={rows}
+        getRowId={(row) => JSON.stringify(row)}
+        renderCell={(row, column) => {
+          switch (column.key) {
+            case "variable":
+              return (
+                <a className="link" href={catalogHref(row.variable)}>
+                  {names.get(row.variable) ?? "Variable name unavailable"}
+                </a>
+              );
+            case "column":
+              return <ColumnChip name={row.column} />;
+            case "period":
+              return catalogPeriodLabel(row.period);
+            case "role":
+              return catalogWords(row.role);
+            case "caveat":
+              return (
+                <span className={styles.notes}>
+                  {!sameCarried && row.carried && <span>Carried forward</span>}
+                  {!sameCaveat && row.caveat && <Caveat text={row.caveat} />}
+                </span>
+              );
+          }
+        }}
+      />
     </section>
   );
 }

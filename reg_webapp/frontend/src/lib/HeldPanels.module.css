@@ -14,10 +14,6 @@
   margin: 0;
 }
 
-.table table {
-  table-layout: fixed;
-}
-
 .notes {
   display: flex;
   flex-direction: column;

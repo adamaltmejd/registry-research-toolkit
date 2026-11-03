@@ -4,17 +4,14 @@ import { flushSync } from "react-dom";
 import { type Context, stewardConfig } from "./api";
 import {
   browseFilter,
-  browseScope,
   useBrowseFilter,
   useBrowseMatches,
-  useBrowseScope,
 } from "./browse_filter";
 import { CommandPalette } from "./CommandPalette";
 import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
 import { Button } from "./ui/Button";
-import { Select } from "./ui/Select";
 import type { ProjectValidation } from "./use_project";
 
 const mac = isMacPlatform();
@@ -59,7 +56,6 @@ export function TopBar({
     config?.presentation.long_name ??
     config?.presentation.name ??
     "Registry Research Toolkit";
-  const scope = useBrowseScope(config);
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -288,20 +284,6 @@ export function TopBar({
             Search
           </Button>
         </span>
-        {config && (
-          <Select
-            label="Browse scope"
-            value={scope ?? "steward"}
-            options={[
-              { id: "steward", name: `Held by ${config.presentation.name}` },
-              { id: "reference", name: "All reference metadata" },
-            ]}
-            onChange={(value) => {
-              if (value === "reference" || value === "steward")
-                browseScope.set(value);
-            }}
-          />
-        )}
         <ProjectBanner context={context} validation={validation} />
       </div>
     </header>

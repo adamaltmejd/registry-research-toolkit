@@ -181,7 +181,12 @@ export function catalogRootChildren(): Read<RootChild[]> {
 
 /** Reference and supplemental lists can name the same provider or register. */
 export function uniqueCatalogRefs<T extends { fqid: string }>(items: T[]): T[] {
-  return [...new Map(items.map((item) => [item.fqid, item])).values()];
+  const unique = new Map<string, T>();
+  // Callers list reference metadata first; supplemental aliases must not replace it.
+  for (const item of items) {
+    if (!unique.has(item.fqid)) unique.set(item.fqid, item);
+  }
+  return [...unique.values()];
 }
 
 /** A register's display names, shared by table headers and located findings. */
@@ -233,6 +238,29 @@ export function registerSubjectNames(
 /** A named catalog subject outside a register (for example a successor class). */
 export function showRead(ref: string): Read<ShowNode> {
   return read(`show:${ref}`, () => sharedShow(ref));
+}
+
+/** Orders currently admit reference registers only; a supplemental collision cannot grant admission. */
+export function referenceRegisterRead(ref: string | null): Read<boolean> {
+  if (ref === null) return UNASKED;
+  const root = showRead("");
+  if (root.value === null) return { value: null, loading: root.loading };
+  const providerFqid = ref.split("/")[0];
+  if (
+    root.value.kind !== "root" ||
+    !root.value.providers.some((provider) => provider.fqid === providerFqid)
+  ) {
+    return { value: false, loading: false };
+  }
+  const provider = showRead(providerFqid);
+  return {
+    value:
+      provider.value === null
+        ? null
+        : provider.value.kind === "provider" &&
+          provider.value.registers.some((register) => register.fqid === ref),
+    loading: provider.loading,
+  };
 }
 
 /** Resolve display names through the same register read used by the browser. */
