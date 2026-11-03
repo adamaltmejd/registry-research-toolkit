@@ -196,7 +196,8 @@ CREATE TABLE valueset (
   hash             TEXT NOT NULL UNIQUE,  -- sha256 of the canonical item list
   n_items          INTEGER NOT NULL,
   hierarchical     INTEGER NOT NULL CHECK (hierarchical IN (0,1)),
-  class_version_id INTEGER REFERENCES class_version(id),  -- curated version; V1 only proposes (D29)
+  -- From curation only (D29), see emit.rs. Deferred: class_version is declared after.
+  class_version_id INTEGER REFERENCES class_version(id) DEFERRABLE INITIALLY DEFERRED,
   class_match      TEXT CHECK (class_match IN ('equal','subset')),
   CHECK ((class_version_id IS NULL) = (class_match IS NULL))
 ) STRICT;
@@ -482,6 +483,7 @@ CREATE TABLE doc (
   hash       TEXT NOT NULL UNIQUE,        -- sha256 of the original bytes
   kind       TEXT NOT NULL CHECK (kind IN ('parsed','pdf')),
   title_text INTEGER NOT NULL REFERENCES text(id),
+  document_title_text INTEGER REFERENCES text(id),  -- the published document's; NULL when unknown
   licence    TEXT NOT NULL,
   bytes      INTEGER NOT NULL,
   url        TEXT,

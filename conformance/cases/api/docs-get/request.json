@@ -1,5 +1,5 @@
 {
-  "note": "Fails if docs_get drops or renames a field of the document (title, kind, licence, url, bytes), lists its subjects other than as the document's links in (kind, fqid, page) order, builds body other than as the sections joined by a blank line, omits excerpt, answers a malformed hash other than invalid_parameter, or an unknown hash other than not_found.",
+  "note": "Fails if docs_get drops or renames a field of the document (title, document_title, kind, licence, url, bytes), lists its subjects other than as the document's links in (kind, fqid, page) order, builds body other than as the sections joined by a blank line, omits excerpt, answers a malformed hash other than invalid_parameter, or an unknown hash other than not_found.",
   "fixture": "documents",
   "requests": [
     {

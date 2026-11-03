@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/value_set/names": [["old"], ["new"]],
+      "/data/items/*/value_set/classification": ["class/kind/old", "class/kind/new"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/value_set/names": [["old"], ["local"]],
+      "/data/items/*/value_set/classification": ["class/kind/old", "class/kind/new"]
+    }
+  }
+]

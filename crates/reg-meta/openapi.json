@@ -1901,6 +1901,7 @@
         "required": [
           "doc",
           "title",
+          "document_title",
           "kind",
           "licence",
           "url",
@@ -1923,6 +1924,13 @@
           },
           "doc": {
             "type": "string"
+          },
+          "document_title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The published document this text is taken from; `null` when unknown."
           },
           "excerpt": {
             "type": "string"
@@ -1956,6 +1964,7 @@
         "required": [
           "doc",
           "title",
+          "document_title",
           "kind",
           "heading",
           "page",
@@ -1964,6 +1973,13 @@
         "properties": {
           "doc": {
             "type": "string"
+          },
+          "document_title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The published document this text is taken from; `null` when unknown."
           },
           "heading": {
             "type": [
@@ -3220,6 +3236,7 @@
         "required": [
           "doc",
           "title",
+          "document_title",
           "kind",
           "licence",
           "url",
@@ -3233,6 +3250,13 @@
           },
           "doc": {
             "type": "string"
+          },
+          "document_title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The published document this text is taken from; `null` when unknown."
           },
           "kind": {
             "type": "string"
@@ -4803,7 +4827,7 @@
               "string",
               "null"
             ],
-            "description": "The curated classification version's ref; `null` until a version is curated."
+            "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated."
           },
           "hash": {
             "type": "string"

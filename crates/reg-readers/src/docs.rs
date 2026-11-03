@@ -84,8 +84,7 @@ struct Sources {
 #[serde(deny_unknown_fields)]
 struct Source {
     url: String,
-    // The source's own title; a document is titled by its frontmatter.
-    #[allow(dead_code)]
+    /// The published document's title; a markdown text is titled by its frontmatter.
     title: String,
 }
 
@@ -160,13 +159,8 @@ pub fn markdown(
         }
         let key = |k: &str| meta.get(k).filter(|v| !v.is_empty());
         let source = key(&config.frontmatter.source);
-        let url = source.and_then(|s| {
-            sources
-                .sources
-                .get(s.strip_suffix(".md").unwrap_or(s))
-                .map(|s| s.url.clone())
-        });
-        if url.is_none() {
+        let original = source.and_then(|s| sources.sources.get(s.strip_suffix(".md").unwrap_or(s)));
+        if original.is_none() {
             out.warnings.push(format!(
                 "{path}: source {:?} is not in {}; no original URL",
                 source.map_or("", String::as_str),
@@ -198,9 +192,10 @@ pub fn markdown(
             title: key(&config.frontmatter.title)
                 .cloned()
                 .unwrap_or_else(|| name.trim_end_matches(".md").to_owned()),
+            document_title: original.map(|s| s.title.clone()),
             licence: sources.licence.clone(),
             bytes: bytes.len() as u64,
-            url,
+            url: original.map(|s| s.url.clone()),
             sections: sections(body),
             content: None,
             subjects: subjects
@@ -270,6 +265,7 @@ pub fn pdf_list(
             records.push(Record::Doc(Doc {
                 hash,
                 kind: "pdf".to_owned(),
+                document_title: Some(entry.title.clone()),
                 title: entry.title,
                 licence: entry.license,
                 bytes: size,

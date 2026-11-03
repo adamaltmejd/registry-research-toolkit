@@ -76,6 +76,9 @@ const SEARCH_DEPTH: usize = 1000;
 pub struct DocHit {
     doc: String,
     title: String,
+    /// The published document this text is taken from; `null` when unknown.
+    #[schema(required = true)]
+    document_title: Option<String>,
     kind: String,
     #[schema(required = true)]
     heading: Option<String>,
@@ -110,6 +113,9 @@ pub struct DocSubject {
 pub struct DocDetail {
     doc: String,
     title: String,
+    /// The published document this text is taken from; `null` when unknown.
+    #[schema(required = true)]
+    document_title: Option<String>,
     kind: String,
     licence: String,
     #[schema(required = true)]
@@ -127,6 +133,9 @@ pub struct DocDetail {
 pub struct RelatedDocument {
     doc: String,
     title: String,
+    /// The published document this text is taken from; `null` when unknown.
+    #[schema(required = true)]
+    document_title: Option<String>,
     kind: String,
     licence: String,
     #[schema(required = true)]
@@ -279,18 +288,20 @@ fn hits(
             args.push(expression.to_owned().into());
             conditions.push(format!("doc_fts MATCH ?{}", args.len()));
             (
-                "d.hash, t.body, d.kind, s.heading, s.page, snippet(doc_fts, 1, '', '', '…', 16)",
+                "d.hash, t.body, d.kind, s.heading, s.page, snippet(doc_fts, 1, '', '', '…', 16), dt.body",
                 "FROM doc_fts
                    JOIN doc_section s ON s.id = doc_fts.rowid
                    JOIN doc d ON d.id = s.doc_id
-                   JOIN text t ON t.id = d.title_text",
+                   JOIN text t ON t.id = d.title_text
+                   LEFT JOIN text dt ON dt.id = d.document_title_text",
                 "ORDER BY bm25(doc_fts), d.hash, s.ord",
             )
         }
         (true, None) => return Ok((Vec::new(), 0)),
         (false, None) => (
-            "d.hash, t.body, d.kind, NULL, NULL, NULL",
-            "FROM doc d JOIN text t ON t.id = d.title_text",
+            "d.hash, t.body, d.kind, NULL, NULL, NULL, dt.body",
+            "FROM doc d JOIN text t ON t.id = d.title_text
+               LEFT JOIN text dt ON dt.id = d.document_title_text",
             "ORDER BY t.body, d.hash",
         ),
     };
@@ -320,6 +331,7 @@ fn hits(
                 heading: row.get(3)?,
                 page: row.get(4)?,
                 snippet: row.get(5)?,
+                document_title: row.get(6)?,
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?;
@@ -338,10 +350,12 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
     let doc = hash(params, "doc")?.expect("a required parameter");
     let conn = server.catalog.connect_for_hash("doc", doc)?;
     require_docs(&conn)?;
-    let (id, kind, title, licence, url, bytes) = conn
+    let (id, kind, title, licence, url, bytes, document_title) = conn
         .query_row(
-            "SELECT d.id, d.kind, t.body, d.licence, d.url, d.bytes
-             FROM doc d JOIN text t ON t.id = d.title_text WHERE d.hash = ?",
+            "SELECT d.id, d.kind, t.body, d.licence, d.url, d.bytes, dt.body
+             FROM doc d JOIN text t ON t.id = d.title_text
+               LEFT JOIN text dt ON dt.id = d.document_title_text
+             WHERE d.hash = ?",
             [doc],
             |row| {
                 Ok((
@@ -351,6 +365,7 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
                     row.get::<_, String>(3)?,
                     row.get::<_, Option<String>>(4)?,
                     row.get::<_, i64>(5)?,
+                    row.get::<_, Option<String>>(6)?,
                 ))
             },
         )
@@ -393,6 +408,7 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
     Ok(serde_json::to_value(DocDetail {
         doc: doc.to_owned(),
         title,
+        document_title,
         kind,
         licence,
         url,
@@ -428,10 +444,11 @@ pub(super) fn related_documents(
     // document are one row to the reader.
     Ok(conn
         .prepare(&format!(
-            "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page
+            "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page, dt.body
              FROM doc_link l
                JOIN doc d ON d.id = l.doc_id
                JOIN text t ON t.id = d.title_text
+               LEFT JOIN text dt ON dt.id = d.document_title_text
              WHERE {}
              ORDER BY t.body, d.hash, l.page",
             links_of(&entity.kind)
@@ -445,6 +462,7 @@ pub(super) fn related_documents(
                 url: row.get(4)?,
                 bytes: row.get(5)?,
                 page: row.get(6)?,
+                document_title: row.get(7)?,
             })
         })?
         .collect::<rusqlite::Result<Vec<_>>>()?)

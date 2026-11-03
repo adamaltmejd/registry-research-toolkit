@@ -763,6 +763,13 @@
             "doc": {
               "type": "string"
             },
+            "document_title": {
+              "description": "The published document this text is taken from; `null` when unknown.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "kind": {
               "type": "string"
             },
@@ -787,6 +794,7 @@
           "required": [
             "doc",
             "title",
+            "document_title",
             "kind",
             "licence",
             "url",
@@ -2028,7 +2036,7 @@
           "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
               "type": [
                 "string",
                 "null"
@@ -2301,7 +2309,7 @@
           "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
               "type": [
                 "string",
                 "null"
@@ -3122,7 +3130,7 @@
           "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
               "type": [
                 "string",
                 "null"
@@ -3553,7 +3561,7 @@
           "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The curated classification version's ref; `null` until a version is curated.",
+              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
               "type": [
                 "string",
                 "null"
@@ -4445,6 +4453,13 @@
             "doc": {
               "type": "string"
             },
+            "document_title": {
+              "description": "The published document this text is taken from; `null` when unknown.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "excerpt": {
               "type": "string"
             },
@@ -4473,6 +4488,7 @@
           "required": [
             "doc",
             "title",
+            "document_title",
             "kind",
             "licence",
             "url",
@@ -4488,6 +4504,13 @@
           "properties": {
             "doc": {
               "type": "string"
+            },
+            "document_title": {
+              "description": "The published document this text is taken from; `null` when unknown.",
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "heading": {
               "type": [
@@ -4518,6 +4541,7 @@
           "required": [
             "doc",
             "title",
+            "document_title",
             "kind",
             "heading",
             "page",
@@ -4649,6 +4673,13 @@
             "doc": {
               "type": "string"
             },
+            "document_title": {
+              "description": "The published document this text is taken from; `null` when unknown.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "kind": {
               "type": "string"
             },
@@ -4673,6 +4704,7 @@
           "required": [
             "doc",
             "title",
+            "document_title",
             "kind",
             "licence",
             "url",
