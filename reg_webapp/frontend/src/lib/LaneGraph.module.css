@@ -9,6 +9,11 @@
   min-width: 0;
 }
 
+.graph[data-scroll] {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 /* ── Marks (one decorative SVG under the lanes) ─────────────────────────── */
 
 .marks {

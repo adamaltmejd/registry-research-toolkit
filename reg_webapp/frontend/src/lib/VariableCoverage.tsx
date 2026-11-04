@@ -61,7 +61,7 @@ export function useVariableCoverage({
   successionError?: string | null;
   allowAdd?: boolean;
 }) {
-  const { draft } = useProject();
+  const { draft, raw } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -266,7 +266,18 @@ export function useVariableCoverage({
             {successionError} Reload the page to try again.
           </StatusRow>
         )}
-        {allowAdd && !draft && (
+        {/* A rejected project is a recovery copy: fixing or replacing it is the
+            project page's, behind its confirmation, never a one-click create. */}
+        {allowAdd && !draft && raw !== null && (
+          <p className={styles.create}>
+            Fix the project on the{" "}
+            <a className="link" href="/project">
+              project page
+            </a>{" "}
+            to add columns.
+          </p>
+        )}
+        {allowAdd && raw === null && (
           <p className={styles.create}>
             Create a project to add columns.
             <Button

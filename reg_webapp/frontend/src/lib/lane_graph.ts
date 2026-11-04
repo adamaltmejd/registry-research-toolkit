@@ -104,6 +104,9 @@ export interface LaneGeometry {
   coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
+  /** Where the widest drawing ends: past the graph's width only when a column
+   * name is wider than the whole track, and the graph then scrolls itself. */
+  contentWidth: number;
   /** `label` and `anchor` are set on the one label that stands for both
    * window bounds when they are too close to label apart. */
   ticks: {
@@ -409,6 +412,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     coverageY,
     lanes,
     spans: placed,
+    contentWidth: Math.max(input.width, ...ends.values()),
     ticks,
     edges,
   };

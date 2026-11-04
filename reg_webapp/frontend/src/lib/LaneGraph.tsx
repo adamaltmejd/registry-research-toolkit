@@ -190,6 +190,8 @@ export function LaneGraph({
         ref={measure}
         className={styles.graph}
         data-stacked={geometry?.stacked || undefined}
+        // A name wider than the track scrolls inside the graph, never the page.
+        data-scroll={(geometry && geometry.contentWidth > width) || undefined}
         style={{ height: geometry?.height ?? 0 }}
       >
         {geometry && (
