@@ -2527,18 +2527,6 @@ evidence = "Avreg har en annan ägare mellan variabelns observerade perioder.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:avregkod-ot"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har en annan ägare i en tidigare period; uppgiften är ett antal övertäckningssvar.\ncatalog:occurrence:249864\ncatalog:occurrence:249933"
-
-[[statement]]
-kind = "set"
-subject = "var:avregkod-ot"
-fields = { "tags" = ["methods"] }
-evidence = "Källkolumnen har en annan ägare i en tidigare period; uppgiften är ett antal övertäckningssvar.\ncatalog:occurrence:249864\ncatalog:occurrence:249933"
-
-[[statement]]
-kind = "set"
 subject = "var:bedfard4"
 fields = { "sets" = [] }
 evidence = "Variabeln avser utbildningens färdighetsträning.\ncatalog:occurrence:249973"
@@ -11133,13 +11121,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "var:avregkod-ot"
-fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger ett antal, inte en kod.\ncatalog:occurrence:249933"
-
-
-[[statement]]
-kind = "set"
 subject = "var:fardighetstraning-anvanda-kritiskt-tankande-f19-07"
 fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper. Uppgiften avser den svarandes universitets- eller högskoleutbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249112:opdef_text. One variable, one description."
@@ -13344,3 +13325,51 @@ kind = "set"
 subject = "var:utb-arbete-overensstammelse-6"
 fields = { "label" = "Överensstämmelse mellan utbildning och arbete (fyrgradig skala)" }
 evidence = "#2102 same-label cluster 'Överensstämmelse mellan utbildning och arbete' (9 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OvrArbUt's opdef refers to work abroad; the other columns ask about the match of the main work with the education. F12/F7 use a four-step scale (Helt/Till stor del/Till viss del/Inte alls) instead of the three-step list of the others."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Avreg where key = 'v28505' and release = 'r5632'"
+fields = { "variable" = "avregkod-avreg" }
+evidence = "In April 2014 (r5632) SCB lists v28505 under the column Avreg with the code list 0=Bortfall, 1=Svarande, 2=Övertäckning (hash #8527), identical to v4655 (Avregkod), which is Avreg/avreg in the same table in 2006, 2008, 2010 and 2017. Its definition (svar, bortfall eller övertäckning) says the same as v4655's operational definition. The 2012 column inkod of v28505 has a different, longer code list (10, 11, 30-60, 90) and stays in inflodeskod.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=583360 (r5632, v28505 Avreg)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=827372 (r4417, v28505 inkod)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=533712 (r3700, v4655 avreg)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=562540 (r11643, v4655 Avreg)"
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: öt where key = 'v4655' and release = 'r15236'"
+fields = { "variable" = "stratum-antal-svar" }
+evidence = "The column öt (float) has the identical operational definition 'Antal inkomna svar som utgör övertäckning i stratumet' in March 2000 (v41884) and March 2002 (v4655). The 2002 label 'Avregkod' and definition 'Kod för granskning' describe the 0/1/2 response code, which öt is not (decimal, no code list). Not co-delivered; no overlap.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=102443 (r15347, v41884 öt)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=630145 (r15236, v4655 öt)"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-antal-svar"
+fields = { "description" = "Antal inkomna svar som utgör övertäckning i stratumet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMoved from avregkod-ot when it was folded into this variable. Definitionen anger ett antal, inte en kod."
+
+[[statement]]
+kind = "set"
+subject = "var:kal-beh"
+fields = { "description" = "Kombinerad indelning efter kön och gymnasieprogram (till exempel BA, EK, NA). Kod 41 betyder samtliga ej examinerade." }
+evidence = "Codes are kön x gymnasieprogram plus 41 = samtliga ej examinerade; opdef says \"kön och behörighet\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-sverige"
+fields = { "description" = "Anger om personen har studerat i Sverige efter avslutad utbildning (1 = ja, 2 = nej)." }
+evidence = "Whether the person studied in Sweden after the education; 1 = ja, 2 = nej. The 2010 list #11094 belongs to the studies-abroad question."
+
+[[statement]]
+kind = "set"
+subject = "var:skal-till-att-arbetet-inte-overensstammer-med-utbildningen-f5-6"
+fields = { "description" = "Anger om \"annan anledning\" är ett skäl till att arbetet inte överensstämmer med utbildningen (ja/nej)." }
+evidence = "F5_1-F5_5 (2020) and F5_6 (2023) use #11301; the 2020 F5_6 list #8626 is the consistency scale."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-inom-europa"
+fields = { "description" = "Anger om personen har studerat utomlands inom Europa. År 2000: 1 = ja inom Europa, 2 = ja utanför Europa, 3 = nej. År 2002: landskod." }
+evidence = "2000 (fr23a/b): 1 ja inom Europa, 2 ja utanför, 3 nej (#4151); 2002 (fr21inom/utom): country code (#1161). Dated change."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-utomlands-utanfor-europa"
+fields = { "description" = "Anger om personen har studerat utomlands utanför Europa. År 2000: 1 = ja inom Europa, 2 = ja utanför Europa, 3 = nej. År 2002: landskod." }
+evidence = "2000 (fr23a/b): 1 ja inom Europa, 2 ja utanför, 3 nej (#4151); 2002 (fr21inom/utom): country code (#1161). Dated change."
