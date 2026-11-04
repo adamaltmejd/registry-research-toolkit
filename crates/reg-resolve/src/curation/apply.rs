@@ -1375,7 +1375,7 @@ fn apply_fields(
 /// The caller must preserve frame length and order when merging field changes.
 pub fn rekey(
     before: &[Record],
-    after: &[Record],
+    after: &[&Record],
     assignments: &mut BTreeMap<crate::OccurrenceKey, String>,
     claims: &mut [crate::provenance::Claim],
     metadata: &mut [Metadata],
@@ -1386,7 +1386,7 @@ pub fn rekey(
         "field phase preserves record order"
     );
     let old_context = crate::OccurrenceContext::new(before);
-    let new_context = crate::OccurrenceContext::new(after);
+    let new_context = crate::OccurrenceContext::new(after.iter().copied());
     let releases: BTreeMap<_, _> = after
         .iter()
         .filter_map(|record| match record {
@@ -1403,46 +1403,54 @@ pub fn rekey(
             _ => None,
         })
         .collect();
+    // Keys borrow these identities rather than cloning one per locator (#2196).
+    let identities = before
+        .iter()
+        .zip(after)
+        .filter_map(|(before, after)| match (before, after) {
+            (Record::Occurrence(before), Record::Occurrence(after)) => Some((
+                before,
+                old_context.identity(before),
+                new_context.identity(after),
+            )),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
     let mut changed = BTreeMap::new();
     let mut owners = BTreeMap::new();
     let mut destinations = BTreeMap::new();
-    for (before, after) in before.iter().zip(after) {
-        let (Record::Occurrence(before), Record::Occurrence(after)) = (before, after) else {
-            continue;
-        };
-        let old = old_context.identity(before);
-        let new = new_context.identity(after);
+    for (before, old, new) in &identities {
         for at in std::iter::once(&before.locator).chain(&before.also) {
-            let old_key = crate::OccurrenceKey::new(old.clone(), at);
-            let new_key = crate::OccurrenceKey::new(new.clone(), at);
+            let old_key = (old, at);
+            let new_key = (new, at);
             if destinations
-                .insert(old_key.clone(), new_key.clone())
+                .insert(old_key, new_key)
                 .is_some_and(|previous| previous != new_key)
             {
                 return Err(at.clone());
             }
-            if let Some(previous) = owners.insert(new_key, old_key.clone())
+            if let Some(previous) = owners.insert(new_key, old_key)
                 && previous != old_key
             {
                 return Err(at.clone());
             }
             if old != new {
-                changed.insert(old_key, new.clone());
+                changed.insert(old_key, new);
             }
         }
     }
     *assignments = std::mem::take(assignments)
         .into_iter()
         .map(|(mut key, value)| {
-            if let Some(identity) = changed.get(&key) {
-                key.identity = identity.clone();
+            if let Some(identity) = changed.get(&(&key.identity, &key.locator)) {
+                key.identity = (*identity).clone();
             }
             (key, value)
         })
         .collect();
     for value in metadata {
-        if let Some(identity) = changed.get(&value.key) {
-            value.key.identity = identity.clone();
+        if let Some(identity) = changed.get(&(&value.key.identity, &value.key.locator)) {
+            value.key.identity = (*identity).clone();
         }
     }
     for claim in claims {
@@ -1460,8 +1468,7 @@ pub fn rekey(
         let Some(identity) = &claim.identity else {
             continue;
         };
-        let key = crate::OccurrenceKey::new(identity.clone(), &claim.locator);
-        if let Some(identity) = changed.get(&key) {
+        if let Some(&identity) = changed.get(&(identity, &claim.locator)) {
             claim.identity = Some(identity.clone());
             claim.table = Some(identity.table.clone());
             claim.release.clone_from(&identity.release);

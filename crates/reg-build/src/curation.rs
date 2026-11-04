@@ -995,7 +995,7 @@ fn field_application(
 ) -> Result<
     (
         Vec<usize>,
-        Vec<Record>,
+        Vec<FieldDelta>,
         reg_resolve::curation::apply::Applied,
     ),
     String,
@@ -1017,10 +1017,10 @@ fn field_application(
     let mut applied =
         reg_resolve::curation::apply::apply(&source, ledger, &statement.statement, &at, premise)?;
     // Unchanged dependency records need no merge; retaining them repeats source text
-    // once per setter. Keep metadata and provenance even when no record changed.
+    // once per setter. Keep metadata and provenance even when no record changed. A
+    // changed record keeps only its changed fields, not both full copies (#2196).
     let mut changed_indices = Vec::new();
-    let mut before_records = Vec::new();
-    let mut after_records = Vec::new();
+    let mut deltas = Vec::new();
     for ((index, before), after) in indices
         .into_iter()
         .zip(source)
@@ -1028,37 +1028,47 @@ fn field_application(
     {
         if before != after {
             changed_indices.push(index);
-            before_records.push(before);
-            after_records.push(after);
+            deltas.push(field_delta(&before, &after)?);
         }
     }
-    applied.records = after_records;
-    Ok((changed_indices, before_records, applied))
+    Ok((changed_indices, deltas, applied))
+}
+
+/// The serialized fields of a set's output record that differ from its source record, in
+/// the output's field order.
+type FieldDelta = Vec<(String, serde_json::Value)>;
+
+fn field_delta(before: &Record, after: &Record) -> Result<FieldDelta, String> {
+    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
+    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
+    let serde_json::Value::Object(after) = after else {
+        unreachable!("frame records serialize as objects");
+    };
+    Ok(after
+        .into_iter()
+        .filter(|(field, value)| before.get(field) != Some(value))
+        .collect())
 }
 
 /// Independent fields merge as patches, never as whole-record replacements.
-fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Record, String> {
+fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record, String> {
     let mut current = serde_json::to_value(current).map_err(|e| e.to_string())?;
-    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
-    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
-    for (field, value) in after.as_object().expect("frame object") {
-        if before.get(field) != Some(value) {
-            if field == "conflicts" {
-                // Independent corrections remove markers from the same source snapshot.
-                if let Some(conflicts) = current
-                    .get_mut(field)
-                    .and_then(serde_json::Value::as_array_mut)
-                {
-                    conflicts.retain(|field| {
-                        value
-                            .as_array()
-                            .expect("source conflict list")
-                            .contains(field)
-                    });
-                }
-            } else {
-                current[field] = value.clone();
+    for (field, value) in delta {
+        if field == "conflicts" {
+            // Independent corrections remove markers from the same source snapshot.
+            if let Some(conflicts) = current
+                .get_mut(field)
+                .and_then(serde_json::Value::as_array_mut)
+            {
+                conflicts.retain(|field| {
+                    value
+                        .as_array()
+                        .expect("source conflict list")
+                        .contains(field)
+                });
             }
+        } else {
+            current[field] = value.clone();
         }
     }
     serde_json::from_value(current).map_err(|e| e.to_string())
@@ -1550,13 +1560,11 @@ fn run_selected(
                     Ok(reg_resolve::curation::apply::Applied::default())
                 }
                 Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
-                    if let Some((indices, before, applied)) =
+                    if let Some((indices, deltas, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
-                        for ((index, before), after) in
-                            indices.into_iter().zip(&before).zip(&applied.records)
-                        {
-                            records[index] = merge_fields(&records[index], before, after)?;
+                        for (index, delta) in indices.into_iter().zip(&deltas) {
+                            records[index] = merge_fields(&records[index], delta)?;
                         }
                         Ok(applied)
                     } else {
@@ -1575,7 +1583,7 @@ fn run_selected(
                 if stage == Phase::Moves {
                     reg_resolve::curation::apply::rekey(
                         &source,
-                        &applied.records,
+                        &applied.records.iter().collect::<Vec<_>>(),
                         &mut result.variables,
                         &mut result.overrides,
                         &mut result.metadata,
@@ -1686,7 +1694,6 @@ fn run_selected(
                             | Record::Occurrence(_)
                     )
                 })
-                .cloned()
                 .collect::<Vec<_>>();
             if let Err(at) = reg_resolve::curation::apply::rekey(
                 &field_snapshot,
