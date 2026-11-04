@@ -27,7 +27,6 @@ const TITLES: Readonly<Record<string, string>> = {
   panel_member_unknown_source:
     "Panel names a source that is not in the project",
   source_referenced_by_multiple_panels: "Source belongs to more than one panel",
-  panel_row_keys_differ: "Panel sources use different row identifiers",
   fqid_unresolved: "Catalog item was not found",
   retired_ref: "Catalog item has been retired",
   table_is_register: "Choose a table within the register",

@@ -1,4 +1,4 @@
--- The catalog file, schema v4 (crates/DESIGN.md, "The catalog builder").
+-- The catalog file, schema v8 (crates/DESIGN.md, "The catalog builder").
 PRAGMA page_size = 4096;
 PRAGMA application_id = 1380271939;      -- 'REGC'
 -- user_version: emit sets it from reg_core::CATALOG_SCHEMA_VERSION (= meta schema_version).
@@ -64,14 +64,6 @@ CREATE TABLE unit_type (
   label_text INTEGER NOT NULL REFERENCES text(id)
 ) STRICT;
 
-CREATE TABLE id_kind (
-  id            INTEGER PRIMARY KEY,
-  slug          TEXT NOT NULL UNIQUE,     -- 'person', 'person-lopnr', 'firm'
-  label_text    INTEGER NOT NULL REFERENCES text(id),
-  base_id       INTEGER REFERENCES id_kind(id),  -- pseudonymised form -> its base
-  pseudonymised INTEGER NOT NULL CHECK (pseudonymised IN (0,1))
-) STRICT;
-
 CREATE TABLE provider (
   id        INTEGER PRIMARY KEY,
   pid       TEXT NOT NULL UNIQUE,         -- 'demo'
@@ -133,7 +125,6 @@ CREATE TABLE release (
   is_primary       INTEGER CHECK (is_primary IN (0,1)),
   name_text        INTEGER NOT NULL REFERENCES text(id),  -- literal delivery name
   description_text INTEGER REFERENCES text(id),
-  ref_day          INTEGER,               -- stated reference date, may be absent
   source_key       TEXT NOT NULL,         -- opaque: 'r18774', or 'stmt:<hash>' if asserted
   input_id         INTEGER REFERENCES input(id),  -- NULL only when asserted
   locator          TEXT,
@@ -169,13 +160,6 @@ CREATE TABLE variable (
   CHECK (start < end)
 ) STRICT;
 CREATE INDEX variable_register ON variable(register_id, pid);
-
--- simplify: Unwritten since D (table-only unit types); delete with the next schema-major change.
-CREATE TABLE variable_unit_type (
-  variable_id  INTEGER NOT NULL REFERENCES variable(id),
-  unit_type_id INTEGER NOT NULL REFERENCES unit_type(id),
-  PRIMARY KEY (variable_id, unit_type_id)
-) STRICT, WITHOUT ROWID;
 
 -- Definition runs: descriptive text over time.
 CREATE TABLE variable_text (
@@ -290,9 +274,7 @@ CREATE TABLE segment (
   coded            TEXT NOT NULL CHECK (coded IN ('yes','no','unknown')),
   sensitive        INTEGER CHECK (sensitive IN (0,1)),
   identifier       INTEGER CHECK (identifier IN (0,1)),
-  id_kind_id       INTEGER REFERENCES id_kind(id),
   role             TEXT NOT NULL CHECK (role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
-  temporality      TEXT NOT NULL CHECK (temporality IN ('fixed','status','accumulated','event','unknown')),
   state            TEXT NOT NULL CHECK (state IN ('clear','ambiguous','preliminary')),
   CHECK (start < end)
 ) STRICT;
@@ -304,9 +286,8 @@ CREATE INDEX segment_class    ON segment(class_version_id, variable_id) WHERE cl
 
 -- Occurrences: one column as documented in one period. The atom; evidence.
 -- override_mask bits: 0 spelling, 1 dtype, 2 length, 3 format, 4 valueset,
--- 5 class_version, 6 coded, 7 sensitive, 8 identifier, 9 id_kind, 10 role,
--- 11 temporality, 12 label, 13 definition, 14 opdef, 15 unit, 16 period, 17 table,
--- 18 variable. Bit set: see override; no override row = the field's default rule.
+-- 5 class_version, 6 coded, 7 sensitive, 8 identifier, 9 role, 10 label,
+-- 11 definition, 12 opdef, 13 unit, 14 period, 15 table, 16 variable. Bit set: see override; no override row = the field's default rule.
 CREATE TABLE occurrence (
   id               INTEGER PRIMARY KEY,
   table_id         INTEGER NOT NULL REFERENCES tbl(id),
@@ -327,9 +308,7 @@ CREATE TABLE occurrence (
   coded            TEXT NOT NULL CHECK (coded IN ('yes','no','unknown')),
   sensitive        INTEGER CHECK (sensitive IN (0,1)),
   identifier       INTEGER CHECK (identifier IN (0,1)),
-  id_kind_id       INTEGER REFERENCES id_kind(id),
   role             TEXT NOT NULL CHECK (role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
-  temporality      TEXT NOT NULL CHECK (temporality IN ('fixed','status','accumulated','event','unknown')),
   variable_id      INTEGER REFERENCES variable(id),   -- NULL when withheld, unplaced, or a
                                                       -- marker of a key that never has a column
   segment_id       INTEGER REFERENCES segment(id),    -- NULL unless status = 'used'
@@ -505,7 +484,7 @@ CREATE TABLE doc_section (
 CREATE VIRTUAL TABLE doc_fts USING fts5(
   heading, body,
   content = 'doc_section', content_rowid = 'id',
-  tokenize = 'unicode61 remove_diacritics 0'
+  tokenize = 'unicode61 remove_diacritics 2'
 );
 
 CREATE TABLE doc_link (
@@ -569,13 +548,24 @@ CREATE TABLE search_item (
 CREATE VIRTUAL TABLE search USING fts5(
   name, label, body,                      -- pid + spellings; labels + synonyms; definitions
   content = '',
-  tokenize = 'unicode61 remove_diacritics 0',
+  tokenize = 'unicode61 remove_diacritics 2',
   prefix = '2 3'
 );
 
 -- Supplementary occurrence text with the primary row's name, label and body as
 -- context for AND queries. Keeping a separate corpus preserves primary BM25 scores.
 CREATE VIRTUAL TABLE search_description USING fts5(
+  name, label, body,
+  content = '',
+  tokenize = 'unicode61 remove_diacritics 2',
+  prefix = '2 3'
+);
+
+-- simplify: exact-match tie-break only. The search indexes fold diacritics (#2163) and
+-- are contentless, so the reader cannot compare a hit's text with the query; this index
+-- keeps diacritics and holds each row's widest text (search_description's when the row
+-- has one, else search's). Replace it when smarter ranking lands.
+CREATE VIRTUAL TABLE search_exact USING fts5(
   name, label, body,
   content = '',
   tokenize = 'unicode61 remove_diacritics 0',
