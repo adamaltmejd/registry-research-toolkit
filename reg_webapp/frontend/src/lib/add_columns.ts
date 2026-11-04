@@ -92,29 +92,27 @@ export function heldColumns(
       type: null,
       value_set: null,
     });
-    // Held years no catalog segment covers state only the role.
+    // Held years no catalog segment covers state only the role. Open ends are
+    // compared as the earliest and latest days.
+    const FIRST = "0000-01-01";
+    const LAST = "9999-12-31";
+    const startOf = (p: CatalogSegment["period"]) => p.start ?? FIRST;
+    const endOf = (p: CatalogSegment["period"]) => p.end ?? LAST;
+    const gap = (start: string, end: string) =>
+      bare({
+        start: start === FIRST ? null : start,
+        end: end === LAST ? null : end,
+      });
     const parts: CatalogSegment[] = [];
-    let covered = placement.period.start;
+    let covered = startOf(placement.period);
     for (const segment of chosen) {
-      if (
-        covered !== null &&
-        segment.period.start !== null &&
-        covered < segment.period.start
-      )
-        parts.push(bare({ start: covered, end: segment.period.start }));
+      if (covered < startOf(segment.period))
+        parts.push(gap(covered, startOf(segment.period)));
       parts.push(segment);
-      if (covered !== null)
-        covered =
-          segment.period.end === null || segment.period.end > covered
-            ? segment.period.end
-            : covered;
+      if (endOf(segment.period) > covered) covered = endOf(segment.period);
     }
-    // A null `covered` is an open end: nothing after it is uncovered.
-    if (
-      covered !== null &&
-      (placement.period.end === null || covered < placement.period.end)
-    )
-      parts.push(bare({ start: covered, end: placement.period.end }));
+    if (covered < endOf(placement.period))
+      parts.push(gap(covered, endOf(placement.period)));
     const id = JSON.stringify([
       placement.table,
       placement.column,
