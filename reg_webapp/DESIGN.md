@@ -119,8 +119,7 @@ corpus pins the refusals. The webapp ships no DDL or schema-version authority;
 ## Catalog operations (the Rust server)
 
 `reg-build` writes the immutable catalog; `reg-meta serve` reads it through
-`reg-catalog`. The Python builder remains for its existing release and steward paths
-until milestone F. It does not write the catalog served by the current global server.
+`reg-catalog`.
 
 `conformance/api/operations.toml` defines the complete operation surface, parameters,
 response shapes and error codes. `crates/reg-meta/openapi.json` is its server snapshot.

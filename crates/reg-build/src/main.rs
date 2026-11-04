@@ -4,8 +4,11 @@
 //! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
-//! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]
+//! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR] [--base FILE]
 //! reg-build verify FILE [--previous FILE]
+//! reg-build verify FILE --catalog FILE --steward-repo DIR
+//! reg-build holdings --base FILE --steward NAME --steward-repo DIR --out FILE
+//!                    [--registry FILE] [--report FILE]
 //! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
 //!
@@ -23,7 +26,10 @@
 //! recorded in the file; `--release` refuses unplaced or split ledger ids and variables
 //! without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
-//! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
+//! key (exit 0 same, 1 different, 2 error); see `diff.rs`. `holdings` compiles a
+//! steward's holdings database against a `--release` base catalog, and `verify --catalog`
+//! checks that pair; `lock --base` locks a steward repository's curation against a base
+//! catalog (`holdings/`).
 
 mod curation;
 mod diff;
