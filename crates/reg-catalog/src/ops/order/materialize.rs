@@ -49,20 +49,26 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
             vec![],
         ));
     }
-    match manifest(server, &held, steward, &project)? {
+    let result = match check(server, &project)? {
+        Ok(order) => manifest(server, &held, steward, &project, &order)?,
+        Err(findings) => Err(findings),
+    };
+    match result {
         Ok(manifest) => Ok(serde_json::to_value(manifest).expect("Manifest serializes")),
         Err(findings) => Err(super::blocked(server, findings)?),
     }
 }
 
-/// The order file of a structurally valid project, or every finding that blocks it: the
-/// logical check's, then the holdings stage's. `validate` runs this on a steward server
-/// too, so it refuses exactly what `materialize` would.
+/// The order file of a project's logical order, or every finding that blocks it: the
+/// logical check's, then the holdings stage's. `validate` and `order` run this on a
+/// steward server too (`super::checked`), so they refuse exactly what `materialize`
+/// would.
 pub(super) fn manifest(
     server: &Server,
     held: &Connection,
     steward: Steward,
     project: &ProjectData,
+    order: &LogicalOrder,
 ) -> Result<Result<Manifest, Vec<Issue>>, Error> {
     let provenance = Provenance {
         mode: Mode::StewardHoldings,
@@ -82,10 +88,6 @@ pub(super) fn manifest(
             project_hash: reg_core::project::project_hash(project),
             name: project.name.clone(),
         },
-    };
-    let order = match check(server, project)? {
-        Ok(order) => order,
-        Err(findings) => return Ok(Err(findings)),
     };
     build(server, held, project, order, provenance)
 }
@@ -148,7 +150,7 @@ fn build(
     server: &Server,
     held: &Connection,
     project: &ProjectData,
-    order: LogicalOrder,
+    order: &LogicalOrder,
     provenance: Provenance,
 ) -> Result<Result<Manifest, Vec<Issue>>, Error> {
     let open = server.open;
@@ -222,7 +224,7 @@ fn build(
     }
     let clips = clip(
         server,
-        &order,
+        order,
         &project.sources,
         &mut bindings,
         &mut findings,
@@ -328,7 +330,7 @@ fn build(
     files.sort_by(|a, b| (a.0, &a.1.name).cmp(&(b.0, &b.1.name)));
     let mut physical: Vec<Issue> = findings;
     physical.sort_by(|a, b| (&a.path, a.key()).cmp(&(&b.path, b.key())));
-    let mut all: Vec<Issue> = order.findings.into_iter().map(|f| f.issue).collect();
+    let mut all: Vec<Issue> = order.findings.iter().map(|f| f.issue.clone()).collect();
     all.extend(physical);
     if all.iter().any(Issue::blocks) {
         return Ok(Err(all));

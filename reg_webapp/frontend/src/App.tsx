@@ -4,8 +4,8 @@ import styles from "./App.module.css";
 import {
   type Context,
   getContext,
+  type OrderCheck,
   stewardConfig,
-  type ValidationResultModel,
 } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
@@ -15,18 +15,20 @@ import {
   registerOfPath,
   routeBreadcrumbs,
   SHOW_MATCHING_REGISTERS_LABEL,
+  trailAncestors,
   unqualifiedCatalogPath,
 } from "./lib/catalog";
+import { ancestorNameRead } from "./lib/catalog_names";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
-import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
-import { useProjectValidation } from "./lib/use_project";
+import { useProjectCheck } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
+import { useCatalogRead } from "./lib/use_store_read";
 import { NoRegisterList, VariableList } from "./lib/VariableList";
 
 const useHref = (href: string) => href;
@@ -51,12 +53,18 @@ export function App() {
     return () => icon.remove();
   }, [brand, logo]);
   const route = useRoute();
-  const validation = useProjectValidation();
+  const validation = useProjectCheck();
   const registerFqid =
     route.name === "catalog-node" ? registerOfPath(route.fqidPath) : null;
   const searching = useBrowseFiltering();
-  const breadcrumbs = routeBreadcrumbs(route).map((crumb) =>
-    searching && isBackCrumb(crumb)
+  const [providerRef = null, registerRef = null] = trailAncestors(route);
+  const provider = useCatalogRead(ancestorNameRead, providerRef);
+  const register = useCatalogRead(ancestorNameRead, registerRef);
+  const names = new Map<string, string>();
+  if (providerRef && provider.value) names.set(providerRef, provider.value);
+  if (registerRef && register.value) names.set(registerRef, register.value);
+  const breadcrumbs = routeBreadcrumbs(route, names).map((crumb) =>
+    searching && crumb.narrowOnly
       ? { ...crumb, label: SHOW_MATCHING_REGISTERS_LABEL }
       : crumb,
   );
@@ -101,7 +109,11 @@ export function App() {
               <NoRegisterList className={styles.list} />
             )}
             <main className={styles.detail}>
-              <Breadcrumbs items={breadcrumbs} className={styles.crumbs} />
+              <Breadcrumbs
+                items={breadcrumbs}
+                busy={provider.loading || register.loading}
+                className={styles.crumbs}
+              />
               <div className={styles.routed}>
                 {route.name === "project" ? (
                   <ProjectEditor
@@ -132,7 +144,7 @@ function RoutedView({
 }: {
   route: Exclude<Route, { name: "project" }>;
   context: Context | null;
-  validation: ValidationResultModel | null;
+  validation: OrderCheck | null;
 }) {
   switch (route.name) {
     case "home":

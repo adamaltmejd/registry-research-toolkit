@@ -12,7 +12,6 @@ import {
   getWarnings,
   relatedDocumentFileHref,
   search,
-  validateProject,
 } from "./api";
 import { resolveBindingAt } from "./catalog";
 
@@ -226,54 +225,6 @@ it("refuses a period list with an empty member before reading", async () => {
     });
   }
   expect(seen).toEqual([]);
-});
-
-describe("validateProject", () => {
-  it("RETURNS the 200 ok:false body WITHOUT throwing (a validation failure is not a 4xx)", async () => {
-    const body = {
-      ok: false,
-      issues: [
-        {
-          level: "error",
-          code: "unexpected_field",
-          path: "/sources/0/bindings/0/typ",
-          message: "unexpected key 'typ' on binding",
-        },
-      ],
-    };
-    stubFetch(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({ data: body, meta: {} }),
-    }));
-    const result = await validateProject({ schema_version: "2.0.0" });
-    expect(result.ok).toBe(false);
-    expect(result.issues).toHaveLength(1);
-    expect(result.issues[0].code).toBe("unexpected_field");
-  });
-
-  it("POSTs the whole draft as JSON to /api/project/validate", async () => {
-    let seenUrl = "";
-    let seenInit: RequestInit | undefined;
-    vi.stubGlobal(
-      "fetch",
-      vi.fn((url: string, init?: RequestInit) => {
-        seenUrl = url;
-        seenInit = init;
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
-        });
-      }),
-    );
-    const draft = { schema_version: "2.0.0", typo_root: { x: 1 } };
-    await validateProject(draft);
-    expect(seenUrl).toBe("/api/project/validate");
-    expect(seenInit?.method).toBe("POST");
-    // The invalid key survives transport so the backend can diagnose it.
-    expect(JSON.parse(seenInit?.body as string)).toEqual(draft);
-  });
 });
 
 describe("search", () => {

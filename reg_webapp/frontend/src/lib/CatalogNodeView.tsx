@@ -1,4 +1,4 @@
-import type { Context, ValidationResultModel } from "./api";
+import type { Context, OrderCheck } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { sharedShow } from "./catalog_names";
 import { ProviderView } from "./ProviderView";
@@ -27,7 +27,7 @@ export function CatalogNodeView({
 }: {
   fqidPath: string;
   context: Context | null;
-  validation: ValidationResultModel | null;
+  validation: OrderCheck | null;
 }) {
   const resource = useAsyncResource(fqidPath, (signal) =>
     sharedShow(fqidPath, signal),

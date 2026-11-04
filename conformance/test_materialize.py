@@ -58,6 +58,16 @@ def test_order_file_or_located_finding(case: Path, steward) -> None:
         ]:
             assert HASH.fullmatch(value)
         assert data == json.loads(oracle.read_text())
+        # Fails if steward `order` drops the holdings stage's warnings (a
+        # `mapping_caveat`) that the order file carries. `order` names them; the
+        # order file carries the bare finding.
+        logical = steward.post("/api/project/order", json=request["project"])
+        assert logical.status_code == 200, logical.text
+        names = {"variable_name", "table_name", "successor_name"}
+        assert [
+            {key: value for key, value in finding.items() if key not in names}
+            for finding in logical.json()["data"]["findings"]
+        ] == data["findings"]
     else:
         assert answer.status_code == 422, answer.text
         error = answer.json()["error"]
@@ -81,6 +91,18 @@ def test_order_file_or_located_finding(case: Path, steward) -> None:
             for issue in data["issues"]
         ]
         assert {"findings": issues} == expected
+        # Fails if steward `order` stops running the holdings stage and returns a
+        # logical order the SPA reads as "Ready to order" for a project materialize
+        # blocks (an unheld variable is `mapping_missing`).
+        logical = steward.post("/api/project/order", json=request["project"])
+        assert logical.status_code == 422, logical.text
+        error = logical.json()["error"]
+        assert error["code"] == "order_blocked"
+        findings = [
+            {key: value for key, value in finding.items() if value is not None}
+            for finding in error["fields"]["findings"]
+        ]
+        assert {"findings": findings} == expected
 
 
 def test_unnamed_project_is_a_logical_draft_but_no_order_file(steward) -> None:

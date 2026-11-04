@@ -6,7 +6,7 @@ import {
   type Context,
   getGraph,
   getSegments,
-  type ValidationResultModel,
+  type OrderCheck,
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
@@ -255,7 +255,7 @@ export function VariableView({
 }: {
   node: VariableShow;
   context: Context | null;
-  validation: ValidationResultModel | null;
+  validation: OrderCheck | null;
 }) {
   // One counter retries every read the timeline needs: the register's tables
   // and the variable's per-period list.

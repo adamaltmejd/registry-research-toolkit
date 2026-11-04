@@ -18,7 +18,6 @@ export interface ProjectSnapshot {
   issues: Issue[];
   storageError: string | null;
   dirty: boolean;
-  orderBlocked: boolean;
 }
 
 const listeners = new Set<() => void>();
@@ -28,7 +27,6 @@ let snapshot: ProjectSnapshot = {
   issues: [],
   storageError: null,
   dirty: false,
-  orderBlocked: false,
 };
 
 let lastDownloaded: string | null = null;
@@ -56,7 +54,6 @@ function replace(raw: string | null, persist: boolean): void {
     issues: check?.issues ?? [],
     storageError,
     dirty: raw !== null && raw !== lastDownloaded,
-    orderBlocked: false,
   });
 }
 
@@ -91,8 +88,9 @@ export const projectStore = {
   get raw(): string | null {
     return snapshot.raw;
   },
-  open(raw: string, fromFile = false): void {
-    lastDownloaded = fromFile ? raw : null;
+  /** An opened file is saved as it is on disk, so it is not unsaved. */
+  open(raw: string): void {
+    lastDownloaded = raw;
     replace(raw, true);
   },
   newProject(seed: ProjectSeed): void {
@@ -104,10 +102,6 @@ export const projectStore = {
     replace(null, true);
   },
   updateField,
-  setOrderBlocked(draft: ProjectData, blocked: boolean): void {
-    if (snapshot.draft === draft && snapshot.orderBlocked !== blocked)
-      publish({ ...snapshot, orderBlocked: blocked });
-  },
   download(): void {
     if (snapshot.raw === null) return;
     triggerDownload(

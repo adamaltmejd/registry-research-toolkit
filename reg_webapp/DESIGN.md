@@ -14,19 +14,31 @@ loaded-project pages use the current API. The earlier SPA is archived on
 
 ## Loaded projects
 
-The browser keeps one working `project_data.json` in localStorage. WASM checks every
-opened file and name edit before it becomes a typed 5.1 draft. Rejected input stays
-unchanged for download or discard; no migration is attempted. Catalog validation uses
-the shared abortable resource hook, with issues under their source or binding and
-summary links that focus them. Opening a replacement or discarding the working copy asks
-first. Download remains available if browser persistence fails.
+The browser keeps one working `project_data.json` in localStorage, opened from a file
+(there is no paste field). WASM checks every opened file and edit before it becomes a
+typed draft. Rejected input stays unchanged for download or discard; no migration is
+attempted, and its structural issues are listed in full under the verdict. Opening a
+replacement or discarding the working copy asks first. Download remains available if
+browser persistence fails.
 
-The banner and project page share one catalog check. The banner retains the project
-name, source and column counts, verdict and download save state across routes. A
-restored local draft is recovery, so it remains unsaved until downloaded. The study
-window is an inline window-band picker bounded by the catalog's half-open period span. A
-new project carries over the browsing window or starts at 2015 through the catalog's
-last year. Moving the study window never rewrites source periods.
+The banner and project page share one catalog check (`useProjectCheck`): `order`,
+through the shared abortable resource hook, 350 ms after the last accepted edit, with no
+manual trigger. `order` answers everything the page shows, so the SPA does not call
+`validate`: both run the same check (on a steward server including the holdings stage of
+`materialize_order`, so a column the steward does not hold blocks here too), an
+`order_blocked` refusal carries every finding that `validate` would list, and a success
+carries the non-blocking findings with the entries, row keys and clips the delivery
+summary draws. Those clips are the logical order's: years the steward's tables lack
+(`coverage_gap`) are listed as a warning but not subtracted from the summary's years.
+The SPA sends only drafts WASM accepted; a `project_invalid` refusal, should the server
+disagree, is read the same way. One verdict function names the result for both, in the
+words of `frontend/DESIGN.md` → Words. Issues sit under their table or column, with
+links from the verdict that focus them. The banner retains the project name, table and
+column counts, verdict and download save state across routes. A restored local draft is
+recovery, so it remains unsaved until downloaded. The study window is an inline
+window-band picker bounded by the catalog's half-open period span. A new project carries
+over the browsing window or starts at 2015 through the catalog's last year. Moving the
+study window never rewrites source periods.
 
 Variable pages project their segments into a single coverage LaneGraph. A column is the
 exact table and spelling pair; selection and its availability-bounded add window are
@@ -41,12 +53,11 @@ timeline, with arrows from predecessor to successor and names linking to their v
 pages. Adding starts from the variable page; register rows link there, and both those
 rows and already-bound columns show in-project state without a checkbox.
 
-The order page reads the logical order, grouping entry rows by source and table.
-Secondary fields are in each row's Details popover, so the table fits the narrow detail
-pane. Register-name reads are shared with catalog browsing; value-set names are read by
-their content identity without displaying hashes. Row keys, period clips and
-non-blocking findings remain separate. Panels return in W5b; manifests, resolve and
-steward workflows remain deferred.
+The project page shows the logical order under the tables as "What will be delivered",
+grouped by project table and catalog table: columns and years, the years a column cannot
+deliver (clips) and the row identifier. There is no order page and no order-file
+download (maintainer ruling 2026-11-04): the steward's `order_instructions` say how to
+order. Register-name reads are shared with catalog browsing.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
