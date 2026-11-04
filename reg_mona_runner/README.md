@@ -18,13 +18,26 @@ All under the export root, set at the top of the script:
 
 ## Run an order
 
-1. Download the order from the catalog (data.swecov.se) after validating the project.
-   The file is named `order_<project>_<date>.json`; the coordinator renames it in the
-   next step.
-2. Upload it to MONA together with `swecov_extract.R`, and save it as
+1. The researcher sends `project_data.json`; the data site offers no order download. The
+   coordinator reviews it, then writes the order file from the reviewed project, on the
+   SWECOV server (the runner trusts the file fully: no allowlist, no hash check):
+
+   ```bash
+   curl -sS --fail-with-body -X POST https://data.swecov.se/api/project/materialize \
+     -H 'content-type: application/json' --data @project_data.json -o response.json
+   jq -e .data response.json > order.json
+   ```
+
+   The MCP `materialize_order` tool gives the same file. A project the server blocks
+   returns `order_blocked` with located findings (`curl` fails and `response.json` holds
+   them) instead; fix the project and ask again.
+
+2. Upload `order.json` to MONA together with `swecov_extract.R`, and save it as
    `orders\<project number>.json` (for example `orders\1234.json`).
+
 3. In R on MONA, `source("swecov_extract.R")`, or run `Rscript swecov_extract.R`. Every
    order in `orders\` runs, one after the other.
+
 4. Read the console: each order ends with `done` or `FAILED (exit code N)`.
 
 The script first installs any of its R packages (DBI, odbc, jsonlite) that is missing,
@@ -61,7 +74,7 @@ that day's export folder.
   | Code    | What to do                                                                                                                                                                                                                                                                                                                                  |
   | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | 2       | Check the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                                                                                                                                                                  |
-  | 3, 4, 6 | The file is not a usable order: download it again from the catalog                                                                                                                                                                                                                                                                          |
+  | 3, 4, 6 | The file is not a usable order: write it again with `materialize`                                                                                                                                                                                                                                                                           |
   | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view                                                                                                                                                                                                                                                                 |
   | 7       | A table or column is not in the database, or is stored otherwise than the order expects: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name that is not a Stata name even as an alias, or a full name over 80 characters, which a label cannot hold): the researcher orders it as Parquet or CSV |
   | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                                                                                                                                                              |
