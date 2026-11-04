@@ -2,14 +2,16 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::days::{self, Span};
-use rusqlite::{Connection, params};
+use reg_core::issue::iso_day;
+use rusqlite::Connection;
 
 use super::{compile, input};
+use crate::error::{Result, rows};
 
 type Declarations = BTreeMap<i64, Vec<input::RowKey>>;
 type Bindings = BTreeMap<(i64, String), Vec<(i64, Span)>>;
 
-pub(super) fn validate_shapes(holding: i64, keys: &[input::RowKey]) -> Result<(), String> {
+pub(super) fn validate_shapes(holding: i64, keys: &[input::RowKey]) -> Result<()> {
     for key in keys {
         let components: Vec<_> = key.entity.iter().chain(&key.time).collect();
         if key.hold.is_none() && key.entity.is_empty()
@@ -28,21 +30,20 @@ pub(super) fn validate_shapes(holding: i64, keys: &[input::RowKey]) -> Result<()
             return Err(format!(
                 "holdings:table={holding}: {}: holdings_row_key_invalid",
                 key.locator
-            ));
+            )
+            .into());
         }
     }
     Ok(())
 }
 
-fn declarations(db: &Connection) -> Result<Declarations, String> {
-    db.prepare("SELECT id,key_requirements FROM holding_table")
-        .map_err(|e| e.to_string())?
+fn declarations(db: &Connection) -> Result<Declarations> {
+    db.prepare("SELECT id,key_requirements FROM holding_table")?
         .query_map([], |row| {
             Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?))
-        })
-        .map_err(|e| e.to_string())?
+        })?
         .map(|row| {
-            let (holding, json) = row.map_err(|e| e.to_string())?;
+            let (holding, json) = row?;
             let keys = serde_json::from_str(&json)
                 .map_err(|_| format!("holdings:table={holding}: holdings_row_key_invalid"))?;
             Ok((holding, keys))
@@ -50,26 +51,20 @@ fn declarations(db: &Connection) -> Result<Declarations, String> {
         .collect()
 }
 
-fn bindings(
-    db: &Connection,
-    routes: Option<&BTreeMap<i64, BTreeSet<String>>>,
-) -> Result<Bindings, String> {
+fn bindings(db: &Connection, routes: Option<&BTreeMap<i64, BTreeSet<String>>>) -> Result<Bindings> {
     let mut held = BTreeMap::new();
-    let mut query = db.prepare("SELECT c.holding_id,m.table_pid,m.variable_pid,c.id,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id").map_err(|e| e.to_string())?;
-    for row in query
-        .query_map([], |row| {
-            Ok((
-                row.get::<_, i64>(0)?,
-                row.get::<_, String>(1)?,
-                row.get::<_, String>(2)?,
-                row.get::<_, i64>(3)?,
-                row.get::<_, i64>(4)?,
-                row.get::<_, i64>(5)?,
-            ))
-        })
-        .map_err(|e| e.to_string())?
-    {
-        let (holding, route, pid, column, start, end) = row.map_err(|e| e.to_string())?;
+    let mut query = db.prepare("SELECT c.holding_id,m.table_pid,m.variable_pid,c.id,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id")?;
+    for row in query.query_map([], |row| {
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, i64>(3)?,
+            row.get::<_, i64>(4)?,
+            row.get::<_, i64>(5)?,
+        ))
+    })? {
+        let (holding, route, pid, column, start, end) = row?;
         if routes.is_some_and(|routes| !routes[&holding].contains(&route)) {
             continue;
         }
@@ -80,7 +75,7 @@ fn bindings(
     Ok(held)
 }
 
-fn key_scope(key: &input::RowKey, span: Span) -> Result<Vec<Span>, String> {
+fn key_scope(key: &input::RowKey, span: Span) -> Result<Vec<Span>> {
     key.period
         .as_deref()
         .map(compile::periods)
@@ -103,23 +98,20 @@ fn projected_copies(
     declarations: &Declarations,
     held: &Bindings,
     failures: &mut BTreeSet<String>,
-) -> Result<BTreeSet<i64>, String> {
+) -> Result<BTreeSet<i64>> {
     let mut carried = BTreeSet::new();
-    let mut query = db.prepare("SELECT m.id,h.id,h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id WHERE h.projection_of IS NOT NULL").map_err(|e| e.to_string())?;
-    for row in query
-        .query_map([], |row| {
-            Ok((
-                row.get::<_, i64>(0)?,
-                row.get::<_, i64>(1)?,
-                row.get::<_, i64>(2)?,
-                row.get::<_, String>(3)?,
-                row.get::<_, i64>(4)?,
-                row.get::<_, i64>(5)?,
-            ))
-        })
-        .map_err(|e| e.to_string())?
-    {
-        let (id, child, parent, variable, start, end) = row.map_err(|e| e.to_string())?;
+    let mut query = db.prepare("SELECT m.id,h.id,h.projection_of,m.variable_pid,m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id WHERE h.projection_of IS NOT NULL")?;
+    for row in query.query_map([], |row| {
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, i64>(1)?,
+            row.get::<_, i64>(2)?,
+            row.get::<_, String>(3)?,
+            row.get::<_, i64>(4)?,
+            row.get::<_, i64>(5)?,
+        ))
+    })? {
+        let (id, child, parent, variable, start, end) = row?;
         let mut spans = vec![(start, end)];
         for holding in [child, parent] {
             for key in &declarations[&holding] {
@@ -165,32 +157,28 @@ fn projected_copies(
     Ok(carried)
 }
 
-pub(super) fn carry_projections(db: &Connection) -> Result<(), String> {
+pub(super) fn carry_projections(db: &Connection) -> Result<()> {
     let declarations = declarations(db)?;
     let held = bindings(db, None)?;
     let mut failures = BTreeSet::new();
     for id in projected_copies(db, &declarations, &held, &mut failures)? {
-        db.execute("UPDATE holding_mapping SET carried=1 WHERE id=?", [id])
-            .map_err(|e| e.to_string())?;
+        db.execute("UPDATE holding_mapping SET carried=1 WHERE id=?", [id])?;
     }
     if failures.is_empty() {
         Ok(())
     } else {
-        Err(failures.into_iter().collect::<Vec<_>>().join("\n"))
+        Err(failures.into_iter().collect::<Vec<_>>().join("\n").into())
     }
 }
 
-fn periods(db: &Connection, holding: i64) -> Result<Vec<Span>, String> {
-    db.prepare("SELECT start,end FROM holding_period WHERE holding_id=?")
-        .map_err(|e| e.to_string())?
-        .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))
-        .map_err(|e| e.to_string())?
-        .collect::<Result<_, _>>()
-        .map_err(|e| e.to_string())
+/// A holding's coverage periods, ascending.
+pub(super) fn periods(db: &Connection, holding: i64) -> Result<Vec<Span>> {
+    let sql = "SELECT start,end FROM holding_period WHERE holding_id=? ORDER BY start,end";
+    rows(db, sql, [holding], |r| Ok((r.get(0)?, r.get(1)?)))
 }
 
 /// A table period supplies one constant key value, never a pooled row's year.
-fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bool, String> {
+fn constant_period(spans: &[Span], encoding: &str) -> Result<bool> {
     let width = match encoding {
         "year" => 4,
         "month" => 7,
@@ -204,16 +192,12 @@ fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bo
         }
         _ => return Err("holdings_period_key_invalid: expected year, month, day or period".into()),
     };
+    // A day outside the four-digit years 0000-01-01..=9999-12-31 has no ISO date (catalog
+    // periods stay inside them).
+    let iso = |day: i64| (-719_528..=2_932_896).contains(&day).then(|| iso_day(day));
     let mut values = BTreeSet::new();
-    for (start, end) in spans {
-        let (lo, hi): (Option<String>, Option<String>) = db
-            .query_row(
-                "SELECT date(?1*86400,'unixepoch'),date((?2-1)*86400,'unixepoch')",
-                params![start, end],
-                |r| Ok((r.get(0)?, r.get(1)?)),
-            )
-            .map_err(|e| e.to_string())?;
-        let (Some(lo), Some(hi)) = (lo, hi) else {
+    for &(start, end) in spans {
+        let (Some(lo), Some(hi)) = (iso(start), iso(end - 1)) else {
             return Ok(false);
         };
         if lo.get(..width) != hi.get(..width) {
@@ -224,28 +208,20 @@ fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bo
     Ok(values.len() == 1)
 }
 
-fn validate(
-    db: &Connection,
-    base: &Connection,
-    holding: i64,
-    key: &input::RowKey,
-) -> Result<(), String> {
+fn validate(db: &Connection, base: &Connection, holding: i64, key: &input::RowKey) -> Result<()> {
     let invalid = || {
         format!(
             "holdings:table={holding}: {}: holdings_row_key_invalid",
             key.locator
         )
     };
-    let exists = |table: &str, pid: &str| -> Result<bool, String> {
+    let exists = |table: &str, pid: &str| -> Result<bool> {
         for conn in [db, base] {
-            if conn
-                .query_row(
-                    &format!("SELECT EXISTS(SELECT 1 FROM {table} WHERE pid=?)"),
-                    [pid],
-                    |r| r.get::<_, bool>(0),
-                )
-                .map_err(|e| e.to_string())?
-            {
+            if conn.query_row(
+                &format!("SELECT EXISTS(SELECT 1 FROM {table} WHERE pid=?)"),
+                [pid],
+                |r| r.get::<_, bool>(0),
+            )? {
                 return Ok(true);
             }
         }
@@ -256,47 +232,42 @@ fn validate(
     }
     for pid in key.entity.iter().chain(key.time.iter()) {
         if !exists("variable", pid)? {
-            return Err(invalid());
+            return Err(invalid().into());
         }
     }
     if key.period_key.as_deref() == Some("column") {
-        let supplied: bool = db.query_row("SELECT period_column_id IS NOT NULL AND period_encoding IS NOT NULL FROM holding_table WHERE id=?", [holding], |r| r.get(0)).map_err(|e| e.to_string())?;
+        let supplied: bool = db.query_row("SELECT period_column_id IS NOT NULL AND period_encoding IS NOT NULL FROM holding_table WHERE id=?", [holding], |r| r.get(0))?;
         return if supplied {
             Ok(())
         } else {
             Err(format!(
                 "holdings:table={holding}: {}: holdings_period_key_invalid: no period column",
                 key.locator
-            ))
+            )
+            .into())
         };
     }
     if let Some(encoding) = &key.period_key
-        && !constant_period(db, &periods(db, holding)?, encoding)?
+        && !constant_period(&periods(db, holding)?, encoding)?
     {
         return Err(format!(
             "holdings:table={holding}: {}: holdings_period_key_invalid: table does not supply one constant value",
             key.locator
-        ));
+        ).into());
     }
     Ok(())
 }
 
 #[allow(clippy::too_many_lines)]
-pub(super) fn verify(
-    db: &Connection,
-    base: &Connection,
-    topology: &input::Topology,
-) -> Result<(), String> {
+pub(super) fn verify(db: &Connection, base: &Connection, topology: &input::Topology) -> Result<()> {
     let declarations = declarations(db)?;
     let mut routes = BTreeMap::new();
     for table in &topology.table {
-        let holding: i64 = db
-            .query_row(
-                "SELECT id FROM holding_table WHERE physical_name=?",
-                [&table.physical_name],
-                |row| row.get(0),
-            )
-            .map_err(|e| e.to_string())?;
+        let holding: i64 = db.query_row(
+            "SELECT id FROM holding_table WHERE physical_name=?",
+            [&table.physical_name],
+            |row| row.get(0),
+        )?;
         let authored: BTreeSet<_> = table
             .routes
             .iter()
@@ -339,24 +310,20 @@ pub(super) fn verify(
         }
     }
     let projection_copies = projected_copies(db, &declarations, &held, &mut failures)?;
-    let mut mappings = db.prepare("SELECT c.holding_id,m.table_pid,m.variable_pid,m.start,m.end,m.carried,m.id,h.projection_of FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id ORDER BY m.id").map_err(|e| e.to_string())?;
-    for row in mappings
-        .query_map([], |r| {
-            Ok((
-                r.get::<_, i64>(0)?,
-                r.get::<_, String>(1)?,
-                r.get::<_, String>(2)?,
-                r.get::<_, i64>(3)?,
-                r.get::<_, i64>(4)?,
-                r.get::<_, bool>(5)?,
-                r.get::<_, i64>(6)?,
-                r.get::<_, Option<i64>>(7)?,
-            ))
-        })
-        .map_err(|e| e.to_string())?
-    {
-        let (holding, table, variable, start, end, carried, id, projection) =
-            row.map_err(|e| e.to_string())?;
+    let mut mappings = db.prepare("SELECT c.holding_id,m.table_pid,m.variable_pid,m.start,m.end,m.carried,m.id,h.projection_of FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id JOIN holding_table h ON h.id=c.holding_id ORDER BY m.id")?;
+    for row in mappings.query_map([], |r| {
+        Ok((
+            r.get::<_, i64>(0)?,
+            r.get::<_, String>(1)?,
+            r.get::<_, String>(2)?,
+            r.get::<_, i64>(3)?,
+            r.get::<_, i64>(4)?,
+            r.get::<_, bool>(5)?,
+            r.get::<_, i64>(6)?,
+            r.get::<_, Option<i64>>(7)?,
+        ))
+    })? {
+        let (holding, table, variable, start, end, carried, id, projection) = row?;
         let keys = &declarations[&holding];
         let mut applicable = Vec::new();
         let mut spans = vec![(start, end)];
@@ -426,6 +393,6 @@ pub(super) fn verify(
     if failures.is_empty() {
         Ok(())
     } else {
-        Err(failures.into_iter().collect::<Vec<_>>().join("\n"))
+        Err(failures.into_iter().collect::<Vec<_>>().join("\n").into())
     }
 }

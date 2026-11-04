@@ -1,3 +1,10 @@
+-- Reference-catalog occurrences the steward's supplemental segments extend, as declared
+-- in its reference-occurrences file.
+CREATE TABLE holding_reference_occurrence (
+ table_pid TEXT NOT NULL,
+ variable_pid TEXT NOT NULL,
+ PRIMARY KEY(table_pid,variable_pid)
+) STRICT, WITHOUT ROWID;
 -- Physical holdings are paired with, never appended to, the reference catalog.
 CREATE TABLE holding_table (
  id INTEGER PRIMARY KEY,

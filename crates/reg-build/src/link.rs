@@ -33,6 +33,24 @@ impl Entity {
         }
     }
 
+    /// The entity's public id.
+    pub fn pid(self, registers: &[Resolved]) -> String {
+        use crate::emit::{pid_of_register, pid_of_table, pid_of_variable};
+        match self {
+            Entity::Register(r) => pid_of_register(&registers[r]),
+            Entity::Table(r, t) => pid_of_table(&registers[r], t),
+            Entity::Release(r, x) => {
+                let release = &registers[r].releases[x];
+                format!(
+                    "{}/{}",
+                    pid_of_table(&registers[r], release.table),
+                    release.release.release
+                )
+            }
+            Entity::Variable(r, v) => pid_of_variable(&registers[r], v),
+        }
+    }
+
     /// The index of the entity's register.
     pub fn register(self) -> usize {
         match self {

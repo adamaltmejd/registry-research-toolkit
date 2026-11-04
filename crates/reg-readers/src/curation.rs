@@ -188,10 +188,11 @@ pub fn load(root: &Path) -> Result<Vec<LocatedStatement>, ReadError> {
 
 /// Byte offsets of a file's newlines, so a statement's line is a binary search: counting
 /// from the file start per statement was quadratic in the multi-MB curation files (#2196).
-struct Lines(Vec<usize>);
+pub struct Lines(Vec<usize>);
 
 impl Lines {
-    fn new(text: &str) -> Self {
+    #[must_use]
+    pub fn new(text: &str) -> Self {
         Self(
             text.bytes()
                 .enumerate()
@@ -202,7 +203,8 @@ impl Lines {
     }
 
     /// The 1-based line holding byte `offset`.
-    fn at(&self, offset: usize) -> usize {
+    #[must_use]
+    pub fn at(&self, offset: usize) -> usize {
         self.0.partition_point(|&newline| newline < offset) + 1
     }
 }

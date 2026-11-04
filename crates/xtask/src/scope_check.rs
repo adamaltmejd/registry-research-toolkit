@@ -44,9 +44,6 @@ const DDL: [&str; 3] = [
     include_str!("../../reg-build/src/holdings/relations.sql"),
     include_str!("../../reg-build/src/holdings/schema.sql"),
 ];
-/// `holding_reference_occurrence` is created from a Rust string, not a `.sql` file.
-const REFERENCES_RS: &str = include_str!("../../reg-build/src/holdings/references.rs");
-const INLINE_DDL_START: &str = "\"CREATE TABLE holding_reference_occurrence ";
 
 const OPTIONAL_TABLES: [&str; 1] = ["holding_relation"];
 
@@ -157,15 +154,8 @@ fn schema_of(con: &Connection) -> rusqlite::Result<(Columns, BTreeSet<String>)> 
 }
 
 fn expected_schema() -> Result<Columns, String> {
-    let inline = REFERENCES_RS
-        .find(INLINE_DDL_START)
-        .and_then(|start| {
-            let ddl = &REFERENCES_RS[start + 1..];
-            ddl.find(";\"").map(|end| &ddl[..=end])
-        })
-        .ok_or("holding_reference_occurrence DDL not found in holdings/references.rs")?;
     let con = Connection::open_in_memory().map_err(|e| e.to_string())?;
-    con.execute_batch(&[DDL.join("\n").as_str(), inline].join("\n"))
+    con.execute_batch(&DDL.join("\n"))
         .map_err(|e| format!("the builder's DDL: {e}"))?;
     Ok(schema_of(&con).map_err(|e| e.to_string())?.0)
 }

@@ -1326,22 +1326,22 @@ public metadata definitions do not authorize publishing private source files.
 The toolkit contains only generic compilation/serving code and a steward pin registry,
 `stewards.toml`: each steward id selects `repo`, exact `commit` and relative `config`
 path. The dedicated repo's `steward.toml` declares owner id, scope, presentation paths,
-reader/input roles, semantic curation root and series root. Use `scope.toml`,
-`branding/` (`steward.json`, logo), `series/`, `curation/registers/` (normal ledgers and
-statements, including slots), `curation/readers/`, and `inputs/` (census, storage
-export, provider source TOML/converted transcription CSV, inventory and legacy slug
-evidence). Pin selected delivery-document evidence there too, retaining originals
-privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
-the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
-inputs. The compiled holdings file carries presentation/config data needed at runtime;
-serving never checks out that repo or parses its TOML. `context` serves only what the
-site shows: the steward's presentation and logo, the server version and the period span.
-In steward mode the span is the hull of the placements, not of the reference registers
-(which cover years the steward does not hold); outside it, the hull of the registers. A
-timeless period (both bounds open) is left out, so one timeless table cannot take the
-study-years slider's bounds; an ongoing register still leaves the end open. Dropping
-whole periods, not single open bounds, keeps the hull ordered. A hull open at both ends
-(one period open at the start, another at the end) has no span either.
+reader/input roles and semantic curation root. Use `scope.toml`, `branding/`
+(`steward.json`, logo), `curation/registers/` (normal ledgers and statements, including
+slots), `curation/readers/`, and `inputs/` (census, storage export, provider source
+TOML/converted transcription CSV, inventory and legacy slug evidence). Pin selected
+delivery-document evidence there too, retaining originals privately. Reuse the catalog
+input-pin discipline: verify the supplied checkout against the exact commit and declared
+paths/hashes; no implicit latest branch or neighbouring inputs. The compiled holdings
+file carries presentation/config data needed at runtime; serving never checks out that
+repo or parses its TOML. `context` serves only what the site shows: the steward's
+presentation and logo, the server version and the period span. In steward mode the span
+is the hull of the placements, not of the reference registers (which cover years the
+steward does not hold); outside it, the hull of the registers. A timeless period (both
+bounds open) is left out, so one timeless table cannot take the study-years slider's
+bounds; an ongoing register still leaves the end open. Dropping whole periods, not
+single open bounds, keeps the hull ordered. A hull open at both ends (one period open at
+the start, another at the end) has no span either.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,
@@ -1670,14 +1670,13 @@ the global member list omits them. The occurrences' own text and locators are no
 served: a release carries catalog items, never steward working files or census row
 references (maintainer 2026-11-03).
 
-`reg-build/src/holdings/schema.sql` owns the holdings DDL, except
-`holding_reference_occurrence` (created in `reg-build/src/holdings/references.rs`) and
-`holding_relation` (`reg-build/src/holdings/relations.sql`), and
-`reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
-schema. `meta` records owner kind/id, holdings generation, catalog generation and file
-digest, the steward pin, the input-manifest digest and the compiler digest. Admission
-checks both schemas exactly and the pairing pins; it does not accept another generation
-because the public ids happen to resolve.
+`reg-build/src/holdings/schema.sql` owns the holdings DDL, except `holding_relation`
+(`reg-build/src/holdings/relations.sql`), and `reg_core::HOLDINGS_SCHEMA_VERSION` its
+exact schema gate, separate from the catalog schema. `meta` records owner kind/id,
+holdings generation, catalog generation and file digest, the steward pin, the
+input-manifest digest and the compiler digest. Admission checks both schemas exactly and
+the pairing pins; it does not accept another generation because the public ids happen to
+resolve.
 
 Holdings schema 4 adds the optional `holding_column.slot_family`; older holdings are
 recompiled. Family declarations and their evidence remain steward input facts, with no
@@ -2490,12 +2489,12 @@ A value set is content-addressed: its hash covers the sorted `(code, label, pare
 items, so segments that deliver the same codes share one set, and a segment with no
 value set has `value_set: null`. `values` reads a set by its hash, or lists the sets
 holding a code and label. The blank code `""` is an item like any other. Classifications
-(versions, codes, correspondences) use curated identities.
-`curation/classifications.toml` holds family/version metadata, served names, publisher,
-existence periods, sentinel codes and explicit succession edges. Its code lists
-reference reader value sets; they are never copied into inventory items. Inventory
-versions reuse the existing `assert classification-version` construction and emission
-path. Inline `items` remain available for genuinely hand-authored assertions.
+(versions, codes) use curated identities. `curation/classifications.toml` holds
+family/version metadata, served names, publisher, existence periods, sentinel codes and
+explicit succession edges. Its code lists reference reader value sets; they are never
+copied into inventory items. Inventory versions reuse the existing
+`assert classification-version` construction and emission path. Inline `items` remain
+available for genuinely hand-authored assertions.
 
 Book periods describe existence only. They are neither inferred nor truncated, and
 versions of one family may overlap. Applicability comes exclusively from occurrence

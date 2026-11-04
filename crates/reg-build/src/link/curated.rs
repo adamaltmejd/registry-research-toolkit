@@ -74,12 +74,8 @@ fn endpoints(
                 .find(|t| t.slug.as_deref().unwrap_or(&resolved.public) == slug)
                 .ok_or("unresolved table endpoint")?;
             super::Index::new(registers).entities(&reg_frame::Endpoint {
-                kind: "table".into(),
-                provider: provider.into(),
-                register: Some(register.into()),
-                register_name: None,
                 table: Some(table.table.table.clone()),
-                key: None,
+                ..reg_frame::Endpoint::new("table", provider, Some(register))
             })
         }
         Address::Set(_) => {
@@ -274,14 +270,9 @@ fn external_link(
         &premise.subjects,
     )?
     .into_iter()
-    .map(|subject| {
-        let pid = match subject {
-            Entity::Register(r) => crate::emit::pid_of_register(&registers[r]),
-            Entity::Table(r, t) => crate::emit::pid_of_table(&registers[r], t),
-            Entity::Variable(r, v) => crate::emit::pid_of_variable(&registers[r], v),
-            Entity::Release(..) => return Err("release-kind derived_from".into()),
-        };
-        Ok((subject.kind().into(), pid))
+    .map(|subject| match subject {
+        Entity::Release(..) => Err("release-kind derived_from".into()),
+        _ => Ok((subject.kind().into(), subject.pid(registers))),
     })
     .collect()
 }

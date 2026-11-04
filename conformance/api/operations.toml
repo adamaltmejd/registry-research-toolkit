@@ -4,7 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# The v5 API reads catalog schema 8. The emitted DDL is crates/reg-build/src/schema.sql.
+# The v5 API reads catalog schema 9. The emitted DDL is crates/reg-build/src/schema.sql.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads

@@ -4,11 +4,11 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 use std::time::Duration;
 
+use crate::error::Result;
 use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
 use reg_resolve::curation::{Premise, SourcePremise, variable_level_setter};
 use serde::{Deserialize, Serialize};
-use sha2::Digest;
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -65,14 +65,12 @@ struct Reviewed {
 }
 
 impl Reviewed {
-    fn new(lock: Lock) -> Result<Self, String> {
+    fn new(lock: Lock) -> Result<Self> {
         let mut objects = BTreeMap::new();
         for (key, object) in lock.objects {
             let line = reg_frame::canonical_line(&object);
             if reg_core::sha256_hex(&line) != key {
-                return Err(format!(
-                    "object digest mismatch for {key}; run reg-build lock"
-                ));
+                return Err(format!("object digest mismatch for {key}; run reg-build lock").into());
             }
             objects.insert(key, line);
         }
@@ -81,7 +79,8 @@ impl Reviewed {
             if let Some(key) = premise.objects.iter().find(|k| !objects.contains_key(*k)) {
                 return Err(format!(
                     "statement {identity}: missing object {key}; run reg-build lock"
-                ));
+                )
+                .into());
             }
             statements.insert(
                 identity,
@@ -149,15 +148,15 @@ impl LockedPremise {
                 .iter()
                 .map(|row| reg_frame::canonical_line(&row.locator))
                 .collect::<BTreeSet<_>>();
-            let mut hash = sha2::Sha256::new();
-            for locator in &locators {
-                hash.update(locator.as_bytes());
-                hash.update(b"\n");
-            }
             LockedSubjects::Variable {
                 variable: variable.to_owned(),
                 count: locators.len(),
-                locators_sha256: reg_core::hex(&hash.finalize()),
+                locators_sha256: reg_core::sha256_hex(
+                    locators
+                        .iter()
+                        .map(|l| l.clone() + "\n")
+                        .collect::<String>(),
+                ),
             }
         } else {
             LockedSubjects::Rows(premise.subjects.clone())
@@ -199,10 +198,7 @@ fn publication_identity(statement: &LocatedStatement) -> String {
     )))
 }
 
-fn statement_locator(
-    root: &Path,
-    statement: &LocatedStatement,
-) -> Result<reg_frame::Locator, String> {
+fn statement_locator(root: &Path, statement: &LocatedStatement) -> Result<reg_frame::Locator> {
     let file = statement.path.strip_prefix(root).map_err(|_| {
         format!(
             "{}: statement is outside curation root {}",
@@ -216,17 +212,25 @@ fn statement_locator(
     })
 }
 
+/// A register-scoped record's provider, register handle and locator.
+// simplify: reg-resolve matches the same four variants; move this to reg_frame::Record
+// once a third crate needs it.
+pub(crate) fn coordinates(record: &Record) -> Option<(&String, &String, &reg_frame::Locator)> {
+    match record {
+        Record::Register(r) => Some((&r.provider, &r.register, &r.locator)),
+        Record::Table(r) => Some((&r.provider, &r.register, &r.locator)),
+        Record::Release(r) => Some((&r.provider, &r.register, &r.locator)),
+        Record::Occurrence(r) => Some((&r.provider, &r.register, &r.locator)),
+        Record::ValueSet(_) | Record::Link(_) | Record::Notice(_) | Record::Doc(_) => None,
+    }
+}
+
 fn belongs(record: &Record, provider: &str, register: &str) -> bool {
-    let coordinates = match record {
-        Record::Register(r) => (&r.provider, &r.register),
-        Record::Table(r) => (&r.provider, &r.register),
-        Record::Release(r) => (&r.provider, &r.register),
-        Record::Occurrence(r) => (&r.provider, &r.register),
+    match coordinates(record) {
+        Some((p, r, _)) => p == provider && r == register,
         // Value-set assertions and source links may depend on shared source facts.
-        Record::ValueSet(_) | Record::Link(_) | Record::Notice(_) => return true,
-        Record::Doc(_) => return false,
-    };
-    coordinates.0 == provider && coordinates.1 == register
+        None => !matches!(record, Record::Doc(_)),
+    }
 }
 
 /// Application reads local coordinates and explicitly named code lists. Other
@@ -263,13 +267,10 @@ impl Slots {
     fn extend(&mut self, records: Vec<Record>) {
         for record in records {
             let at = self.records.len();
-            match &record {
-                Record::Register(r) => self.at(&r.provider, &r.register).push(at),
-                Record::Table(r) => self.at(&r.provider, &r.register).push(at),
-                Record::Release(r) => self.at(&r.provider, &r.register).push(at),
-                Record::Occurrence(r) => self.at(&r.provider, &r.register).push(at),
-                Record::ValueSet(v) => self.value_sets.entry(v.hash.clone()).or_default().push(at),
-                Record::Link(_) | Record::Notice(_) | Record::Doc(_) => {}
+            if let Some((provider, register, _)) = coordinates(&record) {
+                self.at(provider, register).push(at);
+            } else if let Record::ValueSet(v) = &record {
+                self.value_sets.entry(v.hash.clone()).or_default().push(at);
             }
             self.records.push(Some(record));
         }
@@ -323,7 +324,7 @@ fn ledger(
     provider: &str,
     register: &str,
     retired: &[crate::retired::Retired],
-) -> Result<reg_resolve::Ledger, String> {
+) -> Result<reg_resolve::Ledger> {
     let path = super::ledger_path(root, provider, register);
     let mut ledger: reg_resolve::Ledger = if path.is_file() {
         super::toml_file(&path)?
@@ -364,7 +365,7 @@ fn references(
     shared: &reg_resolve::curation::SharedSources,
     retired: &[crate::retired::Retired],
     base: Option<&crate::external::Context>,
-) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
+) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>> {
     let mut references = BTreeMap::new();
     let objects = statements
         .iter()
@@ -479,10 +480,10 @@ fn inventory_error(
 /// Resolve code-list references before register curation, through the same constructor
 /// used by inline classification assertions. No applicability is inferred here.
 #[allow(clippy::too_many_lines)]
-fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
+fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
     use reg_frame::statement::{AssertFact, Statement};
     let mut out = Applied::default();
-    let entries = reg_readers::curation::load_classifications(root).map_err(|e| e.to_string())?;
+    let entries = reg_readers::curation::load_classifications(root)?;
     let mut families = BTreeMap::new();
     for entry in entries {
         let c = &entry.classification;
@@ -499,7 +500,7 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
                 {
                     return Err(located(format!(
                         "classification-family-conflict: {field} conflicts with classifications.toml:{line}"
-                    )));
+                    )).into());
                 }
                 families.insert(key, (value.clone(), entry.line));
             }
@@ -515,7 +516,7 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
             return Err(located(format!(
                 "classification-reference-unresolved: value_set {:?} must name exactly one reader value set",
                 c.value_set
-            )));
+            )).into());
         };
         let scope = c
             .period
@@ -565,7 +566,8 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
                     root,
                     &class.locator,
                     format!("classification-reference-unresolved: predecessor {target:?}"),
-                ));
+                )
+                .into());
             }
         }
     }
@@ -591,7 +593,8 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
                     root,
                     &class.locator,
                     format!("classification-succession-cycle: {origin}"),
-                ));
+                )
+                .into());
             }
             if visited.insert(node.clone()) {
                 pending.extend(predecessors[&node].iter().cloned());
@@ -662,7 +665,7 @@ pub(super) struct Sentinels {
 }
 
 /// Classification exemptions describe observed column sets, never the canonical book.
-fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<String>, String> {
+fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<String>> {
     let sets = records
         .iter()
         .filter_map(|record| match record {
@@ -706,7 +709,7 @@ fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<Stri
                 return Err(format!(
                     "{}:{}: classification-sentinel-binding-missing: {class} has no curated binding statement",
                     occurrence.locator.input, occurrence.locator.at
-                ));
+                ).into());
             }
             bound
                 .entry((class, hash.as_str()))
@@ -766,7 +769,7 @@ fn sentinel_conflicts(
     root: &Path,
     records: &[Record],
     applied: &Applied,
-) -> Result<(BTreeSet<String>, Vec<String>), String> {
+) -> Result<(BTreeSet<String>, Vec<String>)> {
     let sets = records
         .iter()
         .filter_map(|record| match record {
@@ -902,13 +905,14 @@ impl Refusal {
     }
 }
 
-fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, String> {
+fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>> {
     if record && !refusals.is_empty() {
         return Err(refusals
             .iter()
             .map(|r| r.message.as_str())
             .collect::<Vec<_>>()
-            .join("\n"));
+            .join("\n")
+            .into());
     }
     Ok(refusals
         .iter()
@@ -992,14 +996,11 @@ fn field_application(
     premise: &Premise,
     locators: &BTreeMap<&reg_frame::Locator, Vec<usize>>,
     root: &Path,
-) -> Result<
-    (
-        Vec<usize>,
-        Vec<FieldDelta>,
-        reg_resolve::curation::apply::Applied,
-    ),
-    String,
-> {
+) -> Result<(
+    Vec<usize>,
+    Vec<FieldDelta>,
+    reg_resolve::curation::apply::Applied,
+)> {
     let indices = premise
         .subjects
         .iter()
@@ -1038,9 +1039,9 @@ fn field_application(
 /// the output's field order.
 type FieldDelta = Vec<(String, serde_json::Value)>;
 
-fn field_delta(before: &Record, after: &Record) -> Result<FieldDelta, String> {
-    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
-    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
+fn field_delta(before: &Record, after: &Record) -> Result<FieldDelta> {
+    let before = serde_json::to_value(before)?;
+    let after = serde_json::to_value(after)?;
     let serde_json::Value::Object(after) = after else {
         unreachable!("frame records serialize as objects");
     };
@@ -1093,8 +1094,8 @@ fn coordinate_premise(premise: Premise) -> Premise {
 }
 
 /// Independent fields merge as patches, never as whole-record replacements.
-fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record, String> {
-    let mut current = serde_json::to_value(current).map_err(|e| e.to_string())?;
+fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record> {
+    let mut current = serde_json::to_value(current)?;
     for (field, value) in delta {
         if field == "conflicts" {
             // Independent corrections remove markers from the same source snapshot.
@@ -1113,11 +1114,11 @@ fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record, String> 
             current[field] = value.clone();
         }
     }
-    serde_json::from_value(current).map_err(|e| e.to_string())
+    Ok(serde_json::from_value(current)?)
 }
 
-fn previous(path: &Path, record: bool) -> Result<Reviewed, String> {
-    if record || !path.try_exists().map_err(|e| e.to_string())? {
+fn previous(path: &Path, record: bool) -> Result<Reviewed> {
+    if record || !path.try_exists()? {
         return Ok(Reviewed::default());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -1128,11 +1129,15 @@ fn previous(path: &Path, record: bool) -> Result<Reviewed, String> {
             "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
             path.display(),
             value["version"]
-        ));
+        )
+        .into());
     }
     let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    Reviewed::new(lock).map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
+    Ok(
+        Reviewed::new(lock)
+            .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?,
+    )
 }
 
 fn checked_premise(
@@ -1140,13 +1145,14 @@ fn checked_premise(
     premise: &Premise,
     old: &Reviewed,
     path: &Path,
-) -> Result<(), String> {
+) -> Result<()> {
     let premise = LockedPremise::new(statement, premise);
     match old.premise(&statement.identity).as_ref() {
         None => Err(format!(
             "premise-missing: no reviewed premise in {}; run reg-build lock",
             path.display()
-        )),
+        )
+        .into()),
         Some(previous) if previous != &premise => {
             let mut diff = Vec::new();
             if let (
@@ -1164,12 +1170,12 @@ fn checked_premise(
                 ));
             }
             changes(
-                &serde_json::to_value(previous).map_err(|e| e.to_string())?,
-                &serde_json::to_value(&premise).map_err(|e| e.to_string())?,
+                &serde_json::to_value(previous)?,
+                &serde_json::to_value(&premise)?,
                 "premise",
                 &mut diff,
             );
-            Err(format!("premise-changed:\n  {}", diff.join("\n  ")))
+            Err(format!("premise-changed:\n  {}", diff.join("\n  ")).into())
         }
         Some(_) => Ok(()),
     }
@@ -1183,7 +1189,7 @@ pub(super) fn run(
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
-) -> Result<Applied, String> {
+) -> Result<Applied> {
     let mut applied = run_selected(
         root,
         retired,
@@ -1210,7 +1216,21 @@ fn run_selected(
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
-) -> Result<Applied, String> {
+) -> Result<Applied> {
+    // Refused statements contribute neither facts nor provenance: the stages run again
+    // without them, carrying the refusals and their skipped-statement findings.
+    let rerun_without = |refused: &dyn Fn(&LocatedStatement) -> bool, refusals: Vec<Refusal>| {
+        let skipped = refusal_findings(&refusals, record)?;
+        let retained = statements
+            .iter()
+            .copied()
+            .filter(|s| !refused(s))
+            .collect::<Vec<_>>();
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)?;
+        rerun.findings.extend(skipped);
+        rerun.refusals.extend(refusals);
+        Ok::<_, crate::error::Error>(rerun)
+    };
     let t = std::time::Instant::now();
     let mut records = outputs
         .iter()
@@ -1297,15 +1317,7 @@ fn run_selected(
             field_snapshot = reg_resolve::curation::apply::source_keys(
                 &records
                     .iter()
-                    .filter(|r| {
-                        matches!(
-                            r,
-                            Record::Register(_)
-                                | Record::Table(_)
-                                | Record::Release(_)
-                                | Record::Occurrence(_)
-                        )
-                    })
+                    .filter(|r| coordinates(r).is_some())
                     .collect::<Vec<_>>(),
             );
         }
@@ -1314,12 +1326,8 @@ fn run_selected(
         if fields_stage {
             for (i, record) in records.iter().enumerate() {
                 let at = match record {
-                    Record::Register(r) => Some(&r.locator),
-                    Record::Table(r) => Some(&r.locator),
-                    Record::Release(r) => Some(&r.locator),
-                    Record::Occurrence(r) => Some(&r.locator),
                     Record::ValueSet(r) => Some(&r.locator),
-                    _ => None,
+                    _ => coordinates(record).map(|(.., at)| at),
                 };
                 if let Some(at) = at {
                     locators.entry(at).or_default().push(i);
@@ -1562,7 +1570,6 @@ fn run_selected(
         for (statement, premise, provider, register) in accepted {
             let (_, ledger, _) = &locks[&(provider, register)];
             let locator = statement_locator(root, statement)?;
-            let file = locator.input.clone();
             let asserted =
                 reg_resolve::curation::apply::asserted_value_set(&statement.statement, &locator);
             let hash = match &statement.statement {
@@ -1655,18 +1662,8 @@ fn run_selected(
                     let refusal =
                         Refusal::scoped(statement, format!("{}: {e}", location(statement)));
                     refusals.push(refusal);
-                    let skipped = refusal_findings(&refusals, record)?;
-                    // Refused statements contribute neither facts nor provenance.
-                    let retained = statements
-                        .iter()
-                        .copied()
-                        .filter(|s| publication_identity(s) != publication_identity(statement))
-                        .collect::<Vec<_>>();
-                    let mut rerun =
-                        run_selected(root, retired, &retained, outputs, record, registers, base)?;
-                    rerun.findings.extend(skipped);
-                    rerun.refusals.extend(refusals);
-                    return Ok(rerun);
+                    let refused = publication_identity(statement);
+                    return rerun_without(&|s| publication_identity(s) == refused, refusals);
                 }
             };
             result.sets.extend(applied.sets);
@@ -1693,16 +1690,7 @@ fn run_selected(
             }
             evaluated.push((statement, premise));
             if !applied.changes.is_empty() {
-                let value =
-                    serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
-                result.statements.push(crate::emit::StatementRow {
-                    hash: publication_identity(statement),
-                    kind: value["kind"].as_str().expect("statement kind").into(),
-                    file,
-                    line: statement.line,
-                    evidence: value["evidence"].as_str().map(str::to_owned),
-                    caveat: value["caveat"].as_str().map(str::to_owned),
-                });
+                result.statements.push(statement_row(root, statement)?);
                 result.overrides.extend(applied.changes.iter().map(|c| {
                     reg_resolve::provenance::Claim {
                         kind: c.kind.clone(),
@@ -1876,17 +1864,8 @@ fn run_selected(
                 .iter()
                 .map(|(hash, _)| hash)
                 .collect::<BTreeSet<_>>();
-            let retained = statements
-                .iter()
-                .copied()
-                .filter(|s| !refused.contains(&publication_identity(s)))
-                .collect::<Vec<_>>();
-            let mut rerun =
-                run_selected(root, retired, &retained, outputs, record, registers, base)?;
             refusals.extend(messages);
-            rerun.findings.extend(refusal_findings(&refusals, record)?);
-            rerun.refusals.extend(refusals);
-            return Ok(rerun);
+            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
         }
         result.linked = Some(linked);
         result.resolved = Some(resolved);
@@ -1965,16 +1944,7 @@ fn run_selected(
             "reg-build: timing curation rerun after {} conflicts",
             conflicts.len()
         );
-        let skipped = refusal_findings(&refusals, record)?;
-        let retained = statements
-            .iter()
-            .copied()
-            .filter(|s| !conflicts.contains(&publication_identity(s)))
-            .collect::<Vec<_>>();
-        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)?;
-        rerun.findings.extend(skipped);
-        rerun.refusals.extend(refusals);
-        return Ok(rerun);
+        return rerun_without(&|s| conflicts.contains(&publication_identity(s)), refusals);
     }
 
     if !result.sets.is_empty()
@@ -2023,17 +1993,7 @@ fn run_selected(
                 "reg-build: timing curation rerun after {} presentation refusals",
                 refused.len()
             );
-            let skipped = refusal_findings(&refusals, record)?;
-            let retained = statements
-                .iter()
-                .copied()
-                .filter(|s| !refused.contains(&publication_identity(s)))
-                .collect::<Vec<_>>();
-            let mut rerun =
-                run_selected(root, retired, &retained, outputs, record, registers, base)?;
-            rerun.findings.extend(skipped);
-            rerun.refusals.extend(refusals);
-            return Ok(rerun);
+            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
         }
     }
     for ((provider, register), (path, _, _)) in locks {
@@ -2063,13 +2023,12 @@ fn run_selected(
                             .join(register)
                             .is_dir()
                 } else {
-                    std::fs::read_dir(root.join("registers"))
-                        .map_err(|e| e.to_string())?
+                    std::fs::read_dir(root.join("registers"))?
                         .filter_map(Result::ok)
                         .any(|p| p.path().join(register).is_dir())
                 };
                 if !found {
-                    return Err(format!("unknown curation register {register:?}"));
+                    return Err(format!("unknown curation register {register:?}").into());
                 }
             }
         }
@@ -2118,7 +2077,7 @@ pub(super) fn complete_findings(
     applied: &Applied,
     resolved: Option<Vec<reg_resolve::Resolved>>,
     base: Option<&crate::external::Context>,
-) -> Result<Vec<reg_resolve::Resolved>, String> {
+) -> Result<Vec<reg_resolve::Resolved>> {
     let t = std::time::Instant::now();
     let mut resolved = match resolved {
         Some(resolved) => resolved,
@@ -2173,7 +2132,7 @@ pub(super) fn resolve_catalog(
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     metadata: &[reg_resolve::curation::apply::Metadata],
     classifications: &[reg_resolve::curation::apply::Classification],
-) -> Result<Vec<reg_resolve::Resolved>, String> {
+) -> Result<Vec<reg_resolve::Resolved>> {
     let sets = records
         .iter()
         .filter_map(|r| match r {
@@ -2183,14 +2142,13 @@ pub(super) fn resolve_catalog(
         .collect();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for record in records {
-        let key = match record {
-            Record::Register(r) => (&r.provider, &r.register),
-            Record::Table(r) => (&r.provider, &r.register),
-            Record::Release(r) => (&r.provider, &r.register),
-            Record::Occurrence(r) => (&r.provider, &r.register),
-            _ => continue,
+        let Some((provider, register, _)) = coordinates(record) else {
+            continue;
         };
-        groups.entry(key).or_default().push(record.clone());
+        groups
+            .entry((provider, register))
+            .or_default()
+            .push(record.clone());
     }
     groups
         .into_iter()
@@ -2207,8 +2165,8 @@ pub(super) fn resolve_catalog(
 pub(super) fn statement_row(
     root: &Path,
     statement: &LocatedStatement,
-) -> Result<crate::emit::StatementRow, String> {
-    let value = serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
+) -> Result<crate::emit::StatementRow> {
+    let value = serde_json::to_value(&statement.statement)?;
     Ok(crate::emit::StatementRow {
         hash: publication_identity(statement),
         kind: value["kind"].as_str().expect("statement kind").into(),

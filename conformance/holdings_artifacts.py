@@ -47,7 +47,6 @@ def pin_steward(root: Path, registry: Path) -> None:
     """Pin an authored fixture, including deliberate refusal-case mutations."""
     roles = [
         "scope.toml",
-        "series",
         "curation",
         "inputs/slots",
         "branding/steward.json",
@@ -84,7 +83,6 @@ def pin_steward(root: Path, registry: Path) -> None:
             hashes[role] = hashlib.sha256(content.encode()).hexdigest()
     config = """owner = "fixture"
 scope = "scope.toml"
-series_root = "series"
 curation_root = "curation/registers"
 
 [presentation]

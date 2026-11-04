@@ -1,6 +1,7 @@
 //! An immutable base reference used by the ordinary curation premise/lock path.
 //! Only supplemental-to-reference derivation is admitted; no identity relation or
 //! successor edge can cross this boundary.
+use crate::error::Result;
 use reg_frame::Locator;
 use reg_resolve::curation::SourcePremise;
 use rusqlite::{Connection, OpenFlags, OptionalExtension};
@@ -14,34 +15,31 @@ pub(crate) struct Context {
 }
 
 impl Context {
-    pub fn open(path: &Path) -> Result<Self, String> {
+    pub fn open(path: &Path) -> Result<Self> {
         crate::verify::catalog(path, None)?;
-        let db = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)
-            .map_err(|e| e.to_string())?;
-        let generation = db
-            .query_row(
-                "SELECT value FROM meta WHERE key='generation_id'",
-                [],
-                |r| r.get(0),
-            )
-            .map_err(|e| e.to_string())?;
+        let db = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+        let generation = db.query_row(
+            "SELECT value FROM meta WHERE key='generation_id'",
+            [],
+            |r| r.get(0),
+        )?;
         Ok(Self {
             db,
             generation,
             sha256: crate::sha256_file(path)?.0,
         })
     }
-    pub fn kind(&self, pid: &str) -> Result<Option<String>, String> {
-        self.db
+    pub fn kind(&self, pid: &str) -> Result<Option<String>> {
+        Ok(self
+            .db
             .query_row(
                 "SELECT kind FROM ident WHERE pid=? AND kind IN ('register','variable')",
                 [pid],
                 |r| r.get(0),
             )
-            .optional()
-            .map_err(|e| e.to_string())
+            .optional()?)
     }
-    pub fn premise(&self, pid: &str) -> Result<Option<Vec<SourcePremise>>, String> {
+    pub fn premise(&self, pid: &str) -> Result<Option<Vec<SourcePremise>>> {
         let Some(kind) = self.kind(pid)? else {
             return Ok(None);
         };

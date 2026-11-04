@@ -7,6 +7,7 @@ use rusqlite::{Connection, params};
 use reg_core::days::{self, Span};
 
 use super::input;
+use crate::error::{Result, rows};
 
 #[derive(Clone)]
 pub(super) struct Segment {
@@ -22,16 +23,14 @@ pub(super) struct Segment {
     pub timeless: bool,
 }
 
-pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>, String> {
-    let mut query = db
-        .prepare(
-            "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless
+pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
+    rows(
+        db,
+        "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless
       FROM segment s JOIN tbl t ON t.id=s.table_id JOIN variable v ON v.id=s.variable_id
       JOIN spelling sp ON sp.id=s.spelling_id ORDER BY t.pid,v.pid,s.start",
-        )
-        .map_err(|e| e.to_string())?;
-    query
-        .query_map([], |r| {
+        [],
+        |r| {
             Ok(Segment {
                 table: r.get(0)?,
                 variable: r.get(1)?,
@@ -44,40 +43,37 @@ pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>, String> {
                 length: r.get(8)?,
                 timeless: r.get(9)?,
             })
-        })
-        .map_err(|e| e.to_string())?
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())
+        },
+    )
 }
 
-pub(super) fn periods(value: &str) -> Result<Vec<Span>, String> {
-    let mut out = Vec::new();
-    for token in value.split(',') {
-        let period: reg_core::Period = token
-            .trim()
-            .parse()
-            .map_err(|_| "inventory_window_invalid: invalid period spelling")?;
-        let (lo, hi) = period.iso_bounds();
-        out.push((crate::emit::start(&lo), crate::emit::end(&hi)));
-    }
-    Ok(days::merge(out))
-}
-
-pub(super) fn canonical_period(value: &str) -> Result<String, String> {
-    let spans = value
+/// The ISO bounds of each period of a comma-separated list.
+fn bounds(value: &str) -> Result<Vec<(String, String)>> {
+    value
         .split(',')
         .map(|token| {
             token
                 .trim()
                 .parse::<reg_core::Period>()
                 .map(reg_core::Period::iso_bounds)
-                .map_err(|_| "inventory_window_invalid: invalid period spelling".to_owned())
+                .map_err(|_| "inventory_window_invalid: invalid period spelling".into())
         })
-        .collect::<Result<Vec<_>, _>>()?;
-    Ok(reg_core::render(&reg_core::merge(spans)))
+        .collect()
 }
 
-pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>, String> {
+pub(super) fn periods(value: &str) -> Result<Vec<Span>> {
+    let spans = bounds(value)?
+        .iter()
+        .map(|(lo, hi)| (crate::emit::start(lo), crate::emit::end(hi)))
+        .collect();
+    Ok(days::merge(spans))
+}
+
+pub(super) fn canonical_period(value: &str) -> Result<String> {
+    Ok(reg_core::render(&reg_core::merge(bounds(value)?)))
+}
+
+pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>> {
     match (table.disposition.as_str(), table.delivery.as_deref()) {
         ("dated", Some(delivery)) => periods(delivery),
         ("timeless", None) => Ok(vec![(
@@ -95,10 +91,7 @@ pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>, String> {
     }
 }
 
-pub(super) fn column_periods(
-    column: Option<&input::Column>,
-    spans: &[Span],
-) -> Result<Vec<Span>, String> {
+pub(super) fn column_periods(column: Option<&input::Column>, spans: &[Span]) -> Result<Vec<Span>> {
     let Some(column) = column else {
         return Ok(spans.to_vec());
     };
@@ -135,7 +128,7 @@ fn notice(
     spans: Option<Span>,
     detail: (&[Span], &[Span], &[Span]),
     message: &str,
-) -> Result<i64, String> {
+) -> Result<i64> {
     db.execute("INSERT INTO holding_notice(holding_id,column_id,code,start,end,requested,documented,admitted,message)
       VALUES(?,?,?,?,?,?,?,?,?)",params![holding,column,code,spans.map(|s|s.0),spans.map(|s|s.1),
       serde_json::to_string(detail.0).map_err(|e|e.to_string())?,serde_json::to_string(detail.1).map_err(|e|e.to_string())?,
@@ -159,7 +152,7 @@ pub(super) fn candidates(
     decision: Option<&input::Column>,
     owed: &[Span],
     index: &BTreeMap<String, Vec<Segment>>,
-) -> Result<Vec<Candidate>, String> {
+) -> Result<Vec<Candidate>> {
     let mut out = Vec::new();
     if let Some(decision) = decision
         && !decision.mapping.is_empty()
@@ -264,7 +257,7 @@ pub(super) enum Placement<'a> {
 }
 
 /// Apply interval-local ownership for emission.
-pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, String> {
+pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>> {
     let mut by_table = BTreeMap::<&str, Vec<&Candidate>>::new();
     for candidate in candidates {
         by_table
@@ -327,7 +320,7 @@ fn placements(
     candidates: &[Candidate],
     owed: &[Span],
     keys: &[input::RowKey],
-) -> Result<Vec<Segment>, String> {
+) -> Result<Vec<Segment>> {
     if let Some(key) = keys.iter().find(|key| key.hold.is_some()) {
         db.execute(
             "UPDATE holding_column SET disposition='hold',reason=?,follow_up=? WHERE id=?",
@@ -366,8 +359,7 @@ fn placements(
                     db.execute(
                         "INSERT INTO holding_notice_candidate VALUES(?,?,?)",
                         params![id, table, variable],
-                    )
-                    .map_err(|e| e.to_string())?;
+                    )?;
                 }
                 continue;
             }
@@ -432,7 +424,7 @@ fn storage_findings(
     column: i64,
     storage: &census::Storage,
     segments: &[Segment],
-) -> Result<(), String> {
+) -> Result<()> {
     let physical = storage.data_type.to_ascii_lowercase();
     let storage_family = match physical.as_str() {
         "tinyint" | "smallint" | "int" | "bigint" | "bit" => Some("integer"),
@@ -494,17 +486,12 @@ fn storage_findings(
 pub(super) fn segment_index(
     base: &Connection,
     db: &Connection,
-) -> Result<BTreeMap<String, Vec<Segment>>, String> {
+) -> Result<BTreeMap<String, Vec<Segment>>> {
     let mut index = BTreeMap::<String, Vec<Segment>>::new();
     for semantic in [base, db] {
-        let mut tables = semantic
-            .prepare("SELECT pid FROM tbl")
-            .map_err(|e| e.to_string())?;
-        for table in tables
-            .query_map([], |row| row.get::<_, String>(0))
-            .map_err(|e| e.to_string())?
-        {
-            index.entry(table.map_err(|e| e.to_string())?).or_default();
+        let mut tables = semantic.prepare("SELECT pid FROM tbl")?;
+        for table in tables.query_map([], |row| row.get::<_, String>(0))? {
+            index.entry(table?).or_default();
         }
     }
     for segment in segments(base)?.into_iter().chain(segments(db)?) {
@@ -522,7 +509,7 @@ pub(super) fn write(
     base: &Connection,
     topology: input::Topology,
     mut census: Vec<census::Table>,
-) -> Result<(usize, usize, usize, usize), String> {
+) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
     let mut authored = BTreeMap::new();
     for table in topology.table {
@@ -549,19 +536,18 @@ pub(super) fn write(
         return Err("holdings_accounting_invalid: authored tables differ from census".into());
     }
     let count_tables = census.len();
-    let tx = db.transaction().map_err(|e| e.to_string())?;
+    let tx = db.transaction()?;
     let mut count_columns = 0usize;
     let mut mapped = 0usize;
     let mut unmatched = 0usize;
     let mut next_column = 1i64;
     let mut file_names = BTreeMap::<String, String>::new();
     // Parents and row-period columns reference rows filled later in this transaction.
-    tx.execute_batch("PRAGMA defer_foreign_keys=ON;")
-        .map_err(|e| e.to_string())?;
+    tx.execute_batch("PRAGMA defer_foreign_keys=ON;")?;
     for table in census {
         let authored = &authored[&table.name];
         let id = ids[&table.name];
-        let result = (|| -> Result<(), String> {
+        let result = (|| -> Result<()> {
             super::keys::validate_shapes(id, &authored.key)?;
             let spans = table_periods(authored)?;
             if authored.partition.is_some() && authored.projection_of.is_some() {
@@ -615,27 +601,19 @@ pub(super) fn write(
                 return Err(format!(
                     "holdings_filename_invalid: locator={}: file name {file_name:?} is also physical table {other:?}'s",
                     authored.locator
-                ));
+                ).into());
             }
-            tx.execute("INSERT INTO holding_table(id,physical_name,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
-          projection_token,period_encoding,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,schema_name,table_type,
+            // The period column and its encoding are set together once the columns exist.
+            tx.execute("INSERT INTO holding_table(id,physical_name,key_requirements,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,serde_json::to_string(&authored.key)?,schema_name,table_type,
           file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,authored.partition,projection,authored.projection_token,
-          Option::<String>::None,authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
+          authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
                 tx.execute(
                     "INSERT INTO holding_period VALUES(?,?,?)",
                     params![id, start, end],
-                )
-                .map_err(|e| e.to_string())?;
+                )?;
             }
-            tx.execute(
-                "UPDATE holding_table SET key_requirements=? WHERE id=?",
-                params![
-                    serde_json::to_string(&authored.key).map_err(|e| e.to_string())?,
-                    id
-                ],
-            )
-            .map_err(|e| e.to_string())?;
             for route in &authored.routes {
                 if !index.contains_key(route) {
                     return Err("holdings_table_route_unresolved: default table absent".into());
@@ -654,12 +632,12 @@ pub(super) fn write(
                         "stale_declared_mapping_target: topology:column={}: locator={} routes={routes:?}: column decision is stale, duplicate or unlocated",
                         position + 1,
                         c.locator
-                    ));
+                    ).into());
                 }
             }
             let mut period_column = None;
             for column in &table.columns {
-                let result = (|| -> Result<(), String> {
+                let result = (|| -> Result<()> {
                     count_columns += 1;
                     let cid = next_column;
                     next_column += 1;
@@ -807,13 +785,12 @@ pub(super) fn write(
             tx.execute(
                 "UPDATE holding_table SET period_column_id=?,period_encoding=? WHERE id=?",
                 params![period_column, authored.period_encoding, id],
-            )
-            .map_err(|e| e.to_string())?;
+            )?;
             Ok(())
         })();
         result.map_err(|error| format!("holdings:table={id}: {error}"))?;
     }
     super::keys::carry_projections(&tx)?;
-    tx.commit().map_err(|e| e.to_string())?;
+    tx.commit()?;
     Ok((count_tables, count_columns, mapped, unmatched))
 }
