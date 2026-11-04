@@ -156,12 +156,6 @@
   border-top-color: transparent;
 }
 
-.group {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* The in-project mark: a 6px accent dot and the count in accent-ink mono, the
    only number in the list. */
 .inProject {

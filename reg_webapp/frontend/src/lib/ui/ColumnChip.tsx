@@ -11,11 +11,14 @@ export type ColumnChipState = "default" | "in" | "out";
  * Never for a variable name, an FQID or a slug. */
 export function ColumnChip({
   name,
+  table,
   years,
   state = "default",
   className,
 }: {
   name: string;
+  /** The file the column is held in, in the text face after the name. */
+  table?: string;
   /** Already formatted ("2015–2019", "2020–"). */
   years?: string;
   state?: ColumnChipState;
@@ -25,6 +28,7 @@ export function ColumnChip({
   return (
     <span className={`${styles.chip} ${styles[state]} ${className ?? ""}`}>
       {name}
+      {table && <span className={styles.table}>{table}</span>}
       {years && <span className={styles.years}>{years}</span>}
     </span>
   );
