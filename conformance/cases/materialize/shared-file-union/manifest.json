@@ -6,7 +6,7 @@
     "steward": "fixture",
     "catalog": {
       "release": "dev",
-      "schema": "7"
+      "schema": "8"
     },
     "holdings": {
       "owner": "fixture"
@@ -150,7 +150,7 @@
       "level": "info",
       "code": "identifier",
       "path": "/sources/0/bindings/1",
-      "message": "demo/held/id identifies units in demo/held over [2017-01-01, 2018-01-01)",
+      "message": "demo/held/id is an identifier in demo/held over [2017-01-01, 2018-01-01)",
       "source": "a",
       "variable": "demo/held/id",
       "table": "demo/held",
@@ -164,7 +164,7 @@
       "level": "info",
       "code": "row_filter_union",
       "path": "/sources/0",
-      "message": "Several sources share physical table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
+      "message": "Several sources share table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
       "source": "a",
       "variable": null,
       "table": null,
@@ -175,7 +175,7 @@
       "level": "info",
       "code": "row_filter_union",
       "path": "/sources/1",
-      "message": "Several sources share physical table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
+      "message": "Several sources share table \"Pool\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-01-01), [2020-01-01, 2021-01-01)",
       "source": "b",
       "variable": null,
       "table": null,

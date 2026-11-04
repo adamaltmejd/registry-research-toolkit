@@ -19,10 +19,10 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "values",
     paths: &["/api/values"],
     tool: Some("values"),
-    description: "A value set's items, by its hash or by a classification version's ref, \
-        with a hierarchical set paged one level at a time by `parent` and searched flat by \
-        `q`; or, given a `code` and optionally its `label`, the value sets that hold that \
-        pair. The blank code is an item like any other.",
+    description: "The codes and labels of a value set, by `value_set` hash or `classification`. \
+        `parent` steps through a hierarchy one level at a time; `q` searches it. Or give \
+        `code` (and `label`) to find the value sets that contain it. The blank code is a code \
+        like any other.",
     params: &[
         Param::optional("value_set", Type::Hash),
         Param::optional("classification", Type::Ref),
@@ -48,7 +48,6 @@ fn result(components: &mut Components) -> RefOr<Schema> {
     ))
 }
 
-/// `Page<ValueItem>` plus the value set and `total`.
 #[derive(Serialize, ToSchema)]
 pub struct ValueItemsPage {
     items: Vec<ValueItem>,
@@ -59,7 +58,6 @@ pub struct ValueItemsPage {
     total: i64,
 }
 
-/// `Page<ValueSetRef>`, ordered by hash.
 #[derive(Serialize, ToSchema)]
 pub struct ValueSetsPage {
     items: Vec<ValueSetRef>,
@@ -67,7 +65,6 @@ pub struct ValueSetsPage {
     next_cursor: Option<String>,
 }
 
-/// `shape.ValueItem`.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct ValueItem {
     /// May be `""`: a real item.

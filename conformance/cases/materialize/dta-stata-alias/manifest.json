@@ -6,7 +6,7 @@
     "steward": "fixture",
     "catalog": {
       "release": "dev",
-      "schema": "7"
+      "schema": "8"
     },
     "holdings": {
       "owner": "fixture"
@@ -80,7 +80,7 @@
       "level": "info",
       "code": "identifier",
       "path": "/sources/0/bindings/0",
-      "message": "demo/held/relative-id identifies units in demo/held over [2021-01-01, 2022-01-01)",
+      "message": "demo/held/relative-id is an identifier in demo/held over [2021-01-01, 2022-01-01)",
       "source": "r",
       "variable": "demo/held/relative-id",
       "table": "demo/held",

@@ -175,14 +175,9 @@ function statementValue(
       visibleText(value) ??
       (statement.field === "description" ? (node.description ?? null) : null)
     );
-  return [
-    "role",
-    "coded",
-    "state",
-    "identifier",
-    "sensitive",
-    "temporality",
-  ].includes(statement.field)
+  return ["role", "coded", "state", "identifier", "sensitive"].includes(
+    statement.field,
+  )
     ? catalogWords(value)
     : visibleText(value);
 }

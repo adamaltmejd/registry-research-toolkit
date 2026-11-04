@@ -39,7 +39,6 @@ const labels: Record<string, string> = {
   bool: "Boolean",
   datetime: "Date and time",
   state: "State",
-  temporality: "Temporality",
   invariant: "Time independent",
   varying: "Changes over time",
   time_invariant: "Time independent",

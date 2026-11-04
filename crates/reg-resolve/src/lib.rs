@@ -552,7 +552,7 @@ pub(crate) fn resolve_located(
                 subject: Subject::Release(i),
                 period: None,
                 message: format!(
-                    "delivery {:?} is not placed in time; its columns are unplaced",
+                    "delivery {:?} has no known period; its columns are not dated",
                     r.release.name
                 ),
             });
@@ -583,7 +583,7 @@ pub(crate) fn resolve_located(
                     subject: Subject::Release(i),
                     period: placed(&releases[i].release),
                     message: format!(
-                        "deliveries {:?} and {:?} state one period, edition and qualifier",
+                        "deliveries {:?} and {:?} claim the same period and release type",
                         releases[primary].release.name, releases[i].release.name
                     ),
                 });
@@ -761,8 +761,8 @@ pub(crate) fn resolve_located(
                 subject: Subject::Release(x),
                 period: placed(&releases[x].release),
                 message: format!(
-                    "delivery {:?} disagrees with the primary edition on the spelling or \
-                     type of {} key(s): {}",
+                    "delivery {:?} differs from the main release in the name or type of \
+                     {} column(s): {}",
                     releases[x].release.name,
                     differ.len(),
                     differ
@@ -1200,7 +1200,7 @@ pub(crate) fn resolve_located(
                 subject: Subject::Variable(v),
                 period: None,
                 message: format!(
-                    "{}: its source rows disagree on {}",
+                    "{}: the provider's sources disagree on {}",
                     resolved[last].occurrence.column,
                     conflicts.into_iter().collect::<Vec<_>>().join(", ")
                 ),
@@ -1370,7 +1370,7 @@ pub(crate) fn resolve_located(
                     subject: Subject::Segment(v, s),
                     period: Some(segment.period.clone()),
                     message: format!(
-                        "{}: its occurrences disagree only on type family; type left unset",
+                        "{}: deliveries disagree on the type; type left blank",
                         segment.spelling
                     ),
                 });
@@ -1382,7 +1382,7 @@ pub(crate) fn resolve_located(
                     subject: Subject::Segment(v, s),
                     period: Some(segment.period.clone()),
                     message: format!(
-                        "{} cannot be placed on one variable form here",
+                        "{} has more than one form here (name, type or codes differ)",
                         segment.spelling
                     ),
                 });
@@ -1469,9 +1469,9 @@ pub(crate) fn resolve_located(
                 subject: Subject::Occurrence(i),
                 period: r.period.clone(),
                 message: if r.status == "used" {
-                    "documented beyond its table's coverage; clamped".to_owned()
+                    "documented past its table's years; cut to them".to_owned()
                 } else {
-                    "documented entirely outside its table's coverage".to_owned()
+                    "documented only outside its table's years".to_owned()
                 },
             });
         }
