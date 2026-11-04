@@ -1130,11 +1130,11 @@ whole-project finding) and `source_outside_window` (a dated source period wholly
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`period_clipped`, `form_change`, `table_succession_undated`,
-`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
-source, binding or panel and whose `source`, `variable`, `table` and `period` say what
-it is about (`null` for a whole-project finding). The conditions are the order check's
-to state in its own tests; the rules that shape them:
+`period_clipped`, `form_change`, `table_succession_undated`, `identifier` and
+`coverage_end_unstated`. Each is an `Issue` whose `path` points at the source, binding
+or panel and whose `source`, `variable`, `table` and `period` say what it is about
+(`null` for a whole-project finding). The conditions are the order check's to state in
+its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -1767,8 +1767,8 @@ table through its authored default or explicit mapping routes. Those mappings mu
 each offered span; a globally existing variable or a mapping on an unrelated route
 cannot satisfy the declaration. There is no identifier-based or missing-key fallback.
 Steward orders use the same declared entity/time components and their received column
-names. Linking identifiers remain ordinary columns and enter
-the order only when explicitly selected.
+names. Linking identifiers remain ordinary columns and enter the order only when
+explicitly selected.
 
 A time component can instead be supplied by a declared physical period column, or by the
 table's period (`year`, `month`, `day`, or the attested delivery `period`). A constant
@@ -2132,15 +2132,15 @@ automatically rewrite a segment, clear ambiguity or silence F1. This follows D's
 2026-10-28 ruling in REBUILD.md: curate only evidenced affected occurrences; unresolved
 integer/decimal switches remain visible. The input basis is settled: N1 infers from the
 type string and value pattern and emits review on disagreement (clean-room design §4.5).
-Value patterns mean documented code literals/pattern metadata, never MONA row samples.
-A column's role is a separate attribute (§2.2); a row-key role is
-not a dtype disagreement. The implementer uses a conservative closed pattern table:
-complete documented code literals and normalized type strings only, no sampling
-threshold or name-only inference. An all-integer code domain with no significant leading
-zero may propose integer; alphanumeric or zero-padded codes preserve text, and
-documented non-integral numeric literals may propose decimal. Unsupported/ambiguous
-domains propose nothing. This is review output, not permission to reinterpret an amount
-from an incomplete code list.
+Value patterns mean documented code literals/pattern metadata, never MONA row samples. A
+column's role is a separate attribute (§2.2); a row-key role is not a dtype
+disagreement. The implementer uses a conservative closed pattern table: complete
+documented code literals and normalized type strings only, no sampling threshold or
+name-only inference. An all-integer code domain with no significant leading zero may
+propose integer; alphanumeric or zero-padded codes preserve text, and documented
+non-integral numeric literals may propose decimal. Unsupported/ambiguous domains propose
+nothing. This is review output, not permission to reinterpret an amount from an
+incomplete code list.
 
 The implemented table reads a used occurrence's documented codes less its
 statement-declared sentinels and emits `N1:logical-type` (review, on the occurrence)
@@ -2187,8 +2187,8 @@ E must expose enough metadata to support that skill. Existing operations already
 
 - `schema`: table/variable/spelling windows with adopted type, length, value-set
   reference, role and state (`reg-catalog/src/ops/schema.rs`);
-- `segments`: adopted type/length/format, value-set/classification references,
-  role, state and optional provenance (`ops/segments.rs`);
+- `segments`: adopted type/length/format, value-set/classification references, role,
+  state and optional provenance (`ops/segments.rs`);
 - `values`: paged codes, labels, sentinels and hierarchy by value-set hash or pinned
   classification (`ops/values.rs`);
 - `order` on the coarse `order` MCP tool: logical entries with type/length/value-set and
@@ -2203,10 +2203,10 @@ names, physical headers, slot topology, filters, keys and logical
 source/binding/table/variable/form/window references. Each column must expose its
 adopted logical/output type, length and value-set/classification references, or provide
 those exact references so `schema`/`segments`/`values` can retrieve them. Current
-logical row-key entries have only variable/spelling; fetch key type
-through those semantic operations rather than infer it from the header. Unknown remains
-unknown; N1 proposals become effective output types only after review/adoption. These
-metadata gaps belong to e-holdings/e-order/e-types, not a mock service.
+logical row-key entries have only variable/spelling; fetch key type through those
+semantic operations rather than infer it from the header. Unknown remains unknown; N1
+proposals become effective output types only after review/adoption. These metadata gaps
+belong to e-holdings/e-order/e-types, not a mock service.
 
 The e-types audit (#2071) found them filled: `coverage` returns `held` placements from
 the holdings file; `materialize_order` columns carry exact `refs` (source, binding,
@@ -2398,8 +2398,8 @@ table succession chain when the successor occurs there, honoring its dated table
 routing. Otherwise use the successor's segment tables, requiring exactly one table per
 requested day. This also permits a cross-register successor without inventing a
 cross-register variable or a new source. Those serving tables contribute their own row
-keys. Overlapping candidate tables are `ambiguous_window`,
-never an arbitrary table choice.
+keys. Overlapping candidate tables are `ambiguous_window`, never an arbitrary table
+choice.
 
 When the request extends beyond a predecessor's end, multiple successor rows or an
 undated successor block with `variable_replaced` at error level. A cycle or a hop that
@@ -2450,9 +2450,9 @@ Everything else is unchanged: `invalid_root`, `missing_required_field`,
 Catalog rules are the order check's, listed in "The logical order": `fqid_unresolved`
 (also for an unknown table or classification), `retired_ref`,
 `period_default_on_dated_table`, `period_on_timeless_table`, `variable_not_in_table`,
-`table_is_register`. `steward_mismatch`,
-`fqid_outside_steward_catalog`, the `representation_*` codes, `value_set_missing` and
-`binding_state_drifts_within_period` go; the last becomes the `form_change` notice.
+`table_is_register`. `steward_mismatch`, `fqid_outside_steward_catalog`, the
+`representation_*` codes, `value_set_missing` and `binding_state_drifts_within_period`
+go; the last becomes the `form_change` notice.
 
 ## Search
 
