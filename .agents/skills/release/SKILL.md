@@ -237,7 +237,8 @@ hashes to `base.sha256`. A missing or inconsistent record fails closed (exit 2).
 what it prints:
 
 - `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
-- `base: reuse`: keep `$earlier_evidence` as `$evidence` and set
+- `base: reuse` with exit 0 (a later error can follow a printed `reuse`; any non-zero
+  exit means rebuild): keep `$earlier_evidence` as `$evidence` and set
   `base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")`.
 - A step carries over only when `$evidence/passed` lists it; otherwise the command says
   `run it`. Each step below appends `<step> <base sha>` to `passed` once it passes, so a
@@ -408,6 +409,7 @@ Run it from this release checkout (it compiles in the builder's DDL at that comm
 record its one-line result in the release notes:
 
 ```sh
+set -o pipefail
 cargo xtask scope-check "$evidence/catalog/reg_meta_swecov.db" | tee "$evidence/scope-check.txt"
 ```
 

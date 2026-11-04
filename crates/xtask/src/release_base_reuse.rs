@@ -174,31 +174,6 @@ fn read_toml(path: &Path) -> Result<toml::Table, String> {
         .map_err(|e| format!("{}: {e}", path.display()))
 }
 
-/// A string argument as Python's `repr` prints it, for the refusal text.
-fn py_repr(s: &str) -> String {
-    let quote = if s.contains('\'') && !s.contains('"') {
-        '"'
-    } else {
-        '\''
-    };
-    let mut out = String::from(quote);
-    for c in s.chars() {
-        match c {
-            '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            c if c == quote => {
-                out.push('\\');
-                out.push(c);
-            }
-            c => out.push(c),
-        }
-    }
-    out.push(quote);
-    out
-}
-
 /// Step 8a's `reg-build build` arguments, exactly: every value option once, plus
 /// `--release`. Anything else (a subset, a diagnostic flag) is not a release build.
 fn build_options(args: &[&str]) -> Result<BTreeMap<String, String>, Refused> {
@@ -218,8 +193,7 @@ fn build_options(args: &[&str]) -> Result<BTreeMap<String, String>, Refused> {
             options.insert(flag.to_owned(), value.to_owned());
         } else {
             return Err(refused(format!(
-                "build-args.txt has an unexpected argument {}",
-                py_repr(flag)
+                "build-args.txt has an unexpected argument {flag:?}"
             )));
         }
     }
@@ -377,8 +351,11 @@ fn holdings_reason(
         ("steward_commit", "commit"),
         ("steward_config", "config"),
     ] {
-        let wanted = swecov.get(field).and_then(toml::Value::as_str);
-        if meta_value(&conn, key)?.as_deref() != wanted {
+        let wanted = swecov
+            .get(field)
+            .and_then(toml::Value::as_str)
+            .ok_or_else(|| format!("stewards.toml [swecov] has no {field}"))?;
+        if meta_value(&conn, key)?.as_deref() != Some(wanted) {
             return Ok(Some(
                 "the pair's steward pin is not this release's stewards.toml",
             ));
@@ -387,19 +364,21 @@ fn holdings_reason(
     Ok(None)
 }
 
-/// Workspace package ids `root_name` reaches through normal and build deps.
+/// Workspace package ids `root_name` reaches through normal and build deps. Fails
+/// closed: an absent root or resolve node would shrink the builder paths to nothing.
 fn workspace_closure(
     meta: &Value,
     members: &BTreeSet<String>,
     root_name: &str,
-) -> BTreeSet<String> {
+) -> Result<BTreeSet<String>, String> {
     let root = meta["packages"]
         .as_array()
         .into_iter()
         .flatten()
         .find(|p| p["name"] == root_name && members.contains(p["id"].as_str().unwrap_or("")))
         .and_then(|p| p["id"].as_str())
-        .map(str::to_owned);
+        .map(str::to_owned)
+        .ok_or_else(|| format!("{root_name} is not a workspace member"))?;
     let nodes: BTreeMap<&str, &Value> = meta["resolve"]["nodes"]
         .as_array()
         .into_iter()
@@ -407,18 +386,15 @@ fn workspace_closure(
         .filter_map(|n| Some((n["id"].as_str()?, n)))
         .collect();
     let mut seen = BTreeSet::new();
-    let mut todo: Vec<String> = root.into_iter().collect();
+    let mut todo = vec![root];
     while let Some(id) = todo.pop() {
         if !seen.insert(id.clone()) {
             continue;
         }
-        for dep in nodes
+        let node = nodes
             .get(id.as_str())
-            .map(|n| &n["deps"])
-            .and_then(Value::as_array)
-            .into_iter()
-            .flatten()
-        {
+            .ok_or_else(|| format!("cargo metadata has no resolve node for {id}"))?;
+        for dep in node["deps"].as_array().into_iter().flatten() {
             let pkg = dep["pkg"].as_str().unwrap_or("");
             let not_dev_only = dep["dep_kinds"]
                 .as_array()
@@ -430,7 +406,7 @@ fn workspace_closure(
             }
         }
     }
-    seen
+    Ok(seen)
 }
 
 fn run(evidence: &Path) -> Result<u8, String> {
@@ -539,7 +515,7 @@ impl PathSets {
                 .ok_or_else(|| format!("{} is outside {}", manifest.display(), repo.display()))?;
             dirs.insert(id.to_owned(), dir.display().to_string());
         }
-        let builder = workspace_closure(&meta, &members, "reg-build");
+        let builder = workspace_closure(&meta, &members, "reg-build")?;
         let sorted = |ids: Vec<&String>, suffix: &str| {
             let mut v: Vec<String> = ids
                 .iter()
