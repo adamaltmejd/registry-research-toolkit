@@ -505,7 +505,7 @@ CREATE TABLE doc_section (
 CREATE VIRTUAL TABLE doc_fts USING fts5(
   heading, body,
   content = 'doc_section', content_rowid = 'id',
-  tokenize = 'unicode61 remove_diacritics 0'
+  tokenize = 'unicode61 remove_diacritics 2'
 );
 
 CREATE TABLE doc_link (
@@ -569,13 +569,24 @@ CREATE TABLE search_item (
 CREATE VIRTUAL TABLE search USING fts5(
   name, label, body,                      -- pid + spellings; labels + synonyms; definitions
   content = '',
-  tokenize = 'unicode61 remove_diacritics 0',
+  tokenize = 'unicode61 remove_diacritics 2',
   prefix = '2 3'
 );
 
 -- Supplementary occurrence text with the primary row's name, label and body as
 -- context for AND queries. Keeping a separate corpus preserves primary BM25 scores.
 CREATE VIRTUAL TABLE search_description USING fts5(
+  name, label, body,
+  content = '',
+  tokenize = 'unicode61 remove_diacritics 2',
+  prefix = '2 3'
+);
+
+-- simplify: exact-match tie-break only. The search indexes fold diacritics (#2163) and
+-- are contentless, so the reader cannot compare a hit's text with the query; this index
+-- keeps diacritics and holds each row's widest text (search_description's when the row
+-- has one, else search's). Replace it when smarter ranking lands.
+CREATE VIRTUAL TABLE search_exact USING fts5(
   name, label, body,
   content = '',
   tokenize = 'unicode61 remove_diacritics 0',
