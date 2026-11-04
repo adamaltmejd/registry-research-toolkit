@@ -6,7 +6,7 @@
 //!                 [--catalog-version V] [--release]
 //! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]
 //! reg-build verify FILE [--previous FILE]
-//! reg-build diff OLD NEW [--json] [-n N]
+//! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
 //!
 //! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
