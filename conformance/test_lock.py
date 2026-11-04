@@ -137,24 +137,33 @@ def test_inherited_identity_uses_remaining_ledger_anchors(tmp_path):
         ] == expected
 
 
-def test_evidence_edit_moves_no_identity(tmp_path):
+@pytest.mark.parametrize("edit", ["evidence", "caveat"])
+def test_evidence_edit_moves_no_identity(tmp_path, edit):
     # Regression: statement identity hashes `evidence`, so rewording it moves the
     # lock key, the asserted occurrence's `stmt:` source key and the ledger anchor
     # that pins its id (maintainer ruling, 2026-11-04). The committed lock and the
     # ledger's `# stmt:` anchor are the oracle; editing evidence must touch neither.
+    # Twin: a caveat is content, so adding one must still move the lock key; it
+    # fails if identity starts dropping more than evidence.
     case = CASES / "lock/evidence-identity"
     expected = json.loads((case / "expected.json").read_text())
     curation = tmp_path / "curation"
     shutil.copytree(case / "curation", curation)
     statements = curation / "registers/demo/r/curation.toml"
     lock = curation / "registers/demo/r/curation.lock"
-    statements.write_text(
-        statements.read_text().replace(
-            'evidence = "Delivery lists', 'evidence = "Reworded: delivery lists', 1
-        )
+    original = statements.read_text()
+    marker = 'evidence = "Delivery lists'
+    changed = original.replace(
+        marker,
+        'evidence = "Reworded: delivery lists'
+        if edit == "evidence"
+        else 'caveat = "Single value in 2010."\n' + marker,
+        1,
     )
+    assert changed != original
+    statements.write_text(changed)
     catalog = tmp_path / "catalog.db"
-    for command in ("lock", "build"):
+    for command in ("lock", "build") if edit == "evidence" else ("lock",):
         result = subprocess.run(
             [
                 REG_BUILD,
@@ -171,10 +180,11 @@ def test_evidence_edit_moves_no_identity(tmp_path):
             check=False,
         )
         assert result.returncode == 0, result.stderr
-    assert (
-        lock.read_bytes()
-        == (case / "curation/registers/demo/r/curation.lock").read_bytes()
-    )
+    committed = (case / "curation/registers/demo/r/curation.lock").read_bytes()
+    if edit == "caveat":
+        assert lock.read_bytes() != committed
+        return
+    assert lock.read_bytes() == committed
     with sqlite3.connect(catalog) as db:
         assert [
             list(row)
