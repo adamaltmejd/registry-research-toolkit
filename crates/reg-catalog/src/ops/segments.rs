@@ -432,8 +432,18 @@ fn held_rows(
             .copied()
             .filter(|r| r.start < end && start < r.end)
             .collect();
-        let named: Vec<&Row> = overlapping.iter().copied().filter(same_name).collect();
-        let candidates = if named.is_empty() { overlapping } else { named };
+        // The same column name wins per interval: a segment named otherwise stays
+        // where no same-named one overlaps it (a rename the file did not take).
+        let candidates: Vec<&Row> = overlapping
+            .iter()
+            .copied()
+            .filter(|r| {
+                same_name(r)
+                    || !overlapping
+                        .iter()
+                        .any(|o| same_name(o) && o.start < r.end && r.start < o.end)
+            })
+            .collect();
         let mut parts: Vec<Row> = candidates
             .iter()
             .map(|r| Row {
