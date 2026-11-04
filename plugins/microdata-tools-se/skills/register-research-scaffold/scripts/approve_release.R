@@ -17,13 +17,37 @@ sha256 <- function(bytes) {
   if (exists("sha256sum", envir = tools_ns, inherits = FALSE)) {
     return(unname(get("sha256sum", envir = tools_ns)(bytes = bytes)))
   }
+  if (!requireNamespace("digest", quietly = TRUE)) {
+    stop("SHA-256 needs R >= 4.5 (tools::sha256sum) or the digest package")
+  }
   digest::digest(bytes, algo = "sha256", serialize = FALSE)
 }
 
+# Python's non-strict Path.resolve(): resolve symlinks component by component
+# and collapse `..` even below a missing component. normalizePath(mustWork =
+# FALSE) returns a path with a missing component unchanged, `..` included.
 canonical <- function(path) {
-  path <- normalizePath(path, winslash = "/", mustWork = FALSE)
-  path <- sub("/+$", "", path)
-  if (.Platform$OS.type == "windows") tolower(path) else path
+  path <- gsub("\\", "/", path, fixed = TRUE)
+  if (!grepl("^(/|[A-Za-z]:/)", path)) {
+    path <- paste0(getwd(), "/", path)
+  }
+  parts <- strsplit(path, "/", fixed = TRUE)[[1]]
+  resolved <- paste0(parts[[1]], "/")
+  for (part in parts[-1]) {
+    if (part %in% c("", ".")) {
+      next
+    }
+    if (part == "..") {
+      resolved <- dirname(resolved)
+      next
+    }
+    resolved <- paste0(sub("/$", "", resolved), "/", part)
+    if (file.exists(resolved)) {
+      resolved <- normalizePath(resolved, winslash = "/", mustWork = TRUE)
+    }
+  }
+  resolved <- sub("(.)/+$", "\\1", resolved)
+  if (.Platform$OS.type == "windows") tolower(resolved) else resolved
 }
 
 approve <- function(source, destination, expected_sha256, commit) {
@@ -69,21 +93,21 @@ approve <- function(source, destination, expected_sha256, commit) {
   }
   # A reader must match receipt to ZIP. An interrupted two-file replacement
   # can leave a mismatch; that must fail closed rather than reuse approval.
-  old_umask <- Sys.umask("077")
-  on.exit(Sys.umask(old_umask))
+  # Temporary files go in a fresh private directory, refused if the name
+  # exists, so a link planted at a temporary name is never followed.
+  staging <- tempfile(".approve-", tmpdir = destination)
+  if (!dir.create(staging, showWarnings = FALSE, mode = "0700")) {
+    stop("staging directory not created")
+  }
+  on.exit(unlink(staging, recursive = TRUE))
   payloads <- list("current.zip" = data, "approval.json" = charToRaw(receipt))
   for (name in names(payloads)) {
-    temporary <- tempfile(tmpdir = destination)
-    tryCatch(
-      {
-        writeBin(payloads[[name]], temporary)
-        Sys.chmod(temporary, "640", use_umask = FALSE)
-        if (!file.rename(temporary, file.path(destination, name))) {
-          stop("replace failed")
-        }
-      },
-      finally = unlink(temporary)
-    )
+    temporary <- file.path(staging, name)
+    writeBin(payloads[[name]], temporary)
+    Sys.chmod(temporary, "640", use_umask = FALSE)
+    if (!file.rename(temporary, file.path(destination, name))) {
+      stop("replace failed")
+    }
   }
   invisible(receipt)
 }
