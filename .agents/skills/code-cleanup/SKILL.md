@@ -39,18 +39,21 @@ crate's `Cargo.toml` to a use in that crate's sources, tests, examples or `build
 These answer without judgment. Run them first, by one subagent on the tier below the
 family's mid tier (in Claude, Sonnet); the work is lookup.
 
-- **Dependencies.** Each package's `[project] dependencies` against what its `src/`
-  imports and what runs it outside Python imports: entry points, Dockerfiles and
-  entrypoint scripts and CI workflows. The workspace-root `[dependency-groups].dev`
-  against tests, tooling, build configuration and CI. A dependency in one and not the
-  other is a finding.
-- **Dead code.** `uvx --from vulture==2.16 vulture <dir>/src --min-confidence 80`.
+- **Dependencies.** Rust: `cargo machete` (it also runs in `gate.py crates`). The SPA:
+  `reg_webapp/frontend/package.json` against its imports, scripts, build configuration
+  and CI. The workspace-root `[dependency-groups].dev` against `scripts/`,
+  `conformance/` and CI; no Python package has runtime dependencies. A dependency
+  declared and not used, or used and not declared, is a finding.
+- **Dead code.** `cargo machete` and the compiler's warnings for Rust; `rg` each export
+  of `reg_webapp/frontend/src` for a use;
+  `uvx --from vulture==2.16 vulture scripts conformance crates/reg-core/tools --min-confidence 80`.
   Confirm each hit with `rg` across the workspace before calling it dead.
-- **Trace tables**, kept in the scratchpad: every argparse flag and subcommand, to its
-  README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance case;
-  every curation-TOML key the loader accepts, to a committed use. A gap is a finding:
-  code without a stated behavior is YAGNI, and a stated behavior without a test is
-  either a gap or a line to cut.
+- **Trace tables**, kept in the scratchpad: every CLI flag and subcommand (the Rust
+  `parse_args` of `reg-build`, `reg-meta` and `reg-export-gate`; argparse in
+  `scripts/*.py`), to its README or DESIGN.md line, to a test; every `openapi.json`
+  path, to a conformance case; every curation-TOML key the loader accepts, to a
+  committed use. A gap is a finding: code without a stated behavior is YAGNI, and a
+  stated behavior without a test is either a gap or a line to cut.
 - **Deferrals.** `rg -n -i 'TODO|FIXME|XXX|revisit|simplify:'`. A `simplify:` whose
   named upgrade trigger has fired, or that names none, is a finding. So is a root
   tracker past its completion gate.
@@ -60,14 +63,16 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 Do not read the modules yourself. Launch one subagent per module through the harness's
 subagent tool (in Claude Code, the Agent tool with the `general-purpose` type; Explore
 locates code and does not audit it), told to edit nothing. Launch as many at once as the
-harness allows (Codex runs three children at a time) and the rest in waves. Where the
-harness lets a call choose its model, set it on every call: the family's mid tier (in
-Claude, Opus) for code, the tier below for docs. Every tracked non-test source file
-(`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
-the split below misses joins its nearest module. Today's split: `reg_webapp/edge` with
-the Dockerfile and deploy scripts; `scripts/`; the `conformance/` harness;
-`plugins/microdata-tools-se/`; and `crates/` (Rust). The test trees are the `test-audit`
-skill's: run its sweep in the same waves and merge its list into step 3.
+harness allows and the rest in waves. Where the harness lets a call choose its model,
+set it on every call: the family's mid tier (in Claude, Opus) for code, the tier below
+for docs. Every tracked non-test source file (`git ls-files`, minus tests and committed
+data) belongs to exactly one module; a file the split below misses joins its nearest
+module. Today's split: `reg_webapp/edge` with the Dockerfile and deploy scripts;
+`reg_webapp/frontend` (the SPA) with `reg_webapp/dev`; `scripts/`; the `conformance/`
+harness; `plugins/microdata-tools-se/`; the R packages `reg_mona_runner` and
+`reg_export_gate`; `curation/` (TOML, read for stale keys and entries); and `crates/`
+(Rust). The test trees are the `test-audit` skill's: run its sweep in the same waves and
+merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -123,7 +128,9 @@ one of three piles.
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push, run the gate steps CI runs for the touched module
 (`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0` for `scripts/` and
-`conformance/`, and `crates` for `crates/`. For the edge worker, run
+`crates/` (it includes `crates`), `rust` for `conformance/` and the Rust server, and
+`frontend` plus `flows` for `reg_webapp/frontend` and `reg_webapp/dev`. The R packages
+are not gated: run their testthat suites by hand. For the edge worker, run
 `bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
 wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
 redesigns a module rather than deleting from it, or needs more than one sitting, becomes

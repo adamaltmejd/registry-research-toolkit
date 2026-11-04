@@ -34,10 +34,10 @@ before approval.
 
 `reg_webapp/frontend/DESIGN.md` is normative for how the app looks: its front matter is
 the token set, its prose says why the values exist and how to apply them. Judge the diff
-against that file, not against the code around it: it outranks the older styling notes
-in the sibling `reg_webapp/DESIGN.md`, and all source — new, reworked and untouched — is
-held to it. A breach of its "Colors", "Typography", "Components" or "Do's and Don'ts"
-rules is a finding; the checks below are where the yield is.
+against that file, not against the code around it (the sibling `reg_webapp/DESIGN.md`
+covers the server and catalog pages only), and all source — new, reworked and untouched
+— is held to it. A breach of its "Colors", "Typography", "Components" or "Do's and
+Don'ts" rules is a finding; the checks below are where the yield is.
 
 ## Source review
 
@@ -150,13 +150,14 @@ writes and prints, and driving a state no route reaches (an open dialog, a fille
 in a named agent-browser session, captured at the four widths too.
 
 `dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
-directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. `/tmp` is
-purged, so a path without a description of what it showed is not evidence; never commit.
+directory (`dev: repo … HEAD … shots $TMPDIR/reg-webapp-shots.XXXXXX`). Quote it. The
+temp directory is purged, so a path without a description of what it showed is not
+evidence; never commit.
 
 If no route is given, derive the smallest stable route from the changed files and nearby
-tests. Common routes: `/`, `/catalog`, `/catalog/<fqid>`,
-`/catalog/group/<provider>/<register>/<key>`, `/catalog/group/class/<key>`, `/project`,
-`/doc/<identifier>`.
+tests. Common routes: `/`, `/catalog`,
+`/catalog/<provider>/<register>[/<table or variable>]`,
+`/catalog/set/<provider>/<register>/<key>`, `/catalog/class/<slug>`, `/project`.
 
 ### Inspect
 
@@ -199,8 +200,9 @@ where the evidence in hand establishes a candidate defect with that impact.
 
 Fill every field of the rendered template and report the routes, states and viewports
 you actually inspected. Say whether captures are author iteration or retained gate
-evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
-scenarios (the `scenarios` table in `driver.mjs`) and, in CI, only phone and desktop
+evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`, then
+`dev.sh --paired-fixture flows <out-dir> steward-held`) covers only its driver scenarios
+(the `scenarios` table in `driver.mjs`) and, in CI, only phone and desktop
 (`REG_WEBAPP_FLOW_VIEWPORTS`; local runs default to all four); every case must pass, and
 a `check(...)` that was weakened is a finding. Approval needs evidence for every surface
 changed.

@@ -9,7 +9,7 @@ description: >-
 
 # Release pipeline
 
-**Never start a release unless the user explicitly asks for one.** Nothing goes to PyPI.
+**Never start a release unless the user explicitly asks for one.**
 
 Run in a task-owned worktree, from the verified source revision, with one writer
 advancing main at a time. A requested dependency upgrade goes through
@@ -143,9 +143,8 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 
 ### 8. Build and upload release assets
 
-There is no step 7: it published the old Python builder's tag-only release. The numbers
-stay because `scripts/release_base_reuse.py` and each evidence directory's `passed`
-marks name steps 8a–8i.
+There is no step 7. The numbers stay because `scripts/release_base_reuse.py` and each
+evidence directory's `passed` marks name steps 8a–8i.
 
 Every release builds a **pair**: `reg_meta.db.zst` (the reference catalog, documents
 inside) and `reg_meta_swecov.db.zst` (the SWECOV holdings: the catalog schema's
@@ -486,17 +485,20 @@ release is green: `gh variable set SWECOV_DEPLOY --body on`, then
 `gh workflow run container-build.yml` (never wait for the next push). Every later
 release redeploys SWECOV with global while the variable stays `on`.
 
-**Binaries.** The `binaries` job uploads `reg-meta-aarch64-apple-darwin`,
-`reg-meta-x86_64-unknown-linux-gnu` and a `.sha256` for each. Confirm all four:
+**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin` and
+`x86_64-unknown-linux-gnu`), `reg-meta-<target>` and
+`reg-export-gate-<gate version>-<target>`, each with a `.sha256`. Confirm all eight:
 
 ```sh
-gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' | grep '^reg-meta-'
+gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |
+  grep -E '^reg-(meta|export-gate)-'
 ```
 
 If one failed, fix the cause on main and upload by hand from the release commit:
-`cargo build --release --locked -p reg-meta`, copy to `reg-meta-<target>`,
-`shasum -a 256 reg-meta-<target> > reg-meta-<target>.sha256`, then
-`gh release upload reg_meta/vX.Y.Z reg-meta-<target> reg-meta-<target>.sha256`.
+`cargo build --release --locked -p reg-meta -p reg-export-gate`, copy to
+`reg-meta-<target>` and `reg-export-gate-<gate version>-<target>` (the version from
+`cargo pkgid -p reg-export-gate`), `shasum -a 256 <asset> > <asset>.sha256` for each,
+then `gh release upload reg_meta/vX.Y.Z <asset> <asset>.sha256`.
 `gh workflow run publish_reg_meta.yml --ref <branch>` tests the job without a release.
 
 ### 11. Verify the deployed artifact
@@ -511,17 +513,6 @@ to the version, `data.steward_config.presentation` present, and
 `generation_id` in `meta` of the local `reg_meta.db` and `reg_meta_swecov.db`. Record
 what the checks exercised, the steward pin, the `holdings:` summary line from
 `holdings.log` and the census-comparison counts (8g) in the release notes.
-
-## The switch release
-
-The switch release follows the merge of `rebuild-c` into main when the maintainer runs
-it; no immediate release is required. Main is expected to be red at `schema-guard` until
-it publishes, so deployment is blocked during the gap. A few hours of disruption at the
-switch are accepted. The maintainer must first merge the inputs repository's
-`rebuild-c-docs` branch into its main; confirm that the pin in `curation/inputs.toml`
-contains those docs. The minor-or-major bump is decided on the maintainer's sheet, not
-by this skill. Notes name the unminted count and proposed-id caveat, the missing v4
-predecessor and substitute evidence, and the SWECOV old-binary requirement.
 
 ## Error recovery
 
