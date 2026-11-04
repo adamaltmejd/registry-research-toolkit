@@ -1357,10 +1357,11 @@ the exact commit and declared paths/hashes; no implicit latest branch or neighbo
 inputs. The compiled holdings file carries presentation/config data needed at runtime;
 serving never checks out that repo or parses its TOML. `context` serves only what the
 site shows: the steward's presentation and logo, the server version and the period span.
-In steward mode the span is the hull of the placements' dated bounds, not of the
-reference registers (which cover years the steward does not hold); outside it, the
-registers' dated bounds. An open bound (a timeless placement, an open-ended register)
-does not widen it, so one undated period cannot take the study-years slider's bounds.
+In steward mode the span is the hull of the placements, not of the reference registers
+(which cover years the steward does not hold); outside it, the hull of the registers. A
+timeless period (both bounds open) is left out, so one timeless table cannot take the
+study-years slider's bounds; an ongoing register still leaves the end open. Dropping
+whole periods, not single open bounds, keeps the hull ordered.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,

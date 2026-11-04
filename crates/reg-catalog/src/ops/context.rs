@@ -22,9 +22,9 @@ pub const OPERATIONS: &[Operation] = &[Operation {
 /// What the site shell shows. Catalog identity is in every response's `meta`.
 #[derive(Serialize, ToSchema)]
 pub struct Context {
-    /// The span of the dated periods served: in steward mode the years held, else
-    /// the registers' periods. An open bound (a timeless or open-ended period) does
-    /// not widen it; `null` when nothing served is dated.
+    /// The hull of the periods served: in steward mode the years held, else the
+    /// registers' periods. A timeless period does not count; an ongoing one leaves
+    /// `end` null. `null` when every period served is timeless.
     #[schema(required = true)]
     period_span: Option<Period>,
     /// The server's version, which seeds a new project's `reg_meta_version`.
@@ -43,19 +43,20 @@ impl Context {
             Some(held) => (held, "holding_mapping"),
             None => (catalog.connect()?, "register"),
         };
+        // A timeless period (both bounds open) has no years; one open bound (an
+        // ongoing register) stays open. Dropping only whole periods keeps the hull
+        // ordered, which dropping open bounds one by one does not.
         let hull: (Option<i64>, Option<i64>) = conn.query_row(
-            &format!("SELECT MIN(NULLIF(start, ?1)), MAX(NULLIF(end, ?2)) FROM {from}"),
+            &format!(
+                "SELECT MIN(start), MAX(end) FROM {from} WHERE NOT (start = ?1 AND end = ?2)"
+            ),
             [open.0, open.1],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )?;
         Ok(Self {
             period_span: match hull {
-                (None, None) => None,
-                (start, end) => Some(Period::new(
-                    open,
-                    start.unwrap_or(open.0),
-                    end.unwrap_or(open.1),
-                )),
+                (Some(start), Some(end)) => Some(Period::new(open, start, end)),
+                _ => None,
             },
             reg_meta_version: version.to_owned(),
             steward_config: catalog.steward_config(),

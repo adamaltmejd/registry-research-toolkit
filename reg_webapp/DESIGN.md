@@ -191,8 +191,8 @@ metadata; no runtime steward repository is loaded.
 Every JSON response's `meta` carries contract version, catalog version and generation
 (and the steward's identity in steward mode). Context's `period_span` bounds the
 study-years slider: in steward mode the hull of the years held, otherwise of the
-registers' periods, each over dated bounds only (an open bound does not widen it); it is
-null when nothing served is dated.
+registers' periods, leaving out timeless periods (an ongoing register leaves the end
+open); it is null when every period served is timeless.
 
 ## OpenAPI snapshot (the drift gate)
 
