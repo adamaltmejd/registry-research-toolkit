@@ -730,7 +730,10 @@ fn short(hash: &str) -> &str {
 }
 
 /// Set-valued metadata, compared by its published entity key and member string.
-fn memberships(conn: &Connection, sql: &str) -> Result<BTreeMap<String, BTreeSet<String>>> {
+pub(super) fn memberships(
+    conn: &Connection,
+    sql: &str,
+) -> Result<BTreeMap<String, BTreeSet<String>>> {
     let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for (key, member) in query(conn, sql, |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))

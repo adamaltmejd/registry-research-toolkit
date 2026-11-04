@@ -9,7 +9,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Value, json};
 
-use super::{Item, Pair, Section, query};
+use super::{Item, Pair, Section, memberships, query};
 use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
@@ -18,24 +18,18 @@ type Column = (String, String);
 /// (code, subject key, start, end) -> occurrences.
 type Bag = BTreeMap<(String, String, String, String), i64>;
 
-/// Reader-visible text by kind, as SQL returning (natural key, body).
-const TEXT: [(&str, &str); 10] = [
-    (
-        "occurrence label",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.label_text",
-    ),
-    (
-        "occurrence definition",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.definition_text",
-    ),
-    (
-        "occurrence operational definition",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.opdef_text",
-    ),
-    (
-        "occurrence unit",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.unit_text",
-    ),
+/// Occurrence text kinds and their `occurrence` column, keyed by table, source key and
+/// bounds in `texts`.
+const OCCURRENCE_TEXT: [(&str, &str); 4] = [
+    ("label", "label_text"),
+    ("definition", "definition_text"),
+    ("operational definition", "opdef_text"),
+    ("unit", "unit_text"),
+];
+
+/// Reader-visible text by kind, as SQL returning (natural key, body), after the
+/// occurrence text.
+const TEXT: [(&str, &str); 6] = [
     (
         "variable label",
         "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text",
@@ -329,24 +323,23 @@ fn census(p: &Pair) -> Result<Vec<Section>> {
     ])
 }
 
-fn text_maps(conn: &rusqlite::Connection, sql: &str) -> Result<BTreeMap<String, BTreeSet<String>>> {
-    let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
-    for (k, v) in query(conn, sql, |r| Ok((r.get(0)?, r.get(1)?)))? {
-        out.entry(k).or_default().insert(v);
-    }
-    Ok(out)
-}
-
 /// Per kind: counts, and the keys (never the bodies) changed, added and removed.
 fn texts(p: &Pair) -> Result<Section> {
-    let statement = statement_sql();
-    let kinds = TEXT
+    let kinds = OCCURRENCE_TEXT
         .iter()
-        .copied()
-        .chain([("statement", statement.as_str())]);
+        .map(|(kind, column)| {
+            (
+                format!("occurrence {kind}"),
+                format!(
+                    "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.{column}"
+                ),
+            )
+        })
+        .chain(TEXT.iter().map(|&(kind, sql)| (kind.to_owned(), sql.to_owned())))
+        .chain([("statement".to_owned(), statement_sql())]);
     let mut items = Vec::new();
     for (kind, sql) in kinds {
-        let (old, new) = (text_maps(&p.old, sql)?, text_maps(&p.new, sql)?);
+        let (old, new) = (memberships(&p.old, &sql)?, memberships(&p.new, &sql)?);
         let changed: Vec<&String> = old
             .iter()
             .filter(|(k, v)| new.get(*k).is_some_and(|n| n != *v))
