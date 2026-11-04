@@ -924,13 +924,14 @@ overlapping curated overrides are refused at both locations.
   register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
   implicit table has the register's pid. A 2-part table value naming a register with
   named tables is `table_is_register`, listing the tables.
-- **Search keeps diacritics.** The new catalog's `search` index holds the text as
-  written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
-  `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
-  for it. The reader passes `q` to FTS unfolded, so the index tokenizer folds query and
-  text alike (C-9); pre-folding with `reg_core::normalized_search_query` (full case
-  folding, `ß` to `ss`) would miss an indexed `ß`. The `fold_search` paragraph under
-  "Search" below describes the old indexes.
+- **Search ignores diacritics.** The new catalog's `search` indexes fold diacritics
+  under `unicode61 remove_diacritics 2` (schema §3.2), so `lan` finds `län` and `lon`
+  finds `Lön` (non-Swedish keyboards). The maintainer ruling in #2163 reversed plan
+  decision C-9, which kept them. `reg_core::fold_search` is not used for it. The reader
+  passes `q` to FTS unfolded, so the index tokenizer folds query and text alike;
+  pre-folding with `reg_core::normalized_search_query` (full case folding, `ß` to `ss`)
+  would miss an indexed `ß`. The `fold_search` paragraph under "Search" below describes
+  the old indexes.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
@@ -2487,9 +2488,11 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
 description. Both use `search_item.id` as rowid. The builder indexes raw text under
-`unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
-of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
-A call returns one ranked list.
+`unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
+no fold of its own: `lan` finds `län` (#2163). A third index, `search_exact`, holds each
+row's widest text (its description row's, else its primary row's) under
+`remove_diacritics 0`, only to rank exact matches first. Pins, synonyms and type priors
+are curation (D). A call returns one ranked list.
 
 1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
    term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
@@ -2499,11 +2502,13 @@ A call returns one ranked list.
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
-   match set. Within each index, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
-   ascending. The primary corpus and its scores are unaffected by descriptions. FTS5
-   scores a row by its weighted hit count against its whole token count, so a hit weighs
-   most in an id or spelling and least in a definition or document text: a variable
-   labelled `Vikt` ranks above a longer one whose definition says vikt.
+   match set. Within each, rows that also match `search_exact` (the query as typed,
+   diacritics kept, case folded) come first, so `här` lists `här` before `har` and `har`
+   lists `har` before `här` (#2163). Then `bm25(index, 10.0, 5.0, 1.0)` (name, label,
+   body), ascending. The primary corpus and its scores are unaffected by descriptions.
+   FTS5 scores a row by its weighted hit count against its whole token count, so a hit
+   weighs most in an id or spelling and least in a definition or document text: a
+   variable labelled `Vikt` ranks above a longer one whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
    `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
    unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
