@@ -58,12 +58,6 @@ CREATE TABLE statement (
   caveat_text   INTEGER REFERENCES text(id)
 ) STRICT;
 
-CREATE TABLE unit_type (
-  id         INTEGER PRIMARY KEY,
-  slug       TEXT NOT NULL UNIQUE,        -- 'person', 'foretag', 'vardkontakt'
-  label_text INTEGER NOT NULL REFERENCES text(id)
-) STRICT;
-
 CREATE TABLE provider (
   id        INTEGER PRIMARY KEY,
   pid       TEXT NOT NULL UNIQUE,         -- 'demo'
@@ -93,7 +87,6 @@ CREATE TABLE tbl (
   role             TEXT NOT NULL CHECK (role IN ('data','codelist')),
   implicit         INTEGER NOT NULL CHECK (implicit IN (0,1)),
   timeless         INTEGER NOT NULL CHECK (timeless IN (0,1)),
-  unit_type_id     INTEGER REFERENCES unit_type(id),
   cadence          TEXT CHECK (cadence IN ('year','half','quarter','month','day','irregular')),
   start            INTEGER NOT NULL,      -- coverage hull
   end              INTEGER NOT NULL,

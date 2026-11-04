@@ -14,7 +14,6 @@
           "role": "data",
           "implicit": false,
           "timeless": false,
-          "unit_type": null,
           "cadence": "year",
           "period": {"start": "2020-01-01", "end": "2021-01-01"}
         },
@@ -24,7 +23,6 @@
           "role": "data",
           "implicit": false,
           "timeless": false,
-          "unit_type": null,
           "cadence": "year",
           "period": {"start": "2019-01-01", "end": "2021-01-01"}
         }
@@ -85,7 +83,6 @@
           "role": "data",
           "implicit": true,
           "timeless": false,
-          "unit_type": null,
           "cadence": null,
           "period": {"start": "2018-01-01", "end": "2021-01-01"}
         }

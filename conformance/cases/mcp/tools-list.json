@@ -1205,12 +1205,6 @@
                 },
                 "timeless": {
                   "type": "boolean"
-                },
-                "unit_type": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
                 }
               },
               "required": [
@@ -1221,7 +1215,6 @@
                 "role",
                 "implicit",
                 "timeless",
-                "unit_type",
                 "cadence",
                 "spans",
                 "row_keys",
@@ -1526,12 +1519,6 @@
             },
             "timeless": {
               "type": "boolean"
-            },
-            "unit_type": {
-              "type": [
-                "string",
-                "null"
-              ]
             }
           },
           "required": [
@@ -1540,7 +1527,6 @@
             "role",
             "implicit",
             "timeless",
-            "unit_type",
             "cadence",
             "period"
           ],

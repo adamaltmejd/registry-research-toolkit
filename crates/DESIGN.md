@@ -405,8 +405,8 @@ Accepting one requires reviewed curation and a premise lock.
   not support, or content shared by several unbound versions leave the link unset;
   containment never makes one. Variable `tags` applies as normalized membership,
   independently of identity, binding, ordering and peers. Table and occurrence `role`
-  values use one validated vocabulary for each entity kind. `unit_type` populates the
-  table's unit-type reference; variables do not inherit it. Table setters require a
+  values use one validated vocabulary for each entity kind. `unit_type` is accepted but
+  no longer published (the catalog dropped its unit-type table). Table setters require a
   source-stated or asserted table, not a synthesized implicit table. Table and release
   `name` changes preserve their public ids; variable names use `label`. Variable
   `synonyms` enrich search labels without adding delivery aliases. `set sentinels` at an

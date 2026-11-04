@@ -1174,7 +1174,6 @@ export interface components {
             row_keys: components["schemas"]["ShowRowKey"][];
             spans: components["schemas"]["Period"][];
             timeless: boolean;
-            unit_type: string | null;
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
             /**
@@ -1263,7 +1262,6 @@ export interface components {
             period: components["schemas"]["Period"];
             role: string;
             timeless: boolean;
-            unit_type: string | null;
         };
         ShowVariableRef: {
             fqid: string;

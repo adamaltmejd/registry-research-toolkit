@@ -390,7 +390,6 @@ struct TableInfo {
     name: String,
     description: Option<String>,
     role: String,
-    unit_type: Option<String>,
     timeless: i64,
     cadence: Option<String>,
     spans: Vec<(i64, i64)>,
@@ -399,17 +398,16 @@ struct TableInfo {
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
-               "role": self.role, "unit_type": self.unit_type, "timeless": self.timeless, "cadence": self.cadence,
+               "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
                "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>()})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} unit_type={} timeless={} cadence={} spans={}",
+            "name={:?} description={:?} role={} timeless={} cadence={} spans={}",
             self.name,
             self.description,
             self.role,
-            self.unit_type.as_deref().unwrap_or("-"),
             self.timeless,
             self.cadence.as_deref().unwrap_or("-"),
             self.spans
@@ -423,11 +421,10 @@ impl TableInfo {
 fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
     let mut infos: BTreeMap<String, TableInfo> = query(
         conn,
-        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence, u.slug
+        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence
                      FROM tbl t
                      JOIN text n ON n.id = t.name_text
-                     LEFT JOIN text d ON d.id = t.description_text
-                     LEFT JOIN unit_type u ON u.id = t.unit_type_id",
+                     LEFT JOIN text d ON d.id = t.description_text",
         |r| {
             Ok((
                 r.get::<_, String>(0)?,
@@ -435,7 +432,6 @@ fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
                     name: r.get(1)?,
                     description: r.get(2)?,
                     role: r.get(3)?,
-                    unit_type: r.get(6)?,
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
                     spans: Vec::new(),

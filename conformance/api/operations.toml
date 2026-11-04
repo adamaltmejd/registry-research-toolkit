@@ -367,9 +367,9 @@ steward_config = "paired mode only: StewardConfig {presentation: {id, name, long
 
 [shape.Show]
 note = """A `kind`-tagged summary: root (providers), provider (registers), register \
-(name, description, period, tables [{fqid, name, role, implicit, timeless, unit_type, \
+(name, description, period, tables [{fqid, name, role, implicit, timeless, \
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
-(name, description, register, role, implicit, timeless, unit_type, cadence, spans \
+(name, description, register, role, implicit, timeless, cadence, spans \
 [Period], releases? [Release], row_keys [{fqid, spelling, period}]), variable (name, \
 optional description, register, period, sets/tags [{fqid, name}] when non-empty, \
 optional evidence {texts, source_only, spellings, statements, documents}), \

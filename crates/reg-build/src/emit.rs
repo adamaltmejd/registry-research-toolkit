@@ -414,23 +414,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
-    let unit_type_id = sorted_ids(
-        catalog
-            .registers
-            .iter()
-            .flat_map(|r| r.tables.iter().filter_map(|t| t.table.unit_type.as_deref())),
-    );
-    for (slug, id) in &unit_type_id {
-        rows.push(
-            "unit_type",
-            vec![
-                Cell::Int(*id),
-                Cell::Str((*slug).into()),
-                Cell::Text((*slug).into()),
-            ],
-        );
-    }
-
     for p in &catalog.providers {
         let pid = provider_id[p.pid.as_str()];
         rows.push(
@@ -514,7 +497,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     ),
                     Cell::Int(i64::from(table.slug.is_none())),
                     Cell::Int(i64::from(table.timeless)),
-                    opt_int(table.table.unit_type.as_deref().map(|u| unit_type_id[u])),
                     if table.timeless {
                         Cell::Null
                     } else {
