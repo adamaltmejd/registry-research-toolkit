@@ -60,7 +60,9 @@ fn generate(source: &Path) -> Result<(usize, PathBuf), String> {
     let raw = fs::read(source).map_err(|e| format!("cannot read {}: {e}", source.display()))?;
     let sha256 = reg_core::sha256_hex(&raw);
     if sha256 != SOURCE_SHA256 {
-        return Err(format!("CaseFolding.txt SHA-256 {sha256} != pinned {SOURCE_SHA256}"));
+        return Err(format!(
+            "CaseFolding.txt SHA-256 {sha256} != pinned {SOURCE_SHA256}"
+        ));
     }
     let text = String::from_utf8(raw).map_err(|e| format!("CaseFolding.txt is not UTF-8: {e}"))?;
     let table = parse(&text)?;
@@ -96,8 +98,14 @@ fn parse(text: &str) -> Result<Table, String> {
             continue;
         }
         let cp = hex_scalar(code)?;
-        let folded = mapping.split_whitespace().map(hex_scalar).collect::<Result<_, _>>()?;
-        if table.insert(cp, (folded, comment.trim().to_owned())).is_some() {
+        let folded = mapping
+            .split_whitespace()
+            .map(hex_scalar)
+            .collect::<Result<_, _>>()?;
+        if table
+            .insert(cp, (folded, comment.trim().to_owned()))
+            .is_some()
+        {
             return Err(format!("duplicate C/F mapping for U+{cp:04X}"));
         }
     }

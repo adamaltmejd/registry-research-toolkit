@@ -84,10 +84,17 @@ fn page(url: &str, query: &str, group: &str, limit: u32) -> Result<Value, (u8, S
         .map_err(|e| (EXIT_USAGE, format!("cannot run curl: {e}")))?;
     if !out.status.success() {
         let stderr = String::from_utf8_lossy(&out.stderr);
-        return Err((EXIT_USAGE, format!("no search answer from {url}: {}", stderr.trim())));
+        return Err((
+            EXIT_USAGE,
+            format!("no search answer from {url}: {}", stderr.trim()),
+        ));
     }
-    let mut body: Value = serde_json::from_slice(&out.stdout)
-        .map_err(|e| (EXIT_FAIL, format!("search answer from {url} is not JSON: {e}")))?;
+    let mut body: Value = serde_json::from_slice(&out.stdout).map_err(|e| {
+        (
+            EXIT_FAIL,
+            format!("search answer from {url} is not JSON: {e}"),
+        )
+    })?;
     Ok(body["data"].take())
 }
 
@@ -104,12 +111,19 @@ fn run(url: &str, limit: u32) -> Result<(), (u8, String)> {
         if !GROUPS.contains(&c.group.as_str()) {
             return Err((
                 EXIT_FAIL,
-                format!("unsupported eval group {:?}; supported: {}", c.group, GROUPS.join(" | ")),
+                format!(
+                    "unsupported eval group {:?}; supported: {}",
+                    c.group,
+                    GROUPS.join(" | ")
+                ),
             ));
         }
         let page = page(url, &c.query, &c.group, limit)?;
         let items = page["items"].as_array().map_or(&[][..], Vec::as_slice);
-        let rank = items.iter().position(|item| item["fqid"] == c.intended.as_str()).map(|i| i + 1);
+        let rank = items
+            .iter()
+            .position(|item| item["fqid"] == c.intended.as_str())
+            .map(|i| i + 1);
         let status = match (c.expect.as_str(), rank.is_some()) {
             ("hit", found) => {
                 hit_total += 1;
@@ -134,15 +148,25 @@ fn run(url: &str, limit: u32) -> Result<(), (u8, String)> {
         ]);
     }
 
-    let header = ["query", "group", "intended", "expect", "rank", "returned", "has_more", "status"]
-        .map(str::to_owned);
+    let header = [
+        "query", "group", "intended", "expect", "rank", "returned", "has_more", "status",
+    ]
+    .map(str::to_owned);
     // Widths in characters, not bytes: the Swedish queries carry å, ä and ö.
     let width = |i: usize| {
-        std::iter::once(&header).chain(&rows).map(|r| r[i].chars().count()).max().unwrap_or(0)
+        std::iter::once(&header)
+            .chain(&rows)
+            .map(|r| r[i].chars().count())
+            .max()
+            .unwrap_or(0)
     };
     let widths: Vec<usize> = (0..header.len()).map(width).collect();
     let line = |row: &[String; 8]| {
-        let cells: Vec<String> = row.iter().zip(&widths).map(|(v, &w)| format!("{v:<w$}")).collect();
+        let cells: Vec<String> = row
+            .iter()
+            .zip(&widths)
+            .map(|(v, &w)| format!("{v:<w$}"))
+            .collect();
         cells.join("  ")
     };
     println!("{}", line(&header));
