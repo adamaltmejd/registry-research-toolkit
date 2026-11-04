@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::{Connection, OpenFlags, Params, Row};
 use serde_json::Value;
 
 pub use error::{Code, Error, Spec};
@@ -175,6 +175,16 @@ pub(crate) fn read_uri(path: &Path) -> String {
     }
     uri.push_str("?mode=ro&immutable=1");
     uri
+}
+
+/// The rows of `sql` for `params`, each mapped by `map`, in the query's order.
+pub(crate) fn rows<T>(
+    conn: &Connection,
+    sql: &str,
+    params: impl Params,
+    map: impl FnMut(&Row<'_>) -> rusqlite::Result<T>,
+) -> rusqlite::Result<Vec<T>> {
+    conn.prepare(sql)?.query_map(params, map)?.collect()
 }
 
 pub(crate) fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {

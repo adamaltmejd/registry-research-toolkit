@@ -5,7 +5,7 @@
 use reg_core::Fqid;
 use rusqlite::{Connection, OptionalExtension, Row};
 
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// A resolved ref: `ident`'s row.
 pub struct Entity {
@@ -50,13 +50,13 @@ pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
         return Ok(hit);
     }
     if !value.contains('/') {
-        let mut found: Vec<Entity> = conn
-            .prepare(
-                "SELECT kind, entity_id, pid FROM ident
+        let mut found: Vec<Entity> = rows(
+            conn,
+            "SELECT kind, entity_id, pid FROM ident
                       WHERE name_fold = ? AND kind <> 'set' ORDER BY pid",
-            )?
-            .query_map([reg_core::fold_identity(value)], entity)?
-            .collect::<rusqlite::Result<_>>()?;
+            [reg_core::fold_identity(value)],
+            entity,
+        )?;
         match found.len() {
             0 => {}
             1 => return Ok(found.remove(0)),
@@ -148,10 +148,12 @@ pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
             if let Some(id) = by_pid(&hit.pid)? {
                 return Ok(id);
             }
-            let tables: Vec<String> = conn
-                .prepare("SELECT pid FROM tbl WHERE register_id = ? ORDER BY pid")?
-                .query_map([hit.id], |row| row.get(0))?
-                .collect::<rusqlite::Result<_>>()?;
+            let tables: Vec<String> = rows(
+                conn,
+                "SELECT pid FROM tbl WHERE register_id = ? ORDER BY pid",
+                [hit.id],
+                |row| row.get(0),
+            )?;
             Err(Error::new(
                 Code::TableIsRegister,
                 format!("{value:?} is a register; name one of its tables."),

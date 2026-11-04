@@ -10,7 +10,7 @@ use super::docs::{self, RelatedDocument};
 use super::refs::Entity;
 use super::segments::{Locator, StatementLocation};
 use super::{Period, Server};
-use crate::Error;
+use crate::{Error, rows};
 
 /// Provider text and curation provenance, returned only when evidence is requested.
 #[derive(Serialize, ToSchema)]
@@ -174,12 +174,12 @@ pub(super) fn load(
     conn: &Connection,
     entity: &Entity,
 ) -> Result<VariableEvidence, Error> {
-    let mut rows = conn
-        .prepare(&format!(
-            "{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"
-        ))?
-        .query_map([entity.id], |row| source_row(server, row))?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let mut rows = rows(
+        conn,
+        &format!("{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"),
+        [entity.id],
+        |row| source_row(server, row),
+    )?;
     let mut locators = conn.prepare(
         "SELECT i.name, l.locator
          FROM occurrence_locator l JOIN input i ON i.id = l.input_id
@@ -245,18 +245,18 @@ pub(super) fn load(
             text
         })
         .collect();
-    let spellings = conn
-        .prepare(
-            "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
+    let spellings = crate::rows(
+        conn,
+        "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
              WHERE a.variable_id = ? ORDER BY f.folded",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok(EvidenceSpelling {
                 spelling: row.get(0)?,
                 kind: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok(VariableEvidence {
         texts,
         source_only,
@@ -267,9 +267,9 @@ pub(super) fn load(
 }
 
 fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>, Error> {
-    Ok(conn
-        .prepare(
-            "WITH decisions AS (
+    Ok(rows(
+        conn,
+        "WITH decisions AS (
                SELECT field, value, statement_id FROM override
                WHERE subject_kind = 'variable' AND subject_id = ?1
                UNION
@@ -281,8 +281,8 @@ fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>
                LEFT JOIN text e ON e.id = s.evidence_text
                LEFT JOIN text c ON c.id = s.caveat_text
              ORDER BY s.file, s.line, x.field, x.value",
-        )?
-        .query_map([variable], |row| {
+        [variable],
+        |row| {
             Ok(CurationStatement {
                 field: row.get(0)?,
                 value: row.get(1)?,
@@ -293,8 +293,8 @@ fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>
                 evidence: row.get(4)?,
                 caveat: row.get(5)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
+        },
+    )?)
 }
 
 /// The two provider text fields from the same latest used occurrence; never a pair

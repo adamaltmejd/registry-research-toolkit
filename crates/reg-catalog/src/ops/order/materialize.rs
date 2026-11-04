@@ -24,7 +24,7 @@ use serde_json::Value;
 
 use super::{Issue, LogicalOrder, OrderEntry, check, project};
 use crate::ops::{Params, Server, iso_day};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// Half-open day numbers `[start, end)`.
 type Days = (i64, i64);
@@ -357,15 +357,15 @@ fn placements(
     variable: &str,
     days: Days,
 ) -> Result<Vec<Placement>, Error> {
-    let found: Vec<Placement> = held
-        .prepare(
-            "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
+    let found: Vec<Placement> = rows(
+        held,
+        "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
              WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
              ORDER BY h.id, c.ordinal, m.start",
-        )?
-        .query_map(rusqlite::params![table, variable, days.0, days.1], |r| {
+        rusqlite::params![table, variable, days.0, days.1],
+        |r| {
             Ok(Placement {
                 holding: r.get(0)?,
                 projection_of: r.get(1)?,
@@ -373,8 +373,8 @@ fn placements(
                 days: (r.get(3)?, r.get(4)?),
                 caveat: r.get(5)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     let mut covered: BTreeMap<i64, Vec<Days>> = BTreeMap::new();
     for p in &found {
         covered.entry(p.holding).or_default().push(p.days);
@@ -417,10 +417,12 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
             })
         },
     )?;
-    holding.held = held
-        .prepare("SELECT start, end FROM holding_period WHERE holding_id = ? ORDER BY start")?
-        .query_map([id], |r| Ok((r.get(0)?, r.get(1)?)))?
-        .collect::<rusqlite::Result<_>>()?;
+    holding.held = rows(
+        held,
+        "SELECT start, end FROM holding_period WHERE holding_id = ? ORDER BY start",
+        [id],
+        |r| Ok((r.get(0)?, r.get(1)?)),
+    )?;
     holding.held = merge_days(std::mem::take(&mut holding.held));
     Ok(holding)
 }
@@ -538,27 +540,25 @@ fn gaps(
     if missing.is_empty() {
         return Ok(());
     }
-    let contested: Vec<Days> = merge_days(
-        held.prepare(
-            "SELECT n.start, n.end FROM holding_notice n
+    let contested: Vec<Days> = merge_days(rows(
+        held,
+        "SELECT n.start, n.end FROM holding_notice n
              JOIN holding_notice_candidate c ON c.notice_id = n.id
              WHERE n.code = 'ambiguous_delivered_owners'
                AND c.table_pid = ? AND c.variable_pid = ?",
-        )?
-        .query_map([&entry.table, &entry.variable], |r| {
-            Ok((r.get(0)?, r.get(1)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?,
-    );
+        [&entry.table, &entry.variable],
+        |r| Ok((r.get(0)?, r.get(1)?)),
+    )?);
     let windowed: Vec<Days> = merge_days(
-        held.prepare(
+        rows(
+            held,
             "SELECT DISTINCT p.start, p.end FROM holding_period p
              WHERE EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                WHERE c.holding_id = p.holding_id AND m.table_pid = ? AND m.variable_pid = ?
                  AND m.window IS NOT NULL)",
-        )?
-        .query_map([&entry.table, &entry.variable], |r| Ok((r.get(0)?, r.get(1)?)))?
-        .collect::<rusqlite::Result<_>>()?,
+            [&entry.table, &entry.variable],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )?,
     );
     let mut issue = |level, code: &str, piece: Days, message: String| {
         findings.push(Issue {

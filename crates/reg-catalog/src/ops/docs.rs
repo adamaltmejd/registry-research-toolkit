@@ -12,7 +12,7 @@ use super::{
     Cache, Components, Download, Operation, Param, Params, Raw, Server, Type, component, cursor,
     fts, hash, limit,
 };
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -317,13 +317,15 @@ fn hits(
     )?;
     args.push(i64::try_from(rows).expect("a limit fits").into());
     args.push(i64::try_from(offset).expect("an offset fits").into());
-    let items = conn
-        .prepare(&format!(
+    let items = crate::rows(
+        conn,
+        &format!(
             "SELECT {columns} {from} {filter} {order} LIMIT ?{} OFFSET ?{}",
             args.len() - 1,
             args.len()
-        ))?
-        .query_map(params_from_iter(args.iter()), |row| {
+        ),
+        params_from_iter(args.iter()),
+        |row| {
             Ok(DocHit {
                 doc: row.get(0)?,
                 title: row.get(1)?,
@@ -333,8 +335,8 @@ fn hits(
                 snippet: row.get(5)?,
                 document_title: row.get(6)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     Ok((items, total))
 }
 
@@ -372,9 +374,9 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
         .optional()?
         .ok_or_else(|| not_found(doc))?;
     // A value-set subject is addressed by its hash.
-    let subjects = conn
-        .prepare(
-            "SELECT kind, fqid, page FROM (
+    let subjects = rows(
+        &conn,
+        "SELECT kind, fqid, page FROM (
                SELECT l.subject_kind AS kind, l.page AS page,
                       CASE l.subject_kind
                         WHEN 'register' THEN (SELECT pid FROM register WHERE id = l.subject_id)
@@ -385,21 +387,24 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
                       END AS fqid
                FROM doc_link l WHERE l.doc_id = ?)
              ORDER BY kind, fqid, page",
-        )?
-        .query_map([id], |row| {
+        [id],
+        |row| {
             Ok(DocSubject {
                 kind: row.get(0)?,
                 fqid: row.get(1)?,
                 page: row.get(2)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     let body = (kind == "parsed")
         .then(|| {
-            conn.prepare("SELECT body FROM doc_section WHERE doc_id = ? ORDER BY ord")?
-                .query_map([id], |row| row.get::<_, String>(0))?
-                .collect::<rusqlite::Result<Vec<_>>>()
-                .map(|sections| sections.join("\n\n"))
+            rows(
+                &conn,
+                "SELECT body FROM doc_section WHERE doc_id = ? ORDER BY ord",
+                [id],
+                |row| row.get::<_, String>(0),
+            )
+            .map(|sections| sections.join("\n\n"))
         })
         .transpose()?;
     let excerpt = body.as_deref().map_or_else(String::new, |body| {
@@ -442,8 +447,9 @@ pub(super) fn related_documents(
 ) -> Result<Vec<RelatedDocument>, Error> {
     // DISTINCT: a register's own link and its table's link to one page of one
     // document are one row to the reader.
-    Ok(conn
-        .prepare(&format!(
+    Ok(rows(
+        conn,
+        &format!(
             "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page, dt.body
              FROM doc_link l
                JOIN doc d ON d.id = l.doc_id
@@ -452,8 +458,9 @@ pub(super) fn related_documents(
              WHERE {}
              ORDER BY t.body, d.hash, l.page",
             links_of(&entity.kind)
-        ))?
-        .query_map([entity.id], |row| {
+        ),
+        [entity.id],
+        |row| {
             Ok(RelatedDocument {
                 doc: row.get(0)?,
                 title: row.get(1)?,
@@ -464,8 +471,8 @@ pub(super) fn related_documents(
                 page: row.get(6)?,
                 document_title: row.get(7)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?)
+        },
+    )?)
 }
 
 /// `docs_get`'s file: the stored bytes of a `pdf` document, shown inline.

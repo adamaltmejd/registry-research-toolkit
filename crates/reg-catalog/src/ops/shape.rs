@@ -7,7 +7,7 @@ use serde::Serialize;
 use utoipa::ToSchema;
 
 use super::{Period, Server, iso_day};
-use crate::Error;
+use crate::{Error, rows};
 
 /// `shape.ValueSetRef`: a value set by its hash, with the names sources gave it.
 #[derive(Serialize, ToSchema)]
@@ -43,14 +43,14 @@ pub fn value_set_ref(conn: &Connection, valueset_id: i64) -> Result<ValueSetRef,
             })
         },
     )?;
-    value_set.names = conn
-        .prepare(
-            "SELECT DISTINCT t.body
+    value_set.names = rows(
+        conn,
+        "SELECT DISTINCT t.body
              FROM valueset_name n JOIN text t ON t.id = n.name_text
              WHERE n.valueset_id = ? ORDER BY t.body",
-        )?
-        .query_map([valueset_id], |row| row.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
+        [valueset_id],
+        |row| row.get(0),
+    )?;
     Ok(value_set)
 }
 
@@ -136,13 +136,15 @@ fn with_populations(conn: &Connection, rows: Vec<(i64, Release)>) -> Result<Vec<
 ///
 /// `internal_error` when a query fails.
 pub fn releases(server: &Server, conn: &Connection, table_id: i64) -> Result<Vec<Release>, Error> {
-    let rows = conn
-        .prepare(&format!(
+    let rows = rows(
+        conn,
+        &format!(
             "{RELEASE_COLUMNS} WHERE r.table_id = ?
              ORDER BY r.start IS NULL, r.start, r.end, r.qualifier, r.edition, r.source_key"
-        ))?
-        .query_map([table_id], |row| release_row(server, row))?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        [table_id],
+        |row| release_row(server, row),
+    )?;
     with_populations(conn, rows)
 }
 

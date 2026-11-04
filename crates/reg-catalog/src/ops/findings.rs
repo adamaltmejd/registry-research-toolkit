@@ -7,7 +7,7 @@ use utoipa::ToSchema;
 use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
 use super::{Cache, Components, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "findings",
@@ -114,39 +114,38 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     let window = super::days(params, "period")?;
     let code = params.get("code").copied();
 
-    let items = conn
-        .prepare(&sql(scope))?
-        .query_map(
-            named_params! {
-                ":id": entity.id,
-                ":table": table,
-                ":lo": window.map(|w| w.0),
-                ":hi": window.map(|w| w.1),
-                ":code": code,
-            },
-            |row| {
-                let placed = |start: Option<i64>, end: Option<i64>| {
-                    start.zip(end).map(|(s, e)| server.period(s, e))
-                };
-                Ok(Finding {
-                    code: row.get(0)?,
-                    severity: row.get(1)?,
-                    subject: Subject {
-                        kind: row.get(2)?,
-                        fqid: row.get(3)?,
-                        table: row.get(4)?,
-                        period: placed(row.get(5)?, row.get(6)?),
-                        release: row.get(7)?,
-                        spelling: row.get(8)?,
-                        value_set: row.get(9)?,
-                    },
-                    period: placed(row.get(10)?, row.get(11)?),
-                    message: row.get(12)?,
-                    caveat: row.get(13)?,
-                })
-            },
-        )?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let items = rows(
+        &conn,
+        &sql(scope),
+        named_params! {
+            ":id": entity.id,
+            ":table": table,
+            ":lo": window.map(|w| w.0),
+            ":hi": window.map(|w| w.1),
+            ":code": code,
+        },
+        |row| {
+            let placed = |start: Option<i64>, end: Option<i64>| {
+                start.zip(end).map(|(s, e)| server.period(s, e))
+            };
+            Ok(Finding {
+                code: row.get(0)?,
+                severity: row.get(1)?,
+                subject: Subject {
+                    kind: row.get(2)?,
+                    fqid: row.get(3)?,
+                    table: row.get(4)?,
+                    period: placed(row.get(5)?, row.get(6)?),
+                    release: row.get(7)?,
+                    spelling: row.get(8)?,
+                    value_set: row.get(9)?,
+                },
+                period: placed(row.get(10)?, row.get(11)?),
+                message: row.get(12)?,
+                caveat: row.get(13)?,
+            })
+        },
+    )?;
     Ok(serde_json::to_value(items).expect("findings serialize"))
 }
 

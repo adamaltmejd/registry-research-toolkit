@@ -33,7 +33,7 @@ use utoipa::ToSchema;
 use serde_json::Value;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, iso_day, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -601,13 +601,13 @@ fn refused(
 ) -> Result<(&'static str, String), Error> {
     match err.kind() {
         Code::TableIsRegister => {
-            let tables: Vec<String> = conn
-                .prepare(
-                    "SELECT t.pid FROM tbl t JOIN register r ON r.id = t.register_id
+            let tables: Vec<String> = rows(
+                conn,
+                "SELECT t.pid FROM tbl t JOIN register r ON r.id = t.register_id
                      WHERE r.pid = ? ORDER BY t.pid",
-                )?
-                .query_map([value], |row| row.get(0))?
-                .collect::<rusqlite::Result<_>>()?;
+                [value],
+                |row| row.get(0),
+            )?;
             Ok((
                 "table_is_register",
                 format!(

@@ -9,7 +9,7 @@ use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
 use crate::ops::Server;
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
@@ -32,14 +32,14 @@ fn key_segments(
     serving: &Serving,
 ) -> Result<Vec<KeySegment>, Error> {
     if server.catalog.steward().is_none() {
-        return Ok(conn
-            .prepare(
-                "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
+        return Ok(rows(
+            conn,
+            "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
              LEFT JOIN id_kind k ON k.id=s.id_kind_id
              WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
-            )?
-            .query_map([serving.table.id], |r| {
+            [serving.table.id],
+            |r| {
                 Ok(KeySegment {
                     variable: r.get(0)?,
                     spelling: r.get(1)?,
@@ -49,8 +49,8 @@ fn key_segments(
                     kind: r.get(5)?,
                     entity: true,
                 })
-            })?
-            .collect::<rusqlite::Result<_>>()?);
+            },
+        )?);
     }
     let mut mappings = conn.prepare(
         "WITH semantics AS (

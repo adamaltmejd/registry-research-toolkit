@@ -11,7 +11,7 @@ use super::{
     span,
 };
 use crate::ops::{Server, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// What a binding is checked against: its source and the source's serving tables.
 pub(super) struct Scope<'a> {
@@ -448,20 +448,18 @@ pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
 /// segments, clipped to them.
 fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
-    let rows: Vec<Piece> = scope
-        .conn
-        .prepare(&format!(
+    let rows: Vec<Piece> = rows(
+        scope.conn,
+        &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
              identifier, state, end = ?3
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
-        ))?
-        .query_map(
-            rusqlite::params![variable, s.table.id, scope.server.open.1],
-            |row| piece(k, row),
-        )?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        rusqlite::params![variable, s.table.id, scope.server.open.1],
+        |row| piece(k, row),
+    )?;
     let mut pieces = Vec::new();
     for row in rows {
         for days in overlap(std::slice::from_ref(&row.days), &s.requested) {
@@ -643,9 +641,9 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     } else {
         ("", at.variable.id)
     };
-    let rows: Vec<(String, Option<i64>, Option<String>)> = scope
-        .conn
-        .prepare(&format!(
+    let rows: Vec<(String, Option<i64>, Option<String>)> = rows(
+        scope.conn,
+        &format!(
             "SELECT v.pid, r.at_start, c.body
              FROM {origin}relation r JOIN {origin}variable v ON v.id = r.subject_id
                LEFT JOIN {origin}text c ON c.id = r.caveat_text
@@ -653,11 +651,10 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
                AND r.object_kind = 'variable' AND r.object_id = ?1
                AND (r.at_start IS NULL OR r.at_start <= ?2)
              ORDER BY r.at_start, v.pid"
-        ))?
-        .query_map(rusqlite::params![id, day(&requested.1)], |row| {
-            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        rusqlite::params![id, day(&requested.1)],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
     Ok(rows
         .into_iter()
         .map(|(successor, at_start, caveat)| {

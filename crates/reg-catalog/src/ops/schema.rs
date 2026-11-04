@@ -11,7 +11,7 @@ use utoipa::ToSchema;
 
 use super::shape::{ValueSetRef, value_set_ref};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -163,10 +163,8 @@ fn scope(
         ),
         kind => return Err(invalid_ref(value, kind, operation)),
     };
-    let mut tables: Vec<(i64, String)> = conn
-        .prepare(sql)?
-        .query_map([hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?
-        .collect::<rusqlite::Result<_>>()?;
+    let mut tables: Vec<(i64, String)> =
+        rows(conn, sql, [hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?;
     if let Some(table) = table {
         let id = refs::table(conn, table)?;
         if !tables.iter().any(|(t, _)| *t == id) {

@@ -11,7 +11,7 @@ use super::refs::{self, Entity};
 use super::shape::{self, Release};
 use super::show_evidence::{self, SourceDefinition, VariableEvidence};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, flag};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
@@ -311,19 +311,19 @@ impl Held {
 }
 
 fn provider_refs(conn: &Connection) -> Result<Vec<ShowProviderRef>, Error> {
-    Ok(conn
-        .prepare(
-            "SELECT p.pid, n.body FROM provider p JOIN text n ON n.id = p.name_text
+    Ok(rows(
+        conn,
+        "SELECT p.pid, n.body FROM provider p JOIN text n ON n.id = p.name_text
              ORDER BY p.pid",
-        )?
-        .query_map([], |row| {
+        [],
+        |row| {
             Ok(ShowProviderRef {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
                 held: None,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
+        },
+    )?)
 }
 
 fn register_refs(
@@ -331,21 +331,21 @@ fn register_refs(
     conn: &Connection,
     provider: &str,
 ) -> Result<Vec<ShowRegisterRef>, Error> {
-    Ok(conn
-        .prepare(
-            "SELECT r.pid, n.body, r.start, r.end FROM register r
+    Ok(rows(
+        conn,
+        "SELECT r.pid, n.body, r.start, r.end FROM register r
              JOIN provider p ON p.id = r.provider_id JOIN text n ON n.id = r.name_text
              WHERE p.pid = ? ORDER BY r.pid",
-        )?
-        .query_map([provider], |row| {
+        [provider],
+        |row| {
             Ok(ShowRegisterRef {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
                 period: server.period(row.get(2)?, row.get(3)?),
                 held: None,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
+        },
+    )?)
 }
 
 fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
@@ -426,15 +426,15 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
             v.held = Some(held_variables.contains(&v.fqid));
         }
     }
-    let unplaced = conn
-        .prepare(
-            "SELECT DISTINCT n.body
+    let unplaced = rows(
+        conn,
+        "SELECT DISTINCT n.body
              FROM release r JOIN tbl t ON t.id = r.table_id
                JOIN text n ON n.id = r.name_text
              WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
-        )?
-        .query_map([entity.id], |row| row.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
+        [entity.id],
+        |row| row.get(0),
+    )?;
     Ok(Show::Register {
         fqid: entity.pid.clone(),
         name,
@@ -479,21 +479,21 @@ fn groupings(
             }),
         }
     }
-    let tags = conn
-        .prepare(
-            "SELECT DISTINCT t.pid, n.body FROM variable v
+    let tags = crate::rows(
+        conn,
+        "SELECT DISTINCT t.pid, n.body FROM variable v
              JOIN register r ON r.id = v.register_id
              JOIN var_set_member m ON m.variable_id = v.id
              JOIN var_set t ON t.id = m.set_id AND t.kind = 'tag'
              JOIN text n ON n.id = t.name_text WHERE r.pid = ? ORDER BY t.pid",
-        )?
-        .query_map([register], |row| {
+        [register],
+        |row| {
             Ok(ShowMembership {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok((sets, tags))
 }
 
@@ -503,16 +503,16 @@ fn contents(
     conn: &Connection,
     register: &str,
 ) -> Result<(Vec<ShowTable>, Vec<ShowVariableRef>), Error> {
-    let tables = conn
-        .prepare(
-            "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
+    let tables = rows(
+        conn,
+        "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
                     t.start, t.end
              FROM tbl t JOIN register r ON r.id = t.register_id
                JOIN text n ON n.id = t.name_text
                LEFT JOIN unit_type u ON u.id = t.unit_type_id
              WHERE r.pid = ? ORDER BY t.pid",
-        )?
-        .query_map([register], |row| {
+        [register],
+        |row| {
             Ok(ShowTable {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
@@ -524,8 +524,8 @@ fn contents(
                 period: server.period(row.get(7)?, row.get(8)?),
                 held: None,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
     for row in conn
         .prepare(
@@ -539,14 +539,14 @@ fn contents(
         let (variable, table) = row?;
         members.entry(variable).or_default().push(table);
     }
-    let variables = conn
-        .prepare(
-            "SELECT v.pid, l.body, v.start, v.end
+    let variables = rows(
+        conn,
+        "SELECT v.pid, l.body, v.start, v.end
              FROM variable v JOIN register r ON r.id = v.register_id
                JOIN text l ON l.id = v.label_text
              WHERE r.pid = ? ORDER BY v.pid",
-        )?
-        .query_map([register], |row| {
+        [register],
+        |row| {
             let fqid: String = row.get(0)?;
             Ok(ShowVariableRef {
                 tables: members.remove(&fqid).unwrap_or_default(),
@@ -555,8 +555,8 @@ fn contents(
                 period: server.period(row.get(2)?, row.get(3)?),
                 held: None,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok((tables, variables))
 }
 
@@ -593,27 +593,27 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
                 ))
             },
         )?;
-    let spans = conn
-        .prepare("SELECT start, end FROM tbl_span WHERE table_id = ? ORDER BY start")?
-        .query_map([entity.id], |row| {
-            Ok(server.period(row.get(0)?, row.get(1)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let row_keys = conn
-        .prepare(
-            "SELECT v.pid, sp.exact, s.start, s.end
+    let spans = rows(
+        conn,
+        "SELECT start, end FROM tbl_span WHERE table_id = ? ORDER BY start",
+        [entity.id],
+        |row| Ok(server.period(row.get(0)?, row.get(1)?)),
+    )?;
+    let row_keys = rows(
+        conn,
+        "SELECT v.pid, sp.exact, s.start, s.end
              FROM segment s JOIN variable v ON v.id = s.variable_id
                JOIN spelling sp ON sp.id = s.spelling_id
              WHERE s.table_id = ? AND s.role = 'row_key' ORDER BY s.start, v.pid",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok(ShowRowKey {
                 fqid: row.get(0)?,
                 spelling: row.get(1)?,
                 period: server.period(row.get(2)?, row.get(3)?),
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,
@@ -659,13 +659,13 @@ fn variable(
     } else {
         None
     };
-    let tables = conn
-        .prepare(
-            "SELECT DISTINCT t.pid FROM segment s JOIN tbl t ON t.id = s.table_id
+    let tables = rows(
+        conn,
+        "SELECT DISTINCT t.pid FROM segment s JOIN tbl t ON t.id = s.table_id
              WHERE s.variable_id = ? ORDER BY t.pid",
-        )?
-        .query_map([entity.id], |row| row.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
+        [entity.id],
+        |row| row.get(0),
+    )?;
     Ok(Show::Variable {
         fqid: entity.pid.clone(),
         name,
@@ -683,19 +683,19 @@ fn variable(
 }
 
 fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowMembership>, Error> {
-    Ok(conn
-        .prepare(
-            "SELECT s.pid, n.body FROM var_set_member m JOIN var_set s ON s.id = m.set_id
+    Ok(rows(
+        conn,
+        "SELECT s.pid, n.body FROM var_set_member m JOIN var_set s ON s.id = m.set_id
              JOIN text n ON n.id = s.name_text
              WHERE m.variable_id = ? AND s.kind = ? ORDER BY s.pid",
-        )?
-        .query_map(rusqlite::params![variable, kind], |row| {
+        rusqlite::params![variable, kind],
+        |row| {
             Ok(ShowMembership {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
+        },
+    )?)
 }
 
 /// A variable's columns from its segments as `segments` reads them, one per (table,
@@ -754,25 +754,25 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
         [entity.id],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
-    let axes: Vec<ShowSetAxis> = conn
-        .prepare(
-            "SELECT a.axis, l.body FROM var_set_axis a
+    let axes: Vec<ShowSetAxis> = rows(
+        conn,
+        "SELECT a.axis, l.body FROM var_set_axis a
          JOIN text l ON l.id = a.label_text WHERE a.set_id = ? ORDER BY a.ord",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok(ShowSetAxis {
                 id: row.get(0)?,
                 label: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    let mut members: Vec<(i64, ShowSetMember)> = conn
-        .prepare(
-            "SELECT v.id, v.pid, l.body FROM var_set_member m
+        },
+    )?;
+    let mut members: Vec<(i64, ShowSetMember)> = rows(
+        conn,
+        "SELECT v.id, v.pid, l.body FROM var_set_member m
          JOIN variable v ON v.id = m.variable_id
          JOIN text l ON l.id = v.label_text WHERE m.set_id = ? ORDER BY v.pid",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok((
                 row.get(0)?,
                 ShowSetMember {
@@ -782,8 +782,8 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
                     facets: vec![],
                 },
             ))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     let mut facets = conn.prepare(
         "SELECT f.axis, f.value, l.body FROM var_set_member_facet f
          JOIN var_set_axis a ON a.set_id = f.set_id AND a.axis = f.axis
@@ -809,20 +809,20 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
             .collect::<rusqlite::Result<_>>()?;
     }
     members.sort_by(|(_, a), (_, b)| by_axes(&axes, a, b));
-    let tags = conn
-        .prepare(
-            "SELECT DISTINCT t.pid, n.body FROM var_set_member m
+    let tags = rows(
+        conn,
+        "SELECT DISTINCT t.pid, n.body FROM var_set_member m
          JOIN var_set_member tm ON tm.variable_id = m.variable_id
          JOIN var_set t ON t.id = tm.set_id AND t.kind = 'tag'
          JOIN text n ON n.id = t.name_text WHERE m.set_id = ? ORDER BY t.pid",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok(ShowMembership {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok(Show::Set {
         fqid: entity.pid.clone(),
         name,
