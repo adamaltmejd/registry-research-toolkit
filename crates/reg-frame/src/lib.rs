@@ -283,6 +283,22 @@ pub struct Endpoint {
     pub key: Option<String>,
 }
 
+impl Endpoint {
+    /// A `kind` end in `provider`, at the register handle `register` when given; set the
+    /// other fields with struct update.
+    #[must_use]
+    pub fn new(kind: &str, provider: &str, register: Option<&str>) -> Self {
+        Self {
+            kind: kind.to_owned(),
+            provider: provider.to_owned(),
+            register: register.map(str::to_owned),
+            register_name: None,
+            table: None,
+            key: None,
+        }
+    }
+}
+
 /// A relation the source states: `continues` (the subject takes over from the object, from
 /// `at`) or `derived_from` (the subject is derived from the object).
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]

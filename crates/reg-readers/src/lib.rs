@@ -54,7 +54,7 @@ impl Input {
     /// else under the inputs root.
     ///
     /// # Errors
-    /// A release asset with no assets directory or no pinned hash.
+    /// A release asset with no assets directory.
     pub fn locate(&self, root: &Path, assets: Option<&Path>) -> Result<PathBuf, ReadError> {
         match &self.release {
             None => Ok(root.join(&self.path)),
@@ -65,9 +65,6 @@ impl Input {
                         "a release asset; pass --assets with its directory",
                     )
                 })?;
-                if self.sha256.is_none() {
-                    return Err(error(&self.name, "a release asset needs a sha256 pin"));
-                }
                 Ok(assets.join(release).join(&self.path))
             }
         }
@@ -102,34 +99,29 @@ pub fn read(
         (None, None) => None,
         _ => return Err(error(&input.name, "release and sha256 are stated together")),
     };
-    let in_root = || match asset {
-        Some(_) => Err(error(
+    if asset.is_some() && input.reader != "scb" {
+        return Err(error(
             &input.name,
             format!(
                 "reader {} reads the inputs root, not a release asset",
                 input.reader
             ),
-        )),
-        None => Ok(()),
-    };
+        ));
+    }
     match input.reader.as_str() {
-        "transcription" => in_root().and_then(|()| {
-            transcription::read(
-                root,
-                &input.path,
-                &need(&input.provider, "provider")?,
-                &transcription::Config::load(&config)?,
-            )
-        }),
-        "sos-workbook" => in_root().and_then(|()| {
-            workbook::read(
-                root,
-                &input.path,
-                &need(&input.provider, "provider")?,
-                &need(&input.register, "register")?,
-                &workbook::Config::load(&config)?,
-            )
-        }),
+        "transcription" => transcription::read(
+            root,
+            &input.path,
+            &need(&input.provider, "provider")?,
+            &transcription::Config::load(&config)?,
+        ),
+        "sos-workbook" => workbook::read(
+            root,
+            &input.path,
+            &need(&input.provider, "provider")?,
+            &need(&input.register, "register")?,
+            &workbook::Config::load(&config)?,
+        ),
         "scb" => scb::read(
             &asset.clone().ok_or_else(|| {
                 error(
@@ -141,27 +133,23 @@ pub fn read(
             &need(&input.provider, "provider")?,
             &scb::Config::load(&config)?,
         ),
-        "markdown" => in_root().and_then(|()| {
-            docs::markdown(
-                root,
-                &input.path,
-                &need(&input.provider, "provider")?,
-                &need(&input.register, "register")?,
-                &docs::MarkdownConfig::load(&config)?,
-            )
-        }),
-        "pdf-list" => in_root().and_then(|()| {
-            docs::pdf_list(
-                root,
-                &input.path,
-                &need(&input.provider, "provider")?,
-                &docs::PdfListConfig::load(&config)?,
-            )
-        }),
-        "classification-csv" => in_root().and_then(|()| {
+        "markdown" => docs::markdown(
+            root,
+            &input.path,
+            &need(&input.provider, "provider")?,
+            &need(&input.register, "register")?,
+            &docs::MarkdownConfig::load(&config)?,
+        ),
+        "pdf-list" => docs::pdf_list(
+            root,
+            &input.path,
+            &need(&input.provider, "provider")?,
+            &docs::PdfListConfig::load(&config)?,
+        ),
+        "classification-csv" => {
             classification::read(root, &input.path, &classification::Config::load(&config)?)
-        }),
-        "frame" => in_root().and_then(|()| frame::read(root, &input.path)),
+        }
+        "frame" => frame::read(root, &input.path),
         other => Err(error(&input.name, format!("unknown reader {other:?}"))),
     }
 }
@@ -250,24 +238,15 @@ pub(crate) fn derived_from(
     name: String,
     locator: reg_frame::Locator,
 ) -> reg_frame::Record {
-    let end = |kind: &str| reg_frame::Endpoint {
-        kind: kind.to_owned(),
-        provider: provider.to_owned(),
-        register: None,
-        register_name: None,
-        table: None,
-        key: None,
-    };
     reg_frame::Record::Link(reg_frame::Link {
         kind: "derived_from".to_owned(),
         subject: reg_frame::Endpoint {
-            register: Some(register.to_owned()),
             key: Some(key),
-            ..end("variable")
+            ..reg_frame::Endpoint::new("variable", provider, Some(register))
         },
         object: reg_frame::Endpoint {
             register_name: Some(name),
-            ..end("register")
+            ..reg_frame::Endpoint::new("register", provider, None)
         },
         at: None,
         note: None,

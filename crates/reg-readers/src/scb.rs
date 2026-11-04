@@ -721,12 +721,9 @@ fn endpoint(
     key: Option<&str>,
 ) -> Endpoint {
     Endpoint {
-        kind: kind.to_owned(),
-        provider: provider.to_owned(),
-        register: Some(register.to_owned()),
-        register_name: None,
         table: table.map(str::to_owned),
         key: key.map(str::to_owned),
+        ..Endpoint::new(kind, provider, Some(register))
     }
 }
 
