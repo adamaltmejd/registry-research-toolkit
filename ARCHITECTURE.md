@@ -78,7 +78,7 @@ registry-research-toolkit/
     reg-readers/    #   one reader per input format
     reg-resolve/    #   per-register resolution
     reg-build/      #   link, emit and the CLI (binary: reg-build)
-    xtask/          # repo tooling (`cargo xtask gh-issue`) and the repo-policy lints
+    xtask/          # repo and release tooling (`cargo xtask`), the repo-policy lints
   curation/         # the builder's inputs pin, reader config, curation and id ledgers
   reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas

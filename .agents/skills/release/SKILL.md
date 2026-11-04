@@ -143,7 +143,7 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 
 ### 8. Build and upload release assets
 
-There is no step 7. The numbers stay because `scripts/release_base_reuse.py` and each
+There is no step 7. The numbers stay because `cargo xtask release-base-reuse` and each
 evidence directory's `passed` marks name steps 8a–8i.
 
 Every release builds a **pair**: `reg_meta.db.zst` (the reference catalog, documents
@@ -225,7 +225,7 @@ re-pin, a reader-only fix), do not rebuild by default. From a clean checkout at 
 release commit, run:
 
 ```sh
-uv run --no-project scripts/release_base_reuse.py "$earlier_evidence"
+cargo xtask release-base-reuse "$earlier_evidence"
 ```
 
 It diffs the two commits over the builder's dependency closure, read from
@@ -239,7 +239,7 @@ what it prints:
 - `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
 - `base: reuse`: keep `$earlier_evidence` as `$evidence` and set
   `base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")`.
-- A step carries over only when `$evidence/passed` lists it; otherwise the script says
+- A step carries over only when `$evidence/passed` lists it; otherwise the command says
   `run it`. Each step below appends `<step> <base sha>` to `passed` once it passes, so a
   build whose checks never finished carries nothing over, and a mark made against
   another base does not count.
@@ -250,7 +250,7 @@ what it prints:
 - Always rerun 8h and the 8i `base_sha` check at the release commit.
 
 The release notes record both commits, the built one and the release one, and the
-script's output, including when the built commit is a squash-merged PR head that is not
+command's output, including when the built commit is a squash-merged PR head that is not
 on `main`. Merging reader-only fixes before the bump avoids the question altogether.
 
 #### 8b. Verify the base
@@ -297,7 +297,7 @@ edit the steward checkout. Re-lock the pin in a reviewed PR before the bump, not
 the release.
 
 ```sh
-pin=$(uv run --no-project python -c 'import tomllib;print(tomllib.load(open("stewards.toml","rb"))["swecov"]["commit"])')
+pin=$(sed -n '/^\[swecov\]/,/^\[/s/^commit = "\(.*\)"/\1/p' stewards.toml)
 git clone git@github.com:adamaltmejd/swecov-steward.git "$steward"
 git -C "$steward" checkout --detach "$pin"
 target/release/reg-build holdings --base "$evidence/catalog/reg_meta.db" --steward swecov \
@@ -398,24 +398,23 @@ go/no-go; its counts go in the release notes. On a go,
 The SWECOV catalog is public (maintainer 2026-11-03), so there is no disclosure review.
 The release must carry only what the catalog serves, never background data: steward
 repository notes, raw census or storage exports, inventory working files.
-`holdings_scope_check.py` fails when the holdings DB's schema differs from the schema
+`cargo xtask scope-check` fails when the holdings DB's schema differs from the schema
 the builder declares (every table, FTS shadow tables included, and every column must
-match, none extra or missing), when a meta key is not on the script's allowlist, when
+match, none extra or missing), when a meta key is not on the check's allowlist, when
 `occurrence_locator` has rows, when a text or blob value exceeds its size bound, or when
 a `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`) or a census
-row (`census:row=`); the last needs a steward-repo fix and re-pin, not a script change.
-Run it against this release checkout and record its one-line result in the release
-notes:
+row (`census:row=`); the last needs a steward-repo fix and re-pin, not a check change.
+Run it from this release checkout (it compiles in the builder's DDL at that commit) and
+record its one-line result in the release notes:
 
 ```sh
-uv run --no-project scripts/holdings_scope_check.py "$evidence/catalog/reg_meta_swecov.db" \
-  "$PWD" | tee "$evidence/scope-check.txt"
+cargo xtask scope-check "$evidence/catalog/reg_meta_swecov.db" | tee "$evidence/scope-check.txt"
 ```
 
 A failure stops the release. Fix the build or, when the item belongs in the paired
-catalog, add its meta key or size bound to the script in a reviewed PR; then rebuild
-from 8d. Then re-check `$base_sha` against the local base file (it must be unchanged
-since 8a) and proceed.
+catalog, add its meta key or size bound to `crates/xtask/src/scope_check.rs` in a
+reviewed PR; then rebuild from 8d. Then re-check `$base_sha` against the local base file
+(it must be unchanged since 8a) and proceed.
 
 #### 8i. Compress, checksum and upload both assets to the draft
 
@@ -525,7 +524,7 @@ what the checks exercised, the steward pin, the `holdings:` summary line from
 - Tag already exists for the target version: investigate before proceeding.
 - A `reg-build` build, verification or conformance failure stops the release: fix it,
   rebuild with `reg-build` (or reuse the earlier base when
-  `scripts/release_base_reuse.py` says the fix cannot move it), and repeat steps 8b--8i
+  `cargo xtask release-base-reuse` says the fix cannot move it), and repeat steps 8b--8i
   (a base rebuild changes `catalog_sha256`, so holdings are rebuilt too); never copy an
   asset from an older release forward.
 - **Once published, never delete, re-cut or re-upload a release's assets.** Deploys and

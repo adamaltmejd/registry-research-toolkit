@@ -6,6 +6,8 @@ fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let code = match args.split_first() {
         Some((cmd, rest)) if cmd == "gh-issue" => xtask::gh_issue::main(rest),
+        Some((cmd, rest)) if cmd == "scope-check" => xtask::scope_check::main(rest),
+        Some((cmd, rest)) if cmd == "release-base-reuse" => xtask::release_base_reuse::main(rest),
         _ => {
             eprintln!("{}", xtask::USAGE);
             xtask::gh_issue::EXIT_USAGE

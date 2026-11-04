@@ -116,6 +116,11 @@ def rust() -> None:
             )
         if not filecmp.cmp(*builds, shallow=False):
             raise subprocess.CalledProcessError(1, ["cmp", *builds])
+    # Release step 8h's scope check on the synthetic pair, so an unlisted meta key or a
+    # schema drift fails here rather than at the release.
+    with tempfile.TemporaryDirectory(prefix="gate-paired-") as out:
+        run(f"uv run python conformance/paired_fixture.py {out}")
+        run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
     run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
