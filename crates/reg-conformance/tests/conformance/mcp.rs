@@ -18,9 +18,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 use std::io::{BufRead as _, BufReader, Write as _};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::OnceLock;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use serde_json::{Map, Value, json};
 
@@ -674,6 +674,22 @@ fn mcp_command(db: &Path) -> Command {
     command
 }
 
+/// The child's exit status; a child still running after 10 s is killed and the test
+/// fails, so a session that hangs instead of exiting does not hang the suite.
+fn exits_within_10s(child: &mut Child) -> ExitStatus {
+    let deadline = Instant::now() + Duration::from_secs(10);
+    loop {
+        if let Some(status) = child.try_wait().unwrap() {
+            return status;
+        }
+        if Instant::now() > deadline {
+            let _ = child.kill();
+            panic!("reg-meta mcp did not exit within 10 s");
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+}
+
 #[test]
 fn stdio_session() {
     // Fails when `reg-meta mcp` cannot initialize, list the golden's tools (byte for
@@ -694,7 +710,14 @@ fn stdio_session() {
     assert_eq!(status, 200, "{expected}");
     // Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
     // panic (exit 101, #1326) instead of exiting cleanly.
-    let closed = mcp_command(db).stdin(Stdio::null()).output().unwrap();
+    let mut child = mcp_command(db)
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    exits_within_10s(&mut child);
+    let closed = child.wait_with_output().unwrap();
     assert_eq!(
         (
             closed.status.code(),
@@ -735,7 +758,7 @@ fn stdio_session() {
         }
     }
     drop(stdin);
-    assert!(process.wait().unwrap().success());
+    assert!(exits_within_10s(&mut process).success());
     let [initialize, listed, searched] = &replies[..] else {
         panic!("{} replies: {replies:?}", replies.len());
     };
