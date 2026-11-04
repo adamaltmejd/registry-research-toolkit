@@ -11,7 +11,7 @@ use super::{Cache, Operation, Param, Params, Period, Server, Type, component, re
 use crate::{Code, Error, rows};
 
 /// `relation.kind`.
-const KINDS: &[&str] = &["continues", "equivalent", "derived_from", "label_of"];
+const KINDS: &[&str] = &["continues", "derived_from", "label_of"];
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "graph",
@@ -48,7 +48,7 @@ pub struct GraphNode {
 
 #[derive(Serialize, ToSchema)]
 pub struct GraphEdge {
-    /// `continues`, `equivalent`, `derived_from` or `label_of`.
+    /// `continues`, `derived_from` or `label_of`.
     kind: String,
     /// The subject's fqid.
     from: String,

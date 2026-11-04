@@ -354,7 +354,7 @@ CREATE TABLE gap (
 -- day the successor takes over.
 CREATE TABLE relation (
   id           INTEGER PRIMARY KEY,
-  kind         TEXT NOT NULL CHECK (kind IN ('continues','equivalent','derived_from','label_of')),
+  kind         TEXT NOT NULL CHECK (kind IN ('continues','derived_from','label_of')),
   subject_kind TEXT NOT NULL CHECK (subject_kind IN ('variable','table','register','class_version')),
   subject_id   INTEGER NOT NULL,
   object_kind  TEXT NOT NULL CHECK (object_kind IN ('variable','table','register','class_version')),

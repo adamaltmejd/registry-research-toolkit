@@ -179,7 +179,7 @@ are gone: a value set is addressed by content."""
 name = "graph"
 http = ["GET /api/graph/{ref}"]
 tool = "graph"
-params = { ref = "ref", kind = "enum(continues|equivalent|derived_from|label_of)?" }
+params = { ref = "ref", kind = "enum(continues|derived_from|label_of)?" }
 result = "Graph {focus, nodes, edges}"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The `relation` edges where the ref is subject or object (`relation_subject`, \

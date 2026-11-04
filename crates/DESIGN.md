@@ -375,12 +375,12 @@ Accepting one requires reviewed curation and a premise lock.
   depend on type, existing value sets and population alternatives; period changes depend
   on release placement and parent coverage. Source changes reopen review. With no
   statements, artifact bytes remain unchanged.
-- `link` applies `continues`, `derived_from`, `equivalent` and `label_of` after field
-  application and identity resolution. Endpoints use the selected whole occurrences,
-  ledger variables or tables, or a resolved register/variable FQID. Release endpoints
-  remain refused. Optional `at` periods become merged validity intervals. Each relation
-  carries its statement and caveat. An exact source-edge duplicate gains curated
-  provenance without changing the graph's topology.
+- `link` applies `continues`, `derived_from` and `label_of` after field application and
+  identity resolution. Endpoints use the selected whole occurrences, ledger variables or
+  tables, or a resolved register/variable FQID. Release endpoints remain refused.
+  Optional `at` periods become merged validity intervals. Each relation carries its
+  statement and caveat. An exact source-edge duplicate gains curated provenance without
+  changing the graph's topology.
 - A table `continues` points from successor to predecessor. The real corpus drops no
   successions, so no successor-choice or `reject` form exists. Curated links that close
   a cycle or give a table a second successor on one day refuse at their statement
@@ -2571,11 +2571,11 @@ tag memberships, and `search?tag=` narrows discovery to the tag's variables.
 
 `graph` returns the `relation` edges where the ref is the subject or the object. A
 relation has a `kind`: `continues` (successor → predecessor, with its evidenced `at`),
-`derived_from` (the lineage), `equivalent` and `label_of`. `kind` narrows the edges. A
-lone entity with no relations returns no edges. Variable succession and table succession
-use `continues`; a representation change is not a separate succession model. The public
-`at` period is stored as `at_start`/`at_end` on the relation, and no day is inferred
-from a coverage end.
+`derived_from` (the lineage) and `label_of`. `kind` narrows the edges. A lone entity
+with no relations returns no edges. Variable succession and table succession use
+`continues`; a representation change is not a separate succession model. The public `at`
+period is stored as `at_start`/`at_end` on the relation, and no day is inferred from a
+coverage end.
 
 ## Documentation and what is not in the catalog
 
@@ -2628,7 +2628,6 @@ terms describe its cross-provider meanings.
   | set            | A register-local presentation group at `set/<provider>/<register>/<slug>`; not an order binding.       |
   | binding        | A project's use of a variable, named by its FQID.                                                      |
   | segment        | A maximal run of one form of a variable in one table.                                                  |
-  | equivalent     | A curated symmetric relation between variables in different registers or providers.                    |
   | classification | A named vocabulary family, `class/<slug>`, with versions at `class/<slug>/<version>`.                  |
   | valueset       | A content-addressed code list on a segment.                                                            |
 

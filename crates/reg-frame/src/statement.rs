@@ -60,7 +60,6 @@ pub enum AssertFact {
 pub enum Relation {
     Continues,
     DerivedFrom,
-    Equivalent,
     LabelOf,
 }
 

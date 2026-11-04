@@ -2561,7 +2561,6 @@
         "kind": {
           "enum": [
             "continues",
-            "equivalent",
             "derived_from",
             "label_of"
           ],
@@ -2658,7 +2657,7 @@
               "type": "string"
             },
             "kind": {
-              "description": "`continues`, `equivalent`, `derived_from` or `label_of`.",
+              "description": "`continues`, `derived_from` or `label_of`.",
               "type": "string"
             },
             "prov": {

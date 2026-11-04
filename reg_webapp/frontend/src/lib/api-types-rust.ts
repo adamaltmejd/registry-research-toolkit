@@ -577,7 +577,7 @@ export interface components {
             caveat: string | null;
             /** @description The subject's fqid. */
             from: string;
-            /** @description `continues`, `equivalent`, `derived_from` or `label_of`. */
+            /** @description `continues`, `derived_from` or `label_of`. */
             kind: string;
             /** @description `source`, `curated` or `rule`. */
             prov: string;
@@ -1757,7 +1757,7 @@ export interface operations {
     graph: {
         parameters: {
             query?: {
-                kind?: "continues" | "equivalent" | "derived_from" | "label_of";
+                kind?: "continues" | "derived_from" | "label_of";
             };
             header?: never;
             path: {
