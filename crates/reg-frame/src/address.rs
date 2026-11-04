@@ -274,33 +274,15 @@ fn expand(text: &str) -> Result<Vec<String>, String> {
     if body.contains('{') {
         return Err("nested brace lists are not allowed".to_owned());
     }
-    let range = body.split_once("..").filter(|(start, end)| {
-        !start.is_empty()
-            && !end.is_empty()
-            && start.bytes().all(|b| b.is_ascii_digit())
-            && end.bytes().all(|b| b.is_ascii_digit())
-    });
+    // Otherwise an asserted occurrence would invent the spelling `x01..12`.
+    if body.contains("..") {
+        return Err("brace ranges are not supported; list the spellings".to_owned());
+    }
     let choices = if body.contains(',') {
         if body.split(',').any(str::is_empty) {
             return Err("brace list items must not be empty".to_owned());
         }
         body.split(',').map(str::to_owned).collect()
-    } else if let Some((start, end)) = range {
-        let lo = start.parse::<u32>().map_err(|e| e.to_string())?;
-        let hi = end.parse::<u32>().map_err(|e| e.to_string())?;
-        if lo > hi || hi - lo >= 10_000 {
-            return Err(
-                "a brace range must ascend and expand to at most 10000 spellings".to_owned(),
-            );
-        }
-        let width = if start.starts_with('0') {
-            start.len()
-        } else {
-            0
-        };
-        (lo..=hi)
-            .map(|n| format!("{n:0width$}"))
-            .collect::<Vec<_>>()
     } else {
         if body.is_empty() {
             return Err("brace list items must not be empty".to_owned());
