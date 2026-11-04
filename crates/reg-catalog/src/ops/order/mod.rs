@@ -327,38 +327,31 @@ pub fn check(
             };
             if overlap(&items, std::slice::from_ref(&window)).is_empty() {
                 findings.push(Issue {
-                    level: IssueLevel::Error,
-                    code: "source_outside_window".to_owned(),
-                    path: format!("/sources/{index}/period"),
-                    message: format!(
-                        "{}'s period lies wholly outside the study window {}..{}; change the \
-                         period or the window.",
-                        source.name,
-                        &window.0[..4],
-                        &window.1[..4]
-                    ),
                     source: Some(source.name.clone()),
-                    variable: None,
-                    table: None,
-                    period: None,
-                    successor_fqid: None,
+                    ..Issue::new(
+                        IssueLevel::Error,
+                        "source_outside_window",
+                        format!("/sources/{index}/period"),
+                        format!(
+                            "{}'s period lies wholly outside the study window {}..{}; change the \
+                         period or the window.",
+                            source.name,
+                            &window.0[..4],
+                            &window.1[..4]
+                        ),
+                    )
                 });
             }
         }
     }
     if project.sources.is_empty() {
         // A valid draft, but nothing to order (reg-core DESIGN.md, "An empty project").
-        findings.push(Issue {
-            level: IssueLevel::Error,
-            code: "project_empty".to_owned(),
-            path: "/sources".to_owned(),
-            message: "The project has no sources, so there is nothing to order.".to_owned(),
-            source: None,
-            variable: None,
-            table: None,
-            period: None,
-            successor_fqid: None,
-        });
+        findings.push(Issue::new(
+            IssueLevel::Error,
+            "project_empty",
+            "/sources",
+            "The project has no sources, so there is nothing to order.",
+        ));
     }
     if findings.iter().any(Issue::blocks) {
         return Ok(Err(findings));
@@ -395,15 +388,8 @@ fn check_source(
 ) -> Result<Checked, Error> {
     let at = |field: &str| format!("/sources/{index}/{field}");
     let issue = |level, code: &str, path: String, message: String| Issue {
-        level,
-        code: code.to_owned(),
-        path,
-        message,
         source: Some(source.name.clone()),
-        variable: None,
-        table: None,
-        period: None,
-        successor_fqid: None,
+        ..Issue::new(level, code, path, message)
     };
     let mut own = Vec::new();
     let table = match table_ref(conn, &source.table)? {

@@ -102,10 +102,9 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             ));
         }
         other => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {other}, not a variable, a table or a register."),
-                vec![value.into()],
             ));
         }
     }

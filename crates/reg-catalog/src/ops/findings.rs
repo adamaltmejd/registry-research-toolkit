@@ -7,7 +7,7 @@ use utoipa::ToSchema;
 use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
 use super::{Cache, Components, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "findings",
@@ -100,10 +100,9 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
         "table" => SCOPE_TABLE,
         "variable" => SCOPE_VARIABLE,
         kind => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {kind}, not a register, a table or a variable."),
-                vec![value.into()],
             ));
         }
     };

@@ -232,18 +232,19 @@ pub(super) fn row_keys(
                         period.end.as_deref().unwrap_or("open")
                     );
                     findings.push(Issue {
-                        level,
-                        code: code.to_owned(),
-                        path: format!("/sources/{index}"),
-                        message: format!(
-                            "Row key {variable} {verb} {} over {over}{tail}",
-                            s.table.pid
-                        ),
                         source: Some(source.name.clone()),
                         variable: Some(variable.clone()),
                         table: Some(s.table.pid.clone()),
                         period: Some(period),
-                        successor_fqid: None,
+                        ..Issue::new(
+                            level,
+                            code,
+                            format!("/sources/{index}"),
+                            format!(
+                                "Row key {variable} {verb} {} over {over}{tail}",
+                                s.table.pid
+                            ),
+                        )
                     });
                 }
                 pieces.push((lo, hi, (variable.clone(), spelling.clone())));
@@ -327,21 +328,16 @@ pub(super) fn panel(
             )
         })
         .collect();
-    Ok(vec![Issue {
-        level: IssueLevel::Warning,
-        code: "panel_row_keys_differ".to_owned(),
-        path: format!("/panels/{index}"),
-        message: format!(
+    Ok(vec![Issue::new(
+        IssueLevel::Warning,
+        "panel_row_keys_differ",
+        format!("/panels/{index}"),
+        format!(
             "The members of panel {} key their rows on different identifier kinds: {}.",
             panel.panel_id,
             listed.join("; ")
         ),
-        source: None,
-        variable: None,
-        table: None,
-        period: None,
-        successor_fqid: None,
-    }])
+    )])
 }
 
 /// Suppress duplicate window findings already reported by an explicit binding.

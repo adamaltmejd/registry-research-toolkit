@@ -12,7 +12,7 @@ use super::{
     Cache, Operation, Param, Params, Period, Server, Type, component, cursor, days, flag, limit,
     refs,
 };
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "segments",
@@ -126,10 +126,9 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let given = params["ref"];
     let variable = refs::resolve(&conn, given)?;
     if variable.kind != "variable" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            given,
             format!("{given:?} is a {}, not a variable.", variable.kind),
-            vec![given.into()],
         ));
     }
     let (mut filter, mut args) = narrowing(&conn, params, &variable)?;
@@ -197,10 +196,9 @@ fn narrowing(
         if register("SELECT register_id FROM tbl WHERE id = ?", id)?
             != register("SELECT register_id FROM variable WHERE id = ?", variable.id)?
         {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                table,
                 format!("{table:?} is not a table of {given:?}'s register."),
-                vec![table.into()],
             ));
         }
         filter.push("s.table_id = ?".to_owned());

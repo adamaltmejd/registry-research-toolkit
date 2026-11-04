@@ -10,7 +10,7 @@ use utoipa::ToSchema;
 
 use super::shape::{self, Release};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "coverage",
@@ -140,10 +140,9 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
              WHERE s.variable_id = ? ORDER BY t.pid",
         ),
         kind => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {kind}, which coverage does not take."),
-                vec![value.into()],
             ));
         }
     };

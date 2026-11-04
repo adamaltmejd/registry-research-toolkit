@@ -160,10 +160,9 @@ pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
                 vec![value.into(), tables.into()],
             ))
         }
-        kind => Err(Error::new(
-            Code::InvalidRef,
+        kind => Err(Error::invalid_ref(
+            value,
             format!("{value:?} is a {kind}, not a table."),
-            vec![value.into()],
         )),
     }
 }
@@ -179,9 +178,5 @@ fn is_set_ref(value: &str) -> Result<bool, Error> {
 }
 
 fn invalid_ref(value: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
-        format!("{value:?} is not a public id."),
-        vec![value.into()],
-    )
+    Error::invalid_ref(value, format!("{value:?} is not a public id."))
 }

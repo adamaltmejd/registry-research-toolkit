@@ -198,10 +198,9 @@ pub struct FacetVariable {
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
     let entity = refs::resolve(conn, value)?;
     if entity.kind != "register" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            value,
             format!("{value:?} is a {}, not a register.", entity.kind),
-            vec![value.into()],
         ));
     }
     Ok(entity.id)

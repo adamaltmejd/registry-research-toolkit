@@ -11,7 +11,7 @@ use utoipa::ToSchema;
 
 use super::shape::{ValueSetRef, value_set_ref};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, refs};
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -133,10 +133,9 @@ struct Scope {
 }
 
 fn invalid_ref(value: &str, kind: &str, operation: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
+    Error::invalid_ref(
+        value,
         format!("{value:?} is a {kind}, which {operation} does not take."),
-        vec![value.into()],
     )
 }
 
@@ -168,10 +167,9 @@ fn scope(
     if let Some(table) = table {
         let id = refs::table(conn, table)?;
         if !tables.iter().any(|(t, _)| *t == id) {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                table,
                 format!("{table:?} is not one of the tables of {value:?}."),
-                vec![table.into()],
             ));
         }
         tables.retain(|(t, _)| *t == id);

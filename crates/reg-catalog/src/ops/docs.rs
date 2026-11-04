@@ -184,13 +184,12 @@ fn links_of(kind: &str) -> &'static str {
 }
 
 fn invalid_ref(value: &str, entity: &Entity) -> Error {
-    Error::new(
-        Code::InvalidRef,
+    Error::invalid_ref(
+        value,
         format!(
             "{value:?} is a {}, which this operation does not take.",
             entity.kind
         ),
-        vec![value.into()],
     )
 }
 

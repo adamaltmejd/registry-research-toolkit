@@ -121,15 +121,15 @@ pub(super) fn refs(
     let mut findings = Vec::new();
     let mut issue = |field: &str, variable: Option<&str>, (code, message): (&str, String)| {
         findings.push(Issue {
-            level: IssueLevel::Error,
-            code: code.to_owned(),
-            path: format!("/sources/{index}/bindings/{b}/{field}"),
-            message,
             source: Some(source.name.clone()),
             variable: variable.map(str::to_owned),
             table: table.map(str::to_owned),
-            period: None,
-            successor_fqid: None,
+            ..Issue::new(
+                IssueLevel::Error,
+                code,
+                format!("/sources/{index}/bindings/{b}/{field}"),
+                message,
+            )
         });
     };
     let unresolved = |value: &str, what: &str| {
@@ -407,15 +407,16 @@ impl Located<'_> {
         message: String,
     ) -> Issue {
         Issue {
-            level,
-            code: code.to_owned(),
-            path: format!("/sources/{}/bindings/{}", self.scope.index, self.b),
-            message,
             source: Some(self.scope.source.name.clone()),
             variable: Some(self.variable.pid.clone()),
             table: Some(table.to_owned()),
             period: days.map(|d| period(self.scope.server, d)),
-            successor_fqid: None,
+            ..Issue::new(
+                level,
+                code,
+                format!("/sources/{}/bindings/{}", self.scope.index, self.b),
+                message,
+            )
         }
     }
 

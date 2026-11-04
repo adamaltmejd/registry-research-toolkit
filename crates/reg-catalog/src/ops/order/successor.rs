@@ -283,14 +283,14 @@ fn tables(
 
 fn refusal(scope: &Scope, b: usize, variable: &str, code: &str, message: &str) -> Issue {
     Issue {
-        level: IssueLevel::Error,
-        code: code.to_owned(),
-        path: format!("/sources/{}/bindings/{b}", scope.index),
-        message: message.to_owned(),
         source: Some(scope.source.name.clone()),
         variable: Some(variable.to_owned()),
         table: Some(scope.table.to_owned()),
-        period: None,
-        successor_fqid: None,
+        ..Issue::new(
+            IssueLevel::Error,
+            code,
+            format!("/sources/{}/bindings/{b}", scope.index),
+            message,
+        )
     }
 }

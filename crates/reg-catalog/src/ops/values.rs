@@ -150,13 +150,12 @@ fn by_content(conn: &Connection, hash: &str) -> Result<i64, Error> {
 fn classification_set(conn: &Connection, given: &str) -> Result<i64, Error> {
     let version = refs::resolve(conn, given)?;
     if version.kind != "class_version" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            given,
             format!(
                 "{given:?} is a {}, not a classification version.",
                 version.kind
             ),
-            vec![given.into()],
         ));
     }
     Ok(conn.query_row(
