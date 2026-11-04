@@ -89,9 +89,14 @@ materialize <- function(dir, files) {
     if (isTRUE(spec$folder)) {
       dir.create(path)
     } else if (!is.null(spec$text)) {
-      writeBin(charToRaw(spec$text), path)
+      writeBin(charToRaw(strrep(spec$text, spec$`repeat` %||% 1L)), path)
     } else {
-      arrays <- lapply(spec$columns, column_array)
+      # A column's `repeat` is how many times its values follow one another.
+      columns <- lapply(spec$columns, function(col) {
+        col$values <- rep(col$values, col$`repeat` %||% 1L)
+        col
+      })
+      arrays <- lapply(columns, column_array)
       names(arrays) <- vapply(spec$columns, function(col) col$name, "")
       table <- do.call(arrow::Table$create, arrays)
       for (key in names(spec$metadata)) {

@@ -1,0 +1,55 @@
+{
+  "description": "A file over the 8 MiB cap refuses before it is parsed: at most the cap plus one byte is read.",
+  "schema": "../../../schemas/trial.schema.json",
+  "policy": "../../../schemas/trial.policy.json",
+  "candidate": {
+    "persons_by_year_group.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2019,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "2019-2020 cohort",
+            "batch 19121212121212",
+            "2019-2020 cohort"
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            5,
+            120,
+            null,
+            37
+          ]
+        }
+      ]
+    },
+    "summary_by_year.parquet": {
+      "text": "x",
+      "repeat": 8388609
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "structure",
+    "findings": [
+      {
+        "file": "summary_by_year.parquet",
+        "rule": "too_large"
+      }
+    ]
+  }
+}
