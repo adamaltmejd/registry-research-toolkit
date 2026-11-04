@@ -45,7 +45,13 @@ bash reg_webapp/dev/dev.sh --fixture-db smoke
 bash reg_webapp/dev/dev.sh --fixture-db shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>...
 bash reg_webapp/dev/dev.sh --fixture-db flows <out-dir> [scenario...]
 bash reg_webapp/dev/dev.sh --fixture-db          # interactive, Ctrl-C stops
+bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthetic pair
 ```
+
+`--paired-fixture` (instead of `--fixture-db`) builds the synthetic SWECOV holdings pair
+into a temp directory (`conformance/paired_fixture.py`) and exports
+`REG_WEBAPP_FIXTURE=paired`. The SPA is steward-only, so the pair is the state to render
+for steward pages (e.g. `/catalog/demo/held`).
 
 `smoke`, `shot` and `flows` are one-shot: free ports, then **every server (and the
 agent-browser session) is torn down on exit**, and the exit status is the run's.
@@ -57,24 +63,27 @@ summary line, then the page's console errors (`[error] …`) and uncaught except
 (`[pageerror] …`). Axe violations do not fail the run; judging them is the reviewer's
 job.
 
-- **`smoke`** captures the restored catalog shell as `01-root`. Entity-page steps return
-  with their owning W2–W5 ports. Desktop only — not a substitute for the four widths.
+- **`smoke`** captures `/catalog` as `01-root`, desktop only; not a substitute for the
+  four widths.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
   design-reviewer skill judges.
-- **`flows`** runs the shell/search scenario at four viewports (CI sets
-  `REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop`: phone and desktop only), each in a fresh
-  browser context against the real servers, and writes the PNGs into `<out-dir>`. It
-  uses the `demo` / `demo2` content of `--fixture-db`. Entity and project flows return
-  with W2–W5; their routes currently show a not-ported notice.
+- **`flows`** runs the driver's scenarios (the `scenarios` table in `driver.mjs`:
+  `browse-pages`, `browse-search`, `browse-group`, `browse-variable`, `browse-values`,
+  `variable-succession`, `linked-documents`, `project-pages`, `add-variable-columns`,
+  `source-cards` and `steward-held`; name some to run only those) at four viewports (CI
+  sets `REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop`: phone and desktop only), each in a
+  fresh browser context against the real servers, and writes the PNGs into `<out-dir>`.
+  Ten use the `demo` / `demo2` content of `--fixture-db`; `steward-held` needs
+  `--paired-fixture`.
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 
 **Look at the pictures.** The first line `dev.sh` prints names the checkout, the full
-HEAD and the per-invocation shots directory under `/tmp`, kept after teardown:
+HEAD and the per-invocation shots directory under `$TMPDIR`, kept after teardown:
 
 ```
-dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
+dev: repo /path/to/checkout HEAD 0123456789abcdef… shots $TMPDIR/reg-webapp-shots.C8VNZN
 ```
 
 `REG_WEBAPP_SHOTS=<dir>` collects a run elsewhere (relative to the repo root).
@@ -94,9 +103,10 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
 ## Parallel instances (concurrent worktrees)
 
 - **`preview_start`**: `.claude/launch.json`'s `reg-webapp` config (`autoPort: true`)
-  runs `dev.sh --fixture-db preview`, which binds the frontend to the MCP-assigned
-  `$PORT` and the Rust server to a private free port wired through
-  `REG_META_SERVER_URL`. Sessions never collide.
+  runs `dev.sh --fixture-db preview`; its `reg-webapp-paired` config runs
+  `dev.sh --paired-fixture preview`. Both bind the frontend to the MCP-assigned `$PORT`
+  and the Rust server to a private free port wired through `REG_META_SERVER_URL`.
+  Sessions never collide.
 
 - **`dev.sh smoke` / `shot`**: free ports, per-run shots directory, guaranteed teardown.
   The path to reach for.
@@ -108,9 +118,9 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
 
   ```sh
   ab="bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js --session $(basename "$PWD")-ui"
-  $ab open http://localhost:<port>/catalog/scb/lisa
+  $ab open http://localhost:<port>/catalog/demo/bas
   $ab snapshot -i         # interactive elements with @refs to click/fill
-  $ab set viewport 375 812 && $ab screenshot /tmp/lisa-mobile.png
+  $ab set viewport 375 812 && $ab screenshot "$TMPDIR/bas-mobile.png"
   $ab a11y                # axe audit of the current page
   $ab close
   ```
@@ -126,15 +136,16 @@ tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
   clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
   after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
   ones must too (don't key on copy like "Loading…").
-- **agent-browser 0.39.1's text `errors` prints a bare `✗`** whatever it holds; read
+- **agent-browser 0.39.2's text `errors` prints a bare `✗`** whatever it holds; read
   `errors --json` (`dev.sh` does).
 - **Playwright's `waitForFunction` takes `(fn, arg, options)`** (`driver.mjs`). Options
   as the second argument become the page-function argument and the timeout never
   applies; pass `null` for `arg`.
 - **The first `a[href^="/catalog"]` is the header nav link.** To drill, click the first
   link strictly deeper than the current path (`a[href^="<current>/"]`).
-- **Both year sliders label their thumbs "From year" / "To year".** Scope by group
-  (`Period window (years)` vs `Project window (years)`).
+- **Every year slider labels its thumbs "From year" / "To year".** Scope by group:
+  `Years to add` (variable coverage), `Years for <table>` (source card) and
+  `Study years` (project banner).
 - **`driver.mjs` must run from `reg_webapp/frontend/`** (it `createRequire`s playwright
   from the cwd): `cd reg_webapp/frontend && bun ../dev/driver.mjs <out-dir> …`.
   Elsewhere: `Cannot find package 'playwright'`. `dev.sh flows` does this for you.
@@ -157,9 +168,9 @@ tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
   directory (`AGENT_BROWSER_SOCKET_DIR`, removed on exit), not `~/.agent-browser`, so a
   shell that cannot write `$HOME` still gets a daemon. Set the variable yourself to
   choose the directory; the path must stay short (unix socket, 103 bytes). Verified from
-  a Claude Bash shell only; a codex `-s workspace-write` run is untested. The Chrome
-  install (`agent-browser install`) still writes `~/.agent-browser`, so install it
-  outside the sandbox or use an installed Google Chrome.
+  a Claude Bash shell only. The Chrome install (`agent-browser install`) still writes
+  `~/.agent-browser`, so install it outside the sandbox or use an installed Google
+  Chrome.
 - Chromium fails to launch in `flows` → `driver.mjs` tries a ladder (sandboxed,
   no-sandbox, single-process; `LAUNCH_LADDER`) and reports each rung's error; read the
   FIRST.
