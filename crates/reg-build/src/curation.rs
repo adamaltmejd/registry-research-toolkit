@@ -188,10 +188,15 @@ fn location(statement: &LocatedStatement) -> String {
 
 /// Locks live inside a register; published statements and cross-register processing
 /// need that same scope in their identity, independent of file paths and line numbers.
+/// `Statement::scoped_identity` from the identity the loader already computed: the
+/// statement is not re-serialized per call, which cost a large share of the Fields
+/// stage (#2196).
 fn publication_identity(statement: &LocatedStatement) -> String {
-    statement
-        .statement
-        .scoped_identity(&statement.provider, &statement.register)
+    reg_core::sha256_hex(reg_frame::canonical_line(&(
+        &statement.provider,
+        &statement.register,
+        &statement.identity,
+    )))
 }
 
 fn statement_locator(
@@ -985,7 +990,7 @@ fn field_application(
     statement: &LocatedStatement,
     ledger: &reg_resolve::Ledger,
     premise: &Premise,
-    locators: &BTreeMap<reg_frame::Locator, Vec<usize>>,
+    locators: &BTreeMap<&reg_frame::Locator, Vec<usize>>,
     root: &Path,
 ) -> Result<
     (
@@ -1251,6 +1256,7 @@ fn run_selected(
                 .cloned()
                 .collect();
         }
+        // Borrowed from `records`, which the group loop below only reads.
         let mut locators = BTreeMap::<_, Vec<_>>::new();
         if fields_stage {
             for (i, record) in records.iter().enumerate() {
@@ -1263,11 +1269,11 @@ fn run_selected(
                     _ => None,
                 };
                 if let Some(at) = at {
-                    locators.entry(at.clone()).or_default().push(i);
+                    locators.entry(at).or_default().push(i);
                 }
                 if let Record::Occurrence(r) = record {
                     for at in &r.also {
-                        locators.entry(at.clone()).or_default().push(i);
+                        locators.entry(at).or_default().push(i);
                     }
                 }
             }
