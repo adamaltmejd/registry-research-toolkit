@@ -19786,3 +19786,51 @@ kind = "set"
 subject = "lararforsorjningen-icke-aktiva: svar @2004-01-01..2004-12-31 where key = 'v6211'"
 fields = { "variable" = "svarande-per-stratum" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Nsvar in folkhogskoleuppfoljningen, internationell-rorlighet, lararforsorjningen; svar in lararforsorjningen-icke-aktiva: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'respondent size per stratum including overcoverage' text where present; others have none); folded into svarande-per-stratum."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-minst-6-manader-gymnasiet"
+fields = { "description" = "Om personen har haft något arbete som varat minst 6 månader sedan hon eller han avslutade eller avbröt gymnasieutbildningen. Arbetet kan ha varit som anställd, egen företagare eller medhjälpande hushållsmedlem. 1 = ja, 2 = nej." }
+evidence = "Label and short definition ('sedan du avslutade/avbröt din gymnasieutbildning') are explicit; opdef adds the kinds of work. Value set #11301 (0 = ska ej svara, 1 = ja, 2 = nej, 77/88 bortfall)."
+
+[[statement]]
+kind = "set"
+subject = "var:f20-txt"
+fields = { "description" = "Fritext: annan typ av funktionsnedsättning än svarsalternativen, som enligt personen hindrade arbete i minst 6 månader. Besvaras bara av dem som angett att en funktionsnedsättning hindrade arbete i minst 6 månader." }
+evidence = "Opdef: 'Endast de som svarat att funktionsnedsättning hindrade arbete minst 6 månader ... Annan funktionsnedsättning, nämligen...'. The short definition ('hindrat från att påbörja eller fullfölja gymnasieskolan') belongs to the F5_* items; the curated label (r366 line 17939, #2102) already separates F20_* (work) from F5_* (school)."
+
+[[statement]]
+kind = "set"
+subject = "var:f33c-txt"
+fields = { "description" = "Fritext med övriga kommentarer till enkäten från dem som uppgav att de går i gymnasiet just nu och därför inte fick fler frågor. SCB:s operationella definition återger avslutningstexten som visades för dem, inte fältets innehåll." }
+evidence = "Opdef is the closing message shown to respondents still in gymnasium ('Eftersom du sagt att du gör det, så blir det inga fler frågor'); label and short definition say 'Övriga kommentarer till enkäten' and the column suffix is _txt (free text). Answers both case 362 and id case 155."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-inkomstkalla"
+fields = { "description" = "Hjälpvariabel som anger förvärvsinkomst 2014 för den huvudsakliga inkomstkällan, grupperad i fyra intervall: 1 = upp till och med 265 000 kr, 2 = 265 001-350 000 kr, 3 = 350 001-430 000 kr, 4 = 430 001 kr eller mer. Används vid kalibrering av bortfall. Koderna är inkomstintervall, inte inkomstslag." }
+evidence = "Opdef: 'Hjälpvariabel som anger förvärvsinkomst (grupperad) för huvudsaklig inkomstkälla 2014. Används vid kalibrering av bortfall'; value set #4032 holds the four income intervals; column inkgrp."
+
+[[statement]]
+kind = "set"
+subject = "var:statusenkat"
+fields = { "description" = "Elevens utbildningsstatus i gymnasieskolan, härledd från enkätsvaren på frågorna 1 och 3: 1 = aldrig påbörjat gymnasieskolan, 2 = fullföljt gymnasieskolan utan slutbetyg/examen, 3 = hoppat av gymnasieskolan." }
+evidence = "Opdef 'härledd från enkätsvaren på frågorna 1 och 3'; value set #4724 codes 1-3 plus 77/88 bortfall. The codes are status, not a grade (årskurs)."
+
+[[statement]]
+kind = "set"
+subject = "var:svarsdatum"
+fields = { "description" = "Datum då personens svar på undersökningen kom in (svarsdatum). SCB:s kortdefinition kallar uppgiften avregistreringsdatum." }
+evidence = "Key v1719, label 'Svarsdatum', no opdef in these tables. The same key carries opdef 'Datum för när svar inkommit' in PSU (r164, 2015-2025), see case 316."
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning-grundskola: F16h where key = 'v44894'"
+fields = { "operational_definition" = "Vid undervisning på distans, i vilken grad tycker du att ni som skola hittat former för att tillgodose elevers behov av stöd?" }
+evidence = "Registerinformation.csv:row=787086 (r18190): label says 'tillgodose elevers behov av stöd' but the opdef says 'upptäcka elever som behöver stöd', copied from F16g (row=787088). Siblings F16i 'upptäcka ... stimulans' / F16j 'tillgodose ... stimulans' (rows 787087, 787085) show the pattern: F16g detect support, F16h meet support."
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning-gymnasieskolan: F16h where key = 'v44894'"
+fields = { "operational_definition" = "Vid undervisning på distans, i vilken grad tycker du att ni som skola hittat former för att tillgodose elevers behov av stöd?" }
+evidence = "Same copy error in the gymnasieskolan table (key v44894, column F16h)."

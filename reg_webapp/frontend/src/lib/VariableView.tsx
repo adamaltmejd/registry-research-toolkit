@@ -1,36 +1,22 @@
 import { type ReactNode, useRef, useState } from "react";
-import {
-  Button,
-  Disclosure,
-  DisclosurePanel,
-  Heading,
-  Tooltip,
-  TooltipTrigger,
-} from "react-aria-components";
-import { variableColumns } from "./add_columns";
+import { Button, Tooltip, TooltipTrigger } from "react-aria-components";
+import { segmentType, variableColumns } from "./add_columns";
 import {
   type CatalogSegment,
   type Context,
   getGraph,
   getSegments,
-  getVariableEvidence,
   type ValidationResultModel,
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import {
-  catalogHref,
-  formatDataType,
-  humanizeClassificationSlug,
-} from "./catalog";
-import { catalogWords, yesNo } from "./catalog_labels";
+import { catalogHref, humanizeClassificationSlug } from "./catalog";
 import {
   loadRegister,
   registerRead,
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
-import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
 import { yearWindowLabel } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
@@ -41,12 +27,11 @@ import { type Definition, Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
-import { TreeChevron } from "./ui/TreeChevron";
+import { TypePill } from "./ui/TypePill";
 import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValueSetView } from "./ValueSetView";
 import { useVariableCoverage } from "./VariableCoverage";
-import { EvidenceContent } from "./VariableEvidence";
 import variableStyles from "./VariableView.module.css";
 import { windowBounds } from "./window_bounds";
 
@@ -56,67 +41,18 @@ const readNeighbourRegisters = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((fqid) => [fqid, registerRead(fqid)]));
 
 /** One fact of a segment, keyed so equal values group; null when the catalog
- * does not state it (or states the default, "clear"), so the row is left out
- * rather than printed as "Not stated". */
+ * does not state it, or states "no" for a fact shown only when yes, so the
+ * row is left out rather than printed as "Not stated" or "No". */
 type SegmentFact = { key: string; value: ReactNode } | null;
 
 const FACTS: readonly {
   term: string;
   of: (row: CatalogSegment) => SegmentFact;
 }[] = [
-  {
-    term: "Role",
-    of: (row) => ({ key: row.role, value: catalogWords(row.role) }),
-  },
-  {
-    term: "Coded",
-    of: (row) =>
-      row.coded ? { key: row.coded, value: yesNo(row.coded === "yes") } : null,
-  },
-  {
-    term: "State",
-    of: (row) =>
-      row.state ? { key: row.state, value: catalogWords(row.state) } : null,
-  },
-  {
-    term: "Identifier",
-    of: (row) =>
-      row.identifier === undefined
-        ? null
-        : {
-            key: String(row.identifier),
-            value: yesNo(row.identifier),
-          },
-  },
+  // An identifier shows as the Identifier type pill, so it has no row here.
   {
     term: "Sensitive",
-    of: (row) =>
-      row.sensitive === undefined
-        ? null
-        : { key: String(row.sensitive), value: yesNo(row.sensitive) },
-  },
-  {
-    term: "Storage",
-    of: (row) => {
-      const type = formatDataType(
-        row.type || row.format,
-        row.length?.toString(),
-      );
-      const format =
-        row.type && row.format && row.format !== row.type ? row.format : "";
-      const storage = [type, format].filter(Boolean).join(" ");
-      if (storage) return { key: storage, value: <code>{storage}</code> };
-      if (row.length !== undefined)
-        return {
-          key: `length ${row.length}`,
-          value: (
-            <>
-              Length <code>{row.length}</code>
-            </>
-          ),
-        };
-      return null;
-    },
+    of: (row) => (row.sensitive ? { key: "yes", value: "Yes" } : null),
   },
   // Value sets have their own panel (ValueSetView); only the classification
   // they code is a fact here.
@@ -169,6 +105,39 @@ function factYears(
   return columnYearRuns(segments, bounds).map(yearWindowLabel).join(", ");
 }
 
+/** The Type row: one pill per type the columns are written as, with its years
+ * inside only where the type changes over time (maintainer 2026-11-04). */
+function typeFact(
+  segments: readonly CatalogSegment[],
+  bounds: readonly [number, number],
+): Definition[] {
+  const { groups } = groupFact(segments, (row) => ({
+    key: segmentType(row),
+    value: null,
+  }));
+  if (groups.length === 0) return [];
+  return [
+    {
+      term: "Type",
+      value: (
+        <span className={variableStyles.types}>
+          {groups.map(([type, group]) => (
+            <TypePill
+              key={type}
+              type={segmentType(group.segments[0])}
+              years={
+                groups.length > 1
+                  ? factYears(group.segments, bounds)
+                  : undefined
+              }
+            />
+          ))}
+        </span>
+      ),
+    },
+  ];
+}
+
 /** The facts of a variable's segments (DESIGN.md → Detail pane): a fact every
  * segment states alike is one value; one that differs lists each value with
  * its years; a fact no segment states is left out. */
@@ -200,7 +169,6 @@ function segmentFacts(
     ];
   });
 }
-
 /** The curated description, else the provider's wording: once when every
  * stated period agrees, otherwise each wording with the years it is used. */
 function Description({
@@ -289,14 +257,16 @@ export function VariableView({
   context: Context | null;
   validation: ValidationResultModel | null;
 }) {
-  const [registerAttempt, setRegisterAttempt] = useState(0);
-  const registerRegion = useRef<HTMLDivElement>(null);
+  // One counter retries every read the timeline needs: the register's tables
+  // and the variable's per-period list.
+  const [attempt, setAttempt] = useState(0);
+  const timelineRegion = useRef<HTMLDivElement>(null);
   const registerResource = useAsyncResource(
-    `${node.register}:${registerAttempt}`,
+    `${node.register}:${attempt}`,
     (signal) => loadRegister(node.register, signal),
   );
   const register = registerResource.data;
-  const segments = useAsyncResource(node.fqid, (signal) =>
+  const segments = useAsyncResource(`${node.fqid}:${attempt}`, (signal) =>
     getSegments(node.fqid, { signal }),
   );
   const graph = useAsyncResource(node.fqid, (signal) =>
@@ -346,12 +316,6 @@ export function VariableView({
     graph.loading ||
     Object.values(neighbours).some((read) => read.loading) ||
     Object.values(neighbourRegisters).some((read) => read.loading);
-  // Keep the key after closing: the resource (including a failure) lasts for this page.
-  const [evidenceRequested, setEvidenceRequested] = useState(false);
-  const evidence = useAsyncResource(
-    evidenceRequested ? node.fqid : null,
-    (signal) => getVariableEvidence(node.fqid, { signal }),
-  );
   const bounds = windowBounds(context);
   const coverage = useVariableCoverage({
     node,
@@ -365,7 +329,8 @@ export function VariableView({
     successionError,
     allowAdd: context !== null,
   });
-  const facts = segmentFacts(segments.data ?? [], [bounds.min, bounds.max]);
+  const factBounds = [bounds.min, bounds.max] as const;
+  const rows = segments.data ?? [];
   return (
     <article className={styles.page}>
       <Definitions
@@ -383,24 +348,21 @@ export function VariableView({
             : []
         }
         definitions={[
-          ...facts,
-          {
-            term: "Period",
-            value: <code>{catalogPeriodLabel(node.period)}</code>,
-          },
+          ...typeFact(rows, factBounds),
+          ...segmentFacts(rows, factBounds),
           ...(node.tags?.length
             ? [
                 {
-                  term: "Tags",
-                  value: node.tags?.map((tag) => tag.name).join(", "),
+                  term: "Topics",
+                  value: node.tags.map((tag) => tag.name).join(", "),
                 },
               ]
             : []),
           ...(node.sets?.length
             ? [
                 {
-                  term: "Groups",
-                  value: node.sets?.map((set, index) => (
+                  term: "Group",
+                  value: node.sets.map((set, index) => (
                     <span key={set.fqid}>
                       {index > 0 && ", "}
                       <a className="link" href={catalogHref(set.fqid)}>
@@ -413,10 +375,15 @@ export function VariableView({
             : []),
         ]}
       />
+      <Description
+        description={node.description}
+        segments={rows}
+        bounds={factBounds}
+      />
       <div
-        ref={registerRegion}
+        ref={timelineRegion}
         tabIndex={-1}
-        className={variableStyles.registerRead}
+        className={variableStyles.timeline}
         aria-busy={
           registerResource.loading ||
           successionLoading ||
@@ -426,7 +393,7 @@ export function VariableView({
       >
         {registerResource.loading || segments.loading ? (
           <Skeleton count={2} />
-        ) : registerResource.error ? (
+        ) : registerResource.error || segments.error ? (
           <StatusRow
             tone="error"
             live="alert"
@@ -434,73 +401,25 @@ export function VariableView({
               <ActionButton
                 variant="ghost"
                 onPress={() => {
-                  setRegisterAttempt((attempt) => attempt + 1);
-                  registerRegion.current?.focus();
+                  setAttempt((current) => current + 1);
+                  timelineRegion.current?.focus();
                 }}
               >
                 Retry
               </ActionButton>
             }
           >
-            Could not load the register's tables.
-          </StatusRow>
-        ) : segments.error ? (
-          <StatusRow tone="error" live="alert">
-            The variable's columns did not load ({segments.error}). Reload the
-            page to try again.
+            {registerResource.error
+              ? "Could not load the register's tables."
+              : "Could not load this variable's years."}
           </StatusRow>
         ) : (
           coverage.graph
         )}
       </div>
-      <Description
-        description={node.description}
-        segments={segments.data ?? []}
-        bounds={[bounds.min, bounds.max]}
-      />
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
-      <Disclosure
-        className={styles.disclosure}
-        onExpandedChange={(expanded) => {
-          if (expanded) setEvidenceRequested(true);
-        }}
-      >
-        {({ isExpanded }) => (
-          <>
-            <Heading level={2} className={styles.disclosureHeading}>
-              <Button slot="trigger" className={styles.disclosureButton}>
-                <TreeChevron />
-                <span>Source and provenance</span>
-              </Button>
-            </Heading>
-            <DisclosurePanel
-              className={`motion-disclose ${isExpanded ? "open" : ""}`}
-            >
-              <div>
-                {isExpanded &&
-                  (evidence.loading ? (
-                    <div aria-busy="true">
-                      <Skeleton count={2} />
-                    </div>
-                  ) : evidence.error ? (
-                    <StatusRow tone="error" live="alert">
-                      Source and provenance did not load ({evidence.error}).
-                      Reload the page to try again.
-                    </StatusRow>
-                  ) : evidence.data ? (
-                    <EvidenceContent
-                      evidence={evidence.data}
-                      node={node}
-                      names={names}
-                    />
-                  ) : null)}
-              </div>
-            </DisclosurePanel>
-          </>
-        )}
-      </Disclosure>
       {coverage.addBar}
     </article>
   );

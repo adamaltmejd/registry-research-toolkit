@@ -5654,3 +5654,15 @@ kind = "set"
 subject = "var:produktion-av-regnbage-utsattning-salt"
 fields = { "label" = "Produktion av regnbåge för utsättning, i havet (SRblf_salt)" }
 evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "var:movr1r"
+fields = { "description" = "Rymlingar av övrig matfisk (2) i sötvatten, i procent av företagets totala produktion av övrig matfisk (2)." }
+evidence = "Enheten är Procent i sju av åtta årgångar; Antal i r14473 rättas separat.\n0.74.0 catalog, key v40007, releases r13664, r14473, r14902, r17603...; reg_meta.db:occurrence:513941,514114,514348"
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: MOvr1R where key = 'v40007' and release = 'r14473'"
+fields = { "unit" = "Procent" }
+evidence = "Enheten är Procent i övriga sju årgångar av nyckel v40007.\nold unit: 'Antal'; Registerinformation.csv:row=396768 (r14473)"

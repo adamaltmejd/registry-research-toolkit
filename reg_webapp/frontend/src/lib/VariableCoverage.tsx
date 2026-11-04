@@ -31,10 +31,10 @@ import { projectStore } from "./project_store";
 import { columnYearRuns, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
-import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { useProject } from "./use_project";
 import styles from "./VariableCoverage.module.css";
+import { createProject } from "./window";
 import { windowBounds } from "./window_bounds";
 
 /** The focus columns and their read-only succession neighbours on one axis. */
@@ -61,14 +61,14 @@ export function useVariableCoverage({
   successionError?: string | null;
   allowAdd?: boolean;
 }) {
-  const { draft } = useProject();
+  const { draft, raw } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
   const [period, setPeriod] = useState<ProjectStudyWindow | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
-  const heading = useRef<HTMLSpanElement>(null);
+  const heading = useRef<HTMLDivElement>(null);
   const bounds = windowBounds(context);
   const study = studyWindow(draft);
   const columns = variableColumns(segments);
@@ -187,44 +187,38 @@ export function useVariableCoverage({
     }
   };
   return {
-    graph: segments.length > 0 && context && (
-      <Panel
-        title={
-          <span className={styles.header}>
-            <span ref={heading} tabIndex={-1} className={styles.heading}>
-              <span className="visually-hidden">Coverage </span>
-              <span>{runs.map(yearWindowLabel).join(", ")}</span>
-            </span>
-            {allowAdd && differs && (
-              <Button
-                variant="ghost"
-                onPress={() => {
-                  setAddWindow(null);
-                  heading.current?.focus();
-                }}
-              >
-                Clear period
-              </Button>
-            )}
-          </span>
-        }
-      >
-        {allowAdd && (
-          <span className="visually-hidden">
-            Add window {yearWindowLabel(active)}.
-            {outside.length > 0
-              ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`
-              : ""}
-          </span>
+    graph: !context ? null : segments.length === 0 ? (
+      <p className={styles.hint}>No years recorded for this variable.</p>
+    ) : (
+      <div ref={heading} tabIndex={-1} className={styles.timeline}>
+        {allowAdd && differs && (
+          <div className={styles.header}>
+            <Button
+              variant="ghost"
+              onPress={() => {
+                setAddWindow(null);
+                heading.current?.focus();
+              }}
+            >
+              Clear period
+            </Button>
+          </div>
         )}
+        <span className="visually-hidden">
+          Years {runs.map(yearWindowLabel).join(", ")}.
+          {allowAdd && ` Years to add ${yearWindowLabel(active)}.`}
+          {allowAdd && outside.length > 0
+            ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`
+            : ""}
+        </span>
         <LaneGraph
           label="Variable columns"
           lanes={[
             ...[...new Set(columns.map((column) => column.table))].map(
               (table) => ({
                 id: table,
-                name: node.name,
-                sub: { text: names.get(table) ?? "Table name unavailable" },
+                // The page is the variable: its lanes are its tables.
+                name: names.get(table) ?? "Table name unavailable",
                 current: true,
                 relations: neighbours.relations.get(table),
               }),
@@ -238,19 +232,14 @@ export function useVariableCoverage({
           addWindow={
             allowAdd && (differs || !study) ? [active.from, active.to] : null
           }
-          coverage={{
-            covered: available,
-            years,
-            outside,
-            bandName: study ? "Study window" : null,
-          }}
+          coverage={{ covered: available, years, outside }}
           overlay={
             allowAdd && available ? (
               <PeriodThumbs
                 axis={axis}
                 selection={active}
                 bounds={available}
-                label="Add window (years)"
+                label="Years to add"
                 onMove={setAddWindow}
                 onRest={onRest}
               />
@@ -277,12 +266,32 @@ export function useVariableCoverage({
             {successionError} Reload the page to try again.
           </StatusRow>
         )}
-        {allowAdd && !draft && (
-          <p className={styles.hint}>
-            Create or open a project to select columns.
+        {/* A rejected project is a recovery copy: fixing or replacing it is the
+            project page's, behind its confirmation, never a one-click create. */}
+        {allowAdd && !draft && raw !== null && (
+          <p className={styles.create}>
+            Fix the project on the{" "}
+            <a className="link" href="/project">
+              project page
+            </a>{" "}
+            to add columns.
           </p>
         )}
-      </Panel>
+        {allowAdd && raw === null && (
+          <p className={styles.create}>
+            Create a project to add columns.
+            <Button
+              onPress={() => {
+                createProject(context);
+                // The button goes once a project exists; focus stays on the timeline.
+                heading.current?.focus();
+              }}
+            >
+              Create a project
+            </Button>
+          </p>
+        )}
+      </div>
     ),
     addBar: allowAdd && (
       <>

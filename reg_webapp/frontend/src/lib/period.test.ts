@@ -4,7 +4,6 @@ import {
   coverageBandEdges,
   dataAxis,
   intersectCoverageWindow,
-  nextResolutionQuery,
   periodCoverageUnion,
   periodWindowRelation,
   yearSegmentsFromWire,
@@ -33,30 +32,6 @@ describe("dataAxis", () => {
     ["the catalog's last year steps backward", [2025], null, [2020, 2025]],
   ] as const)("%s", (_, years, window, expected) => {
     expect(dataAxis(years, window, [1947, 2025])).toEqual(expected);
-  });
-});
-
-describe("nextResolutionQuery (resolution-merge rule)", () => {
-  it("clearing the period DROPS the variant/value_set_version modifiers", () => {
-    // ?variant / ?value_set_version are inert without ?period (the server
-    // 422s them), so clearing the period yields the empty query (full history).
-    const current = {
-      period: "2020",
-      variant: "x",
-      value_set_version: "y",
-    };
-    expect(nextResolutionQuery(current, { period: null })).toBe("");
-    expect(nextResolutionQuery(current, { period: "" })).toBe("");
-  });
-
-  it("an undefined field inherits; an explicit empty string clears that field", () => {
-    const current = { period: "2020", variant: "x" };
-    // variant undefined → inherited
-    expect(nextResolutionQuery(current, { period: "2021" })).toBe(
-      "period=2021&variant=x",
-    );
-    // variant "" → cleared (but the period survives)
-    expect(nextResolutionQuery(current, { variant: "" })).toBe("period=2020");
   });
 });
 

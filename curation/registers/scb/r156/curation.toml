@@ -1888,3 +1888,9 @@ kind = "set"
 subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
 fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost303T)" }
 evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:radnr"
+fields = { "description" = "Radnummer för posten i enkäten, inte ett belopp. Investeringsbeloppet finns i kolumnen InvBelopp i samma tabell." }
+evidence = "Kolumnnamn RadNr och etiketten \"radnummer\"; beloppet finns i InvBelopp (nyckel v6331).\n0.74.0 catalog, key v6331, releases r1507, r2599, r3013, r3887...; reg_meta.db:occurrence:243636,243690,243743"

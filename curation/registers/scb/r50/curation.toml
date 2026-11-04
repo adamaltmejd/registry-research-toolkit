@@ -901,3 +901,21 @@ kind = "set"
 subject = "var:sumforman"
 fields = { "label" = "Förmån (summa förmåner)" }
 evidence = "#2102 same-label cluster 'Förmån' (2 variables): judged different meaning, medium confidence; Two concurrent columns, MFormaner and SumFormaner; no text beyond the shared definition."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: SumSkift @1996..2005"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "SumSkift (key v5622) is a sum of shift and OB pay, 'Kronor (SEK)' in 2004 and 2006-2024 but 'Hektar' in 1996-2003 and 2005 (Registerinformation.csv:row=340603 (r4384), row=340610 (r4388), row=340617 (r4387)). A copy error from an agriculture table. The range also covers 2004 (already Kronor)."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: MSkift @1996..2005"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "Same class as SumSkift (key v5547, monthly amount of shift and OB pay): 'Hektar' in 1996-2003 and 2005 (row=340606, 340613, 340621), 'Kronor (SEK)' in 2004 and 2006-2024."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: SumHelglon @2004"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "SumHelglon (key v5608, 'Ersättning för förlorad lön vid helgdagar') is 'Kronor (SEK)' in every release except 2004, where SCB gives 'Hektar' (Registerinformation.csv:row=448245 (r1048), row=448955)."

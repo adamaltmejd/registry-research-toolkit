@@ -2890,3 +2890,21 @@ kind = "set"
 subject = "var:arb-mark-stat-lisa"
 fields = { "label" = "Arbetsmarknadsstatus, skapad av SoS (ARB_MARK_STAT_LISA)" }
 evidence = "#2102 same-label cluster 'Arbetsmarknadsstatus, skapad av SoS' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Identical definition and code lists in the same table; nothing documents what the LISA suffix means, so the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:examen-grov-gruppering-kod"
+fields = { "description" = "Kod (femställig bokstavskod) för examens grova ämnesgruppering. Klartexten finns i TMGRPNAMN." }
+evidence = "TMGRP is the code and TMGRPNAMN the plain text in both tables: A_LOVA_EXAMEN label 'Examen grov gruppering, kod', Värdemängd 'Femställig bokstavskod' (row 173), TMGRPNAMN label '..., klartext', 'Fritext' (row 175). In the control table A_LOVA_STYR_EXAMENSKODER (row 174) the label also says 'kod' but the definition says 'i klartext'; that table has its own TMGRPNAMN row (176), so the 'klartext' wording is a copy from TMGRPNAMN.\ncatalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx: 'Metadata - Variabelnivå' rows 173-176."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2000"
+fields = { "description" = "Utbildningsnivå för högsta avslutade utbildning enligt SUN 2000, tresiffrig kod." }
+evidence = "SUN2000NIVA definition 'Nivå på högsta utbilding enligt SUN2020' is identical to the definition of SUN2020NIVA (row 165) in the same table; label, column name and the sibling SUN2000INR (row 161: '...enligt SUN2000') show SUN2000.\ncatalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx: 'Metadata - Variabelnivå' rows 163, 165, 161."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod"
+fields = { "description" = "Tvåställig bokstavskod för legitimationsyrke (22 yrken). I tabellerna med examensuppgifter ingår även socionom (SO), och i examenstabellen är fältet tomt för övriga. I förteckningen över legitimationer och specialbevis förekommer bara SJ, LK och TL, eftersom bara de yrkena har specialiteter." }
+evidence = "One code, differing coverage per table: A_LOVA row 210 and A_LOVA_HOSP row 212 '22 legitimationsyrkena'; A_LOVA_EXAMEN row 211 '..., plus socionom. I övrigt tomt.'; A_LOVA_STYR_EXAMENSKODER row 213 'Legitimationsyrkena plus socionom (SO)'; A_LOVA_STYR_LEG_SPEC_EXAM_KOD row 214 'SJ, LK, TL. Inga leg andra har specialiteter'. Same variable, no conflict in meaning. The letter-code expansions (SJ, LK, TL) are deliberately not spelled out because no codebook is in the sources.\ncatalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx: 'Metadata - Variabelnivå' rows 210-214."

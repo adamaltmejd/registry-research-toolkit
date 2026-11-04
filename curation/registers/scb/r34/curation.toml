@@ -23897,3 +23897,9 @@ kind = "set"
 subject = "individer-16plus: antalsys @1990-01-01..2009-12-31 where key = 'v15532'"
 fields = { "variable" = "antal-sysselsatta-ast" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ast_AntalSys in arbetsstallen; AntalSys in individer-15plus, individer-16plus: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both define the number of employed at the arbetsställe (person-level variant says the workplace of main activity), derived from BAS Årsuppgifter); folded into antal-sysselsatta-ast."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk3-2012"
+fields = { "description" = "Yrkeskod på 3-siffernivå enligt SSYK 2012 för den huvudsakliga sysselsättningen." }
+evidence = "Etikett och definition anger yrke (SSYK 2012); den operationella definitionen \"Arbetsställenummer\" finns bara i en årgång (2016) och är en kopia.\n0.74.0 catalog, key v510, releases r11268, r12202, r8612; reg_meta.db:occurrence:373213,373486,373790"

@@ -292,12 +292,6 @@ evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy ex
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: {lgrp,snigrupp} where key = 'v4027'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v4027'"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
@@ -1120,18 +1114,6 @@ evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34996:14610:1
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-grupperad-2009"
-fields = { "sets" = ["naringsgren"] }
-evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-grupperad-2009"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har motstridiga ägare och begrepp.\ncatalog:occurrence:317770\ncatalog:occurrence:317771"
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-ng1"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Klassificering av näringsgren.\ncatalog:variable_text:34998:15065:16801"
@@ -1261,18 +1243,6 @@ kind = "set"
 subject = "var:naringsgren-snia"
 fields = { "tags" = ["business"] }
 evidence = "Klassificering av näringsgren.\ncatalog:variable_text:35008:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-snigrupp"
-fields = { "sets" = ["naringsgren"] }
-evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-snigrupp"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare med olika klassificeringsnivåer.\ncatalog:occurrence:317889\ncatalog:occurrence:317890"
 
 [[statement]]
 kind = "set"
@@ -1617,12 +1587,6 @@ evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: 
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-grupperad-2009"
-fields = { "facets" = { "nivo" = { "value" = "grupperad", "label" = "Grupperad SNI (2009)" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-rams"
 fields = { "facets" = { "nivo" = { "value" = "5-siffer", "label" = "5-siffrig SNI (RAMS)" } } }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
@@ -1953,18 +1917,6 @@ evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #212
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-grupperad-2009"
-fields = { "label" = "Näringsgren (lgrp)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-snigrupp"
-fields = { "label" = "Näringsgren (snigrupp)" }
-evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-2siffer"
 fields = { "label" = "Näringsgren (2-siffernivå, bransch)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (20 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs exist for only part of each column (NG1 and NGS1 'huvudnäringsgren' 2011 on, Sni2 '2-siffer' from 2011), and no text defines lgrp, snigrupp or the _2002/_2007 suffixes (lgrp and snigrupp carry 821 five-digit codes, not groups), so those take their code; bransch (2-siffernivå) and Ksjusni (RAMS) are documented in every occurrence."
@@ -2010,3 +1962,15 @@ kind = "set"
 subject = "var:urvalsstorlek-per-stratum-lillanrfv"
 fields = { "label" = "Urvalsstorlek per stratum (lillanrfv)" }
 evidence = "#2102 same-label cluster 'Urvalsstorlek per stratum' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; lillanks and lillanrfv have no opdef and run concurrently in sjukfranvaro-sjukloneperioden; Lillan has opdef 'Antalet utvalda objekt i ett stratum'."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v4027'"
+fields = { "variable" = "none" }
+evidence = "r3777 (2011 kv1) lists snigrupp twice: v15149 'Näringsgrupp' (value set 1402, the owner of snigrupp in 2006-2011 kv1 and in every release 2011 kv2 - 2023) and v4027 'Näringsgren' (value set 6191, the detailed industry variable that SCB lists under many columns bgr98, ng1, ngs1, Ksjusni, sni2 and so on). v4027 uses snigrupp nowhere else, so this row is a stray under another variable's column. Withholding it loses no coverage. A fold into naringsgrupp-snigrupp would not work: the two have different definitions and code lists.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=898486 (r3777, v4027 snigrupp)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=691688 (r3777, v15149 snigrupp)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=957086 (r11393, v15149 snigrupp)"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lgrp where key = 'v4027'"
+fields = { "variable" = "none" }
+evidence = "r3774 (2009) lists lgrp twice: v15150 'Länsgrupp' (value set 9202, owner of lgrp in every release 2006 - 2011 kv1) and v4027 'Näringsgren' (value set 6191), which SCB lists under many industry columns and nowhere else under lgrp. The v4027 row is a stray under another variable's column; withholding it loses no coverage.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=898439 (r3774, v4027 lgrp)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=691362 (r3774, v15150 lgrp)"

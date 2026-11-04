@@ -2597,3 +2597,21 @@ kind = "set"
 subject = "var:valdeltagande-senaste-riksdagsval-harledd"
 fields = { "label" = "Valdeltagande vid senaste riksdagsval (härledd)" }
 evidence = "#2102 same-label cluster 'Valdeltagande vid senaste riksdagsval' (2 variables): judged different meaning, high confidence; Fr5 is the survey question; valdrv_sen is derived from fr5, first-time voter code and reskont with extra codes."
+
+[[statement]]
+kind = "set"
+subject = "november: {inkmak,inkmakKI} @2007-05-01..2017-11-30"
+fields = { "unit" = "Kronor" }
+evidence = "Short definition: 'Summa förvärvs- och kapitalinkomst inklusive sjöinkomst för ... make/maka/registrerad partner'. SCB gives unit 'Kronor' in 2000-2006 and 2012-2022 but 'Antal' in 16 releases between 2007-05 and 2017-11 (Registerinformation.csv:row=989685 (r11486) 'Antal' vs row=989691 (r11487) 'Kronor'). A copy error; the range also covers releases already 'Kronor' (no change)."
+
+[[statement]]
+kind = "set"
+subject = "var:fr29-emu"
+fields = { "description" = "Hur personen skulle rösta om en folkomröstning om svensk anslutning till EMU (den europeiska valutaunionen) hölls: 1 = för anslutning, 2 = mot anslutning, 3 = skulle inte delta eller rösta blankt, 8 = vet ej, 9 = vägrar. Frågan ställdes 2000-2002, före folkomröstningen 2003, och gäller alltså inte faktisk röstning." }
+evidence = "Opdef (all three releases): 'Frågan som ställdes rörde 2003 års folkomröstning ... Om vi skulle rösta om en svensk anslutning till EMU, hur skulle du rösta då'; value sets #13033/#11565/#10070. The short definition ('har röstat i folkomröstningen') is a generic text from another variable."
+
+[[statement]]
+kind = "set"
+subject = "var:svarsdatum"
+fields = { "description" = "Datum då personens svar på undersökningen kom in (svarsdatum). SCB:s kortdefinition kallar uppgiften avregistreringsdatum." }
+evidence = "Key v1719: opdef 'Processdata. Svarsdatum' (2003-2006) and 'Datum för när svar inkommit' (2015-2025) contradict nothing in the label 'Svarsdatum'; only the short definition 'Avregistreringsdatum' differs and is repeated unchanged in all releases. The same key and short definition appear in utbildningsanalyser (case 365)."

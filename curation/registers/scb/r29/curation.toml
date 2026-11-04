@@ -626,25 +626,25 @@ evidence = "reg_meta_build/curation/registers/scb/linda.toml:3589\n\nComplete ac
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: afahhalv"
-fields = { "label" = "Underlag för hyreshusavgift med 0,15 procent" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus med 0,15 procent" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:3769\n\nComplete accepted LINDA native families, original operational definitions, physical column associations, exact edition parents, actual support and pinned bound books. Preserve each historical source field and documented rate, pension occurrence and industry basis separately; no statistical equivalence, undocumented classification or period inferred. Proof: Batch50-LINDA12-source-role-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: afahhalv"
-fields = { "label" = "Underlag för hyreshusavgift med 0,15 procent" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus med 0,15 procent" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:3781\n\nComplete accepted LINDA native families, original operational definitions, physical column associations, exact edition parents, actual support and pinned bound books. Preserve each historical source field and documented rate, pension occurrence and industry basis separately; no statistical equivalence, undocumented classification or period inferred. Proof: Batch50-LINDA12-source-role-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: afa02"
-fields = { "label" = "Underlag för hyreshusavgift med 0,2 procent, källfält AFA02" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus med 0,2 procent (AFA02)" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:3793\n\nComplete accepted LINDA native families, original operational definitions, physical column associations, exact edition parents, actual support and pinned bound books. Preserve each historical source field and documented rate, pension occurrence and industry basis separately; no statistical equivalence, undocumented classification or period inferred. Proof: Batch50-LINDA12-source-role-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: afa02"
-fields = { "label" = "Underlag för hyreshusavgift med 0,2 procent, källfält AFA02" }
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus med 0,2 procent (AFA02)" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:3805\n\nComplete accepted LINDA native families, original operational definitions, physical column associations, exact edition parents, actual support and pinned bound books. Preserve each historical source field and documented rate, pension occurrence and industry basis separately; no statistical equivalence, undocumented classification or period inferred. Proof: Batch50-LINDA12-source-role-proof.json."
 
 [[statement]]
@@ -9961,12 +9961,6 @@ evidence = "Variabeln anger ett geografiskt län.\ncatalog:variable_text:36791:2
 
 [[statement]]
 kind = "set"
-subject = "var:lan-kommun-och-forsamling"
-fields = { "tags" = ["geography"] }
-evidence = "Källkolumnen har angränsande mappningar till församlingsvariabeln. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0386: Ingen vald variabel kodar folkbokföringsort. membership-0387: Variabeln anger aktuell folkbokföringsort i sammansatt geografisk kodning. membership-0388: Båda kodar aktuell folkbokföringsort som sammansatt geografisk uppgift. membership-0389: Vald folkbokföringskommun är ett separat kommunfält och ändringsår är ett tidsmått; inget omfattas av sammansatt ortskodning. membership-0390: Församlingsfältet den 1/11 anges som separat församlingskod; delad källkolumn belägger inte sammansatt geografiskt innehåll. membership-0391: Den sammansatta koden anger aktuell folkbokföringsort enligt fast definition. membership-0392: Postnummer är inte den definierade sammansatta folkbokföringsortskoden. membership-0393: Inga valda variabler mäter sammansatt folkbokföringsort. membership-0394: Valda geografiska indelningar är inte sammansatt aktuell folkbokföringsort. membership-0395: Det geografiska fältet anger arbetsställets län, inte sammansatt folkbokföringsort. membership-0396: Folkbokföringsförhållande är inte dokumenterat som sammansatt geografisk ortskod. membership-0397: Ingen vald variabel anger folkbokföringsort. membership-0398: Inget valt sektionsfält motsvarar definitionen. membership-0399: Urvalets extra avdrag omfattas inte.\ncatalog:occurrence:335801\ncatalog:occurrence:336078\ncatalog:occurrence:339078\ncatalog:occurrence:339550\ncatalog:valueset:7128\ncatalog:variable_text:36173:7670:8401\ncatalog:variable_text:36310:3652:4018\ncatalog:variable_text:36413:13879:17167\ncatalog:variable_text:36414:8401:9862\ncatalog:variable_text:36564:13879:14245\ncatalog:variable_text:36565:2922:7670\ncatalog:variable_text:36566:16436:17897\ncatalog:variable_text:36598:12784:17897\ncatalog:variable_text:36707:11323:17897\ncatalog:variable_text:36712:10957:17897\ncatalog:variable_text:36790:9131:17897\ncatalog:variable_text:36792:12418:12784\ncatalog:variable_text:36805:15706:17897\ncatalog:variable_text:36918:17532:17897\ncatalog:variable_text:36943:4018:9862\ncatalog:variable_text:36977:16436:17897\ncatalog:variable_text:37017:16071:17897\ncatalog:variable_text:37137:3652:4018\ncatalog:variable_text:37198:8035:10227\ncatalog:variable_text:37331:-731:8035\ncatalog:variable_text:37356:12053:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:lan"
 fields = { "sets" = [] }
 evidence = "B är en enbokstavskod i id:t; etiketten anger län.\ncatalog:variable_text:36793:4748:5479\ncatalog:variable_text:36793:5844:8401"
@@ -11233,7 +11227,7 @@ evidence = "Pensioner och andra bidrag.\ncatalog:variable_text:36912:12784:17897
 
 [[statement]]
 kind = "set"
-subject = "var:pensionsavgift-allman-anstallning"
+subject = "var:underlag-for-allman-pensionsavgift-anstallning"
 fields = { "tags" = ["taxation"] }
 evidence = "Källans definition anger underlag men operationaliseringen anger avgift.\ncatalog:variable_text:36913:10592:17897\ncatalog:variable_text:36913:9131:9496"
 
@@ -12028,18 +12022,6 @@ kind = "set"
 subject = "var:allman-avgift-for-arbetsloshetsforsakring"
 fields = { "tags" = ["taxation"] }
 evidence = "SARBLOS är en opak källmnemonik.\ncatalog:variable_text:36994:8766:9131"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskild-efterlevandepension"
-fields = { "sets" = [] }
-evidence = "Samma kolumn växlar ägare mellan perioder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0386: Ingen vald variabel mäter särskild efterlevandepension. membership-0387: Ingen vald variabel mäter särskild efterlevandepension eller dess garantidel. membership-0388: Variablerna anger särskild efterlevandepensions grad och dess garantipensionsgrad. membership-0389: Valda efterlevandemått avser barnpension eller premiepension, inte särskild efterlevandepension. membership-0390: Förlängd omställningspension är uttryckligen ett annat pensionsslag. membership-0391: ATP:s allmänna efterlevandeförmånskoder avgränsar inte särskild efterlevandepension. membership-0392: Garantipension till särskild efterlevandepension ingår uttryckligen. Särskild omställningspension utesluts enligt fast text. membership-0393: Inga valda variabler mäter särskild efterlevandepension. membership-0394: ATP:s generella efterlevandekod identifierar inte särskild efterlevandepension. membership-0395: Inget valt mått avser särskild efterlevandepension. membership-0396: Inget valt mått avser särskild efterlevandepension. membership-0397: Ingen vald variabel mäter särskild efterlevandepension. membership-0398: Det valda pensionsfältet är ett belopp utan belagd garantiavgränsning. Den fasta definitionen omfattar grad och garantipensionsdel; källbedömningens medlemsförslag kan därför inte antas. membership-0399: Urvalets extra avdrag omfattas inte.\ncatalog:occurrence:355188\ncatalog:occurrence:355693\ncatalog:occurrence:361346\ncatalog:occurrence:361912\ncatalog:variable_text:36310:3652:4018\ncatalog:variable_text:36379:12053:17897\ncatalog:variable_text:36387:12053:17897\ncatalog:variable_text:36438:12053:17897\ncatalog:variable_text:36439:12053:17897\ncatalog:variable_text:36512:12784:17897\ncatalog:variable_text:36515:12053:12784\ncatalog:variable_text:36582:12053:17897\ncatalog:variable_text:36707:11323:17897\ncatalog:variable_text:36712:10957:17897\ncatalog:variable_text:36741:9862:12053\ncatalog:variable_text:36742:9862:12053\ncatalog:variable_text:36743:9862:12053\ncatalog:variable_text:36805:15706:17897\ncatalog:variable_text:36918:17532:17897\ncatalog:variable_text:36926:12053:17897\ncatalog:variable_text:36977:16436:17897\ncatalog:variable_text:36995:12784:16801\ncatalog:variable_text:37004:12053:17897\ncatalog:variable_text:37017:16071:17897\ncatalog:variable_text:37137:3652:4018\ncatalog:variable_text:37198:8035:10227\ncatalog:variable_text:37216:4018:8401"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskild-efterlevandepension"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma kolumn växlar ägare mellan perioder. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0386: Ingen vald variabel mäter särskild efterlevandepension. membership-0387: Ingen vald variabel mäter särskild efterlevandepension eller dess garantidel. membership-0388: Variablerna anger särskild efterlevandepensions grad och dess garantipensionsgrad. membership-0389: Valda efterlevandemått avser barnpension eller premiepension, inte särskild efterlevandepension. membership-0390: Förlängd omställningspension är uttryckligen ett annat pensionsslag. membership-0391: ATP:s allmänna efterlevandeförmånskoder avgränsar inte särskild efterlevandepension. membership-0392: Garantipension till särskild efterlevandepension ingår uttryckligen. Särskild omställningspension utesluts enligt fast text. membership-0393: Inga valda variabler mäter särskild efterlevandepension. membership-0394: ATP:s generella efterlevandekod identifierar inte särskild efterlevandepension. membership-0395: Inget valt mått avser särskild efterlevandepension. membership-0396: Inget valt mått avser särskild efterlevandepension. membership-0397: Ingen vald variabel mäter särskild efterlevandepension. membership-0398: Det valda pensionsfältet är ett belopp utan belagd garantiavgränsning. Den fasta definitionen omfattar grad och garantipensionsdel; källbedömningens medlemsförslag kan därför inte antas. membership-0399: Urvalets extra avdrag omfattas inte.\ncatalog:occurrence:355188\ncatalog:occurrence:355693\ncatalog:occurrence:361346\ncatalog:occurrence:361912\ncatalog:variable_text:36310:3652:4018\ncatalog:variable_text:36379:12053:17897\ncatalog:variable_text:36387:12053:17897\ncatalog:variable_text:36438:12053:17897\ncatalog:variable_text:36439:12053:17897\ncatalog:variable_text:36512:12784:17897\ncatalog:variable_text:36515:12053:12784\ncatalog:variable_text:36582:12053:17897\ncatalog:variable_text:36707:11323:17897\ncatalog:variable_text:36712:10957:17897\ncatalog:variable_text:36741:9862:12053\ncatalog:variable_text:36742:9862:12053\ncatalog:variable_text:36743:9862:12053\ncatalog:variable_text:36805:15706:17897\ncatalog:variable_text:36918:17532:17897\ncatalog:variable_text:36926:12053:17897\ncatalog:variable_text:36977:16436:17897\ncatalog:variable_text:36995:12784:16801\ncatalog:variable_text:37004:12053:17897\ncatalog:variable_text:37017:16071:17897\ncatalog:variable_text:37137:3652:4018\ncatalog:variable_text:37198:8035:10227\ncatalog:variable_text:37216:4018:8401"
 
 [[statement]]
 kind = "set"
@@ -17267,7 +17249,7 @@ evidence = "r470 explicitly defines tax-free annuities and tax-free pensions tog
 
 [[statement]]
 kind = "set"
-subject = "var:pensionsavgift-allman-anstallning"
+subject = "var:underlag-for-allman-pensionsavgift-anstallning"
 fields = { "sets" = ["underlag-allman-pensionsavgift"] }
 evidence = "Definition and label explicitly identify the employment-income contribution base; the operational note gives the 7% contribution rate without redefining the variable as a charged fee (r852, r93).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:36722\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:336936\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36864"
 
@@ -17906,12 +17888,6 @@ kind = "set"
 subject = "var:kulon"
 fields = { "sets" = ["inkomst-tjanst"] }
 evidence = "r357/r149 operationally define a sum of control-statement incomes declared under service-income item 1, including pay and benefits. This supports r464's historical declared-income inclusion rather than an isolated wage component.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:349706\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:36597\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/linda/inkomst-tjanst"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-kommun-och-forsamling"
-fields = { "sets" = ["folkbokforingsort"] }
-evidence = "r362/r80 explicitly define a combined county–municipality–parish code based on population registration on 1 November. This meets r463's compound registration-location definition.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:339078\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:36607\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/linda/folkbokforingsort"
 
 [[statement]]
 kind = "set"
@@ -20006,3 +19982,99 @@ kind = "set"
 subject = "var:avkastningsskatt-pensionsforsakring-2"
 fields = { "label" = "Avkastningsskatt på utländska pensionsförsäkringar (SAVUP)" }
 evidence = "#2102 same-label cluster 'Avkastningsskatt på utländska pensionsförsäkringar' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SAVUKAP and SAVUP are concurrent in panelurval-befolkningen 2008-2016 with identical definition and unit and no opdef; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: AMASJUK where key = 'v653' and release = 'r16300'"
+fields = { "spelling" = "AEXMIN" }
+evidence = "The 1994 release lists key v653 (minskning av expansionsmedel) under AMASJUK. From 1995 to 2018 v653 is column AEXMIN, and AMASJUK is v35504 (avdrag för allmän sjukförsäkringsavgift) in 1995-1997. The 1994 release has AMARB but neither AEXMIN nor v35504.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=475975 (r16300)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=489261 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=788653 (r16268)"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: AMASJUK where key = 'v653' and release = 'r16410'"
+fields = { "spelling" = "AEXMIN" }
+evidence = "The 1994 release lists key v653 (minskning av expansionsmedel) under AMASJUK. From 1995 to 2018 v653 is column AEXMIN, and AMASJUK is v35504 (avdrag för allmän sjukförsäkringsavgift) in 1995-1997. The 1994 release has AMARB but neither AEXMIN nor v35504.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=475193 (r16410)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=489261 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=788653 (r16268)"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: AMASJUK where key = 'v653' and release = 'r16363'"
+fields = { "spelling" = "AEXMIN" }
+evidence = "The 1994 release lists key v653 (minskning av expansionsmedel) under AMASJUK. From 1995 to 2018 v653 is column AEXMIN, and AMASJUK is v35504 (avdrag för allmän sjukförsäkringsavgift) in 1995-1997. The 1994 release has AMARB but neither AEXMIN nor v35504.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=457706 (r16363)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=489261 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=788653 (r16268)"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BLKFNOV where key = 'v5668'"
+fields = { "variable" = "forsamling-den-1-11" }
+evidence = "Column BLKFNOV: key v24373 'Församling den 1/11' 1993-1995 and 2005-2018, key v5668 'Län, kommun och församling' 1996-2004. Both are the six-digit parish code (011401 = Ed ...) by folkbokföring 1 November.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918792 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974901 (r16247)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=672983 (r472)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=919810 (r8609)"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BLKFNOV where key = 'v5668'"
+fields = { "variable" = "forsamling-den-1-11" }
+evidence = "Column BLKFNOV: key v24373 'Församling den 1/11' 1993-1995 and 2005-2018, key v5668 'Län, kommun och församling' 1996-2004. Both are the six-digit parish code (011401 = Ed ...) by folkbokföring 1 November.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918792 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974901 (r16247)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=672983 (r472)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=919810 (r8609)"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BLKFNOV where key = 'v5668'"
+fields = { "variable" = "forsamling-den-1-11" }
+evidence = "Column BLKFNOV: key v24373 'Församling den 1/11' 1993-1995 and 2005-2018, key v5668 'Län, kommun och församling' 1996-2004. Both are the six-digit parish code (011401 = Ed ...) by folkbokföring 1 November.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918792 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974901 (r16247)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=672983 (r472)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=919810 (r8609)"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BLKFNOV where key = 'v5668'"
+fields = { "variable" = "forsamling-den-1-11" }
+evidence = "Column BLKFNOV: key v24373 'Församling den 1/11' 1993-1995 and 2005-2018, key v5668 'Län, kommun och församling' 1996-2004. Both are the six-digit parish code (011401 = Ed ...) by folkbokföring 1 November.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918792 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974901 (r16247)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=672983 (r472)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=919810 (r8609)"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: PIGRSEP where key = 'v2506'"
+fields = { "variable" = "sarskild-omstallningspension" }
+evidence = "Column PIGRSEP in tilläggsurval utrikesfödda: key v1515 'Särskild omställningspension' 2003-2004 and 2016-2018, key v2506 'Särskild efterlevandepension' 2005-2015. Panelurval has v1515 every year 2003-2018. Both texts are one line, 'Särskild ...pension.'; the two keys never share a release.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=244843 (r11584)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=283719 (r8589)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=460542 (r9990)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=273551 (r11784)"
+
+[[statement]]
+kind = "set"
+subject = "var:baskap"
+fields = { "description" = "Anger om personen fått nedsättning av statlig inkomstskatt på kapitalinkomster på grund av avtal: 1 ja, 0 ej aktuellt." }
+evidence = "Nyckelns namn (v704) och kodlistan #3232 ('Nedsättning av statlig inkomstskatt på kapitalinkomster') anger kapitalinkomster. Definitionen säger 'förvärvsinkomster', samma ord som nyckeln v703 (BASFORV, förvärvsinkomster), och är kopierad därifrån i alla utgåvor 1997-2018.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=258356 (r11584)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=258355 (r11584)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=252774 (r3041)"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelselan-ort"
+fields = { "description" = "Födelselän för personer födda i Sverige (kod 01-25) och födelseland för personer födda utomlands (landkod); 27 anger att uppgift saknas. För person född i Sverige före 1948 är det födelselänet; från 1948 folkbokförs barnet i moderns län, annars faderns. Kod 01 och 02 (Stockholms stad respektive Stockholms län) gäller personer födda före 1968." }
+evidence = "Definitionen skriver 'födelseort' för utlandsfödda men operationaliseringen 'födelseland', och kodlistorna (#6579 1993-1995, #7449 1996-1997) innehåller länskoder och landnamn, inga orter. Beskrivningen anger vilket län som gäller för födda före och efter 1948.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=886262 (r16407)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=886349 (r16420)"
+
+[[statement]]
+kind = "set"
+subject = "var:natrtb"
+fields = { "description" = "Medborgarskap enligt RTB. Utländsk medborgare anges med tvåställig bokstavskod (SCB:s landkoder i RTB); den som förvärvat svenskt medborgarskap anges med årtalet (två siffror) för förvärvet; tomt värde anger Sverige." }
+evidence = "Beskrivningen (v35604) säger att utländska medborgare anges med tvåställig alfabetisk kod och förvärv av svenskt medborgarskap med årtalet under vilket förvärvet skedde. Kodlistan #10594 har tomt värde = Sverige, årskoder 00-97 och bokstavskoder för länder; landkoderna är SCB:s egna (t.ex. DZ = Danzig, SV = Sverige) och är inte ISO-koder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=462198 (r16299)"
+
+[[statement]]
+kind = "set"
+subject = "var:abegr"
+fields = { "description" = "Begravningsavgift, skattesats i procent med två decimaler." }
+evidence = "Operationaliseringen 'Begravningsavgift, skattesats med två decimaler' finns i utgåvorna 2000-2002 och 2005-2018 (t.ex. row 269266 r11771, row 269062 r3802). Utgåvorna 2003-2004 saknar operationalisering (rows 366821 r13103, 233656 r472), har samma nyckel v5563 och samma etikett. Beloppet i kronor finns i en annan variabel, SBEGR (v5655, 'Betald begravningsavgift').\ncurrent-scb-inputs.zip/Registerinformation.csv:row=269266 (r11771)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=269062 (r3802)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=366821 (r13103)"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: ABEGR @2003..2004 where key = 'v5563'"
+fields = { "unit" = "Procent" }
+evidence = "Som i panelurval-befolkningen: enheten Kronor 2003-2004 strider mot skattesatsen i grannåren.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=367092 (r13231)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=269271 (r14845)"
+
+[[statement]]
+kind = "set"
+subject = "var:afa02"
+fields = { "description" = "Underlag för fastighetsavgift på hyreshus med avgiftssatsen 0,2 %." }
+evidence = "SCB:s definition (v19806) är 'Underlag för fastighetsavgift avseende hyreshus' och operationaliseringen 'Underlag för fastighetsavgift med 0,2 % avseende hyreshus'; ordet hyreshusavgift finns inte i källan. Den kurerade etiketten (curation.toml:641, :647) ersätts, se RENAME-blocket.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=68564 (r5274)"
+
+[[statement]]
+kind = "set"
+subject = "var:afahhalv"
+fields = { "description" = "Underlag för fastighetsavgift på hyreshus med avgiftssatsen 0,15 %." }
+evidence = "Som AFA02: operationaliseringen är 'Underlag för fastighetsavgift med 0,15 % avseende hyreshus'. Samma nyckel v19806 som AFA02 men annan avgiftssats, så variablerna hålls isär.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=67842 (r13035)"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-allman-pensionsavgift-anstallning"
+fields = { "description" = "Underlag för beräkning av allmän pensionsavgift för anställning (inte själva avgiftsbeloppet, som finns i SPENAVA). SCB anger att avgiften är 7,0 % av underlaget 1999-2018." }
+evidence = "Etikett och definition (v580) är 'Underlag för beräkning av allmän pensionsavgift'; operationaliseringen 1999-2018 'Den allmäna pensionsavgiften för anställning är 7,0%' är en upplysning om avgiftssatsen. Kolumnen ATPENS 1995 har samma nyckel. Gäller efter omdöpning från pensionsavgift-allman-anstallning.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=586955 (r16268)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=67838 (r11584)"

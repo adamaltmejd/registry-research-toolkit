@@ -148,15 +148,6 @@ export function stewardConfig(context: Context | null): StewardConfig | null {
   return context?.steward_config ?? null;
 }
 
-export type Coverage = RustSchemas["Coverage"];
-
-export function getCoverage(
-  ref: string,
-  options?: { signal?: AbortSignal },
-): Promise<Coverage> {
-  return rustGet<Coverage>(`/coverage/${encodeFqid(ref)}`, undefined, options);
-}
-
 /** `show`'s `kind`-tagged summary of a ref. */
 export type ShowNode = RustSchemas["Show"];
 
@@ -379,7 +370,6 @@ export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogSegment = RustSchemas["Segment"];
-export type VariableEvidence = RustSchemas["VariableEvidence"];
 export type Graph = RustSchemas["Graph"];
 
 export function getGraph(
@@ -412,22 +402,6 @@ export async function getSegments(
     cursor = page.next_cursor;
   } while (cursor !== null);
   return items;
-}
-
-/** Requested only when the variable's provenance disclosure is first opened. */
-export async function getVariableEvidence(
-  ref: string,
-  options?: { signal?: AbortSignal },
-): Promise<VariableEvidence> {
-  const node = await rustGet<ShowNode>(
-    `/catalog/${encodeFqid(ref)}`,
-    new URLSearchParams({ evidence: "true" }),
-    options,
-  );
-  if (node.kind !== "variable" || !node.evidence) {
-    throw new Error("The catalog returned no variable evidence.");
-  }
-  return node.evidence;
 }
 
 /** Review items and notices for a catalog subject, including its descendants. */

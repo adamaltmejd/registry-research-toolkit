@@ -3242,3 +3242,10 @@ kind = "set"
 subject = "var:hkommun"
 fields = { "label" = "Kommun (hemkommun, HKommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: Praktik where key = 'v28321'"
+fields = { "unit" = "Antal veckor" }
+evidence = "Etikett och definition anger antal veckor; enheten Antal timmar hör till efterföljande nyckel v14677. Enheten är densamma i alla årgångar av v28321, så rättelsen vilar på etikett, definition och den efterföljande nyckeln.\nold unit: 'Antal timmar'; Registerinformation.csv:row=544257 (r14055); Registerinformation.csv:row=544259 (r14068); Registerinformation.csv:row=544258 (r14054); Registerinformation.csv:row=544270 (r14075); Registerinformation.csv:row=544273 (r14074); Registerinformation.csv:row=544400 (r14073)"
+

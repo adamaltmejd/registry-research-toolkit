@@ -1196,3 +1196,21 @@ kind = "set"
 subject = "var:naringsgren-cu-branschtext"
 fields = { "label" = "Näringsgren (SNI 2007, CU_BranschText)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktSni92 opdefs say SNI 2007 in some occurrences and SNI 2002 in others, and AL2UndEjU says SNI 2007 then SNI 2002, so a version qualifier is not true of all; AktSni07 and CU_BranschText both say SNI 2007 with the same 821-code list, so they are told apart by code."
+
+[[statement]]
+kind = "set"
+subject = "var:granskning"
+fields = { "description" = "Granskningskod: 0 betyder variabeldel utan fel och 1 variabeldel med tidsglapp eller tidsöverlappning mellan TillDat för föregående tidpunkt och FromDat för den aktuella." }
+evidence = "Värdemängd 3620 (1998-2011); definitionen \"godkända blankettuppgifter\" är en friare formulering.\n0.74.0 catalog, key v2916, releases r3255, r390, r391, r4855; reg_meta.db:occurrence:316305,316344,316132"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-al2undu"
+fields = { "description" = "Anställdaklass för företagsenheten i SCB:s samordnade urvalssystem; kodlistan anger storleksklasserna." }
+evidence = "Värdemängden består av anställdaklasser; definitionen anger urvalsstorlek.\n0.74.0 catalog, key v5181, releases r2847, r2848, r3255, r390...; reg_meta.db:occurrence:316301,316340,316130"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-samustkl"
+fields = { "description" = "Anställdaklass för företagsenheten i SCB:s samordnade urvalssystem; kodlistan anger storleksklasserna." }
+evidence = "Värdemängden består av anställdaklasser; definitionen anger urvalsstorlek.\n0.74.0 catalog, key v5181, releases r14985, r14986, r3591, r3592...; reg_meta.db:occurrence:315386,315905,315409"

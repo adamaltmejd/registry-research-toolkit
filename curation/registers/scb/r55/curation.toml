@@ -1591,18 +1591,6 @@ evidence = "Bostadens län är geografisk tillhörighet.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55653:16801:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:medborgarskap"
-fields = { "tags" = ["demographics"] }
-evidence = "Samma kolumn har olika ägare och en äldre operationell definition anger födelseland.\ncatalog:occurrence:517578\ncatalog:occurrence:517633\ncatalog:occurrence:518131\ncatalog:occurrence:519276\ncatalog:occurrence:519362\ncatalog:occurrence:520543\ncatalog:occurrence:520578\ncatalog:variable_text:55653:16801:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:nov2arssyk"
 fields = { "sets" = ["yrkesuppgiftens-matar"] }
 evidence = "Id:t behålls enligt nov2-familjens gemensamma läsbarhetsbedömning. Variabeln mäter yrkesuppgiftens mätår.\ncatalog:variable_text:55654:11323:14245\ncatalog:variable_text:55654:14245:17532\ncatalog:variable_text:55654:17532:17897\ncatalog:variable_text:55654:17897:20089"
@@ -2191,18 +2179,6 @@ evidence = "Samma utbildningsgruppsbegrepp är delat per period med scb/yrkesreg
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsinriktning"
-fields = { "sets" = [] }
-evidence = "Källkolumnen och värdemängden motsäger utbildningsetiketten; distrikt är motpart.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55716:16801:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsinriktning"
-fields = { "tags" = ["education"] }
-evidence = "Källkolumnen och värdemängden motsäger utbildningsetiketten; distrikt är motpart.\ncatalog:occurrence:520514\ncatalog:occurrence:520549\ncatalog:occurrence:520584\ncatalog:occurrence:520618\ncatalog:valueset:11366\ncatalog:variable_text:55716:16801:17532"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-3-positioner"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Samma detaljerade SUN 2000-nivå är korrekt uppdelad per period med sun2000niva.\ncatalog:occurrence:517576\ncatalog:occurrence:517631\ncatalog:variable_text:55702:16801:17897\ncatalog:variable_text:55717:11323:16801"
@@ -2761,12 +2737,6 @@ evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsinriktning"
-fields = { "label" = "Utbildningsinriktning (distriktskod)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (3 variables): judged different meaning, high confidence; Sun2000Inr och SUN2020Inr är olika SUN-versioner enligt opdefs; Distriktskod innehåller distriktskoder med ortnamn."
-
-[[statement]]
-kind = "set"
 subject = "var:yrke-ssyk3-storsta"
 fields = { "label" = "Yrke, största förvärvskällan (SSYK 2012, 3-siffernivå)" }
 evidence = "#2102 same-label cluster 'Yrke, största förvärvskällan' (2 variables): judged different meaning, high confidence; KU1Ssyk3_2012 och KU1Ssyk4_2012 är samtidiga kolumner på 3- respektive 4-siffernivå."
@@ -2824,3 +2794,33 @@ kind = "set"
 subject = "var:sektorkod-1819"
 fields = { "label" = "Sektorkod (SektorKod)" }
 evidence = "#2102 same-label cluster 'Sektorkod' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Both columns have the identical definition (huvudsaklig sysselsättning i november) and code list, in the same tables and periods, so 'största förvärvskälla' is unsupported and the colliding label is avoided with codes."
+
+[[statement]]
+kind = "set"
+subject = "forvarvsarbetande: SvMedb where key = 'v29578'"
+fields = { "variable" = "forekomst-medborgarskap" }
+evidence = "Column SvMedb: key v16559 2001-2015, key v29578 2016-2021. Same value set (1 = svenskt, 2 = inte svenskt) and the same opdef on dual citizenship in 2015 and 2016.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992897 (r10090)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992898 (r11760)"
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: SvMedb where key = 'v29578'"
+fields = { "variable" = "forekomst-medborgarskap" }
+evidence = "Column SvMedb: key v16559 2001-2015, key v29578 2016-2021. Same value set (1 = svenskt, 2 = inte svenskt) and the same opdef on dual citizenship in 2015 and 2016.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992897 (r10090)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992898 (r11760)"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: SvMedb where key = 'v29578'"
+fields = { "variable" = "forekomst-medborgarskap" }
+evidence = "Column SvMedb: key v16559 2001-2015, key v29578 2016-2021. Same value set (1 = svenskt, 2 = inte svenskt) and the same opdef on dual citizenship in 2015 and 2016.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992897 (r10090)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992898 (r11760)"
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: Distriktskod where key = 'v65'"
+fields = { "variable" = "distrikt" }
+evidence = "In Yrkesverksamma 2016 (r11762) and 2017 (r13032) SCB lists key v65 (utbildningsinriktning) under both Sun2000Inr and Distriktskod. Distriktskod is key v32959 (Distrikt) in Förvärvsarbetande and Grundregister 2015-2018 and in Yrkesverksamma 2015 and 2018. The value set is the district list (n=2523).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=542797 (r11762)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=48905 (r11762)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=790045 (r11760)"
+
+[[statement]]
+kind = "set"
+subject = "var:statusssyk-egf"
+fields = { "description" = "Anger från vilket jobb yrkesuppgiften för egna företagare hämtats och om den är imputerad: koderna 1-5 anger källan (förvärvsarbetande respektive yrkesverksamma jobb 1 och 2, eller övriga), 6 att uppgift saknas, 11-15 och 30 att yrket är imputerat." }
+evidence = "Värdemängd 3438 (2010-2024) och operationell definition om koppling till organisationsnumret enligt RAMS.\n0.74.0 catalog, key v37800, releases r10090, r11760, r13031, r13905...; reg_meta.db:occurrence:517535,517590,517645"

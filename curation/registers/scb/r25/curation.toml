@@ -9668,18 +9668,6 @@ evidence = "Summan avser förvärvs- och kapitalinkomst.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:forvarvsarbetande"
-fields = { "sets" = ["forvarvsarbete"] }
-evidence = "Katalogen anger angränsande ägare och två olika värdemängder i överlappsperioden.\ncatalog:occurrence:278623\ncatalog:occurrence:278624\ncatalog:occurrence:279817\ncatalog:occurrence:279818\ncatalog:valueset:10145\ncatalog:valueset:5742"
-
-[[statement]]
-kind = "set"
-subject = "var:forvarvsarbetande"
-fields = { "tags" = ["employment"] }
-evidence = "Katalogen anger angränsande ägare och två olika värdemängder i överlappsperioden.\ncatalog:occurrence:278623\ncatalog:occurrence:278624\ncatalog:occurrence:279817\ncatalog:occurrence:279818\ncatalog:valueset:10145\ncatalog:valueset:5742"
-
-[[statement]]
-kind = "set"
 subject = "var:forvarvsarbetande-familj-arbetsinkomst"
 fields = { "sets" = ["forvarvsarbete"] }
 evidence = "Katalogen anger angränsande ägare för samma kolumn.\ncatalog:occurrence:278623\ncatalog:occurrence:278624\ncatalog:occurrence:279817\ncatalog:occurrence:279818"
@@ -13130,13 +13118,13 @@ evidence = "Den tidigare kolumnägaren har en snävare etikett och definition.\n
 
 [[statement]]
 kind = "set"
-subject = "var:nettoformogenhet"
+subject = "var:summa-tillgangar-under-formogenhet-egen"
 fields = { "sets" = [] }
 evidence = "Definition och operativ definition anger olika kvantiteter.\ncatalog:variable_text:31381:8766:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:nettoformogenhet"
+subject = "var:summa-tillgangar-under-formogenhet-egen"
 fields = { "tags" = ["wealth"] }
 evidence = "Definition och operativ definition anger olika kvantiteter.\ncatalog:variable_text:31381:8766:13514"
 
@@ -25296,12 +25284,6 @@ evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, fami
 
 [[statement]]
 kind = "set"
-subject = "var:forvarvsarbetande"
-fields = { "label" = "Förvärvsarbetande (RTB-familj)" }
-evidence = "#2102 same-label cluster 'Förvärvsarbetande' (3 variables): judged different meaning, high confidence; FORV continues as BFORV with the same opdef; BFORVFAM opdef says it is calculated on RTB-familj (anyone in the family employed)."
-
-[[statement]]
-kind = "set"
 subject = "var:forvarvsarbetande-arbetsinkomst-storre-an-basbelopp"
 fields = { "label" = "Förvärvsarbetande (individ, BFORV)" }
 evidence = "#2102 same-label cluster 'Förvärvsarbetande' (3 variables): judged different meaning, high confidence; FORV continues as BFORV with the same opdef; BFORVFAM opdef says it is calculated on RTB-familj (anyone in the family employed)."
@@ -27669,3 +27651,67 @@ kind = "set"
 subject = "individer-och-dodsbon: pdel @1993-01-01..2004-12-31 where key = 'v585'"
 fields = { "variable" = "delpens" }
 evidence = "#2141 Q4 (evidence rule): DELPENS (1980-1993) then PDEL (1993-2005) in individer-och-dodsbon: same definition, no value set, adjacent, one column on each side of the boundary; folded into delpens."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: BFORVFAM where key = 'v2679'"
+fields = { "variable" = "forvarvsarbetande-familj-arbetsinkomst" }
+evidence = "From 2020 SCB gives column BFORVFAM the key v2679, which is also the key of column BFORV in the same releases (the person variable). The BFORVFAM operational definition is family-based (calculated on the RTB family, earned income above the price base amount) and its used code list is the same three-code list as v21205 (0 none, 1 one, 2 at least two employed). v21205 delivers BFORVFAM 1998-2019 and v2679 delivers it 2020-2024; no year is shared and the spelling is the same. Only the shadowed 2020 preliminary occurrence has the binary list.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=42200 (r15780)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=42203 (r17939)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=42204 (r17939)"
+
+[[statement]]
+kind = "link"
+subject = "var:fk-ersattning-annat-forvarvsarbete"
+relation = "continues"
+object = "scb/iot/sjukpenning-annan-forvarvsinkomst"
+at = "1990-01-01.."
+evidence = "IoT SJUKPAF: sickness benefit from other earned income (SPAF/SJUKPAF 1974-89, key v40358) -> insurance-office compensation for other work (1990+, key v2567, later NSJUKPF); redefined. The same column SJUKPAF is delivered under both keys, v40358 in 1989 and v2567 in 1990.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=145004 (r15150)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=780668 (r13817)"
+
+[[statement]]
+kind = "link"
+subject = "var:ersattning-forsakringskassa-anstallning"
+relation = "continues"
+object = "scb/iot/sjukpenning-anstallning"
+at = "1990-01-01.."
+evidence = "IoT SJUKPAN: sickness benefit from employment (SPA/SJUKPAN 1974-89, key v40357) -> insurance-office compensation for employment income (1990+, key v1182, later TFKASSA); redefined. The same column SJUKPAN is delivered under both keys, v40357 in 1989 and v1182 in 1990.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=145006 (r15150)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=776370 (r13817)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbftyp"
+fields = { "description" = "Markering av överlåtelse på blankett KU55: 0 = ej överlåtelse eller ej aktuellt, 1 = överlåtelse." }
+evidence = "Flag for overlåtelse on KU55: 0 = ej överlåtelse/ej aktuellt, 1 = överlåtelse."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande-familj-arbetsinkomst"
+fields = { "description" = "Antal förvärvsarbetande i familjen: 0 = ingen, 1 = en, 2 = minst två. Förvärvsarbetande är den som har arbetsinkomst över basbeloppet." }
+evidence = "Count of employed in the RTB family: 0/1/2+; the binary list #5742 appears only in the 2020 preliminary release."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-eller-ar-sverige"
+fields = { "description" = "Medborgarskap. Utländska medborgare anges med tvåställig landskod. Den som blivit svensk medborgare anges med årtalets två sista siffror, till exempel 97 = 1997. Blankt värde betyder Sverige." }
+evidence = "Foreign citizens two-letter code; acquired Swedish citizenship a two-digit year; blank = Sverige."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskapskod"
+fields = { "description" = "Medborgarskapsland som landskod. Till och med 1998 gällde SV = Sverige och SE = Sierra Leone; från 1999 är SE = Sverige och SV = El Salvador." }
+evidence = "1998 list #7449 (SV = SVERIGE, SE = Sierra Leone); from 1999 #9604 (SE = Sverige, SV = El Salvador)."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: BISSTOD where key = 'v38223'"
+fields = { "unit" = "Antal veckor" }
+evidence = "Sibling week variables use Veckor/Antal veckor; unit Kronor (SEK) is a copy error. Same class: BISSTBARN v38224 (same wrong unit), add the same statement with key v38224."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: BISSTBARN where key = 'v38224'"
+fields = { "unit" = "Antal veckor" }
+evidence = "Same-class find, see BISSTOD."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: FTILLG where key = 'v14694'"
+fields = { "label" = "Summa tillgångar under förmögenhet", "definition" = "Summa tillgångar under förmögenhet" }
+evidence = "Opdef and column FTILLG say Summa tillgångar under förmögenhet; the net wording is copied from FSP v2551."

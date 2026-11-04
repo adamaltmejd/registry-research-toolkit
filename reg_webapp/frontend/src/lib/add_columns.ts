@@ -29,19 +29,19 @@ export interface VariableColumn {
   table: string;
   spelling: string;
   segments: CatalogSegment[];
-  /** The file the steward holds the column in; absent off a steward
-   * deployment, where the table's name stands for it. */
-  file?: string;
+  /** The files the steward holds the column in, in period order; empty off a
+   * steward deployment, where the table's name stands for them. */
+  files: string[];
 }
 
-/** A delivery column's identity is its table, exact column name and, on a
- * steward deployment, the file it is held in. */
+/** A delivery column's identity is its table and exact column name. A steward's
+ * yearly files of one table are the same column delivered in several files. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
   for (const segment of segments) {
-    const id = JSON.stringify([segment.table, segment.column, segment.file]);
+    const id = JSON.stringify([segment.table, segment.column]);
     let column = columns.get(id);
     if (!column) {
       column = {
@@ -49,13 +49,39 @@ export function variableColumns(
         table: segment.table,
         spelling: segment.column,
         segments: [],
-        ...(segment.file ? { file: segment.file } : {}),
+        files: [],
       };
       columns.set(id, column);
     }
     column.segments.push(segment);
+    if (segment.file && !column.files.includes(segment.file))
+      column.files.push(segment.file);
   }
   return [...columns.values()];
+}
+
+/** The files as one name: yearly files of one stem read as year runs after the
+ * stem (`RTB_2015–2017, 2019`), so a gap stays visible; anything else is a list. */
+export function filesLabel(files: readonly string[]): string | undefined {
+  if (files.length <= 1) return files[0];
+  // A year suffix is exactly four digits after a non-digit, 1900–2100, so a
+  // batch number or a date is listed unchanged.
+  const parts = files.map((file) => /^(.*\D)(\d{4})$/.exec(file));
+  const stem = parts[0]?.[1];
+  const years = parts.map((part) => Number(part?.[2]));
+  if (
+    !parts.every((part) => part && part[1] === stem) ||
+    !years.every((year) => year >= 1900 && year <= 2100)
+  )
+    return files.join(", ");
+  years.sort((a, b) => a - b);
+  const runs: [number, number][] = [];
+  for (const year of years) {
+    const run = runs.at(-1);
+    if (run && year === run[1] + 1) run[1] = year;
+    else runs.push([year, year]);
+  }
+  return `${stem}${runs.map(([from, to]) => (from === to ? `${from}` : `${from}–${to}`)).join(", ")}`;
 }
 
 export function columnInProject(
@@ -105,7 +131,9 @@ export function columnWindowPeriod(
     : null;
 }
 
-function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
+/** A segment's binding type: what an add writes and what the variable page's
+ * Type pill shows, so the two never disagree. */
+export function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
   if (segment.identifier === true) return "id";
   if (segment.coded === "yes") return "categorical";
   if (segment.type === "int" || segment.type === "decimal") return "numeric";
@@ -168,7 +196,7 @@ export function addColumns(
       : columnWindowOverlap(column, window);
     if (!table.timeless && overlap.intervals.length === 0)
       throw new Error(
-        `${column.spelling} has no delivery in the add window. Change the window or untick the column.`,
+        `${column.spelling} has no delivery in the years to add. Change the years or untick the column.`,
       );
     const requested = byTable.get(column.table) ?? {
       segments: [],

@@ -3906,3 +3906,15 @@ kind = "set"
 subject = "var:versionsnummer-fastighetsreg-version"
 fields = { "label" = "Versionsnummer fastighetsreg. (inskrivning)" }
 evidence = "#2102 same-label cluster 'Versionsnummer fastighetsreg.' (2 variables): judged different meaning, medium confidence; VERNR is in adressplats- and byggnadsinformation, VERSION in inskrivningsinformation: version numbers of different register posts."
+
+[[statement]]
+kind = "set"
+subject = "var:dagboksnummer"
+fields = { "description" = "Dagboksnummer: verksamhetsmässig identitet på ett beslut om inskrivning. Det består av inskrivningsår (utan sekel), aktnummer och eventuell littera och är unikt inom en fastighet." }
+evidence = "Definitionen i v35376 ('Anger den inskrivningsdag det nya beslutet tillhör') är texten för kolumnen NYTTBESLUTINSKDAG (row 468711). Operationaliseringarna för DAGBOKSNUMMER och NYTTBESLUTDBNR beskriver båda beslutets identitet; utgåvan r20265 anger uppbyggnaden.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=451023 (r20265)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=450859 (r17659)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=468711 (r17659)"
+
+[[statement]]
+kind = "set"
+subject = "var:kdatumursp"
+fields = { "description" = "Anger ursprunget till kvalitetsmärkningen av adressplats och byggnad, det vill säga vilken källa märkningen kommer från: Lantmäteriet (Lägenhetsprojektet, batch, fix eller konvertering), kommun, Posten eller Skatteverket. Märkningens datum finns i KDATUM." }
+evidence = "Etikett, definition och kodlistan #5388 anger ursprung; KDATUM (v29380) är den separata datumkolumnen. Bara operationaliseringen för byggnadsinformation i r20262 säger 'Datum för kvalitetsmärkning för ursprung', ett skrivfel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=351437 (r17678)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=351617 (r20262)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=184634 (r17678)"

@@ -11380,3 +11380,15 @@ kind = "set"
 subject = "var:webbplats-med-protokoll-fran-sammantraden-webbprot"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-fr28a"
+fields = { "description" = "Anger om kommunen anordnade medborgardialog under året och hur många gånger: 1 = ja, 1-3 gånger, 2 = ja, 4 gånger eller fler, 3 = nej." }
+evidence = "2024 opdef: kommunen anordnade medborgardialog; code list counts occasions. Regions Fr26a 2024 has the same wording and list."
+
+[[statement]]
+kind = "set"
+subject = "var:kundvalsysgy"
+fields = { "description" = "Anger om kommunen har något valfrihetssystem för gymnasieskolan utöver vad lagstiftningen kräver." }
+evidence = "Label, definition and opdef agree: valfrihetssystem för gymnasieskolan; the medborgarkontor opdef belongs to the neighbouring variable MEDBKONT (v28617)."

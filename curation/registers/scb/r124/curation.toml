@@ -6211,3 +6211,9 @@ kind = "set"
 subject = "var:tfu"
 fields = { "label" = "Olycka på väg till eller från arbetet (inträffade under angivet år eller senare)" }
 evidence = "#2102 same-label cluster 'Olycka på väg till eller från arbetet' (2 variables): judged different meaning, medium confidence; TFF covers events before the survey's reference year and TFU events in that year or later, per the opdefs; the two overlap 2001-2011."
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ANMALVA where key = 'v17410' and release = 'r3065'"
+fields = { "spelling" = "ANMALA12" }
+evidence = "In r3065 (2010) v17410 'Har anmälan skett under de senaste 12 månaderna?' is listed as ANMALVA with opdef 'S23 ANMALA12', in the same release where v8024 'Anmälan till försäkringskassan' is ANMALVA (opdef 'S 21 ANMALVA'). v17410 is ANMALA12 in r1669 (2008, opdef 'S23 ANMALA12') and Anmala12 in r5532 (2014).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456256 (r3065, v17410)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456248 (r3065, v8024)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456239 (r1669, v17410 ANMALA12)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=627336 (r5532, v17410 Anmala12)"

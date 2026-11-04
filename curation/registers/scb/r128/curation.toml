@@ -2692,3 +2692,45 @@ kind = "set"
 subject = "var:traktamente-fel"
 fields = { "label" = "Traktamente (felaktiga värden)" }
 evidence = "#2102 same-label cluster 'Traktamente' (2 variables): judged different meaning, high confidence; Traktamente_Fel holds erroneous values and is no longer used (opdef); concurrent with Traktamente 2020-24."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntInrikes @1996..2017 where key = 'v6138'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntInrikes är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395684 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntKostForman @1996..2017 where key = 'v6139'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntKostForman är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395682 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntLogiErs @1996..2017 where key = 'v6115'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntLogiErs är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395683 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntRanteForman @1996..2017 where key = 'v6117'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntRanteForman är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395686 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntReseErs @1996..2017 where key = 'v6118'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntReseErs är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=687323 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntTraktInr @1996..2017 where key = 'v6119'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntTraktInr är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395679 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntUtrikes @1996..2017 where key = 'v6121'"
+fields = { "unit" = "Kontrolluppgifter" }
+evidence = "Definitionen av AntUtrikes är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395685 (r4882)"

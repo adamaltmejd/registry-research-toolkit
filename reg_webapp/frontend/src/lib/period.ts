@@ -28,13 +28,6 @@ import {
   studyWindowInterval,
 } from "./reg_core";
 
-/** The narrowing modifiers carried in the URL query alongside `?period`. */
-export interface ResolutionParams {
-  period?: string;
-  variant?: string;
-  value_set_version?: string;
-}
-
 /** Sentinel `?value_set_version` selecting the empty/default label (a state with
  * `value_set_version_label === ""`). The empty string can't ride in the query
  * (≡ absent), so the picker sends this for the unlabeled-version option; the Rust
@@ -144,56 +137,6 @@ export function periodCoverageUnion(
       .map(({ segment }) => segment);
   }) as ProjectPeriodSegment[];
   return segments.length === 1 ? segments[0] : segments;
-}
-
-// ── Query-string builder ─────────────────────────────────────────────────────
-
-/** Build a `?query` string from the resolution params, omitting undefined /
- * empty values and emitting a SINGLE value per param (no repeated or nested
- * keys — the server reads one `?period=`/`?variant=`/`?value_set_version=` each).
- * Returns the query WITHOUT a leading `?` (the empty string when no params), so
- * callers do `pathname + (q ? "?" + q : "")`. */
-export function queryFromParams(params: ResolutionParams): string {
-  const qs = new URLSearchParams();
-  if (params.period) {
-    qs.set("period", params.period);
-  }
-  if (params.variant) {
-    qs.set("variant", params.variant);
-  }
-  if (params.value_set_version) {
-    qs.set("value_set_version", params.value_set_version);
-  }
-  return qs.toString();
-}
-
-/** Merge a partial resolution change against the CURRENT params and produce the
- * next `?query` string (no leading `?`). The narrowing rule: `?variant` and
- * `?value_set_version` are MODIFIERS of a `?period` resolve (the server 422s them
- * without one), so clearing the period (`next.period` empty/null) DROPS them —
- * the result is the empty query (full history). A field left `undefined` in
- * `next` inherits from `current`; an explicit empty string clears that field.
- * Pure (no `window`) so it's unit-tested directly. */
-export function nextResolutionQuery(
-  current: ResolutionParams,
-  next: {
-    period?: string | null;
-    variant?: string | null;
-    value_set_version?: string | null;
-  },
-): string {
-  const period =
-    next.period === undefined ? current.period : (next.period ?? undefined);
-  if (!period) {
-    return "";
-  }
-  const variant =
-    next.variant === undefined ? current.variant : (next.variant ?? undefined);
-  const value_set_version =
-    next.value_set_version === undefined
-      ? current.value_set_version
-      : (next.value_set_version ?? undefined);
-  return queryFromParams({ period, variant, value_set_version });
 }
 
 // ── Year-window slider (#615 availability-aware local period) ────────────────

@@ -606,3 +606,27 @@ kind = "set"
 subject = "set:utgifter-for-programvara"
 fields = { "label" = "Utgifter för programvara" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:arsverk"
+fields = { "description" = "Antal årsverken som den egna personalen ägnar åt arbete med marknadsföring." }
+evidence = "Etikett och definition anger årsverken; enheten 1000-tals kronor i r6208, r9861 och r11727 rättas separat.\n0.74.0 catalog, key v32895, releases r11727, r6208, r9861; reg_meta.db:occurrence:122608,122627,122644"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: ARSVERK where key = 'v32895'"
+fields = { "unit" = "Antal årsverken" }
+evidence = "Etikett och definition anger årsverken, inte belopp. Enheten är densamma i alla tre årgångar (r6208, r9861, r11727), så rättelsen vilar på etikett och definition.\nold unit: '1000-tals kronor'; Registerinformation.csv:row=505577 (r6208); Registerinformation.csv:row=310813 (r9861); Registerinformation.csv:row=505580 (r11727)"
+
+[[statement]]
+kind = "set"
+subject = "var:referensar"
+fields = { "description" = "Det år som uppgifterna i enkäten avser." }
+evidence = "Etiketten är Referensår; enheten \"Antal minuter\" i r14899, r17600 och r18566 rättas separat.\n0.74.0 catalog, key v98, releases r14899, r17600, r18566; reg_meta.db:occurrence:122699,122720,122744"
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: Ar where key = 'v98'"
+fields = { "unit" = "År" }
+evidence = "Etiketten är Referensår; ett år anges inte i minuter. Enheten är densamma i alla tre årgångar, så rättelsen vilar på etikett och definition.\nold unit: 'Antal  minuter'; Registerinformation.csv:row=819875 (r14899); Registerinformation.csv:row=820155 (r17600); Registerinformation.csv:row=559783 (r18566)"

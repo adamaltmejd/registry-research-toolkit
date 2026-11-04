@@ -268,3 +268,9 @@ kind = "set"
 subject = "var:inrmin"
 fields = { "tags" = ["demographics"] }
 evidence = "The flag concerns projects targeting Sweden's official minorities (r13, r6), fitting population composition under demographics. Its sibling similarly carries its target group's theme, disability (r12).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:valueset:10571\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7904\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:7907"
+
+[[statement]]
+kind = "set"
+subject = "var:trelandmedb"
+fields = { "description" = "Anger om deltagaren vid start i projektet klassificeras som tredjelandsmedborgare, det vill säga inte är unionsmedborgare (EES); statslösa personer med obestämd nationalitet ingår. Klassificeringen görs utifrån födelseland. Kod 1 är ja och 0 är nej." }
+evidence = "Definition, beskrivning och operationell definition i r19390 (2021-2027); värdemängd 4784.\n0.74.0 catalog, key v47922, releases r19390; reg_meta.db:occurrence:57149"

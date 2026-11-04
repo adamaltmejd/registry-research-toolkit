@@ -706,3 +706,9 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "label" = "Utbildningsnivå" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:funkstod7b"
+fields = { "description" = "Anger om personen fått det stöd som behovet i föregående fråga (7A) avsåg. Tomt värde betyder att personen inte fått frågan." }
+evidence = "xA/xB pattern: B = \"Har du fått\", 7A is the need; blank = inte tillfrågad."

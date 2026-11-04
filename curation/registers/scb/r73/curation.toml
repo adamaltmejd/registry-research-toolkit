@@ -2200,3 +2200,9 @@ kind = "set"
 subject = "var:totantalhusblanketter"
 fields = { "label" = "Totalt antal husblanketter (TotAntalHusblanketter)" }
 evidence = "#2102 same-label cluster 'Totalt antal husblanketter' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; HusBlankettTot and TotAntalHusblanketter are concurrent in one table with near-identical definition and opdefs (only the first names the form section); nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:husform"
+fields = { "description" = "Husform för varje delobjekt i projektet. Den härledda kolumnen B_FHusform anger i stället projektets vanligaste husform." }
+evidence = "Etiketten anger per delobjekt; beskrivningen av projektets vanligaste husform hör till B_FHusform.\n0.74.0 catalog, key v21064, releases r11718, r12059, r12060, r12061...; reg_meta.db:occurrence:397657,397800,397943"

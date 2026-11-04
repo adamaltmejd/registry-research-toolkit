@@ -1750,3 +1750,15 @@ kind = "set"
 subject = "var:svart-fa-arbete-pga-alder"
 fields = { "label" = "Svårt att få arbete pga ursprung/härkomst" }
 evidence = "#2102 same-label cluster 'Svårt att få arbete pga ålder' (4 variables): judged different meaning, medium confidence; Opdefs: F24d (2018-19) is age, but F24f (2015-16) and F24g (2018-19) are ursprung/härkomst, so the current label is wrong for them; F24F_UT (2009-10, 3-point scale) has no text beyond the cluster definition."
+
+[[statement]]
+kind = "set"
+subject = "var:upplevd-orattvis-behandling-kompetensutveckling"
+fields = { "description" = "Hur personen upplever sig ha blivit behandlad på arbetet i Sverige när det gäller kompetensutveckling. 2004 och 2009 anges i vilken grad påståendet 'har känt sig orättvist behandlad på något/några arbeten i Sverige' stämmer (1 = stämmer inte alls till 4 = stämmer helt, 5 = inte arbetat). 2015-2018 anges hur rättvist eller orättvist personen blivit behandlad under de senaste tre åren (1 = mycket rättvist till 4 = mycket orättvist)." }
+evidence = "Value sets: #8368 (2004) and #9972 (2009) agree-with-statement scale; #9175 (2015-2018) fair/unfair scale, opdef 'Rättvist eller orättvist behandlad på arbetet under de senaste tre åren m a p kompetensutveckling'. Same item (F25_4 / F26D / F25d), higher code = more unfair in both scales. The id and label name the unfair pole, which both scales measure."
+
+[[statement]]
+kind = "set"
+subject = "var:hussyk1"
+fields = { "description" = "Anger om personens yrke i huvudsysslan kräver högskoleutbildning (1), inte kräver högskoleutbildning (2) eller är okänt (3). Variabeln är ingen SSYK-kod på ensiffernivå." }
+evidence = "Column yrkgrp, opdef 'Beskriver om man har ett yrke som kräver högskoleutbildning eller inte eller om personens yrke är okänt', value set #12364 has three codes. The label/definition 'Yrke på 1-siffernivå' does not fit a 3-code list."

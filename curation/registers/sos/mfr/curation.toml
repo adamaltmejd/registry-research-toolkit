@@ -3538,3 +3538,9 @@ kind = "set"
 subject = "mfr: blangdf2 where key = 'n:blangdf2'"
 fields = { "variable" = "barnets-fodelselangd" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BLANGD in mfr-fok; BLANGDF2 in mfr: same definition and code list, never concurrent under another spelling in one table; folded into barnets-fodelselangd."
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-1-12-den-forlosta"
+fields = { "description" = "Den förlöstas diagnoskoder 1–12 samlade i en sträng, enligt den svenska versionen av ICD, under och efter förlossningen." }
+evidence = "No conflict: label 'Diagnoskod 1-12, den förlösta' and definition 'Den förlöstas diagnoskoderna 1-12 i ett sträng, under och efter förlossning' agree; Värdemängd 'Enligt den svenska versionen av ICD'. Mirrors the MDIAG1-MDIAG12 rows (124-135). The earlier proposal was only blocked by its open-ended occurrence period; a variable-level description has no period.\ncatalog/source/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx: 'Metadata - Variabelnivå' row 136."
