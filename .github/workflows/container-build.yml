@@ -52,8 +52,7 @@ on:
   # Manual escape hatch: rebuild + deploy after a DATA-only reg_meta
   # release. The bake build-arg always carries the CONCRETE
   # newest reg_meta/v* tag (resolved per run, below), so a data-only release
-  # busts the bake layer's cache by itself — no input needed unless pinning an
-  # OLDER release.
+  # rebakes by itself — no input needed unless pinning an OLDER release.
   # A reg_meta/v* release ALSO reaches this workflow indirectly: publish_reg_meta.yml
   # dispatches this workflow after publishing, so an owed-bump or data-only release
   # auto-rebakes + deploys without a manual run (the #448 self-clearing path).
@@ -78,10 +77,15 @@ jobs:
       edge_global: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_global }}
       edge_swecov: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_swecov }}
     steps:
-      # Full history for the PR base diff and the push ancestry check below.
+      # No history, no blobs and almost no tree: the filter only runs `git diff
+      # --name-status` between two commits, which reads trees, never blobs. The base
+      # commit is fetched on its own below (a push) or by the filter itself (a PR, whose
+      # base is the merge commit's first parent). Both ranges are compared two-dot
+      # (`base..head`), so no merge-base, and therefore no history, is needed.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          sparse-checkout: .github
+          filter: blob:none
       # A push diffs against the last DEPLOYED commit, not the push's `before` (#1481).
       # Every deploy job skips unless its commit is still main's HEAD, so when push A
       # touches a served path and push B lands before A's deploy runs, A skips; diffed
@@ -100,7 +104,14 @@ jobs:
       # Blind spot: a `[skip ci]` push starts no run, so
       # a run it overlapped (and HEAD-skipped) would count: the gap reopens for that
       # one case; none of main's commits use it. No commit found in the last 200 runs
-      # (or one that is not an ancestor) counts as everything changed.
+      # (or one that is not an ancestor, or that cannot be fetched) counts as everything
+      # changed.
+      #
+      # Ancestry comes from the compare API instead of `git merge-base --is-ancestor`,
+      # which needs history: `ahead` or `identical` is exactly "base is an ancestor of
+      # (or equal to) this commit"; `behind`, `diverged`, a 404 (base gone from the
+      # repository) and any API failure fail closed to everything changed. The base
+      # commit alone is then fetched at depth 1 for paths-filter's two-dot diff.
       #
       # Rejected: dispatching HEAD's run from a skipped deploy needs `actions: write`,
       # which this workflow does not hold; reading the deployed version from the edge
@@ -122,12 +133,15 @@ jobs:
                   | select(all($pushes[]; . <= $r.createdAt
                       or (fromdateiso8601) >= ($r.updatedAt | fromdateiso8601) + 300))]
               | sort_by(.createdAt) | last | .headSha // empty')
-          if [ -n "$base" ] && git merge-base --is-ancestor "$base" "$GITHUB_SHA"; then
+          if [ -n "$base" ] \
+            && status=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$GITHUB_SHA?per_page=1" --jq .status) \
+            && { [ "$status" = ahead ] || [ "$status" = identical ]; } \
+            && git fetch --no-tags --depth=1 --filter=blob:none origin "$base"; then
             echo "Diffing against the last deployed commit $base"
             echo "sha=$base" >> "$GITHUB_OUTPUT"
           else
             if [ -n "$base" ]; then
-              echo "::warning::last deployed commit $base is not an ancestor of $GITHUB_SHA or is not fetched; treating every path as changed"
+              echo "::warning::last deployed commit $base is not an ancestor of $GITHUB_SHA (compare: ${status:-unavailable}) or could not be fetched; treating every path as changed"
             else
               echo "::warning::no deployed commit found in the last 200 main runs; treating every path as changed"
             fi
@@ -190,18 +204,17 @@ jobs:
       db_sha256: ${{ steps.regmeta.outputs.db_sha256 }}
       swecov_db_sha256: ${{ steps.regmeta.outputs.swecov_db_sha256 }}
     steps:
-      # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
-      # the released asset's schema constant (the resolved reg_meta/v* tag).
+      # Only the code side's schema constants file: the guard below reads the released
+      # asset's side from the resolved reg_meta/v* tag, which it fetches alone, without
+      # blobs (a sparse path missing here fails the guard: "code has 'absent'").
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
-          fetch-tags: true
+          sparse-checkout: /crates/reg-core/src/lib.rs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
-      # build-arg. Passing a literal `latest` would make the bake layer's
-      # buildx cache key insensitive to data-only releases — worse, after a
-      # pinned-tag dispatch, the next `latest`-keyed build would resurrect the
-      # OLD cached layer and silently revert prod's DB. A concrete tag makes
-      # the cache key change exactly when the release does.
+      # build-arg. A literal `latest` would name no release: the Dockerfile
+      # requires a concrete tag, and the schema guard below reads that tag's source.
       #
       # Resolve GitHub's SHA-256 digest for each paired asset as bare hex.
       # Missing or duplicated assets resolve empty; only SWECOV requires holdings.
@@ -233,7 +246,7 @@ jobs:
       # `CATALOG_SCHEMA_VERSION` (crates/reg-core/src/lib.rs), and the SWECOV server on
       # its `HOLDINGS_SCHEMA_VERSION`; both are checked. The asset's schema is
       # read from the release tag's source (a data-only release keeps the tag-commit
-      # schema), hence the full-history checkout. A release from before the constant
+      # schema), hence the tag fetch. A release from before the constant
       # existed has none, which is a mismatch too. An explicit `reg_meta_tag` pin
       # follows the same rule.
       - name: Schema guard
@@ -241,6 +254,10 @@ jobs:
         run: |
           set -euo pipefail
           TAG="${{ steps.regmeta.outputs.tag }}"
+          # The tag's commit without history or blobs; `git show` below fetches the one
+          # blob it names. A tag that cannot be fetched blocks the deploy like a mismatch.
+          git fetch --no-tags --depth=1 --filter=blob:none origin "+refs/tags/$TAG:refs/tags/$TAG" \
+            || { echo "::error::schema-guard: cannot fetch release tag $TAG; deploys blocked."; exit 1; }
           for name in CATALOG_SCHEMA_VERSION HOLDINGS_SCHEMA_VERSION; do
             pattern="$name: u32 = [0-9]+"
             code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
@@ -319,7 +336,20 @@ jobs:
       # bare sha. The deploy job computes the identical expression.
       IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
+      # Exactly what the Dockerfile COPYs (`Cargo.toml`, `Cargo.lock`, `crates/`,
+      # `reg_webapp/docker-entrypoint.sh`) plus the Dockerfile itself and `.dockerignore`,
+      # which filters the context. A missing path fails the build at its COPY.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: &image-sparse |
+            /Cargo.toml
+            /Cargo.lock
+            /.dockerignore
+            /crates/
+            /reg_webapp/Dockerfile
+            /reg_webapp/docker-entrypoint.sh
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       # Registry push auth (main/dispatch only). The username is ignored by
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
@@ -337,10 +367,10 @@ jobs:
       # itself, and loading exports the full ~1 GB image into the runner's
       # docker daemon for nothing, #290). main/dispatch pushes to Fly's
       # registry addressed by IMAGE_TAG, so the deploy job (and a manual
-      # rollback) references an immutable tag. GHA layer cache keeps rebuilds
-      # cheap; cache is WRITTEN only on non-PR events — PR-scoped GHA cache is
-      # unreadable from main, so PR writes would only evict useful cache from
-      # the repo's 10 GB pool (#290). PRs still READ main's cache.
+      # rollback) references an immutable tag. No layer cache: the GHA cache's export
+      # cost ~2 min per build and only the apt layers ever hit (`COPY crates/` busts
+      # the cargo layer on every change). If a cargo-layer cache is wanted, use
+      # cargo-chef or a registry cache that actually hits.
       - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
@@ -350,8 +380,6 @@ jobs:
           build-args: |
             REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
             REG_META_DB_SHA256=${{ needs.schema-guard.outputs.db_sha256 }}
-          cache-from: type=gha
-          cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
   build-swecov-image:
     needs: [changes, schema-guard, swecov-asset-guard]
@@ -374,7 +402,12 @@ jobs:
     env:
       IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
+      # Same build context as `build-image`.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: *image-sparse
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Log in to registry.fly.io
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
@@ -407,11 +440,21 @@ jobs:
     concurrency:
       group: fly-deploy-global
       cancel-in-progress: false
+    # Whether this run shipped (passed the HEAD guard); `prune-registry` runs only then.
+    outputs:
+      deployed: ${{ steps.head.outputs.skip != 'true' }}
     steps:
-      # Checkout only for reg_webapp/fly.toml — the image is already pushed.
+      # Checkout only for reg_webapp/fly.toml — the image is already pushed. The
+      # Dockerfile that its [build] section names rides along; `--image` does not use it.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            /reg_webapp/fly.toml
+            /reg_webapp/Dockerfile
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       # Stale-deploy guard: only ship if this commit is still main's HEAD.
-      # Build times vary (GHA cache hit vs miss), so an older commit's deploy
+      # Build times vary, so an older commit's deploy
       # can reach this job AFTER a newer commit already deployed; without this
       # check it would roll prod back. Also blocks non-main dispatches.
       - name: Skip unless HEAD of main
@@ -441,25 +484,39 @@ jobs:
           --ha=false
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      # Registry pruning (#290): keep the newest KEEP tags as rollback handles,
-      # delete older manifests so the registry doesn't grow unboundedly. Fly's
-      # registry supports standard v2 manifest DELETE (verified live
-      # 2026-06-11 — 202 Accepted, tag gone from tags/list). Ordering is by
-      # the image config's .created timestamp (buildx pushes OCI indexes; the
-      # real image manifest is the non-"unknown"-platform entry, the other is
-      # the provenance attestation). A digest shared with any kept tag is
-      # never deleted — deleting a manifest removes EVERY tag pointing at it.
-      # continue-on-error: a prune hiccup must not fail a successful deploy.
+
+  # Registry pruning (#290): keep the newest KEEP tags as rollback handles,
+  # delete older manifests so the registry doesn't grow unboundedly. Fly's
+  # registry supports standard v2 manifest DELETE (verified live
+  # 2026-06-11 — 202 Accepted, tag gone from tags/list). Ordering is by
+  # the image config's .created timestamp (buildx pushes OCI indexes; the
+  # real image manifest is the non-"unknown"-platform entry, the other is
+  # the provenance attestation). A digest shared with any kept tag is
+  # never deleted — deleting a manifest removes EVERY tag pointing at it.
+  # Its own job after the deploy, off the critical path (it needs no checkout, only
+  # the registry token). continue-on-error: a prune hiccup must not fail a successful
+  # deploy, and the run must stay green for the deployed-commit resolver in `changes`.
+  prune-registry:
+    needs: deploy
+    if: >-
+      !cancelled() && needs.deploy.result == 'success' &&
+      needs.deploy.outputs.deployed == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    # Prunes never overlap; a pending one is superseded by the newer one.
+    concurrency:
+      group: fly-prune-global
+      cancel-in-progress: false
+    steps:
       - name: Prune old registry tags
-        if: steps.head.outputs.skip != 'true'
         continue-on-error: true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           # The tag this run just deployed — never pruned, regardless of
-          # .created ordering. A no-op dispatch rebuild gets a full buildx
-          # cache hit and inherits the ORIGINAL build's image-config .created,
-          # so on a >KEEP-releases-old commit the just-deployed tag could sort
-          # outside the keep window and the prune would delete the manifest
+          # .created ordering. Defensive since the GHA layer cache was dropped: a
+          # fully cached rebuild used to inherit the ORIGINAL build's image-config
+          # .created, so on a >KEEP-releases-old commit the just-deployed tag could
+          # sort outside the keep window and the prune would delete the manifest
           # prod is actively running (review on #296).
           DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
           FLY_APP: reg-webapp-global
@@ -512,8 +569,18 @@ jobs:
     concurrency:
       group: fly-deploy-swecov
       cancel-in-progress: false
+    # Whether this run shipped (passed the HEAD guard); `prune-registry-swecov` runs only then.
+    outputs:
+      deployed: ${{ steps.head.outputs.skip != 'true' }}
     steps:
+      # As in `deploy`: the fly config, and the Dockerfile it names.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            /reg_webapp/fly.swecov.toml
+            /reg_webapp/Dockerfile
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       - name: Skip unless HEAD of main
         id: head
         env:
@@ -537,8 +604,20 @@ jobs:
           --wait-timeout 10m0s
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+
+  # The SWECOV registry prune, as `prune-registry`.
+  prune-registry-swecov:
+    needs: deploy-swecov
+    if: >-
+      !cancelled() && needs.deploy-swecov.result == 'success' &&
+      needs.deploy-swecov.outputs.deployed == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    concurrency:
+      group: fly-prune-swecov
+      cancel-in-progress: false
+    steps:
       - name: Prune old SWECOV registry tags
-        if: steps.head.outputs.skip != 'true'
         continue-on-error: true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
@@ -568,7 +647,13 @@ jobs:
       group: edge-deploy-global
       cancel-in-progress: false
     steps:
+      # The worker only: wrangler.jsonc and its `src/` (no imports from outside it).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            /reg_webapp/edge/
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       # Bun runs the pinned Wrangler CLI for the MCP edge worker.
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
@@ -649,7 +734,21 @@ jobs:
       group: edge-deploy-swecov
       cancel-in-progress: false
     steps:
+      # The worker, the SPA (`reg_webapp/frontend/`) and what its build reads outside
+      # it: the Rust workspace for `gen:wasm` (`Cargo.toml`, `Cargo.lock`, `.cargo/`,
+      # `crates/`) and `crates/reg-meta/openapi.json` for `gen:types`. `gen:types` also
+      # writes under `plugins/`, which Bun creates on demand.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            /Cargo.toml
+            /Cargo.lock
+            /.cargo/
+            /crates/
+            /reg_webapp/edge/
+            /reg_webapp/frontend/
+          sparse-checkout-cone-mode: false
+          filter: blob:none
       - name: Skip unless HEAD of main
         id: head
         env:
