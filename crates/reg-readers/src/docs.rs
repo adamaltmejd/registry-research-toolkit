@@ -287,12 +287,11 @@ fn config_at<T: serde::de::DeserializeOwned>(root: &Path, rel: &str) -> Result<T
     toml::from_str(&text).map_err(|e| error(rel, e.to_string()))
 }
 
-// simplify: a hand-rolled reader of the flat frontmatter the LISA markdown carries (flat
-// `key: value` and skipped `- ` items only; scripts/parse_lisa_docs.py writes no other
-// shape); use a YAML crate if frontmatter from another source appears.
-/// The frontmatter's unindented `key: value` pairs (a quoted value unquoted; list items
-/// and indented lines are not read) and the body after it. No opening `---` line is no
-/// frontmatter.
+// simplify: a hand-rolled reader of the flat frontmatter the LISA markdown carries; use a
+// YAML crate if frontmatter from another source appears.
+/// The frontmatter's `key: value` pairs (a quoted value unquoted, a wrapped or block
+/// scalar folded to one line; list items are not read) and the body after it. No
+/// opening `---` line is no frontmatter.
 fn frontmatter(text: &str) -> Result<(BTreeMap<String, String>, &str), String> {
     let mut meta = BTreeMap::new();
     let mut lines = text.split_inclusive('\n');
@@ -300,17 +299,35 @@ fn frontmatter(text: &str) -> Result<(BTreeMap<String, String>, &str), String> {
         return Ok((meta, text));
     };
     let mut consumed = first.len();
+    let mut key: Option<String> = None;
     for line in lines {
         consumed += line.len();
         let trimmed = line.trim_end();
         if trimmed == "---" {
             return Ok((meta, &text[consumed..]));
         }
-        if trimmed.starts_with([' ', '\t']) || trimmed.starts_with("- ") {
+        let indented = trimmed.starts_with([' ', '\t']);
+        let item = trimmed.trim_start().starts_with("- ");
+        if item {
             continue;
         }
-        if let Some((k, v)) = trimmed.split_once(':') {
-            meta.insert(k.trim().to_owned(), unquote(v.trim()).to_owned());
+        if indented {
+            // A wrapped or block scalar continues the previous key's value.
+            if let Some(value) = key.as_ref().and_then(|k| meta.get_mut(k)) {
+                if !value.is_empty() {
+                    value.push(' ');
+                }
+                value.push_str(trimmed.trim());
+            }
+        } else if let Some((k, v)) = trimmed.split_once(':') {
+            let v = v.trim();
+            let v = if v.starts_with(['>', '|']) {
+                ""
+            } else {
+                unquote(v)
+            };
+            key = Some(k.trim().to_owned());
+            meta.insert(k.trim().to_owned(), v.to_owned());
         }
     }
     Err("frontmatter does not close".to_owned())
