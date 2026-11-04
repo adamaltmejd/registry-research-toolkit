@@ -1,8 +1,12 @@
 import type { CatalogFindingGroup } from "./api";
 
 /** A group of findings and the ref whose `next_cursor` it carries (`null`: no
- * further page). */
-export type WarningGroup = CatalogFindingGroup & { ref: string | null };
+ * further page). `partial`: more than one ref had further pages, so the group cannot
+ * page on and its items may stop short of its count. */
+export type WarningGroup = CatalogFindingGroup & {
+  ref: string | null;
+  partial: boolean;
+};
 
 const groupKey = (group: { severity: string; code: string }) =>
   JSON.stringify([group.severity, group.code]);
@@ -31,7 +35,14 @@ export function mergeFindingGroups(
     for (const group of groups) {
       const key = groupKey(group);
       const entry = merged.get(key) ?? {
-        group: { ...group, count: 0, items: [], next_cursor: null, ref: null },
+        group: {
+          ...group,
+          count: 0,
+          items: [],
+          next_cursor: null,
+          ref: null,
+          partial: false,
+        },
         seen: new Set<string>(),
         paging: 0,
       };
@@ -55,7 +66,9 @@ export function mergeFindingGroups(
   }
   return [...merged.values()]
     .map(({ group, paging }) =>
-      paging > 1 ? { ...group, next_cursor: null, ref: null } : group,
+      paging > 1
+        ? { ...group, next_cursor: null, ref: null, partial: true }
+        : group,
     )
     .sort(byGroup);
 }

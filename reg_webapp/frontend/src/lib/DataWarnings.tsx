@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button as AriaButton,
   Disclosure,
@@ -66,8 +66,12 @@ function FindingGroup({
   }>({ items: [], cursor: group.next_cursor, dropped: 0 });
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
-  const list = useRef<HTMLUListElement>(null);
   const moreButton = useRef<HTMLButtonElement>(null);
+  // The first item of the page just loaded, focused once it renders, so Tab carries
+  // on from where the reader is rather than from the top of the list.
+  const focusAt = useRef<number | null>(null);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
   const { severity, code, ref } = group;
   const entries = [...group.items, ...more.items];
   const count = group.count - more.dropped;
@@ -76,12 +80,16 @@ function FindingGroup({
     if (loading || cursor === null || ref === null) return;
     setLoading(true);
     setFailure(null);
-    getFindings(ref, { code, cursor }).then(
+    const controller = new AbortController();
+    request.current = controller;
+    getFindings(ref, { code, cursor, signal: controller.signal }).then(
       (page) => {
+        if (controller.signal.aborted) return;
         const next = page.find((g) => g.severity === severity);
-        // The last page removes its button. Move focus only if the reader is still on it.
-        if (!next?.next_cursor && document.activeElement === moreButton.current)
-          list.current?.focus({ preventScroll: true });
+        // Move focus only if the reader has not moved it elsewhere meanwhile.
+        const active = document.activeElement;
+        if (active === moreButton.current || active === document.body)
+          focusAt.current = entries.length;
         // A merged group's first page may hold another ref's copy of a finding.
         setMore((m) => {
           const shown = new Set(
@@ -99,6 +107,7 @@ function FindingGroup({
         setLoading(false);
       },
       (error: unknown) => {
+        if (controller.signal.aborted) return;
         setFailure(error instanceof Error ? error.message : String(error));
         setLoading(false);
       },
@@ -156,13 +165,20 @@ function FindingGroup({
             <div>
               {isExpanded && (
                 <ul
-                  ref={list}
-                  tabIndex={-1}
                   aria-busy={loading || undefined}
                   className={styles.findings}
                 >
-                  {entries.map((finding) => (
-                    <li key={JSON.stringify(finding)}>
+                  {entries.map((finding, i) => (
+                    <li
+                      key={JSON.stringify(finding)}
+                      tabIndex={-1}
+                      ref={(el) => {
+                        if (el && focusAt.current === i) {
+                          focusAt.current = null;
+                          el.focus();
+                        }
+                      }}
+                    >
                       <StatusRow tone={severity === "review" ? "warn" : "info"}>
                         <div className={styles.finding}>
                           <span>
@@ -210,10 +226,23 @@ function FindingGroup({
                   again.
                 </StatusRow>
               )}
+              {isExpanded && group.partial && entries.length < count && (
+                <p className={`${styles.shown} ${styles.findingsFoot}`}>
+                  {entries.length} of {count} shown
+                </p>
+              )}
               {isExpanded && more.cursor !== null && ref !== null && (
-                <Button ref={moreButton} isBusy={loading} onPress={showMore}>
-                  Show more
-                </Button>
+                // Padded so the panel's clipping box leaves the focus ring whole.
+                <div className={styles.findingsFoot}>
+                  <Button
+                    ref={moreButton}
+                    isBusy={loading}
+                    onPress={showMore}
+                    aria-label={`Show more (${count - entries.length} left): ${label}`}
+                  >
+                    Show more ({count - entries.length} left)
+                  </Button>
+                </div>
               )}
             </div>
           </DisclosurePanel>
