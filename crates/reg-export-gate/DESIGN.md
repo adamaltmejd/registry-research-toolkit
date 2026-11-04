@@ -177,7 +177,9 @@ passing set during the review and swap in another before the hash or the export.
    decodes to the same values). A rewritten file over 8 MiB is `too_large` in `check` as
    well, so `export` accepts exactly the outputs `check` can write. The gate writes
    uncompressed, so a compressed staging file under the cap can grow past it. That costs
-   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB.
+   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB. The
+   maintainer kept the cap at that cost (2026-11-04), over dropping it and letting
+   `export` read larger outputs.
 4. The destination and every folder above it must be safe from everyone but the user
    running `export`, or the pipeline could move the destination aside and put its own
    folder or a link there (`destination_writable`). The destination is owned by that
