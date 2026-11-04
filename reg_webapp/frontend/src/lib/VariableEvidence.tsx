@@ -305,7 +305,7 @@ export function EvidenceContent({
                 <Button slot="trigger" className={styles.disclosureButton}>
                   <TreeChevron />
                   <span>
-                    Provider wording: <code>{periodLabels(text.periods)}</code>
+                    Definition for <code>{periodLabels(text.periods)}</code>
                   </span>
                 </Button>
               </Heading>
@@ -484,7 +484,7 @@ export function EvidenceContent({
           <h3
             className={`${styles.disclosureHeading} ${evidenceStyles.subheading}`}
           >
-            Sources without wording
+            Sources without a definition
           </h3>
           <ul className={`${styles.plainList} ${evidenceStyles.list}`}>
             {groupSources(evidence.source_only).map((source) => (

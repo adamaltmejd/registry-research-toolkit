@@ -22,9 +22,8 @@ import {
   allRegisterFacets,
   browseMatches,
   browseOrder,
-  browseScope,
+  searchScope,
   useBrowseFilter,
-  useBrowseScope,
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
@@ -36,7 +35,6 @@ import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
 import columnStyles from "./ui/ColumnList.module.css";
 import { focusBrowseColumn } from "./ui/column_keys";
-import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
@@ -148,10 +146,9 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-/** With `heldOnly` (a steward deployment's default scope), the providers and
- * registers the steward holds anything in, plus the current page's register
- * and provider (`current`), so a page opened by link keeps its row; the rest
- * stay reachable through the palette, links and the "All matches" scope. */
+/** On a steward deployment (`heldOnly`), only the providers and registers the
+ * steward holds anything in, plus the current page's register and provider
+ * (`current`), so a page opened by a link keeps its row. */
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
@@ -224,7 +221,7 @@ export function BrowseTree({
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
   const facetKey = useSettledFilter();
-  const scope = useBrowseScope(config);
+  const scope = searchScope(config);
   const facetResource = useAsyncResource(
     facetKey === null ? null : `${scope ?? ""}\u0000${facetKey}`,
     (signal) => searchFacets(facetKey ?? "", { signal, scope }),
@@ -242,7 +239,7 @@ export function BrowseTree({
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
-    scope === "steward",
+    config !== null,
     currentKey,
   );
   // Without facets, name-only filtering would hide possible variable matches.
@@ -412,44 +409,28 @@ export function BrowseTree({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span className={config ? "visually-hidden" : "micro-label"}>
+        <span className="micro-label">
           {/* While filtering, the label is how many registers the filter
             leaves: a separate count wrapped the header to two lines, out of
             line with the variables column's (#2107). */}
-          {config || matchCount === null
+          {matchCount === null
             ? "Registers"
             : matchCount === 1
               ? "1 register"
               : `${matchCount} registers`}
         </span>
-        <div className={config ? styles.controls : undefined}>
-          {config && (
-            <div className={styles.scope}>
-              <Select
-                label={`Browse scope for ${config.presentation.name}`}
-                labelHidden
-                value={scope ?? "steward"}
-                options={[
-                  { id: "steward", name: "Held matches" },
-                  { id: "reference", name: "All matches" },
-                ]}
-                onChange={browseScope.set}
-              />
-            </div>
-          )}
-          {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
-            group is open, and expands once all are closed. */}
-          <Button
-            variant="ghost"
-            onPress={() =>
-              onExpandedChange(
-                expandedKeys.size > 0 ? new Set() : new Set(expandable),
-              )
-            }
-          >
-            {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
-          </Button>
-        </div>
+        {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
+          group is open, and expands once all are closed. */}
+        <Button
+          variant="ghost"
+          onPress={() =>
+            onExpandedChange(
+              expandedKeys.size > 0 ? new Set() : new Set(expandable),
+            )
+          }
+        >
+          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
+        </Button>
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>
