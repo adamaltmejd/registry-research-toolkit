@@ -375,6 +375,11 @@ export function VariableView({
             : []),
         ]}
       />
+      <Description
+        description={node.description}
+        segments={rows}
+        bounds={factBounds}
+      />
       <div
         ref={timelineRegion}
         tabIndex={-1}
@@ -412,11 +417,6 @@ export function VariableView({
           coverage.graph
         )}
       </div>
-      <Description
-        description={node.description}
-        segments={rows}
-        bounds={factBounds}
-      />
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />

@@ -444,18 +444,18 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   is no Years row, no tables list and no table of columns under it; value sets have
   their own panel, so the facts name only the classification. Where there is no curated
   description, the provider's wording is the Description: once when every period agrees,
-  otherwise each wording under its years. Timeline and facts read the one per-period
-  list (`segments`): on a steward deployment its rows are the held files and columns
-  over the years held. A table page leaves out a Row keys, Populations or Releases panel
-  with nothing to list, and Timeless or Implicit when "No". Placement caveats are
-  steward working notes, not shown until the steward curates them for readers. A
-  register page has no tables table: its tables are FilterChips over the variable list,
-  each with its period, a lens with OR within the selection, offered only when two or
-  more tables deliver variables (the archived variant chips, maintainer 2026-11-03). A
-  Tables definition row links every table's page by name. In steward mode a
-  supplemental-only variable is selectable for a project like a reference variable:
-  `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
-  questions, three scopes").
+  otherwise each wording under its years. It sits under the facts, above the `Timeline`.
+  Timeline and facts read the one per-period list (`segments`): on a steward deployment
+  its rows are the held files and columns over the years held. A table page leaves out a
+  Row keys, Populations or Releases panel with nothing to list, and Timeless or Implicit
+  when "No". Placement caveats are steward working notes, not shown until the steward
+  curates them for readers. A register page has no tables table: its tables are
+  FilterChips over the variable list, each with its period, a lens with OR within the
+  selection, offered only when two or more tables deliver variables (the archived
+  variant chips, maintainer 2026-11-03). A Tables definition row links every table's
+  page by name. In steward mode a supplemental-only variable is selectable for a project
+  like a reference variable: `order` and `validate` read the composed steward view
+  (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -584,8 +584,11 @@ Time is the axis every relation is drawn on.
   then coverage with the period thumbs, then lanes), so the band runs through every
   lane. The variable's columns are its lanes, one per table and titled by the table's
   name, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark.
-  A span's column name is never cut. After it, in muted mono, comes the file the steward
-  holds it in on a steward deployment (`OfferName Inera_CK_EP`): cut short with an
+  One span per column name on a table: a steward's yearly files of one table are the
+  same column delivered in several files, one continuous box over their years
+  (maintainer 2026-11-04). A span's column name is never cut. After it, in muted mono,
+  come the files the steward holds it in on a steward deployment, a run of yearly files
+  as a range (`UtdAdr1 RTB_SaBo_Adress_2015–2020`), others as a list: cut short with an
   ellipsis where the span is narrow, and dropped where only a few characters would show.
   A span too narrow for the column name is a plain bar with the name beside it, to the
   right, or to the left at the axis end. Hovering or focusing a span shows its column,
