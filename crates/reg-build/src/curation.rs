@@ -54,7 +54,7 @@ impl Lock {
         }
     }
 
-    fn resolve(self) -> Result<BTreeMap<String, LockedPremise>, String> {
+    fn verify(&self) -> Result<(), String> {
         for (key, object) in &self.objects {
             if object_key(object) != *key {
                 return Err(format!(
@@ -62,32 +62,36 @@ impl Lock {
                 ));
             }
         }
-        self.statements
-            .into_iter()
-            .map(|(identity, premise)| {
-                let mut objects = premise
-                    .objects
-                    .iter()
-                    .map(|key| {
-                        self.objects.get(key).cloned().ok_or_else(|| {
-                            format!(
-                                "statement {identity}: missing object {key}; run reg-build lock"
-                            )
-                        })
-                    })
-                    .collect::<Result<Vec<_>, _>>()?;
-                // Digest order is only a storage convention. Restore the resolver's
-                // canonical object order for unchanged field-level diagnostics.
-                objects.sort_by_key(reg_frame::canonical_line);
-                Ok((
-                    identity,
-                    LockedPremise {
-                        subjects: premise.subjects,
-                        objects,
-                    },
-                ))
-            })
-            .collect()
+        for (identity, premise) in &self.statements {
+            if let Some(key) = premise
+                .objects
+                .iter()
+                .find(|k| !self.objects.contains_key(*k))
+            {
+                return Err(format!(
+                    "statement {identity}: missing object {key}; run reg-build lock"
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// One statement's reviewed premise. Built on demand: expanding every statement's
+    /// shared objects up front held a copy per statement for the whole run (#2196).
+    fn premise(&self, identity: &str) -> Option<LockedPremise> {
+        let premise = self.statements.get(identity)?;
+        let mut objects = premise
+            .objects
+            .iter()
+            .map(|key| self.objects[key].clone())
+            .collect::<Vec<_>>();
+        // Digest order is only a storage convention. Restore the resolver's
+        // canonical object order for unchanged field-level diagnostics.
+        objects.sort_by_cached_key(reg_frame::canonical_line);
+        Some(LockedPremise {
+            subjects: premise.subjects.clone(),
+            objects,
+        })
     }
 }
 
@@ -102,7 +106,7 @@ struct LockedPremise {
     objects: Vec<SourcePremise>,
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged, deny_unknown_fields)]
 enum LockedSubjects {
     Rows(Vec<SourcePremise>),
@@ -150,7 +154,7 @@ impl LockedPremise {
             })
             .cloned()
             .collect::<Vec<_>>();
-        objects.sort_by_key(reg_frame::canonical_line);
+        objects.sort_by_cached_key(reg_frame::canonical_line);
         Self { subjects, objects }
     }
 }
@@ -207,6 +211,85 @@ fn application_record(record: &Record, provider: &str, register: &str, hash: Opt
     }
 }
 
+/// A structural stage's records, indexed by `application_record`'s keys: a statement's
+/// register coordinates and its code list. Replacing a statement's records leaves
+/// tombstones and appends, so `into_records` keeps the order of a `retain` then `extend`
+/// over the whole record list, without scanning it per statement (#2196).
+struct Slots {
+    records: Vec<Option<Record>>,
+    coordinates: BTreeMap<(String, String), Vec<usize>>,
+    value_sets: BTreeMap<String, Vec<usize>>,
+}
+
+impl Slots {
+    fn new(records: Vec<Record>) -> Self {
+        let mut slots = Self {
+            records: Vec::with_capacity(records.len()),
+            coordinates: BTreeMap::new(),
+            value_sets: BTreeMap::new(),
+        };
+        slots.extend(records);
+        slots
+    }
+
+    fn extend(&mut self, records: Vec<Record>) {
+        for record in records {
+            let at = self.records.len();
+            match &record {
+                Record::Register(r) => self.at(&r.provider, &r.register).push(at),
+                Record::Table(r) => self.at(&r.provider, &r.register).push(at),
+                Record::Release(r) => self.at(&r.provider, &r.register).push(at),
+                Record::Occurrence(r) => self.at(&r.provider, &r.register).push(at),
+                Record::ValueSet(v) => self.value_sets.entry(v.hash.clone()).or_default().push(at),
+                Record::Link(_) | Record::Notice(_) | Record::Doc(_) => {}
+            }
+            self.records.push(Some(record));
+        }
+    }
+
+    fn at(&mut self, provider: &str, register: &str) -> &mut Vec<usize> {
+        self.coordinates
+            .entry((provider.to_owned(), register.to_owned()))
+            .or_default()
+    }
+
+    /// Positions of `application_record(_, provider, register, hash)`, in record order.
+    fn positions(&self, provider: &str, register: &str, hash: Option<&str>) -> Vec<usize> {
+        let empty = Vec::new();
+        let own = self
+            .coordinates
+            .get(&(provider.to_owned(), register.to_owned()))
+            .unwrap_or(&empty);
+        let set = hash.and_then(|h| self.value_sets.get(h)).unwrap_or(&empty);
+        let mut positions = own.iter().chain(set).copied().collect::<Vec<_>>();
+        positions.sort_unstable();
+        positions
+    }
+
+    fn source(&self, provider: &str, register: &str, hash: Option<&str>) -> Vec<Record> {
+        self.positions(provider, register, hash)
+            .into_iter()
+            .map(|at| self.records[at].clone().expect("a live position"))
+            .collect()
+    }
+
+    fn replace(&mut self, provider: &str, register: &str, hash: Option<&str>, by: Vec<Record>) {
+        for at in self.positions(provider, register, hash) {
+            self.records[at] = None;
+        }
+        self.coordinates
+            .remove(&(provider.to_owned(), register.to_owned()));
+        if let Some(hash) = hash {
+            self.value_sets.remove(hash);
+        }
+        self.extend(by);
+    }
+
+    fn into_records(self) -> Vec<Record> {
+        self.records.into_iter().flatten().collect()
+    }
+}
+
 fn ledger(
     root: &Path,
     provider: &str,
@@ -231,10 +314,20 @@ fn ledger(
     Ok(ledger)
 }
 
+/// One curation stage's reference lookups: each provider's source registers with their
+/// ledgers, in record order, and each source register's view. Valid while the stage's
+/// records, shared sources and variable assignments stay unchanged (#2196).
+#[derive(Default)]
+struct ReferenceCache {
+    ledgers: BTreeMap<String, Vec<(String, reg_resolve::Ledger)>>,
+    views: BTreeMap<(String, String), reg_resolve::curation::ReferenceView>,
+}
+
 /// Catalog references resolve through each register's ledger, then snapshot source
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
 #[allow(clippy::too_many_arguments)]
 fn references(
+    cache: &mut ReferenceCache,
     root: &Path,
     records: &[Record],
     statements: &[&LocatedStatement],
@@ -291,30 +384,46 @@ fn references(
             }) => (provider, register, Some(variable)),
             _ => continue,
         };
+        if !cache.ledgers.contains_key(&provider) {
+            let mut ledgers = Vec::new();
+            for source in records {
+                let Record::Register(source) = source else {
+                    continue;
+                };
+                if source.provider == provider {
+                    ledgers.push((
+                        source.register.clone(),
+                        ledger(root, &provider, &source.register, retired)?,
+                    ));
+                }
+            }
+            cache.ledgers.insert(provider.clone(), ledgers);
+        }
         let mut matches = Vec::new();
-        for source in records {
-            let Record::Register(source) = source else {
+        for (source, ledger) in &cache.ledgers[&provider] {
+            if ledger.public.as_deref().unwrap_or(source) != register {
                 continue;
+            }
+            let own = || {
+                records
+                    .iter()
+                    .filter(|r| application_record(r, &provider, source, None))
+                    .cloned()
+                    .collect::<Vec<_>>()
             };
-            if source.provider != provider {
-                continue;
-            }
-            let ledger = ledger(root, &provider, &source.register, retired)?;
-            if ledger.public.as_deref().unwrap_or(&source.register) != register {
-                continue;
-            }
-            let records = records
-                .iter()
-                .filter(|r| application_record(r, &provider, &source.register, None))
-                .cloned()
-                .collect::<Vec<_>>();
-            matches.push(reg_resolve::curation::reference(
-                &records,
-                &ledger,
-                variable.as_deref(),
-                variables,
-                shared,
-            ));
+            let view = cache
+                .views
+                .entry((provider.clone(), source.clone()))
+                .or_insert_with(|| {
+                    reg_resolve::curation::ReferenceView::new(&own(), ledger, shared)
+                });
+            let premise = match variable.as_deref() {
+                Some(_) if !view.has_variables() => view
+                    .with_variables(&own(), ledger, variables)
+                    .and_then(|()| view.premise(variable.as_deref())),
+                variable => view.premise(variable),
+            };
+            matches.push(premise);
         }
         if let [Ok(premise)] = &matches[..] {
             references.insert(object.clone(), premise.clone());
@@ -794,6 +903,9 @@ pub(super) struct Applied {
     pub sentinels: Vec<Sentinels>,
     pub links: Vec<(LocatedStatement, Premise)>,
     pub linked: Option<crate::link::Curated>,
+    /// The final records resolved, once computed: later checks and the build reuse it
+    /// rather than resolving the whole catalog again (#2196).
+    pub resolved: Option<Vec<reg_resolve::Resolved>>,
     pub acks:
         BTreeMap<(String, String), BTreeMap<usize, reg_resolve::curation::ack::Acknowledgement>>,
 }
@@ -924,34 +1036,41 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, LockedPremise>, String> {
+fn previous(path: &Path, record: bool) -> Result<Lock, String> {
+    // The version alone first, so an old lock gets the re-lock hint, not a field error.
+    // Not a `serde_json::Value` of the whole lock: the largest are tens of MB.
+    #[derive(Deserialize)]
+    struct Version {
+        #[serde(default)]
+        version: serde_json::Value,
+    }
     if record || !path.try_exists().map_err(|e| e.to_string())? {
-        return Ok(BTreeMap::new());
+        return Ok(Lock::new(BTreeMap::new()));
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let value: serde_json::Value = serde_json::from_str(&text)
+    let Version { version } = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if value["version"] != 3 {
+    if version != 3 {
         return Err(format!(
-            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
+            "{}: unsupported premise lock version {version}; run reg-build lock to re-lock with version 3",
             path.display(),
-            value["version"]
         ));
     }
-    let lock: Lock = serde_json::from_value(value)
+    let lock: Lock = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    lock.resolve()
-        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
+    lock.verify()
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
+    Ok(lock)
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &BTreeMap<String, LockedPremise>,
+    old: &Lock,
     path: &Path,
 ) -> Result<(), String> {
     let premise = LockedPremise::new(statement, premise);
-    match old.get(&statement.identity) {
+    match old.premise(&statement.identity).as_ref() {
         None => Err(format!(
             "premise-missing: no reviewed premise in {}; run reg-build lock",
             path.display()
@@ -1076,6 +1195,7 @@ fn run_selected(
         }
         let stage_start = std::time::Instant::now();
         let (mut in_references, mut in_resolve) = (Duration::ZERO, Duration::ZERO);
+        let mut reference_cache = ReferenceCache::default();
 
         let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
             reg_resolve::curation::SharedSources::new(&records)
@@ -1087,7 +1207,9 @@ fn run_selected(
         let finding_catalog = if stage == Phase::Acknowledgements
             && statements.iter().any(|s| phase(&s.statement) == stage)
         {
-            Some(complete_findings(root, retired, &records, &result, base)?)
+            Some(complete_findings(
+                root, retired, &records, &result, None, base,
+            )?)
         } else {
             None
         };
@@ -1157,6 +1279,7 @@ fn run_selected(
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
             {
+                let assigned = result.variables.len();
                 for (variable, members) in
                     reg_resolve::curation::variable_members(&source, ledger, &result.variables)?
                 {
@@ -1167,6 +1290,10 @@ fn run_selected(
                             .or_insert_with(|| variable.clone());
                     }
                 }
+                // Views resolved variables under the old assignments.
+                if result.variables.len() != assigned {
+                    reference_cache.views.clear();
+                }
             }
             let finding_view = finding_catalog.as_ref().and_then(|catalog| {
                 catalog.iter().find(|r| {
@@ -1176,6 +1303,7 @@ fn run_selected(
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
             let t = std::time::Instant::now();
             let references = references(
+                &mut reference_cache,
                 root,
                 &records,
                 &group,
@@ -1289,7 +1417,7 @@ fn run_selected(
                 )?;
             }
         }
-        accepted.sort_by_key(|(s, ..)| {
+        accepted.sort_by_cached_key(|(s, ..)| {
             use reg_frame::statement::{AssertFact, Statement};
             let dependency = match &s.statement {
                 Statement::Assert {
@@ -1349,6 +1477,7 @@ fn run_selected(
                 }
             }
         }
+        let mut slots = structural_stage.then(|| Slots::new(std::mem::take(&mut records)));
         for (statement, premise, provider, register) in accepted {
             let (_, ledger, _) = &locks[&(provider, register)];
             let locator = statement_locator(root, statement)?;
@@ -1362,15 +1491,9 @@ fn run_selected(
                 } => fields.value_set.as_deref(),
                 _ => asserted.as_ref().map(|set| set.hash.as_str()),
             };
-            let source = if structural_stage {
-                records
-                    .iter()
-                    .filter(|r| application_record(r, provider, register, hash))
-                    .cloned()
-                    .collect::<Vec<_>>()
-            } else {
-                Vec::new()
-            };
+            let source = slots
+                .as_ref()
+                .map_or_else(Vec::new, |slots| slots.source(provider, register, hash));
             if matches!(stage, Phase::Relations | Phase::Acknowledgements) {
                 match &statement.statement {
                     reg_frame::statement::Statement::Link { .. } => {
@@ -1480,11 +1603,14 @@ fn run_selected(
                         inventory: None,
                     }),
             );
-            evaluated.push((statement, premise.clone()));
-            premises.entry((provider, register)).or_default().insert(
-                statement.identity.clone(),
-                LockedPremise::new(statement, &premise),
-            );
+            // Only `lock` writes reviewed premises; a build keeps none (#2196).
+            if record {
+                premises.entry((provider, register)).or_default().insert(
+                    statement.identity.clone(),
+                    LockedPremise::new(statement, &premise),
+                );
+            }
+            evaluated.push((statement, premise));
             if !applied.changes.is_empty() {
                 let value =
                     serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
@@ -1516,10 +1642,12 @@ fn run_selected(
                     .classifications
                     .extend(applied.classifications.iter().cloned());
             }
-            if structural_stage {
-                records.retain(|r| !application_record(r, provider, register, hash));
-                records.extend(applied.records);
+            if let Some(slots) = &mut slots {
+                slots.replace(provider, register, hash, applied.records);
             }
+        }
+        if let Some(slots) = slots {
+            records = slots.into_records();
         }
         if fields_stage && !field_snapshot.is_empty() {
             if stage == Phase::Fields {
@@ -1683,6 +1811,7 @@ fn run_selected(
             return Ok(rerun);
         }
         result.linked = Some(linked);
+        result.resolved = Some(resolved);
     }
     let indices = evaluated
         .iter()
@@ -1779,15 +1908,19 @@ fn run_selected(
         })
     {
         let t = std::time::Instant::now();
-        let resolved = resolve_catalog(
-            root,
-            retired,
-            &records,
-            &result.variables,
-            &result.metadata,
-            &result.classifications,
-        )?;
+        let resolved = match result.resolved.take() {
+            Some(resolved) => resolved,
+            None => resolve_catalog(
+                root,
+                retired,
+                &records,
+                &result.variables,
+                &result.metadata,
+                &result.classifications,
+            )?,
+        };
         let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        result.resolved = Some(resolved);
         crate::timing::done("curation set presentation", t);
         if !invalid.is_empty() {
             let by_location = evaluated
@@ -1905,17 +2038,21 @@ pub(super) fn complete_findings(
     retired: &[crate::retired::Retired],
     records: &[Record],
     applied: &Applied,
+    resolved: Option<Vec<reg_resolve::Resolved>>,
     base: Option<&crate::external::Context>,
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let t = std::time::Instant::now();
-    let mut resolved = resolve_catalog(
-        root,
-        retired,
-        records,
-        &applied.variables,
-        &applied.metadata,
-        &applied.classifications,
-    )?;
+    let mut resolved = match resolved {
+        Some(resolved) => resolved,
+        None => resolve_catalog(
+            root,
+            retired,
+            records,
+            &applied.variables,
+            &applied.metadata,
+            &applied.classifications,
+        )?,
+    };
     crate::timing::done("findings: resolve catalog", t);
     let t = std::time::Instant::now();
     let mut sets = BTreeMap::new();
@@ -1927,7 +2064,10 @@ pub(super) fn complete_findings(
     let mut linked = crate::link::resolve(&resolved, records, &[])?;
     crate::timing::done("findings: link", t);
     let t = std::time::Instant::now();
-    if !applied.links.is_empty() {
+    // The curation run already curated these links against the same records.
+    if let Some(curated) = &applied.linked {
+        linked.relations.clone_from(&curated.relations);
+    } else if !applied.links.is_empty() {
         linked.relations =
             crate::link::curate(root, &resolved, records, &applied.links, base)?.relations;
     }

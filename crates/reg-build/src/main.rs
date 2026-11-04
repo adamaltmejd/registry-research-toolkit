@@ -206,24 +206,53 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         )?;
     }
     let readers = args.curation.join("readers");
-    manifest
-        .input
-        .iter()
-        .map(|input| {
-            let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
-                .map_err(|e| e.to_string())?;
-            for record in &output.frame.records {
-                let (provider, at) = match record {
-                    Record::Register(r) => (&r.provider, &r.locator),
-                    Record::Table(r) => (&r.provider, &r.locator),
-                    Record::Release(r) => (&r.provider, &r.locator),
-                    Record::Occurrence(r) => (&r.provider, &r.locator),
-                    _ => continue,
-                };
-                check_provider(provider, &at.input, &at.at)?;
+    let read_one = |input: &reg_readers::Input| {
+        let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
+            .map_err(|e| e.to_string())?;
+        for record in &output.frame.records {
+            let (provider, at) = match record {
+                Record::Register(r) => (&r.provider, &r.locator),
+                Record::Table(r) => (&r.provider, &r.locator),
+                Record::Release(r) => (&r.provider, &r.locator),
+                Record::Occurrence(r) => (&r.provider, &r.locator),
+                _ => continue,
+            };
+            check_provider(provider, &at.input, &at.at)?;
+        }
+        Ok(output)
+    };
+    // Readers are independent and pure, so they run on all cores; outputs and the first
+    // error keep manifest order, as a serial read would (#2196).
+    let next = std::sync::atomic::AtomicUsize::new(0);
+    let workers = std::thread::available_parallelism()
+        .map_or(1, std::num::NonZero::get)
+        .min(manifest.input.len());
+    let mut slots: Vec<Option<Result<reg_readers::ReadOutput, String>>> =
+        (0..manifest.input.len()).map(|_| None).collect();
+    std::thread::scope(|scope| {
+        let handles = (0..workers)
+            .map(|_| {
+                scope.spawn(|| {
+                    let mut done = Vec::new();
+                    loop {
+                        let i = next.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                        let Some(input) = manifest.input.get(i) else {
+                            return done;
+                        };
+                        done.push((i, read_one(input)));
+                    }
+                })
+            })
+            .collect::<Vec<_>>();
+        for handle in handles {
+            for (i, output) in handle.join().expect("a reader thread") {
+                slots[i] = Some(output);
             }
-            Ok(output)
-        })
+        }
+    });
+    slots
+        .into_iter()
+        .map(|slot| slot.expect("every input read"))
         .collect()
 }
 
@@ -430,8 +459,15 @@ fn build_with_provenance(
 
     timing::done("digest and group", t);
     let t = std::time::Instant::now();
-    let mut resolved =
-        curation::complete_findings(&args.curation, &retired, &applied.records, &applied, base)?;
+    let precomputed = applied.resolved.take();
+    let mut resolved = curation::complete_findings(
+        &args.curation,
+        &retired,
+        &applied.records,
+        &applied,
+        precomputed,
+        base,
+    )?;
     timing::done("resolve", t);
     let t = std::time::Instant::now();
     let mut report = BTreeMap::new();
