@@ -11760,3 +11760,69 @@ kind = "set"
 subject = "gasforetag: tabell where key = 'v24655'"
 fields = { "label" = "Tabell" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): one register-wide Tabell coordinate replaces the per-column ones. 242 variables each held the Tabell column of gasforetag (2013-14) beside one value column (Kolumn1/Kolumn2), with no value set and no other spelling; the column locates the value's row/table in the SCB form."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: antabhsp @2009..2011 where key = 'v35439'"
+fields = { "spelling" = "mwhhsp" }
+evidence = "SCB's Registerinformation export lists two variables under column antabhsp in the elnätföretag (nät) releases r13854, r13849 and r13848 (2009 - 2011): v35451 (Högspänning, antal uttagspunkter, a count of delivery points) and v35439 (Överförd el antal MWh högspänning). One delivered file cannot hold two columns of one name. v35439 is spelled mwhhsp in every other release that lists it (r13844 for 2012 through r20026 for 2024, and r12652 for 2017), and v35451 is spelled antabhsp in all of its releases. Label and definition of v35439 are identical in all of them. So antabhsp for v35439 in 2009 - 2011 is a documentation misname; corrected to mwhhsp.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848108 (r13854)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848110 (r13849)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848112 (r13848)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848114 (r13844, mwhhsp)"
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: antablsp @2009..2011 where key = 'v35441'"
+fields = { "spelling" = "mwhlsp" }
+evidence = "SCB's Registerinformation export lists two variables under column antablsp in the elnätföretag (nät) releases r13854, r13849 and r13848 (2009 - 2011): v35440 (Lågspänning, antal uttagspunkter, a count of delivery points) and v35441 (Överförd el antal MWh lågspänning). One delivered file cannot hold two columns of one name. v35441 is spelled mwhlsp in every other release that lists it (r13844 for 2012 through r20026 for 2024, and r12652 for 2017), and v35440 is spelled antablsp in all of its releases. Label and definition of v35441 are identical in all of them. So antablsp for v35441 in 2009 - 2011 is a documentation misname; corrected to mwhlsp.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848109 (r13854)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848111 (r13849)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848113 (r13848)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848115 (r13844, mwhlsp)"
+
+[[statement]]
+kind = "set"
+subject = "var:frikyla"
+fields = { "description" = "Installerad effekt hos värmeväxlaren som används för frikyla." }
+evidence = "SCB:s definition är avklippt; den operationella definitionen anger \"Installerad effekt\" i alla årgångar 2018-2025. Enheten i källan (kWh) är en energienhet och ändras inte här.\n0.74.0 catalog, key v38851, releases r13127, r13130, r14254, r14256...; reg_meta.db:occurrence:29218,31152,29298"
+
+[[statement]]
+kind = "set"
+subject = "var:frikyla-prod"
+fields = { "description" = "Producerad mängd frikyla, i MWh." }
+evidence = "SCB:s definition är avklippt; operationell definition \"Producerad mängd frikyla\", enhet MWh i alla årgångar 2018-2025.\n0.74.0 catalog, key v38851, releases r13127, r13130, r14254, r14256...; reg_meta.db:occurrence:29238,31165,29316"
+
+[[statement]]
+kind = "set"
+subject = "var:ngast1-intakter-ovriga-handel"
+fields = { "description" = "Övriga intäkter från handel med naturgas, i tusental kronor." }
+evidence = "Etikett och kolumnnamn anger övriga intäkter; definitionen (\"försäljningsvärde\") är samma text som för försäljningsposten i samma tabell och gäller inte denna kolumn.\n0.74.0 catalog, key v24313, releases r5523, r6017; reg_meta.db:occurrence:32568,33301"
+
+[[statement]]
+kind = "set"
+subject = "var:ngast2-anvandning-konverterad-stadsgas"
+fields = { "description" = "Mängd stadsgas som har framställts genom konvertering av naturgas, i MWh." }
+evidence = "Etiketten anger konverterad mängd stadsgas; definitionen \"naturgas konverterad av naturgas\" nämner naturgas två gånger och följer inte etiketten.\n0.74.0 catalog, key v24471, releases r5523, r6017; reg_meta.db:occurrence:32634,33367"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelseintakter-el-varme-kyla"
+fields = { "description" = "Energimängd i MWh som hör till rubriken Vissa rörelseintäkter samt försäljning av el och värme/kyla. Beloppet i tusental kronor finns i variabeln för tkr." }
+evidence = "Etikett (MWh) och enhet MWh stämmer; motsvarande belopp i tkr är en egen variabel i samma tabell.\n0.74.0 catalog, key v35434, releases r12656, r13860, r13861, r13862...; reg_meta.db:occurrence:30538,30606,30674"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-generatoreffekt-maxnettoopt"
+fields = { "description" = "Sammanlagd generatoreffekt vid maximal nettoeffekt med optimalt bränsle. Uppgiften är en effekt." }
+evidence = "Etiketten anger generatoreffekt max netto (optimalt bränsle); källans enhet kWh är en energienhet och ändras inte, eftersom kW eller MW inte framgår av källan.\n0.74.0 catalog, key v35302, releases r12656, r13127, r13860, r13861...; reg_meta.db:occurrence:30532,30600,30668"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-aggregat"
+fields = { "description" = "Typ av aggregat (produktionsenhet) som raden gäller. Kodlistan för 2009-2017 (21 värden) innehåller i stället rubriker för kostnader och intäkter och beskriver inte aggregattyp; från 2018 anges fem aggregattyper." }
+evidence = "Värdemängd 1585 (2009-2017) jämförd med värdemängden för 2018-2024 på samma kolumn.\n0.74.0 catalog, key v35289, releases r12654, r13129, r13850, r13851...; reg_meta.db:occurrence:29766,29812,29858"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-mwh"
+fields = { "description" = "Energimängd i MWh som hör till rubriken Vissa rörelsekostnader. Beloppet i kronor är en egen variabel." }
+evidence = "Etikett och enhet MWh; ingen annan enhet anges i någon årgång 2009-2018.\n0.74.0 catalog, key v35280, releases r12652, r13838, r13839, r13840...; reg_meta.db:occurrence:28495,28573,28652"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
+fields = { "description" = "Energimängd i MWh som hör till rubriken Vissa rörelsekostnader samt inköpt el." }
+evidence = "Etikett och enhet MWh i alla årgångar 2009-2018.\n0.74.0 catalog, key v35429, releases r12656, r13860, r13861, r13862...; reg_meta.db:occurrence:30537,30605,30673"

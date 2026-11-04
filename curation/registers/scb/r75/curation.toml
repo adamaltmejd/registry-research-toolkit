@@ -940,3 +940,15 @@ kind = "set"
 subject = "var:varmvm3"
 fields = { "label" = "Varmvattenförbrukning (m³)" }
 evidence = "#2102 same-label cluster 'Varmvattenförbrukning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Energiid, Kvant and Uppvid share definition, unit (Megawattimmar) and period; VarmvM3 has the unit M3, which supports (m³)."
+
+[[statement]]
+kind = "set"
+subject = "var:varmeeffekt-luft-luftvarmepump"
+fields = { "description" = "Värmeeffekt för luft-luftvärmepump, i kilowatt (kW)." }
+evidence = "Definitionen anger kW; enhetsfältet i r2753 anger kilowattimmar, vilket är en energienhet.\n0.74.0 catalog, key v19579, releases r2753; reg_meta.db:occurrence:55530"
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: VpUteEff where key = 'v19579' and release = 'r2753'"
+fields = { "unit" = "Kilowatt" }
+evidence = "Definitionen anger kW; en effekt anges inte i kilowattimmar.\nold unit: 'Kilowattimmar'; Registerinformation.csv:row=293012 (r2753)"

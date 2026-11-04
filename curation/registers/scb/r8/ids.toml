@@ -90,7 +90,6 @@ public = "fordonsreg"
 "genomsnittlignyttolast" = ["Lastbilar: GenomsnittligNyttolast"]
 "modellgruppkod" = ["Bussar: GRPKOD"]
 "handelsbeteckning" = ["Bussar: handbet"]
-"inst-2" = ["EU-mopeder: INST_2 @ 2010-12-31"]
 "inst-ag" = ["Personbilar: INST_Ag"]
 "institutionell-kod" = ["Bussar: INST"]
 "institutionell-kod-literal-inst-2" = ["Lastbilar: INST_2"]

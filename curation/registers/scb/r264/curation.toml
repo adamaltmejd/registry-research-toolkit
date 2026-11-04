@@ -14363,3 +14363,15 @@ kind = "set"
 subject = "var:aterforing-fran-periodiseringsfond-v0952"
 fields = { "label" = "Återföring från periodiseringsfond (INK3, V0952/V8604)" }
 evidence = "#2102 fold: the label names every folded column. V0952 (2004-06) and V8604 (2007-09) in register-for-inkomstblanketter-ink3: same definition, no value set, adjacent at 2007."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-k10: v0913 where key = 'v17984' and release = 'r1720'"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "Avyttringspris är ett belopp; tabellens övriga 80 beloppskolumner har enheten Kronor (SEK).\nold unit: 'Hektar'; Registerinformation.csv:row=189021 (r1720)"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-k10: V0913 where key = 'v17984' and release = 'r1690'"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "Avyttringspris är ett belopp; tabellens övriga 80 beloppskolumner har enheten Kronor (SEK).\nold unit: 'Hektar'; Registerinformation.csv:row=189023 (r1690)"

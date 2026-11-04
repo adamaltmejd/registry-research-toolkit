@@ -1552,3 +1552,9 @@ kind = "set"
 subject = "var:sysselsattningsgrad-osysly"
 fields = { "label" = "Överenskommen sysselsättningsgrad (osysly)" }
 evidence = "#2102 same-label cluster 'Överenskommen sysselsättningsgrad' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; osys opdef changes: none (-2013), includes timavlönade (2013-2018), faktisk grad with Tjänstledighetsomfattning (2018-), so 'faktisk' holds only for later occurrences; osysly opdef 'utan hänsyn till tjänstledighet' is absent before 2018. AnForm has three codes (heltid, deltid, övriga) in all occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:osys"
+fields = { "description" = "Sysselsättningsgrad. För 2013-2017 härleds den ur överenskommen sysselsättningsgrad, där även timavlönade får en beräknad grad. Från 2018 är den faktisk sysselsättningsgrad, härledd ur överenskommen sysselsättningsgrad och tjänstledighetsomfattning. För åren före 2013 saknar SCB:s metadata beskrivning." }
+evidence = "Operationell definition r5346-r11907 (2013-2017): härleds från överenskommen sysselsättningsgrad för månadsavlönade, timavlönade får en beräknad grad. r13128-r19908 (2018-2024): härleds från överenskommen sysselsättningsgrad och tjänstledighetsomfattning, resultatet blir faktisk sysselsättningsgrad. Årgångarna r1569-r4677 (1996-2012) har ingen operationell definition.\n0.74.0 catalog, key v5717, releases r1088, r11166, r11907, r13128...; reg_meta.db:occurrence:446377,446417,446457"

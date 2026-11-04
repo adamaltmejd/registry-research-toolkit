@@ -6968,3 +6968,10 @@ kind = "set"
 subject = "tjansteregistret: nivakodtjl @2014-07-01..2025-06-30 where key = 'v35203'"
 fields = { "variable" = "tjanstgoringsniva-tjanstlediga" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): PrNivaKodTjl in personregistret; NivaKodTjl in tjansteregistret: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Identical text apart from a typo ('är inte är')); folded into tjanstgoringsniva-tjanstlediga."
+
+[[statement]]
+kind = "set"
+subject = "tjansteregistret: Sfatim where key = 'v38251'"
+fields = { "unit" = "Antal timmar" }
+evidence = "Etiketten anger tjänstgöringstimmar, inte dagar. Enheten är densamma i alla fyra årgångar (r12632, r12637, r12638, r13269), så rättelsen vilar på etiketten.\nold unit: 'Dagar'; Registerinformation.csv:row=444729 (r13269); Registerinformation.csv:row=444706 (r12638); Registerinformation.csv:row=444713 (r12637); Registerinformation.csv:row=444721 (r12632)"
+

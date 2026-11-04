@@ -832,3 +832,9 @@ kind = "set"
 subject = "var:po8"
 fields = { "label" = "Produktionsområde (8 områden, Po8)" }
 evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; po18 has 18 areas (opdef says so); OrdPo8 and Po8 are both 8-area columns with the same code list and near-identical opdefs."
+
+[[statement]]
+kind = "set"
+subject = "var:areal-bete-betehektar-fjarde-skorden"
+fields = { "description" = "Areal (hektar) betad återväxt som räknas som fjärde skördeomgången." }
+evidence = "Operationell definition \"efter tredjeskörd\" (2016-2023) och \"efter fjärdeskörd\" (r19813). Samma förskjutning gäller kolumnerna Andra och Tredje skörden (förstasskörd/andraskörd före 2024, andraskörd/tredjeskörd 2024), så den är en ändrad formulering för alla tre och inte belagd som ändrat mått; definitionen \"andra skörden\" är gemensam för de tre kolumnerna.\n0.74.0 catalog, key v15175, releases r15816, r16354, r16356, r16359...; reg_meta.db:occurrence:438408,438451,438496"

@@ -1918,3 +1918,9 @@ kind = "set"
 subject = "set:verksamhetsanknutna-tjanster"
 fields = { "label" = "Verksamhetsanknutna tjänster" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-material-varor-trafik"
+fields = { "description" = "Försäljning av material och varor, varav den del som hör till trafik. Posten ingår i konto 37." }
+evidence = "Etiketten anger material och varor därav trafik; definitionen är kopierad från v39855.\n0.74.0 catalog, key v39856, releases r13666, r14535, r16251, r18240...; reg_meta.db:occurrence:322894,322976,323058"
