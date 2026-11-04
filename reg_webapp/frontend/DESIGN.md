@@ -731,7 +731,7 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `TypePill`, `FilterChip`, `VariableRow`,
 `Timeline`, `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`.
-The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `KeyValue`,
+The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`,
 …) are the stepping stones: they keep reading the same roles until each is replaced, and
 must not grow new visual language meanwhile.
 
@@ -751,15 +751,16 @@ must not grow new visual language meanwhile.
   nothing is selected.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
-  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
-  verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
-  "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph; a draft with no sources yet is the same plain "Empty", never
-  an error, since nothing has gone wrong. Its slot is as wide as the widest verdict, so
-  the banner keeps one size while validation runs. A verdict with findings (Warnings,
-  Errors, Order blocked) is a link, in its status hue with the link's `accent` rule, to
-  /project, where the first non-empty findings group scrolls into view and takes focus;
-  Valid and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
+  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono` ("1
+  table, 2 columns"). The verdict is the project page's, in the same words (see Project
+  page), and leads with its glyph: "✓ Ready to order" in `ok`, "▲ Has warnings" in
+  `warn`, "✕ Has problems" or "✕ Can't be ordered yet" in `err`; unchecked or in flight
+  it is a plain `text-muted` "Checking" with no glyph; a draft with no tables yet is the
+  same plain "Empty", never an error, since nothing has gone wrong. Its slot is as wide
+  as the widest verdict, so the banner keeps one size while the check runs. A verdict
+  with findings (Has warnings, Has problems, Can't be ordered yet) is a link, in its
+  status hue with the link's `accent` rule, to the verdict on /project, which takes
+  focus; Ready to order and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
   "unsaved", never a status hue. The study window is the period picker: an inline
   two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
   year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
@@ -772,10 +773,30 @@ must not grow new visual language meanwhile.
   2026-11-04) are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
-  `Tooltip` (`mono`, press to copy); no code chip on the page. The summary panel under
-  the sources keeps the verdict, the counts per level, the project's own findings in
-  full and a plain link to each located one, which scrolls to it, focuses it and flashes
-  it.
+  `Tooltip` (`mono`, press to copy); no code chip on the page. Under the project's
+  verdict, a finding no card holds (a file that fails the structure check, a finding
+  about the whole project) is listed in full, and each warning or problem a card holds
+  has a plain link that scrolls to it and focuses it; a card's notes (level info) change
+  no verdict and get no link.
+- **Project page** (`/project`, maintainer ruling Q1, 2026-11-04): the `h1` "Project"
+  with no breadcrumb repeating it, the name field, then "Download project_data.json",
+  "Open a project file…" and a ghost "Discard"; opening over a project and discarding
+  ask first in a `Dialog`. Under them, the steward's `order_instructions` from
+  `/api/context` as sent (its own line breaks, no markdown, never text from code), then
+  the verdict, "Tables" (one card per table) and "What will be delivered". There is one
+  check and no button for it: WASM on every edit, then `order` 350 ms after the last
+  edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
+  with the count, "Can't be ordered yet" with the count of problems, or "Has problems"
+  for a file that fails the structure check, whose problems are listed in full under
+  it; a check that did not run is an `err` row with Retry. "What will be delivered" is
+  the order the catalog would serve, shown only when the project can be ordered: per
+  table its name and years, each column as a `ColumnChip` (with its years only where
+  they differ from the table's) beside the variable's name, "Years not available" per
+  column the period asks more of than the table has, and the "Row identifier" columns.
+  There is no order-file download: the steward's instructions say how to order. With
+  no project the page is one `EmptyState`, "No project yet", with "Create a project"
+  and "Open a project file…". Below `breakpoint-narrow` a column's row on a card stacks:
+  its name and Remove, its spans, then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

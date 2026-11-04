@@ -4,8 +4,8 @@ import styles from "./App.module.css";
 import {
   type Context,
   getContext,
+  type OrderCheck,
   stewardConfig,
-  type ValidationResultModel,
 } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
@@ -25,7 +25,7 @@ import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { isBackCrumb } from "./lib/ui/types";
 import { useAsyncResource } from "./lib/use_async_resource";
-import { useProjectValidation } from "./lib/use_project";
+import { useProjectCheck } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { NoRegisterList, VariableList } from "./lib/VariableList";
 
@@ -51,7 +51,7 @@ export function App() {
     return () => icon.remove();
   }, [brand, logo]);
   const route = useRoute();
-  const validation = useProjectValidation();
+  const validation = useProjectCheck();
   const registerFqid =
     route.name === "catalog-node" ? registerOfPath(route.fqidPath) : null;
   const searching = useBrowseFiltering();
@@ -132,7 +132,7 @@ function RoutedView({
 }: {
   route: Exclude<Route, { name: "project" }>;
   context: Context | null;
-  validation: ValidationResultModel | null;
+  validation: OrderCheck | null;
 }) {
   switch (route.name) {
     case "home":

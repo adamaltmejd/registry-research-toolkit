@@ -176,7 +176,8 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
       ];
     }
     case "project":
-      return [browserRoot, { label: "Project", word: true }];
+      // The page's h1 says "Project"; a crumb would repeat it.
+      return [browserRoot];
     default:
       // not-found
       return [browserRoot];

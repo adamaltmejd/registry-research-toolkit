@@ -107,13 +107,13 @@ a.verdict {
 .status[data-status="empty"] {
   color: var(--text-muted);
 }
-.status[data-status="ok"] {
+.status[data-status="ready"] {
   color: var(--ok);
 }
 .status[data-status="warnings"] {
   color: var(--warn);
 }
-.status[data-status="errors"],
+.status[data-status="problems"],
 .status[data-status="blocked"] {
   color: var(--err);
 }

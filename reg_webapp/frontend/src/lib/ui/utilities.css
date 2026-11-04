@@ -3,7 +3,7 @@
    `.micro-label` — the label level (DESIGN.md → typography.label): the small,
    muted, SENTENCE-CASE label at normal tracking used for table headers, panel
    titles, rail section names and meta terms, composing the --micro-label-*
-   tokens. It's CROSS-component (DataTable th, Panel title, KeyValue dt, section
+   tokens. It's CROSS-component (DataTable th, Panel title, section
    labels, …), so it can't be component-owned the way a primitive's
    `:global(.ui-btn)` is — it lives in a plain global stylesheet, imported once
    in main.ts after tokens.css. Being a plain global file (NOT a CSS Module),

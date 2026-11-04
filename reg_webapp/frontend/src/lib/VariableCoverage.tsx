@@ -12,7 +12,7 @@ import {
   type Context,
   errMessage,
   type Graph,
-  type ValidationResultModel,
+  type OrderCheck,
   type VariableShow,
 } from "./api";
 import { LaneGraph } from "./LaneGraph";
@@ -55,7 +55,7 @@ export function useVariableCoverage({
   names: ReadonlyMap<string, string>;
   context: Context | null;
   tables: readonly TablePeriodMetadata[] | null;
-  validation: ValidationResultModel | null;
+  validation: OrderCheck | null;
   succession?: Graph | null;
   neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
   successionError?: string | null;

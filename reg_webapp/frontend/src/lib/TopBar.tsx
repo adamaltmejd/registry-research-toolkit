@@ -12,7 +12,7 @@ import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
 import styles from "./TopBar.module.css";
 import { Button } from "./ui/Button";
-import type { ProjectValidation } from "./use_project";
+import type { ProjectCheck } from "./use_project";
 
 const mac = isMacPlatform();
 
@@ -49,7 +49,7 @@ export function TopBar({
   validation,
 }: {
   context: Context | null;
-  validation: ProjectValidation;
+  validation: ProjectCheck;
 }) {
   const config = stewardConfig(context);
   const brand =
