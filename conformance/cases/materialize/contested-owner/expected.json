@@ -4,7 +4,7 @@
       "level": "info",
       "code": "rows_unfiltered",
       "path": "/sources/0",
-      "message": "Physical table \"Owners\" has no period column, so every row of its delivery 2017..2019 is extracted",
+      "message": "Table \"Owners\" has no period column, so every row of its delivery 2017..2019 is extracted",
       "source": "a"
     },
     {

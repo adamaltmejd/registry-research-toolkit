@@ -84,8 +84,8 @@ const FACTS: readonly {
       row.identifier === undefined
         ? null
         : {
-            key: `${row.identifier}${row.id_kind ?? ""}`,
-            value: `${yesNo(row.identifier)}${row.identifier && row.id_kind ? ` (${catalogWords(row.id_kind)})` : ""}`,
+            key: String(row.identifier),
+            value: yesNo(row.identifier),
           },
   },
   {
@@ -94,13 +94,6 @@ const FACTS: readonly {
       row.sensitive === undefined
         ? null
         : { key: String(row.sensitive), value: yesNo(row.sensitive) },
-  },
-  {
-    term: "Temporality",
-    of: (row) =>
-      row.temporality
-        ? { key: row.temporality, value: catalogWords(row.temporality) }
-        : null,
   },
   {
     term: "Storage",
