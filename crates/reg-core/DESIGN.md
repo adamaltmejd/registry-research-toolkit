@@ -7,12 +7,12 @@ The runtime around it, including the semantic layer and the order manifest, is
 [../DESIGN.md](../DESIGN.md). The MONA side is remaining work (#707).
 
 `reg-core` also holds the FQID and period grammars, the text folds and the interval
-algebra. It does no IO, so the server, the MCP tools and the builder (`reg-build`) share
-one implementation of each. The FQID grammar includes `set/<provider>/<register>/<slug>`
-as a distinct presentation kind, disjoint from three-part table and variable refs. A set
-ref is valid for catalog discovery and `show`; it is not a valid project binding or
-source table. `class/` and `set/` lead with literal kind namespaces; malformed forms
-cannot resolve as another kind.
+algebra. It does no IO, so the server, the MCP tools, the builder (`reg-build`) and the
+SPA (through `reg-core-wasm`) share one implementation of each. The FQID grammar
+includes `set/<provider>/<register>/<slug>` as a distinct presentation kind, disjoint
+from three-part table and variable refs. A set ref is valid for catalog discovery and
+`show`; it is not a valid project binding or source table. `class/` and `set/` lead
+with literal kind namespaces; malformed forms cannot resolve as another kind.
 
 ## Scope
 
@@ -131,9 +131,9 @@ after acceptance is validator/type drift, not user error. Enum values come from 
 list that defines their serde encoding, so the two cannot disagree.
 
 The optional `openapi` feature derives the types' input-shape schemas (`ProjectData` and
-`Project*`) and the result's `Validation`, `ValidationIssue` and `IssueLevel`.
-`reg-catalog` enables it and publishes them in `openapi.json`; the plugin's project JSON
-Schema is generated from that contract. The enum schemas come from the same wire list. A
+`Project*`) and `IssueLevel`. `reg-catalog` enables it and publishes them in
+`openapi.json`, with its own `Validation` and `Issue` for the result; the plugin's
+project JSON Schema is generated from that contract. The enum schemas come from the same wire list. A
 doc comment on one of these types is its schema description.
 
 `ok` is true when no issue is an error. Warnings and infos do not block, so `ok` is not
