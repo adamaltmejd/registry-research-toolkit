@@ -16,20 +16,19 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "coverage",
     paths: &["/api/coverage/{ref}"],
     tool: Some("coverage"),
-    description: "The periods a register, a table or a variable is delivered over: per \
-        table its spans, gaps with their reasons and releases.",
+    description: "Which years a register, table or variable exists: per table its periods, gaps \
+        (with reason) and releases.",
     params: &[Param::required("ref", Type::Ref)],
     cache: Cache::Minute,
     run: coverage,
     result: component::<Coverage>,
 }];
 
-/// `shape.Coverage`.
 #[derive(Serialize, ToSchema)]
 pub struct Coverage {
     fqid: String,
     kind: String,
-    /// The entity's hull.
+    /// Its whole span.
     period: Period,
     tables: Vec<CoverageTable>,
 }
@@ -41,7 +40,7 @@ pub struct CoverageTable {
     spans: Vec<Period>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     gaps: Vec<CoverageGap>,
-    /// Absent for a variable ref (releases belong to tables) and in steward mode.
+    /// Absent for a variable (releases belong to tables) and on a data holder's catalog.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     releases: Vec<Release>,
 }
@@ -49,6 +48,9 @@ pub struct CoverageTable {
 #[derive(Serialize, ToSchema)]
 pub struct CoverageGap {
     period: Period,
+    /// `no_release`: no release; `release_without_column`: released without this column;
+    /// `documented_without_column`: documented but not delivered; `ambiguous`: more than
+    /// one form; `withheld`: not delivered on purpose.
     reason: String,
 }
 

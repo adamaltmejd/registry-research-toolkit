@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "7"
+    "schema_version": "8"
   },
   "project": {
     "name": "Order case",
@@ -35,7 +35,7 @@
       "level": "info",
       "code": "coverage_end_unstated",
       "path": "/sources/0/bindings/0",
-      "message": "demo/opn/y in demo/opn has no stated coverage end; data over [2019-01-01, 2021-01-01) is not confirmed",
+      "message": "demo/opn/y in demo/opn: the provider states no end year, so data over [2019-01-01, 2021-01-01) is not confirmed",
       "source": "s",
       "variable": "demo/opn/y",
       "table": "demo/opn",

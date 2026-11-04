@@ -36,7 +36,7 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
     else {
         return Err(Error::new(
             Code::HoldingsUnavailable,
-            "This server serves no steward's holdings, so it has no physical files to order.",
+            "This server has no data holder's tables, so it cannot produce an order file.",
             vec![],
         ));
     };
@@ -228,7 +228,7 @@ fn build(
             findings.push(at(
                 "file_name_unsafe",
                 format!(
-                    "The stored file name {:?} of physical table {:?} is {reason}.",
+                    "The stored file name {:?} of table {:?} is {reason}.",
                     holding.file_name, holding.physical_name
                 ),
             ));
@@ -240,7 +240,7 @@ fn build(
             findings.push(at(
                 "file_name_unsafe",
                 format!(
-                    "Physical tables {other:?} and {:?} name files that differ only in case.",
+                    "Tables {other:?} and {:?} name files that differ only in case.",
                     holding.physical_name
                 ),
             ));
@@ -249,7 +249,7 @@ fn build(
             findings.push(at(
                 "physical_schema_missing",
                 format!(
-                    "Physical table {:?} has no single stored schema.",
+                    "Table {:?} has no single stored schema.",
                     holding.physical_name
                 ),
             ));
@@ -603,7 +603,7 @@ fn gaps(
             "coverage_gap",
             piece,
             format!(
-                "The steward holds no column of {} in {} over {}; that part is not extracted",
+                "The data holder has no column of {} in {} over {}; that part is not extracted",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -677,7 +677,7 @@ fn keys(
     let requirements: Vec<Value> = serde_json::from_str(&holding.keys).map_err(|_| {
         Error::new(
             Code::InternalError,
-            "Admitted key requirements are invalid.",
+            "The holder's row-key data is invalid.",
             vec![],
         )
     })?;
@@ -703,7 +703,7 @@ fn keys(
                         .map_err(|_| {
                             Error::new(
                                 Code::InternalError,
-                                "Admitted row-key period is invalid.",
+                                "The holder's row-key data is invalid.",
                                 vec![],
                             )
                         })?
@@ -730,7 +730,7 @@ fn keys(
                 findings.push(block(
                     "held_key_missing",
                     format!(
-                        "The row key of physical table {:?} is on hold, so its file cannot be \
+                        "The row key of table {:?} is on hold, so its file cannot be \
                          keyed",
                         holding.physical_name
                     ),
@@ -761,7 +761,7 @@ fn keys(
                     findings.push(block(
                         "held_key_ambiguous",
                         format!(
-                            "Row key {variable} of physical table {:?} is placed in {} columns",
+                            "Row key {variable} of table {:?} is in {} columns",
                             holding.physical_name,
                             distinct.len()
                         ),
@@ -772,7 +772,7 @@ fn keys(
                     let mut issue = block(
                         "held_key_missing",
                         format!(
-                            "Physical table {:?} holds no column of its row key {variable} over {}",
+                            "Table {:?} has no column for its row key {variable} over {}",
                             holding.physical_name,
                             span(server, piece)
                         ),
@@ -926,7 +926,7 @@ fn row_filter(
                     *s,
                     "rows_unfiltered",
                     format!(
-                        "Physical table {:?} has no period column, so every row of its \
+                        "Table {:?} has no period column, so every row of its \
                          delivery {} is extracted",
                         holding.physical_name,
                         holding.delivery.as_deref().unwrap_or("(timeless)")
@@ -944,7 +944,7 @@ fn row_filter(
                 *s,
                 "row_filter_widened",
                 format!(
-                    "Rows of physical table {:?} are filtered on {column:?} at its {} grain, \
+                    "Rows of table {:?} are filtered on {column:?} at its {} precision, \
                      so the filter covers whole units around the request",
                     holding.physical_name,
                     serde_json::to_value(encoding)
@@ -965,7 +965,7 @@ fn row_filter(
                     *s,
                     "row_filter_union",
                     format!(
-                        "Several sources share physical table {:?}; every column of its file \
+                        "Several sources share table {:?}; every column of its file \
                          is extracted over the union of their periods, {}",
                         holding.physical_name,
                         union

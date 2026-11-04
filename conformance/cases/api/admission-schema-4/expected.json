@@ -3,7 +3,7 @@
     "code": "schema_incompatible",
     "fields": {
       "schema_version": "4",
-      "supported": "7"
+      "supported": "8"
     }
   }
 }
