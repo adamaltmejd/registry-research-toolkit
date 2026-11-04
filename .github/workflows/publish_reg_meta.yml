@@ -99,15 +99,32 @@ jobs:
           cat smoke.err
           test "$status" -eq 10
           grep -q '"code":"db_not_found"' smoke.err
-      # `--clobber` keeps a rerun of a partly green run idempotent.
+      # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
+      # or a gh retry after the first upload landed (HTTP 422), skips an asset that
+      # exists with the same digest and fails on a different one.
       - name: Upload to the release
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
-        run: >-
-          gh release upload "$TAG" "dist/$ASSET" "dist/$ASSET.sha256"
-          --clobber --repo "$GITHUB_REPOSITORY"
+        run: |
+          for name in "$ASSET" "$ASSET.sha256"; do
+            remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+              --jq ".assets[] | select(.name == \"$name\") | .digest")
+            if [ -z "$remote" ]; then
+              gh release upload "$TAG" "dist/$name" --repo "$GITHUB_REPOSITORY" ||
+                {
+                  # gh may have retried after the first attempt landed: re-check.
+                  remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+                    --jq ".assets[] | select(.name == \"$name\") | .digest")
+                  test -n "$remote" || exit 1
+                }
+            fi
+            if [ -n "$remote" ]; then
+              test "$remote" = "sha256:$(shasum -a 256 "dist/$name" | cut -d' ' -f1)" ||
+                { echo "::error::$name exists on $TAG with a different digest"; exit 1; }
+            fi
+          done
       - name: Upload as workflow artifact
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
