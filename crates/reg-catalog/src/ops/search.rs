@@ -49,12 +49,9 @@ pub const OPERATIONS: &[Operation] = &[
         name: "search",
         paths: &["/api/search"],
         tool: Some("search"),
-        description: "Full-text search over registers, tables, variables, value codes and \
-                      documents, ranked by relevance. Paired steward results have separate \
-                      ranks, counts and cursors; scope=steward filters held intervals before \
-                      ranking. Exact column names are `resolve`. \
-                      Use tag to keep variables belonging to that thematic tag. \
-                      Use show with evidence=true to check a variable's provenance.",
+        description: "Search registers, tables, variables, codes and documents by text, best \
+            match first. `tag` keeps only that tag's variables. For exact column names use \
+            `resolve`.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("type", Type::Enum(TYPES)),
@@ -73,8 +70,7 @@ pub const OPERATIONS: &[Operation] = &[
         name: "search_facets",
         paths: &["/api/search/facets"],
         tool: None,
-        description: "Per register, how many variables a search query matches, for the \
-                      SPA's register filter.",
+        description: "Per register, how many variables a search query matches.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("register", Type::Ref),
@@ -86,7 +82,6 @@ pub const OPERATIONS: &[Operation] = &[
     },
 ];
 
-/// `Page<SearchHit>`; paired mode adds a count and an independently ranked steward group.
 #[derive(Serialize, ToSchema)]
 pub struct SearchPage {
     items: Vec<SearchHit>,
@@ -98,8 +93,7 @@ pub struct SearchPage {
     steward: Option<StewardSearchPage>,
 }
 
-/// Supplemental matches have their own rank, count and cursor. Independent bm25
-/// scores from different databases are never compared.
+/// Matches in the data holder's own data, with their own count and cursor.
 #[derive(Serialize, ToSchema)]
 pub struct StewardSearchPage {
     owner: String,
@@ -108,7 +102,7 @@ pub struct StewardSearchPage {
     total: i64,
 }
 
-/// `shape.SearchHit`: one hit, tagged by its kind.
+/// One hit, tagged by its kind.
 #[derive(Serialize, ToSchema)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum SearchHit {
@@ -133,7 +127,7 @@ pub enum SearchHit {
         register_name: String,
         #[schema(required = true)]
         definition: Option<String>,
-        /// The folded names it was delivered under, sorted.
+        /// Its column names, sorted.
         spellings: Vec<String>,
         period: Period,
     },
@@ -148,7 +142,7 @@ pub enum SearchHit {
         code: String,
         #[schema(required = true)]
         label: Option<String>,
-        /// The value sets some segment references that hold the pair.
+        /// How many value sets in use contain this code and label.
         value_set_count: i64,
     },
     Document {
@@ -365,19 +359,25 @@ fn search_origin(
 /// Count and page share all filters. In steward mode a register, table or variable
 /// matches only when held (by public id, over the requested interval); classifications,
 /// codes and documents are shared and always match.
+///
+/// The held set is an uncorrelated `IN`, built once per query: a correlated `EXISTS`
+/// scanned `holding_mapping` once per FTS match, and a one-letter query has ~10^5.
 fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<String, Error> {
     let scope = if held {
         server.catalog.attach_holdings(conn)?;
-        " AND (i.kind NOT IN ('register', 'table', 'variable')
-            OR EXISTS (SELECT 1 FROM held.holding_mapping hm
+        let from = "FROM held.holding_mapping hm
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
-            WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))
-              AND ((i.kind = 'variable' AND i.entity_id = hv.id)
-               OR (i.kind = 'table' AND i.entity_id = ht.id)
-               OR (i.kind = 'register' AND i.entity_id = ht.register_id))))"
+            WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))";
+        format!(
+            " AND (i.kind NOT IN ('register', 'table', 'variable')
+            OR (i.kind, i.entity_id) IN (
+                SELECT 'variable', hv.id {from}
+                UNION ALL SELECT 'table', ht.id {from}
+                UNION ALL SELECT 'register', ht.register_id {from}))"
+        )
     } else {
-        ""
+        String::new()
     };
     Ok(format!(
         "(?2 IS NULL OR i.kind = ?2)
@@ -585,7 +585,8 @@ fn facets(
     held: bool,
 ) -> Result<Vec<RegisterFacet>, Error> {
     let scope = if held {
-        " AND EXISTS (SELECT 1 FROM held.holding_mapping hm WHERE hm.variable_pid = v.pid)"
+        // Uncorrelated, like `search_filter`'s: no index leads with `variable_pid`.
+        " AND v.pid IN (SELECT variable_pid FROM held.holding_mapping)"
     } else {
         ""
     };

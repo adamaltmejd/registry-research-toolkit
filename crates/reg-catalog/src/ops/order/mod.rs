@@ -39,9 +39,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "validate",
         paths: &["/api/project/validate"],
         tool: Some("order"),
-        description: "Validate a project_data.json document: its structural issues, then the \
-            order check's findings at their levels. A 200 even when the project is invalid; \
-            `ok` is true exactly when `order` returns a logical order.",
+        description: "Check a project_data.json: every problem with its level. Always 200; `ok` \
+            is true when `order` would succeed.",
         params: &[Param::required("project", Type::Project)],
         cache: Cache::Revalidate,
         run: validate,
@@ -51,9 +50,9 @@ pub const OPERATIONS: &[Operation] = &[
         name: "order",
         paths: &["/api/project/order"],
         tool: Some("order"),
-        description: "The logical order of a project_data.json document: per binding, each \
-            window's table, period, spelling and form, with the availability clips, the row \
-            keys and the non-blocking findings; or `order_blocked` with every finding.",
+        description: "What a project_data.json would order: per requested variable, the table, \
+            period and column name, the periods that cannot be delivered, the row keys and any \
+            warnings; or `order_blocked` listing every problem.",
         params: &[Param::required("project", Type::Project)],
         cache: Cache::Revalidate,
         run: order,
@@ -63,10 +62,9 @@ pub const OPERATIONS: &[Operation] = &[
         name: "materialize_order",
         paths: &["/api/project/materialize"],
         tool: Some("order"),
-        description: "The MONA order file of a project_data.json document on this steward's \
-            holdings: per physical table and delivery one file, with its exact columns, \
-            held row keys and row filter, the clips and the non-blocking findings; or \
-            `order_blocked` with every logical and physical finding.",
+        description: "The MONA order file for a project_data.json on this data holder's tables: \
+            one file per table and delivery, with its columns, row keys, row filter, \
+            undeliverable periods and warnings; or `order_blocked` listing every problem.",
         params: &[Param::required("project", Type::Project)],
         cache: Cache::Revalidate,
         run: materialize::materialize,
@@ -138,16 +136,15 @@ fn blocked(findings: Vec<Issue>) -> Error {
 
 pub use reg_core::issue::Issue;
 
-/// `shape.LogicalOrder` (crates/DESIGN.md, "The logical order").
 #[derive(Serialize, ToSchema)]
 pub struct LogicalOrder {
     catalog: OrderCatalog,
     project: OrderProject,
-    /// Per source, per binding in declaration order, then by period start.
+    /// Per source, per requested variable in request order, then by period start.
     entries: Vec<OrderEntry>,
     /// Per source, then by period start.
     row_keys: Vec<OrderRowKeys>,
-    /// Every availability clip, also when nothing blocks.
+    /// Every period that cannot be delivered, also when the order succeeds.
     clips: Vec<OrderClip>,
     /// The non-blocking findings (level `warning` or `info`).
     findings: Vec<Issue>,
@@ -167,29 +164,28 @@ pub struct OrderProject {
     name: String,
     schema_version: String,
     reg_meta_version: String,
-    /// `reg_core::project::project_hash` of the document.
+    /// A hash of the project document.
     project_hash: String,
 }
 
-/// One merged segment of one binding in one table.
+/// One stretch of one requested variable in one table.
 #[derive(Serialize, ToSchema)]
 pub struct OrderEntry {
     /// The project source's name.
     source: String,
-    /// The binding's index in the source.
+    /// The variable's position in the source.
     binding: usize,
     provider: String,
     register: String,
-    /// The table that serves the window.
+    /// The table that serves the period.
     table: String,
     variable: String,
-    /// As the binding states it.
+    /// As the project states it.
     #[schema(required = true)]
     display_name: Option<String>,
-    /// The clipped request over the merged segment; `{start: null, end: null}` for a
-    /// timeless table.
+    /// The requested period cut to what the table has; `{start: null, end: null}` for a timeless table.
     period: Period,
-    /// The merged segment's exact spelling.
+    /// The exact column name.
     spelling: String,
     #[serde(rename = "type")]
     #[schema(required = true)]
@@ -226,7 +222,7 @@ pub struct RowKeyColumn {
     spelling: String,
 }
 
-/// An availability clip of one binding.
+/// A requested variable that covers less than the requested period.
 #[derive(Serialize, ToSchema)]
 pub struct OrderClip {
     source: String,

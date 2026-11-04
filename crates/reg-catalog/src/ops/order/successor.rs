@@ -77,7 +77,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
                 b,
                 &current.variable,
                 "variable_replaced",
-                "Following requires exactly one successor with a stated start day; curate the succession.",
+                "Following needs exactly one successor with a known start date; the catalog has none.",
             );
             if successors.len() == 1 {
                 finding.successor_fqid = Some(successors[0].0.clone());
@@ -138,7 +138,7 @@ fn materialize(
             b,
             &current.variable,
             "outside_availability",
-            "The successor has no orderable column over the requested period.",
+            "The successor has no column that can be ordered over this period.",
         ));
     } else {
         let part = Scope {
@@ -260,7 +260,7 @@ fn tables(
             .any(|other| !overlap(&other.requested, &s.requested).is_empty())
         {
             findings.push(refusal(scope, b, pid, "ambiguous_window",
-                "The successor is available in multiple tables on the same requested days; choose an explicit source."));
+                "The successor is available in several tables for the same days; name the table in the source."));
             return Ok(vec![]);
         }
     }
@@ -273,7 +273,7 @@ fn tables(
             b,
             pid,
             "outside_availability",
-            "The successor is not available over this requested window; curation is required.",
+            "The successor has no data over this period.",
         );
         finding.period = Some(period(scope.server, &days));
         findings.push(finding);

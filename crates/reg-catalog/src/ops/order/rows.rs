@@ -101,7 +101,7 @@ fn key_segments(
                             .map_err(|_| {
                                 Error::new(
                                     Code::InternalError,
-                                    "Admitted row-key period is invalid.",
+                                    "The holder's row-key data is invalid.",
                                     vec![],
                                 )
                             })?
@@ -188,8 +188,8 @@ pub(super) fn row_keys(
                     "ambiguous" => Some((
                         IssueLevel::Error,
                         "ambiguous_window",
-                        "cannot be placed on one form in",
-                        "; the window needs curation",
+                        "has more than one form in",
+                        " (name, type or codes differ); pick a shorter period or ask the maintainer",
                     )),
                     "preliminary" => Some((
                         IssueLevel::Warning,

@@ -92,7 +92,7 @@
       "level": "info",
       "code": "rows_unfiltered",
       "path": "/sources/0",
-      "message": "Physical table \"Parent\" has no period column, so every row of its delivery 2018 is extracted",
+      "message": "Table \"Parent\" has no period column, so every row of its delivery 2018 is extracted",
       "source": "p",
       "variable": null,
       "table": null,

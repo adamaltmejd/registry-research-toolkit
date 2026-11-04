@@ -1,7 +1,7 @@
 [
   {
     "name": "search",
-    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use tag to keep variables belonging to that thematic tag. Use show with evidence=true to check a variable's provenance.",
+    "description": "Search registers, tables, variables, codes and documents by text, best match first. `tag` keeps only that tag's variables. For exact column names use `resolve`.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -75,7 +75,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -106,7 +105,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -128,7 +127,7 @@
           "type": "object"
         },
         "SearchHit": {
-          "description": "`shape.SearchHit`: one hit, tagged by its kind.",
+          "description": "One hit, tagged by its kind.",
           "oneOf": [
             {
               "properties": {
@@ -219,7 +218,7 @@
                   "type": "string"
                 },
                 "spellings": {
-                  "description": "The folded names it was delivered under, sorted.",
+                  "description": "Its column names, sorted.",
                   "items": {
                     "type": "string"
                   },
@@ -288,7 +287,7 @@
                   "type": "string"
                 },
                 "value_set_count": {
-                  "description": "The value sets some segment references that hold the pair.",
+                  "description": "How many value sets in use contain this code and label.",
                   "format": "int64",
                   "type": "integer"
                 }
@@ -343,7 +342,6 @@
           ]
         },
         "SearchPage": {
-          "description": "`Page<SearchHit>`; paired mode adds a count and an independently ranked steward group.",
           "properties": {
             "items": {
               "items": {
@@ -382,7 +380,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -406,7 +404,7 @@
           "type": "object"
         },
         "StewardSearchPage": {
-          "description": "Supplemental matches have their own rank, count and cursor. Independent bm25\nscores from different databases are never compared.",
+          "description": "Matches in the data holder's own data, with their own count and cursor.",
           "properties": {
             "items": {
               "items": {
@@ -473,7 +471,7 @@
   },
   {
     "name": "show",
-    "description": "The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents.",
+    "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -489,7 +487,7 @@
     "outputSchema": {
       "$defs": {
         "CurationStatement": {
-          "description": "An authored curation statement that contributed a field of this variable.",
+          "description": "A curated statement that supplied a field of this variable.",
           "properties": {
             "caveat": {
               "type": [
@@ -547,7 +545,7 @@
           "type": "object"
         },
         "EvidenceSpelling": {
-          "description": "A delivered or curated folded alias; source occurrences retain exact spellings.",
+          "description": "A column name the variable is known by (case ignored).",
           "properties": {
             "kind": {
               "type": "string"
@@ -578,7 +576,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -609,7 +606,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -631,7 +628,7 @@
           "type": "object"
         },
         "Population": {
-          "description": "One population a release states (`shape.Release.populations`).",
+          "description": "One population a release states.",
           "properties": {
             "definition": {
               "type": [
@@ -658,7 +655,7 @@
           "type": "object"
         },
         "ProviderText": {
-          "description": "One provider text, with its coverage and every contributing source occurrence.",
+          "description": "One provider text, the years it covers and the deliveries it comes from.",
           "properties": {
             "periods": {
               "items": {
@@ -684,7 +681,6 @@
           "type": "object"
         },
         "ProviderTextSource": {
-          "description": "Source values remain distinct from curated winners, including silent sources.",
           "properties": {
             "field": {
               "type": [
@@ -742,7 +738,6 @@
           "type": "object"
         },
         "RelatedDocument": {
-          "description": "`shape.RelatedDocument`.",
           "properties": {
             "bytes": {
               "format": "int64",
@@ -792,7 +787,7 @@
           "type": "object"
         },
         "Release": {
-          "description": "`shape.Release`: a delivery of a table.",
+          "description": "A delivery of a table.",
           "properties": {
             "edition": {
               "type": "string"
@@ -843,10 +838,10 @@
           "type": "object"
         },
         "Show": {
-          "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back.",
+          "description": "A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back.",
           "oneOf": [
             {
-              "description": "In steward mode, the steward's own providers too.",
+              "description": "On a data holder's catalog, the holder's own providers too.",
               "properties": {
                 "kind": {
                   "enum": [
@@ -882,7 +877,7 @@
                   "type": "string"
                 },
                 "registers": {
-                  "description": "In steward mode, the steward's own registers too.",
+                  "description": "On a data holder's catalog, the holder's own registers too.",
                   "items": {
                     "$ref": "#/$defs/ShowRegisterRef"
                   },
@@ -921,7 +916,7 @@
                   "$ref": "#/$defs/Period"
                 },
                 "sets": {
-                  "description": "The register's curated sets (groups), in public-id order.",
+                  "description": "The register's curated sets (groups), in id order.",
                   "items": {
                     "$ref": "#/$defs/ShowRegisterSet"
                   },
@@ -941,7 +936,7 @@
                   "type": "array"
                 },
                 "unplaced": {
-                  "description": "The literal names of the releases the reader could not place in time.",
+                  "description": "Names of deliveries with no known period.",
                   "items": {
                     "type": "string"
                   },
@@ -1002,7 +997,7 @@
                   "type": "string"
                 },
                 "releases": {
-                  "description": "Absent when none, and on a steward catalog.",
+                  "description": "Absent when none, and on a data holder's catalog.",
                   "items": {
                     "$ref": "#/$defs/Release"
                   },
@@ -1104,12 +1099,12 @@
             {
               "properties": {
                 "description": {
-                  "description": "The one curated description, separate from source text runs.",
+                  "description": "The curated description.",
                   "type": "string"
                 },
                 "evidence": {
                   "$ref": "#/$defs/VariableEvidence",
-                  "description": "Provenance is present only when requested with `evidence=true`."
+                  "description": "Only with `evidence=true`."
                 },
                 "fqid": {
                   "type": "string"
@@ -1125,7 +1120,7 @@
                 },
                 "period": {
                   "$ref": "#/$defs/Period",
-                  "description": "The coverage hull; `coverage` supplies detailed spans and gaps."
+                  "description": "The whole span; `coverage` has the gaps."
                 },
                 "register": {
                   "description": "The register's fqid.",
@@ -1230,7 +1225,7 @@
           "type": "object"
         },
         "ShowRowKey": {
-          "description": "A segment of the table that holds its rows' key.",
+          "description": "The row-key column's period in this table.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -1266,10 +1261,10 @@
           "type": "object"
         },
         "ShowSetColumn": {
-          "description": "One (table, spelling) a set member has segments in.",
+          "description": "A table and column name the member appears under.",
           "properties": {
             "periods": {
-              "description": "The column's segment periods, in time order.",
+              "description": "The column's periods, in time order.",
               "items": {
                 "$ref": "#/$defs/Period"
               },
@@ -1398,7 +1393,7 @@
               "$ref": "#/$defs/Period"
             },
             "tables": {
-              "description": "The fqids of the register's tables the variable has segments in.",
+              "description": "The tables the variable appears in.",
               "items": {
                 "type": "string"
               },
@@ -1430,7 +1425,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -1454,7 +1449,7 @@
           "type": "object"
         },
         "VariableEvidence": {
-          "description": "Provider text and curation provenance, returned only when evidence is requested.",
+          "description": "The provider's texts and the curated values behind them.",
           "properties": {
             "documents": {
               "items": {
@@ -1534,7 +1529,7 @@
   },
   {
     "name": "segments",
-    "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a row. On a steward catalog, the held columns and files over the years held. With `evidence`, each row's source occurrences and the rule overrides that changed them.",
+    "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -1612,7 +1607,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -1642,7 +1636,7 @@
           "type": "object"
         },
         "Occurrence": {
-          "description": "One occurrence behind a segment (`shape.Segment.evidence`).",
+          "description": "One delivery behind this row.",
           "properties": {
             "label": {
               "type": [
@@ -1698,7 +1692,7 @@
           "type": "object"
         },
         "Override": {
-          "description": "A non-source winner over one field of an occurrence.",
+          "description": "A curated value that replaced the provider's.",
           "properties": {
             "field": {
               "type": "string"
@@ -1722,7 +1716,7 @@
               "oneOf": [
                 {
                   "$ref": "#/$defs/StatementLocation",
-                  "description": "Authoring location of the curated statement."
+                  "description": "Where the curated value is written."
                 },
                 {
                   "type": "null"
@@ -1748,7 +1742,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -1770,7 +1764,7 @@
           "type": "object"
         },
         "Population": {
-          "description": "One population a release states (`shape.Release.populations`).",
+          "description": "One population a release states.",
           "properties": {
             "definition": {
               "type": [
@@ -1797,7 +1791,7 @@
           "type": "object"
         },
         "Release": {
-          "description": "`shape.Release`: a delivery of a table.",
+          "description": "A delivery of a table.",
           "properties": {
             "edition": {
               "type": "string"
@@ -1848,7 +1842,7 @@
           "type": "object"
         },
         "Segment": {
-          "description": "`shape.Segment`: one row of the variable's one per-period list, a column of one\ntable over one period with one form and one provider wording. A fact the catalog\ndoes not state is absent, never `null`: no type, no value set, `coded`\nunknown, and `state` clear (the default) are all left out.",
+          "description": "One row of the variable's per-period list: a column of one table over one period\nwith one form and one provider wording. A fact the catalog does not state is left\nout, never `null`: no type, no value set, `coded` unknown, and `state` clear (the\ndefault).",
           "properties": {
             "classification": {
               "description": "A classification version's ref.",
@@ -1859,7 +1853,7 @@
               "type": "string"
             },
             "column": {
-              "description": "The column name it is delivered under; in steward mode, the held column's.",
+              "description": "The column name it is delivered under; on a data holder's catalog, the holder's column.",
               "type": "string"
             },
             "evidence": {
@@ -1873,7 +1867,7 @@
               ]
             },
             "file": {
-              "description": "In steward mode, the file the steward holds the column in.",
+              "description": "On a data holder's catalog, the file the holder has the column in.",
               "type": "string"
             },
             "format": {
@@ -1923,7 +1917,6 @@
           "type": "object"
         },
         "SegmentPage": {
-          "description": "`Page<Segment>`.",
           "properties": {
             "items": {
               "items": {
@@ -1961,7 +1954,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -1985,10 +1978,10 @@
           "type": "object"
         },
         "ValueSetRef": {
-          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "description": "A value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
+              "description": "The classification this value set belongs to; `null` when none.",
               "type": [
                 "string",
                 "null"
@@ -2058,7 +2051,7 @@
   },
   {
     "name": "values",
-    "description": "A value set's items, by its hash or by a classification version's ref, with a hierarchical set paged one level at a time by `parent` and searched flat by `q`; or, given a `code` and optionally its `label`, the value sets that hold that pair. The blank code is an item like any other.",
+    "description": "The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other.",
     "inputSchema": {
       "properties": {
         "classification": {
@@ -2126,7 +2119,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -2156,7 +2148,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -2180,7 +2172,6 @@
           "type": "object"
         },
         "ValueItem": {
-          "description": "`shape.ValueItem`.",
           "properties": {
             "child_count": {
               "description": "`null` for a flat set.",
@@ -2226,7 +2217,6 @@
           "type": "object"
         },
         "ValueItemsPage": {
-          "description": "`Page<ValueItem>` plus the value set and `total`.",
           "properties": {
             "items": {
               "items": {
@@ -2258,10 +2248,10 @@
           "type": "object"
         },
         "ValueSetRef": {
-          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "description": "A value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
+              "description": "The classification this value set belongs to; `null` when none.",
               "type": [
                 "string",
                 "null"
@@ -2294,7 +2284,6 @@
           "type": "object"
         },
         "ValueSetsPage": {
-          "description": "`Page<ValueSetRef>`, ordered by hash.",
           "properties": {
             "items": {
               "items": {
@@ -2360,7 +2349,7 @@
   },
   {
     "name": "graph",
-    "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
+    "description": "What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage.",
     "inputSchema": {
       "properties": {
         "kind": {
@@ -2412,7 +2401,7 @@
           "type": "object"
         },
         "Graph": {
-          "description": "`shape.Graph`: the focus, its nodes and the relations between them.",
+          "description": "The focus, its nodes and the relations between them.",
           "properties": {
             "edges": {
               "items": {
@@ -2507,7 +2496,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -2538,7 +2526,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -2560,7 +2548,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -2621,7 +2609,7 @@
   },
   {
     "name": "coverage",
-    "description": "The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases.",
+    "description": "Which years a register, table or variable exists: per table its periods, gaps (with reason) and releases.",
     "inputSchema": {
       "properties": {
         "ref": {
@@ -2636,7 +2624,6 @@
     "outputSchema": {
       "$defs": {
         "Coverage": {
-          "description": "`shape.Coverage`.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -2646,7 +2633,7 @@
             },
             "period": {
               "$ref": "#/$defs/Period",
-              "description": "The entity's hull."
+              "description": "Its whole span."
             },
             "tables": {
               "items": {
@@ -2669,6 +2656,7 @@
               "$ref": "#/$defs/Period"
             },
             "reason": {
+              "description": "`no_release`: no release; `release_without_column`: released without this column;\n`documented_without_column`: documented but not delivered; `ambiguous`: more than\none form; `withheld`: not delivered on purpose.",
               "type": "string"
             }
           },
@@ -2693,7 +2681,7 @@
               "type": "string"
             },
             "releases": {
-              "description": "Absent for a variable ref (releases belong to tables) and in steward mode.",
+              "description": "Absent for a variable (releases belong to tables) and on a data holder's catalog.",
               "items": {
                 "$ref": "#/$defs/Release"
               },
@@ -2742,7 +2730,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -2773,7 +2760,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -2795,7 +2782,7 @@
           "type": "object"
         },
         "Population": {
-          "description": "One population a release states (`shape.Release.populations`).",
+          "description": "One population a release states.",
           "properties": {
             "definition": {
               "type": [
@@ -2822,7 +2809,7 @@
           "type": "object"
         },
         "Release": {
-          "description": "`shape.Release`: a delivery of a table.",
+          "description": "A delivery of a table.",
           "properties": {
             "edition": {
               "type": "string"
@@ -2873,7 +2860,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -2934,7 +2921,7 @@
   },
   {
     "name": "schema",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, table?, limit?, cursor?): The columns of a table, a register's tables or one variable's tables over a period: one line per variable and delivered spelling, with its type, length, value set and role.\n- `diff` (ref, from, to, table?): A table's or a register's schema at two periods, joined on variable: what was added, removed or changed (spelling, type, length, value set). A rename is a changed spelling.",
+    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `schema` (ref, period?, table?, limit?, cursor?): The columns of a table, a register or a variable's tables over a period, with type, length, value set and role.\n- `diff` (ref, from, to, table?): Compare a table's or register's columns at two periods: added, removed and changed (name, type, length, value set).",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -2976,7 +2963,6 @@
     "outputSchema": {
       "$defs": {
         "Diff": {
-          "description": "`shape.Diff`.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -3130,7 +3116,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -3161,7 +3146,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -3183,7 +3168,7 @@
           "type": "object"
         },
         "SchemaLine": {
-          "description": "`shape.SchemaLine`: one variable's delivery under one folded spelling in one table.",
+          "description": "One variable under one column name in one table.",
           "properties": {
             "length": {
               "format": "int64",
@@ -3198,7 +3183,7 @@
             },
             "period": {
               "$ref": "#/$defs/Period",
-              "description": "The line's segments merged, clipped to the request."
+              "description": "Its period, cut to the requested one."
             },
             "role": {
               "type": "string"
@@ -3247,7 +3232,6 @@
           "type": "object"
         },
         "SchemaPage": {
-          "description": "`Page<SchemaLine>`.",
           "properties": {
             "items": {
               "items": {
@@ -3269,7 +3253,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -3293,10 +3277,10 @@
           "type": "object"
         },
         "ValueSetRef": {
-          "description": "`shape.ValueSetRef`: a value set by its hash, with the names sources gave it.",
+          "description": "A value set by its hash, with the names sources gave it.",
           "properties": {
             "classification": {
-              "description": "The classification version whose content this set is, or whose codes contain it\nfor every segment curated to it; `null` when no single version is curated.",
+              "description": "The classification this value set belongs to; `null` when none.",
               "type": [
                 "string",
                 "null"
@@ -3381,7 +3365,7 @@
   },
   {
     "name": "resolve",
-    "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
+    "description": "Find the variables behind column names (up to 200), optionally in one register. Names that match nothing are reported as unmatched.",
     "inputSchema": {
       "properties": {
         "columns": {
@@ -3431,7 +3415,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -3476,7 +3459,7 @@
           "type": "object"
         },
         "ResolvedColumn": {
-          "description": "`shape.ResolvedColumn`: a requested column and the variables it names.",
+          "description": "A requested column and the variables it names.",
           "properties": {
             "column": {
               "description": "As asked.",
@@ -3527,7 +3510,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -3588,7 +3571,7 @@
   },
   {
     "name": "order",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `validate` (project): Validate a project_data.json document: its structural issues, then the order check's findings at their levels. A 200 even when the project is invalid; `ok` is true exactly when `order` returns a logical order.\n- `order` (project): The logical order of a project_data.json document: per binding, each window's table, period, spelling and form, with the availability clips, the row keys and the non-blocking findings; or `order_blocked` with every finding.\n- `materialize_order` (project): The MONA order file of a project_data.json document on this steward's holdings: per physical table and delivery one file, with its exact columns, held row keys and row filter, the clips and the non-blocking findings; or `order_blocked` with every logical and physical finding.",
+    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `validate` (project): Check a project_data.json: every problem with its level. Always 200; `ok` is true when `order` would succeed.\n- `order` (project): What a project_data.json would order: per requested variable, the table, period and column name, the periods that cannot be delivered, the row keys and any warnings; or `order_blocked` listing every problem.\n- `materialize_order` (project): The MONA order file for a project_data.json on this data holder's tables: one file per table and delivery, with its columns, row keys, row filter, undeliverable periods and warnings; or `order_blocked` listing every problem.",
     "inputSchema": {
       "properties": {
         "operation": {
@@ -3613,7 +3596,7 @@
       "$defs": {
         "CatalogIdentity": {
           "additionalProperties": false,
-          "description": "The served catalog: its release, schema and the paired generation (`meta.generation`).",
+          "description": "The catalog version the order was checked against.",
           "properties": {
             "generation": {
               "type": "string"
@@ -3634,10 +3617,10 @@
         },
         "ColumnRef": {
           "additionalProperties": false,
-          "description": "A logical reference a column serves.",
+          "description": "A requested variable this column delivers.",
           "properties": {
             "binding": {
-              "description": "The binding's index in the source; null for a held key no binding orders.",
+              "description": "The variable's position in the source; null for a row key nobody requested.",
               "minimum": 0,
               "type": [
                 "integer",
@@ -3652,7 +3635,7 @@
               "type": "string"
             },
             "spelling": {
-              "description": "The logical spelling (the catalog's form); the physical `name` wins in the file.",
+              "description": "The catalog's column name; the file uses `name`.",
               "type": "string"
             },
             "table": {
@@ -3673,7 +3656,7 @@
           "type": "object"
         },
         "ColumnRole": {
-          "description": "`ordered`: a binding names it; `row_key`/`carried`: a held key the file requires\n(`carried` when the table carries its parent's key copy).",
+          "description": "`ordered`: requested; `row_key`: a key the file needs; `carried`: the parent table's key copied into this one.",
           "enum": [
             "ordered",
             "row_key",
@@ -3736,7 +3719,7 @@
         },
         "Issue": {
           "additionalProperties": false,
-          "description": "`shape.Issue`: a project issue or an order finding, located in the project.",
+          "description": "A project issue or an order finding, located in the project.",
           "properties": {
             "code": {
               "type": "string"
@@ -3810,20 +3793,19 @@
           "type": "string"
         },
         "LogicalOrder": {
-          "description": "`shape.LogicalOrder` (crates/DESIGN.md, \"The logical order\").",
           "properties": {
             "catalog": {
               "$ref": "#/$defs/OrderCatalog"
             },
             "clips": {
-              "description": "Every availability clip, also when nothing blocks.",
+              "description": "Every period that cannot be delivered, also when the order succeeds.",
               "items": {
                 "$ref": "#/$defs/OrderClip"
               },
               "type": "array"
             },
             "entries": {
-              "description": "Per source, per binding in declaration order, then by period start.",
+              "description": "Per source, per requested variable in request order, then by period start.",
               "items": {
                 "$ref": "#/$defs/OrderEntry"
               },
@@ -3859,10 +3841,10 @@
         },
         "Manifest": {
           "additionalProperties": false,
-          "description": "The order file: per physical table and delivery, one file and its columns.",
+          "description": "The order file: one file per table and delivery, with its columns.",
           "properties": {
             "clips": {
-              "description": "Every binding the order delivers less of than the project requests, logical\navailability and physical possession together.",
+              "description": "Every requested variable the order delivers less of than requested.",
               "items": {
                 "$ref": "#/$defs/ManifestClip"
               },
@@ -3873,7 +3855,7 @@
               "description": "The project's format, resolved to `dta` when it states none."
             },
             "files": {
-              "description": "By first logical appearance, then name.",
+              "description": "By first appearance in the order, then name.",
               "items": {
                 "$ref": "#/$defs/ManifestFile"
               },
@@ -3890,7 +3872,7 @@
               "$ref": "#/$defs/Provenance"
             },
             "version": {
-              "description": "Always [`MANIFEST_VERSION`].",
+              "description": "Always 4.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -3908,7 +3890,7 @@
         },
         "ManifestClip": {
           "additionalProperties": false,
-          "description": "A binding delivered over less than requested.",
+          "description": "A requested variable that covers less than the requested period.",
           "properties": {
             "binding": {
               "minimum": 0,
@@ -3944,10 +3926,10 @@
         },
         "ManifestColumn": {
           "additionalProperties": false,
-          "description": "One physical column, once per file, with every logical reference it serves.",
+          "description": "One column of the file, with every requested variable it delivers.",
           "properties": {
             "name": {
-              "description": "The exact physical header.",
+              "description": "The exact column name in the file.",
               "type": "string"
             },
             "refs": {
@@ -3970,7 +3952,7 @@
               ]
             },
             "stata_name": {
-              "description": "On a `dta` order only, when `name` is not a Stata variable name ([`stata_name`]).",
+              "description": "Only on a `dta` order, when `name` is not a valid Stata variable name.",
               "type": [
                 "string",
                 "null"
@@ -3990,10 +3972,10 @@
         },
         "ManifestFile": {
           "additionalProperties": false,
-          "description": "One output file: one physical table in its authored delivery.",
+          "description": "One output file: one of the holder's tables in one delivery.",
           "properties": {
             "columns": {
-              "description": "Ordered columns in logical request order, then the held row keys.",
+              "description": "Requested columns in request order, then the row keys.",
               "items": {
                 "$ref": "#/$defs/ManifestColumn"
               },
@@ -4007,7 +3989,7 @@
               ]
             },
             "name": {
-              "description": "The file's stem, a [`safe_file_name`]; the runner adds the format's extension.",
+              "description": "The file's name without the extension; the runner adds the format's extension.",
               "type": "string"
             },
             "partition": {
@@ -4035,7 +4017,7 @@
               ]
             },
             "schema": {
-              "description": "The exact physical schema and table.",
+              "description": "The exact schema and table in the database.",
               "type": "string"
             },
             "table": {
@@ -4058,7 +4040,6 @@
           "type": "string"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -4108,7 +4089,7 @@
           "type": "object"
         },
         "OrderClip": {
-          "description": "An availability clip of one binding.",
+          "description": "A requested variable that covers less than the requested period.",
           "properties": {
             "ordered": {
               "items": {
@@ -4138,10 +4119,10 @@
           "type": "object"
         },
         "OrderEntry": {
-          "description": "One merged segment of one binding in one table.",
+          "description": "One stretch of one requested variable in one table.",
           "properties": {
             "binding": {
-              "description": "The binding's index in the source.",
+              "description": "The variable's position in the source.",
               "minimum": 0,
               "type": "integer"
             },
@@ -4153,7 +4134,7 @@
               ]
             },
             "display_name": {
-              "description": "As the binding states it.",
+              "description": "As the project states it.",
               "type": [
                 "string",
                 "null"
@@ -4168,7 +4149,7 @@
             },
             "period": {
               "$ref": "#/$defs/Period",
-              "description": "The clipped request over the merged segment; `{start: null, end: null}` for a\ntimeless table."
+              "description": "The requested period cut to what the table has; `{start: null, end: null}` for a timeless table."
             },
             "provider": {
               "type": "string"
@@ -4181,11 +4162,11 @@
               "type": "string"
             },
             "spelling": {
-              "description": "The merged segment's exact spelling.",
+              "description": "The exact column name.",
               "type": "string"
             },
             "table": {
-              "description": "The table that serves the window.",
+              "description": "The table that serves the period.",
               "type": "string"
             },
             "type": {
@@ -4232,7 +4213,7 @@
               "type": "string"
             },
             "project_hash": {
-              "description": "`reg_core::project::project_hash` of the document.",
+              "description": "A hash of the project document.",
               "type": "string"
             },
             "reg_meta_version": {
@@ -4296,7 +4277,7 @@
         },
         "Period": {
           "additionalProperties": false,
-          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "description": "A half-open `[start, end)` of ISO days, `null` for an open end.",
           "properties": {
             "end": {
               "type": [
@@ -4333,7 +4314,7 @@
               "type": "string"
             },
             "project_hash": {
-              "description": "`project::project_hash` of the document.",
+              "description": "A hash of the project document.",
               "type": "string"
             },
             "schema_version": {
@@ -4368,7 +4349,7 @@
               "$ref": "#/$defs/ProjectIdentity"
             },
             "steward": {
-              "description": "The steward whose holdings serve the order.",
+              "description": "The data holder whose tables serve the order.",
               "type": "string"
             }
           },
@@ -4409,7 +4390,7 @@
         },
         "RowFilterRange": {
           "additionalProperties": false,
-          "description": "Inclusive ISO days; an absent bound cuts no held day.",
+          "description": "Inclusive ISO days; an absent bound means no limit.",
           "properties": {
             "from": {
               "type": [
@@ -4444,7 +4425,7 @@
         },
         "Slot": {
           "additionalProperties": false,
-          "description": "Steward slot topology of a column.",
+          "description": "How the column is laid out in the holder's files.",
           "properties": {
             "family": {
               "type": [
@@ -4466,7 +4447,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
@@ -4616,7 +4597,7 @@
   },
   {
     "name": "docs",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, limit?, cursor?): Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables.\n- `docs_get` (doc): A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text.\n- `docs_related` (ref): The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables.",
+    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `docs_search` (q?, register?, limit?, cursor?): Search the catalog's documents; without `q`, list them by title. `register` keeps that register's documents.\n- `docs_get` (doc): A document by hash: what it covers, an excerpt and, when available, the full text.\n- `docs_related` (ref): The documents about a register (including its tables and variables), table, variable or classification.",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -4657,7 +4638,6 @@
     "outputSchema": {
       "$defs": {
         "DocDetail": {
-          "description": "`shape.DocDetail`.",
           "properties": {
             "body": {
               "description": "The sections joined by a blank line; `null` for a pdf.",
@@ -4720,7 +4700,6 @@
           "type": "object"
         },
         "DocHit": {
-          "description": "`shape.DocHit`.",
           "properties": {
             "doc": {
               "type": "string"
@@ -4770,7 +4749,6 @@
           "type": "object"
         },
         "DocPage": {
-          "description": "`docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.",
           "properties": {
             "items": {
               "items": {
@@ -4805,7 +4783,7 @@
           "type": "object"
         },
         "DocSubject": {
-          "description": "One entity a document is about (`shape.DocDetail.subjects`).",
+          "description": "One thing a document is about.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -4854,7 +4832,6 @@
           "type": "object"
         },
         "Meta": {
-          "description": "The response `meta` (`shape.Meta`).",
           "properties": {
             "catalog_version": {
               "type": "string"
@@ -4884,7 +4861,6 @@
           "type": "object"
         },
         "RelatedDocument": {
-          "description": "`shape.RelatedDocument`.",
           "properties": {
             "bytes": {
               "format": "int64",
@@ -4934,7 +4910,7 @@
           "type": "object"
         },
         "Steward": {
-          "description": "The selected steward and the identities of its admitted catalog/holdings pair.",
+          "description": "The data holder and the versions of its data.",
           "properties": {
             "catalog_generation": {
               "type": "string"
