@@ -71,8 +71,8 @@ export function variableSpans({
         ? {
             text:
               relation === "disjoint"
-                ? `In project, outside the study window (${sourceLabel}).`
-                : `In project for ${sourceLabel}, which differs from the study window.`,
+                ? `In project, outside the study years (${sourceLabel}).`
+                : `In project for ${sourceLabel}, which differs from the study years.`,
             tone:
               relation === "disjoint" ? ("error" as const) : ("info" as const),
           }

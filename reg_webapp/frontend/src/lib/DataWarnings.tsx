@@ -131,14 +131,12 @@ function FindingGroup({
                               names ?? new Map(),
                             )}
                           </span>
-                          <span>
-                            Period:{" "}
-                            {finding.period ? (
+                          {finding.period && (
+                            <span>
+                              Years:{" "}
                               <code>{catalogPeriodLabel(finding.period)}</code>
-                            ) : (
-                              "Not stated"
-                            )}
-                          </span>
+                            </span>
+                          )}
                           {finding.subject.fqid && (
                             <SubjectLink
                               fqid={finding.subject.fqid}

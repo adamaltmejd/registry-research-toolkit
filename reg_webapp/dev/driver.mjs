@@ -263,10 +263,14 @@ async function browseSearchCase(page, shoot) {
 
 // Source: webapp-dev's hush/fam releases and its 2021 release notice. Fails if
 // register/table dispatch, table links, collapsed releases or grouped findings
-// are lost. The older shell/search case never opened these entity surfaces.
+// are lost, or the trail stops naming its ancestors or repeats the page's own
+// name (maintainer Q5, 2026-11-04: names, ending at the parent). The older
+// shell/search case never opened these entity surfaces. Provider and register
+// names are fixtures/webapp-dev/curation/inputs.toml's and the frame's.
 async function browsePagesCase(page, shoot) {
   const main = page.getByRole("main");
-  await main.getByRole("link", { name: "demo", exact: true }).click();
+  const trail = main.getByRole("navigation", { name: "Breadcrumb", exact: true });
+  await trail.getByRole("link", { name: "Demoleverantören", exact: true }).click();
   await page.waitForURL("**/catalog/demo");
   await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
   await page.waitForURL("**/catalog/demo/hush");
@@ -288,6 +292,14 @@ async function browsePagesCase(page, shoot) {
   await open(page, "/catalog/demo/hush/fam");
   await settled(page);
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
+  // "Browse registers" leads the trail only where the columns stack.
+  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
+  const crumbs = await trail.getByRole("link").filter({ visible: true }).allInnerTexts();
+  const expected = [...(narrow ? ["Browse registers"] : []), "Demoleverantören", "Hushållsregistret"];
+  check(JSON.stringify(crumbs) === JSON.stringify(expected),
+    `the table page's trail read ${JSON.stringify(crumbs)}, not ${JSON.stringify(expected)}`);
+  check((await trail.getByRole("link", { name: "Hushållsregistret", exact: true }).getAttribute("href")) === "/catalog/demo/hush",
+    "the trail's last crumb does not open the parent register");
   // Stacked cells include their CSS label prefix in the accessible name.
   // Match the value at the end while retaining the table-cell boundary.
   // One "Releases" heading: the panel's own, with the entries always shown.
@@ -388,7 +400,7 @@ async function projectPagesCase(page, shoot) {
   await verdict.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
   check((await delivered.count()) === 0, "a blocked order still showed what will be delivered");
   // The finding sits on its card under Bransch's lane; the verdict links to it.
-  await verdict.getByRole("link", { name: /^baseline: Bransch: / }).click();
+  await verdict.getByRole("link", { name: /^Familjer: Bransch: / }).click();
   const tables = main.getByRole("region", { name: "Tables", exact: true });
   const finding = tables.locator("li:focus");
   await finding.getByText("Bransch has no column in Familjer.", { exact: true }).waitFor();
@@ -396,7 +408,7 @@ async function projectPagesCase(page, shoot) {
   await finding.getByRole("button").first().hover();
   await page.getByRole("tooltip").getByText("variable_not_in_table", { exact: true }).waitFor();
   const checkText = `${await verdict.innerText()}\n${await finding.innerText()}`;
-  check(checkText.includes("baseline"), "the blocked order lost its source location");
+  check(checkText.includes("Familjer"), "the blocked order lost its table location");
   check(!/demo\//.test(checkText), "the blocked order exposed an internal catalog ref");
   await banner.getByRole("link", { name: "Can't be ordered yet", exact: true }).waitFor();
 
@@ -404,16 +416,16 @@ async function projectPagesCase(page, shoot) {
   const issues = main.getByRole("region", { name: "Check", exact: true });
   await issues.getByText(/^Has problems: /).waitFor();
   await banner.getByRole("link", { name: "Has problems", exact: true }).waitFor();
-  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
+  await issues.getByText("Table: Basregistret", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
-  await issues.getByText("Period: 2020", { exact: true }).waitFor();
+  await issues.getByText("Years: 2020", { exact: true }).waitFor();
   // Rejected documents survive reload and download byte-for-byte; accepting or
   // normalizing one during persistence would lose the original invalid input.
   await page.reload();
   await settled(page);
-  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
+  await issues.getByText("Table: Basregistret", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
-  await issues.getByText("Period: 2020", { exact: true }).waitFor();
+  await issues.getByText("Years: 2020", { exact: true }).waitFor();
   const issueTitle = issues.getByRole("button").first();
   await issueTitle.focus();
   await issueTitle.press("Tab");
@@ -496,9 +508,9 @@ async function sourceCardsCase(page, shoot) {
   await (await chooser).setFiles(projectFile.pathname);
   await settled(page);
 
-  await main.getByRole("button", { name: /Type for Ålder in baseline/ }).click();
+  await main.getByRole("button", { name: /Type for Ålder in Basregistret/ }).click();
   await page.getByRole("option", { name: "Other", exact: true }).click();
-  const period = main.getByRole("group", { name: "Period for baseline (years)", exact: true });
+  const period = main.getByRole("group", { name: "Years for Basregistret", exact: true });
   const toYear = period.getByRole("slider", { name: /^To year/ });
   await toYear.focus();
   await toYear.press("ArrowRight");
@@ -506,7 +518,7 @@ async function sourceCardsCase(page, shoot) {
   await shoot("source-cards-edited");
 
   const sources = main.getByRole("region", { name: "Tables", exact: true });
-  await sources.getByRole("button", { name: "Remove KON from baseline", exact: true }).click();
+  await sources.getByRole("button", { name: "Remove KON from Basregistret", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
   await page.getByRole("alertdialog").waitFor({ state: "hidden" });
   await settled(page);
@@ -613,10 +625,10 @@ async function addVariableColumnsCase(page, shoot) {
   await open(page, "/project");
   await settled(page);
   const sources = main.getByRole("region", { name: "Tables", exact: true });
-  const source = sources.locator("section").filter({ has: page.getByRole("heading", { name: "fam", exact: true }) });
+  const source = sources.locator("section").filter({ has: page.getByRole("heading", { name: "Hushållsregistret", exact: true }) });
   await source.getByRole("link", { name: "Familjer", exact: true }).waitFor();
   await source.getByRole("link", { name: "Antal personer", exact: true }).waitFor();
-  await source.getByText("Period: 2022", { exact: true }).waitFor();
+  await source.getByText("Years: 2022", { exact: true }).waitFor();
   const downloaded = page.waitForEvent("download");
   await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
   const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));

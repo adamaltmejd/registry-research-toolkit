@@ -362,8 +362,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Top bar:** brand (the deployment's long name in `h3`, one link home, unadorned on
   hover; without a deployment it is "Registry Research Toolkit"), one search bar (a
   filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the palette), and
-  the `ProjectBanner` at the right. The field reads "Search registers, variables,
-  codes…". While it holds text, focused or not, it takes an `accent` border with an
+  the `ProjectBanner` at the right. The field reads "Search registers,
+  variables…". While it holds text, focused or not, it takes an `accent` border with an
   `accent-bg` halo, and its hint becomes the count of matching registers ("12
   registers", naming its noun so it never reads as the palette's hits) in `accent-ink`
   with an `Esc` key hint; the key hints are `text-muted` on `surface-sunken`. There are
@@ -441,8 +441,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   only other registers match, a line above them says the open one has none. Escape
   clears the filter and restores the collapse state from anywhere on the page, unless a
   dialog, popover, the palette or another text field has focus (#1827). The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for codes,
-  classifications and actions; its results are a mixed list and carry a `TypeTag`. It is
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for
+  classifications and the app's places ("Go to the project", "Study years, tables and
+  columns"); its results are a mixed list and carry a `TypeTag`. It is
   a list under the field with no field of its own: the top-bar field is its one input,
   so focus stays there, the arrow keys move through the rows, and typing goes on
   filtering the columns. A second field in the popover showed the same text twice
@@ -461,7 +462,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   data) in `text-muted`, with inline emphasis and `http(s)` links. The browse columns
   are beside it and the project box is in the top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
-  then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
+  then the ancestors' names in the UI face, `text-muted`: the provider, then the
+  register, each a link, ending at the page's parent, since the `h1` names the page
+  itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
+  already make, so the trail fetches nothing of its own; an ancestor whose name has not
+  arrived is left out, never shown as its slug. A group page's trail skips the group
+  namespace, and a classification page has none. Then, on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
   columns, "Notes on this data" (the findings, only when there are any; maintainer
@@ -515,8 +521,8 @@ Time is the axis every relation is drawn on.
   spelling (`1990..2023`) appears only where the page shows the project file's own value
   (maintainer 2026-11-03).
 
-- The **study window** is the project's period, set in the project banner (which is the
-  period picker). Most researchers pick one, from a start year to the latest data, and
+- The **study window** is the project's period, named "Study years" on screen
+  (maintainer Q4, 2026-11-04), set in the project banner (which is the period picker). Most researchers pick one, from a start year to the latest data, and
   it is bounded by the viewed catalog's first and last year (`/api/context`
   `period_span`): the slider shows no data, so its track stays the catalog's span and
   early years stay reachable. A new project starts at 2015 to the catalog's last year
@@ -564,7 +570,10 @@ Time is the axis every relation is drawn on.
   the source's table, its period as the window band with the same thumbs, bounded by
   that table's coverage, and one lane per binding. Each delivered column is a span of
   the years that table delivers it. A column available for part of the period is a
-  shorter span, not a finding. The header states the period's years. A stored period
+  shorter span, not a finding. The card is headed by the table's register, by name,
+  with the table's name as a link and "Years:" with the period's years under it; every
+  label on the card names the table by its catalog name, never the source's `name`
+  (the file's join key), as the page's findings do. A stored period
   outside coverage widens the thumbs' bounds to their union; it is never clamped or
   rewritten on load. A comma-list period rests the thumbs on its outer years and a line
   under the drawing says a move makes it one span; a term period is shown as text with
@@ -573,11 +582,11 @@ Time is the axis every relation is drawn on.
   so its missing period can be repaired; it writes only when a thumb rests. Every source
   card shares the page's one axis. The lanes are the card's columns: no list repeats
   them under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a
-  quiet ghost "Remove", named "Remove <column> from <source>", that asks first in a
+  quiet ghost "Remove", named "Remove <column> from <table>", that asks first in a
   `Dialog` whose answer is the `danger` button and takes the column out of that one
   source. Removing the last binding asks to remove the source. Source removal also
   removes its panel memberships and any panels left without members; the dialog states
-  this when affected. A ghost "Remove source" in the card header also asks first. Focus
+  this when affected. A ghost "Remove table" in the card header also asks first. Focus
   returns to the card heading after a column removal, or the Sources heading after a
   source removal.
 
@@ -761,7 +770,8 @@ grow new visual language meanwhile.
   with findings (Has warnings, Has problems, Can't be ordered yet) is a link, in its
   status hue with the link's `accent` rule, to the verdict on /project, which takes
   focus; Ready to order and Checking stay plain text. Unsaved changes are a quiet `mono`
-  `text-muted` "unsaved", never a status hue. The study window is the period picker: an
+  `text-muted` "unsaved", never a status hue. The study window, labelled "Study
+  years", is the period picker: an
   inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and
   last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
   `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
@@ -822,8 +832,8 @@ grow new visual language meanwhile.
   for a register, one filled column of it for a variable). A group page's kind mark has
   no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
   Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
-  px, `sm` radius. A palette row sets the node's FQID in `mono` `text-muted` beside its
-  name.
+  px, `sm` radius. A palette row shows a name and its `TypeTag`, never an identifier
+  (maintainer Q5, 2026-11-04).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's
@@ -888,5 +898,5 @@ grow new visual language meanwhile.
   `prefers-reduced-motion`. Motion answers a user action at the three durations above;
   nothing animates on page load.
 - Do name things by what a researcher recognizes (registers, variables, columns, value
-  sets, projects, study window) and keep an action's name the same through its whole
+  sets, projects, study years) and keep an action's name the same through its whole
   flow. Don't apologize in errors or leave them vague.

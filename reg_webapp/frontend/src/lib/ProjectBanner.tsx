@@ -168,7 +168,7 @@ function StudyWindow({
       }}
     >
       <div className={styles.windowHead}>
-        <Label className="micro-label">Study window</Label>
+        <Label className="micro-label">Study years</Label>
         <SliderOutput className={styles.readout}>
           {({ state }) =>
             active === null && dragging === null
