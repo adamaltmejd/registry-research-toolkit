@@ -88,10 +88,7 @@ export async function apiGet<T>(
 /**
  * POST `body` as JSON to `path` (relative to `/api`) and return the parsed JSON
  * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
- * body when present). Used for `/project/validate`, where a non-2xx is a refused
- * REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`) — NOT a
- * validation failure: a validation failure is a 200 with `ok:false`, which this
- * RETURNS (see `validateProject`).
+ * body when present); `checkProjectOrder` reads a blocked order out of it.
  */
 export async function apiPostJson<T>(
   path: string,
@@ -197,60 +194,90 @@ export function getShow(
 }
 
 // ── Project surface (the Rust server) ──────────────────────────────────────────
-// `validate` and `order` take the WHOLE serialized draft as the POST body, a raw
-// object: malformed uploads (including unknown root keys) must reach the server
-// unchanged so `validate` can diagnose them.
+// `order` takes the WHOLE serialized draft as the POST body, a raw object. The
+// store POSTs only drafts reg-core's structural door accepted in the browser
+// (`lib/reg_core.ts`); the semantic layer is the server's.
 
-/** `validate`'s result: `ok` when no issue is an error, and every issue in
- * emission order. */
+/** `validate`'s shape `{ok, issues}`, which the WASM structural check shares. */
 export type ValidationResultModel = RustSchemas["Validation"];
 
 export type LogicalOrder = RustSchemas["LogicalOrder"];
 
-/** The logical order, checked against the loaded catalog. */
-export async function getProjectOrder(
+type Issue = RustSchemas["Issue"];
+
+/** The project's one catalog check: the logical order with its non-blocking
+ * findings, or no order and every finding when the order is blocked. `order`
+ * answers both, so the SPA does not also call `validate`. */
+export interface OrderCheck {
+  order: LogicalOrder | null;
+  issues: Issue[];
+}
+
+const isIssue = (issue: unknown): issue is Issue => {
+  if (!issue || typeof issue !== "object") return false;
+  const value = issue as Record<string, unknown>;
+  const period = value.period as Record<string, unknown> | null | undefined;
+  return (
+    ["code", "message", "path"].every(
+      (field) => typeof value[field] === "string",
+    ) &&
+    ["error", "warning", "info"].includes(String(value.level)) &&
+    ["source", "variable", "table", "successor_fqid"].every(
+      (field) => value[field] === null || typeof value[field] === "string",
+    ) &&
+    (period === null ||
+      (typeof period === "object" &&
+        ["start", "end"].every(
+          (field) =>
+            period[field] === null || typeof period[field] === "string",
+        )))
+  );
+};
+
+/** The issues a refused order lists: `order_blocked`'s findings, or
+ * `project_invalid`'s structural issues should the server's structural check
+ * ever disagree with the browser's. Null for any other refusal, or a body that
+ * does not hold well-formed issues. */
+function refusedIssues(error: unknown): Issue[] | null {
+  if (!(error instanceof ApiError) || !error.body) return null;
+  const body = error.body as {
+    error?: { code?: unknown; fields?: Record<string, unknown> };
+  };
+  const field =
+    body.error?.code === "order_blocked"
+      ? "findings"
+      : body.error?.code === "project_invalid"
+        ? "issues"
+        : null;
+  const issues = field ? body.error?.fields?.[field] : null;
+  return Array.isArray(issues) && issues.every(isIssue) ? issues : null;
+}
+
+/** A steward's placement caveats are working notes, not shown until the steward
+ * curates them for readers (DESIGN.md → Findings). */
+const forReaders = (issue: Issue) => issue.code !== "mapping_caveat";
+
+/** Check a draft against the loaded catalog through `order`. A blocked order is
+ * a result, not a failure; only a refused request (`rate_limited`, a proxy
+ * error) throws. */
+export async function checkProjectOrder(
   draft: RustSchemas["ProjectData"],
   options?: { signal?: AbortSignal },
-): Promise<LogicalOrder> {
-  return (
-    await apiPostJson<{ data: LogicalOrder }>("/project/order", draft, options)
-  ).data;
-}
-
-/** Read only the value-set identity and names; its item page is not displayed. */
-export async function getValueSet(
-  hash: string,
-  options?: { signal?: AbortSignal },
-): Promise<RustSchemas["ValueSetRef"]> {
-  return (
-    await rustGet<RustSchemas["ValueItemsPage"]>(
-      "/values",
-      new URLSearchParams({ value_set: hash, limit: "1" }),
-      options,
-    )
-  ).value_set;
-}
-
-/**
- * POST a draft to `/api/project/validate` and RETURN its `data`
- * (`ValidationResultModel`, `{ok, issues}`). A validation FAILURE is a 200 with
- * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
- * Only a refused REQUEST (`malformed_request`, `payload_too_large`,
- * `rate_limited`) throws an `ApiError` (shown as a banner, distinct from the
- * issue list). The store POSTs only drafts reg-core's structural door accepted in
- * the browser (`lib/reg_core.ts`); the semantic layer is the server's.
- */
-export async function validateProject(
-  draft: Record<string, unknown>,
-  options?: { signal?: AbortSignal },
-): Promise<ValidationResultModel> {
-  return (
-    await apiPostJson<{ data: ValidationResultModel }>(
-      "/project/validate",
-      draft,
-      options,
-    )
-  ).data;
+): Promise<OrderCheck> {
+  try {
+    const order = (
+      await apiPostJson<{ data: LogicalOrder }>(
+        "/project/order",
+        draft,
+        options,
+      )
+    ).data;
+    return { order, issues: order.findings.filter(forReaders) };
+  } catch (error) {
+    const issues = refusedIssues(error);
+    if (issues === null) throw error;
+    return { order: null, issues: issues.filter(forReaders) };
+  }
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────

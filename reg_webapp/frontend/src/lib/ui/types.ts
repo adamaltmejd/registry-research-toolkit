@@ -1,10 +1,8 @@
 // Public TS types for the shared visual primitives (#804). Consumers import
 // these alongside the components from the `../ui` barrel so the downstream
 // design-system children (#806–#809) get typed APIs (column defs, tones,
-// breadcrumb items, key-value rows, button variants) instead of re-declaring
+// breadcrumb items, button variants) instead of re-declaring
 // them per call site.
-
-import type { ReactNode } from "react";
 
 /** Status `Tag` tones — paired with a glyph, never hue alone (DESIGN.md → Color).
  *  Tag's props REQUIRE a `glyph` when `tone` is one of these. */
@@ -67,12 +65,4 @@ export interface BreadcrumbItem {
 /** The narrow-only crumb that links back to the register list. */
 export function isBackCrumb(item: BreadcrumbItem): boolean {
   return Boolean(item.narrowOnly && item.href);
-}
-
-/** A `KeyValue` row. Rich values can compose a primitive such as ColumnChip;
- * `mono` is reserved for plain identifier values. */
-export interface KeyValueRow {
-  label: string;
-  value?: ReactNode;
-  mono?: boolean;
 }

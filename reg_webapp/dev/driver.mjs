@@ -314,12 +314,13 @@ async function browsePagesCase(page, shoot) {
 }
 
 // The project + artifact → logical order boundary, through the loaded-project UI.
-// Fails if opening a file does not reach catalog validation, ordering loses a
-// binding, the banner loses save/verdict state, reload loses the draft, a blocked
-// order loses its named findings, or a structurally invalid file is accepted.
-// Names and spellings are from webapp-dev's readable JSONL; the invalid type and
-// located refusal code come from reg-core's binding_type_null corpus case. No
-// existing browser case exercises project files or the order page.
+// Fails if opening a file does not reach the automatic catalog check, the
+// delivery summary loses a binding, its years or the row identifier, the banner
+// loses save/verdict state, reload loses the draft, a blocked order loses its
+// named findings, or a structurally invalid file is accepted. Names and
+// spellings are from webapp-dev's readable JSONL; the invalid type and located
+// refusal code come from reg-core's binding_type_null corpus case. No existing
+// browser case exercises project files or the delivery summary.
 async function projectPagesCase(page, shoot) {
   const main = page.getByRole("main");
   const projectFile = new URL(
@@ -332,7 +333,7 @@ async function projectPagesCase(page, shoot) {
   const banner = page.getByRole("region", { name: "Project", exact: true });
   async function openProjectFile(file, replacing = false) {
     const chooser = page.waitForEvent("filechooser");
-    await main.getByRole("button", { name: "Open project file", exact: true }).click();
+    await main.getByRole("button", { name: "Open a project file…", exact: true }).click();
     await (await chooser).setFiles(file);
     if (replacing) {
       const replacement = page.getByRole("alertdialog", { name: "Replace the working project?", exact: true });
@@ -340,9 +341,12 @@ async function projectPagesCase(page, shoot) {
     }
   }
   await openProjectFile(projectFile.pathname);
-  await main.getByRole("button", { name: "Check catalog", exact: true }).click();
-  await main.getByText("Project is valid against this catalog.", { exact: true }).waitFor();
-  check(/1 source,\s*2 columns/.test(await banner.innerText()), "the banner lost the loaded project's source/column summary");
+  const verdict = main.getByRole("region", { name: "Check", exact: true });
+  // No button runs the check: opening the file does.
+  await verdict.getByText("Ready to order.", { exact: true }).waitFor();
+  // The verdict sits beside invisible sizers holding every verdict word.
+  await banner.getByText(/Ready to order$/).filter({ visible: true }).waitFor();
+  check(/1 table,\s*2 columns/.test(await banner.innerText()), "the banner lost the loaded project's table/column summary");
   await main.getByRole("textbox", { name: "Project name", exact: true }).fill("Baseline study revised");
   await banner.getByText("unsaved", { exact: true }).waitFor();
   const savedProject = page.waitForEvent("download");
@@ -357,29 +361,23 @@ async function projectPagesCase(page, shoot) {
   // rather than surviving only because routing leaves the JS store alive.
   await page.reload();
   await settled(page);
-  await main.getByRole("link", { name: "Order", exact: true }).click();
-  await page.waitForURL("**/project?tab=order");
-  await settled(page);
-  const entries = main.getByRole("region", { name: "Entries", exact: true });
-  for (const { variable, display, spelling } of [
-    { variable: "Kön", display: "sex", spelling: "KON" },
-    { variable: "Ålder", display: "age", spelling: "Alder" },
+  const delivered = main.getByRole("region", { name: "What will be delivered", exact: true });
+  for (const { variable, spelling } of [
+    { variable: "Kön", spelling: "KON" },
+    { variable: "Ålder", spelling: "Alder" },
   ]) {
-    const row = entries.getByRole("row").filter({
+    const row = delivered.getByRole("listitem").filter({
       has: page.getByRole("link", { name: variable, exact: true }),
     });
     await row.waitFor();
-    check((await row.count()) === 1, `order did not list one ${variable} entry`);
+    check((await row.count()) === 1, `the delivery summary did not list one ${variable} column`);
     await row.getByText(spelling, { exact: true }).waitFor();
-    check((await row.innerText()).includes("2020"), `${variable} order entry lost its period`);
-    await row.getByRole("button", { name: `Details for ${variable}, 2020`, exact: true }).click();
-    await page.getByRole("dialog").getByText(display, { exact: true }).waitFor();
-    await page.keyboard.press("Escape");
-    await page.getByRole("dialog").waitFor({ state: "hidden" });
   }
-  await shoot("project-order");
+  const deliveredTable = delivered.getByRole("region", { name: /^Basregistret/ });
+  check((await deliveredTable.getByRole("heading").innerText()).includes("2020"), "the delivery summary lost the table's years");
+  await deliveredTable.getByText("Lopnr", { exact: true }).waitFor();
+  await shoot("project-delivery");
 
-  await main.getByRole("navigation", { name: "Project pages" }).getByRole("link", { name: "Project", exact: true }).click();
   // Bransch occurs only in Hushållsregistret's Individer table in webapp-dev.
   // Keeping the same register passes WASM, then pins the catalog's located
   // variable_not_in_table refusal (order/window.rs), including table:null refs.
@@ -387,32 +385,33 @@ async function projectPagesCase(page, shoot) {
   blockedProject.sources[0] = { ...blockedProject.sources[0], table: "demo/hush/fam", period: 2021,
     bindings: [{ variable: "demo/hush/bransch", type: "categorical", display_name: "industry" }] };
   await openProjectFile({ name: "blocked-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(blockedProject)) }, true);
-  await main.getByRole("link", { name: "Order", exact: true }).click();
-  await main.getByText("The order is blocked. Review the findings and update the project.", { exact: true }).waitFor();
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
-  const group = findings.getByRole("button", { name: /Needs review: catalog finding/ }).first();
-  await group.hover();
+  await verdict.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
+  check((await delivered.count()) === 0, "a blocked order still showed what will be delivered");
+  // The finding sits on its card under Bransch's lane; the verdict links to it.
+  await verdict.getByRole("link", { name: /^baseline: Bransch: / }).click();
+  const tables = main.getByRole("region", { name: "Tables", exact: true });
+  const finding = tables.locator("li:focus");
+  await finding.getByText("Bransch has no column in Familjer.", { exact: true }).waitFor();
+  await tables.getByRole("link", { name: "Familjer", exact: true }).waitFor();
+  await finding.getByRole("button").first().hover();
   await page.getByRole("tooltip").getByText("variable_not_in_table", { exact: true }).waitFor();
-  await group.click();
-  await findings.getByRole("link", { name: "Bransch", exact: true }).first().waitFor();
-  await findings.getByRole("link", { name: "Familjer", exact: true }).first().waitFor();
-  check((await findings.innerText()).includes("baseline"), "the blocked order lost its source location");
-  check(!/demo\//.test(await findings.innerText()), "the blocked order exposed an internal catalog ref");
-  await banner.getByRole("link", { name: "Order blocked", exact: true }).waitFor();
+  const checkText = `${await verdict.innerText()}\n${await finding.innerText()}`;
+  check(checkText.includes("baseline"), "the blocked order lost its source location");
+  check(!/demo\//.test(checkText), "the blocked order exposed an internal catalog ref");
+  await banner.getByRole("link", { name: "Can't be ordered yet", exact: true }).waitFor();
 
-  await main.getByRole("navigation", { name: "Project pages" }).getByRole("link", { name: "Project", exact: true }).click();
   await openProjectFile({ name: "invalid-project.json", mimeType: "application/json", buffer: Buffer.from(invalidRaw) }, true);
-  const issues = main.locator("section").filter({
-    has: page.getByRole("heading", { name: "Draft check", exact: true }),
-  });
-  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  const issues = main.getByRole("region", { name: "Check", exact: true });
+  await issues.getByText(/^Has problems: /).waitFor();
+  await banner.getByRole("link", { name: "Has problems", exact: true }).waitFor();
+  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
   await issues.getByText("Period: 2020", { exact: true }).waitFor();
   // Rejected documents survive reload and download byte-for-byte; accepting or
   // normalizing one during persistence would lose the original invalid input.
   await page.reload();
   await settled(page);
-  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
   await issues.getByText("Period: 2020", { exact: true }).waitFor();
   const issueTitle = issues.getByRole("button").first();
@@ -493,7 +492,7 @@ async function sourceCardsCase(page, shoot) {
     import.meta.url,
   );
   const chooser = page.waitForEvent("filechooser");
-  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await main.getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles(projectFile.pathname);
   await settled(page);
 
@@ -506,7 +505,7 @@ async function sourceCardsCase(page, shoot) {
   await settled(page);
   await shoot("source-cards-edited");
 
-  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  const sources = main.getByRole("region", { name: "Tables", exact: true });
   await sources.getByRole("button", { name: "Remove KON from baseline", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
   await page.getByRole("alertdialog").waitFor({ state: "hidden" });
@@ -544,13 +543,13 @@ async function openWindowedFixture(page, name) {
   ), "utf8"));
   fixture.window = { from: 2021, to: 2022 };
   const chooser = page.waitForEvent("filechooser");
-  await main.getByRole("button", { name: "Open project file", exact: true }).click();
+  await main.getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles({
     name,
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(fixture)),
   });
-  await main.getByRole("region", { name: "Project sources", exact: true }).waitFor();
+  await main.getByRole("region", { name: "Tables", exact: true }).waitFor();
   return fixture;
 }
 
@@ -613,7 +612,7 @@ async function addVariableColumnsCase(page, shoot) {
 
   await open(page, "/project");
   await settled(page);
-  const sources = main.getByRole("region", { name: "Project sources", exact: true });
+  const sources = main.getByRole("region", { name: "Tables", exact: true });
   const source = sources.locator("section").filter({ has: page.getByRole("heading", { name: "fam", exact: true }) });
   await source.getByRole("link", { name: "Familjer", exact: true }).waitFor();
   await source.getByRole("link", { name: "Antal personer", exact: true }).waitFor();
@@ -876,14 +875,23 @@ async function stewardHeldCase(page, shoot) {
   await shoot("steward-held");
   await open(page, "/project");
   const fixture = JSON.parse(readFileSync(new URL("../../conformance/cases/holdings/order-key-requirements.json", import.meta.url), "utf8"));
+  // RelativeId is in the catalog but Pool holds no column of it. Fails if the
+  // project page reads a steward order the server would not make as orderable
+  // (the check skipping the holdings stage reads "Ready to order").
+  fixture.project.sources[0].bindings.push({ variable: "demo/held/relative-id", type: "numeric" });
   const chooser = page.waitForEvent("filechooser");
-  await page.getByRole("main").getByRole("button", { name: "Open project file", exact: true }).click();
+  await page.getByRole("main").getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles({ name: "paired-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fixture.project)) });
-  await page.getByRole("main").getByRole("link", { name: "Order", exact: true }).click();
-  const rowKeys = page.locator("section").filter({ has: page.getByRole("heading", { name: "Row keys", exact: true }) });
+  const checkRegion = page.getByRole("main").getByRole("region", { name: "Check", exact: true });
+  await checkRegion.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
+  // The steward site has no name for a variable it does not hold, so its Remove
+  // button carries the card's fallback name.
+  await page.getByRole("main").getByRole("button", { name: "Remove Variable name unavailable from s", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
+  const rowKeys = page.getByRole("main").getByRole("region", { name: "What will be delivered", exact: true });
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
   await settled(page);
-  await shoot("steward-order");
+  await shoot("steward-delivery");
   // Supplemental-only variables order through the composed steward view (#2068),
   // so a project can select them like reference variables.
   await open(page, "/catalog/steward/slots/slot2");

@@ -49,6 +49,18 @@ const TITLES: Readonly<Record<string, string>> = {
   period_on_timeless_table: "This table does not use dated periods",
   period_not_orderable: "The requested period cannot be ordered",
   project_empty: "Project has no variables to order",
+  // The steward's tables (a steward server's `order` runs this stage too).
+  // `mapping_caveat` is not shown (api.ts `forReaders`).
+  mapping_missing: "This column is not available for these years",
+  coverage_gap: "This column is not available for some years",
+  column_window_unavailable: "This column leaves out some requested years",
+  held_key_missing: "This table has no row identifier column",
+  held_key_ambiguous: "The row identifier is in more than one column",
+  file_name_unsafe: "This table's file name cannot be used",
+  physical_schema_missing: "This table has no single location",
+  rows_unfiltered: "Every year of this table is delivered",
+  row_filter_widened: "Rows are delivered for whole periods around the request",
+  row_filter_union: "Tables sharing a file are delivered over all their years",
 };
 
 export function issueTitle(issue: ValidationIssue): string {

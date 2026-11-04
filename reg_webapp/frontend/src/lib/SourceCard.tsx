@@ -3,6 +3,7 @@ import { variableColumns } from "./add_columns";
 import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogLastDate, sourcePeriodLabel } from "./catalog_period";
+import { LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import {
   LaneGraph,
@@ -35,7 +36,6 @@ import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
-import { LocatedIssue } from "./ValidationPanel";
 import { issueId, type ValidationIssue } from "./validation";
 
 type Table = RegisterShow["tables"][number];
@@ -122,7 +122,7 @@ export function SourceCard({
       setError(null);
       return true;
     } catch (cause) {
-      setError(`The source was not changed. ${errMessage(cause)}`);
+      setError(`The table was not changed. ${errMessage(cause)}`);
       return false;
     }
   }
@@ -290,10 +290,10 @@ export function SourceCard({
       action={
         <Button
           variant="ghost"
-          aria-label={`Remove source ${source.name}`}
+          aria-label={`Remove table ${source.name}`}
           onPress={() => setRemoving({ binding: null, label: source.name })}
         >
-          Remove source
+          Remove table
         </Button>
       }
     >
@@ -324,12 +324,12 @@ export function SourceCard({
       </p>
       {loading && (
         <div aria-busy="true">
-          <StatusRow tone="info">Loading coverage…</StatusRow>
+          <StatusRow tone="info">Loading years…</StatusRow>
         </div>
       )}
       {loadError && (
         <StatusRow tone="error">
-          Coverage did not load. Reload the page to try again, or check the
+          The years did not load. Reload the page to try again, or check the
           catalog for columns that are no longer available.
         </StatusRow>
       )}
@@ -392,7 +392,7 @@ export function SourceCard({
         }}
         title={
           removesSource
-            ? `Remove source ${source.name}?`
+            ? `Remove table ${source.name}?`
             : `Remove ${removing?.label ?? "column"} from ${source.name}?`
         }
         actions={
@@ -413,19 +413,19 @@ export function SourceCard({
                 } else setRemoving(null);
               }}
             >
-              {removesSource ? "Remove source" : "Remove column"}
+              {removesSource ? "Remove table" : "Remove column"}
             </Button>
           </>
         }
       >
         {removesSource
           ? source.bindings.length === 1 && removing?.binding !== null
-            ? "This is the source's last column. Removing it also removes the source from this project."
-            : "The source and its columns leave this project."
-          : "The column leaves this source only."}
+            ? "This is the table's last column. Removing it also removes the table from this project."
+            : "The table and its columns leave this project."
+          : "The column leaves this table only."}
         {removesSource &&
           draft.panels?.some((panel) => panel.members.includes(source.name)) &&
-          " The source is removed from its panels. Any panel left without members is also removed."}
+          " The table is removed from its panels. Any panel left without members is also removed."}
       </ConfirmDialog>
     </Panel>
   );

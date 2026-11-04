@@ -1,33 +1,31 @@
 import { useRef, useState } from "react";
-import {
-  FileTrigger,
-  Input,
-  Label,
-  TextArea,
-  TextField,
-} from "react-aria-components";
-import { type Context, errMessage } from "./api";
+import { FileTrigger, Input, Label, TextField } from "react-aria-components";
+import { type Context, errMessage, stewardConfig } from "./api";
 import { registerRead, segmentsRead } from "./catalog_names";
+import { DeliverySummary } from "./DeliverySummary";
+import { IssueLink, LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
-import { OrderView } from "./OrderView";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis } from "./period";
 import type { ProjectData } from "./project_data";
-import { projectStore } from "./project_store";
+import { type ProjectSnapshot, projectStore } from "./project_store";
 import { sourcePeriodYears } from "./reg_core";
 import { SourceCard } from "./SourceCard";
 import { tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
-import { Panel } from "./ui/Panel";
+import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useCatalogNames } from "./use_catalog_names";
-import { type ProjectValidation, useProject } from "./use_project";
-import { useQueryParam } from "./use_router";
+import {
+  type ProjectCheck,
+  projectVerdict,
+  useProject,
+  VERDICT_WORDS,
+} from "./use_project";
 import { useCatalogRead, useDistinct } from "./use_store_read";
-import { ValidationPanel } from "./ValidationPanel";
-import type { ValidationIssue } from "./validation";
+import { issueId, type ValidationIssue } from "./validation";
 import { createProject, windowStore } from "./window";
 import { windowBounds } from "./window_bounds";
 
@@ -36,11 +34,9 @@ export function ProjectEditor({
   validation,
 }: {
   context: Context | null;
-  validation: ProjectValidation;
+  validation: ProjectCheck;
 }) {
   const project = useProject();
-  const tab = useQueryParam("tab");
-  const [pasted, setPasted] = useState("");
   const [fileError, setFileError] = useState<string | null>(null);
   const [pending, setPending] = useState<{
     action: () => void;
@@ -48,10 +44,17 @@ export function ProjectEditor({
   } | null>(null);
   const raw = project.raw;
   const draft = project.draft;
+  // While a check is in flight the page keeps the previous one, marked busy.
+  const busy = validation.loading && validation.previous !== null;
+  const shown: ProjectCheck = busy
+    ? { ...validation, ...validation.previous, loading: false }
+    : validation;
+  const instructions =
+    stewardConfig(context)?.presentation.order_instructions ?? null;
   // A saved window outside this deployment's catalog span is clamped into it at
   // open, so the exported project never keeps decades the catalog cannot hold (#1037).
-  const open = (text: string, fromFile = false) => {
-    projectStore.open(text, fromFile);
+  const open = (text: string) => {
+    projectStore.open(text);
     const bounds = windowBounds(context);
     if (bounds.enforced && projectStore.draft)
       windowStore.clampTo(bounds.min, bounds.max);
@@ -60,39 +63,32 @@ export function ProjectEditor({
     if (raw === null) action();
     else setPending({ action });
   };
+  const openFile = (
+    <FileTrigger
+      acceptedFileTypes={["application/json", ".json"]}
+      onSelect={(files) => {
+        const file = files?.[0];
+        if (!file) return;
+        replace(() => {
+          void file.text().then(
+            (text) => {
+              open(text);
+              setFileError(null);
+            },
+            (error: unknown) =>
+              setFileError(
+                `Could not read the file: ${errMessage(error)}. Choose it again.`,
+              ),
+          );
+        });
+      }}
+    >
+      <Button onPress={() => {}}>Open a project file…</Button>
+    </FileTrigger>
+  );
   return (
     <article className={styles.editor}>
-      <h1 className={styles.title}>
-        {tab === "order" && draft ? "Order" : "Project"}
-      </h1>
-      <div className={styles.toolbar}>
-        <Button
-          isInert={!context}
-          onPress={() => {
-            if (context) replace(() => createProject(context));
-          }}
-        >
-          Create a project
-        </Button>
-        {raw !== null && (
-          <>
-            <Button onPress={() => projectStore.download()}>
-              Download project_data.json
-            </Button>
-            <Button
-              variant="ghost"
-              onPress={() =>
-                setPending({
-                  action: () => projectStore.discard(),
-                  discard: true,
-                })
-              }
-            >
-              Discard project
-            </Button>
-          </>
-        )}
-      </div>
+      <h1 className={styles.title}>Project</h1>
       {project.storageError && (
         <StatusRow tone="error" live="alert">
           {project.storageError}
@@ -105,135 +101,69 @@ export function ProjectEditor({
       )}
       {raw === null ? (
         <EmptyState
-          title="No project is open"
-          description="Create a project, or open project_data.json to check it and review its order."
+          title="No project yet"
+          description="Create one, or open a project_data.json."
+          action={
+            <div className={styles.toolbar}>
+              <Button
+                isInert={!context}
+                onPress={() => {
+                  if (context) createProject(context);
+                }}
+              >
+                Create a project
+              </Button>
+              {openFile}
+            </div>
+          }
         />
       ) : (
         <>
-          <nav
-            aria-label="Project pages"
-            className={`${styles.toolbar} ${styles.pages}`}
-          >
-            <a
-              className="link"
-              href="/project"
-              aria-current={tab !== "order" ? "page" : undefined}
+          {draft && (
+            <TextField
+              className={styles.field}
+              value={draft.name}
+              onChange={(name) => projectStore.updateField("name", name)}
             >
-              Project
-            </a>
-            {draft && (
-              <a
-                className="link"
-                href="/project?tab=order"
-                aria-current={tab === "order" ? "page" : undefined}
-              >
-                Order
-              </a>
-            )}
-          </nav>
-          {!draft ? (
-            <>
-              <section
-                id="project-checks"
-                tabIndex={-1}
-                className={styles.checks}
-              >
-                <ValidationPanel
-                  title="Draft check"
-                  validMessage="Project structure is valid."
-                  result={{ ok: false, issues: project.issues }}
-                  raw={raw}
-                />
-              </section>
-            </>
-          ) : tab === "order" ? (
-            <OrderView draft={draft} />
-          ) : (
-            <>
-              <TextField
-                className={styles.field}
-                value={draft.name}
-                onChange={(name) => projectStore.updateField("name", name)}
-              >
-                <Label>Project name</Label>
-                <Input />
-              </TextField>
-              <Sources
-                context={context}
-                draft={draft}
-                issues={validation.data?.issues ?? []}
-                raw={raw}
-              />
-              <section
-                id="project-checks"
-                tabIndex={-1}
-                className={styles.checks}
-              >
-                <ValidationPanel
-                  title="Draft check"
-                  validMessage="Project structure is valid."
-                  result={{ ok: true, issues: [] }}
-                  raw={raw}
-                />
-                <div className={styles.toolbar}>
-                  <Button onPress={validation.refresh}>Check catalog</Button>
-                </div>
-                <ValidationPanel
-                  title="Catalog check"
-                  validMessage="Project is valid against this catalog."
-                  summarizeLocated
-                  result={validation.data}
-                  raw={raw}
-                  loading={validation.loading}
-                  error={validation.error}
-                />
-              </section>
-            </>
+              <Label>Project name</Label>
+              <Input />
+            </TextField>
           )}
-        </>
-      )}
-      {(!draft || tab !== "order") && (
-        <Panel title="Open a project">
-          <div className={`${styles.toolbar} ${styles.openActions}`}>
-            <FileTrigger
-              acceptedFileTypes={["application/json", ".json"]}
-              onSelect={(files) => {
-                const file = files?.[0];
-                if (!file) return;
-                replace(() => {
-                  void file.text().then(
-                    (text) => {
-                      open(text, true);
-                      setFileError(null);
-                    },
-                    (error: unknown) =>
-                      setFileError(
-                        `Could not read the file: ${errMessage(error)}. Choose it again.`,
-                      ),
-                  );
-                });
-              }}
+          <div className={styles.toolbar}>
+            <Button onPress={() => projectStore.download()}>
+              Download project_data.json
+            </Button>
+            {openFile}
+            <Button
+              variant="ghost"
+              onPress={() =>
+                setPending({
+                  action: () => projectStore.discard(),
+                  discard: true,
+                })
+              }
             >
-              <Button onPress={() => {}}>Open project file</Button>
-            </FileTrigger>
+              Discard
+            </Button>
           </div>
-          <TextField
-            className={styles.field}
-            value={pasted}
-            onChange={setPasted}
-          >
-            <Label>Project JSON</Label>
-            <TextArea rows={4} spellCheck={false} />
-          </TextField>
-          <Button
-            isInert={!pasted.trim()}
-            onPress={() => {
-              if (pasted.trim()) replace(() => open(pasted));
-            }}
-          >
-            Open project
-          </Button>
-        </Panel>
+          {instructions && (
+            <p className={styles.instructions}>{instructions}</p>
+          )}
+          <Check project={project} validation={shown} busy={busy} />
+          {draft && (
+            <Sources
+              context={context}
+              draft={draft}
+              issues={shown.data?.issues ?? []}
+              raw={raw}
+            />
+          )}
+          {draft &&
+            shown.data?.order &&
+            ["ready", "warnings"].includes(projectVerdict(project, shown)) && (
+              <DeliverySummary order={shown.data.order} busy={busy} />
+            )}
+        </>
       )}
       <ConfirmDialog
         isOpen={pending !== null}
@@ -260,12 +190,103 @@ export function ProjectEditor({
           </>
         }
       >
-        Download project_data.json first if you want to keep the current draft.{" "}
+        Download project_data.json first if you want to keep the current
+        project.{" "}
         {pending?.discard
           ? "Discarding it removes the browser's saved working copy."
           : "Replacing it changes the browser's saved working copy."}
       </ConfirmDialog>
     </article>
+  );
+}
+
+const count = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+/** The verdict in the banner's words, then the findings no table card holds in
+ * full and a plain link to each one a card holds. The banner's verdict link
+ * lands here (`#project-checks`). */
+function Check({
+  project,
+  validation,
+  busy,
+}: {
+  project: ProjectSnapshot;
+  validation: ProjectCheck;
+  busy: boolean;
+}) {
+  const verdict = projectVerdict(project, validation);
+  const words = VERDICT_WORDS[verdict];
+  const structural = project.draft === null;
+  const issues: ValidationIssue[] = structural
+    ? project.issues
+    : (validation.data?.issues ?? []);
+  const onCard = (issue: ValidationIssue) =>
+    !structural && issue.path.startsWith("/sources/");
+  // A note on a card (level info) needs no link here: it changes no verdict.
+  const listed = issues.filter(
+    (issue) => !onCard(issue) || issue.level !== "info",
+  );
+  const problems = issues.filter((issue) => issue.level === "error").length;
+  const warnings = issues.filter((issue) => issue.level === "warning").length;
+  if (verdict === "empty") return null;
+  return (
+    <section
+      id="project-checks"
+      tabIndex={-1}
+      aria-label="Check"
+      aria-busy={busy || undefined}
+      className={styles.check}
+    >
+      {verdict === "checking" ? (
+        <div aria-busy="true">
+          <Skeleton />
+        </div>
+      ) : validation.error && !structural ? (
+        <StatusRow
+          tone="error"
+          live="alert"
+          action={<Button onPress={validation.retry}>Retry</Button>}
+        >
+          The check did not run ({validation.error}). Retry, or reload the page.
+        </StatusRow>
+      ) : (
+        <StatusRow
+          tone={
+            verdict === "ready"
+              ? "ok"
+              : verdict === "warnings"
+                ? "warn"
+                : "error"
+          }
+          live="status"
+        >
+          {verdict === "ready"
+            ? `${words}.`
+            : verdict === "warnings"
+              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you order.`
+              : structural
+                ? `${words}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
+                : problems === 0
+                  ? `${words}.`
+                  : `${words}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
+        </StatusRow>
+      )}
+      {listed.length > 0 && verdict !== "checking" && (
+        <ul className={styles.issues} aria-label="Problems and warnings">
+          {listed.map((issue) =>
+            onCard(issue) ? (
+              <IssueLink key={issueId(issue)} issue={issue} raw={project.raw} />
+            ) : (
+              <LocatedIssue
+                key={issueId(issue)}
+                issue={issue}
+                raw={project.raw}
+              />
+            ),
+          )}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -342,14 +363,19 @@ function Sources({
     bounds,
   );
   return (
-    <section aria-label="Project sources" className={styles.sources}>
-      <h2 ref={heading} tabIndex={-1} className={styles.sourcesHeading}>
-        Sources
+    <section aria-labelledby="project-tables" className={styles.sources}>
+      <h2
+        id="project-tables"
+        ref={heading}
+        tabIndex={-1}
+        className={styles.sourcesHeading}
+      >
+        Tables
       </h2>
       {draft.sources.length === 0 ? (
         <EmptyState
-          title="No sources in this project"
-          description="Browse the catalog to add columns."
+          title="No tables in this project"
+          description="Browse the registers and add columns from a variable's page."
         />
       ) : (
         draft.sources.map((source, sourceIndex) => {
@@ -378,7 +404,7 @@ function Sources({
                   const read = segmentReads[binding.variable];
                   return read && !read.loading && read.value === null;
                 })
-                  ? "Column coverage is unavailable"
+                  ? "Column years are unavailable"
                   : null) ??
                 (register && !register.loading && !register.value
                   ? "Table availability is unavailable"
