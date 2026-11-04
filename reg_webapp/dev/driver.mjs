@@ -898,7 +898,7 @@ async function stewardHeldCase(page, shoot) {
   await checkRegion.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
   // The steward site has no name for a variable it does not hold, so its Remove
   // button carries the card's fallback name.
-  await page.getByRole("main").getByRole("button", { name: "Remove Variable name unavailable from s", exact: true }).click();
+  await page.getByRole("main").getByRole("button", { name: "Remove Variable name unavailable from Held reference metadata", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
   const rowKeys = page.getByRole("main").getByRole("region", { name: "What will be delivered", exact: true });
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
