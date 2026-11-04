@@ -1,0 +1,31 @@
+name: Wait for CI
+
+# Reusable gate: succeeds once ci.yml is green on the caller's commit (`GITHUB_SHA`; a
+# called workflow inherits the caller's `github` context), fails when that run failed
+# and times out after 20 minutes. Matches runs by SHA whatever their trigger, so a PR
+# run on the same head counts. container-build.yml gates every deploy on it;
+# publish_reg_meta.yml gates the release's integration and deploy on it instead of
+# re-running CI on the tag.
+on:
+  workflow_call:
+
+jobs:
+  wait-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for green CI on this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for _ in $(seq 1 40); do
+            run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml \
+              --commit "$GITHUB_SHA" --limit 1 --json status,conclusion \
+              -q '.[0] | (.status + " " + (.conclusion // ""))')
+            echo "ci.yml @ $GITHUB_SHA: ${run:-no run found yet}"
+            case "$run" in
+              "completed success") exit 0 ;;
+              completed*) echo "FATAL: CI did not succeed on this commit" >&2; exit 1 ;;
+            esac
+            sleep 30
+          done
+          echo "FATAL: timed out waiting for CI" >&2; exit 1
