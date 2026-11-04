@@ -1,7 +1,0 @@
-[register]
-provider = "scb"
-slug = "lisa"
-native_id = "1"
-
-[variable]
-"1.44" = "kon"

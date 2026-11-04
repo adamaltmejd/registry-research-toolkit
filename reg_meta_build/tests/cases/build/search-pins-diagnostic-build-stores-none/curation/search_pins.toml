@@ -1,4 +1,0 @@
-[[pin]]
-query = "diagnos"
-type = "register"
-fqids = ["sos/par"]

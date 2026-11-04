@@ -1,9 +1,0 @@
-{
-  "loader": "classifications",
-  "replaces": "test_curation_tree.py::test_label_in_two_files_fails",
-  "fails_if": "load_classifications lets two books bind the same value-set label",
-  "error": {
-    "code": "classification_duplicate",
-    "locator": "classifications/B.toml: label 'Bee' is also declared in classifications/A.toml."
-  }
-}

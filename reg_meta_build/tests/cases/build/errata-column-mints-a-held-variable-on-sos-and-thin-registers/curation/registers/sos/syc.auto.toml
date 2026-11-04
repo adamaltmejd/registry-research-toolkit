@@ -1,2 +1,0 @@
-[variable]
-{{naming_id kind=variable provider=sos register_key=syc member_key=LANK}} = "auto-lank"

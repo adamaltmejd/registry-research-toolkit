@@ -1,8 +1,0 @@
-{
-  "catalog": "catalog.json",
-  "inventory": "inventory.toml",
-  "census": "census.csv",
-  "behavior": "Compile physical range holdings while preserving the single pooled catalog state.",
-  "observe_catalog_states": true,
-  "scope": "scope.toml"
-}

@@ -1,8 +1,0 @@
-{
-  "exit_code": 10,
-  "files": {
-    "out.db*": {
-      "absent": true
-    }
-  }
-}

@@ -1,4 +1,0 @@
-[[pin]]
-query = "q"
-type = "register"
-fqids = ["scb/a", "scb/a"]

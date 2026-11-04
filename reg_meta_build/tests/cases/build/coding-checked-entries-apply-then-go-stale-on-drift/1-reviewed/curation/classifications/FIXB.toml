@@ -1,5 +1,0 @@
-[classification]
-short_name = "FIXB"
-slug = "fixture2"
-name = "Fixture"
-codes_file = "fixture2.csv"

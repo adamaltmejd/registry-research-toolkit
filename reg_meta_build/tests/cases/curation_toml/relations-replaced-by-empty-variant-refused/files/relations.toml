@@ -1,8 +1,0 @@
-[[edge]]
-type = "replaced_by"
-from = "scb/lisa/x"
-to = "scb/lisa/x"
-from_column = "Old"
-to_column = "New"
-effective_year = 2010
-variant = ""

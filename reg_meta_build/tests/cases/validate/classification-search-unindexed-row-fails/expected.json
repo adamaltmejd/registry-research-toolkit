@@ -1,6 +1,0 @@
-{
-  "passed": false,
-  "failures_contain": [
-    "1 source row(s) not held as folded text in classification_fts: rowids ["
-  ]
-}

@@ -1,7 +1,0 @@
-{
-  "installations": [
-    "dirty-checkout",
-    "ignored-copy-in-builder-checkout",
-    "outside-checkout"
-  ]
-}

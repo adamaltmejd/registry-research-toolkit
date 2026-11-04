@@ -1,8 +1,0 @@
-[register]
-provider = "scb"
-slug = "lisa"
-native_id = "34"
-
-[variable]
-"34.3" = "alder"
-"34.4" = "variants"

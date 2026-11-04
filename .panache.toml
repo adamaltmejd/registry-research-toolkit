@@ -5,9 +5,8 @@
 # gfm keeps `smart` off → no quote/dash rewriting of the Swedish register text.
 flavor = "gfm"
 
-# _raw is untracked marker output; AGENTS.md is agent config, not a rendered doc.
+# AGENTS.md is agent config, not a rendered doc.
 extend-exclude = [
-  "reg_meta_build/docs/_raw/",
   "AGENTS.md",
 ]
 

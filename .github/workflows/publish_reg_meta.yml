@@ -25,7 +25,7 @@ jobs:
   # artifact and, when the release has it, the paired reg_meta_swecov.db.zst, served by
   # the Rust server (integration.yml). Inherits the
   # reg_meta/v* gate via `needs: wait-ci` (a skipped `wait-ci` skips it), so it never fires for
-  # reg_meta_build/v* releases.
+  # a release under another tag prefix.
   integration:
     needs: wait-ci
     uses: ./.github/workflows/integration.yml

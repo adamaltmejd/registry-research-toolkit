@@ -105,11 +105,6 @@ after its last lookup. Deleting the directory between runs is safe. CI sets no
 `uv run python conformance/fixture_cache.py base` builds one entry and prints its path
 for consumers outside pytest.
 
-`cases/reader/fixture` and `cases/reader/classification-editions` are sources of the old
-builder (`reg_meta_build`), whose tests still build artifacts from them through
-`reg_meta_build/tests/_reader_artifacts.py` until milestone F deletes the builder.
-Nothing in this suite builds them.
-
 ## API cases
 
 `cases/api` holds the cases for the API (`api/operations.toml`, `api/errors.toml`),

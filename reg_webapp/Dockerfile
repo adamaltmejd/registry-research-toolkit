@@ -83,8 +83,8 @@ RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
 # ---------------------------------------------------------------------------
 # Same Debian release as the runtime base, so the binary's glibc matches. The
 # workspace manifest names every crate under crates/ as a member, so all of them
-# are copied; only `reg-meta` and its dependencies are built (`reg-core-py`'s PyO3
-# extension is not). `--locked` asserts Cargo.lock is current (CI parity).
+# are copied; only `reg-meta` and its dependencies are built. `--locked` asserts
+# Cargo.lock is current (CI parity).
 FROM rust:1.99.1-slim-trixie@sha256:b8e062b1c3a80183df83d9ba187cadd2b5ab84bc78d453dbfeb2fccd5f982247 AS server
 WORKDIR /build
 COPY Cargo.toml Cargo.lock ./

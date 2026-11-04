@@ -1,5 +1,0 @@
-[classification]
-short_name = "TREE"
-slug = "tree"
-name = "Tree"
-codes_file = "tree.csv"
