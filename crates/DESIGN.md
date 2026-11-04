@@ -1005,6 +1005,14 @@ set, `coded` unknown, and `state` clear (the default) are all left out, which ke
 agent context small. Storage type stays in the catalog (orders use it) and is shown only
 when stated.
 
+**Names next to ids.** A response that refers to a register, table or variable carries
+its name next to the FQID, as `show` gives it (a reference row's name over a steward
+overlay's), so a reader needs no `show` per id: `segments` rows have `table_name`,
+`findings` subjects `name` and `table_name`, and the `order` and `validate` rows and
+findings `table_name`, `variable_name` and `successor_name` (`NamedIssue`). One batched
+read per origin names a whole response (`refs::names`), never a read per row. The MONA
+order file carries ids only.
+
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
@@ -1121,7 +1129,8 @@ In short: `catalog` and `project` identify the generation and the project (with
 `project_hash`); `entries` are per source, per binding in declaration order, then by
 period start; `row_keys` are per source and period start; `clips` record every
 availability clip, also when nothing blocks; `findings` are the non-blocking ones
-(warnings and infos), as `Issue`. Periods are half-open ISO-day intervals, with `null`
+(warnings and infos), as `NamedIssue`. Every table and variable id in a row has its name
+beside it ("Names next to ids"). Periods are half-open ISO-day intervals, with `null`
 for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 - An **entry** is one merged segment of one binding in one table. With a table
@@ -1190,28 +1199,36 @@ and `sun2000niva`.
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2003-01-01", "end": "2004-01-01"},
        "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/sun2000niva", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/sun2000niva", "variable_name": "Utbildningsnivå",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "Sun2000niva", "type": "char", "length": 3,
        "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
     ],
     "row_keys": [
-      {"source": "lisa", "table": "scb/lisa/individ",
+      {"source": "lisa", "table": "scb/lisa/individ", "table_name": "Individer",
        "period": {"start": "2003-01-01", "end": "2007-01-01"},
-       "columns": [{"variable": "scb/lisa/lopnr", "spelling": "LopNr"}]}
+       "columns": [{"variable": "scb/lisa/lopnr", "variable_name": "Löpnummer",
+                    "spelling": "LopNr"}]}
     ],
     "clips": [
       {"source": "lisa", "variable": "scb/lisa/sun2000niva",
+       "variable_name": "Utbildningsnivå",
        "requested": [{"start": "2003-01-01", "end": "2007-01-01"}],
        "ordered": [{"start": "2004-01-01", "end": "2007-01-01"}]}
     ],
@@ -1219,11 +1236,13 @@ and `sun2000niva`.
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
        "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null},
+       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
+       "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
       {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
        "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
        "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
+       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null,
+       "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
   "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
@@ -1250,7 +1269,8 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
          "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
-         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null}
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null,
+         "variable_name": "Kommun", "table_name": "Individer", "successor_name": null}
       ]
     }
   },
@@ -2357,7 +2377,11 @@ The validate operation runs the supported-version decision, then the structural
 validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), and concatenates their issues with
 the order check's findings ("The logical order"). A failing project is a result, not an
 error. A structural failure skips the catalog layer, so a rejected document costs no
-catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
+catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order. On
+a steward server `validate` also runs the holdings stage of `materialize_order`, so its
+`ok` is true exactly when `materialize_order` would not block: a variable the steward
+does not hold is `mapping_missing` at validate time, not when the coordinator makes the
+order (#2194).
 
 ### Project document 5.2.0
 
@@ -2593,10 +2617,15 @@ located warnings, while release builds collect the refusals in their report.
 
 `show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
 optional `description`, register public id, ordered `axes`, and `members`. Each member
-supplies `fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members
-sort by facet value in axis order (missing coordinates first), then by name and public id.
-`tags` is the union of the members' tags in public-id order. The summary contains
-curated presentation data; source evidence remains on the individual variables.
+supplies `fqid`, `name`, `segments` (its whole per-period list: every row `segments`
+serves for it, unpaged, in that order and shape, without evidence) and `facets` (`axis`,
+`value`, `label`) in axis order, so the group page needs one request. The set's
+`description` is its curated one; without one, a description every member states alike
+is sent once as the set's (maintainer 2026-11-04). A member carries its own
+`description` only where it differs from the set's. Members sort by facet value in axis
+order (missing coordinates first), then by name and public id. `tags` is the union of
+the members' tags in public-id order. The summary contains curated presentation data;
+source evidence remains on the individual variables.
 
 `show` at a register lists its `sets` (`fqid`, `name`, member variable `fqid`s, each in
 public-id order) for the register page's grouping, and `tags`, the union of its

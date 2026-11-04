@@ -236,7 +236,7 @@ name = "validate"
 http = ["POST /api/project/validate"]
 tool = "order"
 params = { project = "project" }
-result = "Validation {ok, issues: [Issue]}"
+result = "Validation {ok, issues: [NamedIssue]}"
 note = """An invalid project is a 200 with `ok: false`. The issues are the structural \
 rules (reg-core), then the order check's findings (crates/DESIGN.md, "The logical order") at their levels: \
 a blocking finding is an `error`, the rest `warning` or `info`. `ok` is true exactly \
@@ -329,7 +329,9 @@ note = """Every result period is half-open, `[start, end)` (schema §0). A reque
 [shape.Subject]
 kind = "\"register\" | \"table\" | \"release\" | \"variable\" | \"segment\" | \"occurrence\" | \"valueset\""
 fqid = "string | null; the register, table or variable; for a segment or an occurrence, its variable (null for an occurrence without one)"
+name = "string | null; the name of `fqid`, as `show` gives it"
 table = "string | null; the table of a release, segment or occurrence"
+table_name = "string | null; the name of `table`"
 period = "Period | null; the release's, segment's or occurrence's period (null when unplaced)"
 release = "string | null; a release's literal delivery name"
 spelling = "string | null; an occurrence's exact spelling"
@@ -396,6 +398,7 @@ populations = "[{name, definition, ref_day}]"
 [shape.Segment]
 note = "A fact the catalog does not state is absent, never null: `coded` unknown and `state` clear are left out too."
 table = "string; the table's fqid"
+table_name = "string; the table's name, as `show` gives it"
 column = "string; the column name, the latest primary occurrence's spelling; on a paired catalog the held column's"
 period = "Period"
 file = "string?; paired catalog only: the file the steward holds the column in"
@@ -472,6 +475,12 @@ variable = "string | null; fqid"
 table = "string | null; fqid"
 period = "Period | null"
 successor_fqid = "string | null; the successor a `variable_replaced` finding names, or the successor table an undated succession names (`table_succession_undated`)"
+
+[shape.NamedIssue]
+note = "An `Issue` with the names of the catalog entities it is about, as `validate`, `order` and `order_blocked` serve it; the MONA order file carries the bare `Issue`."
+variable_name = "string | null; the name of `variable`, as `show` gives it; null when `variable` is null or names no catalog variable"
+table_name = "string | null; the name of `table`; null likewise"
+successor_name = "string | null; the name of `successor_fqid`"
 
 [shape.LogicalOrder]
 note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples (a clear and a blocked order)."

@@ -1,5 +1,4 @@
 import { Link } from "react-aria-components";
-import type { ValidationResultModel } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogPeriodLabel, sourcePeriodLabel } from "./catalog_period";
 import { FindingTitle } from "./Finding";
@@ -28,7 +27,8 @@ export function ValidationPanel({
 }: {
   title: string;
   validMessage: string;
-  result: ValidationResultModel | null;
+  // The draft's local structural check names nothing, so plain issues are enough.
+  result: { ok: boolean; issues: ValidationIssue[] } | null;
   raw: string | null;
   loading?: boolean;
   error?: string | null;

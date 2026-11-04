@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/ark",
       "table": "demo/ark",
+      "table_name": "Radnyckelregistret",
       "variable": "demo/ark/belopp",
+      "variable_name": "Belopp",
       "display_name": null,
       "period": {
         "start": "2020-01-01",
@@ -32,6 +34,7 @@
     {
       "source": "s",
       "table": "demo/ark",
+      "table_name": "Radnyckelregistret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
@@ -39,6 +42,7 @@
       "columns": [
         {
           "variable": "demo/ark/nyckel",
+          "variable_name": "Nyckel",
           "spelling": "Nyckel"
         }
       ]
@@ -53,12 +57,15 @@
       "message": "Row key demo/ark/nyckel in demo/ark over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
       "source": "s",
       "variable": "demo/ark/nyckel",
+      "variable_name": "Nyckel",
       "table": "demo/ark",
+      "table_name": "Radnyckelregistret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

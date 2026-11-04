@@ -79,7 +79,8 @@
         "column",
         "period",
         "role",
-        "table"
+        "table",
+        "table_name"
       ]
     }
   }
