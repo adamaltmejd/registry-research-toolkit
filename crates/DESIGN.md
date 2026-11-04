@@ -2,12 +2,10 @@
 
 Design rationale and constraints for the catalog runtime: `reg-core` (grammars, folds,
 interval algebra, the project contract), `reg-catalog` (the reader and its operation
-set) and `reg-meta` (the `serve` and `mcp` run modes), plus the design of the builder
-that replaces `reg_meta_build` ("The catalog builder"). The project contract has its own
-note, [reg-core/DESIGN.md](reg-core/DESIGN.md). The artifact these crates read is built
-by `reg-build` ("The catalog builder"); `reg_meta_build`
-([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)) stays until milestone F.
-Holdings are not compiled into it: they return in milestone E. Cross-package topology is
+set) and `reg-meta` (the `serve` and `mcp` run modes), plus the design of the builder,
+`reg-build` ("The catalog builder"), which builds the artifact these crates read. The
+project contract has its own note, [reg-core/DESIGN.md](reg-core/DESIGN.md). Holdings
+are a separate layer compiled after the artifact ("Holdings"). Cross-package topology is
 in [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
 The operation names, parameters, result shapes and routes are
@@ -25,8 +23,7 @@ runtime:
 
 - **Query cost is a query-design problem, not a language one.** A Rust reader runs the
   same SQLite engine. The fix is to move every pure function of the artifact into the
-  build (`reg_meta_build/DESIGN.md`, "Base and derive"), which also keeps the reader
-  small.
+  build ("The catalog builder"), which also keeps the reader small.
 - **Start-up does not matter**, because the runtime runs as long-lived processes
   (`serve`, `mcp`). The case for Rust is one implementation of each shared contract
   across build and server, typed contracts, and memory use.
@@ -50,9 +47,9 @@ these calls its home; it does not add a second copy held in step by a parity tes
   | Catalog schema version                  | `reg_core::CATALOG_SCHEMA_VERSION`                                                                                          | `reg-build` stamps it; `reg-catalog` admits on equality; the deploy guard compares it with the newest release's |
   | Artifact validation                     | `reg-build verify`                                                                                                          | The single authority; the release tier and the release skill run it                                             |
   | Resolver semantics                      | `reg-resolve` (Rust)                                                                                                        | Compiled into the artifact                                                                                      |
-  | FQID and period grammar                 | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
-  | Interval algebra over periods           | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
-  | Text folds                              | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
+  | FQID and period grammar                 | `reg-core`                                                                                                                  | `reg-build`; reader                                                                                             |
+  | Interval algebra over periods           | `reg-core`                                                                                                                  | `reg-build`; reader                                                                                             |
+  | Text folds                              | `reg-core`                                                                                                                  | `reg-build`; reader                                                                                             |
   | Canonical JSON + SHA-256 (build hashes) | `reg-frame::canonical_line` and value-set hashing (`src/lib.rs`); `reg-build`'s `main` module (input and generation hashes) | Build only                                                                                                      |
   | Project schema + structural validator   | `reg-core` (`project::check`)                                                                                               | Server and MCP; JSON Schema export                                                                              |
   | Result types                            | Rust structs (serde + utoipa)                                                                                               | OpenAPI and MCP tool schemas derive from it                                                                     |
@@ -65,11 +62,9 @@ JSON-Schema dependency or pretending that JSON shape validation replaces SQL/typ
 checks. Neither R nor the webapp resolves logical orders independently. E's runner PR
 changes the R validator and manifest corpus together.
 
-The build reaches `reg-core` through the compiled `reg-core-py` extension, which
-`resolve_code_sha256` (`reg_meta_build/src/reg_meta_build/resolve_code.py`) hashes. A
-`reg-core` change, an interval or grammar fix included, therefore invalidates every
-build resolve key: the next real-seed build resolves in full and its dbdiff shows any
-artifact change.
+The builder crates link `reg-core` directly. A `reg-core` change, an interval or grammar
+fix included, is therefore a builder change: `reg-build diff` against the previous
+release shows any artifact change it causes.
 
 **Text folds.** Two named folds, specified rather than inherited from a library:
 
@@ -85,8 +80,8 @@ artifact change.
   U+001C..U+001F; "alphanumeric" is general category L\* or N\*, not Rust's `Alphabetic`
   property (which admits marks and symbols Python's `[^\W_]` rejects).
 
-The build fills folded columns through `reg-core-py`, with the code the reader applies
-to the query string. All of `reg-core` uses one Unicode version
+`reg-build` fills folded columns with `reg-core`'s folds, the code the reader applies to
+the query string. All of `reg-core` uses one Unicode version
 (`tests/unicode_version.rs`). The oracle is `conformance/cases/folds/`.
 
 **Canonical JSON** has no floats. A float in a hashed payload is a build error.
@@ -111,8 +106,8 @@ HTTP API             MCP over stdio (local catalog)
 ```
 
 - `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data
-  types and the structural validator, error codes. Compiles natively, as a Python
-  extension (`reg-core-py`, PyO3 via maturin).
+  types and the structural validator, error codes. Compiles natively and to WebAssembly
+  (`reg-core-wasm`, for the SPA).
 - `reg-catalog`: the reader. Opens and admits an artifact and defines the operation set:
   one function per operation, typed parameters and results with JSON Schemas. Search
   (one ranking), the logical order and project semantic validation live here.
@@ -120,9 +115,6 @@ HTTP API             MCP over stdio (local catalog)
   early `ETag` revalidation, body-size limit and rate limit as tower layers) plus the
   remote MCP endpoint over streamable HTTP. `mcp` is MCP over stdio against a local
   catalog, for offline use. There is no query CLI.
-- `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
-  sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
-  change.
 - `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
   data side. It reads no catalog. Its design is
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
@@ -151,9 +143,8 @@ MCP configuration by hand.
 
 ## The catalog builder
 
-The builder that replaces `reg_meta_build` is being written beside it, as new crates
-(`reg-frame`, `reg-readers`, `reg-resolve`, `reg-build`). [../REBUILD.md](../REBUILD.md)
-tracks the milestones. This section holds the design decisions that outlive the rebuild.
+The builder is `reg-build`, with the crates `reg-frame`, `reg-readers` and
+`reg-resolve`. This section holds its design decisions.
 
 **Three stages, each seeing only its inputs.**
 
@@ -248,8 +239,8 @@ Accepting one requires reviewed curation and a premise lock.
 - Reader occurrences carry an opaque *source key*: the provider's variable id where one
   exists, otherwise the folded column name, scoped to the register. An asserted
   occurrence without a `key` guard currently gets a per-statement source key
-  (`stmt:<scoped identity>`). Aligning that default with the folded column is deferred
-  to the id sprint in [REBUILD.md §D](../REBUILD.md#d-deferrals).
+  (`stmt:<scoped identity>`). Aligning that default with the folded column is deferred,
+  because it changes published identities.
 - Occurrences with one key in one register are one variable. The exception is a key that
   covers two folded spellings in overlapping periods anywhere in the register. The
   comparison uses the preferred edition of each period, so a preliminary and a final
@@ -521,8 +512,13 @@ Regular expressions are refused. Edition and qualifier remain release attributes
 a message pointing at `where release` (maintainer ruling, 2026-10-27).
 
 All four kinds deny unknown fields. `evidence` is nonblank text (including
-`doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. `caveat` is
-optional user-facing text. Kind-specific content is:
+`doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. Evidence
+carried over in D from the retired Python builder cites its files at the git tag
+`python-builder-pre-cutover`: `python-builder-pre-cutover:curation/…` is a file under
+that builder's package directory, usually with a `:<line>` suffix, and
+`python-builder-pre-cutover:reg_webapp/…` a repository path (a file or, for the `series`
+directory, a directory), both at that tag. `caveat` is optional user-facing text.
+Kind-specific content is:
 
 - `assert`: `subject` and a `fact` tagged by `entity`: `occurrence` or `table` with
   `fields`, `release` with `name` and `period`, `value-set` with `items`, or
@@ -624,8 +620,7 @@ overlapping curated overrides are refused at both locations.
   Before minting, reconcile stale anchors against old pins and current placed variables.
   An existing id wins over a duplicate new mint. Pre-v1 pins with no current variable
   for their historical scope, and obsolete merged aliases, are removed without
-  redirects. New variable ids use the existing label-slug rule
-  (`reg_meta_build.fqid_slugs`'s `_name_slug`): NFKD ASCII folding, lowercase
+  redirects. New variable ids use the label-slug rule: NFKD ASCII folding, lowercase
   hyphenation and pure unit parentheticals removed, without general stop-word removal.
   Prefer the latest label when its slug is unique among the register's variables, then
   the latest unique label from another canonical period. Otherwise append the anchor's
@@ -1035,10 +1030,11 @@ agents need no install and no 1.2 GB download. `/mcp` and every POST share one r
 limit per client address, sized for tool calls (`reg-meta/src/limit.rs`). A published
 server admits its MCP host (`--public-host`).
 
-**Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). Holdings and
-ordering return in milestone E; `show`'s root names no webapp. The `order` tool stays:
-researchers describe data they already hold on MONA as a `project_data.json`, and it
-returns the logical order.
+**Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). The global server
+carries no holdings, which a steward deployment serves (`--catalog <steward>`,
+"Holdings"); `show`'s root names no webapp. The `order` tool stays: researchers describe
+data they already hold on MONA as a `project_data.json`, and it returns the logical
+order.
 
 ## A provider-neutral substrate
 
@@ -1068,8 +1064,7 @@ provider oddities into the universal shape.
 Every entity has a fully qualified identifier: a `/`-separated string whose kind follows
 from its segment count and the leading `class/` or `set/` namespace. `reg-core` owns the
 grammar (`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
-(ledgers under `curation/`) and resolves a ref to an entity
-([REBUILD.md](../REBUILD.md)).
+(ledgers under `curation/`) and resolves a ref to an entity.
 
   | Kind                   | Public id                                                                         |
   | ---------------------- | --------------------------------------------------------------------------------- |
@@ -1112,7 +1107,8 @@ equals `reg_core::CATALOG_SCHEMA_VERSION`, every required `meta` key is present 
 with no fallback. The file is opened read-only and `immutable=1`: published files are
 replaced by rename, never changed in place. There is no read scope and no second
 database. A project is the user's file: the server stores none and checks one only when
-it is posted to `validate` or `order`. Holdings return in milestone E.
+it is posted to `validate` or `order`. Holdings are a second, optional database admitted
+with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
@@ -1125,8 +1121,9 @@ physical-order logic, which v5 deletes.
 
 The logical order says what is ordered, never in which files. It stops at the catalog:
 physical files, partitions, row filters, file names, the manifest download and the
-extract format are the holdings layer's, and the physical manifest returns with it in
-milestone E. Nothing in the result names a steward.
+extract format are the holdings layer's, and the physical manifest is built from the
+holdings (`reg-catalog/src/ops/order/materialize.rs`). Nothing in the result names a
+steward.
 
 **Shape.** `shape.LogicalOrder` in `conformance/api/operations.toml` is the field list.
 In short: `catalog` and `project` identify the generation and the project (with
@@ -1291,19 +1288,18 @@ resolves the ambiguity; narrowing the period to 2018 alone also clears it.
 Holdings describe possession and delivery topology. They are a separate compilation
 layer after the published catalog, reading its public table and variable ids. They do
 not change provider identity, segment validity or classification applicability. This
-boundary and the absence of a catalog series entity are settled in [REBUILD.md,
-"Decisions already made"](../REBUILD.md#decisions-already-made) and "Value sets,
-populations and series" above. The decisions below include the maintainer 2026-10-29
-rulings and the Operator decision on pre-2018 current coding derived from them. No open
-design questions remain.
+boundary and the absence of a catalog series entity are settled maintainer decisions;
+see also "Value sets, populations and series" above. The decisions below include the
+maintainer 2026-10-29 rulings and the Operator decision on pre-2018 current coding
+derived from them. No open design questions remain.
 
 Source references in this section use `cleanroom/design.md` (v4, 2026-10-26) and
 `cleanroom/schema-v3.md`, under the maintainer-local `.local/design/first-principles/`
 directory. The latter's prefatory "Maintainer rulings after the review" override its
-programme-era body. The v4 design and later rulings in REBUILD.md and this file govern
-where they supersede older rules: no programme, `parallel` state, separate table-key
-entity, six-kind curation grammar or restored order-time edition selector is imported
-from that older schema.
+programme-era body. The v4 design and later rulings in this file govern where they
+supersede older rules: no programme, `parallel` state, separate table-key entity,
+six-kind curation grammar or restored order-time edition selector is imported from that
+older schema.
 
 ### Three questions, three scopes
 
@@ -1411,91 +1407,28 @@ data/config contract, not a second deployment.
 including located release refusals; it does not admit a refused artifact. Reports and
 holdings outputs cannot overwrite the reference catalog.
 
-The compiler has explicit paths and pins; it reads no neighbouring files implicitly. The
-inspected private inputs worktree is clean at commit
-`9186fcbceeb2283a50c7f684764869e4dda5765e` (also the current `curation/inputs.toml`
-pin). It supplies the legacy migration sources listed below; e-repo moves the SWECOV
-subtree into the dedicated repo and records its new paths/pin:
+The compiler has explicit paths and pins; it reads no neighbouring files implicitly.
 
-- `swecov/swecov/SWECOV_variables_full_2026-06-15.csv`: the physical census, headed
-  `Category,Detail,Table,V1,…,V1396`. The inspected pin contains 1,813 tables and 44,970
-  nonempty column-name cells. Category/detail route reviewed definitions; they are not
-  provider identity rules.
+**History: the SWECOV conversion (e-holdings).** The SWECOV inputs were converted once
+from the legacy steward tree and the private inputs repository's `swecov/` subtree into
+the dedicated steward repository: the physical census, the storage export, 28 legacy
+provider TOML files (converted to transcription CSV, read by
+`reg-readers/src/transcription.rs`), the generated placement inventory, 55 legacy slug
+pin files (converted to `ids.toml` ledgers) and selected delivery-document evidence.
+Every legacy mapping was converted, dropped with a reason, or refused at its source.
+Missing targets were retargeted to existing ids with evidence, minted as steward-only
+definitions or slots, corrected through reviewed global curation, or held or unmapped
+with a reason. The legacy paths survive in `steward.toml` only as conversion provenance;
+the compiler never reads them. The census is matched by table and exact column; storage
+facts that are missing or multiply resolved refuse for orderable holdings.
 
-- `swecov/swecov/derived/swecov_column_types.csv`: the storage export, with
-  `table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position`.
-  It has 61,130 records and 2,660 distinct table names. It is a different census, not an
-  instruction to admit every table in the database. Match census tables and exact
-  columns; report extras, refuse missing or multiply resolved storage facts for
-  orderable holdings.
-
-- `swecov/providers/` (28 TOML files at the inspected pin): stewardship-only logical
-  descriptions in legacy TOML. Convert them once to the current transcription CSV
-  format, pin the converted inputs in the dedicated steward repository as milestone A
-  did, then use the existing reader, frames, ledgers and statements. The reader itself
-  reads CSV (`reg-readers/src/transcription.rs`), not TOML. No second identity or slug
-  algorithm. The 27 providers absent from D use the holdings file's supplemental
-  semantic part (maintainer 2026-10-29); the existing global provider is reconciled
-  through reviewed global curation. Regions, quality registers, Swedbank and Telia need
-  normal logical records, not a holdings-only shortcut.
-
-- `swecov/policy/inventory.toml` (1,432 table entries at that pin): today's generated
-  physical placements, not a second authored authority. Its old base/spec pins and
-  variant coordinates cannot be admitted unchanged against D.
-
-- `swecov/slugs/`: 55 legacy pin TOMLs. Convert the adopted ids/anchors to ordinary
-  `ids.toml` ledgers; reconcile duplicates and missing targets, then stop reading these
-  pins. Never regenerate new slugs from old auto-pin files silently.
-
-- `swecov-delivery-docs/`: 66 files in the supplied tree. The old `build_doc_index`
-  selects 11 documents for enrichment (not all 66). One-shot conversion records exactly
-  which documents/sections support each logical fact; keep original documents private.
-  Approved steward document metadata/derived text belongs in the holdings database's
-  supplemental `doc`/subject/FTS tables using the existing document emitter. Public
-  provider documents remain in the base; no third document DB.
-
-**e-holdings conversion worklist.** The accepted inventory has 38,070 physical columns
-and 37,549 mapping entries; the series contain only 991 reviewed mapping entries, so
-explicit decisions alone cannot replace auto-mapping. Against the current D ledgers, 348
-of those 991 targets are absent: 331 mapping uses in existing registers (96 member
-uses), plus 17 mapping uses into five absent registers. These are mapping-use counts,
-not counts of distinct variables. Of the missing uses, 60 contain `enligt-leverans` (one
-absent variable). These counts are against the reviewed D base `8cc73d5fe`, not a claim
-about a future refreshed catalog. Classify every missing target as: an existing D
-id/table to retarget with evidence; a new steward-only definition/slot to mint under the
-steward repo; a genuine provider correction through reviewed global curation; or an
-explicit hold/unmap with a reason. `*-enligt-leverans` definitions are accepted as
-ordinary global curation when evidence records what a provider delivery actually
-contains: D already has 55 such ids in provider registers. SWECOV facts may inform
-global curation (Operator ruling S3). Delivery-only wide slots use separate steward slot
-definitions (maintainer 2026-10-29); legacy long-concept targets are retargeting
-evidence, not a requirement to mint a dangling long concept. The 17 uses need normal
-definitions and ledgers for those five registers, not a redirect to a similarly named
-provider register.
-
-The separate automatic-mapping worklist includes **1,747** inventory mapping entries
-whose provider is absent from D's `curation/inputs.toml` provider list, including
-`scrcr` 427, `ndr` 201, `graviditetsregistret` 196, `swedbank` 126 and `sabo` 125. The
-28 legacy provider files include `lakemedelsverket`, which already exists in D; all
-legacy-provider targets total 1,777, including its 30 uses. These counts overlap the
-reviewed-target worklist and must not be added to it. Reconcile all of them in
-**e-holdings** from the new pinned steward repo; the 991 reviewed mappings are not the
-whole conversion scope.
-
-The maintainer 2026-10-29 confirms the 27 providers' definitions are legally public, but
-rules out a global-catalog home. This does not publish the private census, storage
-export, inventory or original documents. File listings remain metadata under D9; release
-assets include only admitted metadata and safe source locators.
-
-The numbers describe inspected metadata, not microdata or an E build. Move the reviewed
-decisions in `reg_webapp/stewards/swecov/scope.toml` and `series/*.toml`, plus branding,
-into the dedicated repo, preserving locators, reasons and census digest. Move the inputs
-repo's `swecov/` there as well. The private inventory is an accounting/conversion input
-during replacement; thereafter one generic holdings compiler reads the authored
-definitions and census directly. There is no permanent generate-then-reparse inventory
-stage and no steward-specific Python implementation. Every legacy mapping is converted,
-dropped with a reason, or refused at its source. F deletes the old toolkit steward tree
-and input-repo leftovers after the pinned move is verified.
+The 27 providers absent from the reference catalog have legally public definitions but
+no global-catalog home (maintainer 2026-10-29): they live in the holdings file's
+supplemental semantic part. The private census, storage export, inventory and original
+documents are not published; release assets include only admitted metadata and safe
+source locators. One generic holdings compiler reads the authored definitions and census
+directly. There is no generate-then-reparse inventory stage and no steward-specific
+code.
 
 The ordinary catalog pipeline handles missing logical facts before holdings compile:
 `reg-readers` → `reg-frame` → `reg-resolve` → `reg-build` emission. Existing-provider
@@ -1582,8 +1515,9 @@ The generic compiler does the following against the exact catalog/semantic-view 
    `(table_pid, variable_pid)` pairs (`holding_notice_candidate`), so the contested cell
    stays linked to its variables even where no placement of them survives. Do not select
    by longest coverage, first id or label. Uncontested intervals remain independently
-   eligible. Explicit `select_owner` names an evidence-backed variable per
-   column/table/window; it cannot clear an ambiguous catalog segment.
+   eligible. An explicit reviewed column `mapping` (`table_pid`, `variable_pid`,
+   optional `delivery` window) names an evidence-backed variable and replaces automatic
+   matching for that column; it cannot clear an ambiguous catalog segment.
    Partition/projection and duplicate placement checks still apply after owner grouping.
 5. Emit keys `(table_pid, variable_pid, interval)` pointing to the literal physical
    column. An unmatched or empty-intersection column is retained with a
@@ -1618,16 +1552,16 @@ clips/notices; empty intersections yield unmatched notices. Measure actual parti
 counts in e-holdings/e-compare against the pinned D artifact, without claiming that this
 static inspection measured them.
 
-`inventory.py::_fallbacks` is replaced by variable/window lookup: a table explicitly
-serving a variable can serve its other historical delivered spellings in that table,
-only over owed-interval slices where that other spelling is documented, the mapped
-spelling is absent, and no other physical column serves that logical cell. This is an
-explicit-variable fallback, not authority to auto-match an out-of-period historical
-header. Retain the exact physical column; never treat an alias as possession of another
-variable or use fallback to defeat an owner/window refusal.
+The old inventory's historical-spelling fallbacks are replaced by variable/window
+lookup: a table explicitly serving a variable can serve its other historical delivered
+spellings in that table, only over owed-interval slices where that other spelling is
+documented, the mapped spelling is absent, and no other physical column serves that
+logical cell. This is an explicit-variable fallback, not authority to auto-match an
+out-of-period historical header. Retain the exact physical column; never treat an alias
+as possession of another variable or use fallback to defeat an owner/window refusal.
 
-Storage checks run in the holdings compiler **after mapping**, separately from N1. Port
-`steward_storage.py`'s `disagrees`, `narrower`, `uncurated` and `unmatched` findings
+Storage checks run in the holdings compiler **after mapping**, separately from N1: the
+`disagrees`, `narrower`, `uncurated` and `unmatched` findings of the old steward build,
 against type curation and physical precision/scale/length. N1 sees catalog metadata, not
 this storage export. Storage mismatch findings require review; missing or ambiguous
 schema facts and unsafe output types remain publication/materialization refusals. No
@@ -1669,7 +1603,10 @@ is no migration or carry-forward of old physical rows.
 
 Steward attestation can support years absent from the reference catalog (maintainer,
 2026-11-02). Provider labels, definitions and value sets for those years are not a
-prerequisite. A canonical occurrence can be added when all five conditions hold:
+prerequisite. This is a review rule, applied in the steward repository when authoring
+`inputs.reference_occurrences` (its evidence is that repository's
+`reconcile_census_continuity.py` and `census-continuity-evidence.jsonl`); the compiler
+does not evaluate it. A canonical occurrence can be added when all five conditions hold:
 
 1. The same register and delivery-table series are established by the census naming and
    pinned series topology, including its covered-year tables.
@@ -1690,14 +1627,10 @@ A documented steward variable may retain its private definition namespace: both
 placements must have located provenance to the same actual source register and census
 series. That namespace alone does not establish a different physical source.
 
-Each such occurrence and physical binding carries
-`no provider metadata for <years>; identity from census column and series continuity`,
-with located evidence for the conditions, and enters the private global-curation
-worklist. A failed condition is named in the hold and its follow-up. Shared-shape
-choices without a separating fact remain held. Documentary new-variable definitions
-still use ordinary supplemental transcription and ledgers. Compiling these attestations
-never changes global validity or invents historical provider types, code lists or
-definitions.
+A failed condition leaves the column held. Shared-shape choices without a separating
+fact remain held. Documentary new-variable definitions still use ordinary supplemental
+transcription and ledgers. Compiling the declared occurrences never changes global
+validity or invents historical provider types, code lists or definitions.
 
 A census table need not have a logical route when no route is proved. Its held columns
 remain held, and other columns without an accepted owner remain `mapping_missing`.
@@ -1780,7 +1713,9 @@ the global member list omits them. The occurrences' own text and locators are no
 served: a release carries catalog items, never steward working files or census row
 references (maintainer 2026-11-03).
 
-`reg-build/src/holdings/schema.sql` owns the holdings DDL and
+`reg-build/src/holdings/schema.sql` owns the holdings DDL, except
+`holding_reference_occurrence` (created in `reg-build/src/holdings/references.rs`) and
+`holding_relation` (`reg-build/src/holdings/relations.sql`), and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
 schema. `meta` records owner kind/id, holdings generation, catalog generation and file
 digest, the steward pin, the input-manifest digest and the compiler digest. Admission
@@ -1811,8 +1746,9 @@ catalog's half-open day convention:
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot kind/index as topology evidence, unmapped/held reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                                                                   |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
   | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
@@ -1951,7 +1887,7 @@ manifest. Failures name physical metadata and source or binding paths, never row
 
 The v3 `global_fallback` manifest is **dropped**: it described already-held data without
 physical tables, filters or added held keys, and ordered nothing. Today's global logical
-`order` is that use's contract (REBUILD §C and "The logical order" above). Do not emit a
+`order` is that use's contract ("The logical order" above). Do not emit a
 runner-readable fallback or invent physical locations from catalog availability. A
 caller with no holdings gets the logical result only.
 
@@ -2008,11 +1944,12 @@ declares the same nonblank `slot_family`, `slot_kind = "position"`, a distinct p
 integer `slot_index`, and a locator evidencing the slot association. The exception is
 local to the same physical table and logical table/variable; it grants no cross-file
 duplication or temporal coverage. Index spellings such as `2` and `"02"` denote the same
-position and refuse as duplicates. The verifier compares family, kind, index and
-evidence locator with the pinned steward input before accepting the exception. Bare slot
-tags, different families and undeclared duplicates still refuse. Existing distinct
-steward slot variables keep their identities. For a worked target shape (illustrative
-ids pending the normal ledger review),
+position: overlapping placements of the same variable at those indexes refuse as
+duplicates. The verifier compares family, kind and index with the pinned steward input
+(`holdings_slot_source_mismatch`) before accepting the exception. Bare slot tags,
+different families and undeclared duplicates still refuse. Existing distinct steward
+slot variables keep their identities. For a worked target shape (illustrative ids
+pending the normal ledger review),
 `(table_pid = swecov/par-sv-slots, variable_pid = swecov/par-sv-slots/dia1, interval = [2019-01-01,2021-01-01))`
 points to `SWECOV_SOS_SV.DIA1` and carries `slot_kind = position`, `slot_index = 1` on
 its physical column. The provider long DIA is lineage evidence, not the target of that
@@ -2099,11 +2036,12 @@ existing transliteration, run-coalescing and leading-letter rule, with `_` as se
 instead of implementing another normalizer; then apply runner length, Windows-device,
 log-name and case-insensitive collision checks. The current helper hardcodes `-`, so
 implementation parameterizes that same helper or uses its output with `-`→`_`, rather
-than pretending it already has a separator argument. Refuse empty or colliding results
-pending an authored `file_name`; never disambiguate by iteration order. Normalize and
-store `holding_table.file_name` in `reg-build`, which already depends on `reg-resolve`;
-readers consume it without gaining a dependency on the resolver. The old physical-id
-suffix mechanism is accounted as changed, not silently forgotten.
+than pretending it already has a separator argument. An empty or colliding result
+refuses with `holdings_filename_invalid`; never disambiguate by iteration order. An
+authored `file_name` override is added when the first real collision appears. Normalize
+and store `holding_table.file_name` in `reg-build`, which already depends on
+`reg-resolve`; readers consume it without gaining a dependency on the resolver. The old
+physical-id suffix mechanism is accounted as changed, not silently forgotten.
 
 The runner keeps its operational contract ([runner
 design](../reg_mona_runner/DESIGN.md), "The run", "SQL", "Types per format", "No row
@@ -2189,8 +2127,8 @@ proposals (`reg-build/src/proposals/types.rs`, beside V1), not in a SWECOV reade
 runner. Keep source dtype/length evidence distinct from the inferred logical type. A
 disagreement with the reader's `[types]` map emits a located `N1` review with both
 types, evidence and a proposed ordinary `set type` where representable. It does not
-automatically rewrite a segment, clear ambiguity or silence F1. This follows D's
-2026-10-28 ruling in REBUILD.md: curate only evidenced affected occurrences; unresolved
+automatically rewrite a segment, clear ambiguity or silence F1. This follows the
+maintainer ruling of 2026-10-28: curate only evidenced affected occurrences; unresolved
 integer/decimal switches remain visible. The input basis is settled: N1 infers from the
 type string and value pattern and emits review on disagreement (clean-room design §4.5).
 Value patterns mean documented code literals/pattern metadata, never MONA row samples. A
@@ -2293,46 +2231,44 @@ consumer, not an E generator implementation.
 
 ### Vocabulary checklist and proof
 
-This checklist inventories today's implementation rather than freezing it. Source:
-`inventory.py`, `holdings_compile.py`, `holdings_accounting.py`, `steward_spec.py` and
-`steward_storage.py` in `reg_meta_build/src/reg_meta_build/`, their holdings/steward
-cases, and the SWECOV series.
+This checklist inventories the retired Python builder's holdings and steward code, their
+holdings/steward cases and the SWECOV series, and records what became of each item.
 
-  | Today's item                                               | Disposition                   | Reason                                                                                                                                                                            |
-  | ---------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | Annual tables; pooled editions; disjoint period lists      | Kept                          | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                                                 |
-  | `edition_spelling` (8 nonannual series)                    | Kept                          | Authored LA/VT/HT anchors, using the existing period grammar; no school year guessed from a filename.                                                                             |
-  | Point-date status editions                                 | Kept                          | RTB postnr's `2015-12-31` is a one-day status, not a calendar year.                                                                                                               |
-  | Partitions                                                 | Kept                          | Declared disjoint shards such as Swedbank `v15`, not competing deliveries hidden by a label.                                                                                      |
-  | Projections                                                | Kept                          | Own grain/keys/file; parent is not a projection.                                                                                                                                  |
-  | Wide position/month/year members (197/36/5 uses)           | Changed                       | Existing interval-valid D variables win, including resolution of the five year members; mint only missing steward slots (maintainer 2026-10-29). Index stays topology evidence.   |
-  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding uses ordinary supplemental coding tables, per the Operator decision above.                   |
-  | `select_owner` (280 uses)                                  | Changed                       | Explicit evidence-backed variable choice per table/window; cannot clear catalog ambiguity.                                                                                        |
-  | `hold` + `follow_up` versus `unmap`                        | Kept                          | Interim unresolved metadata with issue versus permanent non-mapping; neither is silently auto-mapped.                                                                             |
-  | `graft_onto`                                               | Changed                       | Convert provider gap-fill candidates to reviewed ordinary assertions/setters, or steward definitions; no generator silently grafts physical facts into provider history.          |
-  | Historical spelling `_fallbacks`                           | Changed                       | Variable/interval lookup serves historical forms only without another physical owner; no spelling selector or alias-based possession of another variable.                         |
-  | Row-period columns, `ranges[]` OR filters                  | Kept                          | Union of sorted requested ranges, optional inclusive ends and explicit encodings; confirmed by maintainer 2026-10-29; annual physical tables have no row filter.                  |
-  | Column-role row keys; carried keys; key-only files         | Kept                          | Roles, no key table; only required held row keys ride along, no arbitrary identifiers.                                                                                            |
-  | Timeless/year-independent; retained unknown                | Changed                       | Explicit dispositions; unknown stays accounted/unavailable. Legacy `_default` variant restrictions go.                                                                            |
-  | Excluded and lookup dispositions                           | Kept                          | Exact census accounting without observation availability.                                                                                                                         |
-  | Companion/crosswalk tables, including `LopNrByte`          | Kept, deferred                | Account separately from observations; no automatic extraction of pseudonym crosswalks. If the real exit order needs one, use explicit reviewed selection (maintainer 2026-10-29). |
-  | Unmapped columns and coverage denominator                  | Kept                          | Retain unmatched columns as mapping_missing notices/worklist rows; publication continues. Every-held-column orderability is a tracked target.                                     |
-  | Combined tables; several logical mappings per column       | Kept                          | Each routed table/variable/window must validate; one physical extraction column may have several references.                                                                      |
-  | Exact physical names; Stata aliases                        | Kept                          | Literal SQL identifiers and format-safe output; spelling is evidence.                                                                                                             |
-  | v3 logical filename template + physical-id suffix          | Changed                       | Physical-table names use shared slugify with `_`; periods stay in manifest metadata (maintainer 2026-10-29), replacing the v3 ruling.                                             |
-  | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                              |
-  | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                           |
-  | Warned-gap catalog-state clones                            | Dropped                       | Ordinary supplemental coding tables preserve provenance and warn-not-hold notices; never copy widened global segments or add a holdings-only exception contract.                  |
-  | Alias or succession as possession shortcut                 | Dropped                       | Documentary relations grant no possession.                                                                                                                                        |
-  | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                       |
-  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                            |
-  | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                                      |
-  | Legacy slug pins (`swecov/slugs/`)                         | Changed                       | Reconcile 55 pin files into normal ledgers; no silent fallback slug minting.                                                                                                      |
-  | Steward delivery documents                                 | Changed                       | Pin selected source evidence/derived text; supplemental doc/FTS tables, original documents stay private.                                                                          |
-  | Generated inventory and candidate/base/spec pins           | Changed                       | Preserve provenance/accounting; remove intermediate authority.                                                                                                                    |
-  | `global_fallback` physical manifest                        | Dropped                       | The global logical order already describes the unlocated selection; it cannot run on MONA.                                                                                        |
-  | `project_unnamed`                                          | Kept for physical order       | Blank/whitespace names cannot identify manifest provenance; logical drafts remain valid.                                                                                          |
-  | Project-received inventories and mocks                     | Kept as deferred domain scope | `owner.kind` retained; E ships steward mode only until a real project input format exists.                                                                                        |
+  | Today's item                                               | Disposition                   | Reason                                                                                                                                                                                |
+  | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Annual tables; pooled editions; disjoint period lists      | Kept                          | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                                                     |
+  | `edition_spelling` (8 nonannual series)                    | Converted                     | LA/VT/HT anchors converted into the authored `delivery`, using the existing period grammar; no school year guessed from a filename. Not a config field: the closed config refuses it. |
+  | Point-date status editions                                 | Kept                          | RTB postnr's `2015-12-31` is a one-day status, not a calendar year.                                                                                                                   |
+  | Partitions                                                 | Kept                          | Declared disjoint shards such as Swedbank `v15`, not competing deliveries hidden by a label.                                                                                          |
+  | Projections                                                | Kept                          | Own grain/keys/file; parent is not a projection.                                                                                                                                      |
+  | Wide position/month/year members (197/36/5 uses)           | Changed                       | Existing interval-valid D variables win, including resolution of the five year members; mint only missing steward slots (maintainer 2026-10-29). Index stays topology evidence.       |
+  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding uses ordinary supplemental coding tables, per the Operator decision above.                       |
+  | `select_owner` (280 uses)                                  | Changed                       | Explicit reviewed column `mapping` per table/window; cannot clear catalog ambiguity. Not a config field: the closed config refuses it.                                                |
+  | `hold` + `follow_up` versus `unmap`                        | Kept                          | Interim unresolved metadata with issue versus permanent non-mapping; neither is silently auto-mapped.                                                                                 |
+  | `graft_onto`                                               | Changed                       | Convert provider gap-fill candidates to reviewed ordinary assertions/setters, or steward definitions; no generator silently grafts physical facts into provider history.              |
+  | Historical spelling `_fallbacks`                           | Changed                       | Variable/interval lookup serves historical forms only without another physical owner; no spelling selector or alias-based possession of another variable.                             |
+  | Row-period columns, `ranges[]` OR filters                  | Kept                          | Union of sorted requested ranges, optional inclusive ends and explicit encodings; confirmed by maintainer 2026-10-29; annual physical tables have no row filter.                      |
+  | Column-role row keys; carried keys; key-only files         | Kept                          | Roles, no key table; only required held row keys ride along, no arbitrary identifiers.                                                                                                |
+  | Timeless/year-independent; retained unknown                | Changed                       | Explicit dispositions; unknown stays accounted/unavailable. Legacy `_default` variant restrictions go.                                                                                |
+  | Excluded and lookup dispositions                           | Kept                          | Exact census accounting without observation availability.                                                                                                                             |
+  | Companion/crosswalk tables, including `LopNrByte`          | Kept, deferred                | Account separately from observations; no automatic extraction of pseudonym crosswalks. If the real exit order needs one, use explicit reviewed selection (maintainer 2026-10-29).     |
+  | Unmapped columns and coverage denominator                  | Kept                          | Retain unmatched columns as mapping_missing notices/worklist rows; publication continues. Every-held-column orderability is a tracked target.                                         |
+  | Combined tables; several logical mappings per column       | Kept                          | Each routed table/variable/window must validate; one physical extraction column may have several references.                                                                          |
+  | Exact physical names; Stata aliases                        | Kept                          | Literal SQL identifiers and format-safe output; spelling is evidence.                                                                                                                 |
+  | v3 logical filename template + physical-id suffix          | Changed                       | Physical-table names use shared slugify with `_`; periods stay in manifest metadata (maintainer 2026-10-29), replacing the v3 ruling.                                                 |
+  | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                                  |
+  | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                               |
+  | Warned-gap catalog-state clones                            | Dropped                       | Ordinary supplemental coding tables preserve provenance and warn-not-hold notices; never copy widened global segments or add a holdings-only exception contract.                      |
+  | Alias or succession as possession shortcut                 | Dropped                       | Documentary relations grant no possession.                                                                                                                                            |
+  | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                           |
+  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                                |
+  | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                                          |
+  | Legacy slug pins (`swecov/slugs/`)                         | Changed                       | Reconcile 55 pin files into normal ledgers; no silent fallback slug minting.                                                                                                          |
+  | Steward delivery documents                                 | Changed                       | Pin selected source evidence/derived text; supplemental doc/FTS tables, original documents stay private.                                                                              |
+  | Generated inventory and candidate/base/spec pins           | Changed                       | Preserve provenance/accounting; remove intermediate authority.                                                                                                                        |
+  | `global_fallback` physical manifest                        | Dropped                       | The global logical order already describes the unlocated selection; it cannot run on MONA.                                                                                            |
+  | `project_unnamed`                                          | Kept for physical order       | Blank/whitespace names cannot identify manifest provenance; logical drafts remain valid.                                                                                              |
+  | Project-received inventories and mocks                     | Kept as deferred domain scope | `owner.kind` retained; E ships steward mode only until a real project input format exists.                                                                                            |
 
 Companions remain the old design's explicit deferral (`f5993d7d8^`, "Deferred: companion
 tables"): VaraText, school-code crosswalks, FEK keys and `LopNrByte` are not ordinary
@@ -2353,15 +2289,13 @@ located codes; `reg-build verify` owns structural invariants. Adapt the existing
 `test_order.py` harness in E to distinguish logical and physical requests and load the
 new holdings fixtures, including a mismatched catalog/holdings pair and an actual-file
 spelling differing from the latest catalog spelling. Project-only cases are deferred.
-This restores the holdings/steward cases removed in C, as REBUILD §C requires; it does
-not introduce another test suite or resolver oracle. Broader test additions/audit remain
-F work under the no-new-tests rebuild rule.
+This restores the holdings/steward cases removed in C; it does not introduce another
+test suite or resolver oracle.
 
 `conformance/test_release_order.py` keeps its independent published-catalog SQL census,
-repeat-byte and HTTP/MCP checks. Its adapted steward mode in E samples accepted
-holdings, obtains physical names/windows/keys from an independent relational census, and
-compares plans without reimplementing logical resolution. It must not use the
-materializer to derive expected values. Real-artifact runs are maintainer scheduled.
+repeat-byte and HTTP/MCP checks. It has no steward mode. The holdings release proof is
+release step 8g (`reg-build diff --holdings` against the previous paired release) plus
+the integration workflow's `swecov` leg. Real-artifact runs are maintainer scheduled.
 
 The runner and its manifests moved together (#2125). Its testthat suite reads the
 materialize corpus's manifests and covers the pre-database refusals only; extraction is
@@ -2369,18 +2303,17 @@ verified by hand on MONA, with no SQL Server suite (#2126; [runner
 design](../reg_mona_runner/DESIGN.md), "Tests"). Local fixtures prove machinery only. E
 exits only after the maintainer runs one reviewed real order on MONA.
 
-**Holdings comparison, e-compare.** Follow REBUILD's proof model, not byte parity. The
-orderable-column/held-period census per physical table was compared with the released
-0.64.0 SWECOV artifact (#2103), classifying every difference as intended design/curation
-carryover, defect, or unresolved input work; a failed/missing mapping is never dropped
-from the denominator. From 0.72.0 on, every release compares the census with the
-previous paired release (`reg-build diff --holdings`, #2143, #2172; release step 8g).
-The representative-order comparison with 0.64.0 was ruled unneeded (maintainer
-2026-11-04; #2070 closed).
+**Holdings comparison, e-compare.** The comparison checks reader-visible facts, not byte
+parity ("What the rebuild is checked against" above). The orderable-column/held-period
+census per physical table was compared with the released 0.64.0 SWECOV artifact (#2103),
+classifying every difference as intended design/curation carryover, defect, or
+unresolved input work; a failed/missing mapping is never dropped from the denominator.
+From 0.72.0 on, every release compares the census with the previous paired release
+(`reg-build diff --holdings`, #2143, #2172; release step 8g). The representative-order
+comparison with 0.64.0 was ruled unneeded (maintainer 2026-11-04; #2070 closed).
 
-This stage replaces `reg_webapp/stewards/swecov/build_catalog.py` and Python
-`extend-db`; they remain frozen until F deletes them. No Rust port of their overlay or
-warned-state cloning pipeline survives as a compatibility layer.
+This stage replaces the retired Python SWECOV steward build. No Rust port of its overlay
+or warned-state cloning pipeline survives as a compatibility layer.
 
 ## Project semantic validation
 
@@ -2757,4 +2690,5 @@ Column names are universal English; values stay provider-native. Source names an
 spellings are evidence on occurrences; descriptive text varies over time in
 `variable_text`. Type, length, value set, sensitivity and identifier status belong to
 segments. Sensitivity follows the source per segment rather than a variable-wide flag.
-Population metadata belongs to stated releases. Holdings arrive in milestone E.
+Population metadata belongs to stated releases. Holdings are a separate layer
+("Holdings").

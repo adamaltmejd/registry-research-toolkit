@@ -3,13 +3,13 @@
 kind = "set"
 subject = "arbetsflode: atc4pos"
 fields = { "classification" = "class/atc/atc" }
-evidence = "reg_meta_build/curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
+evidence = "python-builder-pre-cutover:curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
 
 [[statement]]
 kind = "set"
 subject = "handlagda: atc4pos"
 fields = { "classification" = "class/atc/atc" }
-evidence = "reg_meta_build/curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
+evidence = "python-builder-pre-cutover:curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
 
 [[statement]]
 kind = "set"

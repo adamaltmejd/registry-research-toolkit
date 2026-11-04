@@ -3,211 +3,211 @@
 kind = "set"
 subject = "par-sv: lk where label = 'Folkbokföringsort (län, kommun) 31 dec, från SCB'"
 fields = { "label" = "Folkbokföringsort (län, kommun) 31 dec" }
-evidence = "reg_meta_build/curation/registers/sos/par.toml:540\n\nBoth exact annual LK originals positively state identical31December observation wording and SCB source attribution. Use the existing PAR_OV name also for PAR_SV; redundant source attribution remains explicitly SCB. Retain all monthly care-event originals, source descriptions, periods, classifications and raw contexts."
+evidence = "python-builder-pre-cutover:curation/registers/sos/par.toml:540\n\nBoth exact annual LK originals positively state identical31December observation wording and SCB source attribution. Use the existing PAR_OV name also for PAR_SV; redundant source attribution remains explicitly SCB. Retain all monthly care-event originals, source descriptions, periods, classifications and raw contexts."
 
 [[statement]]
 kind = "set"
 subject = "par-sv: atco where label = 'ATC-kod som komplement till åtgärdskod, finns i plattfil, flera koder i en sträng'"
 fields = { "label" = "ATC-kod som komplement till åtgärdskod" }
-evidence = "reg_meta_build/curation/registers/sos/par.toml:858\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/par.toml:858\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "par-sv: lt_in"
 fields = { "label" = "Uppgiftslämnare" }
-evidence = "reg_meta_build/curation/registers/sos/par.toml:870\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/par.toml:870\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "par-tv: lt_in"
 fields = { "label" = "Uppgiftslämnare" }
-evidence = "reg_meta_build/curation/registers/sos/par.toml:882\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/par.toml:882\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "par-ov: dia_ant"
 fields = { "label" = "Antal diagnoskoder" }
-evidence = "reg_meta_build/curation/registers/sos/par.toml:378\n\nCorrect the duplicated plural ending using the peer name; both descriptions count diagnosis codes. Original rows row:16 and row:89 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "python-builder-pre-cutover:curation/registers/sos/par.toml:378\n\nCorrect the duplicated plural ending using the peer name; both descriptions count diagnosis codes. Original rows row:16 and row:89 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-1"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-10"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-11"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-12"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-13"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-14"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-15"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-16"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-17"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-18"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-19"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-2"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-20"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-21"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-22"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-23"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-24"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-25"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-26"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-27"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-28"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-29"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-3"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-30"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-4"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-5"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-6"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-7"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-8"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-9"
 fields = { "sets" = ["atgardsdatum"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+evidence = "D-9 membership only: python-builder-pre-cutover:curation/registers/sos/par.toml:16"
 
 [[statement]]
 kind = "set"
@@ -1149,133 +1149,133 @@ evidence = "The n:atc and n:atco source keys each conflate actual ATC code strin
 kind = "set"
 subject = "var:anestesikod-1"
 fields = { "description" = "Den första koden för eventuell anestesi vid operation, enligt Rekommendationer för registrering av anestesiarbete från 1997." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:732\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-1"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:732\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-1"
 
 
 [[statement]]
 kind = "set"
 subject = "var:anestesikod-2"
 fields = { "description" = "Den andra koden för eventuell anestesi vid operation, enligt Rekommendationer för registrering av anestesiarbete från 1997." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:741\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-2"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:741\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-2"
 
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum"
 fields = { "description" = "Datum då åtgärden påbörjades, i SAS-datum, i at-fil" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:276\n\nComma spacing only. Original rows row:12 and row:85 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:276\n\nComma spacing only. Original rows row:12 and row:85 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnos"
 fields = { "description" = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget max vid insamling men endast 30 diagnoskoder läggs i strängen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:426\n\nWord order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:426\n\nWord order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-atc-skada-forgiftning"
 fields = { "description" = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:288\n\nHard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:288\n\nHard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:fodelsedatum-sas-m"
 fields = { "description" = "Patientens födelsedatum uttryckt som SAS-datum." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/fodelsedatum-sas-m"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/fodelsedatum-sas-m"
 
 
 [[statement]]
 kind = "set"
 subject = "var:icd"
 fields = { "description" = "Version av ICD-klassifikationen som används för diagnoskoderna, inklusive huvuddiagnosen HDIA." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:777\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/icd"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:777\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/icd"
 
 
 [[statement]]
 kind = "set"
 subject = "var:insatt"
 fields = { "description" = "Varifrån patienten skrivs in, det vill säga inskrivningssätt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:786\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/insatt"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:786\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/insatt"
 
 
 [[statement]]
 kind = "set"
 subject = "var:lt-klin"
 fields = { "description" = "Inrapporterad kod för klinik eller medicinskt verksamhetsområde för vårdkontakten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:804\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/lt-klin"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:804\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/lt-klin"
 
 
 [[statement]]
 kind = "set"
 subject = "var:medicinskt-verksamhetsomrade"
 fields = { "description" = "Klinik, verksamhetsenhet, vårdenhet eller basenhet för patientens vårdkontakt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/medicinskt-verksamhetsomrade"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/medicinskt-verksamhetsomrade"
 
 
 [[statement]]
 kind = "set"
 subject = "var:op-ant"
 fields = { "description" = "Antal inrapporterade åtgärder; antalet kan överstiga 30." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:822\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/op-ant"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:822\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/op-ant"
 
 
 [[statement]]
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer eller samordningsnummer på patient. Om reservnummer är variabeln tom och värdet finns i RNR." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:390\n\nDuplicated space only. Original rows row:58 and row:161 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:390\n\nDuplicated space only. Original rows row:58 and row:161 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:planerad-vardkontakt"
 fields = { "description" = "Anger om vårdkontakten varit planerat eller ej" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:402\n\nDefinite noun form only; preserve identical planned-contact code meanings. Original rows row:165 and row:62 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:402\n\nDefinite noun form only; preserve identical planned-contact code meanings. Original rows row:165 and row:62 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:sjukhus"
 fields = { "description" = "Sjukhus eller sjukvårdsinrättning för vårdkontakten, knuten till vårdgivare och fysisk plats." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/sjukhus"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/sjukhus"
 
 
 [[statement]]
 kind = "set"
 subject = "var:uppgiftslamnare"
 fields = { "description" = "Inrapporterande region, angiven med landstingsnummer, eller privat rapportör, angiven med PV." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/uppgiftslamnare"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/uppgiftslamnare"
 
 
 [[statement]]
 kind = "set"
 subject = "var:utdatum"
 fields = { "description" = "Det datum då patienten skrivits ut, i SAS-datum" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:894\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:894\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
 
 
 [[statement]]
 kind = "set"
 subject = "var:utsatt"
 fields = { "description" = "Vad patienten skrivs ut till efter avslutad vårdkontakt, eller om patienten avlidit." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:849\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/utsatt"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:849\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/utsatt"
 
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-eller-atc"
 fields = { "description" = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:414\n\nHard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:414\n\nHard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskoder"
 fields = { "description" = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 [[statement]]
 kind = "set"
@@ -1293,253 +1293,253 @@ evidence = "Docs description review 2026-11-02; one variable, one description. T
 kind = "set"
 subject = "set:atgardsdatum"
 fields = { "label" = "Åtgärdsdatum", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-1"
 fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-10"
 fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-11"
 fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-12"
 fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-13"
 fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-14"
 fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-15"
 fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-16"
 fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-17"
 fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-18"
 fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-19"
 fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-2"
 fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-20"
 fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-21"
 fields = { "facets" = { "ordinal" = { "value" = "21", "label" = "21" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-22"
 fields = { "facets" = { "ordinal" = { "value" = "22", "label" = "22" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-23"
 fields = { "facets" = { "ordinal" = { "value" = "23", "label" = "23" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-24"
 fields = { "facets" = { "ordinal" = { "value" = "24", "label" = "24" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-25"
 fields = { "facets" = { "ordinal" = { "value" = "25", "label" = "25" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-26"
 fields = { "facets" = { "ordinal" = { "value" = "26", "label" = "26" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-27"
 fields = { "facets" = { "ordinal" = { "value" = "27", "label" = "27" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-28"
 fields = { "facets" = { "ordinal" = { "value" = "28", "label" = "28" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-29"
 fields = { "facets" = { "ordinal" = { "value" = "29", "label" = "29" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-3"
 fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-30"
 fields = { "facets" = { "ordinal" = { "value" = "30", "label" = "30" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-4"
 fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-5"
 fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-6"
 fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-7"
 fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-8"
 fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardsdatum-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:11; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:yttre-orsakskod"
 fields = { "label" = "Yttre orsakskod", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-1"
 fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-3"
 fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-4"
 fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-5"
 fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-6"
 fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-7"
 fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:18; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:anestesikod"
 fields = { "label" = "Anestesikod", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:anestesikod-1"
 fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:anestesikod-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/par.toml:25; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"

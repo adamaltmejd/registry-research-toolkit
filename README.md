@@ -3,12 +3,11 @@
 Tools for working with Swedish registry microdata on [SCB
 MONA](https://www.scb.se/mona).
 
-  | Package                             | Description                                                                   |
-  | ----------------------------------- | ----------------------------------------------------------------------------- |
-  | [`crates/`](crates/)                | Rust runtime: the `reg-meta` server (HTTP API and MCP) and the catalog reader |
-  | [`reg_meta_build`](reg_meta_build/) | Build the catalog DBs from agency exports (Python, maintainer-only)           |
-  | [`reg_webapp`](reg_webapp/)         | Rust server container and hosted MCP edge deployment                          |
-  | [`plugins/`](plugins/)              | The `microdata-tools-se` agent plugin                                         |
+  | Package                     | Description                                                                         |
+  | --------------------------- | ----------------------------------------------------------------------------------- |
+  | [`crates/`](crates/)        | Rust: the `reg-meta` server (HTTP API and MCP), the catalog reader, and `reg-build` |
+  | [`reg_webapp`](reg_webapp/) | Rust server container and hosted MCP edge deployment                                |
+  | [`plugins/`](plugins/)      | The `microdata-tools-se` agent plugin                                               |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 

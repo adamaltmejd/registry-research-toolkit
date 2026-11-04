@@ -71,14 +71,18 @@ pub fn load_classifications(root: &Path) -> Result<Vec<LocatedClassification>, R
     let text = std::fs::read_to_string(&path).map_err(|e| error(&name, e.to_string()))?;
     let inventory: Inventory = toml::from_str(&text).map_err(|e: toml::de::Error| {
         error(
-            &format!("{name}:{}", line_at(&text, e.span().map_or(0, |s| s.start))),
+            &format!(
+                "{name}:{}",
+                Lines::new(&text).at(e.span().map_or(0, |s| s.start))
+            ),
             e.message(),
         )
     })?;
+    let lines = Lines::new(&text);
     let mut out = Vec::new();
     let mut seen = BTreeMap::new();
     for raw in inventory.classification {
-        let line = line_at(&text, raw.span().start);
+        let line = lines.at(raw.span().start);
         let at = format!("{name}:{line}");
         let mut c: Classification = toml::Value::Table(raw.into_inner())
             .try_into()
@@ -149,12 +153,13 @@ pub fn load(root: &Path) -> Result<Vec<LocatedStatement>, ReadError> {
             let name = path.display().to_string();
             let text = std::fs::read_to_string(&path).map_err(|e| error(&name, e.to_string()))?;
             let parsed: File = toml::from_str(&text).map_err(|e: toml::de::Error| {
-                let line = line_at(&text, e.span().map_or(0, |s| s.start));
+                let line = Lines::new(&text).at(e.span().map_or(0, |s| s.start));
                 error(&format!("{name}:{line}"), e.message())
             })?;
+            let lines = Lines::new(&text);
             let mut seen = BTreeMap::new();
             for raw in parsed.statement {
-                let line = line_at(&text, raw.span().start);
+                let line = lines.at(raw.span().start);
                 let location = format!("{name}:{line}");
                 let statement: Statement = toml::Value::Table(raw.into_inner())
                     .try_into()
@@ -181,8 +186,25 @@ pub fn load(root: &Path) -> Result<Vec<LocatedStatement>, ReadError> {
     Ok(out)
 }
 
-fn line_at(text: &str, offset: usize) -> usize {
-    text[..offset].chars().filter(|&c| c == '\n').count() + 1
+/// Byte offsets of a file's newlines, so a statement's line is a binary search: counting
+/// from the file start per statement was quadratic in the multi-MB curation files (#2196).
+struct Lines(Vec<usize>);
+
+impl Lines {
+    fn new(text: &str) -> Self {
+        Self(
+            text.bytes()
+                .enumerate()
+                .filter(|&(_, b)| b == b'\n')
+                .map(|(i, _)| i)
+                .collect(),
+        )
+    }
+
+    /// The 1-based line holding byte `offset`.
+    fn at(&self, offset: usize) -> usize {
+        self.0.partition_point(|&newline| newline < offset) + 1
+    }
 }
 
 fn directory_name(path: &Path) -> Result<String, ReadError> {

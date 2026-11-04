@@ -5,7 +5,6 @@
  * structure).
  */
 import { encodeFqid } from "./api";
-import { foldSearch } from "./reg_core";
 import type { Route } from "./router";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -25,11 +24,22 @@ export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 // ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so
-// all four surfaces fold identically, and identically to the server's search
-// (`fold_search`, crates/DESIGN.md "Text folds"): "lon" matches both "Löne…"
-// and "lön" (diacritic-blind), "strasse" matches "Straße", and the needle is
-// matched against BOTH display name AND slug/FQID. The fold is reg-core's own
-// (`foldSearch`, through WASM), not a copy.
+// all four surfaces fold identically (`foldSearch`): "lon" matches both "Löne…"
+// and "lön" (diacritic-blind), and the needle is matched against BOTH display
+// name AND slug/FQID.
+
+/** The browse filter's fold: NFKD, lower case, combining marks dropped, one
+ * space between words. It is close to the server search's fold, not the same
+ * (maintainer 2026-11-04): "ss" does not match "ß", since JavaScript lower-cases
+ * "ß" to itself where full case folding gives "ss". */
+export function foldSearch(text: string): string {
+  return text
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/\p{M}/gu, "")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
 
 /** Whether any of `haystacks` contains the folded `needle` (substring). An empty
  * (or whitespace-only) needle matches everything — the unfiltered full-list
@@ -263,13 +273,13 @@ export function humanizeClassificationSlug(slug: string): string {
 
 // ── State-window display (#309 + #321) ──────────────────────────────────────
 
-/** The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
- * default) — never shown to the user (#309). */
+/** The open-ended `valid_to` sentinel (`reg_frame::OPEN_END`, the
+ * builder's unstated upper bound) — never shown to the user (#309). */
 export const OPEN_ENDED_VALID_TO = "9999-12-31";
 
-/** The yearless-fallback `variable_state.valid_from` sentinel — the floor
- * reg_meta_build writes when a state's start year is unknown (`_VALID_FROM_UNKNOWN`
- * in `reg_meta_build/db.py`; the `0001` twin of the `9999` ceiling). Like the ceiling it must NOT read as a literal year:
+/** The yearless-fallback `valid_from` sentinel — the floor the
+ * builder writes when a state's start is unknown (`reg_frame::OPEN_START`; the
+ * `0001` twin of the `9999` ceiling). Like the ceiling it must NOT read as a literal year:
  * coverage `from` is unbounded/unknown for it, never year 1 (which would let the
  * slider emit out-of-grammar wires like `1..2026`). */
 export const YEARLESS_VALID_FROM = "0001-01-01";
