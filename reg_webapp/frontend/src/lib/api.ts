@@ -435,30 +435,6 @@ export async function getSegments(
   return items;
 }
 
-/** The variables a table read names at once. Requests and server work pull apart: the
- * edge counts requests (at least rows / 200, the page size), while the server rebuilds
- * a read's whole row set for each page it serves. On a 107-column LISA individer-16plus
- * draft (1,543 rows) 10 gives 11 single-page reads, 25 gives 9 reads building 3,010
- * rows, 100 gives 9 reads building 11,812 (measured for #2232). Chunks run in parallel.
- * simplify: tuned on that one table; a read form without the page cap would serve each
- * chunk once, so revisit if a page load of a larger draft passes the edge's budget. */
-const TABLE_READ_VARIABLES = 25;
-
-/** `variables`' rows in `table`, a read per 25 variables, in parallel (#2232). */
-export async function getTableSegments(
-  table: string,
-  variables: readonly string[],
-  options?: { signal?: AbortSignal },
-): Promise<CatalogSegment[]> {
-  const chunks: string[][] = [];
-  for (let i = 0; i < variables.length; i += TABLE_READ_VARIABLES)
-    chunks.push(variables.slice(i, i + TABLE_READ_VARIABLES));
-  const pages = await Promise.all(
-    chunks.map((chunk) => getSegments(table, { ...options, variables: chunk })),
-  );
-  return pages.flat();
-}
-
 /** Review items and notices for a catalog subject, including its descendants: one
  * group per severity and code, with its count and a first page of items. `code` with a
  * group's `next_cursor` fetches that group's next page. */

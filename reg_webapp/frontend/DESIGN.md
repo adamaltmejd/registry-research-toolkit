@@ -397,35 +397,34 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   shell is capped at `shell-max` and centred, so a wide screen gets wider lists, not a
   stranded pane. The variables column is always there: before a register is chosen it
   holds an empty state ("Choose a register to list its variables."). The register column
-  draws from the one catalog-root read, which lists each provider's registers, so it
-  shows whole or not at all, never a provider still loading (#2232). The two column
-  headers share one height, so their rules line up. Every group is open by default; a
-  header triangle collapses it, the column header offers one toggle that reads "Collapse
-  all" while any group is open and "Expand all" once all are closed, and collapse state
-  is remembered per user. A group's items are indented `spacing.3` from the group's
-  label, not a full column (toggle and indent maintainer-decided 2026-10-22). A group
-  header is the `label` level at weight 500 in `text-muted` on `bg`, its disclosure a
-  small `text-faint` triangle turned −90° when closed, with no rule under it. Rows are
-  selectable options, not links. On a variable or group page its register's row stays
-  selected, and pressing it opens the register. Selection moves with arrow keys across
-  columns, and selecting a row opens its page; type-ahead moves focus only. Left on a
-  group header collapses it, Right expands it; Right on a register row moves to the
-  variables column, and Left there moves back. Collapsing a group never changes the
-  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
-  For a register the second column is flat, a concept group folded to one item (#303),
-  its identifier and panel-key variables first and the rest in Swedish collation; on a
-  group's page (or a member's, which shows that page) the same list stays and the
-  group's row is selected. The members are lanes on that page, not rows in the column. A
-  browse column fills the viewport below the top bar and scrolls its own list. Every
-  item and group carries its in-project mark on the right when it has one. Below the
-  single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two columns leave
-  the detail pane under 400px, #2107) the columns stack, one at a time; the way back is
-  the breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its
-  own line above the trail so it reads as an action, not a path segment (#1824). Every
-  page's trail leads with it below the breakpoint (and only there: beside the columns it
-  would repeat them), and it opens the register list; while the search holds text it
-  reads "Show matching registers", since the list the search filters is off screen. Do
-  not mint new breakpoints.
+  appears whole or not at all, never with a provider still loading (#2232). The two
+  column headers share one height, so their rules line up. Every group is open by
+  default; a header triangle collapses it, the column header offers one toggle that
+  reads "Collapse all" while any group is open and "Expand all" once all are closed, and
+  collapse state is remembered per user. A group's items are indented `spacing.3` from
+  the group's label, not a full column (toggle and indent maintainer-decided
+  2026-10-22). A group header is the `label` level at weight 500 in `text-muted` on
+  `bg`, its disclosure a small `text-faint` triangle turned −90° when closed, with no
+  rule under it. Rows are selectable options, not links. On a variable or group page its
+  register's row stays selected, and pressing it opens the register. Selection moves
+  with arrow keys across columns, and selecting a row opens its page; type-ahead moves
+  focus only. Left on a group header collapses it, Right expands it; Right on a register
+  row moves to the variables column, and Left there moves back. Collapsing a group never
+  changes the selection: the detail pane keeps its page, and keyboard focus moves to the
+  group row. For a register the second column is flat, a concept group folded to one
+  item (#303), its identifier and panel-key variables first and the rest in Swedish
+  collation; on a group's page (or a member's, which shows that page) the same list
+  stays and the group's row is selected. The members are lanes on that page, not rows in
+  the column. A browse column fills the viewport below the top bar and scrolls its own
+  list. Every item and group carries its in-project mark on the right when it has one.
+  Below the single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two
+  columns leave the detail pane under 400px, #2107) the columns stack, one at a time;
+  the way back is the breadcrumb's first crumb, "Browse registers", drawn as a `default`
+  button on its own line above the trail so it reads as an action, not a path segment
+  (#1824). Every page's trail leads with it below the breakpoint (and only there: beside
+  the columns it would repeat them), and it opens the register list; while the search
+  holds text it reads "Show matching registers", since the list the search filters is
+  off screen. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -827,25 +826,26 @@ grow new visual language meanwhile.
   ask first in a `Dialog`. Under them, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
   the verdict, "Tables" (one card per table) and "What will be delivered". A card's
-  column years come from `segments` reads at the table for the columns not yet read, 25
-  columns a read, in parallel (#2232), never a read per column; a column added later
-  reads only itself. There is one check and no button for it: WASM on every edit, then
-  `order` 350 ms after the last edit WASM accepted. The verdict is one `StatusRow`:
-  "Ready to order", "Has warnings" with the count, "Can't be ordered yet" with the count
-  of problems, or "Has problems" for a file that fails the structure check, whose
-  problems are listed in full under it; a check that did not run is an `err` row with
-  Retry. While a newer check runs, the verdict, its list and "What will be delivered"
-  keep the previous check's answer (not a check that did not run) with `aria-busy`; a
-  `Skeleton` shows only when there is none, or when a table or column was added, removed
-  or moved since, so the earlier findings would sit on the wrong card. "What will be
-  delivered" is the order the catalog would serve, shown only when the project can be
-  ordered: per table its name and years, each column as a `ColumnChip` (with its years
-  only where they differ from the table's) beside the variable's name, "Years not
-  available" per column the period asks more of than the table has, and the "Row
-  identifier" columns. There is no order-file download: the steward's instructions say
-  how to order. With no project the page is one `EmptyState`, "No project yet", with
-  "Create a project" and "Open a project file…". Below `breakpoint-narrow` a column's
-  row on a card stacks: its name and Remove, its spans, then Type.
+  column years load with its own table, not with other cards: a column the catalog does
+  not know shows its own error and leaves the card's other columns their years, and
+  adding or removing a column reloads no other (#2232). There is one check and no button
+  for it: WASM on every edit, then `order` 350 ms after the last edit WASM accepted. The
+  verdict is one `StatusRow`: "Ready to order", "Has warnings" with the count, "Can't be
+  ordered yet" with the count of problems, or "Has problems" for a file that fails the
+  structure check, whose problems are listed in full under it; a check that did not run
+  is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
+  will be delivered" keep the previous check's answer (not a check that did not run)
+  with `aria-busy`; a `Skeleton` shows only when there is none, or when a table or
+  column was added, removed or moved since, so the earlier findings would sit on the
+  wrong card. "What will be delivered" is the order the catalog would serve, shown only
+  when the project can be ordered: per table its name and years, each column as a
+  `ColumnChip` (with its years only where they differ from the table's) beside the
+  variable's name, "Years not available" per column the period asks more of than the
+  table has, and the "Row identifier" columns. There is no order-file download: the
+  steward's instructions say how to order. With no project the page is one `EmptyState`,
+  "No project yet", with "Create a project" and "Open a project file…". Below
+  `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
+  then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

@@ -1,10 +1,10 @@
 import {
+  ApiError,
   type CatalogSegment,
   type Graph,
   getGraph,
   getSegments,
   getShow,
-  getTableSegments,
   type RegisterShow,
   type RootChild,
   type ShowNode,
@@ -202,38 +202,71 @@ export function segmentsRead(ref: string): Read<CatalogSegment[]> {
   return read(`segments:${ref}`, () => getSegments(ref));
 }
 
+/** The variables a table read names at once. Requests and server work pull apart: the
+ * edge counts requests (at least rows / 200, the page size), while the server rebuilds
+ * a read's whole row set for each page it serves. On a 107-column LISA individer-16plus
+ * draft (1,543 rows) 10 gives 11 single-page reads, 25 gives 9 reads building 3,010
+ * rows, 100 gives 9 reads building 11,812 (measured for #2232).
+ * simplify: tuned on that one table; a read form without the page cap would serve each
+ * batch once, so revisit if a page load of a larger draft passes the edge's budget. */
+const TABLE_READ_VARIABLES = 25;
+
+/** The named variable a refused table read blames (`fields.ref`, set by not_found,
+ * ambiguous_ref and invalid_ref), if it is one of `batch`. */
+function refusedVariable(
+  error: unknown,
+  batch: readonly string[],
+): string | null {
+  if (!(error instanceof ApiError) || error.status >= 500) return null;
+  const body = error.body as { error?: { fields?: { ref?: unknown } } } | null;
+  const ref = body?.error?.fields?.ref;
+  return typeof ref === "string" && batch.includes(ref) ? ref : null;
+}
+
 /** Each of `variables`' rows in `table`, by variable. The columns not read yet are
- * read together, a read per 25 of a table's columns rather than one per column
- * (#2232, `getTableSegments`), and each
- * keeps its own entry: a column added later reads only itself, and source edits
- * reload no other card. */
+ * read together in parallel batches of `TABLE_READ_VARIABLES` rather than one read
+ * per column (#2232), and each keeps its own entry: a column added later reads only
+ * itself, and source edits reload no other card. A batch settles on its own. A
+ * variable the server refuses fails alone and the rest of its batch is read again;
+ * any other failure fails that batch's columns, as a column's own read did. */
 export function tableSegmentsReads(
   table: string,
   variables: readonly string[],
 ): Record<string, Read<CatalogSegment[]>> {
   const key = (variable: string) =>
     `table-segments:${JSON.stringify([table, variable])}`;
-  const missing = variables.filter((variable) => !reads[key(variable)]);
-  if (missing.length > 0) {
-    for (const variable of missing) reads[key(variable)] = PENDING;
-    const startedIn = generation;
-    // A failed read is not an error surface — see the module comment.
-    getTableSegments(table, missing).then(
+  const startedIn = generation;
+  const readBatch = (batch: readonly string[]) => {
+    getSegments(table, { variables: batch }).then(
       (rows) =>
         settleReads(
-          missing.map((variable) => [
+          batch.map((variable) => [
             key(variable),
             rows.filter((row) => row.variable === variable),
           ]),
           startedIn,
         ),
-      () =>
+      (error: unknown) => {
+        const refused = refusedVariable(error, batch);
+        // A failed read is not an error surface — see the module comment.
         settleReads(
-          missing.map((variable) => [key(variable), null]),
+          (refused === null ? batch : [refused]).map((variable) => [
+            key(variable),
+            null,
+          ]),
           startedIn,
-        ),
+        );
+        // Each retry drops one variable, so this ends within the batch.
+        const rest = batch.filter((variable) => variable !== refused);
+        if (refused !== null && rest.length > 0 && startedIn === generation)
+          readBatch(rest);
+      },
     );
-  }
+  };
+  const missing = variables.filter((variable) => !reads[key(variable)]);
+  for (const variable of missing) reads[key(variable)] = PENDING;
+  for (let i = 0; i < missing.length; i += TABLE_READ_VARIABLES)
+    readBatch(missing.slice(i, i + TABLE_READ_VARIABLES));
   return Object.fromEntries(
     variables.map((variable) => [
       variable,
