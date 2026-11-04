@@ -1664,7 +1664,7 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/Period",
-                "description": "The hull of the periods served: in steward mode the years held, else the\nregisters' periods. A timeless period does not count; an ongoing one leaves\n`end` null. `null` when every period served is timeless."
+                "description": "The hull of the periods served: in steward mode the years held, else the\nregisters' periods. A timeless period does not count; an ongoing one leaves\n`end` null. `null` when every period served is timeless, or when the\nhull is open at both ends."
               },
               {
                 "type": "null"
