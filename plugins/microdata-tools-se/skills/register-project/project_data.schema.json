@@ -212,7 +212,7 @@
     },
     "ProjectSource": {
       "type": "object",
-      "description": "One logical extraction: a table, a requested period and its bindings.",
+      "description": "One table, a requested period and its variables.",
       "required": [
         "name",
         "table",
@@ -251,7 +251,7 @@
           "$ref": "#/$defs/ProjectPeriodSegment"
         }
       ],
-      "description": "`Source.period`: one segment, or a sorted, disjoint list of them (an interrupted\nseries)."
+      "description": "One period, or a sorted list of periods for an interrupted series."
     },
     "ProjectStudyWindow": {
       "type": "object",

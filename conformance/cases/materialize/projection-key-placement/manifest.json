@@ -6,7 +6,7 @@
     "steward": "fixture",
     "catalog": {
       "release": "dev",
-      "schema": "7"
+      "schema": "8"
     },
     "holdings": {
       "owner": "fixture"
@@ -156,7 +156,7 @@
       "level": "info",
       "code": "identifier",
       "path": "/sources/0/bindings/0",
-      "message": "demo/projected/id identifies units in demo/projected over [2018-01-01, 2019-01-01)",
+      "message": "demo/projected/id is an identifier in demo/projected over [2018-01-01, 2019-01-01)",
       "source": "p",
       "variable": "demo/projected/id",
       "table": "demo/projected",
@@ -170,7 +170,7 @@
       "level": "info",
       "code": "identifier",
       "path": "/sources/0/bindings/1",
-      "message": "demo/projected/child-id identifies units in demo/projected over [2018-01-01, 2019-01-01)",
+      "message": "demo/projected/child-id is an identifier in demo/projected over [2018-01-01, 2019-01-01)",
       "source": "p",
       "variable": "demo/projected/child-id",
       "table": "demo/projected",

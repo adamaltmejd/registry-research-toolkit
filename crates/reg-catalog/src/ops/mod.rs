@@ -436,7 +436,6 @@ pub fn hash<'a>(params: &Params<'a>, name: &str) -> Result<Option<&'a str>, Erro
     }
 }
 
-/// The response `meta` (`shape.Meta`).
 #[derive(Serialize, ToSchema)]
 pub struct Meta {
     pub contract_version: &'static str,
