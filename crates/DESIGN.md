@@ -2355,7 +2355,11 @@ The validate operation runs the supported-version decision, then the structural
 validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), and concatenates their issues with
 the order check's findings ("The logical order"). A failing project is a result, not an
 error. A structural failure skips the catalog layer, so a rejected document costs no
-catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
+catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order. On
+a steward server `validate` also runs the holdings stage of `materialize_order`, so its
+`ok` is true exactly when `materialize_order` would not block: a variable the steward
+does not hold is `mapping_missing` at validate time, not when the coordinator makes the
+order (#2194).
 
 ### Project document 5.2.0
 
