@@ -47,14 +47,14 @@ CREATE TABLE spelling (
 ) STRICT;
 CREATE INDEX spelling_fold ON spelling(fold_id);
 
--- Curation statements that won at least one field, link, assignment or ack.
+-- Curation statements that won at least one field, link or assignment.
 CREATE TABLE statement (
   id            INTEGER PRIMARY KEY,
   hash          TEXT NOT NULL UNIQUE,     -- hash of normalized content
-  kind          TEXT NOT NULL CHECK (kind IN ('assert','set','link','ack')),
+  kind          TEXT NOT NULL CHECK (kind IN ('assert','set','link')),
   file          TEXT NOT NULL,            -- curation path, repo-relative
   line          INTEGER NOT NULL,
-  evidence_text INTEGER REFERENCES text(id),  -- NULL only for an ack of a notice
+  evidence_text INTEGER REFERENCES text(id),
   caveat_text   INTEGER REFERENCES text(id)
 ) STRICT;
 
@@ -412,7 +412,7 @@ CREATE TABLE var_set_member_facet (
   FOREIGN KEY (set_id, axis) REFERENCES var_set_axis(set_id, axis)
 ) STRICT, WITHOUT ROWID;
 
--- Findings shown to readers: open review items and notices (including acked caveats).
+-- Findings shown to readers: open review items and notices.
 -- code is a rule code plus its sub-kind: 'F1:type-change',
 -- 'F2:ambiguous', 'F7:edition-disagreement', 'F9:unparsed-delivery', 'T1:clamp'.
 CREATE TABLE finding (
@@ -426,7 +426,6 @@ CREATE TABLE finding (
   end              INTEGER,
   message_text     INTEGER NOT NULL REFERENCES text(id),
   caveat_text      INTEGER REFERENCES text(id),
-  ack_statement_id INTEGER REFERENCES statement(id),
   CHECK ((start IS NULL) = (end IS NULL))
 ) STRICT;
 CREATE INDEX finding_subject  ON finding(subject_kind, subject_id);

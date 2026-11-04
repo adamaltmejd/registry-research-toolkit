@@ -488,9 +488,6 @@ fn build_with_provenance(
     for r in &mut resolved {
         let (provider, register) = (&r.register.provider, &r.register.register);
         let path = ledger_path(&args.curation, provider, register);
-        if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
-            r.acknowledgements.extend(acks.clone());
-        }
         if args.release {
             for (ids, kind, reason) in [
                 (

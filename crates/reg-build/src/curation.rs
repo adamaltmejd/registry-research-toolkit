@@ -369,7 +369,7 @@ fn references(
         .filter_map(|s| match &s.statement {
             reg_frame::statement::Statement::Link { object, .. } => Some(object),
             reg_frame::statement::Statement::Set { fields, .. } => fields.classification.as_ref(),
-            _ => None,
+            reg_frame::statement::Statement::Assert { .. } => None,
         })
         .collect::<BTreeSet<_>>();
     for object in objects {
@@ -937,8 +937,6 @@ pub(super) struct Applied {
     /// The final records resolved, once computed: later checks and the build reuse it
     /// rather than resolving the whole catalog again (#2196).
     pub resolved: Option<Vec<reg_resolve::Resolved>>,
-    pub acks:
-        BTreeMap<(String, String), BTreeMap<usize, reg_resolve::curation::ack::Acknowledgement>>,
 }
 
 /// Every curated sentinel code by value-set hash.
@@ -965,7 +963,6 @@ enum Phase {
     Fields,
     Sentinels,
     Relations,
-    Acknowledgements,
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> Phase {
@@ -982,7 +979,6 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
         Statement::Set { fields, .. } if fields.sentinels.is_some() => Phase::Sentinels,
         Statement::Link { .. } => Phase::Relations,
-        Statement::Ack { .. } => Phase::Acknowledgements,
         Statement::Set { .. } => Phase::Fields,
     }
 }
@@ -1273,7 +1269,6 @@ fn run_selected(
         Phase::Fields,
         Phase::Sentinels,
         Phase::Relations,
-        Phase::Acknowledgements,
     ] {
         let fields_stage = matches!(
             stage,
@@ -1295,18 +1290,8 @@ fn run_selected(
         };
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
-        let finding_catalog = if stage == Phase::Acknowledgements
-            && statements.iter().any(|s| phase(&s.statement) == stage)
-        {
-            Some(complete_findings(
-                root, retired, &records, &result, None, base,
-            )?)
-        } else {
-            None
-        };
         let mut accepted = Vec::new();
         let mut field_applications = BTreeMap::new();
-        let mut ack_indices = BTreeMap::new();
         if fields_stage
             && statements.iter().any(|s| {
                 matches!(s.statement, reg_frame::statement::Statement::Set { .. })
@@ -1376,11 +1361,6 @@ fn run_selected(
                     reference_cache.views.clear();
                 }
             }
-            let finding_view = finding_catalog.as_ref().and_then(|catalog| {
-                catalog.iter().find(|r| {
-                    r.register.provider == **provider && r.register.register == **register
-                })
-            });
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
             let t = std::time::Instant::now();
             let references = references(
@@ -1407,7 +1387,7 @@ fn run_selected(
             in_resolve += t.elapsed();
             for (statement, evaluation) in group.iter().zip(evaluations) {
                 let at = location(statement);
-                let mut resolved = match evaluation {
+                let resolved = match evaluation {
                     Ok(r) => r,
                     Err(e) => {
                         refusals.push(Refusal::scoped(statement, format!("{at}: {e}")));
@@ -1448,26 +1428,6 @@ fn run_selected(
                         ));
                     }
                     continue;
-                }
-                if let Some(view) = &finding_view
-                    && matches!(
-                        statement.statement,
-                        reg_frame::statement::Statement::Ack { .. }
-                    )
-                {
-                    match reg_resolve::curation::ack::review(
-                        view,
-                        &statement.statement,
-                        &mut resolved.premise,
-                    ) {
-                        Ok(indices) => {
-                            ack_indices.insert(publication_identity(statement), indices);
-                        }
-                        Err(error) => {
-                            refusals.push(Refusal::scoped(statement, format!("{at}: {error}")));
-                            continue;
-                        }
-                    }
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
@@ -1581,40 +1541,14 @@ fn run_selected(
             let source = slots
                 .as_ref()
                 .map_or_else(Vec::new, |slots| slots.source(provider, register, hash));
-            if matches!(stage, Phase::Relations | Phase::Acknowledgements) {
-                match &statement.statement {
-                    reg_frame::statement::Statement::Link { .. } => {
-                        result.links.push(((*statement).clone(), premise.clone()));
-                    }
-                    reg_frame::statement::Statement::Ack { caveat, .. } => {
-                        let indices = ack_indices
-                            .remove(&publication_identity(statement))
-                            .expect("evaluated ack");
-                        for index in indices {
-                            result
-                                .acks
-                                .entry(((*provider).clone(), (*register).clone()))
-                                .or_default()
-                                .insert(
-                                    index,
-                                    reg_resolve::curation::ack::Acknowledgement {
-                                        statement: publication_identity(statement),
-                                        caveat: caveat.clone(),
-                                    },
-                                );
-                        }
-                        result.statements.push(statement_row(root, statement)?);
-                    }
-                    _ => unreachable!("post-resolve phase"),
-                }
+            if stage == Phase::Relations {
+                result.links.push(((*statement).clone(), premise.clone()));
             }
             let application = match stage {
                 Phase::Variables => assignments
                     .remove(&publication_identity(statement))
                     .expect("evaluated assignment"),
-                Phase::Relations | Phase::Acknowledgements => {
-                    Ok(reg_resolve::curation::apply::Applied::default())
-                }
+                Phase::Relations => Ok(reg_resolve::curation::apply::Applied::default()),
                 Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
                     if let Some((indices, deltas, applied)) =
                         field_applications.remove(&publication_identity(statement))
@@ -1714,7 +1648,7 @@ fn run_selected(
         }
         if fields_stage && !field_snapshot.is_empty() {
             if stage == Phase::Fields {
-                // Conflict checks retain the field phase view; links and acks see final identities.
+                // Conflict checks retain the field phase view; links see final identities.
                 conflict_overrides = Some(result.overrides.clone());
             }
             let final_coordinates = records
@@ -2053,7 +1987,7 @@ fn run_selected(
     Ok(result)
 }
 
-/// The complete review surface shared by acknowledgement validation and publication.
+/// The complete review surface for publication.
 pub(super) fn complete_findings(
     root: &Path,
     retired: &[crate::retired::Retired],
@@ -2098,7 +2032,7 @@ pub(super) fn complete_findings(
         &mut resolved,
         &applied.classifications,
         &sets,
-        // Classification sentinels bind after the acknowledgement stage (`bound_sentinels`)
+        // Classification sentinels bind after the curation stages (`bound_sentinels`)
         // and are keyed by a hash unbound occurrences may share: N1 reads only the
         // statement-declared ones, which both stages see.
         &sentinel_codes(applied.sentinels.iter().filter(|s| s.inventory.is_none())),

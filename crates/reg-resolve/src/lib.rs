@@ -209,7 +209,6 @@ pub struct Resolved {
     pub occurrences: Vec<ResolvedOccurrence>,
     pub gaps: Vec<Gap>,
     pub findings: Vec<Finding>,
-    pub acknowledgements: BTreeMap<usize, curation::ack::Acknowledgement>,
     /// Source keys for register-level F5 findings, without changing their published subject.
     pub finding_keys: BTreeMap<usize, String>,
     pub report: Report,
@@ -1395,9 +1394,10 @@ pub(crate) fn resolve_located(
         if let Some(defaults) = &defaults {
             if let Some(v) = defaults.occurrences[i].variable {
                 let slug = &defaults.variables[v].slug;
-                let target = variables.iter().position(|v| v.slug == *slug).ok_or_else(|| {
-                    format!("set variable would orphan gap marker for {slug:?}; ack the finding instead")
-                })?;
+                let target = variables
+                    .iter()
+                    .position(|v| v.slug == *slug)
+                    .ok_or_else(|| format!("set variable would orphan gap marker for {slug:?}"))?;
                 marker_variable.push((i, target));
             }
         } else if let Some(vs) = key_variables.get(key)
@@ -1476,7 +1476,6 @@ pub(crate) fn resolve_located(
         occurrences: resolved,
         gaps,
         findings,
-        acknowledgements: BTreeMap::new(),
         finding_keys,
         report,
     })

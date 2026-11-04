@@ -271,12 +271,11 @@ Accepting one requires reviewed curation and a premise lock.
 
 **Curation.**
 
-- A `link` or `ack` changes exactly its selected subjects or findings. Source links are
-  not displaced to accept a conflicting curated link. With no statements, artifact bytes
-  are unchanged.
-- Four statement kinds: `assert`, `set`, `link` and `ack`. `bind` and `assign` are gone:
-  the ledger names registers and tables; moving a row or assigning its variable is a
-  field change.
+- A `link` changes exactly its selected subjects. Source links are not displaced to
+  accept a conflicting curated link. With no statements, artifact bytes are unchanged.
+- Three statement kinds: `assert`, `set` and `link`. `bind` and `assign` are gone: the
+  ledger names registers and tables; moving a row or assigning its variable is a field
+  change.
 - Each register has one optional `curation.toml` beside `ids.toml`, containing
   `[[statement]]` tables. Statements have no hand-written ids. Register-local locks hash
   normalized typed content, including caveat but excluding evidence, file and line.
@@ -290,12 +289,12 @@ Accepting one requires reviewed curation and a premise lock.
   writes resolved decisions.
 - Application is one ordered pass: parent table/release assertions, table coverage
   overrides, occurrence/release period overrides, table moves, remaining assertions,
-  variable assignments, ordinary fields, then links, then acknowledgements. Each stage
-  reads an immutable snapshot; later stages see the accepted corrections. Coverage
-  precedes period checks, and corrected periods precede moves and occurrence assertions.
-  A coverage or period override must be a separate statement without other fields.
-  Coordinate changes carry existing provenance forward without changing its reviewed
-  source values. There is no fixpoint or second application pass.
+  variable assignments, ordinary fields, then links. Each stage reads an immutable
+  snapshot; later stages see the accepted corrections. Coverage precedes period checks,
+  and corrected periods precede moves and occurrence assertions. A coverage or period
+  override must be a separate statement without other fields. Coordinate changes carry
+  existing provenance forward without changing its reviewed source values. There is no
+  fixpoint or second application pass.
 - `set table = "<slug>"` moves selected whole occurrences to an existing table before
   default resolution. It does not merge source rows or rank sources. Disagreements at
   the destination follow the existing F6 and ambiguity rules; a curator corrects the
@@ -392,20 +391,9 @@ Accepting one requires reviewed curation and a premise lock.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
-- Acknowledgement validation and publication share the complete finding collector,
-  including F3 and V1 proposals after curated links.
-- `ack` retains the finding, its severity and message, and records the statement's file,
-  line, evidence and caveat through `ack_statement_id`. Its declared severity must match
-  the finding. The reviewed premise snapshots the finding and its supporting source
-  facts; a missing finding is a located `stale-ack` refusal. Legacy finding codes are
-  not guessed to be equivalent to new findings. Resolver findings are addressable
-  through their variable, occurrence or release; F5 markers retain their register-level
-  published finding but carry internal key metadata for exact acknowledgement.
-  Link-stage source notices are not resolver findings and cannot currently be
-  acknowledged. Acknowledgements do not change structural ambiguity: orders still refuse
-  ambiguous segments. F5 is currently a notice, F6 a review; neither independently
-  blocks orders. Notice acknowledgements annotate; there is currently no separate
-  generic review-finding order blocker to suppress. F7 edition findings remain warnings.
+- Publication uses the complete finding collector, including F3 and V1 proposals after
+  curated links. F5 is currently a notice, F6 a review; neither independently blocks
+  orders. F7 edition findings remain warnings.
 - `classification` selects an exact curated `class/<family>/<version>` for whole
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
@@ -468,9 +456,8 @@ Accepting one requires reviewed curation and a premise lock.
   redundant-set finding.
 - Source premise field projections and their canonical sort keys are shared per source
   within each immutable view. Statement, conflict and lock bookkeeping clone shared
-  snapshots; acknowledgement findings copy only the snapshot they extend. Field
-  applications retain before/after records only for changed facts, while metadata and
-  provenance remain independent of record changes.
+  snapshots. Field applications retain before/after records only for changed facts,
+  while metadata and provenance remain independent of record changes.
 - Evaluation serializes shared code-list facts once per phase and indexes selectors and
   application dependencies once per register phase. Conflict candidates share source
   locators, assertion addresses or table moves; the identity and overlap rules still
@@ -511,11 +498,11 @@ Regular expressions are refused. Edition and qualifier remain release attributes
 `:edition` and `/qualifier` address suffixes are unsupported syntax and are refused with
 a message pointing at `where release` (maintainer ruling, 2026-10-27).
 
-All four kinds deny unknown fields. `evidence` is nonblank text (including
-`doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. Evidence
-carried over in D from the retired Python builder cites its files at the git tag
-`python-builder-pre-cutover`: `python-builder-pre-cutover:curation/…` is a file under
-that builder's package directory, usually with a `:<line>` suffix, and
+All three kinds deny unknown fields. `evidence` is nonblank text (including
+`doc:<hash>#page=12`). Evidence carried over in D from the retired Python builder cites
+its files at the git tag `python-builder-pre-cutover`:
+`python-builder-pre-cutover:curation/…` is a file under that builder's package
+directory, usually with a `:<line>` suffix, and
 `python-builder-pre-cutover:reg_webapp/…` a repository path (a file or, for the `series`
 directory, a directory), both at that tag. `caveat` is optional user-facing text.
 Kind-specific content is:
@@ -525,9 +512,7 @@ Kind-specific content is:
   `classification-version` with `family`, `version` and `items`;
 - `set`: `subject` and nonempty `fields`;
 - `link`: `subject`, typed `relation`, `object` (address or catalog FQID) and optional
-  `at` period set;
-- `ack`: `subject`, `finding`, `severity` (`notice` or `review`), and evidence when
-  required.
+  `at` period set.
 
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,

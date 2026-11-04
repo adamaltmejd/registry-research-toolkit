@@ -981,7 +981,7 @@ pub fn apply(
                 }
             }
         }
-        _ => {}
+        Statement::Link { .. } => {}
     }
     Ok(out)
 }

@@ -29,13 +29,6 @@ pub enum Statement {
         evidence: String,
         caveat: Option<String>,
     },
-    Ack {
-        subject: Address,
-        finding: String,
-        severity: Severity,
-        evidence: Option<String>,
-        caveat: Option<String>,
-    },
 }
 
 /// A curator may state facts without introducing opaque provider coordinates.
@@ -69,13 +62,6 @@ pub enum Relation {
     DerivedFrom,
     Equivalent,
     LabelOf,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum Severity {
-    Notice,
-    Review,
 }
 
 /// The closed schema of fields curation can override. Names describe catalog
@@ -163,26 +149,15 @@ impl Statement {
         let subject = match self {
             Self::Assert { subject, .. }
             | Self::Set { subject, .. }
-            | Self::Link { subject, .. }
-            | Self::Ack { subject, .. } => subject,
+            | Self::Link { subject, .. } => subject,
         };
         if matches!(subject, Address::Set(_)) && !matches!(self, Self::Set { .. }) {
             return Err("set-subject: set: subjects support only set statements".into());
         }
-        let evidence = match self {
-            Self::Assert { evidence, .. }
-            | Self::Set { evidence, .. }
-            | Self::Link { evidence, .. } => Some(evidence),
-            Self::Ack {
-                evidence, severity, ..
-            } => {
-                if *severity != Severity::Notice && evidence.is_none() {
-                    return Err("evidence is required except for an ack of a notice".into());
-                }
-                evidence.as_ref()
-            }
-        };
-        if evidence.is_some_and(|value| value.trim().is_empty()) {
+        let (Self::Assert { evidence, .. }
+        | Self::Set { evidence, .. }
+        | Self::Link { evidence, .. }) = self;
+        if evidence.trim().is_empty() {
             return Err("evidence must not be blank".into());
         }
         match self {
@@ -240,10 +215,6 @@ impl Statement {
                     return Err(format!("invalid link object: {error}"));
                 }
             }
-            Self::Ack { finding, .. } if finding.trim().is_empty() => {
-                return Err("ack finding must not be blank".into());
-            }
-            Self::Ack { .. } => {}
         }
         Ok(())
     }
@@ -285,7 +256,6 @@ impl Statement {
                     *object = address.to_string();
                 }
             }
-            Self::Ack { .. } => {}
         }
         let mut tree = serde_json::to_value(&normalized).expect("statements serialize");
         tree.as_object_mut()

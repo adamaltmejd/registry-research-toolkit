@@ -2,7 +2,6 @@
 //! moved/asserted frame; other overrides never feed selector resolution. Selectors
 //! and premises describe the source the curator reviewed.
 
-pub mod ack;
 pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -709,7 +708,6 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
                 .map_or_else(|_| object.clone(), |a| a.to_string());
             BTreeSet::from([format!("relation:{relation:?}:{object}")])
         }
-        Statement::Ack { finding, .. } => BTreeSet::from([format!("finding:{finding}")]),
     }
 }
 
@@ -922,8 +920,7 @@ fn subject(statement: &Statement) -> &Address {
     match statement {
         Statement::Assert { subject, .. }
         | Statement::Set { subject, .. }
-        | Statement::Link { subject, .. }
-        | Statement::Ack { subject, .. } => subject,
+        | Statement::Link { subject, .. } => subject,
     }
 }
 
@@ -1319,7 +1316,7 @@ fn application_dependencies(
                 hashes.insert(hash.clone());
             }
         }
-        _ => return Ok(Vec::new()),
+        Statement::Link { .. } => return Ok(Vec::new()),
     }
     for (provider, register, table, release) in &contexts {
         let key = |kind: &str, table: Option<String>, release: Option<String>| {
@@ -1372,7 +1369,7 @@ fn application_dependencies(
                 || fields.sentinels.is_some()
         }
         Statement::Assert { .. } => true,
-        _ => false,
+        Statement::Link { .. } => false,
     };
     for index in selected
         .iter()
@@ -1623,10 +1620,7 @@ pub fn resolve(
             }
             if !matches!(
                 statement,
-                Statement::Ack {
-                    subject: Address::Variable(_),
-                    ..
-                } | Statement::Link {
+                Statement::Link {
                     subject: Address::Variable(_),
                     ..
                 }
@@ -1710,10 +1704,7 @@ pub fn resolve(
                             .iter()
                             .any(|m| view[m.source].text("spelling") == Some(""))
                     {
-                        return Err(
-                            "set variable cannot target a gap marker; ack the finding instead"
-                                .into(),
-                        );
+                        return Err("set variable cannot target a gap marker".into());
                     }
                     if values.variable.as_deref().is_some_and(|v| v != "none")
                         && matches.iter().any(|m| view[m.source].period.is_none())
@@ -1773,7 +1764,7 @@ pub fn resolve(
                         return Err("redundant assert: the source now states this fact".into());
                     }
                 }
-                Statement::Ack { .. } | Statement::Link { .. } => {
+                Statement::Link { .. } => {
                     fields.extend(evidence_fields.iter().cloned());
                 }
             }
