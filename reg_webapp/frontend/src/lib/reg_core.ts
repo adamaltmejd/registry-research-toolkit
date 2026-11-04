@@ -13,12 +13,9 @@ import type { ValidationResultModel } from "./api";
 import type { ProjectSourcePeriod } from "./project_data";
 import init, {
   check_project,
-  fold_search,
   initSync,
   merge,
   overlap,
-  parse_period,
-  period_token_for_bounds,
   project_schema_version,
   render,
   source_period_from_wire,
@@ -68,59 +65,14 @@ export function checkProject(json: string): ValidationResultModel {
   return JSON.parse(check_project(json)) as ValidationResultModel;
 }
 
-/** The server search's fold (`reg_core::fold_search`): full case folding, NFKD,
- * combining marks dropped, repeated to a fixed point, then one space between
- * words (Python's `str.isspace`). The SPA's type-to-filter folds with it, so
- * the client filter and the server search agree. The oracle is
- * conformance/cases/folds/fold_search.jsonl. */
-export function foldSearch(text: string): string {
-  requireReady();
-  return fold_search(text);
-}
-
 // ── Periods ──────────────────────────────────────────────────────────────────
 // The SPA never parses period grammar or bounds a project period: every answer
 // below is reg-core's (`crates/reg-core/src/grammar.rs`, `interval.rs`,
-// `project.rs`). The oracles are conformance/cases/grammar/period.jsonl and
-// crates/reg-core/tests/project/source_period.jsonl, run by reg_core.test.ts.
+// `project.rs`). The oracle is crates/reg-core/tests/project/source_period.jsonl,
+// run by reg_core.test.ts.
 
 /** An inclusive `[lo, hi]` interval of ISO dates. */
 export type Interval = [string, string];
-
-/** A `period.jsonl` kind. */
-export type PeriodKind =
-  | "year"
-  | "month"
-  | "day"
-  | "term"
-  | "school_year"
-  | "quarter"
-  | "half"
-  | "range";
-
-/** One period token or `from..to` range through the grammar: its canonical
- * spelling, kind, first and last day, and the calendar years it touches; or the
- * error catalog code that refuses it. The text is not trimmed. */
-export type ParsedPeriod =
-  | {
-      canonical: string;
-      kind: PeriodKind;
-      bounds: Interval;
-      years: [number, number];
-    }
-  | { error: string };
-
-export function parsePeriod(text: string): ParsedPeriod {
-  requireReady();
-  return JSON.parse(parse_period(text)) as ParsedPeriod;
-}
-
-/** The coarsest period token whose days are exactly `lo..hi`, else the explicit
- * `lo..hi` (a term wins over the half-year it equals). */
-export function periodTokenForBounds(lo: string, hi: string): string {
-  requireReady();
-  return period_token_for_bounds(lo, hi);
-}
 
 /** The `Source.period` a `?period` wire spells, shaped and not validated: a
  * comma list becomes segments, `from..to` a range object, a grammar year an int;

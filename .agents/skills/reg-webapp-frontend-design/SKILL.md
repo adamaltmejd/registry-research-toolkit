@@ -121,11 +121,11 @@ token system.
 
 ## Swedish text: filtering and sorting
 
-- **Filtering** goes through the existing `rankFilter`/`foldSearch` in `src/lib/`
-  (reg-core's fold over WASM), so a client filter matches exactly what the server search
-  matches. That fold drops diacritics: "alderspension" finds "ålderspension". Never
-  filter with RAC's `useFilter` or Autocomplete's default filter: they collate in the
-  provider's en-US locale and disagree with the server.
+- **Filtering** goes through the existing `rankFilter`/`foldSearch` in
+  `src/lib/catalog.ts`, a JS fold close to the server search's. It drops diacritics:
+  "alderspension" finds "ålderspension". Never filter with RAC's `useFilter` or
+  Autocomplete's default filter: they collate in the provider's en-US locale and
+  disagree with the server.
 - **Sorting** Swedish labels uses one shared
   `Intl.Collator('sv', { sensitivity: 'base' })`, never bare `localeCompare`, so å, ä
   and ö sort after z.

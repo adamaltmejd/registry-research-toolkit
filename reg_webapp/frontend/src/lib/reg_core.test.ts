@@ -1,20 +1,13 @@
 import { describe, expect, it } from "vitest";
-// The fold corpus the server's `fold_search` is generated from and checked against.
-import foldCorpus from "../../../../conformance/cases/folds/fold_search.jsonl?raw";
-// The period grammar corpus reg-core's own tests run (`crates/reg-core/tests/grammar.rs`).
-import periodCorpus from "../../../../conformance/cases/grammar/period.jsonl?raw";
 // The interval algebra's golden cases (`crates/reg-core/tests/interval.rs`).
 import intervalGolden from "../../../../crates/reg-core/tests/interval/golden.json";
 // Source-period wire shaping is owned by reg-core's project corpus.
 import sourcePeriodCorpus from "../../../../crates/reg-core/tests/project/source_period.jsonl?raw";
 import {
   checkProject,
-  foldSearch,
   type Interval,
   mergeIntervals,
   overlapIntervals,
-  parsePeriod,
-  periodTokenForBounds,
   renderIntervals,
   sourcePeriodFromWire,
   sourcePeriodIntervals,
@@ -103,31 +96,12 @@ describe("checkProject (reg-core-wasm)", () => {
   });
 });
 
-// Fails when the module's fold drifts from the server search's: the client
-// filter and the server search must fold every corpus case the same way.
-it("folds every fold_search corpus case as the server does", () => {
-  const cases = jsonl<{ in: string; out: string }>(foldCorpus);
-  expect(cases.length).toBeGreaterThan(0);
-  const mismatches = cases
-    .map((c) => ({ in: c.in, expected: c.out, got: foldSearch(c.in) }))
-    .filter((c) => c.got !== c.expected);
-  expect(mismatches).toEqual([]);
-});
-
-/** One JSON object per line (the grammar and fold corpora's format). */
+/** One JSON object per line (the project corpora's format). */
 function jsonl<T>(text: string): T[] {
   return text
     .split("\n")
     .filter(Boolean)
     .map((line) => JSON.parse(line) as T);
-}
-
-interface PeriodCase {
-  in: string;
-  out?: { kind: string };
-  error?: string;
-  years?: [number, number];
-  bounds?: [string, string];
 }
 
 interface SourcePeriodCase {
@@ -149,41 +123,6 @@ interface GoldenCase {
 }
 
 describe("periods (reg-core-wasm)", () => {
-  // Fails when the module's period grammar drifts from the server's: a token form,
-  // a bound, the year span or a refusal code read differently in the browser, or a
-  // token that no longer renders back from its own days.
-  it("parses every period.jsonl case as reg-core does", () => {
-    const cases = jsonl<PeriodCase>(periodCorpus);
-    expect(cases.length).toBeGreaterThan(60);
-    for (const c of cases) {
-      const parsed = parsePeriod(c.in);
-      if (c.error !== undefined) {
-        expect([c.in, parsed]).toEqual([c.in, { error: c.error }]);
-        continue;
-      }
-      expect([c.in, parsed]).toEqual([
-        c.in,
-        {
-          canonical: c.in,
-          kind: c.out?.kind,
-          bounds: c.bounds,
-          years: c.years,
-        },
-      ]);
-      if (c.out?.kind !== "range" && c.bounds) {
-        // A half year renders as its term, the one spelling the reader emits.
-        const token = periodTokenForBounds(...c.bounds);
-        expect([c.in, parsePeriod(token)]).toMatchObject([
-          c.in,
-          { bounds: c.bounds },
-        ]);
-        if (c.out?.kind !== "half") {
-          expect(token).toBe(c.in);
-        }
-      }
-    }
-  });
-
   // Fails when the wire shaping, the one-period structural check, the days, the
   // year spans or their render differ between the browser and the server.
   it("answers every source_period.jsonl case as reg-core does", () => {
@@ -242,11 +181,9 @@ describe("periods (reg-core-wasm)", () => {
 
   // Fails when hostile input aborts the module (a panic is a trap that leaves it
   // unusable): a byte-sliced year in render, a period endpoint the grammar refuses
-  // reaching the days, an inverted range, text that is not JSON.
+  // reaching the days, an inverted range.
   it("answers hostile input without aborting the module", () => {
     expect(renderIntervals([["日日-01-01", "日日-12-31"]])).toBe("日日..日日");
-    expect(periodTokenForBounds("日日日日-01", "x")).toBe("日日日日-01..x");
-    expect(parsePeriod("２０１９")).toEqual({ error: "invalid_period" });
     expect(sourcePeriodIntervals([{ from: "x", to: 2020 }])).toMatchObject({
       error: "invalid_period",
     });
@@ -255,6 +192,6 @@ describe("periods (reg-core-wasm)", () => {
     });
     expect(sourcePeriodYears([[[2018]]])).toBeNull();
     expect(sourcePeriodToWire({ from: 1e300, to: 2020 })).toBeNull();
-    expect(parsePeriod("2019")).toMatchObject({ canonical: "2019" });
+    expect(sourcePeriodToWire(2019)).toBe("2019");
   });
 });
