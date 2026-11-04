@@ -284,7 +284,9 @@ Accepting one requires reviewed curation and a premise lock.
   field change.
 - Each register has one optional `curation.toml` beside `ids.toml`, containing
   `[[statement]]` tables. Statements have no hand-written ids. Register-local locks hash
-  normalized typed content, including evidence and caveat but excluding file and line.
+  normalized typed content, including caveat but excluding evidence, file and line.
+  Evidence is commentary, not a premise: rewording it moves no lock key, no asserted
+  occurrence's `stmt:` source key and no ledger anchor (maintainer, 2026-11-04).
   Publication hashes also include provider and register, preserving separate authoring
   locations for identical statements in different registers.
 - The typed model and address grammar live in `reg-frame`; the TOML loader lives in

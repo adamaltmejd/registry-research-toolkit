@@ -1,0 +1,7 @@
+[tables]
+t = "t"
+
+[variables]
+a = ["t: A # v2"]
+kept = ["t: A # stmt:b1436b3fc9fe074f059314b7a628f98833b0a72e8207b5e6f02e0c4ef46b92ff"]
+x = ["t: X"]

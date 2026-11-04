@@ -1,0 +1,5 @@
+[[statement]]
+kind = "assert"
+subject = "t: A @2010..2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "A", "definition" = "A" } }
+evidence = "Delivery lists hold column A; the source export has no row for it."
