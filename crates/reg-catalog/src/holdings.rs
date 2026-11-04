@@ -132,8 +132,6 @@ pub struct StewardConfig {
     presentation: StewardPresentation,
     /// The logo's SVG markup.
     logo: String,
-    #[schema(value_type = Object)]
-    scope: serde_json::Value,
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -357,13 +355,12 @@ impl Catalog {
         })
     }
 
-    /// Compiled presentation/config data is served from the admitted artifact;
+    /// The steward's presentation and logo, served from the admitted artifact;
     /// runtime never reads the steward repository.
     pub(crate) fn steward_config(&self) -> Option<serde_json::Value> {
         self.holdings.as_ref().map(|h| serde_json::json!({
             "presentation": serde_json::from_str::<serde_json::Value>(&h.meta["steward"]).expect("admitted JSON"),
             "logo": h.meta["logo"],
-            "scope": serde_json::from_str::<serde_json::Value>(&h.meta["scope"]).expect("admitted JSON"),
         }))
     }
 

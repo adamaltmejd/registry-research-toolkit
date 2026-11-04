@@ -94,8 +94,9 @@ variables."""
 name = "context"
 http = ["GET /api/context"]
 result = "Context"
-note = """The catalog's identity and counts. No MCP tool: an agent's catalog identity \
-is in every response's `meta`, and the counts serve the SPA shell."""
+note = """What the SPA shell shows: the catalog's period span, the server version and, in \
+steward mode, the steward's presentation and logo. No MCP tool: an agent's catalog \
+identity is in every response's `meta`."""
 
 [[operation]]
 name = "show"

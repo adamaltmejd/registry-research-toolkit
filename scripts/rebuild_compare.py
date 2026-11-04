@@ -1619,7 +1619,7 @@ def orders(args) -> int:
         for side, context in zip(("old", "new"), contexts, strict=True):
             summary.append(
                 f"- {side}: reg-meta {context['data']['reg_meta_version']}; "
-                f"catalog {context['data'].get('catalog_version', 'not exposed')}; "
+                f"catalog {context['meta'].get('catalog_version', 'not exposed')}; "
                 f"meta.generation `{context['meta']['generation']}`"
             )
         summary.append(

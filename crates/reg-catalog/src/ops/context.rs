@@ -1,5 +1,5 @@
-//! `context`: the catalog's identity and counts, computed once when the catalog is
-//! admitted and answered from memory.
+//! `context`: what the site shell shows, computed once when the catalog is admitted
+//! and answered from memory.
 
 use serde::Serialize;
 use serde_json::Value;
@@ -12,85 +12,53 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "context",
     paths: &["/api/context"],
     tool: None,
-    description: "The catalog's identity and headline counts.",
+    description: "The catalog's period span, the server version and the steward's presentation.",
     params: &[],
     cache: Cache::Revalidate,
     run: context,
     result: component::<Context>,
 }];
 
+/// What the site shell shows. Catalog identity is in every response's `meta`.
 #[derive(Serialize, ToSchema)]
 pub struct Context {
-    catalog_version: String,
-    schema_version: String,
-    /// The span of all registers; `null` for a catalog without registers.
+    /// The span of the dated periods served: in steward mode the years held, else
+    /// the registers' periods. An open bound (a timeless or open-ended period) does
+    /// not widen it; `null` when nothing served is dated.
     #[schema(required = true)]
     period_span: Option<Period>,
     /// The server's version, which seeds a new project's `reg_meta_version`.
     reg_meta_version: String,
-    sizes: Sizes,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    steward: Option<crate::Steward>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(value_type = crate::holdings::StewardConfig)]
     steward_config: Option<Value>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    steward_sizes: Option<Sizes>,
-}
-
-/// Every provider, register, table (implicit ones included) and variable.
-#[derive(Serialize, ToSchema)]
-pub struct Sizes {
-    providers: i64,
-    registers: i64,
-    tables: i64,
-    variables: i64,
 }
 
 impl Context {
     /// `catalog`'s context; `open` is its `open_start` and `open_end`.
     pub(crate) fn load(catalog: &Catalog, open: (i64, i64), version: &str) -> Result<Self, Error> {
-        let conn = catalog.connect()?;
-        let count = |table: &str| {
-            conn.query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |row| {
-                row.get::<_, i64>(0)
-            })
+        // Steward mode spans the placements, not the reference registers: the
+        // reference catalog covers years the steward does not hold.
+        let (conn, from) = match catalog.connect_holdings()? {
+            Some(held) => (held, "holding_mapping"),
+            None => (catalog.connect()?, "register"),
         };
-        let sizes = Sizes {
-            providers: count("provider")?,
-            registers: count("register")?,
-            tables: count("tbl")?,
-            variables: count("variable")?,
-        };
-        let hull: (Option<i64>, Option<i64>) =
-            conn.query_row("SELECT MIN(start), MAX(end) FROM register", [], |row| {
-                Ok((row.get(0)?, row.get(1)?))
-            })?;
+        let hull: (Option<i64>, Option<i64>) = conn.query_row(
+            &format!("SELECT MIN(NULLIF(start, ?1)), MAX(NULLIF(end, ?2)) FROM {from}"),
+            [open.0, open.1],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?;
         Ok(Self {
-            catalog_version: catalog.meta("catalog_version").to_owned(),
-            schema_version: catalog.meta("schema_version").to_owned(),
             period_span: match hull {
-                (Some(start), Some(end)) => Some(Period::new(open, start, end)),
-                _ => None,
+                (None, None) => None,
+                (start, end) => Some(Period::new(
+                    open,
+                    start.unwrap_or(open.0),
+                    end.unwrap_or(open.1),
+                )),
             },
             reg_meta_version: version.to_owned(),
-            sizes,
-            steward: catalog.steward(),
             steward_config: catalog.steward_config(),
-            steward_sizes: catalog
-                .connect_holdings()?
-                .map(|extra| {
-                    let count = |table: &str| {
-                        extra.query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |r| r.get(0))
-                    };
-                    Ok::<_, Error>(Sizes {
-                        providers: count("provider")?,
-                        registers: count("register")?,
-                        tables: count("tbl")?,
-                        variables: count("variable")?,
-                    })
-                })
-                .transpose()?,
         })
     }
 }

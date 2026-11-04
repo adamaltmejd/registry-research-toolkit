@@ -1355,7 +1355,12 @@ evidence). Pin selected delivery-document evidence there too, retaining original
 privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
 the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
 inputs. The compiled holdings file carries presentation/config data needed at runtime;
-serving never checks out that repo or parses its TOML.
+serving never checks out that repo or parses its TOML. `context` serves only what the
+site shows: the steward's presentation and logo, the server version and the period span.
+In steward mode the span is the hull of the placements' dated bounds, not of the
+reference registers (which cover years the steward does not hold); outside it, the
+registers' dated bounds. An open bound (a timeless placement, an open-ended register)
+does not widen it, so one undated period cannot take the study-years slider's bounds.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,

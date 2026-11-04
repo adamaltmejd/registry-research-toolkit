@@ -32,18 +32,15 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         client = pool.client(artifact_env(output))
         context = client.get("/api/context")
         assert context.status_code == 200
-        context = context.json()["data"]
-        assert context["steward"]["owner"] == "fixture"
+        context = context.json()
+        assert context["meta"]["steward"]["owner"] == "fixture"
+        context = context["data"]
         assert context["steward_config"]["presentation"] == {
             "id": "fixture",
             "name": "Synthetic steward",
         }
-        assert context["steward_sizes"] == {
-            "providers": 1,
-            "registers": 1,
-            "tables": 1,
-            "variables": 2,
-        }
+        # Fails if context passes steward config the site does not show (the scope).
+        assert sorted(context["steward_config"]) == ["logo", "presentation"]
         # Fails if possession resolves placements through one origin only: demo/*
         # tables are reference tables, steward/slots a steward-only register.
         providers = client.get("/api/catalog").json()["data"]["providers"]
@@ -161,6 +158,46 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         refused = run(pool.argv(tmp_path, 0))
         assert refused.returncode == 10
         assert json.loads(refused.stderr)["code"] == "schema_incompatible"
+
+
+def test_steward_context_spans_the_years_held(tmp_path, server_cmd):
+    # Fails if steward-mode context spans the reference registers instead of the
+    # placements (data.swecov.se served a null span from the reference hull). The
+    # base frame's demo registers run 2017-01-01..2021-12-31; with the two 2021
+    # partitions excluded the steward holds 2017..2020 only (holdings.toml: Owners
+    # 2017..2019, Pool 2017..2020, Parent and Child 2018), so the half-open span ends
+    # 2021-01-01, a year before the reference hull.
+    base, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    text = path.read_text()
+    for part in "AB":
+        dated = (
+            f'physical_name = "Part {part}"\ndisposition = "dated"\ndelivery = "2021"\n'
+            f'partition = "{part.lower()}"\ntable_pids = ["demo/held"]\n'
+            f'locator = "fixture:partition-{part.lower()}"\n\n\n[[table.key]]\n'
+            'entity = ["demo/held/id"]\ntime = []\nperiod_key = "year"\n'
+            'locator = "fixture:declared-entity-time-key"\n'
+        )
+        assert dated in text
+        text = text.replace(
+            dated,
+            f'physical_name = "Part {part}"\ndisposition = "excluded"\ntable_pids = []\n'
+            f'reason = "Outside the authored observation scope"\n'
+            f'locator = "fixture:partition-{part.lower()}"\n',
+        )
+    path.write_text(text)
+    pin_steward(root, tmp_path / "stewards.toml")
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
+        context = pool.client(artifact_env(output)).get("/api/context")
+        assert context.status_code == 200, context.text
+        assert context.json()["data"]["period_span"] == {
+            "start": "2017-01-01",
+            "end": "2021-01-01",
+        }
 
 
 def test_same_variable_attestation_extends_holdings_without_global_validity(
