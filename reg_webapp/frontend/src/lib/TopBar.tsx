@@ -170,8 +170,8 @@ export function TopBar({
           )}
         </a>
         {/* Text here filters both browse columns in place, never the open
-          page. Enter opens the palette under it, the way to codes,
-          classifications and the rest of the catalog; the field stays the
+          page. Enter opens the palette under it, for registers, variables
+          and the app's places; the field stays the
           palette's one input, so typing there goes on filtering the columns
           too. Escape closes the palette first, then clears the text (here or
           anywhere on the page, giving back the collapse state), then, below

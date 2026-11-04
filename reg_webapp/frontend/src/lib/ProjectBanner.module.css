@@ -157,6 +157,13 @@ a.verdict {
 .clear {
   margin-left: auto;
 }
+.clear[data-hidden] {
+  visibility: hidden;
+}
+/* The readout's years are mono; the words for no years are not. */
+.unset {
+  font-family: var(--font-ui);
+}
 .track {
   position: relative;
   height: 20px;

@@ -442,9 +442,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   only other registers match, a line above them says the open one has none. Escape
   clears the filter and restores the collapse state from anywhere on the page, unless a
   dialog, popover, the palette or another text field has focus (#1827). The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for
-  classifications and the app's places ("Go to the project", "Browse the data", "Go to
-  the start page"); its results are a mixed list and carry a `TypeTag`. It is a list
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for registers,
+  variables (with their register) and the app's places ("Go to the project", "Browse the
+  data", "Go to the start page"); classifications are reached through their variables
+  (Operator 2026-11-04). Its results are a mixed list and carry a `TypeTag`. It is a list
   under the field with no field of its own: the top-bar field is its one input, so focus
   stays there, the arrow keys move through the rows, and typing goes on filtering the
   columns. A second field in the popover showed the same text twice (maintainer report
@@ -597,7 +598,7 @@ Time is the axis every relation is drawn on.
   missing period can be repaired; it writes only when a thumb rests. Every source card
   shares the page's one axis. The lanes are the card's columns: no list repeats them
   under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a quiet
-  ghost "Remove", named "Remove <column> from <table>", that asks first in a `Dialog`
+  ghost "Remove", named "Remove <variable> from <table>", that asks first in a `Dialog`
   whose answer is the `danger` button and takes the column out of that one source.
   Removing the last binding asks to remove the source. Source removal also removes its
   panel memberships and any panels left without members; the dialog states this when
@@ -656,7 +657,9 @@ Time is the axis every relation is drawn on.
   where only a few characters would show. A span too narrow for the column name is a
   plain bar with the name beside it: to the right, to the left at the axis end, else in
   a gap between its deliveries, and only where no room is free over the bars at the
-  track's end, never cut. Hovering or focusing a span shows its column, table and years
+  track's end, never cut; the bar carries the span's years where they fit, so it is not
+  an empty box. Stacked below the breakpoint, a lane's spans start just under its name.
+  Hovering or focusing a span shows its column, table and years
   at once in a RAC `Tooltip` with no delay. The variables a succession reaches are
   further lanes in time order, with their arrows. A line under the drawing says "Click a
   column to add it to your project."; with no project open it says "Create a project to

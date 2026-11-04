@@ -168,7 +168,9 @@ kbd.hint,
   .inner[data-search-open] .searchToggle {
     display: none;
   }
-  .inner > :last-child {
+  /* The banner, the row's last child; /project with no project has none,
+     and the "Search" button keeps its place. */
+  .inner > :last-child:not(.searchToggle) {
     flex-basis: 100%;
     margin-left: 0;
   }
