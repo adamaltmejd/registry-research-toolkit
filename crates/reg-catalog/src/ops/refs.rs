@@ -2,10 +2,107 @@
 //! `ident`. Every operation that takes a ref calls [`resolve`]; one that expects a
 //! table calls [`table`].
 
+use std::collections::{BTreeMap, BTreeSet};
+
 use reg_core::Fqid;
 use rusqlite::{Connection, OptionalExtension, Row};
 
+use super::Server;
 use crate::{Code, Error, rows};
+
+/// The kinds [`names`] names. An implicit table shares its register's id, so a name is
+/// asked for by kind.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Named {
+    Register,
+    Table,
+    Variable,
+}
+
+/// The display names [`names`] read, by kind and public id.
+pub struct Names(BTreeMap<(Named, String), String>);
+
+impl Names {
+    #[must_use]
+    pub fn get(&self, kind: Named, fqid: &str) -> Option<String> {
+        self.0.get(&(kind, fqid.to_owned())).cloned()
+    }
+
+    /// The name of an id the response already resolved, which every such id has
+    /// (`name_text` and `label_text` are `NOT NULL`).
+    ///
+    /// # Errors
+    ///
+    /// `internal_error` when it has none.
+    pub fn of(&self, kind: Named, fqid: &str) -> Result<String, Error> {
+        self.get(kind, fqid).ok_or_else(|| {
+            Error::new(
+                Code::InternalError,
+                format!("{fqid:?} has no name in the catalog."),
+                vec![],
+            )
+        })
+    }
+}
+
+/// The display names of the registers, tables and variables among `fqids`, as `show`
+/// gives them: a register's or a table's name, a variable's label. In steward mode an
+/// id the reference catalog defines keeps its reference name (an overlay's is its
+/// slug), as `show` does. One query per origin however many ids, so a list response
+/// names its rows with one call, never a read per row.
+///
+/// # Errors
+///
+/// `catalog_unavailable` for an unreadable file; `internal_error` when a query fails.
+pub fn names<'a>(
+    server: &Server,
+    fqids: impl IntoIterator<Item = &'a str>,
+) -> Result<Names, Error> {
+    let mut wanted: Vec<&str> = fqids.into_iter().collect();
+    wanted.sort_unstable();
+    wanted.dedup();
+    if wanted.is_empty() {
+        return Ok(Names(BTreeMap::new()));
+    }
+    let mut names = origin_names(&server.catalog.connect()?, &wanted)?;
+    let found: BTreeSet<&str> = names.keys().map(|(_, fqid)| fqid.as_str()).collect();
+    let rest: Vec<&str> = wanted.into_iter().filter(|f| !found.contains(f)).collect();
+    if !rest.is_empty()
+        && let Some(extra) = server.catalog.connect_holdings()?
+    {
+        names.extend(origin_names(&extra, &rest)?);
+    }
+    Ok(Names(names))
+}
+
+/// [`names`] in one origin: one query over the three kinds.
+fn origin_names(
+    conn: &Connection,
+    fqids: &[&str],
+) -> Result<BTreeMap<(Named, String), String>, Error> {
+    Ok(rows(
+        conn,
+        "SELECT 0, r.pid, n.body FROM json_each(?1) x
+           JOIN register r ON r.pid = x.value JOIN text n ON n.id = r.name_text
+         UNION ALL
+         SELECT 1, t.pid, n.body FROM json_each(?1) x
+           JOIN tbl t ON t.pid = x.value JOIN text n ON n.id = t.name_text
+         UNION ALL
+         SELECT 2, v.pid, n.body FROM json_each(?1) x
+           JOIN variable v ON v.pid = x.value JOIN text n ON n.id = v.label_text",
+        [serde_json::Value::from(fqids).to_string()],
+        |row| {
+            let kind = match row.get::<_, i64>(0)? {
+                0 => Named::Register,
+                1 => Named::Table,
+                _ => Named::Variable,
+            };
+            Ok(((kind, row.get(1)?), row.get(2)?))
+        },
+    )?
+    .into_iter()
+    .collect())
+}
 
 /// A resolved ref: `ident`'s row.
 pub struct Entity {

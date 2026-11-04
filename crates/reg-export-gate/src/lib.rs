@@ -4,13 +4,14 @@
 
 mod backstop;
 mod config;
+mod deliver;
 mod disclosure;
 mod export;
 mod inventory;
 mod schema;
 mod structure;
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
 
@@ -32,6 +33,7 @@ pub enum Code {
     Structure,
     Disclosure,
     Backstop,
+    Delivery,
 }
 
 impl Code {
@@ -43,6 +45,7 @@ impl Code {
             Code::Structure => "structure",
             Code::Disclosure => "disclosure",
             Code::Backstop => "backstop",
+            Code::Delivery => "delivery",
         }
     }
 
@@ -55,6 +58,7 @@ impl Code {
             Code::Structure => 12,
             Code::Disclosure => 13,
             Code::Backstop => 14,
+            Code::Delivery => 15,
         }
     }
 }
@@ -218,4 +222,22 @@ pub fn check_project(config_dir: &Path, project: &str, staging: &Path) -> Result
         Some(&project.policy),
         &[config_dir, &project.destination],
     )
+}
+
+/// The reviewer's export of a server-mode project: the output folder whose
+/// `receipt.json` has SHA-256 `receipt` (lowercase hex, the receipt the
+/// reviewer inspected) is read once and checked again under the config's
+/// schema and policy; its rewrite must reproduce it byte for byte. Then the
+/// gate writes its own bytes to `<destination>/<first 16 hex digits of
+/// receipt>/` and re-hashes them there; a second export of the same receipt
+/// re-verifies that folder and writes nothing. Gives that folder. A panic is
+/// `internal_error`.
+///
+/// # Errors
+///
+/// The refusal, with its code and findings: `delivery` (`receipt_mismatch`,
+/// `destination_writable`, `hash_mismatch`), a setup refusal of the config or
+/// paths, or the structure, disclosure or backstop refusal of the output.
+pub fn export_project(config_dir: &Path, project: &str, receipt: &str) -> Result<PathBuf, Refusal> {
+    caught(|| deliver::export(config_dir, project, receipt))
 }

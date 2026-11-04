@@ -17,24 +17,22 @@ package. The pass reads the whole tree, not a diff.
 
 ## 0. Measure
 
-Take the numbers before anything moves, and again at the end. `<tag>` is the release tag
-prefix and `<dir>` the package directory, both `reg_meta_build` for the one Python
-package. The Rust counts follow; the Rust runtime releases as `reg_meta`, so its commit
-count uses `<tag>` = `reg_meta` and `<dir>` = `crates`.
+Take the numbers before anything moves, and again at the end. The Rust runtime and
+builder release as `reg_meta` from `crates/`:
 
 ```sh
-last=$(git describe --tags --abbrev=0 --match '<tag>/v*' 2>/dev/null ||
+last=$(git describe --tags --abbrev=0 --match 'reg_meta/v*' 2>/dev/null ||
   git rev-list --max-parents=0 HEAD)  # no reachable tag: count from the root
-git log --oneline "$last"..HEAD -- <dir> | wc -l
-git ls-files '<dir>/src/*.py' | xargs wc -l | tail -1
-git ls-files '<dir>/tests/*.py' | xargs wc -l | tail -1
-uv run python -m pytest <dir> -n auto -q --durations=20
+git log --oneline "$last"..HEAD -- crates | wc -l
+git ls-files 'crates/*.rs' | xargs wc -l | tail -1
+git ls-files 'scripts/*.py' 'conformance/*.py' | xargs wc -l | tail -1
+uv run python -m pytest scripts/tests -n auto -q --durations=20
 ```
 
 Compare each suite's wall time with its budget in ARCHITECTURE.md → "Tiers". Rust:
-`git ls-files 'crates/*.rs' | xargs wc -l` and `cargo test --workspace`; its dependency
-check traces each direct dependency in a crate's `Cargo.toml` to a use in that crate's
-sources, tests, examples or `build.rs` (`rg`).
+`cargo test --workspace`; its dependency check traces each direct dependency in a
+crate's `Cargo.toml` to a use in that crate's sources, tests, examples or `build.rs`
+(`rg`).
 
 ## 1. Mechanical checks
 
@@ -66,12 +64,10 @@ harness allows (Codex runs three children at a time) and the rest in waves. Wher
 harness lets a call choose its model, set it on every call: the family's mid tier (in
 Claude, Opus) for code, the tier below for docs. Every tracked non-test source file
 (`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
-the split below misses joins its nearest module. Today's split: `reg_meta_build/src` as
-`sources/`, `ir/` and the top-level modules by size, with
-`reg_webapp/stewards/swecov/build_catalog.py`; `reg_webapp/edge` with the Dockerfile and
-deploy scripts; `scripts/`; the `conformance/` harness; `plugins/microdata-tools-se/`;
-and `crates/` (Rust). The test trees are the `test-audit` skill's: run its sweep in the
-same waves and merge its list into step 3.
+the split below misses joins its nearest module. Today's split: `reg_webapp/edge` with
+the Dockerfile and deploy scripts; `scripts/`; the `conformance/` harness;
+`plugins/microdata-tools-se/`; and `crates/` (Rust). The test trees are the `test-audit`
+skill's: run its sweep in the same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step

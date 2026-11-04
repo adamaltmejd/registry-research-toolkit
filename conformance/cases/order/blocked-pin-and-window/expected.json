@@ -7,7 +7,9 @@
       "message": "demo/amb/del has more than one form in demo/amb over [2019-01-01, 2020-01-01) (name, type or codes differ); pick a shorter period or ask the maintainer",
       "source": "s",
       "variable": "demo/amb/del",
+      "variable_name": "Del",
       "table": "demo/amb",
+      "table_name": "Tvetydiga registret",
       "period": {
         "start": "2019-01-01",
         "end": "2020-01-01"
@@ -20,7 +22,9 @@
       "message": "class/absent/v1 names no classification version in the catalog.",
       "source": "s",
       "variable": "demo/amb/del",
-      "table": "demo/amb"
+      "variable_name": "Del",
+      "table": "demo/amb",
+      "table_name": "Tvetydiga registret"
     }
   ]
 }

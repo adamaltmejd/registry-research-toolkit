@@ -59,10 +59,15 @@ def test_order_file_or_located_finding(case: Path, steward) -> None:
             assert HASH.fullmatch(value)
         assert data == json.loads(oracle.read_text())
         # Fails if steward `order` drops the holdings stage's warnings (a
-        # `mapping_caveat`) that the order file carries.
+        # `mapping_caveat`) that the order file carries. `order` names them; the
+        # order file carries the bare finding.
         logical = steward.post("/api/project/order", json=request["project"])
         assert logical.status_code == 200, logical.text
-        assert logical.json()["data"]["findings"] == data["findings"]
+        names = {"variable_name", "table_name", "successor_name"}
+        assert [
+            {key: value for key, value in finding.items() if key not in names}
+            for finding in logical.json()["data"]["findings"]
+        ] == data["findings"]
     else:
         assert answer.status_code == 422, answer.text
         error = answer.json()["error"]

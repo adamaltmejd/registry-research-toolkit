@@ -19,8 +19,11 @@
     {
       "source": "s",
       "table": "demo/held",
+      "table_name": "Held reference metadata",
       "period": {"start": "2018-01-01", "end": "2019-01-01"},
-      "columns": [{"variable": "demo/held/id", "spelling": "Received_Id"}]
+      "columns": [
+        {"variable": "demo/held/id", "variable_name": "Identifier", "spelling": "Received_Id"}
+      ]
     }
   ]
 }

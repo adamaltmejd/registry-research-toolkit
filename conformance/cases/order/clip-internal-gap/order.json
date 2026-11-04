@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/gap",
       "table": "demo/gap",
+      "table_name": "Glappregistret",
       "variable": "demo/gap/x",
+      "variable_name": "X",
       "display_name": null,
       "period": {
         "start": "2015-01-01",
@@ -33,7 +35,9 @@
       "provider": "demo",
       "register": "demo/gap",
       "table": "demo/gap",
+      "table_name": "Glappregistret",
       "variable": "demo/gap/x",
+      "variable_name": "X",
       "display_name": null,
       "period": {
         "start": "2018-01-01",
@@ -51,6 +55,7 @@
     {
       "source": "s",
       "variable": "demo/gap/x",
+      "variable_name": "X",
       "requested": [
         {
           "start": "2015-01-01",
@@ -77,12 +82,15 @@
       "message": "demo/gap/x is not available over [2017-01-01, 2018-01-01); that part is not ordered",
       "source": "s",
       "variable": "demo/gap/x",
+      "variable_name": "X",
       "table": "demo/gap",
+      "table_name": "Glappregistret",
       "period": {
         "start": "2017-01-01",
         "end": "2018-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

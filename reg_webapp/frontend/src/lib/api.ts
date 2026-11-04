@@ -135,10 +135,11 @@ export function triggerDownload(blob: Blob, filename: string): void {
 // `show` summarizes any ref (no ref is the catalog root). Entity facets return
 // with their routed pages in W2–W5.
 
-/** The Rust server's `context`: artifact identity and catalog counts. */
+/** The Rust server's `context`: the period span, server version and steward
+ * presentation the shell shows. */
 export type Context = RustSchemas["Context"];
 
-/** The steward's presentation, logo and scope; present in paired mode only. */
+/** The steward's presentation and logo; present in paired mode only. */
 export type StewardConfig = RustSchemas["StewardConfig"];
 
 export function stewardConfig(context: Context | null): StewardConfig | null {
