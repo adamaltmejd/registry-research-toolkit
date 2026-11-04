@@ -91,9 +91,19 @@ fn project(params: &Params) -> Result<Value, Error> {
 fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
     let issues: Vec<Issue> = match reg_core::project::check(&project(params)?) {
         Err(result) => result.issues.into_iter().map(Issue::from).collect(),
-        Ok(project) => match check(server, &project)? {
-            Ok(order) => order.findings,
-            Err(findings) => findings,
+        // A steward server also runs the holdings stage, so validate refuses what
+        // `materialize` would block (an unheld variable is `mapping_missing`).
+        Ok(project) => match (server.catalog.connect_holdings()?, server.catalog.steward()) {
+            (Some(held), Some(steward)) => {
+                match materialize::manifest(server, &held, steward, &project)? {
+                    Ok(manifest) => manifest.findings,
+                    Err(findings) => findings,
+                }
+            }
+            _ => match check(server, &project)? {
+                Ok(order) => order.findings,
+                Err(findings) => findings,
+            },
         },
     };
     let ok = !issues.iter().any(Issue::blocks);
