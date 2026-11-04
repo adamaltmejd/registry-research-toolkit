@@ -1,5 +1,0 @@
-[[edge]]
-type = "replaced_by"
-from = "class/sun2000-inriktning"
-to = "class/sun2020-inriktning"
-effective_year = 2020

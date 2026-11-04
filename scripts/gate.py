@@ -2,15 +2,14 @@
 """gate — the full verification gate and the regenerate command.
 
     uv run --no-project scripts/gate.py all            # before opening a PR
-    uv run --no-project scripts/gate.py g0 --packages reg_meta_build
+    uv run --no-project scripts/gate.py g0 rust
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, builder, flows and frontend;
+first failure. `all` runs g0, rust, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
-jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
-`builder`, `frontend` and `flows`; the legacy Python builder suite runs in
-`builder` until cutover F. `rust` also owns release admission on the synthetic
+jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`, `frontend` and
+`flows`, and runs `scripts/tests` itself. `rust` also owns release admission on the synthetic
 artifact, so the Rust binaries are built once per job.
 `regen` also refreshes the plugin project schema. Stdlib only.
 """
@@ -45,7 +44,7 @@ SERVER_CMD = (
     " --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
-ALL = ("g0", "rust", "builder", "flows", "frontend")
+ALL = ("g0", "rust", "flows", "frontend")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
 # builder"). These words fail `lint` in the other builder crates and in the catalog
 # reader and server, which read only the catalog: providers, their template
@@ -127,25 +126,10 @@ def provider_vocabulary() -> None:
         raise subprocess.CalledProcessError(1, ["provider vocabulary scan"])
 
 
-def g0(packages: list[str] | None = None) -> None:
+def g0() -> None:
     lint()
     crates()
-    # The legacy builder stays mandatory in CI and `builder` until cutover F;
-    # its full compiler corpus costs more than the every-change local gate allows.
-    # Explicit --packages still checks it here when working on a release fix.
-    run(
-        [
-            "uv",
-            "run",
-            "python",
-            "-m",
-            "pytest",
-            *(packages or ["scripts/tests"]),
-            "-n",
-            "auto",
-            "-q",
-        ]
-    )
+    run("uv run python -m pytest scripts/tests -n auto -q")
 
 
 def rust() -> None:
@@ -165,17 +149,11 @@ def rust() -> None:
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
     # checks: the rest of the suite does not read `--artifact-dir` and already ran
-    # above. Here, not in `builder`, because this step has the binaries built.
+    # above.
     artifact = base_artifact()
     run(
         f"{CONFORMANCE} -m release --run-release --artifact-dir={artifact} {SERVER_CMD}"
     )
-
-
-def builder() -> None:
-    # The legacy builder's Python suite; needs no Rust binary, only the `reg-core-py`
-    # extension that `uv sync` builds.
-    run("uv run python -m pytest reg_meta_build -n auto -q")
 
 
 def flows() -> None:
@@ -258,7 +236,6 @@ STEPS = {
         g0,
         crates,
         rust,
-        builder,
         flows,
         frontend,
         regen,
@@ -269,21 +246,15 @@ STEPS = {
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("steps", nargs="+", choices=[*STEPS, "all"])
-    parser.add_argument(
-        "--packages",
-        nargs="+",
-        help="g0's pytest paths (default: scripts/tests; legacy builder runs in builder)",
-    )
     args = parser.parse_args()
     names = [n for step in args.steps for n in (ALL if step == "all" else [step])]
-    steps = STEPS | {"g0": lambda: g0(args.packages)}
     times: list[str] = []
     failed = None
     for name in names:
         print(f"== gate {name}", flush=True)
         started = time.monotonic()
         try:
-            steps[name]()
+            STEPS[name]()
         except subprocess.CalledProcessError as exc:
             failed = (
                 f"{name}: exit {exc.returncode} from {shlex.join(map(str, exc.cmd))}"

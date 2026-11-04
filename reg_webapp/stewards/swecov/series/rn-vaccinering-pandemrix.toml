@@ -1,8 +1,0 @@
-id = "rn-vaccinering-pandemrix"
-register = "region-norrbotten/pandemrix-vaccinationer"
-variants = ["region-norrbotten/pandemrix-vaccinationer/_default"]
-
-[[table]]
-table = "RN_Vaccinering_Pandemrix"
-edition = { from = 2009, to = 2010 }
-period_column = { name = "datum", encoding = "date" }

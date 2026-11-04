@@ -1,6 +1,0 @@
-{
-  "passed": false,
-  "failures_contain": [
-    "resolver_column is not the projection of expanded_state: 1 missing, 1 surplus row(s)"
-  ]
-}

@@ -1,6 +1,0 @@
-{
-  "passed": true,
-  "report_contains": [
-    "flavored build — pooled↔explicit guard skipped"
-  ]
-}

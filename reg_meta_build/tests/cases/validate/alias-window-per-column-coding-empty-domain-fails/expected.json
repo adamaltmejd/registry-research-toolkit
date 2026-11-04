@@ -1,6 +1,0 @@
-{
-  "passed": false,
-  "failures_contain": [
-    "2 alias coding override(s) lack an exact positive finite domain"
-  ]
-}

@@ -1,18 +1,14 @@
 [project]
 name = "registry-research-toolkit"
 version = "0.4.0"
-description = "Workspace coordinator for reg_meta_build"
+description = "Test and tooling environment for the scripts and the conformance suite"
 requires-python = ">=3.15"
-dependencies = [
-  "reg-meta-build",
-]
+dependencies = []
 
 [dependency-groups]
 dev = [
   "httpx2>=2.16.0",
-  "hypothesis>=6.170.13",
   "jsonschema>=4.26.0",
-  "maturin>=1.15.0",
   "pytest>=9.2.0",
   "pytest-xdist>=3.8.0",
   "ruff>=0.17.3",
@@ -23,7 +19,6 @@ pythonpath = ["conformance"]
 # Not `conformance`: it needs the Rust server (`--server-cmd`), so `scripts/gate.py
 # rust` runs it.
 testpaths = [
-  "reg_meta_build",
   "scripts/tests",
 ]
 markers = [
@@ -87,12 +82,3 @@ package = false
 # ~/.config/uv/uv.toml `exclude-newer`, which makes plain `uv run` discard the
 # committed lock and re-resolve to older versions than the ones locked here.
 exclude-newer = false
-
-[tool.uv.sources]
-reg-meta-build = { workspace = true }
-
-[tool.uv.workspace]
-members = [
-  "crates/reg-core-py",
-  "reg_meta_build",
-]

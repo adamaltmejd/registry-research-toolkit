@@ -1,6 +1,0 @@
-{
-  "passed": false,
-  "failures_contain": [
-    "2 variable member(s) outside their group's register"
-  ]
-}

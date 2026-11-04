@@ -123,8 +123,8 @@ one of three piles.
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push, run the gate steps CI runs for the touched module
-(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0 --packages <dir>` for
-a Python package and `crates` for `crates/`. For the edge worker, run
+(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0` for `scripts/` and
+`conformance/`, and `crates` for `crates/`. For the edge worker, run
 `bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
 wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
 redesigns a module rather than deleting from it, or needs more than one sitting, becomes

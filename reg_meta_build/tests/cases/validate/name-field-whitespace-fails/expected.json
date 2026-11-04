@@ -1,8 +1,0 @@
-{
-  "passed": false,
-  "failures_contain": [
-    "1 variable.name value(s) with surrounding whitespace",
-    "1 register.name value(s) with surrounding whitespace",
-    "1 register_variant.name value(s) with surrounding whitespace"
-  ]
-}

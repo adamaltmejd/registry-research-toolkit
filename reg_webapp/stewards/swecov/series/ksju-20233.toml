@@ -1,9 +1,0 @@
-id = "ksju-20233"
-register = "scb/ksju"
-variants = ["scb/ksju/sjukfranvaro-sjukloneperioden"]
-
-# route note: ERSDAG/ERSK/FALLK etc. are wide pivots
-
-[[table]]
-table = "KSju_20233"
-edition = "2023-Q3"

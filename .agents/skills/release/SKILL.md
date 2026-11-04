@@ -96,8 +96,8 @@ maintainer runs it. A gap is allowed; the guard blocks deployment throughout it.
 The bump commit, `Bump <package> version to X.Y.Z`, contains **only** the version files
 (and `Cargo.lock`). Commit it on `origin/main` and push it to a PR branch; CI is the
 gate, so there is no local `gate.py all`. `ci.yml` runs every step `gate.py all` runs
-(lint, the builder and scripts suites, `rust` with the synthetic release admission, and,
-because the `webapp` filter matches `Cargo.toml`, the frontend and flows jobs):
+(lint, the scripts suite, `rust` with the synthetic release admission, and, because the
+`webapp` filter matches `Cargo.toml`, the frontend and flows jobs):
 
 ```sh
 git push origin HEAD:refs/heads/release/<package>-vX.Y.Z

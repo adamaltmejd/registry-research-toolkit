@@ -1,8 +1,0 @@
-{
-  "catalog_publishable": "false",
-  "catalog_completeness": "incomplete",
-  "absent_fields": [
-    "generation_id",
-    "builder_commit"
-  ]
-}
