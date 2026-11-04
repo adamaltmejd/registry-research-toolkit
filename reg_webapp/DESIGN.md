@@ -128,8 +128,9 @@ into the holdings DB as `steward_config`, and the server serves them at `/api/co
 
 The Rust server admits its catalog at startup and refuses to serve otherwise
 (`Catalog::open` in `crates/reg-catalog`): metadata must be well formed and its schema
-version must exactly equal `reg_core::CATALOG_SCHEMA_VERSION`. The `api` admission
-corpus pins the refusals. The webapp ships no DDL or schema-version authority;
+version must exactly equal `reg_core::CATALOG_SCHEMA_VERSION`. A steward selection also
+admits its holdings partner, whose manifest pins the base catalog's SHA-256. The `api`
+admission corpus pins the refusals. The webapp ships no DDL or schema-version authority;
 `reg-build verify` owns published artifact invariants.
 
 ## Catalog operations (the Rust server)
@@ -382,12 +383,20 @@ hosted MCP through its own origin and worker.
   MCP only. Cloudflare can weaken ETags during compression; GET revalidation permits
   weak comparison.
 
+Pair admission checks the holdings pin against the base catalog's SHA-256. The image
+computes that digest when it is built, in the bake step that verifies and unpacks the
+release assets, and the entrypoint passes it in as `REG_META_CATALOG_SHA256`. Hashing
+the 1.33 GB catalog at boot instead took about 80 s on Fly's rootfs (~17 MB/s), and
+data.swecov.se was down that long on every deploy or restart. A wrong digest refuses
+admission like a wrong file. Without the variable (local runs, CI, the conformance
+suite) the server hashes the file at boot.
+
 Paired boot allows 300 seconds (`REG_META_READY_DEADLINE` and the SWECOV Fly check's
-`grace_period`) because pair admission hashes the base catalog before binding. Global
-keeps its 60-second default. The check's five-second request timeout applies after
-binding; it is not the startup allowance. Preload currently runs after the smoke gate.
-Moving it before server start could warm the hash's pages if they remain resident, but
-would still require the same cold disk read before binding.
+`grace_period`); the gate's first search reads cold pages and reuses that deadline.
+Global keeps its 60-second default. The check's five-second request timeout applies
+after binding; it is not the startup allowance. After the smoke gate passes, the
+entrypoint reads the served DBs into the page cache in the background (`nice cat`), so
+the site serves while the cache warms; the read ends with the container.
 
 The first push after this restoration merges rebuilds and redeploys global: the
 `__edge_v` server restoration changes `crates/**`, the binary and its content digest.
