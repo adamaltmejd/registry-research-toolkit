@@ -23,13 +23,14 @@ All under the export root, set at the top of the script:
    SWECOV server (the runner trusts the file fully: no allowlist, no hash check):
 
    ```bash
-   curl -sS -X POST https://data.swecov.se/api/project/materialize \
-     -H 'content-type: application/json' --data @project_data.json \
-     | jq .data > order.json
+   curl -sS --fail-with-body -X POST https://data.swecov.se/api/project/materialize \
+     -H 'content-type: application/json' --data @project_data.json -o response.json
+   jq -e .data response.json > order.json
    ```
 
    The MCP `materialize_order` tool gives the same file. A project the server blocks
-   returns `order_blocked` with located findings instead; fix the project and ask again.
+   returns `order_blocked` with located findings (`curl` fails and `response.json` holds
+   them) instead; fix the project and ask again.
 
 2. Upload `order.json` to MONA together with `swecov_extract.R`, and save it as
    `orders\<project number>.json` (for example `orders\1234.json`).
