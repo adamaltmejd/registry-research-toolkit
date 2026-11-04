@@ -250,6 +250,12 @@ impl Answer {
     }
 }
 
+impl IntoResponse for Answer {
+    fn into_response(self) -> Response {
+        (self.status, json(self.body.to_string())).into_response()
+    }
+}
+
 /// Answer a route's parameters with `run` on the blocking pool.
 async fn call<T: Send + 'static>(
     server: &Arc<Server>,
@@ -330,8 +336,9 @@ async fn answer(
     Query(query): Query<Vec<(String, String)>>,
 ) -> Response {
     let params = request_params(route, path, query);
-    let answer = run(&server, op, op.route_params(route), params).await;
-    (answer.status, json(answer.body.to_string())).into_response()
+    run(&server, op, op.route_params(route), params)
+        .await
+        .into_response()
 }
 
 /// One POST operation over HTTP: its body, capped by [`limit::guard`] and parsed
@@ -349,8 +356,9 @@ async fn submit(
         Ok(params) => params,
         Err(refused) => return *refused,
     };
-    let answer = run(&server, op, op.route_params(route), params).await;
-    (answer.status, json(answer.body.to_string())).into_response()
+    run(&server, op, op.route_params(route), params)
+        .await
+        .into_response()
 }
 
 /// One POST download over HTTP: its body as [`submit`] takes it, answered with the
@@ -390,8 +398,7 @@ fn posted(
 
 /// `{error, meta}` with the code's status.
 fn refusal(server: &Server, err: Error) -> Response {
-    let answer = Answer::new(server, Err(err));
-    (answer.status, json(answer.body.to_string())).into_response()
+    Answer::new(server, Err(err)).into_response()
 }
 
 /// One download over HTTP: the raw bytes with its media type, or `{error, meta}` with
