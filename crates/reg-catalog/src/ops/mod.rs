@@ -120,7 +120,9 @@ impl<'c> HeldClip<'c> {
             .query_row(rusqlite::params![table, variable, start, end], |row| {
                 Ok((row.get(0)?, row.get(1)?))
             })?;
-        Ok(first.zip(last).map(|(first, last)| (start.max(first), end.min(last))))
+        Ok(first
+            .zip(last)
+            .map(|(first, last)| (start.max(first), end.min(last))))
     }
 }
 

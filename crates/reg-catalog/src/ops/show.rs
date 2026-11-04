@@ -11,9 +11,7 @@ use super::refs::{self, Entity};
 use super::segments::{self, Segment};
 use super::shape::{self, Release};
 use super::show_evidence::{self, VariableEvidence};
-use super::{
-    Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag,
-};
+use super::{Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag};
 use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
