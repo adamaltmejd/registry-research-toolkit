@@ -74,6 +74,8 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** The table (on a steward site, the file) the column is in, named in the
    * span's tooltip. */
   where?: string;
+  /** The table's fqid: which span of a variable a relation anchors on. */
+  tableRef?: string;
   /** Starts with the column name, then the variable, the years and the
    * state. */
   accessibleName: string;
@@ -663,6 +665,20 @@ function LaneText({
     if (top !== undefined && node && document.activeElement === node)
       node.scrollIntoView({ block: "center" });
   }, [top]);
+  // The reader's own scroll or key ends that: a later resize must not pull
+  // the page back.
+  useEffect(() => {
+    if (!focus) return;
+    const release = () => {
+      focused.current = null;
+    };
+    const events = ["wheel", "touchmove", "keydown", "pointerdown"] as const;
+    for (const event of events)
+      window.addEventListener(event, release, { once: true, passive: true });
+    return () => {
+      for (const event of events) window.removeEventListener(event, release);
+    };
+  }, [focus]);
   return (
     <div
       ref={measure}
@@ -693,7 +709,7 @@ function LaneText({
           // The focus target of a member's address: said in words, not only
           // by the lane's fill.
           tabIndex={focus ? -1 : undefined}
-          aria-current={lane.current ? "true" : undefined}
+          aria-current={focus ? "true" : undefined}
         >
           {lane.name}
         </span>

@@ -41,18 +41,15 @@
 }
 
 /* The ghost button's look at the line's size: no box, the accent underline. */
+/* A button drawn as the shared `.link`: only the button's own chrome is reset. */
 .more {
   align-self: flex-start;
   padding: 0;
-  border: 0;
+  border-top: 0;
+  border-inline: 0;
   background: transparent;
-  color: var(--text);
   font: inherit;
   font-size: var(--text-micro);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
   cursor: pointer;
 }
 

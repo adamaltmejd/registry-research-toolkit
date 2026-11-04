@@ -72,7 +72,7 @@ function MemberDetail({
           </p>
           {description.length > LONG && (
             <AriaButton
-              className={groupStyles.more}
+              className={`link ${groupStyles.more}`}
               aria-expanded={open}
               onPress={() => setOpen((current) => !current)}
             >
@@ -256,7 +256,7 @@ export function GroupView({
         )}
       </div>
       <CodeTimeline
-        segments={node.members.flatMap((member) => member.segments)}
+        members={node.members}
         axis={coverage.axis}
         bounds={factBounds}
       />

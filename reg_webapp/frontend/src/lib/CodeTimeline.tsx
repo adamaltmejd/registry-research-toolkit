@@ -30,6 +30,7 @@ const codeOrder = new Intl.Collator("sv", {
 });
 
 interface Use {
+  /** The member and the column name: two members can share a column name. */
   column: string;
   years: ProjectStudyWindow[];
 }
@@ -54,6 +55,8 @@ async function allValues(hash: string, signal: AbortSignal) {
   } while (cursor);
   return items;
 }
+
+const columnName = (key: string) => key.split("\u0000")[1] ?? key;
 
 const pair = (item: ValueItem) => `${item.code}\u0000${item.label ?? ""}`;
 
@@ -119,28 +122,29 @@ const label = (runs: readonly ProjectStudyWindow[]) =>
  * columns. A block with a long list waits for "Show codes".
  */
 export function CodeTimeline({
-  segments,
+  members,
   axis,
   bounds,
 }: {
   /** Every member's per-period rows. */
-  segments: readonly CatalogSegment[];
+  members: readonly { fqid: string; segments: readonly CatalogSegment[] }[];
   axis: [number, number];
   bounds: readonly [number, number];
 }) {
   const byHash = new Map<string, CodeList>();
-  for (const segment of segments) {
-    if (!segment.value_set) continue;
-    const list = byHash.get(segment.value_set.hash) ?? {
-      valueSet: segment.value_set,
-      uses: [],
-    };
-    list.uses.push({
-      column: segment.column,
-      years: columnYearRuns([segment], bounds, axis[0]),
-    });
-    byHash.set(segment.value_set.hash, list);
-  }
+  for (const { fqid, segments } of members)
+    for (const segment of segments) {
+      if (!segment.value_set) continue;
+      const list = byHash.get(segment.value_set.hash) ?? {
+        valueSet: segment.value_set,
+        uses: [],
+      };
+      list.uses.push({
+        column: `${fqid}\u0000${segment.column}`,
+        years: columnYearRuns([segment], bounds, axis[0]),
+      });
+      byHash.set(segment.value_set.hash, list);
+    }
   const lists = [...byHash.values()];
   // A hierarchy is browsed level by level, not drawn: its own block.
   const flat = lists.filter((list) => !list.valueSet.hierarchical);
@@ -254,7 +258,7 @@ function Block({
   const head = headed && (
     <p className={styles.columns}>
       {columns.map((column) => (
-        <ColumnChip key={column} name={column} />
+        <ColumnChip key={column} name={columnName(column)} />
       ))}
     </p>
   );
@@ -377,11 +381,14 @@ function Rows({
       rows.set(key, row);
     }
   }
-  const sorted = [...rows.values()].sort(
-    (a, b) =>
-      codeOrder.compare(a.code, b.code) ||
-      Math.min(...a.years.keys()) - Math.min(...b.years.keys()),
-  );
+  // A row with no year on the axis has nothing to draw.
+  const sorted = [...rows.values()]
+    .filter((row) => row.years.size > 0)
+    .sort(
+      (a, b) =>
+        codeOrder.compare(a.code, b.code) ||
+        Math.min(...a.years.keys()) - Math.min(...b.years.keys()),
+    );
   const track = runsOf(coded.keys());
   const columnYears = new Map<string, Set<number>>();
   for (const [year, columns] of coded) {
@@ -391,7 +398,7 @@ function Rows({
   // The name column of the timeline above, then its track.
   const columnsStyle = geometry.stacked
     ? "minmax(0, 1fr)"
-    : `${geometry.trackX - 16}px minmax(0, 1fr)`;
+    : `${geometry.trackX}px minmax(0, 1fr)`;
   const x = (year: number) =>
     ((year - axis[0]) / (axis[1] + 1 - axis[0])) * geometry.trackWidth;
   const bar = (run: ProjectStudyWindow) => ({
@@ -424,7 +431,7 @@ function Rows({
               <>
                 Only in{" "}
                 {users.map((column) => (
-                  <ColumnChip key={column} name={column} />
+                  <ColumnChip key={column} name={columnName(column)} />
                 ))}
               </>
             ) : (
@@ -437,7 +444,7 @@ function Rows({
                   const whole = label(runsOf(years)) === label(runsOf(own));
                   return (
                     <span key={column} className={styles.lack}>
-                      <ColumnChip name={column} />
+                      <ColumnChip name={columnName(column)} />
                       {!whole && ` ${label(runsOf(years))}`}
                     </span>
                   );
@@ -453,7 +460,13 @@ function Rows({
               style={{ gridTemplateColumns: columnsStyle }}
             >
               <span className={styles.text}>
-                <code className={styles.code}>{continued ? "" : row.code}</code>
+                {/* A further label of the code: the code is said, not shown. */}
+                <code
+                  className={`${styles.code} ${continued ? "visually-hidden" : ""}`}
+                >
+                  {row.code}
+                </code>
+                {continued && <span className={styles.code} />}
                 <span className={styles.label}>
                   {row.label}
                   <span className="visually-hidden">, used {label(used)}</span>

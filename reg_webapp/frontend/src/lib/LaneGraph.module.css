@@ -134,6 +134,8 @@
 /* A name block with a `detail` (a group member's facts and description):
    from the lane's top, and the lane grows to its measured height. */
 .detailed {
+  /* Its links' focus rings sit at the edge; the lane is sized to hold the text. */
+  overflow: visible;
   justify-content: flex-start;
   gap: var(--space-1);
   padding: var(--space-2) 0;

@@ -116,6 +116,7 @@ export function variableSpans({
       name: column.spelling,
       table: filesLabel(column.files),
       where: filesLabel(column.files) ?? names.get(column.table),
+      tableRef: column.table,
       from: first,
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
@@ -270,12 +271,13 @@ export function successionLanes({
     let successor = successors[0];
     // Anchor on the neighbour's end, then prefer its table on the focus variable.
     if (edge.from === graph.focus && predecessor) {
-      const table = predecessor.lane.slice(edge.to.length + 1);
-      successor = successors.find((span) => span.lane === table) ?? successor;
+      successor =
+        successors.find((span) => span.tableRef === predecessor?.tableRef) ??
+        successor;
     } else if (edge.to === graph.focus && successor) {
-      const table = successor.lane.slice(edge.from.length + 1);
       predecessor =
-        predecessors.find((span) => span.lane === table) ?? predecessor;
+        predecessors.find((span) => span.tableRef === successor?.tableRef) ??
+        predecessor;
     }
     const newer = nodes.get(edge.from);
     const older = nodes.get(edge.to);

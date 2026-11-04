@@ -14,11 +14,19 @@ export function ScopedDataWarnings({
   names?: ReadonlyMap<string, string>;
 }) {
   // simplify: one request per subject; the server has no group-level read.
-  const resource = useAsyncResource(fqids.join("\n"), async (signal) =>
-    (
+  const resource = useAsyncResource(fqids.join("\n"), async (signal) => {
+    const findings = (
       await Promise.all(fqids.map((fqid) => getFindings(fqid, { signal })))
-    ).flat(),
-  );
+    ).flat();
+    // Members of one table share its table-level findings: show each once.
+    const seen = new Set<string>();
+    return findings.filter((finding) => {
+      const key = JSON.stringify(finding);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  });
   if (resource.loading)
     return (
       <section aria-label="Notes on this data" aria-busy="true">
