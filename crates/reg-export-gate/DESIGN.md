@@ -66,8 +66,10 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   needs deletion relative to an open folder handle (`unlinkat`), which `std` does not
   offer without `unsafe`.
 - **Paths are compared by identity on disk** (device and inode), not by spelling, so a
-  case or Unicode variant on a case-insensitive volume is the same folder. An output
-  named `.diagnostics` in any case, or staging inside that folder, is `paths_overlap`.
+  case or Unicode variant on a case-insensitive volume is the same folder; the check
+  creates `.diagnostics` first, so an output name the volume folds to it is seen. That
+  output, one named `.diagnostics` in any ASCII case, or staging inside that folder, is
+  `paths_overlap`.
 - **The report** is written beside `output` only where it can touch neither staging nor
   the export, checked again once its folder exists, and not at all when staging exists
   but cannot be resolved. It goes into a real folder, as a new file (`O_NOFOLLOW`, never

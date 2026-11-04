@@ -80,6 +80,18 @@ fn apart(staging: Option<&Path>, output: &Path) -> Option<bool> {
     Some(!(name.eq_ignore_ascii_case(DIAGNOSTICS) || same || overlap))
 }
 
+/// `apart`, then again once the diagnostics folder exists (created here if
+/// the first check passes): only then can identity see an output whose name
+/// the volume folds to `.diagnostics` (another case or Unicode form).
+fn apart_settled(staging: Option<&Path>, output: &Path) -> Option<bool> {
+    if apart(staging, output)? {
+        let _ = std::fs::create_dir(parent(output).canonicalize().ok()?.join(DIAGNOSTICS));
+        apart(staging, output)
+    } else {
+        Some(false)
+    }
+}
+
 /// Staging exists, the output's folder exists, and staging, the output and the
 /// diagnostics folder beside it are apart, so nothing the gate clears or the
 /// report it writes can land in staging, and the report never in the export.
@@ -93,7 +105,7 @@ pub(crate) fn check_paths(staging: &Path, output: &Path) -> Result<(), Refusal> 
     let s = staging
         .canonicalize()
         .map_err(|_| setup("internal_error"))?;
-    match apart(Some(&s), output) {
+    match apart_settled(Some(&s), output) {
         Some(true) => Ok(()),
         Some(false) => Err(setup("paths_overlap")),
         None => Err(setup("internal_error")),
@@ -357,17 +369,22 @@ struct Report<'a> {
 /// into a real folder, as a new file: a planted link or hard link named like
 /// the report is unlinked, never written through.
 pub(crate) fn write_report(staging: &Path, output: &Path, refusal: Option<&Refusal>) {
-    // A staging path that exists but does not resolve (a dangling link) could
-    // be anywhere: no report.
+    // A staging path that is there but does not resolve (a dangling link, a
+    // folder that cannot be searched) could be anywhere: no report.
     let staging = match staging.canonicalize() {
         Ok(s) => Some(s),
-        Err(_) if std::fs::symlink_metadata(staging).is_err() => None,
+        Err(_)
+            if std::fs::symlink_metadata(staging)
+                .is_err_and(|e| e.kind() == std::io::ErrorKind::NotFound) =>
+        {
+            None
+        }
         Err(_) => return,
     };
     let Ok(dir) = parent(output).canonicalize().map(|p| p.join(DIAGNOSTICS)) else {
         return;
     };
-    if apart(staging.as_deref(), output) != Some(true) {
+    if apart_settled(staging.as_deref(), output) != Some(true) {
         return;
     }
     let report = Report {
@@ -388,12 +405,7 @@ pub(crate) fn write_report(staging: &Path, output: &Path, refusal: Option<&Refus
             })
             .unwrap_or_default(),
     };
-    let _ = std::fs::create_dir(&dir);
-    // Checked again now the folder exists, by identity: an alias of it the
-    // first check could not see (another case or form) is caught here.
-    if !std::fs::symlink_metadata(&dir).is_ok_and(|m| m.is_dir())
-        || apart(staging.as_deref(), output) != Some(true)
-    {
+    if !std::fs::symlink_metadata(&dir).is_ok_and(|m| m.is_dir()) {
         return;
     }
     let path = dir.join(REPORT);

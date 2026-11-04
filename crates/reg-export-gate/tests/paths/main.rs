@@ -61,6 +61,29 @@ fn output_named_like_the_diagnostics_folder_refuses() {
     }
 }
 
+#[test]
+fn the_report_never_lands_in_an_export_whose_name_folds_to_diagnostics() {
+    // Regression: on a volume that folds `ſ` to `s` (APFS), `.diagnoſtics`
+    // passed the name check and became the export, and the next run's report
+    // went into it. On a volume that does not fold, both runs may pass; either
+    // way no export holds a report.
+    let (root, staging, schema, policy) = trial("folded-diagnostics");
+    let aliased = root.join(".diagno\u{17f}tics");
+    let other = root.join("other");
+    let _ = export_gate(&staging, &aliased, Some(&schema), Some(&policy));
+    assert_eq!(
+        export_gate(&staging, &other, Some(&schema), Some(&policy)),
+        Ok(2)
+    );
+    for entry in std::fs::read_dir(&root).expect("the root") {
+        let dir = entry.expect("an entry").path();
+        assert!(
+            !(dir.join("receipt.json").exists() && dir.join("export_gate_report.json").exists()),
+            "an export holds a report"
+        );
+    }
+}
+
 #[cfg(unix)]
 #[test]
 fn a_planted_report_link_is_never_written_through() {
