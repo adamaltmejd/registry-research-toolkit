@@ -30,23 +30,22 @@ const TITLES: Readonly<Record<string, string>> = {
   retired_ref: "Catalog item has been retired",
   table_is_register: "Choose a table within the register",
   variable_not_in_table: "Variable is not available in this table",
-  outside_availability: "Variable is unavailable for the requested period",
+  outside_availability: "Variable is not available for the study years",
   edition_disagreement: "Editions disagree about this variable",
-  classification_incompatible:
-    "Classification does not match the requested period",
+  classification_incompatible: "Classification does not match the study years",
   classification_version_ambiguous: "Choose one classification version",
-  ambiguous_window: "The requested period needs curation",
+  ambiguous_window: "The study years cannot be ordered yet",
   coverage_end_unstated: "The end of coverage has not been confirmed",
-  form_change: "The delivered column changes during the requested period",
-  period_clipped: "Only part of the requested period is available",
+  form_change: "The delivered column changes during the study years",
+  period_clipped: "Years not available",
   preliminary_data: "The requested data are preliminary",
   variable_replaced: "Variable has a successor",
   variable_sensitive: "Variable contains sensitive information",
   source_outside_window: "Table is outside the study years",
   table_succession_undated: "The table succession has no stated date",
   period_default_on_dated_table: "Choose years for this dated table",
-  period_on_timeless_table: "This table does not use dated periods",
-  period_not_orderable: "The requested period cannot be ordered",
+  period_on_timeless_table: "This table has no years",
+  period_not_orderable: "These years cannot be ordered",
   project_empty: "Project has no variables to order",
   // The steward's tables (a steward server's `order` runs this stage too).
   // `mapping_caveat` is not shown (api.ts `forReaders`).
@@ -58,7 +57,7 @@ const TITLES: Readonly<Record<string, string>> = {
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
   rows_unfiltered: "Every year of this table is delivered",
-  row_filter_widened: "Rows are delivered for whole periods around the request",
+  row_filter_widened: "Rows are delivered for whole years around the request",
   row_filter_union: "Tables sharing a file are delivered over all their years",
 };
 
@@ -184,7 +183,7 @@ export function plainIssueText(
         )
         .replace(
           /(?<![\p{L}\p{N}_/-])\/sources(?![\p{L}\p{N}_/-])/gu,
-          "project sources",
+          "project tables",
         );
     } catch {
       // An unreadable draft has no panel identities to resolve.
