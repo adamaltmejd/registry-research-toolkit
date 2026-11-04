@@ -297,9 +297,10 @@ http = ["GET /api/docs/related/{ref}"]
 tool = "docs"
 params = { ref = "ref" }
 result = "[RelatedDocument]"
-errors = ["docs_unavailable", "invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The documents linked to a register, table, variable or classification family \
-(`doc_link_subject`), by title."""
+(`doc_link_subject`), by title. A resolved ref with no linked documents answers an \
+empty list, also in a catalog without documents."""
 
 [[download]]
 route = "GET /api/docs/file/{doc}"
