@@ -1,4 +1,4 @@
-import type { LogicalOrder } from "./api";
+import type { CatalogPeriod, LogicalOrder } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogPeriodRuns, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
@@ -53,18 +53,22 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
               firstOfSource.get(clip.source) === key &&
               periodsLess(clip.requested, clip.ordered).length > 0,
           );
-          const rowKeys = [
-            ...new Map(
-              order.row_keys
-                .filter(
-                  (rowKey) =>
-                    rowKey.source === group.source &&
-                    rowKey.table === group.table,
-                )
-                .flatMap((rowKey) => rowKey.columns)
-                .map((column) => [column.spelling, column] as const),
-            ).values(),
-          ];
+          // A table's row identifier can change over time: each column keeps
+          // the periods it identifies a row in.
+          const rowKeys = new Map<
+            string,
+            { spelling: string; variable: string; periods: CatalogPeriod[] }
+          >();
+          for (const rowKey of order.row_keys) {
+            if (rowKey.source !== group.source || rowKey.table !== group.table)
+              continue;
+            for (const column of rowKey.columns) {
+              const id = JSON.stringify([column.spelling, column.variable]);
+              const seen = rowKeys.get(id);
+              if (seen) seen.periods.push(rowKey.period);
+              else rowKeys.set(id, { ...column, periods: [rowKey.period] });
+            }
+          }
           const years = catalogPeriodRuns(
             group.entries.map((entry) => entry.period),
           );
@@ -121,13 +125,20 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
                   </ul>
                 </div>
               )}
-              {rowKeys.length > 0 && (
+              {rowKeys.size > 0 && (
                 <div className={styles.fact}>
                   <span className="micro-label">Row identifier</span>
                   <ul className={styles.plainList}>
-                    {rowKeys.map((column) => (
-                      <li key={column.spelling} className={styles.column}>
-                        <ColumnChip name={column.spelling} />
+                    {[...rowKeys].map(([id, column]) => (
+                      <li key={id} className={styles.column}>
+                        <ColumnChip
+                          name={column.spelling}
+                          years={
+                            catalogPeriodRuns(column.periods) === years
+                              ? undefined
+                              : catalogPeriodRuns(column.periods)
+                          }
+                        />
                         <a className="link" href={catalogHref(column.variable)}>
                           {names.get(column.variable) ??
                             "Variable name unavailable"}
