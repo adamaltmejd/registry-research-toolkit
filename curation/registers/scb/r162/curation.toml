@@ -1332,3 +1332,9 @@ kind = "set"
 subject = "set:varuslag"
 fields = { "label" = "Varuslag" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: MaxLv where key = 'v1986' and release = 'r1375'"
+fields = { "unit" = "kg" }
+evidence = "Maximal lastvikt anges inte i kilometer; övriga årgångar anger kg.\nold unit: 'kilometer'; Registerinformation.csv:row=951686 (r1375)"

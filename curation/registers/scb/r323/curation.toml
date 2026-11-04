@@ -454,3 +454,9 @@ kind = "set"
 subject = "set:vardepappersvaluta"
 fields = { "label" = "Värdepappersvaluta" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+[[statement]]
+kind = "set"
+subject = "var:quotationbasis"
+fields = { "description" = "Anger i vilken enhet instrumentets variabler uttrycks. Kodlistan har tolv koder: CCY valuta per enhet, PCL och PDT procent av nominellt värde (exklusive respektive inklusive upplupen ränta), PCT procent, PNT poäng, UNT enhet, YLD och YAN avkastning (årlig för YAN) och DCL, DDT, DAC och DAD diskonto (exklusive respektive inklusive upplupen ränta; DAC och DAD årligt)." }
+evidence = "Värdemängd 9280 (2013-2026) med tolv koder; definitionen nämner bara CCY och PCL.\n0.74.0 catalog, key v28768, releases r11140, r11833, r13379, r13826...; reg_meta.db:occurrence:462345,462400,462455"

@@ -1969,18 +1969,6 @@ evidence = "Samma källkolumn har överlappande ägare med olika etiketter.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-3"
-fields = { "sets" = ["franvarotimmar"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter.\ncatalog:occurrence:5642\ncatalog:occurrence:5643\ncatalog:variable_text:1517:17167:18628\ncatalog:variable_text:1518:12874:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-3"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter.\ncatalog:occurrence:5642\ncatalog:occurrence:5643\ncatalog:variable_text:1517:17167:18628\ncatalog:variable_text:1518:12874:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-franvarotimmar-i-huvudsysslan-totalt-for-sysselsatta"
 fields = { "sets" = ["franvarotimmar"] }
 evidence = "Variabeln mäter frånvarotimmar för sysselsatta.\ncatalog:variable_text:1519:18628:20819"
@@ -11041,18 +11029,6 @@ evidence = "Näringsgren i bisysslan.\ncatalog:variable_text:2323:8035:9131"
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-i-huvudsysslan-sni92"
-fields = { "sets" = [] }
-evidence = "Källan anger samma näringsgrensbegrepp med en efterföljande period hos scb/aku/husni92.\ncatalog:occurrence:2667\ncatalog:occurrence:2808\ncatalog:variable_text:2324:6574:6940"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-i-huvudsysslan-sni92"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger samma näringsgrensbegrepp med en efterföljande period hos scb/aku/husni92.\ncatalog:occurrence:2667\ncatalog:occurrence:2808\ncatalog:variable_text:2324:6574:6940"
-
-[[statement]]
-kind = "set"
 subject = "var:nattarbete-huvudsysslan"
 fields = { "sets" = ["nattarbete"] }
 evidence = "Frågan gäller nattarbete.\ncatalog:variable_text:2326:12874:18628"
@@ -14803,18 +14779,6 @@ evidence = "Frågekoden är opak.\ncatalog:variable_text:2714:18628:20819"
 
 [[statement]]
 kind = "set"
-subject = "var:utbildning-fritid-tim-refvecka"
-fields = { "sets" = [] }
-evidence = "Källkolumnens etikett och värdemängd ger olika innehållstyper.\ncatalog:occurrence:11966\ncatalog:occurrence:12540\ncatalog:valueset:862"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-fritid-tim-refvecka"
-fields = { "tags" = ["culture", "education"] }
-evidence = "Källkolumnens etikett och värdemängd ger olika innehållstyper.\ncatalog:occurrence:11966\ncatalog:occurrence:12540\ncatalog:valueset:862"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningens-niva"
 fields = { "tags" = ["education"] }
 evidence = "Utbildningsnivå.\ncatalog:variable_text:2716:9496:11323"
@@ -15076,18 +15040,6 @@ kind = "set"
 subject = "var:viktvfat-ord"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln är ett vikttal för skattning av arbetade timmar i ordinarie urval.\ncatalog:variable_text:2747:14610:17167\ncatalog:variable_text:2747:17167:20819"
-
-[[statement]]
-kind = "set"
-subject = "var:vill-forandra-antalet-arbetade-timmar"
-fields = { "sets" = ["onskad-arbetstidsforandring"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5867\ncatalog:occurrence:5868"
-
-[[statement]]
-kind = "set"
-subject = "var:vill-forandra-antalet-arbetade-timmar"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5867\ncatalog:occurrence:5868"
 
 [[statement]]
 kind = "set"
@@ -17875,12 +17827,6 @@ evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): j
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-i-huvudsysslan-sni92"
-fields = { "label" = "Näringsgren i huvudsysslan (SNI 92)" }
-evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 69 versus SNI 92."
-
-[[statement]]
-kind = "set"
 subject = "var:nattarbete-i-huvudsysslan-frekvens-huarbnatt"
 fields = { "label" = "Nattarbete i huvudsysslan, frekvens (HuArbNatt)" }
 evidence = "#2102 same-label cluster 'Nattarbete i huvudsysslan, frekvens' (2 variables): judged different meaning, low confidence; HUARBNATTANT and HuArbNatt are concurrent 2009-2011 with identical value lists and no source text on the difference; raw column code qualifies."
@@ -17983,12 +17929,6 @@ evidence = "#2102 same-label cluster 'Yrkesställning i senaste arbete, personer
 
 [[statement]]
 kind = "set"
-subject = "var:antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-3"
-fields = { "label" = "Antal frånvarotimmar i huvudsysslan totalt för sysselsatta, inkl helg (HuFranTimTotAnst)" }
-evidence = "#2102 same-label cluster 'Antal frånvarotimmar i huvudsysslan totalt för sysselsatta, inkl helg' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; HuFranTimTotAnst runs concurrently with HuFranTimTot in 2005-2009 with identical definition, and the 2017-2021 opdef gives the total as HuFranTimTotAnst + HuFranTimTotFO, so it is a component; nothing documents what 'Anst' means, so the column code is the qualifier."
-
-[[statement]]
-kind = "set"
 subject = "var:formella-studier-hel-eller-deltid"
 fields = { "label" = "Studier på hel- eller deltid (FU4V6)" }
 evidence = "#2102 same-label cluster 'Studier på hel- eller deltid' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; StudHelDel's opdef derives it from FU4v6 or IF4vOmf (code for code), so it merges two sources while FU4V6 is the single raw item; both sit in aku-januari-2021 with the same codes."
@@ -17998,3 +17938,141 @@ kind = "set"
 subject = "var:studier-pa-hel-eller-deltid"
 fields = { "label" = "Studier på hel- eller deltid (StudHelDel)" }
 evidence = "#2102 same-label cluster 'Studier på hel- eller deltid' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; StudHelDel's opdef derives it from FU4v6 or IF4vOmf (code for code), so it merges two sources while FU4V6 is the single raw item; both sit in aku-januari-2021 with the same codes."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: EXB4 @2017..2019 where key = 'v27172'"
+fields = { "spelling" = "EXB4BES" }
+evidence = "SCB lists v27172 (Externrekryteringsfråga 4, fri text) as EXB4BES in 2005-2016 (r6127..r7304) and in 2020 (r13795), but as EXB4 in 2017-2019 (r18775, r18774, r18772), beside v6530 (the EXB4 code variable with 12 codes) in the same releases. v6530 is EXB4 in every release 2005-2026. Label and definition of v27172 are identical in all years ('Fri text'). The 2017-2019 records are dtype int while the EXB4BES years are char; the return to EXB4BES in 2020 and the collision with v6530 carry the fix.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=629825 (r18775)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=629396 (r18774)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=629160 (r18772)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=629824 (r18775, v6530 EXB4)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=620266 (r13795, v27172 EXB4BES)"
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: HuSNI92 @1987..1988 where key = 'v25622'"
+fields = { "variable" = "husni92" }
+evidence = "Both are the SNI92 industry of the main job, coded to SNI69 and linked to SNI92 by probability (identical operational definition text in r15089/r15068 for v25622 and r15060 for v3882), same column HuSNI92, identical code list (64 codes, hash #2606), adjacent periods 1987-1988 and 1989-1999 with no overlap. v25622 stays on HuSNI69 (a separate column) throughout. Same pattern and argument as the existing alsni92 fold (r122 curation.toml:15251).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=297516 (r15089, v25622 HuSNI92)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=406897 (r15068, v25622 HuSNI92)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=406973 (r15060, v3882 HuSNI92)"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: IF4V4 where key = 'v48185' and release = 'r19485'"
+fields = { "spelling" = "IF12OVR" }
+evidence = "v48185 (fritidsaktivitet, 12 månader) is IF12OVR in r19484, r19479, r19684 and r20279 (2023-2026). In r19485 (2022) SCB lists it as IF4V4, the column of v47623 (fritidsaktivitet, fyra veckor), in every release 2021-2026; v47623 operational definition 'Frågan ställs om IF12OVR=1' names the 12-month column.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=912070 (r19485, v48185 IF4V4)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=187289 (r19485, v47623 IF4V4)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=912079 (r19484, v48185 IF12OVR)"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: IF4V4 where key = 'v48184' and release = 'r19485'"
+fields = { "spelling" = "IF12AR" }
+evidence = "v48184 (lärarledd kurs, 12 månader) is IF12AR in r19484, r19479, r19684 and r20279 (2023-2026). In r19485 (2022) SCB lists it as IF4V4 beside v48185 and v47623, three keys under one column name in one release.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=912071 (r19485, v48184 IF4V4)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=912080 (r19484, v48184 IF12AR)"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: STUDFRIT @2017..2020 where key = 'v7832'"
+fields = { "variable" = "studfrit-refvecka" }
+evidence = "Same column STUDFRIT in adjacent periods (v21673 2005-2016, v7832 2017-2020), no overlap; both ask for participation in a course or activity in leisure time during the reference week, with the identical Ja/Nej/Vet ej/Partiellt bortfall code list (hash #862). Both labels say 'antal timmar' although the codes are Ja/Nej. In 2017-2020 SCB keeps v21673 on STUDFRITTIM, the hours column.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857940 (r7304, v21673 STUDFRIT)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=721211 (r18775, v7832 STUDFRIT)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=639619 (r18775, v21673 STUDFRITTIM)"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: HuFranTimTotAnst where key = 'v6618'"
+fields = { "variable" = "none" }
+evidence = "In r6127, r6125, r6109 and r6106 (2005-04 - 2008) SCB lists v6618 (hours of absence for all employed, column HuFranTimTot) twice: once under its own column HuFranTimTot and once under HuFranTimTotAnst, with the same code list (CVID 381677, 380860, 379950, 378259 on both rows). HuFranTimTotAnst belongs to v6619 (employees only) in the same four releases, and v6618 is HuFranTimTot / HuFrAntimTot / HsFranTimTot in every release 2005-2026. The 2017-2021 operational definition of v6618 is 'HuFranTimTotAnst + HuFranTimTotFO', so it is the sum, not the employee component. The duplicate rows under HuFranTimTotAnst are a documentation slip; the withheld rows lose no coverage because v6618 keeps its own column.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=321854 (r6127, v6618 under HuFranTimTotAnst)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=321853 (r6127, v6618 under HuFranTimTot)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=321855 (r6127, v6619 HuFranTimTotAnst)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857281 (r6125)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857757 (r6109)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857515 (r6106)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=180746 (r13795, v6618 HuFrAntimTot; opdef 'HuFranTimTotAnst + HuFranTimTotFO')"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: SysVillForand where key = 'v31250'"
+fields = { "variable" = "none" }
+evidence = "r6127 (2005-04) lists two keys under SysVillForand: v6854 (label 'Önskemål om att förändra antalet arbetstimmar (totalt i både huvud- och bisyssla)') and v31250 ('Vill förändra antalet arbetade timmar'), with the same question text ('Skulle du vilja förändra antalet timmar du arbetar (totalt i både huvud- och bisyssla)?') and the same value set (hash #862). v6854 documents SysVillForand in all 16 releases 2005-04 - 2020, including r6127; v31250 appears only in r6127. The two labels differ, so a fold would leave the 2005 segment ambiguous; withholding the one-release duplicate loses no coverage.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=254854 (r6127, v31250)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=323429 (r6127, v6854)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857447 (r6125, v6854)"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: UArbLand where key = 'v39235'"
+fields = { "variable" = "none" }
+evidence = "r18775 and r18774 (2017-2018) list v3811 ('I vilket land arbetade du?', operational definition 'Arbetsland i senaste arbete, personer utan arbete som har haft arbete senaste 8 åren') and v39235 (label 'Arbetsland i senaste arbete, personer u. arbete som haft arbete senaste 8 åren', definition 'I vilket land arbetade du?') under UArbLand. v3811 documents UArbLand in every release 2005-04 - 2020, including r18775, r18774 and r18772; v39235 is listed in the 2005-2020 table only in these two releases and is the owner of UarbLand from 2021 (separate table). Same question, different labels: a fold would not clear the 2017-2018 overlap; withholding the two 2017-2018 rows of v39235 loses no coverage. v39235 keeps its 2021- occurrences in aku-januari-2021.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=128014 (r18774, v39235)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=128013 (r18775, v39235)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=956961 (r18774, v3811)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=956929 (r18775, v3811)"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: UARBYRKSTALL where key = 'v31251'"
+fields = { "variable" = "none" }
+evidence = "r6127 (2005-04) lists v31251 ('Yrkesställning senaste arbetet') beside v6908 ('Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren') under UARBYRKSTALL. Same question ('Var du anställd, företagare eller medhjälpare i ditt senaste arbete?') and the same value set (hash #12702). v6908 documents UARBYRKSTALL in every release 2005-04 - 2020, including r6127. v31251 appears in this table only in r6127; its other occurrences (AlYrkStall in the 1987-2005 table) are not touched. The labels differ, so a fold would not clear the overlap.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=80570 (r6127, v31251)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=799949 (r6127, v6908)"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: UARBYRKSTALL where key = 'v31262'"
+fields = { "variable" = "none" }
+evidence = "r6109 (2007) and r6106 (2008) list v31262 ('Yrkesställning, personer utan arbete') under UARBYRKSTALL beside v6908, which documents UARBYRKSTALL in every release 2005-04 - 2020 with the same question text and value set (hash #12702). v31262 uses UARBYRKSTALL only in these two releases; its UARBSOKTYRKSTALL occurrences are a different column and are not touched by this selector (see decisions-amb.md, sibling note). The labels differ, so a fold would not clear the overlap.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=98998 (r6109, v31262)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=857501 (r6106, v31262)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=794417 (r6109, v6908)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=794424 (r6106, v6908)"
+
+[[statement]]
+kind = "set"
+subject = "var:al4soksatt"
+fields = { "description" = "Anger om personen använt släkt och vänner som sökmetod när hon eller han sökt arbete (kod 4 = ja). Motsvarar fråga M25 i frågeformuläret." }
+evidence = "Label, beskrivning and opdef say släkt och vänner, code 4 = ja, question M25; the definition \"annons\" is copied from Al3SokSatt (v7396). Registerinformation.csv:row=533996 (r3855). Identity handled in the identity batch."
+
+[[statement]]
+kind = "set"
+subject = "var:barn10alder"
+fields = { "description" = "Ålder på det tionde barnet i hushållet." }
+evidence = "Definition \"barn 1\" is a copy error; sibling Barn11Alder says 11. Description covers it."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3a"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn a som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3b"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn b som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3c"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn c som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3d"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn d som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3e"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn e som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3f"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn f som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3g"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn g som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3h"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn h som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3i"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn i som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3j"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för barn j som tillkommit i hushållet sedan föregående intervju, enligt frågan \"När är barnen födda?\"." }
+evidence = "Length 6 like Barn*ArMan (year and month); question \"När är barnen födda?\"; a personnummer does not fit in 6 characters."
+
+[[statement]]
+kind = "set"
+subject = "var:uutbreg"
+fields = { "description" = "Markering för personer som saknar uppgift om utbildning. Vid kod 2-4 ställs frågorna om utbildning (Utb1524) i intervjun." }
+evidence = "Label and 2017+ opdef say \"saknar uppgift\"; codes 2-4 route to the Utb1524 questions."

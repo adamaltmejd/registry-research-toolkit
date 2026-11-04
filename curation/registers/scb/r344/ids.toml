@@ -67,7 +67,6 @@ public = "specialskola"
 "ma" = ["Betyg åk 10: MA"]
 "meritvarde" = ["Betyg åk 10: MeritVarde"]
 "meritvarde-m2" = ["Betyg åk 10: MeritVarde_M2"]
-"minst-ett-godkant-betyg" = ["Betyg åk 10: Antal_Ettor @ 2012-07-01"]
 "minst-ett-godkant-betyg-2" = ["Betyg åk 10: Betyg"]
 "modersmal-betyg" = ["Betyg åk 10: ML_Betyg"]
 "modersmal-sprak" = ["Betyg åk 10: ML_Sprak"]

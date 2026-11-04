@@ -7554,3 +7554,21 @@ kind = "set"
 subject = "var:lan-vid-utvandring"
 fields = { "label" = "Län (vid utvandring)" }
 evidence = "#2102 same-label cluster 'Län' (12 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs give the län at birth, move, civil-status change, death, citizenship change, immigration, emigration, mantalsskrivning, or the delivering länsskattemyndighet. AvSandLan and AvsLan have identical opdef and period in different tables, so they need distinct labels."
+
+[[statement]]
+kind = "set"
+subject = "var:aldermorslut"
+fields = { "description" = "Moderns ålder i år vid årets slut: mättidens år minus födelseåret, härlett från personnumret. I Födda 2000 står 'fadern' i operationaliseringen av misstag." }
+evidence = "Etikett 'Ålder 31/12 mor' och kolumnen AlderMorSlut; operationaliseringen säger modern i alla utgåvor utom Födda 2000, där raden för AlderMorSlut har faderns text från grannkolumnen AlderFarSlut.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=461036 (r115)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=460817 (r2433)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=461035 (r115)"
+
+[[statement]]
+kind = "set"
+subject = "var:ordnrlevfoddaf"
+fields = { "description" = "Barnets ordningsnummer bland alla registrerade levande födda barn för fadern. Vid flerbörd får varje barn var sitt ordningsnummer. Relationen till fadern saknas ibland för personer som invandrat utan sin far, så ordningsnumret kan underskattas. Uppgiften om födda barn kommer från Skatteverket." }
+evidence = "Definition, etikett och kolumnen OrdnrLevFoddaF avser fadern. Operationaliseringen lyder 'för fadern' i 27 utgåvor; bara Födda 2007 (r2348) har 'för modern', ordagrant texten för OrdnrLevFoddaM.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=473707 (r2348)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=473705 (r872)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=473708 (r2348)"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "description" = "Tidpunkt för personens senaste invandring till Sverige. Till och med 1997 anges bara året (kolumn SenInvAr, fyra tecken); från 1998 anges hela datumet ÅÅÅÅMMDD (kolumn DatInv). Värde saknas om personen inte invandrat." }
+evidence = "Samma nyckel (v332) och definition 'Datum för senaste invandring till Sverige' i hela perioden; operationaliseringen 1978-1997 är 'År för senaste invandring', från 1998 'Datum består av årtal, månad och dag. ÅÅÅÅMMDD'. Kolumnerna SenInvAr (till och med 1997) och DatInv (från 1998) förekommer aldrig samma år.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=267425 (r2397)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=386630 (r12998)"

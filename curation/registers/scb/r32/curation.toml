@@ -5874,3 +5874,9 @@ kind = "set"
 subject = "var:antrumenh"
 fields = { "label" = "Antal rumsenheter (AntRumEnh)" }
 evidence = "#2102 same-label cluster 'Antal rumsenheter' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; AntRumEnhBrK opdef counts 'bostadsrum + kök', AntRumEnhRoK 'rum + kök'; AntRumEnh (1980-91) has its own coding and an opdef that counts rum as well as kök."
+
+[[statement]]
+kind = "set"
+subject = "var:vigselar-upplosningsar-eller-malsmans-fodelsear"
+fields = { "description" = "För gifta personer året då äktenskapet ingicks, för änkor, änklingar och skilda året då äktenskapet upplöstes. För personer födda 1944–1960 (1960) respektive 1948–1965 (1965) anges i stället målsmannens födelseår. I 1965 års material är fältet blankt för ogifta och när uppgift saknas." }
+evidence = "Operationaliseringen av v39455 (VigselAr) beskriver de tre betydelserna; etiketten 'Vigseldatum' och definitionen 'Datum för ingånget äktenskap' beskriver bara den första. Id:t nämner redan alla tre.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=95972 (r15448)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=95983 (r15118)"

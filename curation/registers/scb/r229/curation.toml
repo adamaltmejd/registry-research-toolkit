@@ -4829,3 +4829,75 @@ kind = "set"
 subject = "var:storny"
 fields = { "label" = "Stora N per stratum (omräknat efter sammanslagning av stratum, storny)" }
 evidence = "#2102 same-label cluster 'Stora N per stratum' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: STORAN is the AKU population count per stratum at a sampling occasion, storny is the recount after strata were merged; both occur in the same table in 2010."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "description" = "Intervjupersonens civilstånd i tre grupper: 1 = gift, 2 = sambo, 3 = ensamstående. 8 = vet ej, 9 = partiellt bortfall." }
+evidence = "Single occurrence (column CIVILSTAND, 2006), value set #3981. The short definition ('är, har varit eller aldrig varit gift/registrerad partner') is generic and does not match the cohabitation category."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column fstor 1999-2003, value set #3779; opdef is the interview question 'Hur många anställda finns det på arbetsplatsen du arbetar vid?' while the short definition says 'Antal anställda i företaget'. The question actually put to the respondent is the primary text."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t12"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column t12 1996-1998, same opdef, definition and value set #3779 as foretagsstorlek (separate variable because the spellings coexist in one table and release)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t14"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column t14 2000-2001, same opdef, definition and value set #3779."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t15"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd; 2003 finns också 8 = vet ej. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column t15 2002-2003, opdef and definition as foretagsstorlek; value set #3779 (2002) and #1755 (2003, adds 8 = Vet ej)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t16"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column t16 1998, same opdef, definition and value set #3779."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsstorlek-t17"
+fields = { "description" = "Storleksklass efter antal anställda: 1 = högst 9, 2 = 10-49, 3 = 50-99, 4 = 100-249, 5 = 250-499, 6 = 500-999, 7 = 1 000 eller fler. 0 = ingen personalutbildning, 9 = okänd. Enligt SCB:s intervjufråga avser antalet arbetsplatsen där personen arbetar; SCB:s kortdefinition säger företaget." }
+evidence = "Column t17 1999, same opdef, definition and value set #3779."
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-1"
+fields = { "description" = "Omfattningen av kurs eller utbildning 1 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
+evidence = "Registerinformation.csv:row=272418 (t8a2, 'antal månader', opdef 'Intervjufråga om svar i T8a omfattade antal månader') and row=272417 (t8a1, 'antal dagar', 'om svar i T8a omfattade antal dagar'): the question text is pasted from the days item; label and unit 'Månad' agree in every release."
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-2"
+fields = { "description" = "Omfattningen av kurs eller utbildning 2 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
+evidence = "Column t8b2 / T9B2, unit 'Månad' in all releases; opdef 'Intervjufråga om svar i T8b omfattade antal månader', same pattern as kurs 1 (row=272418)."
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-3"
+fields = { "description" = "Omfattningen av kurs eller utbildning 3 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
+evidence = "Column t8c2 / T9C2, unit 'Månad'; same pattern as kurs 1."
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-4"
+fields = { "description" = "Omfattningen av kurs eller utbildning 4 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
+evidence = "Column t8d2 / T9D2, unit 'Månad'; same pattern as kurs 1."
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning-manader-5"
+fields = { "description" = "Omfattningen av kurs eller utbildning 5 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
+evidence = "Column t8e2 / T9E2, unit 'Månad'; same pattern as kurs 1."

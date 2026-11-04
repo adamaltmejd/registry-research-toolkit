@@ -6028,3 +6028,21 @@ kind = "set"
 subject = "fs-slutdata-foretagsenhet: gem0969 @1997-01-01..2002-12-31 where key = 'v4291'"
 fields = { "variable" = "ovriga-bokslutsdispositioner" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): bl0969 in fs-slutdata-resultatrakning; gem0969 in fs-slutdata-foretagsenhet: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both say the values may be imputed, differing only by 'Uppgift'/'Uppgifterna'); folded into ovriga-bokslutsdispositioner."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-utdelningar"
+fields = { "description" = "Belopp för andra utdelningar, i kronor." }
+evidence = "Övriga belopp i tabellen anger Kronor (SEK); enheten \"Antal minuter\" rättas separat.\n0.74.0 catalog, key v40749, releases r14736, r14750, r14754, r14755...; reg_meta.db:occurrence:129174,129328,129486"
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-resultatrakning: bl0902 where key = 'v40749'"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "Ett belopp för utdelningar anges inte i minuter; tabellens övriga belopp har enheten Kronor (SEK). Enheten är densamma i alla sex årgångar, så rättelsen vilar på etikett och tabellens övriga kolumner.\nold unit: 'Antal  minuter'; Registerinformation.csv:row=873492 (r14756); Registerinformation.csv:row=873493 (r14754); Registerinformation.csv:row=873494 (r14757)"
+
+[[statement]]
+kind = "set"
+subject = "var:bl2314"
+fields = { "description" = "Skulder till intresseföretag, i kronor." }
+evidence = "Etikett och definition anger skulder till intresseföretag; den operationella definitionen (räntebärande skulder till koncernföretag) är samma text som för bl2332 och är en kopia.\n0.74.0 catalog, key v40777, releases r14735, r14796, r14798, r14799...; reg_meta.db:occurrence:127964,128100,128236"

@@ -1048,3 +1048,15 @@ kind = "set"
 subject = "var:sun2020niva-old"
 fields = { "label" = "Utbildningsnivå (sun2020niva_old, ensiffrig äldre nivåindelning)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; SunNiva (10 codes, 1996) has no stated SUN version; sun2000niva/sun2020niva have 51 detailed codes; the _old columns have 8 one-digit codes comparable with pre-2000 levels, but sun2020niva_old's opdef still says 'skapats utifrån SUN2000', so 'SUN 2020' is not documented for it."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-statlig-sektor: Grundlon where key = 'v15936' and release = 'r5390'"
+fields = { "spelling" = "lon1in" }
+evidence = "r5390 (2013) lists Grundlon twice: key v27263 (Avtalad grundlön, which owns Grundlon in 2012-2024) and key v15936 (Lön exklusive fasta och rörliga tillägg). Key v15936 is lon1in in 2008-2012 and 2015-2024, and no lon1in is listed in 2013. The v15936 row (CVID 332155) sits between Myndkod and Foraldrapenningtillagg, where lon1in sits in 2012 (CVID 291931).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=28964 (r5390)"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-statlig-sektor: Grundlon where key = 'v15936' and release = 'r6029'"
+fields = { "spelling" = "lon1in" }
+evidence = "r6029 (2014) lists Grundlon twice: key v27263 (Avtalad grundlön) and key v15936 (Lön exklusive fasta och rörliga tillägg). Key v15936 is lon1in in 2008-2012 and 2015-2024, and no lon1in is listed in 2014. The v15936 row (CVID 373086) sits between Foraldrapenningtillagg and Myndkod, where lon1in sits in 2012.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=502194 (r6029)"

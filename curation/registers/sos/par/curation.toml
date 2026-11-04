@@ -1654,3 +1654,27 @@ kind = "set"
 subject = "var:atgardsdatum"
 fields = { "label" = "Åtgärdsdatum (SAS-datum)" }
 evidence = "#2102 same-label cluster 'Åtgärdsdatum' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ATGDATUM definition says 'i SAS-datum, i at-fil' in both occurrences; ATGARD_DATUM and OP_DATUM have identical definitions in par-tv with nothing separating them."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: hdia where key = 'n:hdia' and label = 'Huvuddiagnoskod'"
+fields = { "variable" = "huvuddiagnoskod" }
+evidence = "The n:hdia source key conflates two different fields. In the flat files (plattfil) HDIA is the main diagnosis code: PAR_SV from 1964 (row 107), PAR_OV from 1997 (row 36), label 'Huvuddiagnoskod'. In the multi-files (flerfil) from 2015 (PAR_SV row 106, PAR_OV row 35) and in PAR_TV 2011-2012 (row 199) it is the 0/1 marker 'Typ av diagnos' whether the code in DIA is the main diagnosis. PAR_SV row 107 says so itself: 'I flerfilen DI är HDIA endast en binär variabel'. Exact source-label guards separate the two as for ATC.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107, 199."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: hdia where key = 'n:hdia' and label = 'Huvuddiagnoskod'"
+fields = { "variable" = "huvuddiagnoskod" }
+evidence = "The n:hdia source key conflates two different fields. In the flat files (plattfil) HDIA is the main diagnosis code: PAR_SV from 1964 (row 107), PAR_OV from 1997 (row 36), label 'Huvuddiagnoskod'. In the multi-files (flerfil) from 2015 (PAR_SV row 106, PAR_OV row 35) and in PAR_TV 2011-2012 (row 199) it is the 0/1 marker 'Typ av diagnos' whether the code in DIA is the main diagnosis. PAR_SV row 107 says so itself: 'I flerfilen DI är HDIA endast en binär variabel'. Exact source-label guards separate the two as for ATC.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107, 199."
+
+[[statement]]
+kind = "set"
+subject = "var:huvuddiagnoskod"
+fields = { "description" = "Huvuddiagnosen som en enda diagnoskod, enligt den ICD-version som gällde vid vårdkontakten. Har huvuddiagnosen kodats med ett diagnoskodpar finns tillhörande diagnoskod tillsammans med bidiagnoserna i DIAGNOS." }
+evidence = "PAR_SV row 107 and PAR_OV row 36 (Variabelbeskrivning and Värdemängd; PAR_SV lists ICD-7 1964-1968, ICD-8 1969-1986, ICD-9 1987-1996, ICD-10-SE from 1997).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 36, 107."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-diagnos"
+fields = { "description" = "Anger om diagnoskoden i DIA är markerad som huvuddiagnos (1) eller bidiagnos (0). Finns i flerfil." }
+evidence = "PAR_SV row 106, PAR_OV row 35, PAR_TV row 199 (identical definition and codes 1=Huvuddiagnos; 0=bidiagnos).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 106, 199."

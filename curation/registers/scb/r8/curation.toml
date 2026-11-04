@@ -1747,18 +1747,6 @@ evidence = "Variabeln anger fordonets handelsbeteckning.\ncatalog:occurrence:105
 
 [[statement]]
 kind = "set"
-subject = "var:inst-2"
-fields = { "sets" = ["institutionell-kod"] }
-evidence = "Identitetsfaktum och motstridig operativ definition kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
-
-[[statement]]
-kind = "set"
-subject = "var:inst-2"
-fields = { "tags" = ["business"] }
-evidence = "Identitetsfaktum och motstridig operativ definition kräver granskning.\ncatalog:occurrence:105516\ncatalog:occurrence:105553\ncatalog:occurrence:105672\ncatalog:occurrence:105721"
-
-[[statement]]
-kind = "set"
 subject = "var:inst-ag"
 fields = { "sets" = ["institutionell-kod"] }
 evidence = "Institutionell kod för fordonsägaren hör till den fastställda gruppen och temat transporter.\ncatalog:occurrence-locators:variable:11857\ncatalog:variable_text:11857:20453:20454"
@@ -3964,3 +3952,27 @@ kind = "set"
 subject = "traktorer: arsm_imp @2000-12-31..2001-12-31 where key = 'v2350'"
 fields = { "variable" = "arsmodell-imputerad-arsmod-imp" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Arsmod_Imp/Arsmod_imp in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, snoskotrar, terranghjulingar, terrangskotrar, traktorer; ARSM_IMP in bussar, eu-mopeder, lastbilar, motorcyklar, ovriga-fordonsslag, personbilar, slapvagnar, terrangskotrar, traktorer: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All tables carry the same imputation-order opdef; one terranghjulingar span says 'enkätsvar, förekomst' (survey-response presence), which sits inside one member already and is a possible scope difference); folded into arsmodell-imputerad-arsmod-imp."
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: INST_2 where key = 'v3047'"
+fields = { "variable" = "institutionell-kod-literal-inst-2" }
+evidence = "v3047 and v3005 are both the owning company's institutional code for the vehicle's previous owner, in column INST_2 of the eu-mopeder table. Their periods do not overlap: v3005 has INST_2 in 2005 - 2009 and 2014 - 2025, v3047 has it in 2010 - 2013 (r13430 - r13427), where SCB lists v3005 only as INST. The definitions agree (ägandeform of the previous owner), the 2010 opdef is word for word 'Avser fordonets föregående ägare om denna är en juridisk person.', and the code list is the same one v3005 carries in eu-mopeder 2006 - 2009 (the 1619-code list). The 2013 opdef of v3047 ('Anger fordonets fabrikat') is a copy error in SCB's metadata; it contradicts that year's own definition and does not change the identity.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=757476 (r13430)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=780416 (r13429)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=780418 (r13428)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=732688 (r13427)"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod"
+fields = { "description" = "Institutionell kod (ägandeform) för fordonets ägare när denne är en juridisk person." }
+evidence = "Operationell definition anger fordonets ägare i de flesta tabeller och årgångar. I Lastbilar står beskrivningarna för INST och INST_3 omkastade i vissa årgångar (INST_3: r13532, r13512, r13491, r13488, r13439); ordningen INST, INST_2, INST_3 följer ägarordningen.\n0.74.0 catalog, key v3005, releases r11751, r12980, r12993, r12996...; reg_meta.db:occurrence:102764,106592,109930"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-2"
+fields = { "description" = "Institutionell kod (ägandeform) för fordonets föregående ägare när denne är en juridisk person." }
+evidence = "Operationell definition anger fordonets föregående ägare i de flesta tabeller och årgångar. I Lastbilar står beskrivningarna för INST och INST_3 omkastade i vissa årgångar (INST_3: r13532, r13512, r13491, r13488, r13439); ordningen INST, INST_2, INST_3 följer ägarordningen.\n0.74.0 catalog, key v3005, releases r11751, r12980, r12993, r12996...; reg_meta.db:occurrence:107353,113404,107410"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-kod-literal-inst-3"
+fields = { "description" = "Institutionell kod (ägandeform) för fordonets nästföregående ägare när denne är en juridisk person." }
+evidence = "Operationell definition anger fordonets nästföregående ägare i de flesta tabeller och årgångar. I Lastbilar står beskrivningarna för INST och INST_3 omkastade i vissa årgångar (INST_3: r13532, r13512, r13491, r13488, r13439); ordningen INST, INST_2, INST_3 följer ägarordningen.\n0.74.0 catalog, key v3005, releases r11751, r12980, r12993, r12996...; reg_meta.db:occurrence:107354,113405,107411"

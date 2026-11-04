@@ -1041,18 +1041,6 @@ evidence = "Variabeln anger en beräkningsvariant av meritvärde.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "sets" = [] }
-evidence = "Etikett och driftdefinition skiljer sig och samma källkolumn har en annan ägare följande period.\ncatalog:occurrence:200222\ncatalog:occurrence:200285\ncatalog:variable_text:21712:15522:15887"
-
-[[statement]]
-kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "tags" = ["education"] }
-evidence = "Etikett och driftdefinition skiljer sig och samma källkolumn har en annan ägare följande period.\ncatalog:occurrence:200222\ncatalog:occurrence:200285\ncatalog:variable_text:21712:15522:15887"
-
-[[statement]]
-kind = "set"
 subject = "var:minst-ett-godkant-betyg-2"
 fields = { "sets" = [] }
 evidence = "Suffixet 2 är en tillagd räknare och finns inte i källkolumnen; etiketten kolliderar och mål kräver disambiguering.\ncatalog:variable_text:21713:18078:20270"
@@ -2169,12 +2157,6 @@ evidence = "#2102 same-label cluster 'Meritvärde' (2 variables): judged differe
 
 [[statement]]
 kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "label" = "Minst ett godkänt betyg (antal ämnen med betyget F)" }
-evidence = "#2102 same-label cluster 'Minst ett godkänt betyg' (2 variables): judged different meaning, medium confidence; Antal_F (2012-2013) is a count of subjects with grade F per its opdef; Betyg is the coded yes/no variable."
-
-[[statement]]
-kind = "set"
 subject = "var:minst-ett-godkant-betyg-2"
 fields = { "label" = "Minst ett godkänt betyg (ja/nej)" }
 evidence = "#2102 same-label cluster 'Minst ett godkänt betyg' (2 variables): judged different meaning, medium confidence; Antal_F (2012-2013) is a count of subjects with grade F per its opdef; Betyg is the coded yes/no variable."
@@ -2460,3 +2442,15 @@ kind = "set"
 subject = "var:vt9"
 fields = { "label" = "Första tillvalsämne (vårterminen, årskurs 9, VT9)" }
 evidence = "#2102 same-label cluster 'Första tillvalsämne' (12 variables): judged different meaning, high confidence; Six parallel columns for autumn and spring term of year 7, 8 and 9; HT7-VT9 (to 1993) continue as TV1_HT7-TV1_VT9 with the same code list."
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: Antal_F where key = 'v30653'"
+fields = { "variable" = "antal-amnen-ej-natt" }
+evidence = "In r5573 (2012/2013) key v30653 sits on two columns, Antal_F and Betyg. Betyg carries v30653's own text in every release 2012-2024 (flag for at least one passed subject). The Antal_F row has the operational text of v3594's Antal_F in 2013-2024 (number of subjects with grade F; blank means not graded under the grade system), and Antal_F continues as v3594 from r5574 (2013/2014).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=929089 (r5573)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=991783 (r5573)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=929090 (r5574)"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "description" = "Antal ämnen i vilka eleven saknar godkänt betyg (betyget F), kodat i fyra grupper: 0 är godkänt betyg i alla ämnen, 1 saknar godkänt betyg i ett ämne, 2 saknar i två eller flera ämnen och 100 saknar godkänt betyg i alla ämnen. Tomt värde betyder att eleven inte har betygsatts enligt skolförordningen." }
+evidence = "Värdemängd 4373 (2015-2025) och operationell definition \"antal ämnen som eleven fått betyget F, kodad i 4 grupper\".\n0.74.0 catalog, key v3594, releases r11493, r12571, r13535, r14984...; reg_meta.db:occurrence:200657,200728,200799"

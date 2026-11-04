@@ -3080,3 +3080,39 @@ kind = "set"
 subject = "var:mobiluppg"
 fields = { "label" = "Kontaktpersonens mobiltelefonnummer (mobiluppg)" }
 evidence = "#2102 same-label cluster 'Kontaktpersonens mobiltelefonnummer' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; mobil and mobiluppg are two columns in the same table and period with identical definition and no opdef or codes; nothing separates them, so each keeps its spelling."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-aktsni92"
+fields = { "description" = "Produktionsenhetens näringsgren (bransch) enligt kolumnen AktSni92. Kodlistan 1998-2002 är SNI 1992; för 2003-2008 anges ingen kodlista. SCB:s operationella definition 'enligt SNI 2007' är kopierad från kolumnen AktSni07 och kan inte gälla åren före 2008." }
+evidence = "Kodlistan #7902 (755 koder) 1998-2002 är en delmängd av SNI 1992, och kolumnnamnet är AktSni92. Operationaliseringen 'Näringsgrensindelning enligt SNI 2007' är ordagrant densamma i alla AktSni92-rader 1998-2008 och i AktSni07-raderna 2011-2021 (nyckel v4027), och SNI 2007 fanns inte 1998-2002.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918699 (r4794)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=918709 (r4783)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=849823 (r3593)"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-al2undeju"
+fields = { "description" = "Produktionsenhetens näringsgren (bransch) 2009-2010. Kodlistan är SNI 2007; SCB:s operationella definition anger SNI 2002." }
+evidence = "Kodlistan (821 koder, t.ex. 01120 'Odling av ris', 01140 'Odling av sockerrör') är en delmängd av SNI 2007 och identisk i storlek med kodlistan för AktSni07 från 2011 (nyckel v4027). Operationaliseringen 'SNI 2002' strider mot kodlistans benämningar.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33855 (r392)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33857 (r3258)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=849823 (r3593)"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek"
+fields = { "description" = "Storleksklass för objektet i urvalet enligt SCB:s samordnade urvalssystem, kodad efter antal anställda: 0 = 0 anställda, 1 = 1-4, 2 = 5-9, 3 = 10-19, 4 = 20-49, 5 = 50-99, 6 = 100-199, 7 = 200-499, 8 = 500 eller fler. Variabeln anger alltså en klass och inte antalet objekt i urvalet." }
+evidence = "Operationaliseringen 1998-2008 (SamuStkl) är 'Storleken på urvalet enl. det samordnade urvalssystemet på SCB' och kodlistan #10750 har nio anställdsklasser. Nyckelns definition 'Antalet objekt i urvalet' stämmer inte med klasskoder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=963276 (r4794)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=963285 (r4784)"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelklass-kod-pin"
+fields = { "description" = "Kod för variabelklass i PIN-undersökningarna. En klass är en unik kombination av variabel, variabeldelmängd och marknad, till exempel 'Nettoomsättning, Total omsättning, Total'." }
+evidence = "Definitionen och operationaliseringen 2022 (nyckel v50053) säger variabelklass, och kodlistan #11524 har värden som kombinerar variabel, delmängd och marknad. Operationaliseringen 'Identifierande kod för variabeldelmängd' i industrins kapacitetsutnyttjande 2023-2024 är en förkortning av samma uppgift: nyckel och kodlista är desamma.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=122149 (r20220)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=121682 (r20235)"
+
+[[statement]]
+kind = "set"
+subject = "var:inclassid"
+fields = { "description" = "Kod för variabelklass i PIN-undersökningarna (kolumn InClassId): en unik kombination av variabel, variabeldelmängd och marknad, enligt samma kodlista som ClassId. SCB beskriver inte vad prefixet In skiljer från ClassId." }
+evidence = "Samma nyckel (v50053), definition och kodlista (#11524) som ClassId; operationaliseringen 2022 är 'variabelklass', och 'variabeldelmängd' 2023-2024 är en förkortning av samma uppgift. Ingen källtext förklarar In respektive Out.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=121881 (r20215)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=121683 (r20235)"
+
+[[statement]]
+kind = "set"
+subject = "var:outclassid"
+fields = { "description" = "Kod för variabelklass i PIN-undersökningarna (kolumn OutClassId): en unik kombination av variabel, variabeldelmängd och marknad, enligt samma kodlista som ClassId. SCB beskriver inte vad prefixet Out skiljer från ClassId." }
+evidence = "Som InClassId: samma nyckel (v50053), definition och kodlista (#11524).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=121882 (r20215)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=121684 (r20235)"

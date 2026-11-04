@@ -17359,3 +17359,57 @@ kind = "set"
 subject = "statliga-myndigheter: sasvalue @2015-01-01..2017-12-31 where key = 'v7743'"
 fields = { "variable" = "fou-verksamhet-nasta-ar" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): FoUUtgKomAr/FoUVerkKomAr in foretagssektorn, kommuner, landsting, lokala-regionala-fou, pnp; SASValue in statliga-myndigheter: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (One member names questionnaire section D; the rest have no opdef); folded into fou-verksamhet-nasta-ar."
+
+[[statement]]
+kind = "set"
+subject = "var:syfte-framtagning-nya-produkter"
+fields = { "description" = "FoU-kostnader som har syftet att ta fram nya produkter." }
+evidence = "Etikett och id anger nya produkter; definitionen är återanvänd från variabeln för nya processer (v3448).\n0.74.0 catalog, key v3446, releases 2001, r1011, r394; reg_meta.db:occurrence:135178,135435,135639"
+
+[[statement]]
+kind = "set"
+subject = "var:v0204"
+fields = { "description" = "Den del av summa driftkostnader för FoU (v0202) som avser programvarurelaterad FoU, i tusental kronor. Uppgiften är ett belopp, inte en andel." }
+evidence = "Definition \"Driftkostnader för programvarurelaterad FoU\" och enhet 1000-tal kronor (KSEK) i r394; syskonvariablerna v0200-v0207 är kostnadsbelopp.\n0.74.0 catalog, key v3334, releases 2001, r394; reg_meta.db:occurrence:135137,135376"
+
+[[statement]]
+kind = "set"
+subject = "var:fou-regionala-fordelning-fou-utgifter-i-dalarna"
+fields = { "description" = "Utgifter för egen FoU i Dalarnas län." }
+evidence = "Förslag från tidigare granskning; etiketten anger Dalarna.\n0.74.0 catalog, key v3519, releases 2001, r394; reg_meta.db:occurrence:135260,135523"
+
+[[statement]]
+kind = "set"
+subject = "var:v0781"
+fields = { "description" = "Summering av de regionalt fördelade FoU-årsverkena." }
+evidence = "Förslag från tidigare granskning; etiketten är \"summa regional fördelning: antal FoU-årsverken\".\n0.74.0 catalog, key v3530, releases 2001, r11904, r1329, r3250...; reg_meta.db:occurrence:135273,135536,135730"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-regional-fordelning-fou-utgifter"
+fields = { "description" = "Summering av de regionalt fördelade FoU-utgifterna." }
+evidence = "Förslag från tidigare granskning; etiketten är \"summa regional fördelning: FoU-utgifter\".\n0.74.0 catalog, key v3531, releases 2001, r1011, r394; reg_meta.db:occurrence:135274,135537,135674"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-under-en-genomsnittlig-arbetsvecka-vid-universitet-hogskolan-f2upp"
+fields = { "description" = "Arbetstid under en genomsnittlig arbetsvecka vid universitetet eller högskolan, i timmar per vecka, uppräknad med uppräkningsfaktorn. " }
+evidence = "Etiketten och frågetexten anger arbetstid i timmar; källans enhet Procent för 2005-2008 stämmer inte med frågan och ändras inte här.\n0.74.0 catalog, key v6327, releases r12470, r1714, r3655, r4472...; reg_meta.db:occurrence:136656,136687,136716"
+
+[[statement]]
+kind = "set"
+subject = "var:f2"
+fields = { "description" = "Individens arbetstid under en genomsnittlig arbetsvecka vid universitetet eller högskolan, i hela timmar per vecka." }
+evidence = "Etiketten och frågetexten anger arbetstid i timmar; källans enhet Procent för 2005-2008 stämmer inte med frågan och ändras inte här.\n0.74.0 catalog, key v6327, releases r12470, r1714, r3655, r4472...; reg_meta.db:occurrence:136655,136686,136715"
+
+[[statement]]
+kind = "set"
+subject = "var:v001"
+fields = { "description" = "Anger om företaget haft kostnader för FoU-verksamhet i Sverige med egen personal under 2003." }
+evidence = "Etiketten är avklippt efter 80 tecken; definitionen i r394 och den fullständiga formuleringen ger \"under 2003\".\n0.74.0 catalog, key v3320, releases 2001, r394; reg_meta.db:occurrence:135125,135363"
+
+[[statement]]
+kind = "set"
+subject = "var:v1261"
+fields = { "description" = "Belopp i tusental kronor för FoU-uppdrag till statliga civila myndigheter. Statliga civila myndigheter är mottagare av uppdraget, inte finansiär." }
+evidence = "Definitionen är \"uppdrag till Statliga civila myndigheter\" och övriga variabler i serien (v1021-v1271) anger mottagare; enhet 1000-tal kronor (KSEK).\n0.74.0 catalog, key v3561, releases r394; reg_meta.db:occurrence:135585"
