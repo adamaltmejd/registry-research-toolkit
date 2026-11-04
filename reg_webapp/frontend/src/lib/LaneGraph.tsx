@@ -213,14 +213,13 @@ export function LaneGraph({
                 {overlay}
               </div>
             )}
-            {geometry.coverageY !== null && (
+            {!geometry.stacked && geometry.coverageY !== null && (
               <span
                 className={styles.coverageCaption}
-                data-stacked={geometry.stacked || undefined}
                 style={{
                   top: geometry.coverageY,
-                  height: geometry.stacked ? undefined : COVERAGE_HEIGHT,
-                  width: geometry.stacked ? undefined : geometry.trackX - 16,
+                  height: COVERAGE_HEIGHT,
+                  width: geometry.trackX - 16,
                 }}
                 aria-hidden="true"
               >

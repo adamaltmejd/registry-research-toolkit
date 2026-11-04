@@ -575,29 +575,30 @@ Time is the axis every relation is drawn on.
   `Timeline`, and a page with several sources draws them on one axis.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
-  the name column (over the row's left end when the names stack), with no header, no
-  "Variable" column header and no legend (maintainer 2026-11-04); a screen reader hears
-  the covered years and the years to add. Coverage is one ink box per delivered year, a
-  `surface` hairline between boxes, empty where a year has no delivery. On a variable
-  page it is one drawing with the columns (#1833, maintainer ruling 2026-10-23): it is
-  drawn as a `LaneGraph` headed by the coverage row (axis, then coverage with the period
-  thumbs, then lanes), so the band runs through every lane. The variable's columns are
-  its lanes, one per table and titled by the table's name, labelled spans in the
-  `ColumnChip` shape with a coding change as a `warn` mark. A span's column name is
-  never cut. After it, in muted mono, comes the file the steward holds it in on a
-  steward deployment (`OfferName Inera_CK_EP`): cut short with an ellipsis where the
-  span is narrow, and dropped where only a few characters would show. A span too narrow
-  for the column name is a plain bar with the name beside it, to the right, or to the
-  left at the axis end. Hovering or focusing a span shows its column, table and years at
-  once in a RAC `Tooltip` with no delay. The variables a succession reaches are further
-  lanes in time order, with their arrows. A line under the drawing says "Click a column
-  to add it to your project."; with no project open it says "Create a project to add
-  columns." beside a "Create a project" button, the top bar's action, since the top bar
-  scrolls away below the breakpoint. There is no second graph on the page. While it
-  loads the region is a `Skeleton`; a failed load is an error `StatusRow` in the region
-  with Retry; a variable with no years says "No years recorded for this variable." in
-  place of the lanes. Succession reaches one hop of read-only lanes, with arrows from
-  predecessor to successor and each neighbour's name linking to its variable page.
+  the name column (dropped when the names stack, where the axis heads the row), with no
+  header, no "Variable" column header and no legend (maintainer 2026-11-04); a screen
+  reader hears the covered years and the years to add. Coverage is one ink box per
+  delivered year, a `surface` hairline between boxes, empty where a year has no
+  delivery. On a variable page it is one drawing with the columns (#1833, maintainer
+  ruling 2026-10-23): it is drawn as a `LaneGraph` headed by the coverage row (axis,
+  then coverage with the period thumbs, then lanes), so the band runs through every
+  lane. The variable's columns are its lanes, one per table and titled by the table's
+  name, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark.
+  A span's column name is never cut. After it, in muted mono, comes the file the steward
+  holds it in on a steward deployment (`OfferName Inera_CK_EP`): cut short with an
+  ellipsis where the span is narrow, and dropped where only a few characters would show.
+  A span too narrow for the column name is a plain bar with the name beside it, to the
+  right, or to the left at the axis end. Hovering or focusing a span shows its column,
+  table and years at once in a RAC `Tooltip` with no delay. The variables a succession
+  reaches are further lanes in time order, with their arrows. A line under the drawing
+  says "Click a column to add it to your project."; with no project open it says "Create
+  a project to add columns." beside a "Create a project" button, the top bar's action,
+  since the top bar scrolls away below the breakpoint. There is no second graph on the
+  page. While it loads the region is a `Skeleton`; a failed load is an error `StatusRow`
+  in the region with Retry; a variable with no years says "No years recorded for this
+  variable." in place of the lanes. Succession reaches one hop of read-only lanes, with
+  arrows from predecessor to successor and each neighbour's name linking to its variable
+  page.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one read-only row of a

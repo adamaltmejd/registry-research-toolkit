@@ -627,7 +627,8 @@ async function addVariableColumnsCase(page, shoot) {
 // #2056, browser boundary over webapp-dev's Antal segments and its variable
 // notice. Fails if variable dispatch or the timeline's lane per table is lost,
 // the Type fact stops reading the binding type an add writes (Numeric for int,
-// as add-variable-columns downloads), or the page fetches evidence again
+// as add-variable-columns downloads), the no-project line's "Create a project"
+// stops making the spans selectable in place, or the page fetches evidence again
 // (maintainer 2026-11-04: no source and provenance in the web app). Existing
 // cases only browse register/table pages.
 async function browseVariableCase(page, shoot) {
@@ -650,6 +651,11 @@ async function browseVariableCase(page, shoot) {
   await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
   await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
   await shoot("browse-variable");
+  // With no project open the page offers to create one in place, and the
+  // spans become selectable without leaving it.
+  check(await main.getByRole("checkbox").count() === 0, "a span was selectable with no project open");
+  await main.getByRole("button", { name: "Create a project", exact: true }).click();
+  await main.getByRole("checkbox").first().waitFor();
   check(evidenceRequests.length === 0, "the variable page requested evidence");
 }
 

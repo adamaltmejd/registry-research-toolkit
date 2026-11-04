@@ -340,12 +340,6 @@ a.nameText {
   font-size: var(--text-micro);
   font-weight: 500;
 }
-/* Stacked, the names have no column: the caption sits over the row's left
-   end, above its bar. */
-.coverageCaption[data-stacked] {
-  align-items: flex-start;
-  line-height: 1.2;
-}
 
 /* The period slider's box over the coverage row's track. */
 .overlay {
