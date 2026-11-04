@@ -519,8 +519,8 @@ All four kinds deny unknown fields. `evidence` is nonblank text (including
 carried over in D from the retired Python builder cites its files at the git tag
 `python-builder-pre-cutover`: `python-builder-pre-cutover:curation/…` is a file under
 that builder's package directory, and `python-builder-pre-cutover:reg_webapp/…` a
-repository path, both at that tag. `caveat` is
-optional user-facing text. Kind-specific content is:
+repository path, both at that tag. `caveat` is optional user-facing text. Kind-specific
+content is:
 
 - `assert`: `subject` and a `fact` tagged by `entity`: `occurrence` or `table` with
   `fields`, `release` with `name` and `period`, `value-set` with `items`, or
