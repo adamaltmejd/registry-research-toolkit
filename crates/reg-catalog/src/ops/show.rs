@@ -11,7 +11,9 @@ use super::refs::{self, Entity};
 use super::segments::{self, Segment};
 use super::shape::{self, Release};
 use super::show_evidence::{self, VariableEvidence};
-use super::{Cache, Operation, Param, Params, Period, Server, Type, component, flag};
+use super::{
+    Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag,
+};
 use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -235,11 +237,32 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "table" => table(server, &conn, &entity)?,
                 "variable" => variable(server, &conn, &entity, evidence)?,
                 "set" => set(server, &conn, &entity)?,
-                // simplify: classification summaries land with their data.
+                // simplify: a classification is refused, not summarized; give it a
+                // summary when a client needs one beyond `values` (#2235).
+                "class_family" => {
+                    return Err(Error::invalid_ref(
+                        &entity.pid,
+                        format!(
+                            "{:?} is a classification, which show does not take; values \
+                             lists the codes of one of its versions.",
+                            entity.pid
+                        ),
+                    ));
+                }
+                "class_version" => {
+                    return Err(Error::invalid_ref(
+                        &entity.pid,
+                        format!(
+                            "{:?} is a classification version, which show does not take; \
+                             values lists its codes.",
+                            entity.pid
+                        ),
+                    ));
+                }
                 kind => {
                     return Err(Error::new(
                         Code::InternalError,
-                        format!("show has no summary for a {kind} yet."),
+                        format!("show has no summary for a {kind}."),
                         vec![],
                     ));
                 }
@@ -610,38 +633,30 @@ fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRow
     if let Some(extra) = &extra {
         found.extend(keys(extra)?);
     }
-    found.sort();
-    found.dedup();
     // Steward mode: a key is shown over the years its placements in this table hold,
-    // as `schema` clips a line; a key no placement holds here is not shown.
-    let mut held = extra
-        .as_ref()
-        .map(|extra| {
-            extra.prepare(
-                "SELECT min(start), max(end) FROM holding_mapping
-                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
-            )
-        })
-        .transpose()?;
-    let mut row_keys: Vec<ShowRowKey> = Vec::with_capacity(found.len());
-    for (mut start, fqid, spelling, mut end) in found {
-        if let Some(held) = held.as_mut() {
-            let (first, last): (Option<i64>, Option<i64>) = held
-                .query_row(rusqlite::params![pid, fqid, start, end], |row| {
-                    Ok((row.get(0)?, row.get(1)?))
-                })?;
-            let (Some(first), Some(last)) = (first, last) else {
-                continue;
-            };
-            start = start.max(first);
-            end = end.min(last);
+    // as `schema` clips a line; a key no placement holds here is not shown. Duplicates
+    // go after the clip: two origins' segments of one key can clip to the same years.
+    let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
+    let mut clipped = Vec::with_capacity(found.len());
+    for (start, fqid, spelling, end) in found {
+        let days = match held.as_mut() {
+            Some(held) => held.clip(pid, &fqid, (start, end))?,
+            None => Some((start, end)),
+        };
+        if let Some(days) = days {
+            clipped.push((days, fqid, spelling));
         }
-        row_keys.push(ShowRowKey {
+    }
+    clipped.sort();
+    clipped.dedup();
+    let row_keys = clipped
+        .into_iter()
+        .map(|((start, end), fqid, spelling)| ShowRowKey {
             fqid,
             spelling,
             period: server.period(start, end),
-        });
-    }
+        })
+        .collect();
     Ok(row_keys)
 }
 

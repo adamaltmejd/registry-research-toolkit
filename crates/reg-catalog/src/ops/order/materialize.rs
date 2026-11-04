@@ -747,8 +747,8 @@ fn keys(
                     "held_key_missing",
                     format!(
                         "Table {:?} cannot be ordered yet: the data holder does not \
-                         supply its row identifier for the years requested. Leave out those \
-                         years, or ask the data holder",
+                         supply its row identifier. Leave this table out, or ask the data \
+                         holder",
                         holding.physical_name
                     ),
                 ));
