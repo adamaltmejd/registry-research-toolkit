@@ -230,7 +230,7 @@ machine identifiers that look like machine identifiers.
 
 **The project is the primary object.** Browsing exists to collect columns for a project,
 so the interface tells you, everywhere, what you have already collected and whether a
-column covers the study window you set.
+column covers the study years you set.
 
 The look is ink on neutral paper, with one colour for what is yours. The base is
 monochrome: near-black text and rules on a near-white sheet. Colour appears only where
@@ -246,6 +246,42 @@ view is that it is indistinguishable in language from the best existing view.
 Planned axis: per-provider themes. A provider theme (SCB, Socialstyrelsen,
 Försäkringskassan, …) is a remap of the `accent*` roles under a `[data-provider]`
 attribute and nothing else. Do not pre-build it; design so that it stays that small.
+
+## Words
+
+The site is a steward site (SWECOV now, IFAU next) and shows only what its steward
+holds. Screens use the researcher's words, never the catalog's internal model
+(maintainer 2026-11-04, #2066). The steward's own name, description and order
+instructions come from `/api/context`, never from code. Some screens still use the old
+words; the slices in `SPA-REDESIGN.md` bring them in line.
+
+  | Say                                                              | Not                                    |
+  | ---------------------------------------------------------------- | -------------------------------------- |
+  | (nothing: everything shown is held)                              | held, holdings, held matches           |
+  | (nothing: the timeline shows it)                                 | segments, census                       |
+  | Column name                                                      | spelling                               |
+  | Description                                                      | provider wording                       |
+  | Years                                                            | coverage                               |
+  | Years to add                                                     | add window                             |
+  | Study years                                                      | study window                           |
+  | Topics                                                           | tags                                   |
+  | Group                                                            | groups, part of                        |
+  | Notes on this data                                               | findings, data warnings                |
+  | Row identifier                                                   | row keys                               |
+  | Who is included                                                  | populations                            |
+  | Table (in a project)                                             | source                                 |
+  | Column, variable                                                 | binding                                |
+  | Check                                                            | draft check, catalog check             |
+  | Years not available                                              | period adjustments, clips              |
+  | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
+
+**Type** is one list for every screen: Categorical, Numeric, Date, Date and time,
+Identifier, Other (uncoded text is Other). It is shown as a pill with a glyph, with
+years only when the type changes by period.
+
+**Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
+source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
+stated has no row. A yes/no fact (identifier, sensitive) shows only when yes.
 
 ## Colors
 

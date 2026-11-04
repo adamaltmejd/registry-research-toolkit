@@ -14,8 +14,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "resolve",
     paths: &["/api/resolve"],
     tool: Some("resolve"),
-    description: "Match delivered column names (at most 200) to variables, optionally within \
-                  one register. A name that matches nothing is reported as unmatched.",
+    description: "Find the variables behind column names (up to 200), optionally in one \
+        register. Names that match nothing are reported as unmatched.",
     params: &[
         Param::required("columns", Type::Strings),
         Param::optional("register", Type::Ref),
@@ -31,7 +31,7 @@ pub struct Resolved {
     columns: Vec<ResolvedColumn>,
 }
 
-/// `shape.ResolvedColumn`: a requested column and the variables it names.
+/// A requested column and the variables it names.
 #[derive(Serialize, ToSchema)]
 pub struct ResolvedColumn {
     /// As asked.
