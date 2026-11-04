@@ -19,6 +19,9 @@ path = "tests/conformance/main.rs"
 test = false
 
 [dev-dependencies]
+# The MCP outputSchema check (tests/conformance/mcp.rs). Test-only, but its url → idna
+# chain adds 35 crates. simplify: revisit if the conformance target's cold CI compile
+# becomes a problem, or a lighter 2020-12 validator without the url/ICU chain appears.
 boon = "0.6.1"
 form_urlencoded = "1.2.2"
 http-body-util = "0.1.5"

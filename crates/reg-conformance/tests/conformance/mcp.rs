@@ -471,6 +471,14 @@ fn materialize_tool_matches_http() {
         .unwrap();
         schema.check(&document).unwrap();
         assert_eq!(is_error, status != 200, "{document}");
+        if port == reference_only {
+            // A reference-only server refuses as a client error, never a 5xx.
+            assert_eq!(status, 400, "{document}");
+            assert_eq!(
+                document["error"]["code"], "holdings_unavailable",
+                "{document}"
+            );
+        }
         assert!(json_eq(&document, &http), "tool {document}\nHTTP {http}");
         if is_error {
             codes.insert(document["error"]["code"].as_str().unwrap().to_owned());
