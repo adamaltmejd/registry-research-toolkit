@@ -2602,10 +2602,10 @@ serves for it, unpaged, in that order and shape, without evidence) and `facets` 
 `value`, `label`) in axis order, so the group page needs one request. The set's
 `description` is its curated one; without one, a description every member states alike
 is sent once as the set's (maintainer 2026-11-04). A member carries its own
-`description` only where it differs from the set's. Members
-sort by facet value in axis order (missing coordinates first), then by name and public id.
-`tags` is the union of the members' tags in public-id order. The summary contains
-curated presentation data; source evidence remains on the individual variables.
+`description` only where it differs from the set's. Members sort by facet value in axis
+order (missing coordinates first), then by name and public id. `tags` is the union of
+the members' tags in public-id order. The summary contains curated presentation data;
+source evidence remains on the individual variables.
 
 `show` at a register lists its `sets` (`fqid`, `name`, member variable `fqid`s, each in
 public-id order) for the register page's grouping, and `tags`, the union of its
