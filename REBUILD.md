@@ -50,7 +50,7 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done   |
   | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done   |
   | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | done   |
-  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | built  |
+  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | done   |
   | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —      |
 
 The hosted global catalog switches in C, uncurated, and curation in D happens against
@@ -706,20 +706,24 @@ source inventories; per-entry reasons stay in the F-deleted conversion reports.
 
 ### E: the holdings layer
 
-**Status (2026-11-03): built; the exit waits on the maintainer's real MONA order.** E
-restarted on 2026-11-03 as two releases (plan in #2070). Release A: the paired SWECOV
-image and deploy (#2105), steward mode in the SPA (#2108), the census comparison with
-0.64.0 SWECOV (#2103) and the paired release step (#2111) shipped as 0.72.0, with
-project 5.2.0 (#2112). Release B: the composed steward view (#2119), the MONA order file
-(#2121), contested columns and safe file names (#2139) and the v4 runner (#2125) shipped
-as 0.73.0, which data.swecov.se serves. Both releases were built by `reg-build`; the
-release compares holdings rebuilt against rebuilt (#2143), and the weekly integration
-run checks the pair. e-order #2068 is done and e-runner #2069 is closed. Runner
-extraction is verified by hand on MONA, with no SQL Server suite (#2126). Open: the
-maintainer's real MONA order on the v4 order file (the exit) and the E audit; #2070's
-representative-plan comparison; e-types #2071; the SPA follow-ups #2109 and #2110, which
-do not gate F. The held and unmatched columns (#2072) are settled on swecov-steward main
-(01ef4379) and ship when 0.74.0 re-pins the steward. Retiring `build_catalog.py`, Python
+**Status (2026-11-04): done.** E restarted on 2026-11-03 as two releases (plan in
+#2070). Release A: the paired SWECOV image and deploy (#2105), steward mode in the SPA
+(#2108), the census comparison with 0.64.0 SWECOV (#2103) and the paired release step
+(#2111) shipped as 0.72.0, with project 5.2.0 (#2112). Release B: the composed steward
+view (#2119), the MONA order file (#2121), contested columns and safe file names (#2139)
+and the v4 runner (#2125) shipped as 0.73.0. Both releases were built by `reg-build`;
+the release compares holdings rebuilt against rebuilt (#2143), and the weekly
+integration run checks the pair. e-order #2068 is done and e-runner #2069 is closed.
+Runner extraction is verified by hand on MONA, with no SQL Server suite (#2126).
+e-types' N1 reviews and mock-metadata audit shipped in #2152. 0.74.0 re-pinned the
+steward with the held and unmatched columns settled (#2072), and 0.75.0 (steward
+`0a6500cf`) serves holdings only (#2175) on data.swecov.se. The E audit ran on
+2026-11-04: E is code-complete. The exit is met: the maintainer ran two real orders on
+the v4 order file on MONA on 2026-11-04 (9998, 4 files; 9997, 26 files), with files, row
+and column counts and the filter matching the orders. Follow-ups #2193 (runner README)
+and #2194 (steward `validate` passes what materialize blocks) do not gate F. #2070's
+representative-plan comparison was ruled unneeded (maintainer 2026-11-04) and #2070 is
+closed; the SPA follow-ups #2110 do not gate F. Retiring `build_catalog.py`, Python
 `extend-db` and `reg_webapp/stewards/swecov/` is F's work.
 
 - **Design first, for the maintainer's review.** The design covers:
