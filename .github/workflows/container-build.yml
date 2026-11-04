@@ -285,24 +285,7 @@ jobs:
   # image build run in parallel — this usually resolves first.
   wait-ci:
     if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for green CI on this commit
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for _ in $(seq 1 40); do
-            run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml \
-              --commit "$GITHUB_SHA" --limit 1 --json status,conclusion \
-              -q '.[0] | (.status + " " + (.conclusion // ""))')
-            echo "ci.yml @ $GITHUB_SHA: ${run:-no run found yet}"
-            case "$run" in
-              "completed success") exit 0 ;;
-              completed*) echo "FATAL: CI did not succeed — refusing to deploy" >&2; exit 1 ;;
-            esac
-            sleep 30
-          done
-          echo "FATAL: timed out waiting for CI" >&2; exit 1
+    uses: ./.github/workflows/wait-ci.yml
 
   build-image:
     needs: [changes, schema-guard]
