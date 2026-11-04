@@ -7,18 +7,18 @@ executable it consumes. The domain invariant holds throughout: PII never leaves 
 side, only aggregate statistics do, and disclosure control is a load-bearing guard.
 
 The MONA check (`export_gate.R`), its schemas and policies and the case corpus are
-built. The Rust binary is being built in
-[`crates/reg-export-gate`](../crates/reg-export-gate/DESIGN.md) (#1803). Trial steps for
-MONA are in [README.md](README.md).
+built, and so is the Rust binary,
+[`crates/reg-export-gate`](../crates/reg-export-gate/DESIGN.md) (#1803), the reference
+the R check imitates. Trial steps for MONA are in [README.md](README.md).
 
 ## Components
 
 - **`reg-export-gate`.** One static Rust binary, in a crate of the same name in
-  `crates/`, built and released next to `reg-meta`. It runs the whole disclosure check,
-  stages the checked bytes for human review, serves the review UI and pushes approved
-  bytes to the agent VM. An agent calls it; it never reimplements it. The name says what
-  it does: the check is disclosure control on aggregates, not only PII detection, so
-  "pii" is avoided. Being built.
+  `crates/`, released as an asset of each `reg_meta/v*` release. It runs the whole
+  disclosure check (`check`), and, when the human has reviewed the checked output,
+  re-derives it and delivers the approved bytes to the agent VM (`export`). An agent
+  calls it; it never reimplements it. The name says what it does: the check is
+  disclosure control on aggregates, not only PII detection, so "pii" is avoided.
 - **Schemas and policy.** Fixed, versioned JSON files supplied by the toolkit, each with
   a policy file beside it, in `schemas/`. Choosing or adding a schema is a deliberate
   user configuration step. An agent never writes or edits a schema or a policy.
@@ -31,16 +31,18 @@ Three parties, which may share one host; on a shared host the same separation ho
 between the agent's environment and the gate:
 
 - **Agent VM.** Code, mock data and approved aggregates only. It never sees unreviewed
-  output, check reports (beyond the refusal category code), logs or the review UI.
+  output, check reports (beyond the refusal category code) or logs.
 - **Data VM.** Microdata, the pipeline and `reg-export-gate`.
-- **Human.** Reviews the checked output in the review UI and presses Export.
+- **Human.** Reviews the checked output on the data side and runs
+  `reg-export-gate export`, naming the receipt they reviewed.
 
-The review UI is unreachable from the agent VM, by `curl` or any other client. That is
-enforced by the VM network setup, not by instructions to the agent. The review UI is
-part of the `reg-export-gate` binary and listens only on the data-side network. After
-Export, the binary pushes the approved bytes one way to the agent VM. The gate records
-the SHA-256 of each file it writes and verifies it on delivery. A changed byte voids the
-approval and needs a new check.
+v1 has no review UI (maintainer, 2026-11-04): the reviewer inspects a copy of the output
+folder with any tool. `export` writes the approved bytes one way to a shared folder that
+the agent VM sees read-only; the separation of the VMs is enforced by the VM network
+setup, not by instructions to the agent. The procedure and its checks are in [the
+crate's DESIGN.md](../crates/reg-export-gate/DESIGN.md), "Export and delivery". The gate
+records the SHA-256 of each file it writes and verifies it on delivery. A changed byte
+voids the approval and needs a new check.
 
 The prior art is the education-returns `server.sh` (adamaltmejd/education-returns#18).
 It stops three times: before code reaches the data server, before checked output is
@@ -183,10 +185,10 @@ output. In order:
 Setup stops at its first finding; each of the four steps collects every finding over all
 files, and the check stops at the first step with a finding. On any refusal the output
 folder holds nothing. The output folder is data-side: its files are checked but not yet
-approved, and only the human's Export pushes them to the agent VM. Refusals have stable
-codes by category: setup, inventory, structure, disclosure, backstop, and delivery
-integrity (a hash mismatch; binary only). Reports, logs and diagnostics stay on the data
-side and never enter the output folder.
+approved, and only the human's `export` delivers them to the agent VM. Refusals have
+stable codes by category: setup, inventory, structure, disclosure, backstop, and
+delivery integrity (a hash mismatch; binary only). Reports, logs and diagnostics stay on
+the data side and never enter the output folder.
 
 A finding names the rule and locates it, never by a value, as in the MONA extract runner
 ([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md), "No row values in logs").

@@ -26,8 +26,9 @@ draft or tag already exists, follow Error recovery first.
   | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
-`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` binaries (step 10). A
-`reg_meta_build/v*` release is a tag with no assets.
+`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` and `reg-export-gate` binaries
+(step 10; the gate's is named by its own crate version). A `reg_meta_build/v*` release
+is a tag with no assets.
 
 ## Validation
 
