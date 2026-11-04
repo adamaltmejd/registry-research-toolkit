@@ -31,8 +31,6 @@ source named in the commit.
 Selection per fold, as generated, over assigned scalars excluding private use:
 
 - every scalar the fold changes;
-- except precomposed Hangul syllables with a final consonant, whose decomposition is
-  algorithmic; they are sampled;
 - a seeded sample of 1,000 other scalars;
 - a seeded sample of scalars in four contexts: after `ΑΣ` and between `Α` and `Σ`
   (`Final_Sigma`), before ` x` and padded with spaces (token boundaries, strip);

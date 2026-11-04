@@ -27,8 +27,8 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
-`archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`) and removed from `main`,
-pending a from-scratch MONA rebuild, tracked in #707.
+`archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`) and removed from `main`.
+Local mock data from a `project_data.json` is tracked in #707, as a local skill.
 
 ## MONA constraint
 

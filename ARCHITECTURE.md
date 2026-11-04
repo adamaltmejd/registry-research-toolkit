@@ -29,8 +29,8 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 - **No internet on MONA.** Code that runs there is self-contained: dependencies are
   pre-installed (WinPython, incl. duckdb/pyodbc/numpy) or uploaded with the code.
 - **LLM agents are not allowed inside MONA.** Researchers develop analysis code with
-  coding agents *outside* MONA. The tooling for that (the MONA bundle and local mock
-  data) is archived pending a from-scratch rebuild (#707).
+  coding agents *outside* MONA. Local mock data generated from a `project_data.json` is
+  remaining work (#707), as a local skill.
 
 ### Data stewards
 
