@@ -142,6 +142,7 @@ fn invalid_ref(value: &str, kind: &str, operation: &str) -> Error {
 /// The tables of `value`: a table, a register's tables (implicit included) or, when
 /// `variable_ok`, the tables a variable's segments are in. `table` keeps one of them.
 fn scope(
+    server: &Server,
     conn: &Connection,
     value: &str,
     table: Option<&str>,
@@ -164,6 +165,7 @@ fn scope(
     };
     let mut tables: Vec<(i64, String)> =
         rows(conn, sql, [hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?;
+    tables.retain(|(_, pid)| server.catalog.serves("table", pid));
     if let Some(table) = table {
         let id = refs::table(conn, table)?;
         if !tables.iter().any(|(t, _)| *t == id) {
@@ -200,8 +202,9 @@ struct Line {
 }
 
 /// The lines of `tables` (of `variable` when given) over `[from, to)`, ordered by
-/// (table pid, variable pid, start, spelling).
+/// (table pid, variable pid, start, spelling); in steward mode only held ones.
 fn lines(
+    server: &Server,
     conn: &Connection,
     tables: &[(i64, String)],
     variable: Option<i64>,
@@ -256,6 +259,7 @@ fn lines(
             }
         }
     }
+    let mut out = held_only(server, out)?;
     out.sort_by(|a, b| {
         (&a.table, &a.variable, a.start, &a.spelling).cmp(&(
             &b.table,
@@ -264,6 +268,32 @@ fn lines(
             &b.spelling,
         ))
     });
+    Ok(out)
+}
+
+/// Steward mode: each line clipped to the years its variable is held in its table,
+/// and a line held in none of them dropped (crates/DESIGN.md, "A steward deployment
+/// serves its holdings only").
+fn held_only(server: &Server, lines: Vec<Line>) -> Result<Vec<Line>, Error> {
+    let Some(extra) = server.catalog.connect_holdings()? else {
+        return Ok(lines);
+    };
+    let mut held = extra.prepare(
+        "SELECT min(start), max(end) FROM holding_mapping
+         WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
+    )?;
+    let mut out = Vec::with_capacity(lines.len());
+    for mut line in lines {
+        let (first, last): (Option<i64>, Option<i64>) = held.query_row(
+            rusqlite::params![line.table, line.variable, line.start, line.end],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?;
+        if let (Some(first), Some(last)) = (first, last) {
+            line.start = line.start.max(first);
+            line.end = line.end.min(last);
+            out.push(line);
+        }
+    }
     Ok(out)
 }
 
@@ -329,6 +359,7 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     };
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let scope = scope(
+        server,
         &conn,
         params["ref"],
         params.get("table").copied(),
@@ -337,7 +368,7 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     )?;
     // simplify: every line of the ref is built, then paged in memory; page in SQL if a
     // register's lines pass a few thousand.
-    let mut rest: Vec<Line> = lines(&conn, &scope.tables, scope.variable, request)?
+    let mut rest: Vec<Line> = lines(server, &conn, &scope.tables, scope.variable, request)?
         .into_iter()
         .filter(|l| {
             after
@@ -426,6 +457,7 @@ fn diff(server: &Server, params: &Params) -> Result<Value, Error> {
     let to = super::days(params, "to")?.expect("a required parameter");
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let scope = scope(
+        server,
         &conn,
         params["ref"],
         params.get("table").copied(),
@@ -435,8 +467,8 @@ fn diff(server: &Server, params: &Params) -> Result<Value, Error> {
     let mut tables = Vec::new();
     for table in &scope.tables {
         let one = std::slice::from_ref(table);
-        let before = by_variable(lines(&conn, one, None, from)?);
-        let mut after = by_variable(lines(&conn, one, None, to)?);
+        let before = by_variable(lines(server, &conn, one, None, from)?);
+        let mut after = by_variable(lines(server, &conn, one, None, to)?);
         let (mut removed, mut changed, mut unchanged) = (Vec::new(), Vec::new(), 0);
         for (variable, line) in before {
             match after.remove(&variable) {

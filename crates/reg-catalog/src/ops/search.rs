@@ -402,11 +402,12 @@ fn hit(
              WHERE r.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Register {
-                    fqid: row.get(0)?,
+                    period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    fqid,
                     name: row.get(1)?,
                     description: row.get(2)?,
-                    period: server.period(row.get(3)?, row.get(4)?),
                 })
             },
         )?,
@@ -419,12 +420,13 @@ fn hit(
              WHERE t.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Table {
-                    fqid: row.get(0)?,
+                    period: server.hull("table", &fqid, row.get(4)?, row.get(5)?),
+                    fqid,
                     name: row.get(1)?,
                     register_name: row.get(2)?,
                     role: row.get(3)?,
-                    period: server.period(row.get(4)?, row.get(5)?),
                 })
             },
         )?,
@@ -447,13 +449,14 @@ fn hit(
                  WHERE v.id = ?",
                 [variable],
                 |row| {
+                    let fqid: String = row.get(0)?;
                     Ok(SearchHit::Variable {
-                        fqid: row.get(0)?,
+                        period: server.hull("variable", &fqid, row.get(4)?, row.get(5)?),
+                        fqid,
                         name: row.get(1)?,
                         register_name: row.get(2)?,
                         definition: row.get(3)?,
                         spellings,
-                        period: server.period(row.get(4)?, row.get(5)?),
                     })
                 },
             )?

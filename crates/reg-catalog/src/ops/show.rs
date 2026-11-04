@@ -640,10 +640,10 @@ fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowM
 fn columns(
     server: &Server,
     segments: &mut rusqlite::Statement,
-    variable: i64,
+    variable: impl rusqlite::Params,
 ) -> Result<Vec<ShowSetColumn>, Error> {
     let rows = segments
-        .query_map([variable], |row| {
+        .query_map(variable, |row| {
             Ok((
                 row.get::<_, String>(0)?,
                 row.get::<_, String>(1)?,
@@ -654,7 +654,11 @@ fn columns(
     let mut columns: Vec<ShowSetColumn> = vec![];
     for (table, spelling, period) in rows {
         match columns.last_mut() {
-            Some(c) if c.table == table && c.spelling == spelling => c.periods.push(period),
+            Some(c) if c.table == table && c.spelling == spelling => {
+                if c.periods.last() != Some(&period) {
+                    c.periods.push(period);
+                }
+            }
             _ => columns.push(ShowSetColumn {
                 table,
                 spelling,
@@ -703,6 +707,40 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
             })
         },
     )?;
+    let mut members = set_members(server, conn, entity)?;
+    members.sort_by(|(_, a), (_, b)| by_axes(&axes, a, b));
+    let tags = rows(
+        conn,
+        "SELECT DISTINCT t.pid, n.body FROM var_set_member m
+         JOIN var_set_member tm ON tm.variable_id = m.variable_id
+         JOIN var_set t ON t.id = tm.set_id AND t.kind = 'tag'
+         JOIN text n ON n.id = t.name_text WHERE m.set_id = ? ORDER BY t.pid",
+        [entity.id],
+        |row| {
+            Ok(ShowMembership {
+                fqid: row.get(0)?,
+                name: row.get(1)?,
+            })
+        },
+    )?;
+    Ok(Show::Set {
+        fqid: entity.pid.clone(),
+        name,
+        description,
+        register,
+        axes,
+        members: members.into_iter().map(|(_, member)| member).collect(),
+        tags,
+    })
+}
+
+/// A set's members with their facets and columns; in steward mode only the held
+/// members, each over its held columns and years (`not_found` when none is held).
+fn set_members(
+    server: &Server,
+    conn: &Connection,
+    entity: &Entity,
+) -> Result<Vec<(i64, ShowSetMember)>, Error> {
     let mut members: Vec<(i64, ShowSetMember)> = rows(
         conn,
         "SELECT v.id, v.pid, l.body FROM var_set_member m
@@ -733,8 +771,30 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
          JOIN spelling sp ON sp.id = s.spelling_id
          WHERE s.variable_id = ? ORDER BY t.pid, sp.exact, s.start, s.end",
     )?;
+    members.retain(|(_, member)| server.catalog.serves("variable", &member.fqid));
+    let extra = server.catalog.connect_holdings()?;
+    if extra.is_some() && members.is_empty() {
+        return Err(Error::new(
+            Code::NotFound,
+            format!("Nothing is named {:?}.", entity.pid),
+            vec![entity.pid.clone().into()],
+        ));
+    }
+    let mut held = extra
+        .as_ref()
+        .map(|extra| {
+            extra.prepare(
+                "SELECT m.table_pid, c.name, m.start, m.end FROM holding_mapping m
+                 JOIN holding_column c ON c.id = m.column_id
+                 WHERE m.variable_pid = ? ORDER BY m.table_pid, c.name, m.start, m.end",
+            )
+        })
+        .transpose()?;
     for (id, member) in &mut members {
-        member.columns = columns(server, &mut segments, *id)?;
+        member.columns = match held.as_mut() {
+            Some(held) => columns(server, held, [member.fqid.clone()])?,
+            None => columns(server, &mut segments, [*id])?,
+        };
         member.facets = facets
             .query_map(rusqlite::params![entity.id, *id], |row| {
                 Ok(ShowSetFacet {
@@ -745,28 +805,5 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
             })?
             .collect::<rusqlite::Result<_>>()?;
     }
-    members.sort_by(|(_, a), (_, b)| by_axes(&axes, a, b));
-    let tags = rows(
-        conn,
-        "SELECT DISTINCT t.pid, n.body FROM var_set_member m
-         JOIN var_set_member tm ON tm.variable_id = m.variable_id
-         JOIN var_set t ON t.id = tm.set_id AND t.kind = 'tag'
-         JOIN text n ON n.id = t.name_text WHERE m.set_id = ? ORDER BY t.pid",
-        [entity.id],
-        |row| {
-            Ok(ShowMembership {
-                fqid: row.get(0)?,
-                name: row.get(1)?,
-            })
-        },
-    )?;
-    Ok(Show::Set {
-        fqid: entity.pid.clone(),
-        name,
-        description,
-        register,
-        axes,
-        members: members.into_iter().map(|(_, member)| member).collect(),
-        tags,
-    })
+    Ok(members)
 }

@@ -1,8 +1,9 @@
 //! `segments`: a variable's segments, the reader's main row (schema §1.2), with each
 //! segment's occurrences when `evidence` is asked for.
 
-use rusqlite::types::Value as Sql;
-use rusqlite::{Connection, params_from_iter};
+use std::collections::HashSet;
+
+use rusqlite::{Connection, OptionalExtension};
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
@@ -160,7 +161,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             format!("{given:?} is a {}, not a variable.", variable.kind),
         ));
     }
-    let (filter, args) = narrowing(&conn, params, &variable)?;
+    let table = table_pid(&conn, params, &variable)?;
     let evidence = flag(params, "evidence")?;
     let limit = limit(params)?;
     let offset = match params.get("cursor") {
@@ -177,11 +178,12 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     };
     // simplify: the whole list is built, then paged; a variable has tens of rows.
     // Page in SQL again if a variable's list reaches thousands.
-    let mut rows = segment_rows(&conn, &filter, args)?;
-    if let Some(extra) = server.catalog.connect_holdings()? {
-        rows = held_rows(&extra, &variable.pid, params.get("table").copied(), &rows)?;
-    }
-    let rows = with_wording(&conn, variable.id, rows)?;
+    let origins = match server.catalog.connect_holdings()? {
+        Some(extra) => vec![server.catalog.connect()?, extra],
+        None => vec![conn],
+    };
+    let value_set_name = params.get("value_set_name").copied();
+    let rows = listed(&origins, &variable.pid, table.as_deref(), value_set_name)?;
     let mut rows: Vec<Row> = match days(params, "period")? {
         Some((first, end)) => rows
             .into_iter()
@@ -215,18 +217,20 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let mut items = Vec::with_capacity(page.len());
     for Row {
         id,
+        origin,
         valueset_id,
         start,
         end,
         mut segment,
     } in page
     {
+        let conn = &origins[origin];
         segment.period = server.period(start, end);
         segment.value_set = valueset_id
-            .map(|valueset| shape::value_set_ref(&conn, valueset))
+            .map(|valueset| shape::value_set_ref(conn, valueset))
             .transpose()?;
         segment.evidence = match (evidence, id) {
-            (true, Some(id)) => Some(occurrences(server, &conn, id)?),
+            (true, Some(id)) => Some(occurrences(server, conn, id)?),
             (true, None) => Some(vec![]),
             (false, _) => None,
         };
@@ -235,39 +239,87 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
 }
 
-/// The `WHERE` terms and arguments the variable, `table` and `value_set_name` give;
-/// `period` applies after steward rows replace the catalog's periods.
-fn narrowing(
+/// The variable's rows over every origin, before the `period` filter and paging. A
+/// steward's supplemental occurrences of a reference variable are its forms in the
+/// holdings origin under the same public id, so both are read and each row keeps its
+/// origin; in steward mode the rows are then the held placements.
+fn listed(
+    origins: &[Connection],
+    variable: &str,
+    table: Option<&str>,
+    value_set_name: Option<&str>,
+) -> Result<Vec<Row>, Error> {
+    let mut rows = Vec::new();
+    let mut runs = Vec::new();
+    let mut named = HashSet::new();
+    for (origin, conn) in origins.iter().enumerate() {
+        let Some(id) = conn
+            .query_row("SELECT id FROM variable WHERE pid = ?", [variable], |row| {
+                row.get::<_, i64>(0)
+            })
+            .optional()?
+        else {
+            continue;
+        };
+        rows.extend(segment_rows(conn, origin, id, table)?);
+        runs.extend(show_evidence::wordings(conn, id)?);
+        if let Some(name) = value_set_name {
+            named.extend(
+                named_value_sets(conn, name)?
+                    .into_iter()
+                    .map(|v| (origin, v)),
+            );
+        }
+    }
+    runs.sort_by_key(|run| std::cmp::Reverse((run.start, run.end)));
+    if let [_, extra] = origins {
+        rows = held_rows(extra, variable, table, &rows)?;
+    }
+    if value_set_name.is_some() {
+        rows.retain(|row| {
+            row.valueset_id
+                .is_some_and(|valueset| named.contains(&(row.origin, valueset)))
+        });
+    }
+    Ok(with_wording(&runs, rows))
+}
+
+/// The public id of the `table` narrowing, checked to be in the variable's register.
+fn table_pid(
     conn: &Connection,
     params: &Params,
     variable: &refs::Entity,
-) -> Result<(Vec<String>, Vec<Sql>), Error> {
-    let given = params["ref"];
-    let mut filter = vec!["s.variable_id = ?".to_owned()];
-    let mut args = vec![Sql::Integer(variable.id)];
-    if let Some(&table) = params.get("table") {
-        let id = refs::table(conn, table)?;
-        let register = |sql: &str, id: i64| conn.query_row(sql, [id], |row| row.get::<_, i64>(0));
-        if register("SELECT register_id FROM tbl WHERE id = ?", id)?
-            != register("SELECT register_id FROM variable WHERE id = ?", variable.id)?
-        {
-            return Err(Error::invalid_ref(
-                table,
-                format!("{table:?} is not a table of {given:?}'s register."),
-            ));
-        }
-        filter.push("s.table_id = ?".to_owned());
-        args.push(Sql::Integer(id));
+) -> Result<Option<String>, Error> {
+    let Some(&table) = params.get("table") else {
+        return Ok(None);
+    };
+    let id = refs::table(conn, table)?;
+    let register = |sql: &str, id: i64| conn.query_row(sql, [id], |row| row.get::<_, i64>(0));
+    if register("SELECT register_id FROM tbl WHERE id = ?", id)?
+        != register("SELECT register_id FROM variable WHERE id = ?", variable.id)?
+    {
+        let given = params["ref"];
+        return Err(Error::invalid_ref(
+            table,
+            format!("{table:?} is not a table of {given:?}'s register."),
+        ));
     }
-    if let Some(&name) = params.get("value_set_name") {
-        filter.push(
-            "EXISTS (SELECT 1 FROM valueset_name n JOIN text x ON x.id = n.name_text
-               WHERE n.valueset_id = s.valueset_id AND x.body = ?)"
-                .to_owned(),
-        );
-        args.push(Sql::Text(name.to_owned()));
-    }
-    Ok((filter, args))
+    Ok(Some(conn.query_row(
+        "SELECT pid FROM tbl WHERE id = ?",
+        [id],
+        |row| row.get(0),
+    )?))
+}
+
+/// The value sets in `conn` named `name`.
+fn named_value_sets(conn: &Connection, name: &str) -> Result<Vec<i64>, Error> {
+    Ok(rows(
+        conn,
+        "SELECT n.valueset_id FROM valueset_name n JOIN text x ON x.id = n.name_text
+         WHERE x.body = ?",
+        [name],
+        |row| row.get(0),
+    )?)
 }
 
 /// One row of the list before paging: its segment (none for a steward row no
@@ -275,16 +327,22 @@ fn narrowing(
 #[derive(Clone)]
 struct Row {
     id: Option<i64>,
+    /// Index of the database origin the row's ids belong to.
+    origin: usize,
     valueset_id: Option<i64>,
     start: i64,
     end: i64,
     segment: Segment,
 }
 
-/// Every catalog segment `filter` and `args` select.
-fn segment_rows(conn: &Connection, filter: &[String], args: Vec<Sql>) -> Result<Vec<Row>, Error> {
-    let sql = format!(
-        "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
+/// The variable's catalog segments in one origin, in `table` when given.
+fn segment_rows(
+    conn: &Connection,
+    origin: usize,
+    variable: i64,
+    table: Option<&str>,
+) -> Result<Vec<Row>, Error> {
+    let sql = "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
                 s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier, ik.slug,
                 s.role, s.temporality, s.state
          FROM segment s
@@ -292,47 +350,51 @@ fn segment_rows(conn: &Connection, filter: &[String], args: Vec<Sql>) -> Result<
            JOIN spelling sp ON sp.id = s.spelling_id
            LEFT JOIN class_version cv ON cv.id = s.class_version_id
            LEFT JOIN id_kind ik ON ik.id = s.id_kind_id
-         WHERE {}",
-        filter.join(" AND ")
-    );
+         WHERE s.variable_id = ?1 AND (?2 IS NULL OR t.pid = ?2)";
     let stated = |value: String, unstated: &str| (value != unstated).then_some(value);
-    Ok(rows(conn, &sql, params_from_iter(args), |row| {
-        Ok(Row {
-            id: Some(row.get(0)?),
-            valueset_id: row.get(8)?,
-            start: row.get(2)?,
-            end: row.get(3)?,
-            segment: Segment {
-                table: row.get(1)?,
-                column: row.get(4)?,
-                period: Period {
-                    start: None,
-                    end: None,
+    Ok(rows(
+        conn,
+        sql,
+        rusqlite::params![variable, table],
+        |row| {
+            Ok(Row {
+                id: Some(row.get(0)?),
+                origin,
+                valueset_id: row.get(8)?,
+                start: row.get(2)?,
+                end: row.get(3)?,
+                segment: Segment {
+                    table: row.get(1)?,
+                    column: row.get(4)?,
+                    period: Period {
+                        start: None,
+                        end: None,
+                    },
+                    file: None,
+                    wording: None,
+                    dtype: row.get(5)?,
+                    length: row.get(6)?,
+                    format: row.get(7)?,
+                    value_set: None,
+                    classification: row.get(9)?,
+                    coded: stated(row.get(10)?, "unknown"),
+                    sensitive: row.get(11)?,
+                    identifier: row.get(12)?,
+                    id_kind: row.get(13)?,
+                    role: row.get(14)?,
+                    temporality: stated(row.get(15)?, "unknown"),
+                    state: stated(row.get(16)?, "clear"),
+                    evidence: None,
                 },
-                file: None,
-                wording: None,
-                dtype: row.get(5)?,
-                length: row.get(6)?,
-                format: row.get(7)?,
-                value_set: None,
-                classification: row.get(9)?,
-                coded: stated(row.get(10)?, "unknown"),
-                sensitive: row.get(11)?,
-                identifier: row.get(12)?,
-                id_kind: row.get(13)?,
-                role: row.get(14)?,
-                temporality: stated(row.get(15)?, "unknown"),
-                state: stated(row.get(16)?, "clear"),
-                evidence: None,
-            },
-        })
-    })?)
+            })
+        },
+    )?)
 }
 
 /// Steward mode: one row per held file and column over the years held, never the
 /// catalog's wider periods (maintainer 2026-11-04). A placement takes its facts from
-/// the catalog segments it overlaps in its table, preferring the same column name;
-/// with none, from the table's or the variable's first segment, else only its role.
+/// the catalog segments it overlaps in its table, preferring the same column name
+/// among those; a placement no segment overlaps states only its role.
 fn held_rows(
     extra: &Connection,
     variable: &str,
@@ -364,15 +426,16 @@ fn held_rows(
             .iter()
             .filter(|r| r.segment.table == table)
             .collect();
-        let named: Vec<&Row> = in_table
+        let same_name = |r: &&Row| r.segment.column.eq_ignore_ascii_case(&column);
+        let overlapping: Vec<&Row> = in_table
             .iter()
             .copied()
-            .filter(|r| r.segment.column.eq_ignore_ascii_case(&column))
+            .filter(|r| r.start < end && start < r.end)
             .collect();
-        let candidates = if named.is_empty() { in_table } else { named };
+        let named: Vec<&Row> = overlapping.iter().copied().filter(same_name).collect();
+        let candidates = if named.is_empty() { overlapping } else { named };
         let mut parts: Vec<Row> = candidates
             .iter()
-            .filter(|r| r.start < end && start < r.end)
             .map(|r| Row {
                 start: r.start.max(start),
                 end: r.end.min(end),
@@ -380,41 +443,34 @@ fn held_rows(
             })
             .collect();
         if parts.is_empty() {
-            let template = candidates.first().copied().or_else(|| catalog.first());
-            parts.push(match template {
-                Some(r) => Row {
-                    start,
-                    end,
-                    ..r.clone()
-                },
-                None => Row {
-                    id: None,
-                    valueset_id: None,
-                    start,
-                    end,
-                    segment: Segment {
-                        table: table.clone(),
-                        column: column.clone(),
-                        period: Period {
-                            start: None,
-                            end: None,
-                        },
-                        file: None,
-                        wording: None,
-                        dtype: None,
-                        length: None,
-                        format: None,
-                        value_set: None,
-                        classification: None,
-                        coded: None,
-                        sensitive: None,
-                        identifier: None,
-                        id_kind: None,
-                        role,
-                        temporality: None,
-                        state: None,
-                        evidence: None,
+            parts.push(Row {
+                id: None,
+                origin: 0,
+                valueset_id: None,
+                start,
+                end,
+                segment: Segment {
+                    table: table.clone(),
+                    column: column.clone(),
+                    period: Period {
+                        start: None,
+                        end: None,
                     },
+                    file: None,
+                    wording: None,
+                    dtype: None,
+                    length: None,
+                    format: None,
+                    value_set: None,
+                    classification: None,
+                    coded: None,
+                    sensitive: None,
+                    identifier: None,
+                    id_kind: None,
+                    role,
+                    temporality: None,
+                    state: None,
+                    evidence: None,
                 },
             });
         }
@@ -431,8 +487,7 @@ fn held_rows(
 /// The rows cut where the provider's wording changes, each carrying the wording in
 /// force: the latest used occurrence's in the row's table that states one, else (a
 /// steward table the catalog has no occurrence in) any table's on that day.
-fn with_wording(conn: &Connection, variable: i64, list: Vec<Row>) -> Result<Vec<Row>, Error> {
-    let runs = show_evidence::wordings(conn, variable)?;
+fn with_wording(runs: &[show_evidence::Wording], list: Vec<Row>) -> Vec<Row> {
     let mut out = Vec::new();
     for row in list {
         let table = &row.segment.table;
@@ -469,7 +524,7 @@ fn with_wording(conn: &Connection, variable: i64, list: Vec<Row>) -> Result<Vec<
         part.segment.wording = wording;
         out.push(part);
     }
-    Ok(out)
+    out
 }
 
 /// A segment's occurrences, in time, then source key and spelling order.

@@ -85,6 +85,22 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         assert [(r["table"], r["column"], r["file"], r["period"]) for r in rows] == [
             ("demo/held", "Late", "Pool", held_years)
         ]
+        # Fails if the holdings rows compare the raw `table` input with table ids (a
+        # bare name then lists nothing) or re-create placements a `value_set_name`
+        # filter excluded.
+        for params, expected in [
+            ({"table": "held"}, rows),
+            ({"value_set_name": "None such"}, []),
+        ]:
+            narrowed = client.get("/api/segments/demo/held/late", params=params)
+            assert narrowed.status_code == 200, narrowed.text
+            assert narrowed.json()["data"]["items"] == expected, params
+        # Fails if schema lists a variable no placement names, or reference years.
+        schema = client.get("/api/schema/demo/held").json()["data"]["items"]
+        assert "demo/held/relative-id" not in {line["variable"] for line in schema}
+        assert [
+            line["period"] for line in schema if line["variable"] == "demo/held/late"
+        ] == [held_years]
         search = client.get("/api/search", params={"q": "position", "type": "variable"})
         assert search.status_code == 200
         data = search.json()["data"]
@@ -104,6 +120,8 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         )
         assert anytime.status_code == outside.status_code == 200
         assert anytime.json()["data"]["total"] == 1
+        # Fails if a hit advertises the reference period instead of the years held.
+        assert [h["period"] for h in anytime.json()["data"]["items"]] == [held_years]
         assert outside.json()["data"]["total"] == 0
         assert outside.json()["data"]["items"] == []
         # Fails if facets count a variable no placement names (RelativeId) or the
@@ -251,6 +269,9 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert any(
             x["file"] == "Attested"
             and x["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
+            # Fails if the list reads the reference origin only: the attested form
+            # (its own class version) is in the holdings origin.
+            and x.get("classification") == "class/received/v1"
             for x in answer.json()["data"]["items"]
         )
         member = pool.client(artifact_env(output)).get("/api/segments/demo/owners/id")
