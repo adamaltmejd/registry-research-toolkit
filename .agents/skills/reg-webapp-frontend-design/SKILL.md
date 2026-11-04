@@ -47,8 +47,10 @@ user action, no SaaS card kit, sentence case, errors say how to fix it.
 
 1. `reg_webapp/frontend/DESIGN.md`: front matter is the token set, prose says why and
    how. **On any conflict it wins over this skill.**
-2. `reg_webapp/DESIGN.md` → the UI primitives, frontend toolchain and SPA routing
-   sections that the change touches.
+2. `reg_webapp/frontend/DESIGN.md` → "Words": the only words that appear on screen (a
+   steward site, plain researcher language; no "held", "segments" or catalog internals).
+   Then "Components" for the primitives. `reg_webapp/DESIGN.md` → "Catalog pages" only
+   if the change touches them.
 3. `reg_webapp/frontend/src/tokens.css`: the roles as implemented, held to the front
    matter by `lint:tokens`.
 4. `reg_webapp/frontend/src/lib/ui/`: the primitives (one file each) and the one or two
@@ -81,8 +83,7 @@ A new dependency stops the work until it is justified against the repo ladder.
 **Never hand-roll a widget RAC covers:** Button, Link, Dialog/Modal, Popover, Tooltip,
 Menu, ListBox, ComboBox, Autocomplete, Select, Slider, Tabs, Disclosure, Tree, GridList,
 SearchField, Checkbox, ToggleButton. `DataTable` stays a plain `<table>` with explicit
-roles (reg_webapp/DESIGN.md, "not to re-litigate"). No Tailwind, shadcn or a second
-token system.
+roles. No Tailwind, shadcn or a second token system.
 
 - **Props, not DOM habits.** `onPress`, not `onClick`; `isDisabled`, `isOpen`,
   `isSelected`, not `disabled`/`open`. A `Popover` or `Modal` holds a `<Dialog>`.
@@ -121,11 +122,11 @@ token system.
 
 ## Swedish text: filtering and sorting
 
-- **Filtering** goes through the existing `rankFilter`/`foldSearch` in `src/lib/`
-  (reg-core's fold over WASM), so a client filter matches exactly what the server search
-  matches. That fold drops diacritics: "alderspension" finds "ålderspension". Never
-  filter with RAC's `useFilter` or Autocomplete's default filter: they collate in the
-  provider's en-US locale and disagree with the server.
+- **Filtering** goes through the existing `rankFilter`/`foldSearch` in
+  `src/lib/catalog.ts`, a JS fold close to the server search's. It drops diacritics:
+  "alderspension" finds "ålderspension". Never filter with RAC's `useFilter` or
+  Autocomplete's default filter: they collate in the provider's en-US locale and
+  disagree with the server.
 - **Sorting** Swedish labels uses one shared
   `Intl.Collator('sv', { sensitivity: 'base' })`, never bare `localeCompare`, so å, ä
   and ö sort after z.

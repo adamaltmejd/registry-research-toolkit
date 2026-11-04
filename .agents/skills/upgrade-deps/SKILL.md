@@ -31,10 +31,15 @@ Resolve the requested scope before updating. A named dependency stays a named up
 with its necessary dependency closure. For a complete refresh, audit these surfaces
 together, reading actual files rather than a saved version list:
 
-- Root/member `pyproject.toml`, `uv.lock`, Python floor and `.python-version`.
+- Root `pyproject.toml`, `uv.lock`, Python floor and `.python-version`.
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
   pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
   dependencies.
+- The SPA: `reg_webapp/frontend/package.json` and `bun.lock` (exact pins, including
+  `agent-browser`, `playwright` and React Aria), the wrangler pin in
+  `.github/workflows/container-build.yml` (`bunx wrangler@<pin> deploy`), and the
+  `wasm-bindgen` CLI pin in `.github/workflows/ci.yml`, which must equal the exact
+  `wasm-bindgen` version in `crates/reg-core-wasm/Cargo.toml`.
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
@@ -73,8 +78,9 @@ Run focused checks during repair. On the resulting candidate, execute the releva
 existing checks once; read their current commands and checker pins from
 `scripts/gate.py` and CI instead of duplicating version pins in this skill:
 
-- Python and Rust: frozen installation, lint/format/types and the relevant full test
-  suite (`scripts/gate.py all` covers both).
+- Python, Rust and the SPA: frozen installation, lint/format/types and the relevant full
+  test suite (`scripts/gate.py all` covers all three; the SPA's steps are
+  `gate.py frontend flows`).
 - Images/toolchains: build affected stages and exercise the existing affected gate
   commands directly in the candidate image, including their documented offline
   environment. A host test pass alone does not verify Linux image tools.

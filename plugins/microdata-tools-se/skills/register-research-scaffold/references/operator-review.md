@@ -45,8 +45,8 @@ prevent agent access. Do not auto-preview or index unreviewed files. Determinist
 previews may run under the human identity without model calls. Expose only the reviewed
 version after approval; no duplicate review is required after a remote review.
 
-[approve_release.py](../scripts/approve_release.py) is an optional operator-run helper
-for this local-review route. It accepts the reviewed ZIP's SHA-256 and execution commit,
+[approve_release.R](../scripts/approve_release.R) is an optional operator-run helper for
+this local-review route. It accepts the reviewed ZIP's SHA-256 and execution commit,
 checks the bytes before copying them, and replaces `current.zip` and `approval.json` in
 model-readable storage. It copies one file, not siblings. Do not compute the approved
 hash inline from a potentially replaced candidate. Consumers using `approval.json` must

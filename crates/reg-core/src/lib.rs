@@ -1,4 +1,5 @@
-//! `reg-core`: contracts shared by the Rust runtime and, through bindings, the build.
+//! `reg-core`: contracts shared by the Rust runtime, the build (`reg-build`) and,
+//! through `reg-core-wasm`, the SPA.
 //!
 //! This crate holds the FQID and period grammars ([`Fqid`], [`Period`]), the text
 //! folds, and the `project_data.json` types ([`project`]) with their structural
@@ -54,16 +55,6 @@ fn py_isspace(c: char) -> bool {
 /// Python `str.split()` with no arguments.
 fn py_split(s: &str) -> impl Iterator<Item = &str> {
     s.split(py_isspace).filter(|t| !t.is_empty())
-}
-
-/// The class `[^\W_]` in Python's `re`: general category L* or N*. Not
-/// `char::is_alphanumeric`, whose `Alphabetic` property also admits `Other_Alphabetic`
-/// marks and symbols (U+0345, circled letters U+24B6..).
-fn py_isalnum(c: char) -> bool {
-    matches!(
-        c.general_category_group(),
-        GeneralCategoryGroup::Letter | GeneralCategoryGroup::Number
-    )
 }
 
 /// PCRE `\p{L}`: general category L*. Not `char::is_alphabetic`, which also admits
@@ -167,15 +158,4 @@ pub fn fold_search(s: &str) -> String {
 #[must_use]
 pub fn normalized_search_query(s: &str) -> String {
     case_fold(&py_split(s).collect::<Vec<_>>().join(" "))
-}
-
-/// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its
-/// [`fold_search`] fold, in order.
-#[must_use]
-pub fn fts_terms(s: &str) -> Vec<String> {
-    fold_search(s)
-        .split(|c: char| !py_isalnum(c))
-        .filter(|t| !t.is_empty())
-        .map(str::to_owned)
-        .collect()
 }

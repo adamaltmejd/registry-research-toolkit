@@ -175,11 +175,7 @@ impl Catalog {
         if selected == "global" {
             return Ok(catalog);
         }
-        if selected.is_empty()
-            || !selected
-                .bytes()
-                .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
-        {
+        if !reg_core::is_slug(selected) {
             return Err(Error::invalid_parameter("--catalog"));
         }
         let path = dir.join(format!("reg_meta_{selected}.db"));

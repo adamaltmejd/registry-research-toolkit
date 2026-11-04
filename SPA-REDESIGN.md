@@ -23,9 +23,9 @@ approved a plan on 2026-11-04 that removes everything else.
 - **One PR per slice**, straight to main; the site works after each.
 - **Delete with the code.** Component tests are not ported; behaviour is pinned through
   the flows driver (`reg_webapp/dev/driver.mjs`).
-- **Each PR** passes `gate.py frontend flows`, a codex review and a design review
-  (`reg-webapp-design-reviewer`), and carries screenshots at 375, 768, 1280 and 1920 px
-  on the fixture and on the real SWECOV pair.
+- **Each PR** passes `gate.py frontend flows`, an independent Opus review and a design
+  review (`reg-webapp-design-reviewer`), and carries screenshots at 375, 768, 1280 and
+  1920 px on the fixture and on the real SWECOV pair.
 - **Release window.** No slice merges between a schema-bump PR and the release that
   publishes it. The Operator sequences merges.
 

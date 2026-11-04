@@ -200,9 +200,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   properties: edge hits do not substitute for cold-origin evidence.
   Classification/value-set initial responses must be bounded by bucket/page limits
   rather than total code cardinality, and cold/repeat rendered routes target CLS < 0.1.
-  The 200-column load-test fixture is committed
-  (`crates/reg-core/tests/project/corpus/load_test_200col/`), but the load-test harness
-  and CI perf gate are remaining work (#1455).
+  The load-test harness, its fixtures and a CI perf gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
   `schema_version`. Contract 5.1.0 added optional boolean `follow_successor` on variable
   bindings; absent or false keeps the bound variable's own history. Contract 5.2.0 adds

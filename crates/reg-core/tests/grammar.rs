@@ -7,9 +7,10 @@ use std::fs;
 use std::path::PathBuf;
 
 use common::Rng;
+use reg_core::issue::iso_day;
 use reg_core::{
-    Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
-    prev_iso_day,
+    Fqid, GrammarError, Period, PeriodToken, Term, iso_day_number, next_iso_day,
+    period_token_for_bounds, prev_iso_day,
 };
 use serde_json::{Value, json};
 
@@ -223,7 +224,7 @@ const ROUND_TRIPS: usize = 20_000;
 fn fqid_round_trips() {
     let mut rng = Rng(0x5EED_F01D);
     for _ in 0..ROUND_TRIPS {
-        let fqid = match rng.range(0, 4) {
+        let fqid = match rng.range(0, 5) {
             0 => Fqid::Provider {
                 provider: rng.slug(),
             },
@@ -241,8 +242,13 @@ fn fqid_round_trips() {
                 register: rng.slug(),
                 set: rng.slug(),
             },
-            _ => Fqid::Classification {
+            4 => Fqid::Classification {
                 classification: rng.slug(),
+            },
+            // A digit-led version, which `is_version_slug` admits and `is_slug` does not.
+            _ => Fqid::ClassVersion {
+                family: rng.slug(),
+                version: format!("{}{}", rng.range(0, 9), rng.slug()),
             },
         };
         assert_eq!(fqid.to_string().parse(), Ok(fqid.clone()), "{fqid}");
@@ -287,6 +293,18 @@ fn period_token_inverts_bounds() {
             other => other.to_string(),
         };
         assert_eq!(period_token_for_bounds(&lo, &hi), expected, "{token}");
+    }
+}
+
+// Fails when a result period's ISO day drifts from the day number the builder wrote
+// (`iso_day_number`): an off-by-one at a leap day, a century or before 1970, which the
+// `context` case's two January firsts do not reach.
+#[test]
+fn iso_day_inverts_iso_day_number() {
+    let first = iso_day_number("1600-01-01").unwrap();
+    let last = iso_day_number("2400-12-31").unwrap();
+    for day in first..=last {
+        assert_eq!(iso_day_number(&iso_day(day)), Some(day));
     }
 }
 

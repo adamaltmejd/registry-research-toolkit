@@ -29,13 +29,15 @@ Do not run the sabotage by hand. Review the named change as the failure proof.
 
 ## The sweep
 
-Read-only. One subagent per test tree (each package's, plus `conformance/` and
-`scripts/tests/`), through the harness's subagent tool (in Claude Code, the Agent tool
-with the `general-purpose` type; Explore locates code and does not audit it), told to
-edit nothing. Launch as many at once as the harness allows and the rest in waves. Where
-the harness lets a call choose its model, use the family's mid tier (in Claude, Opus).
-Each prompt carries AGENTS.md, the "Testing strategy" section, the tree's conftest and
-helpers, a scratchpad file name unique to the tree, and this section verbatim.
+Read-only. One subagent per test tree (each package's, plus `conformance/`,
+`scripts/tests/`, the SPA's vitest files under `reg_webapp/frontend/src` and the flows
+driver `reg_webapp/dev/driver.mjs`), through the harness's subagent tool (in Claude
+Code, the Agent tool with the `general-purpose` type; Explore locates code and does not
+audit it), told to edit nothing. Launch as many at once as the harness allows and the
+rest in waves. Where the harness lets a call choose its model, use the family's mid tier
+(in Claude, Opus). Each prompt carries AGENTS.md, the "Testing strategy" section, the
+tree's conftest and helpers, a scratchpad file name unique to the tree, and this section
+verbatim.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
 at a boundary), `delete` (name the boundary case that covers it), or `gap` (no corpus
@@ -77,7 +79,10 @@ first; read through `cargo xtask gh-issue`), never delete it.
 Before pushing, always `uv run python -m pytest <tree> -n auto -q`, where `<tree>` is
 `scripts/tests`, and conformance, which runs against the Rust server
 (`uv run --no-project scripts/gate.py rust`), plus the tree's own gate step
-(`uv run --no-project scripts/gate.py <step>`): `crates` for `crates/`. Then compare the
-wall time with the package budget. Report in the PR body, or in the code-cleanup report
-when run inside that pass: each disposition with its boundary, test lines removed beside
-product lines, suite time before and after.
+(`uv run --no-project scripts/gate.py <step>`): `crates` for `crates/`, `frontend` for
+the SPA's vitest suite (`bun run test` in `reg_webapp/frontend`) and `flows` for the
+driver. The R packages' testthat suites are not gated; run them by hand
+(`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`). Then compare the wall time
+with the package budget. Report in the PR body, or in the code-cleanup report when run
+inside that pass: each disposition with its boundary, test lines removed beside product
+lines, suite time before and after.

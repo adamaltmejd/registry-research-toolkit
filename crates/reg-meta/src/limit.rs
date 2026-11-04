@@ -16,8 +16,6 @@ use reg_catalog::ops::{Server, body};
 use reg_catalog::{Code, Error};
 use sha2::{Digest, Sha256};
 
-use crate::Answer;
-
 /// Requests per client address to `/mcp` and the POST routes together: a token bucket
 /// of this many tokens, refilled one per second. Sized for agent tool calls; the SPA's
 /// debounced validation and its order downloads stay well inside it. `serve
@@ -25,8 +23,9 @@ use crate::Answer;
 /// address.
 pub const DEFAULT_PER_MINUTE: u64 = 60;
 /// simplify: buckets that have refilled are dropped only once this many addresses are
-/// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
-/// or in write latency.
+/// tracked, and while that many are active every request sweeps them all under the
+/// lock; make it a time-ordered sweep if a hosted burst of addresses shows in RSS or in
+/// write latency.
 const MAX_TRACKED: usize = 10_000;
 /// The secret the edge worker sends as [`EDGE_TOKEN_HEADER`] on every origin request.
 /// A request carrying it came through the edge, so its `CF-Connecting-IP` is the
@@ -106,9 +105,7 @@ impl Limits {
         let now = Instant::now();
         let mut buckets = self.buckets.lock().expect("rate buckets");
         if buckets.len() >= MAX_TRACKED {
-            // A full bucket is the same as none. simplify: while this many addresses
-            // are active, every request sweeps them all under the lock; replace the
-            // sweep (see MAX_TRACKED) if it shows in write latency.
+            // A full bucket is the same as none. The sweep's ceiling: see MAX_TRACKED.
             let capacity = self.capacity;
             buckets.retain(|_, bucket| bucket.refill(now, capacity).tokens < capacity);
         }
@@ -122,12 +119,6 @@ impl Limits {
         let allowed = bucket.tokens > 0;
         bucket.tokens = bucket.tokens.saturating_sub(1);
         allowed
-    }
-
-    /// `err` as `{error, meta}` with its status.
-    fn refuse(&self, err: Error) -> Response {
-        let answer = Answer::new(&self.server, Err(err));
-        (answer.status, crate::json(answer.body.to_string())).into_response()
     }
 }
 
@@ -150,13 +141,17 @@ pub async fn guard(
             ),
             vec![1.into()],
         );
-        return ([(header::RETRY_AFTER, "1")], limits.refuse(err)).into_response();
+        return (
+            [(header::RETRY_AFTER, "1")],
+            crate::refusal(&limits.server, err),
+        )
+            .into_response();
     }
     let (parts, body) = request.into_parts();
     match Bytes::from_request(Request::from_parts(parts.clone(), body), &()).await {
         Ok(bytes) => next.run(Request::from_parts(parts, bytes.into())).await,
         Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            limits.refuse(body::too_large())
+            crate::refusal(&limits.server, body::too_large())
         }
         Err(rejection) => rejection.into_response(),
     }
