@@ -464,19 +464,24 @@ async function projectPagesCase(page, shoot) {
 // order, a lane title stops joining its varying facets in curated axis order
 // (unit, then measure), facet labels become raw values, the member name stops
 // telling lanes apart, or the synthetic set ancestor becomes a link.
-// Expected titles and order come from webapp-dev's authored set and member
-// facets (an unlabelled unit shows its value) in the member order the
-// show-set conformance case pins; existing browse cases do not open a group.
+// A grouped variable has no page of its own (maintainer 2026-11-04, #2066):
+// its address renders the group page with its lane in focus, and the group
+// page adds a member's columns as the variable page does. Fails if a member's
+// address renders a variable page or redirects, the lane loses focus or its
+// "current" state, the lanes lose their authored order or facet titles, or an
+// add from the group page binds the wrong variable. Expected titles, order and
+// columns come from webapp-dev's authored set, member facets and the member
+// order the show-set conformance case pins; no other case opens a group.
 async function browseGroupCase(page, shoot) {
   const main = page.getByRole("main");
-  await main.getByRole("link", { name: "Inkomstmått", exact: true }).click();
-  await page.waitForURL("**/catalog/set/demo/bas/inkomst");
   await settled(page);
+  check(new URL(page.url()).pathname === "/catalog/demo/bas/inkomst", "a member's address redirected");
   await main.getByRole("heading", { name: "Inkomstmått", level: 1, exact: true }).waitFor();
   await main.getByText("Inkomst före och efter skatt för personer och hushåll.", { exact: true }).waitFor();
   const lanes = main.getByRole("list", { name: "Group members", exact: true });
-  await lanes.getByRole("link").first().waitFor();
-  const titles = await lanes.getByRole("link").allTextContents();
+  await lanes.locator(":scope > li").first().waitFor();
+  const titles = await lanes.locator(":scope > li").evaluateAll((items) =>
+    items.map((item) => item.querySelector("[title]")?.textContent ?? ""));
   check(JSON.stringify(titles) === JSON.stringify([
     "household, Före skatt",
     "household, Efter skatt",
@@ -485,10 +490,35 @@ async function browseGroupCase(page, shoot) {
   ]),
     `group lanes lost authored order or facet titles: ${JSON.stringify(titles)}`);
   await lanes.getByText("Disponibel inkomst, hushåll", { exact: true }).waitFor();
+  const focused = await page.evaluate(() => ({
+    text: document.activeElement?.textContent ?? "",
+    current: document.activeElement?.getAttribute("aria-current") ?? null,
+  }));
+  check(focused.text === "person, Efter skatt" && focused.current === "true",
+    `the member's address did not focus its lane: ${JSON.stringify(focused)}`);
   check(await main.locator('nav a[href="/catalog/set"]').count() === 0, "group breadcrumb links to a synthetic set ancestor");
   await shoot("browse-group");
-  await lanes.locator('a[href="/catalog/demo/bas/net-household"]').click();
-  await page.waitForURL("**/catalog/demo/bas/net-household");
+
+  check(await main.getByRole("checkbox").count() === 0, "a span was selectable with no project open");
+  await main.getByRole("button", { name: "Create a project", exact: true }).click();
+  const income = main.getByRole("checkbox", { name: /^Inkomst, Inkomst efter skatt,/ });
+  const household = main.getByRole("checkbox", { name: /^gross-household, Förvärvsinkomst, hushåll,/ });
+  for (const span of [income, household]) {
+    await span.focus();
+    await span.press("Space");
+  }
+  await main.getByRole("button", { name: "Add 2 columns to project", exact: true }).click();
+  await main.getByRole("img", { name: /^Inkomst, Inkomst efter skatt,.*in project/ }).waitFor();
+  await main.getByRole("img", { name: /^gross-household, Förvärvsinkomst, hushåll,.*in project/ }).waitFor();
+
+  await open(page, "/project");
+  await settled(page);
+  const downloaded = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
+  const bound = saved.sources.flatMap((source) => source.bindings.map((binding) => binding.variable)).sort();
+  check(JSON.stringify(bound) === JSON.stringify(["demo/bas/gross-household", "demo/bas/inkomst"]),
+    `the group page's add bound the wrong variables: ${JSON.stringify(bound)}`);
 }
 
 // Project + catalog → saved project boundary. Fails if changing a binding's

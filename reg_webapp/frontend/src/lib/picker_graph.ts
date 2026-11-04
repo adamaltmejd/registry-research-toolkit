@@ -4,9 +4,8 @@ import {
   columnWindowPeriod,
   filesLabel,
   type VariableColumn,
-  variableColumns,
 } from "./add_columns";
-import type { Graph, SetShow, VariableShow } from "./api";
+import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
 import {
@@ -29,6 +28,7 @@ export function variableSpans({
   catalogBounds,
   selected,
   idPrefix = "",
+  lane,
   readOnly = false,
 }: {
   columns: readonly VariableColumn[];
@@ -38,8 +38,11 @@ export function variableSpans({
   selection: ProjectStudyWindow;
   axis: [number, number];
   catalogBounds: [number, number];
+  /** Span ids, `idPrefix` included. */
   selected: ReadonlySet<string>;
   idPrefix?: string;
+  /** One lane for every column (a group member's); else a lane per table. */
+  lane?: string;
   readOnly?: boolean;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
@@ -106,9 +109,10 @@ export function variableSpans({
     const changeYears = coverageMarks({ from: first, to: last }, changes)
       .delivered.map(yearWindowLabel)
       .join(", ");
+    const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
-      id: `${idPrefix}${column.id}`,
-      lane: `${idPrefix}${column.table}`,
+      id,
+      lane: lane ?? `${idPrefix}${column.table}`,
       name: column.spelling,
       table: filesLabel(column.files),
       where: filesLabel(column.files) ?? names.get(column.table),
@@ -118,8 +122,8 @@ export function variableSpans({
       years,
       state: source ? "in" : inside ? "default" : "out",
       selectable: !!project && !source && inside,
-      isSelected: inside && selected.has(column.id),
-      staged: inside && selected.has(column.id) && !source ? "add" : null,
+      isSelected: inside && selected.has(id),
+      staged: inside && selected.has(id) && !source ? "add" : null,
       blocked: relation === "disjoint",
       note,
       changes,
@@ -157,48 +161,10 @@ function readOnlySpan(
   };
 }
 
-/** A group member's columns as read-only spans on the member's lane. */
-export function memberSpans({
-  member,
-  names,
-  project,
-  axis,
-  catalogBounds,
-}: {
-  member: SetShow["members"][number];
-  names: ReadonlyMap<string, string>;
-  project: ProjectData | null;
-  axis: [number, number];
-  catalogBounds: [number, number];
-}): LaneSpanModel[] {
-  return variableColumns(member.segments).flatMap((column) => {
-    const eras = columnYearRuns(column.segments, catalogBounds, axis[0]);
-    if (!eras.length) return [];
-    return [
-      readOnlySpan(
-        {
-          id: `${member.fqid}|${JSON.stringify([column.table, column.spelling])}`,
-          lane: member.fqid,
-          name: column.spelling,
-          from: eras[0].from,
-          to: eras[eras.length - 1].to,
-          segments: eras.map((era) => ({ name: null, ...era })),
-          years: eras.map(yearWindowLabel).join(", "),
-          state: "default",
-          selectable: false,
-          accessibleName: "",
-        },
-        columnInProject(project, member.fqid, column.table),
-        member.name,
-        names.get(column.table),
-      ),
-    ];
-  });
-}
-
 /** One-hop succession on the coverage drawing; API subjects are the newer end. */
 export function successionLanes({
   focusSpans,
+  members = new Map(),
   graph,
   neighbourColumns,
   names,
@@ -207,6 +173,9 @@ export function successionLanes({
   catalogBounds,
 }: {
   focusSpans: readonly LaneSpanModel[];
+  /** The page's other subjects' spans (a group's other members): a relation
+   * to one is drawn between the two lanes, with no neighbour lane. */
+  members?: ReadonlyMap<string, readonly LaneSpanModel[]>;
   graph: Graph | null;
   neighbourColumns: ReadonlyMap<string, readonly VariableColumn[]>;
   names: ReadonlyMap<string, string>;
@@ -225,11 +194,18 @@ export function successionLanes({
   const relations = new Map<string, string[]>();
   const byVariable = new Map<string, readonly LaneSpanModel[]>();
   if (!graph) return { lanes, spans, edges, relations };
+  for (const [fqid, memberSpans] of members) byVariable.set(fqid, memberSpans);
   byVariable.set(graph.focus, focusSpans);
   const nodes = new Map(graph.nodes.map((node) => [node.fqid, node]));
   for (const [fqid, columns] of neighbourColumns) {
     const node = nodes.get(fqid);
-    if (!node || node.kind !== "variable" || fqid === graph.focus) continue;
+    if (
+      !node ||
+      node.kind !== "variable" ||
+      fqid === graph.focus ||
+      members.has(fqid)
+    )
+      continue;
     const register = fqid.split("/").slice(0, 2).join("/");
     const crossRegister =
       register !== graph.focus.split("/").slice(0, 2).join("/");

@@ -31,6 +31,9 @@ export interface LaneModel {
   href?: string | null;
   /** The variable this page is about, on `accent-soft`. */
   current?: boolean;
+  /** More about the lane under its name and line, in the name column: a
+   * group member's type, facts and description. The lane grows to hold it. */
+  detail?: ReactNode;
   /** Its relations as sentences, for a screen reader: the edges are drawn
    * only. */
   relations?: string[];
@@ -107,6 +110,27 @@ interface Props {
   overlay?: ReactNode;
   isDisabled?: boolean;
   onToggle?: (spanId: string) => void;
+  /** The lane whose name takes focus, scrolled into view, once it is first
+   * drawn: a group page opened at one member's address. */
+  focus?: string | null;
+}
+
+/** Measured heights by lane id, and the callback a measured block reports
+ * to; zero gives the room back. */
+function useHeights() {
+  const [heights, setHeights] = useState<ReadonlyMap<string, number>>(
+    () => new Map(),
+  );
+  const onHeight = useCallback((id: string, height: number) => {
+    setHeights((current) => {
+      if (current.get(id) === height) return current;
+      const next = new Map(current);
+      if (height > 0) next.set(id, height);
+      else next.delete(id);
+      return next;
+    });
+  }, []);
+  return [heights, onHeight] as const;
 }
 
 /**
@@ -134,23 +158,15 @@ export function LaneGraph({
   overlay,
   isDisabled = false,
   onToggle,
+  focus = null,
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
-  // The measured height of each lane's `below` block, so the lanes under it
-  // move down instead of being covered.
-  const [below, setBelow] = useState<ReadonlyMap<string, number>>(
-    () => new Map(),
-  );
-  const onBelowHeight = useCallback((id: string, height: number) => {
-    setBelow((current) => {
-      if (current.get(id) === height) return current;
-      const next = new Map(current);
-      if (height > 0) next.set(id, height);
-      else next.delete(id);
-      return next;
-    });
-  }, []);
+  // The measured height of each lane's `below` block and of each name block
+  // with a `detail`, so the lanes under them move down instead of being
+  // covered.
+  const [below, onBelowHeight] = useHeights();
+  const [nameHeights, onNameHeight] = useHeights();
   const markerId = useId();
   // The one DOM measurement: the graph's width, which the layout needs to
   // place labels and pack rows.
@@ -177,6 +193,7 @@ export function LaneGraph({
           width,
           coverageRow: coverage !== undefined,
           below,
+          nameHeights,
         })
       : null;
   const spansByLane = new Map<string, LaneSpanModel[]>();
@@ -246,6 +263,8 @@ export function LaneGraph({
                     <LaneName
                       lane={lane}
                       width={geometry.stacked ? width : geometry.trackX - 16}
+                      onHeight={lane.detail ? onNameHeight : undefined}
+                      focus={lane.id === focus}
                     />
                     <ul className={styles.spans}>
                       {(spansByLane.get(lane.id) ?? []).map((span) => {
@@ -554,7 +573,17 @@ export function LaneList({
   );
 }
 
-function LaneName({ lane, width }: { lane: LaneModel; width?: number }) {
+function LaneName({
+  lane,
+  width,
+  onHeight,
+  focus = false,
+}: {
+  lane: LaneModel;
+  width?: number;
+  onHeight?: (id: string, height: number) => void;
+  focus?: boolean;
+}) {
   // The action is a sibling of the text block, not inside it: the block's
   // `overflow: hidden` (the ellipsis) would clip the action's focus ring.
   if (lane.action) {
@@ -565,13 +594,54 @@ function LaneName({ lane, width }: { lane: LaneModel; width?: number }) {
       </div>
     );
   }
-  return <LaneText lane={lane} width={width} />;
+  return (
+    <LaneText lane={lane} width={width} onHeight={onHeight} focus={focus} />
+  );
 }
 
-function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
+function LaneText({
+  lane,
+  width,
+  onHeight,
+  focus = false,
+}: {
+  lane: LaneModel;
+  width?: number;
+  onHeight?: (id: string, height: number) => void;
+  focus?: boolean;
+}) {
   const subId = useId();
+  const id = lane.id;
+  const measure = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node || !onHeight) return;
+      const observer = new ResizeObserver(([entry]) => {
+        onHeight(id, Math.ceil(entry.borderBoxSize[0]?.blockSize ?? 0));
+      });
+      observer.observe(node);
+      return () => {
+        observer.disconnect();
+        onHeight(id, 0);
+      };
+    },
+    [id, onHeight],
+  );
+  // Once, when the lane is first drawn: the lanes mount only after the graph
+  // is measured, so this runs with the lane in place.
+  const focusName = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node || !focus) return;
+      node.focus({ preventScroll: true });
+      node.scrollIntoView({ block: "center" });
+    },
+    [focus],
+  );
   return (
-    <div className={styles.name} style={width ? { width } : undefined}>
+    <div
+      ref={measure}
+      className={`${styles.name} ${lane.detail ? styles.detailed : ""}`}
+      style={width ? { width } : undefined}
+    >
       {lane.href ? (
         <a
           className={`link ${styles.nameText}`}
@@ -589,7 +659,15 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
           {lane.name}
         </a>
       ) : (
-        <span className={styles.nameText} title={lane.name}>
+        <span
+          ref={focusName}
+          className={styles.nameText}
+          title={lane.name}
+          // The focus target of a member's address: said in words, not only
+          // by the lane's fill.
+          tabIndex={focus ? -1 : undefined}
+          aria-current={lane.current ? "true" : undefined}
+        >
           {lane.name}
         </span>
       )}
@@ -610,6 +688,7 @@ function LaneText({ lane, width }: { lane: LaneModel; width?: number }) {
           <span className={styles.sub}>never delivered</span>
         </span>
       )}
+      {lane.detail}
       {lane.relations && lane.relations.length > 0 && (
         <span className="visually-hidden">{lane.relations.join(". ")}.</span>
       )}

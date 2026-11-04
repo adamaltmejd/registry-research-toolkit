@@ -44,6 +44,11 @@
   font-weight: var(--heading-weight);
 }
 
+.description {
+  max-width: 60ch;
+  margin: 0;
+}
+
 .facets {
   display: flex;
   flex-wrap: wrap;

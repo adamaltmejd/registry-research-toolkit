@@ -13,9 +13,20 @@ import {
   errMessage,
   type Graph,
   type OrderCheck,
-  type VariableShow,
 } from "./api";
-import { LaneGraph } from "./LaneGraph";
+import {
+  graphRead,
+  type Read,
+  registerRead,
+  registerSubjectNames,
+  segmentsRead,
+} from "./catalog_names";
+import {
+  type LaneEdgeModel,
+  LaneGraph,
+  type LaneModel,
+  type LaneSpanModel,
+} from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
 import {
   clampYearWindow,
@@ -33,33 +44,114 @@ import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
 import { useProject } from "./use_project";
+import { useCatalogRead, useDistinct } from "./use_store_read";
 import styles from "./VariableCoverage.module.css";
 import { createProject } from "./window";
 import { windowBounds } from "./window_bounds";
 
-/** The focus columns and their read-only succession neighbours on one axis. */
+/** A variable the page draws and adds from. */
+export interface CoverageSubject {
+  fqid: string;
+  name: string;
+  segments: readonly CatalogSegment[];
+  /** A group member: its columns share this one lane. Without it (the
+   * variable page) each table is a lane, titled by the table's name. */
+  lane?: Omit<LaneModel, "id" | "relations" | "current">;
+}
+
+const readGraphs = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, graphRead(fqid)]));
+const readNeighbourSegments = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, segmentsRead(fqid)]));
+const readNeighbourRegisters = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((fqid) => [fqid, registerRead(fqid)]));
+
+const failed = (reads: Record<string, Read<unknown>>) =>
+  Object.values(reads).some((read) => !read.loading && read.value === null);
+const pending = (reads: Record<string, Read<unknown>>) =>
+  Object.values(reads).some((read) => read.loading);
+
+/** The one-hop succession of the page's variables: their graphs, the columns
+ * of the neighbours outside them, and the names of the neighbours' other
+ * registers. */
+export function useSuccession(fqids: readonly string[], register: string) {
+  const graphReads = useCatalogRead(readGraphs, useDistinct(fqids));
+  const own = new Set(fqids);
+  const neighbours = useCatalogRead(
+    readNeighbourSegments,
+    useDistinct(
+      Object.values(graphReads).flatMap((read) =>
+        (read.value?.nodes ?? [])
+          .filter((entry) => entry.kind === "variable" && !own.has(entry.fqid))
+          .map((entry) => entry.fqid),
+      ),
+    ),
+  );
+  const neighbourRegisters = useCatalogRead(
+    readNeighbourRegisters,
+    useDistinct(
+      Object.keys(neighbours)
+        .map((fqid) => fqid.split("/").slice(0, 2).join("/"))
+        .filter((ref) => ref !== register),
+    ),
+  );
+  const names = new Map<string, string>();
+  for (const read of Object.values(neighbourRegisters)) {
+    for (const [fqid, name] of registerSubjectNames(read.value))
+      names.set(fqid, name);
+  }
+  return {
+    graphs: Object.values(graphReads).flatMap((read) =>
+      read.value ? [read.value] : [],
+    ),
+    neighbourColumns: new Map(
+      Object.entries(neighbours).map(([fqid, read]) => [
+        fqid,
+        variableColumns(read.value ?? []),
+      ]),
+    ) as ReadonlyMap<string, readonly VariableColumn[]>,
+    names: names as ReadonlyMap<string, string>,
+    error: failed(graphReads)
+      ? "Succession relations did not load."
+      : failed(neighbours)
+        ? "Neighbour columns did not load."
+        : failed(neighbourRegisters)
+          ? "Neighbour register names did not load."
+          : null,
+    loading:
+      pending(graphReads) || pending(neighbours) || pending(neighbourRegisters),
+  };
+}
+
+/** The page's columns and their read-only succession neighbours on one axis,
+ * with the add flow over them: one subject on a variable page, every member
+ * on a group page. */
 export function useVariableCoverage({
-  node,
-  segments,
+  subjects,
+  label,
   names,
   context,
   tables,
   validation,
-  succession = null,
+  successions = [],
   neighbourColumns = new Map(),
   successionError = null,
   allowAdd = true,
+  focus = null,
 }: {
-  node: VariableShow;
-  segments: readonly CatalogSegment[];
+  subjects: readonly CoverageSubject[];
+  /** The drawing's accessible name. */
+  label: string;
   names: ReadonlyMap<string, string>;
   context: Context | null;
   tables: readonly TablePeriodMetadata[] | null;
   validation: OrderCheck | null;
-  succession?: Graph | null;
+  successions?: readonly Graph[];
   neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
   successionError?: string | null;
   allowAdd?: boolean;
+  /** The subject whose lane takes focus when first drawn. */
+  focus?: string | null;
 }) {
   const { draft, raw } = useProject();
   const [selected, setSelected] = useState<ReadonlySet<string>>(
@@ -70,9 +162,29 @@ export function useVariableCoverage({
   const [added, setAdded] = useState(false);
   const heading = useRef<HTMLDivElement>(null);
   const bounds = windowBounds(context);
+  const catalogBounds: [number, number] = [bounds.min, bounds.max];
   const study = studyWindow(draft);
-  const columns = variableColumns(segments);
-  const runs = columnYearRuns(segments, [bounds.min, bounds.max]);
+  // Every column of every subject by its span id: a group member's carries
+  // its fqid, since two members can share a table and a column name.
+  const prefix = (subject: CoverageSubject) =>
+    subject.lane ? `${subject.fqid}|` : "";
+  const columnsOf = new Map(
+    subjects.map((subject) => [
+      subject.fqid,
+      variableColumns(subject.segments),
+    ]),
+  );
+  const columns = subjects.flatMap((subject) =>
+    (columnsOf.get(subject.fqid) ?? []).map((column) => ({
+      id: `${prefix(subject)}${column.id}`,
+      subject,
+      column,
+    })),
+  );
+  const runs = columnYearRuns(
+    subjects.flatMap((subject) => subject.segments),
+    catalogBounds,
+  );
   const available = runs.length
     ? { from: runs[0].from, to: runs[runs.length - 1].to }
     : null;
@@ -91,43 +203,57 @@ export function useVariableCoverage({
       ...runs.flatMap((run) => [run.from, run.to]),
       ...[...neighbourColumns.values()].flatMap((entries) =>
         entries.flatMap((column) =>
-          columnYearRuns(column.segments, [bounds.min, bounds.max]).flatMap(
-            (run) => [run.from, run.to],
-          ),
+          columnYearRuns(column.segments, catalogBounds).flatMap((run) => [
+            run.from,
+            run.to,
+          ]),
         ),
       ),
       active.from,
       active.to,
     ],
     study,
-    [bounds.min, bounds.max],
+    catalogBounds,
   );
   const picked = columns.filter(
-    (column) =>
-      selected.has(column.id) &&
+    ({ id, subject, column }) =>
+      selected.has(id) &&
       columnWindowPeriod(column, active) !== null &&
-      !columnInProject(draft, node.fqid, column.table),
+      !columnInProject(draft, subject.fqid, column.table),
   );
-  const spans = variableSpans({
-    columns,
-    variable: node,
-    names,
-    project: draft,
-    selection: active,
-    axis,
-    catalogBounds: [bounds.min, bounds.max],
-    selected,
-    readOnly: !allowAdd,
-  });
-  const neighbours = successionLanes({
-    focusSpans: spans,
-    graph: succession,
-    neighbourColumns,
-    names,
-    project: draft,
-    axis,
-    catalogBounds: [bounds.min, bounds.max],
-  });
+  const spansOf = new Map(
+    subjects.map((subject) => [
+      subject.fqid,
+      variableSpans({
+        columns: columnsOf.get(subject.fqid) ?? [],
+        variable: subject,
+        names,
+        project: draft,
+        selection: active,
+        axis,
+        catalogBounds,
+        selected,
+        idPrefix: prefix(subject),
+        lane: subject.lane ? subject.fqid : undefined,
+        readOnly: !allowAdd,
+      }),
+    ]),
+  );
+  const spans = [...spansOf.values()].flat();
+  const neighbours = mergeSuccession(
+    successions.map((graph) =>
+      successionLanes({
+        focusSpans: spansOf.get(graph.focus) ?? [],
+        members: new Map([...spansOf].filter(([fqid]) => fqid !== graph.focus)),
+        graph,
+        neighbourColumns,
+        names,
+        project: draft,
+        axis,
+        catalogBounds,
+      }),
+    ),
+  );
   const years = [
     ...new Set(
       runs.flatMap((run) =>
@@ -143,11 +269,11 @@ export function useVariableCoverage({
         new Set(
           columns
             .filter(
-              (column) =>
-                previous.has(column.id) &&
+              ({ id, column }) =>
+                previous.has(id) &&
                 columnWindowPeriod(column, next ?? seed) !== null,
             )
-            .map((column) => column.id),
+            .map(({ id }) => id),
         ),
     );
   };
@@ -158,7 +284,7 @@ export function useVariableCoverage({
     validation?.issues.some(
       (issue) =>
         issue.code === "classification_version_ambiguous" &&
-        issue.variable === node.fqid,
+        subjects.some((subject) => subject.fqid === issue.variable),
     );
   const add = () => {
     const current = projectStore.draft;
@@ -168,14 +294,32 @@ export function useVariableCoverage({
         throw new Error(
           "Table availability is not loaded. Reload the page and try again.",
         );
-      // A project binds a variable once per table, so ticking one lane adds the
-      // variable's years in every column and file of that table inside the window.
-      const adding = columns.filter(
-        (column) =>
-          picked.some((pick) => pick.table === column.table) &&
-          columnWindowPeriod(column, active) !== null,
-      );
-      const candidate = addColumns(current, node.fqid, adding, active, tables);
+      // A project binds a variable once per table, so ticking one span adds the
+      // variable's years in every column and file of that table inside the
+      // window; each variable is added on top of the one before.
+      let candidate = current;
+      for (const subject of subjects) {
+        const adding = columns
+          .filter(
+            ({ subject: owner, column }) =>
+              owner === subject &&
+              picked.some(
+                (pick) =>
+                  pick.subject === subject &&
+                  pick.column.table === column.table,
+              ) &&
+              columnWindowPeriod(column, active) !== null,
+          )
+          .map(({ column }) => column);
+        if (adding.length)
+          candidate = addColumns(
+            candidate,
+            subject.fqid,
+            adding,
+            active,
+            tables,
+          );
+      }
       projectStore.updateField("sources", candidate.sources);
       setSelected(new Set());
       setError(null);
@@ -187,8 +331,12 @@ export function useVariableCoverage({
     }
   };
   return {
-    graph: !context ? null : segments.length === 0 ? (
-      <p className={styles.hint}>No years recorded for this variable.</p>
+    /** The page's axis, for what it draws under the timeline. */
+    axis,
+    graph: !context ? null : columns.length === 0 ? (
+      <p className={styles.hint}>
+        No years recorded for this {subjects.length > 1 ? "group" : "variable"}.
+      </p>
     ) : (
       <div ref={heading} tabIndex={-1} className={styles.timeline}>
         {allowAdd && differs && (
@@ -212,16 +360,31 @@ export function useVariableCoverage({
             : ""}
         </span>
         <LaneGraph
-          label="Variable columns"
+          label={label}
           lanes={[
-            ...[...new Set(columns.map((column) => column.table))].map(
-              (table) => ({
-                id: table,
-                // The page is the variable: its lanes are its tables.
-                name: names.get(table) ?? "Table name unavailable",
-                current: true,
-                relations: neighbours.relations.get(table),
-              }),
+            ...subjects.flatMap((subject): LaneModel[] =>
+              subject.lane
+                ? [
+                    {
+                      ...subject.lane,
+                      id: subject.fqid,
+                      current: subject.fqid === focus,
+                      relations: neighbours.relations.get(subject.fqid),
+                    },
+                  ]
+                : // The page is the variable: its lanes are its tables.
+                  [
+                    ...new Set(
+                      (columnsOf.get(subject.fqid) ?? []).map(
+                        (column) => column.table,
+                      ),
+                    ),
+                  ].map((table) => ({
+                    id: table,
+                    name: names.get(table) ?? "Table name unavailable",
+                    current: true,
+                    relations: neighbours.relations.get(table),
+                  })),
             ),
             ...neighbours.lanes,
           ]}
@@ -246,6 +409,7 @@ export function useVariableCoverage({
             ) : undefined
           }
           isDisabled={!tables}
+          focus={focus}
           onToggle={
             allowAdd
               ? (id) => {
@@ -327,5 +491,36 @@ export function useVariableCoverage({
         {picked.length > 0 && <AddBar count={picked.length} onAdd={add} />}
       </>
     ),
+  };
+}
+
+/** One page's succession merged over its variables' graphs: a neighbour two
+ * members share is one lane, and a relation between two members, which both
+ * their graphs carry, one arrow. */
+function mergeSuccession(parts: readonly ReturnType<typeof successionLanes>[]) {
+  const lanes = new Map<string, LaneModel>();
+  const spans = new Map<string, LaneSpanModel>();
+  const edges = new Map<string, LaneEdgeModel>();
+  const relations = new Map<string, string[]>();
+  for (const part of parts) {
+    for (const lane of part.lanes)
+      if (!lanes.has(lane.id)) lanes.set(lane.id, lane);
+    for (const span of part.spans)
+      if (!spans.has(span.id)) spans.set(span.id, span);
+    for (const edge of part.edges)
+      if (!edges.has(edge.id)) edges.set(edge.id, edge);
+    for (const [lane, sentences] of part.relations)
+      relations.set(lane, [
+        ...new Set([...(relations.get(lane) ?? []), ...sentences]),
+      ]);
+  }
+  return {
+    lanes: [...lanes.values()].map((lane) => ({
+      ...lane,
+      relations: relations.get(lane.id),
+    })),
+    spans: [...spans.values()],
+    edges: [...edges.values()],
+    relations,
   };
 }

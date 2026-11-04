@@ -4,15 +4,20 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
+/** The notes on the page's subjects: one, or each of a group's members, whose
+ * notes name the member they are about. */
 export function ScopedDataWarnings({
-  fqid,
+  fqids,
   names,
 }: {
-  fqid: string;
+  fqids: readonly string[];
   names?: ReadonlyMap<string, string>;
 }) {
-  const resource = useAsyncResource(fqid, (signal) =>
-    getFindings(fqid, { signal }),
+  // simplify: one request per subject; the server has no group-level read.
+  const resource = useAsyncResource(fqids.join("\n"), async (signal) =>
+    (
+      await Promise.all(fqids.map((fqid) => getFindings(fqid, { signal })))
+    ).flat(),
   );
   if (resource.loading)
     return (

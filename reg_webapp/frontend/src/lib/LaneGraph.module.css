@@ -131,7 +131,19 @@
   overflow: hidden;
 }
 
-/* A name with a lane action: the text block takes the room, the action
+/* A name block with a `detail` (a group member's facts and description):
+   from the lane's top, and the lane grows to its measured height. */
+.detailed {
+  justify-content: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+}
+
+.graph[data-stacked] .detailed {
+  padding-bottom: var(--space-1);
+}
+
+/* A name block with a lane action: the text block takes the room, the action
    keeps its own width at the row's end. */
 .nameRow {
   display: flex;
@@ -170,6 +182,18 @@
   white-space: nowrap;
 }
 
+/* A group member's name, focused when the page opens at its address. */
+.nameText[tabindex] {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.nameText:focus-visible {
+  outline: none;
+  /* Inset: the name block's overflow (the ellipsis) would clip a ring. */
+  box-shadow: var(--focus-ring-inset);
+}
+
 /* The lane's name opens the variable: a plain link (`link`), hugging its text. */
 a.nameText {
   align-self: flex-start;
@@ -184,6 +208,13 @@ a.nameText {
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Its lane grows, so a long name and its line wrap instead of cutting
+   members of one long name to the same few words. */
+.detailed > .nameText,
+.detailed > .sub {
+  white-space: normal;
 }
 
 .mono {

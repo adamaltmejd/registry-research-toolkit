@@ -1,9 +1,9 @@
 import type { Context, OrderCheck } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { sharedShow } from "./catalog_names";
+import { GroupView } from "./GroupView";
 import { ProviderView } from "./ProviderView";
 import { RegisterView } from "./RegisterView";
-import { SetView } from "./SetView";
 import { TableView } from "./TableView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
@@ -29,9 +29,17 @@ export function CatalogNodeView({
   context: Context | null;
   validation: OrderCheck | null;
 }) {
-  const resource = useAsyncResource(fqidPath, (signal) =>
-    sharedShow(fqidPath, signal),
-  );
+  // A grouped variable has no page of its own: its address shows its
+  // group's page with its lane in focus (a variable is in at most one group).
+  const resource = useAsyncResource(fqidPath, async (signal) => {
+    const node = await sharedShow(fqidPath, signal);
+    if (node.kind !== "variable" || !node.sets?.length)
+      return { node, focus: null };
+    return {
+      node: await sharedShow(node.sets[0].fqid, signal),
+      focus: node.fqid,
+    };
+  });
   if (resource.loading) {
     return (
       <section className={styles.loading} aria-busy="true">
@@ -57,7 +65,7 @@ export function CatalogNodeView({
       </StatusRow>
     );
   }
-  const node = resource.data;
+  const { node, focus } = resource.data;
   switch (node.kind) {
     case "provider":
       return <ProviderView node={node} />;
@@ -75,7 +83,15 @@ export function CatalogNodeView({
         />
       );
     case "set":
-      return <SetView key={node.fqid} node={node} context={context} />;
+      return (
+        <GroupView
+          key={node.fqid}
+          node={node}
+          focus={focus}
+          context={context}
+          validation={validation}
+        />
+      );
     default:
       return (
         <StatusRow tone="info">Not ported to the current API yet</StatusRow>

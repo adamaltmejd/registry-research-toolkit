@@ -152,8 +152,8 @@ export function RegisterView({
           </>
         )}
       </Panel>
-      <ScopedDataWarnings fqid={node.fqid} names={names} />
-      <RelatedDocumentsPanel fqid={node.fqid} names={names} filterable />
+      <ScopedDataWarnings fqids={[node.fqid]} names={names} />
+      <RelatedDocumentsPanel fqids={[node.fqid]} names={names} filterable />
     </article>
   );
 }

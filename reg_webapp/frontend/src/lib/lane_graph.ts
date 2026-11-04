@@ -61,6 +61,10 @@ export interface LaneGeometryInput {
   /** Measured px under a lane's spans for what the page sets there (a
    * column's findings on /project, #1906), by lane id. */
   below?: ReadonlyMap<string, number>;
+  /** Measured px of a lane's name block where it holds more than a name and
+   * its line (a group member's facts and description), by lane id: the lane
+   * grows to hold it. */
+  nameHeights?: ReadonlyMap<string, number>;
 }
 
 export interface PlacedSegment {
@@ -265,18 +269,23 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const laneTop = new Map<string, number>();
   const coverageY = input.coverageRow ? AXIS_HEIGHT : null;
   let y = AXIS_HEIGHT + (input.coverageRow ? COVERAGE_HEIGHT : 0);
-  const spanTop = stacked
-    ? STACKED_NAME_HEIGHT
-    : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
+  // Stacked, the spans start under the lane's name block; beside it, they
+  // keep the lane's top and the lane grows to the taller of the two.
+  const spanTop = new Map<string, number>();
   for (const lane of input.lanes) {
     const rows = rowsOf.get(lane.id) ?? 1;
+    const name = input.nameHeights?.get(lane.id) ?? 0;
+    const top = stacked
+      ? Math.max(STACKED_NAME_HEIGHT, name)
+      : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
     const height =
       (stacked
-        ? STACKED_NAME_HEIGHT + rows * ROW_STEP + 2
-        : LANE_HEIGHT + (rows - 1) * ROW_STEP) +
+        ? top + rows * ROW_STEP + 2
+        : Math.max(LANE_HEIGHT + (rows - 1) * ROW_STEP, name)) +
       (input.below?.get(lane.id) ?? 0);
     lanes.push({ id: lane.id, y, height });
     laneTop.set(lane.id, y);
+    spanTop.set(lane.id, top);
     y += height;
   }
   for (const span of input.spans) {
@@ -284,7 +293,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     if (!at) continue;
     at.y =
       (laneTop.get(span.lane) ?? 0) +
-      spanTop +
+      (spanTop.get(span.lane) ?? 0) +
       (rowOf.get(span.id) ?? 0) * ROW_STEP;
   }
 
