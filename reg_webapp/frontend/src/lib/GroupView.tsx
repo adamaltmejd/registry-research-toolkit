@@ -258,6 +258,7 @@ export function GroupView({
       <CodeTimeline
         members={node.members}
         axis={coverage.axis}
+        window={coverage.window}
         bounds={factBounds}
       />
       <ScopedDataWarnings fqids={fqids} names={names} />

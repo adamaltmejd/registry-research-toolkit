@@ -145,6 +145,8 @@ const NAME_GAP = 16;
 const MIN_TRACK = 360;
 // Keep the two-line lane name and coding marks on separate rows.
 const STACKED_NAME_HEIGHT = 54;
+// The row a span's coding marks take above it (the `axis` type and a pixel).
+const MARK_ROOM = 14;
 // IBM Plex Mono advances 0.6 em; the `column` type is 12 px. Set in mono, a
 // name's width follows from its length without measuring the DOM.
 const COLUMN_CHAR = 7.2;
@@ -276,7 +278,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     const rows = rowsOf.get(lane.id) ?? 1;
     const name = input.nameHeights?.get(lane.id) ?? 0;
     const top = stacked
-      ? Math.max(STACKED_NAME_HEIGHT, name)
+      ? Math.max(STACKED_NAME_HEIGHT, name + MARK_ROOM)
       : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
     const height =
       (stacked

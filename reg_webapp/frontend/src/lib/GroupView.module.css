@@ -40,7 +40,6 @@
   display: block;
 }
 
-/* The ghost button's look at the line's size: no box, the accent underline. */
 /* A button drawn as the shared `.link`: only the button's own chrome is reset. */
 .more {
   align-self: flex-start;

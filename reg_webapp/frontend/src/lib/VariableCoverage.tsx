@@ -331,8 +331,9 @@ export function useVariableCoverage({
     }
   };
   return {
-    /** The page's axis, for what it draws under the timeline. */
+    /** The page's axis and study years, for what it draws under the timeline. */
     axis,
+    window: study ? ([study.from, study.to] as [number, number]) : null,
     graph: !context ? null : columns.length === 0 ? (
       <p className={styles.hint}>
         No years recorded for this {subjects.length > 1 ? "group" : "variable"}.

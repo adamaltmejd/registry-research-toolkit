@@ -33,10 +33,28 @@
   line-height: 1;
 }
 
+.tick[data-anchor="start"] {
+  transform: none;
+}
+
+.tick[data-anchor="end"] {
+  transform: translateX(-100%);
+}
+
+.tick[data-window] {
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
 .block {
   display: grid;
   gap: var(--space-2);
   min-width: 0;
+}
+
+.block:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .columns {

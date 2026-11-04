@@ -1,4 +1,4 @@
-import { useCallback, useId, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import {
   type CatalogSegment,
   getValues,
@@ -124,11 +124,14 @@ const label = (runs: readonly ProjectStudyWindow[]) =>
 export function CodeTimeline({
   members,
   axis,
+  window,
   bounds,
 }: {
   /** Every member's per-period rows. */
   members: readonly { fqid: string; segments: readonly CatalogSegment[] }[];
   axis: [number, number];
+  /** The study years the lanes' axis labels, so both axes tick alike. */
+  window: [number, number] | null;
   bounds: readonly [number, number];
 }) {
   const byHash = new Map<string, CodeList>();
@@ -184,7 +187,7 @@ export function CodeTimeline({
           spans: [],
           edges: [],
           axis,
-          window: null,
+          window,
           width,
         })
       : null;
@@ -230,8 +233,22 @@ function Axis({ geometry }: { geometry: Geometry }) {
   return (
     <div className={styles.axis} aria-hidden="true">
       {geometry.ticks.map((tick) => (
-        <span key={tick.year} className={styles.tick} style={{ left: tick.x }}>
-          {tick.year}
+        <span
+          key={`${tick.year}:${tick.inWindow}`}
+          className={styles.tick}
+          // The lanes' axis rule: an end year is anchored inward, not clipped.
+          data-anchor={
+            tick.anchor ??
+            (tick.x - geometry.trackX < 16
+              ? "start"
+              : geometry.trackX + geometry.trackWidth - tick.x < 16
+                ? "end"
+                : undefined)
+          }
+          data-window={tick.inWindow || undefined}
+          style={{ left: tick.x }}
+        >
+          {tick.label ?? tick.year}
         </span>
       ))}
     </div>
@@ -252,11 +269,14 @@ function Block({
   headed: boolean;
 }) {
   const [asked, setAsked] = useState(false);
+  // "Show codes" unmounts under the reader: the block it opens takes focus.
+  const opened = useRef(false);
+  const columnsId = useId();
   const columns = [
     ...new Set(lists.flatMap((list) => list.uses.map((use) => use.column))),
   ];
   const head = headed && (
-    <p className={styles.columns}>
+    <p id={columnsId} className={styles.columns}>
       {columns.map((column) => (
         <ColumnChip key={column} name={columnName(column)} />
       ))}
@@ -278,7 +298,15 @@ function Block({
       <div className={styles.block}>
         {head}
         <p className={styles.ask}>
-          <Button onPress={() => setAsked(true)}>Show codes</Button>
+          <Button
+            aria-describedby={headed ? columnsId : undefined}
+            onPress={() => {
+              opened.current = true;
+              setAsked(true);
+            }}
+          >
+            Show codes
+          </Button>
           <span className={styles.hint}>
             Each column has up to{" "}
             {Math.max(...lists.map((list) => list.valueSet.n_items))} codes.
@@ -287,7 +315,16 @@ function Block({
       </div>
     );
   return (
-    <div className={styles.block}>
+    <div
+      ref={(node) => {
+        if (node && opened.current) {
+          opened.current = false;
+          node.focus();
+        }
+      }}
+      tabIndex={-1}
+      className={styles.block}
+    >
       {head}
       {missing.length ? (
         <Fetched lists={lists} known={codes} axis={axis} geometry={geometry} />
