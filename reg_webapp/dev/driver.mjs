@@ -598,8 +598,8 @@ async function addVariableColumnsCase(page, shoot) {
   await shoot("add-variable-selected");
   await main.getByRole("button", { name: "Add 1 column to project", exact: true }).click();
   await familyColumn.waitFor({ state: "detached" });
-  await main.getByText(/Antal.*Familjer.*in project/i).waitFor();
-  await main.getByText(/Antal.*Individer.*outside the years to add/i).waitFor();
+  await main.getByRole("img", { name: /Antal.*Familjer.*in project/i }).waitFor();
+  await main.getByRole("img", { name: /Antal.*Individer.*outside the years to add/i }).waitFor();
   check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
     "the add bar kept the committed selection staged");
 
@@ -862,7 +862,7 @@ async function stewardHeldCase(page, shoot) {
   if (narrow) await page.getByRole("main").getByRole("link", { name: "Late measure", exact: true }).click();
   else await page.getByRole("option", { name: /Late measure/ }).click();
   await page.waitForURL("**/catalog/demo/held/late");
-  await page.getByRole("main").getByText(/^Late, .*, Pool, 2019–2020,/).first().waitFor({ state: "attached" });
+  await page.getByRole("main").getByRole("img", { name: /^Late, .*, Pool, 2019–2020,/ }).first().waitFor({ state: "attached" });
   await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });
   await settled(page);
   await shoot("steward-held");
