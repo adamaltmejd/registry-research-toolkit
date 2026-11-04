@@ -147,10 +147,11 @@ output. In order:
 
 1. **Inventory.** The staging directory holds exactly the schema's files: none missing,
    none extra, no links, folders or hidden files, and no `receipt.json`.
-2. **Structure.** Each file is at most 8 MiB and 100,000 rows (`too_large`; maintainer,
-   2026-11-04; the Rust gate has it, the R gate not yet), so a small compressed file
-   cannot become a large table, is readable Parquet, and its columns are the schema's
-   columns in the schema's order, each of an accepted type.
+2. **Structure.** Each file is at most 8 MiB and 100,000 rows, and so is its rewrite,
+   which is uncompressed (`too_large`; maintainer, 2026-11-04; the Rust gate has it, the
+   R gate not yet), so a small compressed file cannot become a large table, is readable
+   Parquet, and its columns are the schema's columns in the schema's order, each of an
+   accepted type.
 3. **Disclosure.** Each file passes the policy's rules: every non-null `count` and
    `person_count` is at least `min_cell_count`, and a `statistic` is null wherever its
    `support` is null. Null is the suppression marker, so a zero count is refused like

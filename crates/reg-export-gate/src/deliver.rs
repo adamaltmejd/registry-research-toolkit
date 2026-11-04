@@ -39,25 +39,27 @@ fn owner_only(_: &Path) -> bool {
     false
 }
 
-/// Whether only `uid` could change what `dest` (resolved) names: it is owned by
-/// `uid`, and it and every folder above it have no group or other write bit
-/// (a sticky folder aside, which lets others add entries but not move ours)
-/// and are owned by `uid` or root. Otherwise someone else could move the
-/// destination aside and put their own folder or a link in its place.
+/// Whether only `uid` could change what `dir` (resolved) names: it is owned by
+/// `uid` (or root, if `root_ok`), and it and every folder above it have no
+/// group or other write bit (a sticky folder above aside, which lets others
+/// add entries but not move ours) and are owned by `uid` or root. Otherwise
+/// someone else could move the folder aside and put their own or a link in
+/// its place.
 #[cfg(unix)]
-fn reviewer_only(dest: &Path, uid: u32) -> bool {
+fn reviewer_only(dir: &Path, uid: u32, root_ok: bool) -> bool {
     use std::os::unix::fs::MetadataExt;
-    dest.ancestors().enumerate().all(|(i, a)| {
+    dir.ancestors().enumerate().all(|(i, a)| {
         std::fs::symlink_metadata(a).is_ok_and(|m| {
-            let sticky = m.mode() & 0o1000 != 0 && i > 0;
-            let owner = m.uid() == uid || (i > 0 && m.uid() == 0);
+            let above = i > 0;
+            let sticky = above && m.mode() & 0o1000 != 0;
+            let owner = m.uid() == uid || ((above || root_ok) && m.uid() == 0);
             m.is_dir() && owner && (m.mode() & 0o022 == 0 || sticky)
         })
     })
 }
 
 #[cfg(not(unix))]
-fn reviewer_only(_: &Path, _: u32) -> bool {
+fn reviewer_only(_: &Path, _: u32, _: bool) -> bool {
     false
 }
 
@@ -171,10 +173,10 @@ pub(crate) fn export(config_dir: &Path, name: &str, receipt: &str) -> Result<Pat
     let destination = &destination
         .canonicalize()
         .map_err(|_| delivery("destination_writable"))?;
-    if !reviewer_only(destination, uid) {
+    if !reviewer_only(destination, uid, false) {
         return Err(delivery("destination_writable"));
     }
-    if !matches!(owner(&project.dir), Some(o) if o == uid || o == 0) {
+    if !reviewer_only(&project.dir, uid, true) {
         return Err(setup("config_writable"));
     }
     let target = destination.join(&receipt[..FOLDER_DIGITS]);

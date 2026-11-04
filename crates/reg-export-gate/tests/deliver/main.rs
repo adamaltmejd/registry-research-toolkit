@@ -139,13 +139,20 @@ fn a_file_replaced_after_the_check_refuses() {
 fn a_destination_others_can_write_refuses() {
     // Regression: export delivered into a folder the pipeline's user could
     // write, so the agent VM's view was not only the reviewer's bytes.
+    // Its parent too: whoever can write that can move the destination aside.
     let (d, receipt) = checked("writable-destination");
-    chmod(&d.root.join("destination"), 0o777);
-    assert_eq!(
-        export(&d, &receipt),
-        Err((Code::Delivery, "destination_writable"))
-    );
-    assert_eq!(entries(&d.root.join("destination")), 0);
+    let destination = d.root.join("destination");
+    for (folder, mode) in [(&destination, 0o777), (&d.root, 0o775)] {
+        chmod(folder, mode);
+        assert_eq!(
+            export(&d, &receipt),
+            Err((Code::Delivery, "destination_writable")),
+            "{}",
+            folder.display()
+        );
+        assert_eq!(entries(&destination), 0);
+        chmod(folder, 0o755);
+    }
 }
 
 #[test]

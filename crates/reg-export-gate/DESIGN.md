@@ -176,15 +176,17 @@ passing set during the review and swap in another before the hash or the export.
    version). The author's own Parquet does not, even under the genuine receipt (it
    decodes to the same values). A rewritten file over 8 MiB is `too_large` in `check` as
    well, so `export` accepts exactly the outputs `check` can write. The gate writes
-   uncompressed, so a compressed staging file under the cap can grow past it.
+   uncompressed, so a compressed staging file under the cap can grow past it. That costs
+   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB.
 4. The destination and every folder above it must be safe from everyone but the user
    running `export`, or the pipeline could move the destination aside and put its own
    folder or a link there (`destination_writable`). The destination is owned by that
    user; each folder above it is owned by that user or root. None has a group or other
    write bit, except that a folder above may be sticky (`/tmp`). The config folder must
-   be owned by that user or root (`config_writable`). `std` has no `geteuid` and the
-   crate has no `unsafe`, so the user is read as the owner of a probe folder the gate
-   creates and removes in the destination.
+   be owned by that user or root, with the same rule for the folders above it
+   (`config_writable`). `std` has no `geteuid` and the crate has no `unsafe`, so the
+   user is read as the owner of a probe folder the gate creates and removes in the
+   destination.
 5. The gate writes its own bytes, never the folder's, to
    `<destination>/<first 16 hex digits of the receipt hash>/`, through a new folder and
    a rename as for an export, then reads them back and compares hashes (`hash_mismatch`,
