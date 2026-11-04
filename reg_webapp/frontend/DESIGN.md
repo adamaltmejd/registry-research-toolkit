@@ -353,41 +353,40 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   lists, searches and serves only what the steward holds, and every period it returns is
   the years held (crates/DESIGN.md). There is no scope control and no held or unheld
   wording anywhere in the SPA: it filters nothing by that, and reads no such field.
-  Registers grouped under sticky provider headers, then
-  the selected register's or group's variables, one name per row with no period under
-  it (maintainer 2026-11-04), then the detail pane capped at
-  `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
-  to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
-  and centred, so a wide screen gets wider lists, not a stranded pane. The variables
-  column is always there: before a register is chosen it holds an empty state ("Choose a
-  register to list its variables."). The two column headers share one height, so their
-  rules line up. Every group is open by default; a header triangle collapses it, the
-  column header offers one toggle that reads "Collapse all" while any group is open and
-  "Expand all" once all are closed, and collapse state is remembered per user. A group's
-  items are indented `spacing.3` from the group's label, not a full column (toggle and
-  indent maintainer-decided 2026-10-22). A group header is the `label` level at weight
-  500 in `text-muted` on `bg`, its disclosure a small `text-faint` triangle turned −90°
-  when closed, with no rule under it. Rows are selectable options, not links. On a
-  variable or group page its register's row stays selected, and pressing it opens the
-  register. Selection moves with arrow keys across columns, and selecting a row opens
-  its page; type-ahead moves focus only. Left on a group header collapses it, Right
-  expands it; Right on a register row moves to the variables column, and Left there
-  moves back. Collapsing a group never changes the selection: the detail pane keeps its
-  page, and keyboard focus moves to the group row. For a register the second column is
-  flat, a concept group folded to one item (#303), its identifier and panel-key
-  variables first and the rest in Swedish collation; on a group's page (or a member's,
-  which redirects there) the same list stays and the group's row is selected. The
-  members are lanes on that page, not rows in the column. A browse column fills the
-  viewport below the top bar and scrolls its own list. Every item and group carries its
-  in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
-  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
-  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
-  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
-  below the breakpoint (and only there: beside the columns it would repeat them), and it
-  opens the register list; while the search holds text it reads "Show matching
-  registers", since the list the search filters is off screen. Do not mint new
-  breakpoints.
+  Registers grouped under sticky provider headers, then the selected register's or
+  group's variables, one name per row with no period under it (maintainer 2026-11-04),
+  then the detail pane capped at `content-max`. The two columns grow with the viewport
+  from `col-browse` and `col-list` to `col-browse-max` and `col-list-max`, and the whole
+  shell is capped at `shell-max` and centred, so a wide screen gets wider lists, not a
+  stranded pane. The variables column is always there: before a register is chosen it
+  holds an empty state ("Choose a register to list its variables."). The two column
+  headers share one height, so their rules line up. Every group is open by default; a
+  header triangle collapses it, the column header offers one toggle that reads "Collapse
+  all" while any group is open and "Expand all" once all are closed, and collapse state
+  is remembered per user. A group's items are indented `spacing.3` from the group's
+  label, not a full column (toggle and indent maintainer-decided 2026-10-22). A group
+  header is the `label` level at weight 500 in `text-muted` on `bg`, its disclosure a
+  small `text-faint` triangle turned −90° when closed, with no rule under it. Rows are
+  selectable options, not links. On a variable or group page its register's row stays
+  selected, and pressing it opens the register. Selection moves with arrow keys across
+  columns, and selecting a row opens its page; type-ahead moves focus only. Left on a
+  group header collapses it, Right expands it; Right on a register row moves to the
+  variables column, and Left there moves back. Collapsing a group never changes the
+  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
+  For a register the second column is flat, a concept group folded to one item (#303),
+  its identifier and panel-key variables first and the rest in Swedish collation; on a
+  group's page (or a member's, which redirects there) the same list stays and the
+  group's row is selected. The members are lanes on that page, not rows in the column. A
+  browse column fills the viewport below the top bar and scrolls its own list. Every
+  item and group carries its in-project mark on the right when it has one. Below the
+  single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two columns leave
+  the detail pane under 400px, #2107) the columns stack, one at a time; the way back is
+  the breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its
+  own line above the trail so it reads as an action, not a path segment (#1824). Every
+  page's trail leads with it below the breakpoint (and only there: beside the columns it
+  would repeat them), and it opens the register list; while the search holds text it
+  reads "Show matching registers", since the list the search filters is off screen. Do
+  not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -430,28 +429,28 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
   columns, "Notes on this data" (the findings, only when there are any; maintainer
-  2026-11-04), then source documents. On a variable page, source and provenance
-  follows the documents. Padding `spacing.5`. A variable group page carries the Group
-  kind mark and a member-of line naming its register, with constant facets shown once in
-  the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
-  order: a lane is titled by its varying facets in curated axis order, with the member's
-  name on the line under it, and by the name alone when no axis varies. A variable
-  page's facts are what its columns state: one value where every column states it alike,
-  each value with its years where they differ, and no row where none states it, never
-  "Not stated" down the list. The `Timeline` carries the columns, their tables and
-  years, so there is no tables list and no table of columns under it; value sets have
-  their own panel, so the facts name only the classification. Where there is no curated
+  2026-11-04), then source documents. On a variable page, source and provenance follows
+  the documents. Padding `spacing.5`. A variable group page carries the Group kind mark
+  and a member-of line naming its register, with constant facets shown once in the
+  facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API order:
+  a lane is titled by its varying facets in curated axis order, with the member's name
+  on the line under it, and by the name alone when no axis varies. A variable page's
+  facts are what its columns state: one value where every column states it alike, each
+  value with its years where they differ, and no row where none states it, never "Not
+  stated" down the list. The `Timeline` carries the columns, their tables and years, so
+  there is no tables list and no table of columns under it; value sets have their own
+  panel, so the facts name only the classification. Where there is no curated
   description, the provider's wording is the Description: once when every period agrees,
   otherwise each wording under its years. Timeline and facts read the one per-period
-  list (`segments`): on a steward deployment its rows are the files and columns
-  the steward has, over the years it has them. A table page leaves out a Row keys, Populations or Releases panel
-  with nothing to list, and Timeless or Implicit when "No". Placement caveats are
-  steward working notes, not shown until the steward curates them for readers. A
-  register page has no tables table: its tables are FilterChips over the variable list,
-  each with its period, a lens with OR within the selection, offered only when two or
-  more tables deliver variables (the archived variant chips, maintainer 2026-11-03). A
-  Tables definition row links every table's page by name. A register page has no
-  "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
+  list (`segments`): on a steward deployment its rows are the files and columns the
+  steward has, over the years it has them. A table page leaves out a Row keys,
+  Populations or Releases panel with nothing to list, and Timeless or Implicit when
+  "No". Placement caveats are steward working notes, not shown until the steward curates
+  them for readers. A register page has no tables table: its tables are FilterChips over
+  the variable list, each with its period, a lens with OR within the selection, offered
+  only when two or more tables deliver variables (the archived variant chips, maintainer
+  2026-11-03). A Tables definition row links every table's page by name. A register page
+  has no "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
   supplemental-only variable is selectable for a project like a reference variable:
   `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
   questions, three scopes").
