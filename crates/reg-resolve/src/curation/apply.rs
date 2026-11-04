@@ -1464,7 +1464,7 @@ pub fn rekey(
             value.key.identity = (*identity).clone();
         }
     }
-    for claim in claims {
+    for claim in claims.iter_mut().map(|claim| &mut claim.change) {
         if claim.kind == "release"
             && let Some(period) = releases.get(&(
                 claim.provider.as_deref(),

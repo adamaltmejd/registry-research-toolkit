@@ -604,17 +604,19 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
         let facts = class.facts(&out.classifications);
         for (field, value) in facts {
             out.overrides.push(reg_resolve::provenance::Claim {
-                kind: "class_version".into(),
-                locator: class.locator.clone(),
-                identity: None,
-                provider: None,
-                register: None,
-                table: None,
-                release: None,
-                period: Some(class.period.clone()),
-                field,
-                value: reg_resolve::curation::apply::rendered(&value),
-                source_value: None,
+                change: reg_resolve::curation::apply::Change {
+                    kind: "class_version".into(),
+                    locator: class.locator.clone(),
+                    identity: None,
+                    provider: None,
+                    register: None,
+                    table: None,
+                    release: None,
+                    period: Some(class.period.clone()),
+                    field,
+                    value: reg_resolve::curation::apply::rendered(&value),
+                    source_value: None,
+                },
                 statement: statement.hash.clone(),
             });
         }
@@ -674,11 +676,11 @@ fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<Stri
     for claim in applied
         .overrides
         .iter()
-        .filter(|claim| claim.kind == "occurrence" && claim.field == "classification")
+        .filter(|claim| claim.change.kind == "occurrence" && claim.change.field == "classification")
     {
-        if let Some(class) = claim.value.as_deref() {
+        if let Some(class) = claim.change.value.as_deref() {
             bindings
-                .entry((&claim.locator, class))
+                .entry((&claim.change.locator, class))
                 .or_default()
                 .insert(claim.statement.as_str());
         }
@@ -1688,22 +1690,17 @@ fn run_selected(
             evaluated.push((statement, premise));
             if !applied.changes.is_empty() {
                 result.statements.push(statement_row(root, statement)?);
-                result.overrides.extend(applied.changes.iter().map(|c| {
-                    reg_resolve::provenance::Claim {
-                        kind: c.kind.clone(),
-                        locator: c.locator.clone(),
-                        identity: c.identity.clone(),
-                        provider: c.provider.clone(),
-                        register: c.register.clone(),
-                        table: c.table.clone(),
-                        release: c.release.clone(),
-                        period: c.period.clone(),
-                        field: c.field.clone(),
-                        value: c.value.clone(),
-                        source_value: c.source_value.clone(),
-                        statement: publication_identity(statement),
-                    }
-                }));
+                result
+                    .overrides
+                    .extend(
+                        applied
+                            .changes
+                            .iter()
+                            .map(|change| reg_resolve::provenance::Claim {
+                                change: change.clone(),
+                                statement: publication_identity(statement),
+                            }),
+                    );
                 result
                     .classifications
                     .extend(applied.classifications.iter().cloned());
@@ -1878,21 +1875,11 @@ fn run_selected(
         .iter()
         // Shared inventory claims have no register evaluation index. Their version
         // identity conflicts are checked below; keep their claims for provenance.
-        .filter(|value| {
-            !(value.kind == "class_version" && value.locator.input == "classifications.toml")
+        .filter(|claim| {
+            !(claim.change.kind == "class_version"
+                && claim.change.locator.input == "classifications.toml")
         })
-        .map(|value| reg_resolve::curation::AppliedClaim {
-            statement: indices[value.statement.as_str()],
-            kind: &value.kind,
-            locator: &value.locator,
-            identity: value.identity.as_ref(),
-            provider: value.provider.as_deref(),
-            register: value.register.as_deref(),
-            table: value.table.as_deref(),
-            release: value.release.as_deref(),
-            field: &value.field,
-            period: value.period.as_ref(),
-        })
+        .map(|claim| (indices[claim.statement.as_str()], &claim.change))
         .collect::<Vec<_>>();
     let resolved = evaluated
         .iter()

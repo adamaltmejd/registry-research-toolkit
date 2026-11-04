@@ -3,26 +3,17 @@
 use std::collections::BTreeMap;
 
 use reg_core::Interval;
-use reg_frame::{Locator, ValueSet};
+use reg_frame::ValueSet;
 use serde_json::Value;
 
 use crate::Resolved;
-use crate::curation::apply::Classification;
+use crate::curation::apply::{Change, Classification};
 
-/// A source-shaped application's claim, before default resolution.
+/// A source-shaped application's change and the publication identity of the
+/// statement that made it, before default resolution.
 #[derive(Clone)]
 pub struct Claim {
-    pub kind: String,
-    pub locator: Locator,
-    pub identity: Option<crate::OccurrenceIdentity>,
-    pub provider: Option<String>,
-    pub register: Option<String>,
-    pub table: Option<String>,
-    pub release: Option<String>,
-    pub period: Option<Interval>,
-    pub field: String,
-    pub value: Option<String>,
-    pub source_value: Option<String>,
+    pub change: Change,
     pub statement: String,
 }
 
@@ -92,6 +83,7 @@ fn matches(
     table: Option<&str>,
     period: Option<&Interval>,
 ) -> bool {
+    let claim = &claim.change;
     claim
         .provider
         .as_deref()
@@ -115,7 +107,7 @@ fn field_values<'a>(
 ) -> Vec<FinalValue> {
     let mut winners = BTreeMap::<&str, (&Claim, Option<String>)>::new();
     for claim in claims {
-        let field = match claim.field.as_str() {
+        let field = match claim.change.field.as_str() {
             "type" => "dtype",
             "spelling" => "column",
             "value_set" => "valueset",
@@ -126,17 +118,18 @@ fn field_values<'a>(
         } else if let Some(value) = current.get(field) {
             crate::curation::apply::rendered(value)
         } else {
-            claim.value.clone()
+            claim.change.value.clone()
         };
         // Only a claim for the resolved value can own it. Shared code lists can
         // have equal claims; use one deterministic owner.
-        if field != "period" && final_value != claim.value {
+        if field != "period" && final_value != claim.change.value {
             continue;
         }
         let entry = winners
-            .entry(&claim.field)
+            .entry(&claim.change.field)
             .or_insert((claim, final_value.clone()));
-        if (&claim.statement, &claim.locator) < (&entry.0.statement, &entry.0.locator) {
+        if (&claim.statement, &claim.change.locator) < (&entry.0.statement, &entry.0.change.locator)
+        {
             *entry = (claim, final_value);
         }
     }
@@ -144,9 +137,9 @@ fn field_values<'a>(
         .into_values()
         .map(|(claim, value)| FinalValue {
             subject: subject.clone(),
-            field: claim.field.clone(),
+            field: claim.change.field.clone(),
             value,
-            source_value: claim.source_value.clone(),
+            source_value: claim.change.source_value.clone(),
             origin: Origin::Curated(claim.statement.clone()),
         })
         .collect()
@@ -170,15 +163,15 @@ pub fn finalize(
     let mut by_coordinates = BTreeMap::<_, Vec<_>>::new();
     for claim in claims {
         by_locator
-            .entry((claim.kind.as_str(), &claim.locator))
+            .entry((claim.change.kind.as_str(), &claim.change.locator))
             .or_default()
             .push(claim);
         by_coordinates
             .entry((
-                claim.kind.as_str(),
-                claim.provider.as_deref(),
-                claim.register.as_deref(),
-                claim.table.as_deref(),
+                claim.change.kind.as_str(),
+                claim.change.provider.as_deref(),
+                claim.change.register.as_deref(),
+                claim.change.table.as_deref(),
             ))
             .or_default()
             .push(claim);
@@ -206,13 +199,13 @@ pub fn finalize(
             Some(&resolved.coverage),
         ));
         let set_claims = claims.iter().filter(|c| {
-            c.kind == "set"
-                && c.provider.as_deref() == Some(register.provider.as_str())
-                && c.register.as_deref() == Some(register.register.as_str())
+            c.change.kind == "set"
+                && c.change.provider.as_deref() == Some(register.provider.as_str())
+                && c.change.register.as_deref() == Some(register.register.as_str())
         });
         let mut by_set = BTreeMap::<&str, Vec<&Claim>>::new();
         for claim in set_claims {
-            if let Some(slug) = claim.table.as_deref() {
+            if let Some(slug) = claim.change.table.as_deref() {
                 by_set.entry(slug).or_default().push(claim);
             }
         }
@@ -263,7 +256,7 @@ pub fn finalize(
             ));
             result.values.extend(field_values(
                 candidates.into_iter().flatten().copied().filter(|c| {
-                    c.release.as_deref() == Some(release.release.as_str())
+                    c.change.release.as_deref() == Some(release.release.as_str())
                         && matches(
                             c,
                             Some(&release.provider),
@@ -286,7 +279,7 @@ pub fn finalize(
                 .flatten()
                 .copied()
                 .filter(|claim| {
-                    claim.identity.as_ref()
+                    claim.change.identity.as_ref()
                         == Some(&crate::OccurrenceIdentity::new(
                             source,
                             occurrence
@@ -294,7 +287,7 @@ pub fn finalize(
                                 .clone()
                                 .or_else(|| occurrence.period.clone()),
                         ))
-                        && (occurrence.period.is_some() || claim.field != "period")
+                        && (occurrence.period.is_some() || claim.change.field != "period")
                 });
             let mut current = serde_json::to_value(source).expect("occurrence serializes");
             current["variable"] = Value::String(occurrence.variable.map_or_else(
@@ -307,7 +300,7 @@ pub fn finalize(
                 for mut value in field_values(
                     candidates
                         .clone()
-                        .filter(|claim| claim.field == "description"),
+                        .filter(|claim| claim.change.field == "description"),
                     &Subject::Variable(ri, variable),
                     &current,
                     None,
@@ -317,7 +310,7 @@ pub fn finalize(
                 }
             }
             let mut values = field_values(
-                candidates.filter(|claim| claim.field != "description"),
+                candidates.filter(|claim| claim.change.field != "description"),
                 &subject,
                 &current,
                 occurrence.period.as_ref(),
@@ -368,16 +361,17 @@ pub fn finalize(
     // arbitrary first source locator retained by value-set interning.
     let asserted_sets = claims
         .iter()
-        .filter(|c| c.kind == "valueset" && c.field == "hash")
+        .filter(|c| c.change.kind == "valueset" && c.change.field == "hash")
         .filter_map(|c| {
-            c.value
+            c.change
+                .value
                 .as_deref()
-                .map(|hash| ((c.statement.as_str(), &c.locator), hash))
+                .map(|hash| ((c.statement.as_str(), &c.change.locator), hash))
         })
         .collect::<BTreeMap<_, _>>();
     let mut sets_by_hash = BTreeMap::<_, Vec<_>>::new();
-    for claim in claims.iter().filter(|c| c.kind == "valueset") {
-        if let Some(hash) = asserted_sets.get(&(claim.statement.as_str(), &claim.locator)) {
+    for claim in claims.iter().filter(|c| c.change.kind == "valueset") {
+        if let Some(hash) = asserted_sets.get(&(claim.statement.as_str(), &claim.change.locator)) {
             sets_by_hash.entry(*hash).or_default().push(claim);
         }
     }

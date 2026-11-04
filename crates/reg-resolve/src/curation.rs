@@ -719,21 +719,6 @@ fn moves_table(statement: &Statement) -> bool {
     matches!(statement, Statement::Set { fields, .. } if fields.table.is_some())
 }
 
-/// A field introduced by an accepted table move or assertion, in final source coordinates.
-/// `statement` indexes the evaluated statements supplied to [`applied_conflicts`].
-pub struct AppliedClaim<'a> {
-    pub statement: usize,
-    pub kind: &'a str,
-    pub locator: &'a Locator,
-    pub identity: Option<&'a crate::OccurrenceIdentity>,
-    pub provider: Option<&'a str>,
-    pub register: Option<&'a str>,
-    pub table: Option<&'a str>,
-    pub release: Option<&'a str>,
-    pub field: &'a str,
-    pub period: Option<&'a Interval>,
-}
-
 fn premise_source(premise: &SourcePremise) -> Source {
     let period = premise
         .fields
@@ -835,11 +820,12 @@ fn premise_overlap(
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
 /// statements. Uses the same effects, source identity and interval overlap as the
-/// register-local evaluator; the build boundary adds authoring locations.
+/// register-local evaluator; the build boundary adds authoring locations. Each claim
+/// pairs an applied change with the index of its statement in `statements`.
 #[must_use]
 pub fn applied_conflicts(
     statements: &[(&Statement, &Premise)],
-    claims: &[AppliedClaim<'_>],
+    claims: &[(usize, &apply::Change)],
 ) -> Vec<(usize, usize)> {
     let mut conflicts = BTreeSet::new();
     let evaluated: Vec<_> = statements
@@ -867,23 +853,23 @@ pub fn applied_conflicts(
             }
         }
     }
-    for claim in claims {
+    for &(statement, claim) in claims {
         // Set-wide sentinel conflicts are checked globally by value-set hash.
         if claim.field == "sentinels" {
             continue;
         }
-        let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
+        let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.clone()))]);
         for (field, value) in [
-            ("provider", claim.provider),
-            ("register", claim.register),
-            ("table", claim.table),
-            ("release", claim.release),
+            ("provider", claim.provider.as_deref()),
+            ("register", claim.register.as_deref()),
+            ("table", claim.table.as_deref()),
+            ("release", claim.release.as_deref()),
         ] {
             if let Some(value) = value {
                 fields.insert(field.into(), Value::String(value.into()));
             }
         }
-        if let Some(identity) = claim.identity {
+        if let Some(identity) = &claim.identity {
             fields.insert("spelling".into(), Value::String(identity.column.clone()));
             fields.insert("key".into(), Value::String(identity.source_key.clone()));
             fields.insert("period".into(), serde_json::json!(identity.period));
@@ -891,16 +877,16 @@ pub fn applied_conflicts(
         let source = Source {
             fields: Arc::new(fields),
             locators: vec![claim.locator.clone()],
-            period: claim.period.cloned(),
+            period: claim.period.clone(),
         };
         let claimed = Match {
             source: 0,
-            spans: vec![claim.period.cloned().unwrap_or_else(|| bounds(None, None))],
+            spans: vec![claim.period.clone().unwrap_or_else(|| bounds(None, None))],
         };
-        let field = BTreeSet::from([claim.field.to_owned()]);
-        for &(index, row) in by_locator.get(claim.locator).into_iter().flatten() {
+        let field = BTreeSet::from([claim.field.clone()]);
+        for &(index, row) in by_locator.get(&claim.locator).into_iter().flatten() {
             let (effects, sources) = &evaluated[index];
-            if index == claim.statement || effects.is_disjoint(&field) {
+            if index == statement || effects.is_disjoint(&field) {
                 continue;
             }
             let (selected, spans) = &sources[row];
@@ -913,7 +899,7 @@ pub fn applied_conflicts(
                     &claimed,
                 )
             {
-                conflicts.insert((index.min(claim.statement), index.max(claim.statement)));
+                conflicts.insert((index.min(statement), index.max(statement)));
             }
         }
     }
