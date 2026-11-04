@@ -300,14 +300,6 @@ a.nameText {
   transform: translateY(-50%);
 }
 
-.outside[data-side="right"] {
-  left: calc(100% + 4px);
-}
-
-.outside[data-side="left"] {
-  right: calc(100% + 4px);
-}
-
 .span[data-state="out"] .outside {
   color: var(--text-muted);
 }

@@ -64,10 +64,17 @@ export function variableColumns(
  * stem (`RTB_2015–2017, 2019`), so a gap stays visible; anything else is a list. */
 export function filesLabel(files: readonly string[]): string | undefined {
   if (files.length <= 1) return files[0];
-  const parts = files.map((file) => /^(.*?)(\d{4})$/.exec(file));
+  // A year suffix is exactly four digits after a non-digit, 1900–2100, so a
+  // batch number or a date is listed unchanged.
+  const parts = files.map((file) => /^(.*\D)(\d{4})$/.exec(file));
   const stem = parts[0]?.[1];
-  if (!parts.every((part) => part && part[1] === stem)) return files.join(", ");
-  const years = parts.map((part) => Number(part?.[2])).sort((a, b) => a - b);
+  const years = parts.map((part) => Number(part?.[2]));
+  if (
+    !parts.every((part) => part && part[1] === stem) ||
+    !years.every((year) => year >= 1900 && year <= 2100)
+  )
+    return files.join(", ");
+  years.sort((a, b) => a - b);
   const runs: [number, number][] = [];
   for (const year of years) {
     const run = runs.at(-1);

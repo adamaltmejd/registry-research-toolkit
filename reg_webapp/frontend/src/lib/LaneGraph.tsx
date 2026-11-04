@@ -682,7 +682,7 @@ function Span({
         </span>
       )}
       {at.label !== "inside" && (
-        <span className={styles.outside} data-side={at.label}>
+        <span className={styles.outside} style={{ left: at.labelX }}>
           {span.name}
         </span>
       )}

@@ -78,6 +78,8 @@ export interface PlacedSpan {
   segments: PlacedSegment[];
   /** Where the name sits: inside the span, or beside it. */
   label: "inside" | "right" | "left";
+  /** Where a name set beside the span starts, from the span's left edge. */
+  labelX: number;
   /** Whether the span's file is set after its name (cut short inside a
    * narrow span); false where only a few characters of it would fit, and
    * always beside a span, where only the name is set. */
@@ -208,18 +210,30 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       });
       const room = Math.max(...segments.map((segment) => segment.width));
       const need = labelWidth(span.name);
-      const label: PlacedSpan["label"] =
+      // Beside the span first, then in a gap between its deliveries; where no
+      // room is free the name sits over the bars at the track's end, uncut.
+      const gaps = segments.slice(0, -1).map((segment, i) => ({
+        from: segment.x + segment.width,
+        to: segments[i + 1].x,
+      }));
+      const gap = gaps.find((g) => g.to - g.from >= 2 * LABEL_GAP + need);
+      const [label, labelX]: [PlacedSpan["label"], number] =
         need <= room
-          ? "inside"
+          ? ["inside", 0]
           : left + width + LABEL_GAP + need <= trackEnd
-            ? "right"
+            ? ["right", width + LABEL_GAP]
             : left - LABEL_GAP - need >= trackX
-              ? "left"
-              : "inside";
+              ? ["left", -LABEL_GAP - need]
+              : gap
+                ? ["right", gap.from + LABEL_GAP]
+                : ["right", Math.max(trackX, trackEnd - need) - left];
       const withTable =
         !!span.table && label === "inside" && need + TABLE_MIN <= room;
-      const start = label === "left" ? left - LABEL_GAP - need : left;
-      const end = left + width + (label === "right" ? LABEL_GAP + need : 0);
+      const start = Math.min(left, left + labelX);
+      const end = Math.max(
+        left + width,
+        label === "inside" ? left : left + labelX + need,
+      );
       let row = rowEnds.findIndex((rowEnd) => rowEnd + PACK_GAP <= start);
       if (row < 0) {
         row = rowEnds.length;
@@ -236,6 +250,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         width,
         segments,
         label,
+        labelX,
         table: withTable,
       });
     }
