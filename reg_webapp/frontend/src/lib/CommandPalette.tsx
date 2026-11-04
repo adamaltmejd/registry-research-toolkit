@@ -9,6 +9,7 @@ import {
 import {
   SEARCH_MIN_QUERY_LENGTH,
   type SearchHit,
+  type SearchPage,
   type SearchType,
   search,
 } from "./api";
@@ -54,42 +55,48 @@ const ACTIONS: readonly Row[] = [
   },
 ];
 
-/** The arms the palette asks, in the order it lists them: the in-place filter
- * already finds registers and variables (DESIGN.md → Layout). */
-const ARMS: readonly SearchType[] = ["classification"];
-const ARM_LIMIT = 5;
+/** The arms the palette asks, in the order it lists them. Classifications
+ * are reached through their variables (Operator 2026-11-04). */
+const ARMS = ["register", "variable"] as const satisfies readonly SearchType[];
+const ARM_HEADERS: Record<(typeof ARMS)[number], string> = {
+  register: "Registers",
+  variable: "Variables",
+};
+const ARM_LIMIT = 4;
 const DEBOUNCE_MS = 150;
 
-/** A search hit as a palette row, or null for a hit with nowhere to go. */
+/** A search hit as a palette row: a name, and for a variable its register. */
 function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
   switch (hit.type) {
-    case "classification":
-      return hit.fqid
-        ? {
-            label: hit.name,
-            detail: null,
-            href: catalogHref(hit.fqid),
-            type: "classification",
-          }
-        : null;
+    case "register":
+      return {
+        label: hit.name,
+        detail: null,
+        href: catalogHref(hit.fqid),
+        type: "register",
+      };
+    case "variable":
+      return {
+        label: hit.name,
+        detail: hit.register_name,
+        href: catalogHref(hit.fqid),
+        type: "variable",
+      };
     default:
-      // Registers and variables are the in-place filter's, not the palette's.
       return null;
   }
 }
 
-/** The rows for a page of hits, keyed by content (with an occurrence suffix:
- * the same hit can come back twice under two arms). */
-function hitRows(hits: readonly SearchHit[]): Row[] {
-  const seen = new Map<string, number>();
+/** One arm's rows: the catalog's hits, then the steward's own, each in the
+ * server's order (never re-ranked together), once per place. */
+function hitRows(page: SearchPage): Row[] {
+  const seen = new Set<string>();
   const rows: Row[] = [];
-  for (const hit of hits) {
+  for (const hit of [...page.items, ...(page.steward?.items ?? [])]) {
     const row = hitRow(hit);
-    if (!row) continue;
-    const base = `${hit.type}:${row.href}:${row.label}`;
-    const n = seen.get(base) ?? 0;
-    seen.set(base, n + 1);
-    rows.push({ ...row, id: n === 0 ? base : `${base}#${n}` });
+    if (!row || seen.has(row.href)) continue;
+    seen.add(row.href);
+    rows.push({ ...row, id: `${hit.type}:${row.href}` });
   }
   return rows;
 }
@@ -118,7 +125,7 @@ interface Props {
 }
 
 /** The command palette (DESIGN.md → Layout → Top bar): a `Menu` in a popover
- * under the top-bar search field, for classifications and the app's
+ * under the top-bar search field, for registers, variables and the app's
  * places. It renders inside the top bar's RAC `Autocomplete`, so that field is
  * its one input: focus stays there and the arrow keys move a virtual focus
  * through the rows. The popover is non-modal for the same reason; a press
@@ -176,19 +183,21 @@ export function CommandPalette({
 function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
   const query = useDebounced(text.trim());
   const asked = query.length >= SEARCH_MIN_QUERY_LENGTH ? query : null;
-  const results = useAsyncResource(asked, async (signal) =>
-    (
-      await Promise.all(
-        ARMS.map((type) => search(query, { signal, type, limit: ARM_LIMIT })),
-      )
-    ).flatMap((page) => page.items),
+  const results = useAsyncResource(asked, (signal) =>
+    Promise.all(
+      ARMS.map((type) => search(query, { signal, type, limit: ARM_LIMIT })),
+    ),
   );
 
   const actions = rankFilter([...ACTIONS], text.trim(), (a) => [
     a.label,
     a.detail,
   ]);
-  const hits = hitRows(results.data ?? []);
+  const arms = ARMS.map((type, i) => ({
+    type,
+    rows: results.data?.[i] ? hitRows(results.data[i]) : [],
+  }));
+  const hits = arms.flatMap((arm) => arm.rows);
   const byId = new Map([...actions, ...hits].map((row) => [row.id, row]));
   const typing = text.trim() !== query;
   const pending =
@@ -199,14 +208,14 @@ function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
   if (results.error) {
     status = `Search failed: ${results.error}`;
   } else if (pending) {
-    status = "Searching classifications…";
+    status = "Searching…";
   } else if (
     text.trim().length > 0 &&
     text.trim().length < SEARCH_MIN_QUERY_LENGTH
   ) {
-    status = `Type ${SEARCH_MIN_QUERY_LENGTH} characters to search classifications.`;
+    status = `Type ${SEARCH_MIN_QUERY_LENGTH} characters to search.`;
   } else if (asked && hits.length === 0) {
-    status = `No classification matches “${asked}”.`;
+    status = `Nothing matches “${asked}”.`;
   }
 
   return (
@@ -219,7 +228,7 @@ function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
         {status}
       </output>
       <Menu
-        aria-label="Classifications and places"
+        aria-label="Registers, variables and places"
         className={styles.menu}
         onAction={(id) => {
           const row = byId.get(String(id));
@@ -236,15 +245,18 @@ function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
             ))}
           </MenuSection>
         )}
-        {hits.length > 0 && (
-          <MenuSection className={styles.section}>
-            <Header className={`micro-label ${styles.header}`}>
-              Classifications
-            </Header>
-            {hits.map((row) => (
-              <PaletteItem key={row.id} row={row} />
-            ))}
-          </MenuSection>
+        {arms.map(
+          (arm) =>
+            arm.rows.length > 0 && (
+              <MenuSection key={arm.type} className={styles.section}>
+                <Header className={`micro-label ${styles.header}`}>
+                  {ARM_HEADERS[arm.type]}
+                </Header>
+                {arm.rows.map((row) => (
+                  <PaletteItem key={row.id} row={row} />
+                ))}
+              </MenuSection>
+            ),
         )}
       </Menu>
     </div>

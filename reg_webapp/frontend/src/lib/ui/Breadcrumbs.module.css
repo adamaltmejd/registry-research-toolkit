@@ -16,31 +16,28 @@
   gap: var(--space-1);
   min-width: 0;
 }
-/* Generated, so it stays out of the accessible name. */
-.crumb:not(:first-child)::before {
+/* Generated, so it stays out of the accessible name. After its crumb, not
+   before the next, so a wrapped trail never starts a line with "/". */
+.crumb:not(:last-child)::after {
   content: "/" / "";
   color: var(--text-faint);
 }
 
 /* "Browse registers" is the way back to the register list where the columns stack; above
-   the breakpoint the list is on screen, so the crumb and the separator after it
-   go. */
+   the breakpoint the list is on screen, so the crumb goes. */
 @media (min-width: 60.0625rem) {
   .narrowOnly {
     display: none;
-  }
-  .narrowOnly + .crumb::before {
-    content: none;
   }
 }
 
 /* "Browse registers", the way back to the register list where the columns
    stack: a default button, so it reads as an action rather than a path segment
-   (#1824). It takes its own line, so the trail after it needs no separator. */
+   (#1824). It takes its own line, so it needs no separator after it. */
 .back {
   flex-basis: 100%;
 }
-.back + .crumb::before {
+.crumb.back::after {
   content: none;
 }
 .backLink {

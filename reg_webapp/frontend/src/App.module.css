@@ -64,11 +64,6 @@
   min-width: 0;
 }
 
-.rootPrompt {
-  margin: 0;
-  color: var(--text-muted);
-}
-
 /* Below the narrow breakpoint (60rem, DESIGN.md → spacing.breakpoint-narrow) the
    columns stack one at a time: the catalog root shows the list, every other page
    its detail, with the breadcrumb's first crumb as the way back to the list. */
@@ -91,8 +86,7 @@
   /* On the list the pane keeps only the root's visually hidden h1, so the page
      keeps its `main` landmark and its heading. */
   .body[data-narrow-shows="detail"] .browse,
-  .body[data-narrow-shows="browse"] .crumbs,
-  .body[data-narrow-shows="browse"] .rootPrompt {
+  .body[data-narrow-shows="browse"] .crumbs {
     display: none;
   }
 }

@@ -1,6 +1,6 @@
 # Operation table: the API contract the Rust server implements, defined once and
 # exposed over HTTP and MCP (crates/DESIGN.md, "Agent and web interface"). Error codes live in
-# `errors.toml`; `conformance/test_api_spec.py` lints both and the `api` cases.
+# `errors.toml`; the conformance suite's `api_spec` module lints both and the `api` cases.
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
@@ -137,15 +137,18 @@ than `/api/catalog/{ref}/<facet>`, which a variable named `segments` could shado
 [[operation]]
 name = "findings"
 http = ["GET /api/findings/{ref}"]
-params = { ref = "ref", period = "period?", table = "ref?", code = "string?" }
-result = "[Finding], ordered by subject kind, subject, start, code"
-errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period"]
+params = { ref = "ref", period = "period?", table = "ref?", code = "string?", limit = "limit?", cursor = "cursor?" }
+result = "{groups: [{code, severity, count, items: [Finding], next_cursor: cursor | null}]}, review groups first, then by code; items ordered by subject kind, subject, start"
+errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """The review and notice findings on a register (`finding_register`), a table or \
 a variable, its segments and its occurrences (`finding_subject`), overlapping \
 `period`. Renamed from `warnings`: v4's entity is the finding (schema §1.1). `code` \
-narrows by the rule code prefix (`F7`, `F7:edition-disagreement`). Bounded by the \
-entity, so not a page. No MCP tool: segments and the order check carry the findings an \
-agent needs; the SPA's entity pages are the consumer."""
+narrows by the rule code prefix (`F7`, `F7:edition-disagreement`). One group per \
+severity and code: `count` is its total under the filters, `items` its first `limit`. \
+A register holds thousands of findings in a few codes, so a group is paged: its \
+`next_cursor` is issued for the request with `code` set to the group's code, and a \
+`cursor` without `code` is `invalid_parameter`. No MCP tool: segments and the order \
+check carry the findings an agent needs; the SPA's entity pages are the consumer."""
 
 [[operation]]
 name = "values"

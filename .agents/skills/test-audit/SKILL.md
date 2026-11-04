@@ -29,14 +29,14 @@ Do not run the sabotage by hand. Review the named change as the failure proof.
 
 ## The sweep
 
-Read-only. One subagent per test tree (each package's, plus `conformance/`,
-`scripts/tests/`, the SPA's vitest files under `reg_webapp/frontend/src` and the flows
-driver `reg_webapp/dev/driver.mjs`), through the harness's subagent tool (in Claude
-Code, the Agent tool with the `general-purpose` type; Explore locates code and does not
-audit it), told to edit nothing. Launch as many at once as the harness allows and the
-rest in waves. Where the harness lets a call choose its model, use the family's mid tier
-(in Claude, Opus). Each prompt carries AGENTS.md, the "Testing strategy" section, the
-tree's conftest and helpers, a scratchpad file name unique to the tree, and this section
+Read-only. One subagent per test tree (each package's, plus `conformance/`, the SPA's
+vitest files under `reg_webapp/frontend/src` and the flows driver
+`reg_webapp/dev/driver.mjs`), through the harness's subagent tool (in Claude Code, the
+Agent tool with the `general-purpose` type; Explore locates code and does not audit it),
+told to edit nothing. Launch as many at once as the harness allows and the rest in
+waves. Where the harness lets a call choose its model, use the family's mid tier (in
+Claude, Opus). Each prompt carries AGENTS.md, the "Testing strategy" section, the tree's
+conftest and helpers, a scratchpad file name unique to the tree, and this section
 verbatim.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
@@ -76,8 +76,7 @@ the block and the helpers it orphans, one commit per test file or package. A kep
 that fails on main is a product bug: reproduce it at the boundary and file it (search
 first; read through `cargo xtask gh-issue`), never delete it.
 
-Before pushing, always `uv run python -m pytest <tree> -n auto -q`, where `<tree>` is
-`scripts/tests`, and conformance, which runs against the Rust server
+Before pushing, always run conformance, which runs against the Rust server
 (`uv run --no-project scripts/gate.py rust`), plus the tree's own gate step
 (`uv run --no-project scripts/gate.py <step>`): `crates` for `crates/`, `frontend` for
 the SPA's vitest suite (`bun run test` in `reg_webapp/frontend`) and `flows` for the

@@ -1,5 +1,6 @@
 import { getFindings } from "./api";
 import { DataWarnings } from "./DataWarnings";
+import { mergeFindingGroups } from "./finding_groups";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
@@ -14,19 +15,14 @@ export function ScopedDataWarnings({
   names?: ReadonlyMap<string, string>;
 }) {
   // simplify: one request per subject; the server has no group-level read.
-  const resource = useAsyncResource(fqids.join("\n"), async (signal) => {
-    const findings = (
-      await Promise.all(fqids.map((fqid) => getFindings(fqid, { signal })))
-    ).flat();
-    // Members of one table share its table-level findings: show each once.
-    const seen = new Set<string>();
-    return findings.filter((finding) => {
-      const key = JSON.stringify(finding);
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  });
+  const resource = useAsyncResource(fqids.join("\n"), (signal) =>
+    Promise.all(
+      fqids.map(async (fqid) => ({
+        ref: fqid,
+        groups: await getFindings(fqid, { signal }),
+      })),
+    ),
+  );
   if (resource.loading)
     return (
       <section aria-label="Notes on this data" aria-busy="true">
@@ -40,5 +36,8 @@ export function ScopedDataWarnings({
         try again.
       </StatusRow>
     );
-  return <DataWarnings findings={resource.data} names={names} />;
+  // Members of one table share its table-level findings: the merge shows each once.
+  return (
+    <DataWarnings groups={mergeFindingGroups(resource.data)} names={names} />
+  );
 }

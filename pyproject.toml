@@ -16,11 +16,6 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["conformance"]
-# Not `conformance`: it needs the Rust server (`--server-cmd`), so `scripts/gate.py
-# rust` runs it.
-testpaths = [
-  "scripts/tests",
-]
 markers = [
   "release: conformance cases run against a real artifact selected with --run-release --artifact-dir",
 ]
@@ -64,15 +59,10 @@ combine-as-imports = true
 
 [tool.ty.src]
 # Tests use sibling-module sys.path injection and JSON-shaped fixtures that
-# defeat ty's narrowing. The three excluded scripts lazily import one-off deps
-# that aren't in any workspace pyproject.toml (xlrd, certifi). None
-# of these categories are part of the shipped library surface, so exclude from
-# the type baseline.
+# defeat ty's narrowing. They are not part of the shipped library surface, so
+# exclude them from the type baseline.
 exclude = [
   "**/tests/**",
-  "scripts/extract_lkf.py",
-  "scripts/fetch_sos_classifications.py",
-  "scripts/parse_lisa_docs.py",
   "conformance/**",
 ]
 

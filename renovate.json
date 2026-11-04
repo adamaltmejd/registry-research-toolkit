@@ -15,11 +15,10 @@
   },
   "customManagers": [
     {
-      "description": "uvx tool pins (`uvx --from <pkg>==<ver>`) in the gate, the LISA parser and skills",
+      "description": "uvx tool pins (`uvx --from <pkg>==<ver>`) in the gate and skills",
       "customType": "regex",
       "managerFilePatterns": [
         "/^scripts/gate\\.py$/",
-        "/^scripts/parse_lisa_docs\\.py$/",
         "/^\\.agents/skills/.+/SKILL\\.md$/"
       ],
       "matchStrings": [
