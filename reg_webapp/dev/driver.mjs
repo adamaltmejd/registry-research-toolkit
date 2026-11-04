@@ -420,6 +420,24 @@ async function projectPagesCase(page, shoot) {
     "the rejected project changed during persistence or download");
   check((await banner.getByText("unsaved", { exact: true }).count()) === 0, "downloading the rejected file did not clear its unsaved state");
   await shoot("project-invalid");
+
+  // A saved window wider than the catalog opens clamped to its span (#1037); the
+  // download is the project the user would hand on. Fails if open stops clamping.
+  const span = (await page.evaluate(() => fetch("/api/context").then((r) => r.json()))).data.period_span;
+  const spanEnd = new Date(`${span.end}T00:00:00Z`);
+  spanEnd.setUTCDate(spanEnd.getUTCDate() - 1);
+  const spanYears = [Number(span.start.slice(0, 4)), spanEnd.getUTCFullYear()];
+  const wide = JSON.parse(readFileSync(projectFile, "utf8"));
+  wide.window = { from: 1900, to: 2200 };
+  await openProjectFile(
+    { name: "wide.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(wide)) },
+    true,
+  );
+  const wideDownload = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const clamped = JSON.parse(readFileSync(await (await wideDownload).path(), "utf8")).window;
+  check(clamped?.from === spanYears[0] && clamped.to === spanYears[1],
+    `the opened project's window ${JSON.stringify(clamped)} was not clamped to the catalog span ${spanYears}`);
 }
 
 // Browser boundary: group links, member lanes and member navigation.
