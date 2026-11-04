@@ -496,9 +496,9 @@ The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, cal
 with no `ref`: it must answer and its `meta.catalog_version` must equal the version
 passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
 Then SWECOV, once `SWECOV_DEPLOY` is `on` and its deploy jobs are green: the public
-`GET https://data.swecov.se/api/context` must answer with `data.catalog_version` equal
+`GET https://data.swecov.se/api/context` must answer with `meta.catalog_version` equal
 to the version, `data.steward_config.presentation` present, and
-`data.steward.catalog_generation` and `data.steward.holdings_generation` equal to the
+`meta.steward.catalog_generation` and `meta.steward.holdings_generation` equal to the
 `generation_id` in `meta` of the local `reg_meta.db` and `reg_meta_swecov.db`. Record
 what the checks exercised, the steward pin, the `holdings:` summary line from
 `holdings.log` and the census-comparison counts (8g) in the release notes.
