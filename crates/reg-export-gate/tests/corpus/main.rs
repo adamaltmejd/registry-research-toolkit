@@ -3,12 +3,13 @@
 //! folder in; the output folder, the report and the refusal code out. The
 //! corpus is the oracle shared with the R gate; everything a case asserts is in
 //! its JSON (`reg_export_gate/DESIGN.md`, "Case corpus"), and this runner
-//! asserts what the R runner does.
+//! asserts what the R runner does. Each case runs through the binary too.
 
 mod materialize;
 
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
+use std::process::{Command, Output};
 
 use bytes::Bytes;
 use parquet::file::reader::{FileReader, SerializedFileReader};
@@ -166,7 +167,9 @@ struct Run {
     staged: Vec<(String, Option<Vec<u8>>)>,
 }
 
-fn run_case(name: &str, case_dir: &Path, case: &Value, attempt: u32) -> Run {
+/// A fresh case folder `<name>-<attempt>` with the candidate in `staging` and
+/// any prior output in `output`.
+fn prepare(name: &str, case_dir: &Path, case: &Value, attempt: u32) -> Run {
     let root = Path::new(env!("CARGO_TARGET_TMPDIR"))
         .join("corpus")
         .join(format!("{name}-{attempt}"));
@@ -184,16 +187,96 @@ fn run_case(name: &str, case_dir: &Path, case: &Value, attempt: u32) -> Run {
     let path = |key: &str| case[key].as_str().map(|p| case_dir.join(p));
     let (schema, policy) = (path("schema"), path("policy"));
     let staged = snapshot(&staging);
-    let result = export_gate(&staging, &output, schema.as_deref(), policy.as_deref());
     Run {
         root,
         staging,
         output,
         schema,
         policy,
-        result,
+        result: Ok(0),
         staged,
     }
+}
+
+fn run_case(name: &str, case_dir: &Path, case: &Value, attempt: u32) -> Run {
+    let mut run = prepare(name, case_dir, case, attempt);
+    run.result = export_gate(
+        &run.staging,
+        &run.output,
+        run.schema.as_deref(),
+        run.policy.as_deref(),
+    );
+    run
+}
+
+/// The case run through the binary's explicit form: its stdout, exit status
+/// and stderr.
+fn run_binary(name: &str, case_dir: &Path, case: &Value) -> (Run, Output) {
+    let run = prepare(name, case_dir, case, 3);
+    let mut command = Command::new(env!("CARGO_BIN_EXE_reg-export-gate"));
+    command
+        .arg("check")
+        .arg("--staging")
+        .arg(&run.staging)
+        .arg("--output")
+        .arg(&run.output);
+    if let Some(schema) = &run.schema {
+        command.arg("--schema").arg(schema);
+    }
+    if let Some(policy) = &run.policy {
+        command.arg("--policy").arg(policy);
+    }
+    let out = command.output().expect("the binary runs");
+    (run, out)
+}
+
+/// The binary's stdout line and exit status for the case, from the CLI
+/// contract (this crate's DESIGN.md, "The binary").
+fn cli_expectation(case: &Value) -> (String, i32) {
+    let Some(code) = case["expect"]["code"].as_str() else {
+        return ("pass\n".to_owned(), 0);
+    };
+    let status = match code {
+        "setup" => 10,
+        "inventory" => 11,
+        "structure" => 12,
+        "disclosure" => 13,
+        "backstop" => 14,
+        other => panic!("unknown code {other}"),
+    };
+    (format!("refused: {code}\n"), status)
+}
+
+/// A folder's entries and bytes, or `None` if it is not there.
+fn output_snapshot(dir: &Path) -> Option<Vec<(String, Option<Vec<u8>>)>> {
+    dir.exists().then(|| snapshot(dir))
+}
+
+/// The binary does what the library does: the contract's one stdout line and
+/// exit status, nothing on stderr, the same report and the same output, and
+/// staging left as it was.
+fn expect_binary(f: &mut Failures, name: &str, case_dir: &Path, case: &Value, library: &Run) {
+    let (run, out) = run_binary(name, case_dir, case);
+    let (line, status) = cli_expectation(case);
+    f.check(out.stdout == line.as_bytes(), || {
+        format!("binary stdout {:?}", String::from_utf8_lossy(&out.stdout))
+    });
+    f.check(out.status.code() == Some(status), || {
+        format!("binary exit {:?} not {status}", out.status.code())
+    });
+    f.check(out.stderr.is_empty(), || "binary wrote to stderr".into());
+    let report =
+        |root: &Path| std::fs::read(root.join(".diagnostics/export_gate_report.json")).ok();
+    f.check(report(&run.root) == report(&library.root), || {
+        "binary report differs".into()
+    });
+    f.check(
+        output_snapshot(&run.output) == output_snapshot(&library.output),
+        || "binary output differs".into(),
+    );
+    f.check(snapshot(&run.staging) == run.staged, || {
+        "binary changed staging".into()
+    });
 }
 
 fn kv_metadata_free(bytes: Vec<u8>) -> bool {
@@ -391,6 +474,7 @@ fn expect_case(name: &str, case_dir: &Path, case: &Value) -> Vec<String> {
     } else {
         expect_pass(&mut f, name, case_dir, case, &run, &report);
     }
+    expect_binary(&mut f, name, case_dir, case, &run);
     f.0
 }
 

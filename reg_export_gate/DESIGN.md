@@ -241,9 +241,10 @@ The code is the category; the rule locates the finding. Both are stable.
   `schema_invalid`, `schema_version`, `schema_reserved_name`, `policy_missing`,
   `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
   `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO or writer failure,
-  reported without its message). In the R gate only: `jsonlite_missing`,
-  `arrow_missing`, `arrow_too_old`, `sha256_missing`, `internal_warning`,
-  `internal_error:<R condition class>`.
+  reported without its message). In the Rust gate's server mode only: `config_missing`,
+  `config_invalid`, `config_writable` (`crates/reg-export-gate/DESIGN.md`, "Server
+  mode"). In the R gate only: `jsonlite_missing`, `arrow_missing`, `arrow_too_old`,
+  `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,

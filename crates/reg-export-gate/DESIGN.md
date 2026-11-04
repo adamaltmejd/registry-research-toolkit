@@ -8,8 +8,9 @@ specific to the Rust implementation, which is the reference: the R gate imitates
 
 ## Shape
 
-- **One crate, a library now and a binary later.** No dependency on `reg-core` or
-  `reg-catalog`: the gate reads no catalog.
+- **One crate, library and binary.** No dependency on `reg-core` or `reg-catalog`: the
+  gate reads no catalog. The binary only parses arguments and prints the result; tests
+  drive the library, and the corpus runs through both.
 - **Dependencies.** `parquet` (arrow-rs) with `arrow-array` and `arrow-schema` reads and
   will write Parquet. Reading accepts the codecs R's arrow, pyarrow, DuckDB and Polars
   write: snappy, zstd, gzip and lz4; another codec is `unreadable`. `serde` and
@@ -45,8 +46,9 @@ specific to the Rust implementation, which is the reference: the R gate imitates
 - **Decoder panics** are caught and are `unreadable`. The default panic hook would print
   the message first, and a decoder message can quote an author's name or value, so the
   crate installs a hook that is silent while a thread decodes and defers to the previous
-  hook otherwise. It is installed on the first check; the binary must not set a panic
-  hook after that, or it replaces this one.
+  hook otherwise. It is installed on the first check; the binary sets its own silent
+  hook before that, so no panic prints anything, and must not set one after, or it
+  replaces this one. Any other panic in a check is `internal_error`, with no message.
 - **The rewrite** builds a fresh Arrow schema of the export types (`integer` as `int64`)
   with no key-value metadata at all: arrow-rs's `ARROW:schema` entry is skipped, so the
   exported files carry none, where R's arrow always writes one. Pinned options: data
@@ -79,6 +81,62 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   non-string `description` is invalid, and a duplicate JSON key is `schema_invalid` or
   `policy_invalid`.
 
+## The binary
+
+- `reg-export-gate check --staging DIR --output DIR [--schema FILE] [--policy FILE]`:
+  the gate as the R gate's `export_gate()` runs it, for the corpus and for a researcher
+  running it by hand.
+- `reg-export-gate check --project NAME --staging DIR`: server mode (below).
+
+stdout gets one line, `pass` or `refused: <code>`; nothing else is printed, so the
+pipeline learns only the category. Findings go to the report. Arguments are parsed by
+hand, as `reg-meta` does, and a usage error prints fixed text, never an argument. Exit
+status: 0 pass, 2 usage, 10 setup, 11 inventory, 12 structure, 13 disclosure, 14
+backstop.
+
+## Server mode
+
+In server mode the pipeline names a project and its staging folder, nothing else. The
+project's config, `/etc/reg-export-gate/projects/<name>.json`, names the rest:
+
+```json
+{
+  "format": "reg-export-gate/project",
+  "format_version": 1,
+  "schema": "schemas/trial.schema.json",
+  "policy": "schemas/trial.policy.json",
+  "output": "/data/project-x/output",
+  "destination": "/mnt/agent-inbox/project-x"
+}
+```
+
+The config folder is a constant in the binary, not read from the environment or the
+arguments, which the pipeline controls; tests pass another folder through the library
+(`check_project`). The format is closed. Setup rules, Rust only:
+
+- `config_missing`: no config folder, a name that is not a slug (so it cannot leave
+  `projects/`), or no such file.
+- `config_invalid`: not a closed format-1 project config; a schema or policy path that
+  is not relative with plain names, or that resolves (through a link) outside the config
+  folder, or does not exist; an output or destination that is not absolute.
+- `config_writable`: the config, the schema, the policy or any folder from them up to
+  the config folder has a group or other write bit. Whoever can write those chooses the
+  check the pipeline is held to. Off Unix there are no mode bits to read, so server mode
+  always refuses there.
+- `paths_overlap` extends to the config folder and the destination: staging and the
+  output's folder may not be, or lie inside, either, and neither may lie inside staging
+  or the output. A destination that does not exist yet is apart. The check runs before
+  the diagnostics folder is created.
+
+A config refusal writes no report (the output is not known to be the deployer's yet);
+stdout still says `refused: setup`. `check` in server mode is advisory: the pipeline
+controls the run. The guard is `export`, which the reviewer runs under the same config.
+
+Deployment invariants: the config folder and the destination are writable only by the
+reviewer's user; the destination is the agent VM's read-only view of a shared folder;
+the deployer copies the chosen schema and policy from `reg_export_gate/schemas/` into
+the config folder, a reviewed step.
+
 ## Plan
 
 Tracks the build of #1803; deleted when the binary ships. Decisions (maintainer,
@@ -94,11 +152,12 @@ crate.
    format's `repeat` are new; the R runner materializes `repeat` and lists the two cases
    as pending until the R gate has the caps.
 2. **Library: disclosure, backstop, the rewrite, the receipt, the report, clearing a
-   prior export** (this PR). `export_gate()` is the whole gate. `na_not_null` leaves the
+   prior export** (#2177). `export_gate()` is the whole gate. `na_not_null` leaves the
    rule list, and the two NaN cases gain `unsupported_statistic` (pending in the R
    runner). The whole corpus runs; nothing is pending here.
 3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
-   `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes.
+   `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes
+   (this PR). The corpus runs through the binary too.
 4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,
    copy to the destination, re-hash there.
 5. **Ship**: the release asset; this section goes.
