@@ -50,15 +50,14 @@ const TITLES: Readonly<Record<string, string>> = {
   period_not_orderable: "The requested period cannot be ordered",
   project_empty: "Project has no variables to order",
   // The steward's tables (a steward server's `order` runs this stage too).
-  mapping_missing: "The data holder does not have this column for these years",
-  coverage_gap: "The data holder does not have this column for some years",
-  column_window_unavailable:
-    "The data holder's column leaves out some requested years",
-  mapping_caveat: "The data holder notes a caveat for this column",
-  held_key_missing: "The data holder's table lacks a row identifier column",
+  // `mapping_caveat` is not shown (api.ts `forReaders`).
+  mapping_missing: "This column is not available for these years",
+  coverage_gap: "This column is not available for some years",
+  column_window_unavailable: "This column leaves out some requested years",
+  held_key_missing: "This table has no row identifier column",
   held_key_ambiguous: "The row identifier is in more than one column",
-  file_name_unsafe: "The data holder's file name cannot be used",
-  physical_schema_missing: "The data holder's table has no single location",
+  file_name_unsafe: "This table's file name cannot be used",
+  physical_schema_missing: "This table has no single location",
   rows_unfiltered: "Every year of this table is delivered",
   row_filter_widened: "Rows are delivered for whole periods around the request",
   row_filter_union: "Tables sharing a file are delivered over all their years",

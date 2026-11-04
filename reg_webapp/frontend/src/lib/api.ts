@@ -253,6 +253,10 @@ function refusedIssues(error: unknown): Issue[] | null {
   return Array.isArray(issues) && issues.every(isIssue) ? issues : null;
 }
 
+/** A steward's placement caveats are working notes, not shown until the steward
+ * curates them for readers (DESIGN.md → Findings). */
+const forReaders = (issue: Issue) => issue.code !== "mapping_caveat";
+
 /** Check a draft against the loaded catalog through `order`. A blocked order is
  * a result, not a failure; only a refused request (`rate_limited`, a proxy
  * error) throws. */
@@ -268,11 +272,11 @@ export async function checkProjectOrder(
         options,
       )
     ).data;
-    return { order, issues: order.findings };
+    return { order, issues: order.findings.filter(forReaders) };
   } catch (error) {
     const issues = refusedIssues(error);
     if (issues === null) throw error;
-    return { order: null, issues };
+    return { order: null, issues: issues.filter(forReaders) };
   }
 }
 
