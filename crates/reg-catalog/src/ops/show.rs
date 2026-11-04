@@ -754,6 +754,8 @@ fn set_members(
         ));
     }
     let origins = segments::origins(server, server.catalog.connect()?)?;
+    // simplify: one segments list per member; batch by variable id if a set reaches
+    // hundreds of members.
     for (id, member) in &mut members {
         member.segments = segments::all(server, &origins, &member.fqid)?;
         member.facets = facets
