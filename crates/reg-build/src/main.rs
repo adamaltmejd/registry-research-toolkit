@@ -53,6 +53,7 @@ use std::process::ExitCode;
 
 use crate::error::Result;
 use reg_frame::Record;
+use reg_readers::curation::Lines;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
@@ -178,11 +179,7 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
                 path.display()
             )
         })?;
-    let line = text[..key.span().start]
-        .bytes()
-        .filter(|&c| c == b'\n')
-        .count()
-        + 1;
+    let line = Lines::new(&text).at(key.span().start);
     Ok(format!(
         "{}:{line}: {code}: ledger id {id:?} {reason} (--release)",
         path.display()
@@ -200,13 +197,9 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         }
     };
     let path = args.curation.join("inputs.toml");
-    let text = std::fs::read_to_string(&path)?;
+    let lines = Lines::new(&std::fs::read_to_string(&path)?);
     for provider in &manifest.provider {
-        let line = text[..provider.pid.span().start]
-            .bytes()
-            .filter(|&b| b == b'\n')
-            .count()
-            + 1;
+        let line = lines.at(provider.pid.span().start);
         check_provider(
             provider.pid.get_ref(),
             &path.to_string_lossy(),

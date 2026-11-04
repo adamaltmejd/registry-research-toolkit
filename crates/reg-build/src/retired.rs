@@ -41,21 +41,18 @@ pub fn load(root: &Path) -> Result<Vec<Retired>, String> {
         return Ok(Vec::new());
     }
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let line_starts: Vec<_> = std::iter::once(0)
-        .chain(text.match_indices('\n').map(|(offset, _)| offset + 1))
-        .collect();
-    let line = |offset| line_starts.partition_point(|&start| start <= offset);
+    let lines = reg_readers::curation::Lines::new(&text);
     let entries: BTreeMap<toml::Spanned<String>, Entry> = toml::from_str(&text).map_err(|e| {
         format!(
             "{}:{}: {e}",
             path.display(),
-            line(e.span().map_or(0, |s| s.start))
+            lines.at(e.span().map_or(0, |s| s.start))
         )
     })?;
     entries
         .into_iter()
         .map(|(pid, entry)| {
-            let location = format!("{}:{}", path.display(), line(pid.span().start));
+            let location = format!("{}:{}", path.display(), lines.at(pid.span().start));
             if !matches!(
                 entry.kind.as_str(),
                 "provider"

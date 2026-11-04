@@ -31,12 +31,12 @@ pub fn vocabulary(root: &Path) -> Result<BTreeMap<String, Tag>, String> {
         return Ok(BTreeMap::new());
     }
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let line = |offset| text[..offset].bytes().filter(|&b| b == b'\n').count() + 1;
+    let lines = reg_readers::curation::Lines::new(&text);
     let parsed: Vocabulary = toml::from_str(&text).map_err(|e: toml::de::Error| {
         format!(
             "{}:{}: tag-vocabulary: {}",
             path.display(),
-            line(e.span().map_or(0, |s| s.start)),
+            lines.at(e.span().map_or(0, |s| s.start)),
             e.message()
         )
     })?;
@@ -45,7 +45,7 @@ pub fn vocabulary(root: &Path) -> Result<BTreeMap<String, Tag>, String> {
         let at = format!(
             "{}:{}: tag-vocabulary",
             path.display(),
-            line(raw.span().start)
+            lines.at(raw.span().start)
         );
         let tag: Tag = toml::Value::Table(raw.into_inner())
             .try_into()
