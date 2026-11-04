@@ -53,46 +53,69 @@ impl Lock {
             statements,
         }
     }
+}
 
-    fn verify(&self) -> Result<(), String> {
-        for (key, object) in &self.objects {
-            if object_key(object) != *key {
+/// A verified lock, held as canonical JSON text: parsed into `serde_json` maps, the
+/// real seed's locks take about ten times their file size for the whole curation run
+/// (#2196). A statement's premise is parsed back when that statement is checked.
+#[derive(Default)]
+struct Reviewed {
+    objects: BTreeMap<String, String>,
+    statements: BTreeMap<String, (String, Vec<String>)>,
+}
+
+impl Reviewed {
+    fn new(lock: Lock) -> Result<Self, String> {
+        let mut objects = BTreeMap::new();
+        for (key, object) in lock.objects {
+            let line = reg_frame::canonical_line(&object);
+            if reg_core::sha256_hex(&line) != key {
                 return Err(format!(
                     "object digest mismatch for {key}; run reg-build lock"
                 ));
             }
+            objects.insert(key, line);
         }
-        for (identity, premise) in &self.statements {
-            if let Some(key) = premise
-                .objects
-                .iter()
-                .find(|k| !self.objects.contains_key(*k))
-            {
+        let mut statements = BTreeMap::new();
+        for (identity, premise) in lock.statements {
+            if let Some(key) = premise.objects.iter().find(|k| !objects.contains_key(*k)) {
                 return Err(format!(
                     "statement {identity}: missing object {key}; run reg-build lock"
                 ));
             }
+            statements.insert(
+                identity,
+                (
+                    reg_frame::canonical_line(&premise.subjects),
+                    premise.objects,
+                ),
+            );
         }
-        Ok(())
+        Ok(Self {
+            objects,
+            statements,
+        })
     }
 
-    /// One statement's reviewed premise. Built on demand: expanding every statement's
-    /// shared objects up front held a copy per statement for the whole run (#2196).
+    /// One statement's reviewed premise, as the lock stored it.
     fn premise(&self, identity: &str) -> Option<LockedPremise> {
-        let premise = self.statements.get(identity)?;
-        let mut objects = premise
-            .objects
+        let (subjects, keys) = self.statements.get(identity)?;
+        let mut lines = keys
             .iter()
-            .map(|key| self.objects[key].clone())
+            .map(|key| &self.objects[key])
             .collect::<Vec<_>>();
         // Digest order is only a storage convention. Restore the resolver's
         // canonical object order for unchanged field-level diagnostics.
-        objects.sort_by_cached_key(reg_frame::canonical_line);
+        lines.sort();
         Some(LockedPremise {
-            subjects: premise.subjects.clone(),
-            objects,
+            subjects: parse_line(subjects),
+            objects: lines.into_iter().map(|line| parse_line(line)).collect(),
         })
     }
+}
+
+fn parse_line<T: serde::de::DeserializeOwned>(line: &str) -> T {
+    serde_json::from_str(line).expect("a canonical lock line")
 }
 
 fn object_key(object: &SourcePremise) -> String {
@@ -106,7 +129,7 @@ struct LockedPremise {
     objects: Vec<SourcePremise>,
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged, deny_unknown_fields)]
 enum LockedSubjects {
     Rows(Vec<SourcePremise>),
@@ -165,10 +188,15 @@ fn location(statement: &LocatedStatement) -> String {
 
 /// Locks live inside a register; published statements and cross-register processing
 /// need that same scope in their identity, independent of file paths and line numbers.
+/// `Statement::scoped_identity` from the identity the loader already computed: the
+/// statement is not re-serialized per call, which cost a large share of the Fields
+/// stage (#2196).
 fn publication_identity(statement: &LocatedStatement) -> String {
-    statement
-        .statement
-        .scoped_identity(&statement.provider, &statement.register)
+    reg_core::sha256_hex(reg_frame::canonical_line(&(
+        &statement.provider,
+        &statement.register,
+        &statement.identity,
+    )))
 }
 
 fn statement_locator(
@@ -962,7 +990,7 @@ fn field_application(
     statement: &LocatedStatement,
     ledger: &reg_resolve::Ledger,
     premise: &Premise,
-    locators: &BTreeMap<reg_frame::Locator, Vec<usize>>,
+    locators: &BTreeMap<&reg_frame::Locator, Vec<usize>>,
     root: &Path,
 ) -> Result<
     (
@@ -1036,9 +1064,9 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<Lock, String> {
+fn previous(path: &Path, record: bool) -> Result<Reviewed, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
-        return Ok(Lock::new(BTreeMap::new()));
+        return Ok(Reviewed::default());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let value: serde_json::Value = serde_json::from_str(&text)
@@ -1052,15 +1080,13 @@ fn previous(path: &Path, record: bool) -> Result<Lock, String> {
     }
     let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    lock.verify()
-        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    Ok(lock)
+    Reviewed::new(lock).map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &Lock,
+    old: &Reviewed,
     path: &Path,
 ) -> Result<(), String> {
     let premise = LockedPremise::new(statement, premise);
@@ -1230,6 +1256,7 @@ fn run_selected(
                 .cloned()
                 .collect();
         }
+        // Borrowed from `records`, which the group loop below only reads.
         let mut locators = BTreeMap::<_, Vec<_>>::new();
         if fields_stage {
             for (i, record) in records.iter().enumerate() {
@@ -1242,11 +1269,11 @@ fn run_selected(
                     _ => None,
                 };
                 if let Some(at) = at {
-                    locators.entry(at.clone()).or_default().push(i);
+                    locators.entry(at).or_default().push(i);
                 }
                 if let Record::Occurrence(r) = record {
                     for at in &r.also {
-                        locators.entry(at.clone()).or_default().push(i);
+                        locators.entry(at).or_default().push(i);
                     }
                 }
             }
