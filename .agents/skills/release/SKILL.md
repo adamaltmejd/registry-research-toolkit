@@ -312,13 +312,14 @@ holdings-notice deltas by code. The JSON goes to the evidence directory only.
 
 ```sh
 target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
-  "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings-compare.txt"
+  "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings-compare.txt" || [ $? -eq 1 ]
 target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
-  "$evidence/catalog/reg_meta_swecov.db" --json > "$evidence/holdings-compare.json"
+  "$evidence/catalog/reg_meta_swecov.db" --json > "$evidence/holdings-compare.json" || [ $? -eq 1 ]
 ```
 
-Exit 1 only means the two differ. The maintainer reads that summary for go/no-go; its
-counts go in the release notes.
+Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
+exit 2 is an error and stops the release. The maintainer reads that summary for
+go/no-go; its counts go in the release notes.
 
 #### 8h. Scope check
 
