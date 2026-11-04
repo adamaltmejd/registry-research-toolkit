@@ -1,6 +1,7 @@
 //! `validate` and `order`: the order check of design v4 §9 over the v4 catalog
 //! (crates/DESIGN.md, "The logical order"). One function, [`check`], answers both
-//! operations, which is what makes their results identical.
+//! operations (through [`checked`], which adds the holdings stage on a steward
+//! server), which is what makes their results identical.
 //!
 //! The check, per source: resolve the table (`refs::table`) and the bindings' ids; check
 //! the period against the table (`_default` exactly on a timeless table); follow the
@@ -28,9 +29,11 @@ use reg_core::{Interval, IssueLevel, merge, overlap};
 use rusqlite::Connection;
 use serde::Serialize;
 use utoipa::ToSchema;
+use utoipa::openapi::{RefOr, Schema};
 
 use serde_json::Value;
 
+use super::refs::{Named, Names};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, iso_day, refs};
 use crate::{Code, Error, rows};
 
@@ -76,7 +79,7 @@ pub const OPERATIONS: &[Operation] = &[
 #[derive(Serialize, ToSchema)]
 pub struct Validation {
     ok: bool,
-    issues: Vec<Issue>,
+    issues: Vec<NamedIssue>,
 }
 
 /// The `project` body as a JSON object.
@@ -89,14 +92,14 @@ fn project(params: &Params) -> Result<Value, Error> {
 
 /// The structural issues, then (when none is an error) the order check's findings.
 fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
-    let issues: Vec<Issue> = match reg_core::project::check(&project(params)?) {
-        Err(result) => result.issues.into_iter().map(Issue::from).collect(),
-        Ok(project) => match check(server, &project)? {
+    let issues = match reg_core::project::check(&project(params)?) {
+        Err(result) => result.issues.into_iter().map(NamedIssue::unnamed).collect(),
+        Ok(project) => match checked(server, &project)? {
             Ok(order) => order.findings,
-            Err(findings) => findings,
+            Err(findings) => named_issues(server, findings)?,
         },
     };
-    let ok = !issues.iter().any(Issue::blocks);
+    let ok = !issues.iter().any(|named| named.issue.blocks());
     Ok(serde_json::to_value(Validation { ok, issues }).expect("Validation serializes"))
 }
 
@@ -104,10 +107,33 @@ fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
 /// with every finding.
 fn order(server: &Server, params: &Params) -> Result<Value, Error> {
     let project = structural(&project(params)?)?;
-    match check(server, &project)? {
+    match checked(server, &project)? {
         Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
-        Err(findings) => Err(blocked(findings)),
+        Err(findings) => Err(blocked(server, findings)?),
     }
+}
+
+/// The logical order with every non-blocking finding, or every finding that blocks it.
+/// A steward server also runs the holdings stage of `materialize_order`, so `validate`
+/// and `order` refuse exactly what it would block (an unheld variable is
+/// `mapping_missing`) and carry its warnings on success (#2194).
+fn checked(
+    server: &Server,
+    project: &ProjectData,
+) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
+    let mut order = match check(server, project)? {
+        Ok(order) => order,
+        Err(findings) => return Ok(Err(findings)),
+    };
+    if let (Some(held), Some(steward)) =
+        (server.catalog.connect_holdings()?, server.catalog.steward())
+    {
+        match materialize::manifest(server, &held, steward, project, &order)? {
+            Ok(manifest) => order.findings = named_issues(server, manifest.findings)?,
+            Err(findings) => return Ok(Err(findings)),
+        }
+    }
+    Ok(Ok(order))
 }
 
 /// The structurally valid project, or `project_invalid` with its issues.
@@ -125,16 +151,123 @@ fn structural(value: &Value) -> Result<ProjectData, Error> {
     })
 }
 
-/// `order_blocked` with every finding.
-fn blocked(findings: Vec<Issue>) -> Error {
-    Error::new(
+/// `order_blocked` with every finding, named.
+///
+/// # Errors
+///
+/// [`refs::names`]'s.
+fn blocked(server: &Server, findings: Vec<Issue>) -> Result<Error, Error> {
+    let findings = named_issues(server, findings)?;
+    Ok(Error::new(
         Code::OrderBlocked,
         format!("The order is blocked by {} findings.", findings.len()),
         vec![serde_json::to_value(findings).expect("findings serialize")],
-    )
+    ))
 }
 
 pub use reg_core::issue::Issue;
+
+/// A finding with the names of the catalog entities it is about, next to their ids.
+/// The MONA order file carries the bare `Issue`: names are for readers.
+#[derive(Serialize)]
+pub struct NamedIssue {
+    #[serde(flatten)]
+    issue: Issue,
+    variable_name: Option<String>,
+    table_name: Option<String>,
+    successor_name: Option<String>,
+}
+
+/// `NamedIssue`'s fields and their descriptions, after `Issue`'s.
+const ISSUE_NAMES: [(&str, &str); 3] = [
+    (
+        "variable_name",
+        "The name of `variable`, as `show` gives it; `null` when `variable` is null or \
+         names no catalog variable.",
+    ),
+    (
+        "table_name",
+        "The name of `table`; `null` when `table` is null or names no catalog table.",
+    ),
+    (
+        "successor_name",
+        "The name of `successor_fqid`; `null` when that is null.",
+    ),
+];
+
+/// `Issue`'s object with the name fields added. Not `allOf` over `Issue`: its
+/// `additionalProperties: false` (`deny_unknown_fields`) would refuse the names.
+impl utoipa::PartialSchema for NamedIssue {
+    fn schema() -> RefOr<Schema> {
+        use utoipa::openapi::schema::{ObjectBuilder, SchemaType, Type};
+        let RefOr::T(Schema::Object(mut object)) = Issue::schema() else {
+            unreachable!("Issue's schema is an inline object");
+        };
+        object.description = Some(
+            "A located finding with the names of the catalog entities it is about. The MONA \
+             order file carries the bare `Issue`."
+                .into(),
+        );
+        for (name, description) in ISSUE_NAMES {
+            object.properties.insert(
+                name.into(),
+                ObjectBuilder::new()
+                    .schema_type(SchemaType::from_iter([Type::String, Type::Null]))
+                    .description(Some(description))
+                    .into(),
+            );
+            object.required.push(name.into());
+        }
+        RefOr::T(Schema::Object(object))
+    }
+}
+
+impl ToSchema for NamedIssue {
+    fn schemas(schemas: &mut Vec<(String, RefOr<Schema>)>) {
+        <Issue as ToSchema>::schemas(schemas);
+    }
+}
+
+impl NamedIssue {
+    /// A structural issue, which names nothing in the catalog.
+    fn unnamed(issue: reg_core::ValidationIssue) -> Self {
+        Self {
+            issue: Issue::from(issue),
+            variable_name: None,
+            table_name: None,
+            successor_name: None,
+        }
+    }
+
+    fn name(issue: Issue, names: &Names) -> Self {
+        let of = |kind, fqid: &Option<String>| fqid.as_ref().and_then(|f| names.get(kind, f));
+        Self {
+            variable_name: of(Named::Variable, &issue.variable),
+            table_name: of(Named::Table, &issue.table),
+            // A replaced variable's successor, or an undated succession's table.
+            successor_name: of(Named::Variable, &issue.successor_fqid)
+                .or_else(|| of(Named::Table, &issue.successor_fqid)),
+            issue,
+        }
+    }
+}
+
+/// The ids a finding names.
+fn issue_refs(issue: &Issue) -> impl Iterator<Item = &str> {
+    [&issue.variable, &issue.table, &issue.successor_fqid]
+        .into_iter()
+        .flatten()
+        .map(String::as_str)
+}
+
+/// `findings` named with one [`refs::names`] read.
+fn named_issues(server: &Server, findings: Vec<Issue>) -> Result<Vec<NamedIssue>, Error> {
+    let names = refs::names(server, findings.iter().flat_map(issue_refs))?;
+    Ok(findings
+        .into_iter()
+        .map(|issue| NamedIssue::name(issue, &names))
+        .collect())
+}
 
 #[derive(Serialize, ToSchema)]
 pub struct LogicalOrder {
@@ -147,7 +280,7 @@ pub struct LogicalOrder {
     /// Every period that cannot be delivered, also when the order succeeds.
     clips: Vec<OrderClip>,
     /// The non-blocking findings (level `warning` or `info`).
-    findings: Vec<Issue>,
+    findings: Vec<NamedIssue>,
 }
 
 /// The catalog generation an order was checked against (`meta`).
@@ -179,7 +312,11 @@ pub struct OrderEntry {
     register: String,
     /// The table that serves the period.
     table: String,
+    /// The table's name, as `show` gives it.
+    table_name: String,
     variable: String,
+    /// The variable's name, as `show` gives it.
+    variable_name: String,
     /// As the project states it.
     #[schema(required = true)]
     display_name: Option<String>,
@@ -211,6 +348,8 @@ pub struct OrderValueSet {
 pub struct OrderRowKeys {
     source: String,
     table: String,
+    /// The table's name.
+    table_name: String,
     period: Period,
     columns: Vec<RowKeyColumn>,
 }
@@ -219,6 +358,8 @@ pub struct OrderRowKeys {
 #[derive(Serialize, ToSchema)]
 pub struct RowKeyColumn {
     variable: String,
+    /// The variable's name.
+    variable_name: String,
     spelling: String,
 }
 
@@ -227,6 +368,8 @@ pub struct RowKeyColumn {
 pub struct OrderClip {
     source: String,
     variable: String,
+    /// The variable's name.
+    variable_name: String,
     requested: Vec<Period>,
     ordered: Vec<Period>,
 }
@@ -344,6 +487,7 @@ pub fn check(
     if findings.iter().any(Issue::blocks) {
         return Ok(Err(findings));
     }
+    let findings = name_order(server, &mut entries, &mut row_keys, &mut clips, findings)?;
     Ok(Ok(LogicalOrder {
         catalog: OrderCatalog {
             generation_id: server.catalog.generation().to_owned(),
@@ -361,6 +505,46 @@ pub fn check(
         clips,
         findings,
     }))
+}
+
+/// Name an order's rows and findings with one [`refs::names`] read: the rows are built
+/// with empty names until here.
+fn name_order(
+    server: &Server,
+    entries: &mut [OrderEntry],
+    row_keys: &mut [OrderRowKeys],
+    clips: &mut [OrderClip],
+    findings: Vec<Issue>,
+) -> Result<Vec<NamedIssue>, Error> {
+    let names = refs::names(
+        server,
+        entries
+            .iter()
+            .flat_map(|e| [e.table.as_str(), e.variable.as_str()])
+            .chain(row_keys.iter().flat_map(|k| {
+                std::iter::once(k.table.as_str())
+                    .chain(k.columns.iter().map(|c| c.variable.as_str()))
+            }))
+            .chain(clips.iter().map(|c| c.variable.as_str()))
+            .chain(findings.iter().flat_map(issue_refs)),
+    )?;
+    for entry in entries.iter_mut() {
+        entry.table_name = names.of(Named::Table, &entry.table)?;
+        entry.variable_name = names.of(Named::Variable, &entry.variable)?;
+    }
+    for keys in row_keys.iter_mut() {
+        keys.table_name = names.of(Named::Table, &keys.table)?;
+        for column in &mut keys.columns {
+            column.variable_name = names.of(Named::Variable, &column.variable)?;
+        }
+    }
+    for clip in clips.iter_mut() {
+        clip.variable_name = names.of(Named::Variable, &clip.variable)?;
+    }
+    Ok(findings
+        .into_iter()
+        .map(|issue| NamedIssue::name(issue, &names))
+        .collect())
 }
 
 /// One source on its table's origin `conn`: its own findings, then each binding's.

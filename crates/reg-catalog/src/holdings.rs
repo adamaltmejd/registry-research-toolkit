@@ -1,7 +1,7 @@
 //! Pair admission and database-origin selection for steward metadata. Row ids never
 //! cross the two database boundaries; physical placements use public ids.
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
@@ -34,6 +34,9 @@ pub(crate) struct Possession {
     tables: HashMap<String, Vec<Span>>,
     registers: HashMap<String, Vec<Span>>,
     providers: HashMap<String, Vec<Span>>,
+    /// (variable, table) pairs a placement names: a variable held in one table is
+    /// not held in another table the steward holds through other columns.
+    pairs: HashSet<(String, String)>,
 }
 
 impl Possession {
@@ -78,6 +81,7 @@ impl Possession {
                     .or_default()
                     .push(span);
             }
+            possession.pairs.insert((variable.clone(), table.clone()));
             possession.variables.entry(variable).or_default().push(span);
             possession.tables.entry(table).or_default().push(span);
         }
@@ -132,8 +136,6 @@ pub struct StewardConfig {
     presentation: StewardPresentation,
     /// The logo's SVG markup.
     logo: String,
-    #[schema(value_type = Object)]
-    scope: serde_json::Value,
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -338,6 +340,17 @@ impl Catalog {
         }
     }
 
+    /// Whether this deployment serves `variable` in `table`: always outside steward
+    /// mode; in steward mode only when a placement names that pair.
+    #[must_use]
+    pub fn serves_in(&self, variable: &str, table: &str) -> bool {
+        self.holdings.as_ref().is_none_or(|h| {
+            h.possession
+                .pairs
+                .contains(&(variable.to_owned(), table.to_owned()))
+        })
+    }
+
     /// In steward mode, the years a served provider, register, table or variable is
     /// held, merged and in order; `None` outside steward mode or for another kind.
     #[must_use]
@@ -357,13 +370,12 @@ impl Catalog {
         })
     }
 
-    /// Compiled presentation/config data is served from the admitted artifact;
+    /// The steward's presentation and logo, served from the admitted artifact;
     /// runtime never reads the steward repository.
     pub(crate) fn steward_config(&self) -> Option<serde_json::Value> {
         self.holdings.as_ref().map(|h| serde_json::json!({
             "presentation": serde_json::from_str::<serde_json::Value>(&h.meta["steward"]).expect("admitted JSON"),
             "logo": h.meta["logo"],
-            "scope": serde_json::from_str::<serde_json::Value>(&h.meta["scope"]).expect("admitted JSON"),
         }))
     }
 
@@ -448,11 +460,15 @@ impl Catalog {
     }
 
     /// Physical facts attached under an explicit database origin for public-id joins.
+    /// Steward mode only: every caller checks for the holdings pair first.
     pub(crate) fn attach_holdings(&self, conn: &Connection) -> Result<(), Error> {
-        let holdings = self
-            .holdings
-            .as_ref()
-            .ok_or_else(|| Error::invalid_parameter("scope"))?;
+        let holdings = self.holdings.as_ref().ok_or_else(|| {
+            Error::new(
+                Code::InternalError,
+                "Holdings attached without a holdings database.",
+                vec![],
+            )
+        })?;
         conn.execute(
             "ATTACH DATABASE ? AS held",
             [crate::read_uri(&holdings.path)],

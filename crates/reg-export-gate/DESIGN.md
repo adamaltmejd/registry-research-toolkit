@@ -8,8 +8,9 @@ specific to the Rust implementation, which is the reference: the R gate imitates
 
 ## Shape
 
-- **One crate, a library now and a binary later.** No dependency on `reg-core` or
-  `reg-catalog`: the gate reads no catalog.
+- **One crate, library and binary.** No dependency on `reg-core` or `reg-catalog`: the
+  gate reads no catalog. The binary only parses arguments and prints the result; tests
+  drive the library, and the corpus runs through both.
 - **Dependencies.** `parquet` (arrow-rs) with `arrow-array` and `arrow-schema` reads and
   will write Parquet. Reading accepts the codecs R's arrow, pyarrow, DuckDB and Polars
   write: snappy, zstd, gzip and lz4; another codec is `unreadable`. `serde` and
@@ -45,8 +46,9 @@ specific to the Rust implementation, which is the reference: the R gate imitates
 - **Decoder panics** are caught and are `unreadable`. The default panic hook would print
   the message first, and a decoder message can quote an author's name or value, so the
   crate installs a hook that is silent while a thread decodes and defers to the previous
-  hook otherwise. It is installed on the first check; the binary must not set a panic
-  hook after that, or it replaces this one.
+  hook otherwise. It is installed on the first check; the binary sets its own silent
+  hook before that, so no panic prints anything, and must not set one after, or it
+  replaces this one. Any other panic in a check is `internal_error`, with no message.
 - **The rewrite** builds a fresh Arrow schema of the export types (`integer` as `int64`)
   with no key-value metadata at all: arrow-rs's `ARROW:schema` entry is skipped, so the
   exported files carry none, where R's arrow always writes one. Pinned options: data
@@ -79,30 +81,134 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   non-string `description` is invalid, and a duplicate JSON key is `schema_invalid` or
   `policy_invalid`.
 
-## Plan
+## The binary
 
-Tracks the build of #1803; deleted when the binary ships. Decisions (maintainer,
-2026-11-04): no review UI in v1 (the reviewer runs
-`export --project X --receipt <sha256>`); approved files go to a shared folder the agent
-VM sees read-only; staging files over 8 MiB or 100,000 rows are refused (`too_large`);
-the binary ships as an extra asset in the `reg_meta/v*` release, versioned by this
-crate.
+- `reg-export-gate check --staging DIR --output DIR [--schema FILE] [--policy FILE]`:
+  the gate as the R gate's `export_gate()` runs it, for the corpus and for a researcher
+  running it by hand.
+- `reg-export-gate check --project NAME --staging DIR`: server mode (below).
+- `reg-export-gate export --project NAME --receipt SHA256`: the reviewer's export of a
+  server-mode output (below). `SHA256` is 64 lowercase hex digits, as `sha256sum` prints
+  them.
 
-1. **Library: loading, inventory, structure, the size caps** (#2176). The corpus runner
-   (`tests/corpus/`) runs every refusal these checks decide and lists the rest, and
-   every pass, as pending. Two corpus cases (`structure-too-many-*`) and the corpus
-   format's `repeat` are new; the R runner materializes `repeat` and lists the two cases
-   as pending until the R gate has the caps.
-2. **Library: disclosure, backstop, the rewrite, the receipt, the report, clearing a
-   prior export** (this PR). `export_gate()` is the whole gate. `na_not_null` leaves the
-   rule list, and the two NaN cases gain `unsupported_statistic` (pending in the R
-   runner). The whole corpus runs; nothing is pending here.
-3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
-   `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes.
-4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,
-   copy to the destination, re-hash there.
-5. **Ship**: the release asset; this section goes.
+stdout gets one line, `pass` or `refused: <code>`. `check` prints nothing else, so the
+pipeline learns only the category; findings go to the report. `export`, which only the
+reviewer runs, also prints a refusal's findings on stderr, one per line (rule, then
+file, column, position: never a value). Arguments are parsed by hand, as `reg-meta`
+does, and a usage error prints fixed text, never an argument. Exit status: 0 pass, 2
+usage, 10 setup, 11 inventory, 12 structure, 13 disclosure, 14 backstop, 15 delivery.
 
-After 5, one R PR makes `export_gate.R` imitate the binary: the size caps, the
-`na_not_null` change, and a duplicate column refused as `column_order` (today R ends in
-`internal_error` there, since `GetFieldByName` gives NULL).
+## Server mode
+
+In server mode the pipeline names a project and its staging folder, nothing else. The
+project's config, `/etc/reg-export-gate/projects/<name>.json`, names the rest:
+
+```json
+{
+  "format": "reg-export-gate/project",
+  "format_version": 1,
+  "schema": "schemas/trial.schema.json",
+  "policy": "schemas/trial.policy.json",
+  "output": "/data/project-x/output",
+  "destination": "/mnt/agent-inbox/project-x"
+}
+```
+
+The config folder is a constant in the binary, not read from the environment or the
+arguments, which the pipeline controls; tests pass another folder through the library
+(`check_project`). The format is closed. Setup rules, Rust only:
+
+- `config_missing`: no config folder, a name that is not a slug (so it cannot leave
+  `projects/`), or no such file.
+- `config_invalid`: the project file, or its schema or policy, is not a regular file
+  reached from the config folder by plain relative names with no link at any step (a
+  link in a folder someone else can write could be retargeted after the check; a FIFO
+  would block the read); or the config is not a closed format-1 project config; or its
+  output or destination is not absolute.
+- `config_writable`: the config, the schema, the policy or any folder from them up to
+  the config folder has a group or other write bit, or an owner other than the config
+  folder's (or root), who could set one. Whoever can write those chooses the check the
+  pipeline is held to. Off Unix there are no mode bits to read, so server mode always
+  refuses there.
+- `paths_overlap` extends to the config folder and the destination: staging, the output
+  and the output's folder may not be, or lie inside, either; neither may lie inside
+  staging or the output, or be the diagnostics folder beside the output. A destination
+  that does not exist yet is apart. The check runs before the diagnostics folder is
+  created.
+
+A config refusal writes no report (the output is not known to be the deployer's yet);
+stdout still says `refused: setup`. `check` in server mode is advisory: the pipeline
+controls the run. The guard is `export`, which the reviewer runs under the same config.
+
+Deployment invariants: the config folder and the destination are writable only by the
+reviewer's user; the destination is the agent VM's read-only view of a shared folder;
+the deployer copies the chosen schema and policy from `reg_export_gate/schemas/` into
+the config folder, a reviewed step.
+
+## Export and delivery
+
+No review UI in v1 (maintainer, 2026-11-04). The output folder is the pipeline's to
+write at any time, so the reviewer binds what they inspect to the hash they name:
+
+1. Copy the output folder somewhere only the reviewer can write.
+2. Hash the copy's `receipt.json` and check every file in the copy against the hash the
+   receipt lists (`sha256sum`).
+3. Inspect the copy with any tool (DuckDB, R, Python).
+4. Run `export --project NAME --receipt <that hash>`.
+
+`export` then succeeds only if the live output folder is byte for byte what was
+inspected. Hashing the live folder instead leaves a window: the pipeline can show one
+passing set during the review and swap in another before the hash or the export.
+`export` runs under the same config as `check` and trusts nothing in the output:
+
+1. The config loads as for `check`. The destination must be a real folder with no group
+   or other write bit (`destination_writable`); the output's folder must exist
+   (`output_parent_missing`) and be apart from the destination and the config folder
+   (`paths_overlap`).
+2. The output is read once, each file as staging files are: no link, never blocking,
+   under the 8 MiB cap. It must be a real folder holding exactly the schema's files and
+   `receipt.json`, all regular files, and the receipt's SHA-256 must be the one named
+   (`receipt_mismatch`).
+3. The files are checked again (structure, disclosure, backstop, under the configured
+   schema and policy, with those codes) and rewritten. The fresh receipt must equal the
+   one read, byte for byte, and each file read must hash to its rewrite
+   (`receipt_mismatch`). A genuine export reproduces exactly (byte identity per gate
+   version). The author's own Parquet does not, even under the genuine receipt (it
+   decodes to the same values). A rewritten file over 8 MiB is `too_large` in `check` as
+   well, so `export` accepts exactly the outputs `check` can write. The gate writes
+   uncompressed, so a compressed staging file under the cap can grow past it. That costs
+   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB. The
+   maintainer kept the cap at that cost (2026-11-04), over dropping it and letting
+   `export` read larger outputs.
+4. The destination and every folder above it must be safe from everyone but the user
+   running `export`, or the pipeline could move the destination aside and put its own
+   folder or a link there (`destination_writable`). The destination is owned by that
+   user; each folder above it is owned by that user or root. None has a group or other
+   write bit, except that a folder above may be sticky (`/tmp`). The config folder must
+   be owned by that user or root, with the same rule for the folders above it
+   (`config_writable`). `std` has no `geteuid` and the crate has no `unsafe`, so the
+   user is read as the owner of a probe folder the gate creates and removes in the
+   destination.
+5. The gate writes its own bytes, never the folder's, to
+   `<destination>/<first 16 hex digits of the receipt hash>/`, through a new folder and
+   a rename as for an export, then reads them back and compares hashes (`hash_mismatch`,
+   and the folder is removed). If that folder exists, the receipt was exported before:
+   it is re-verified the same way and nothing is written.
+
+Delivery rules, Rust only: `receipt_mismatch`, `destination_writable`, `hash_mismatch`.
+`export` writes no report: its reader is the reviewer, on stderr. Ownership and mode
+bits are what the gate reads. An ACL that grants the pipeline's user write access
+passes, so the deployment must not set one on the config folder or the destination. The
+probe folder (`.export-gate-probe-*`) and the new folder (`.export-gate-*`) appear in
+the destination for a moment, and a killed export can leave the latter behind with
+verified gate bytes in it. The agent's side ignores dot-folders.
+
+## The R gate follows
+
+`export_gate.R` stays the MONA implementation (MONA runs no executables) and imitates
+this one in its own PR, naming the gate version it matches: the size caps (the rewrite's
+too), the `na_not_null` change (a NaN beside a null count is `unsupported_statistic`),
+and a duplicate column refused as `column_order` (today R ends in `internal_error`
+there, since `GetFieldByName` gives NULL). The binary's first release is 0.3.0, after
+R's 0.2.0, since it changes behaviour; R moves to 0.3.0 when it imitates (maintainer,
+2026-11-04). From then on a corpus change lands with the Rust change, and R follows.

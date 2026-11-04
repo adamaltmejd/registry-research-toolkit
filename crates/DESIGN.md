@@ -124,7 +124,7 @@ HTTP API             MCP over stdio (local catalog)
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
 - `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
-  data side. It reads no catalog. Being built (#1803); its design is
+  data side. It reads no catalog. Its design is
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
@@ -135,15 +135,19 @@ dependency.
 **Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
 fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
 digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
-arm64 and Linux x86_64 with SHA-256 checksums, and two DB assets, `reg_meta.db.zst`
-(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
-holdings pin the base's `catalog_sha256`). There is no separate docs asset. The binaries
-serve local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no
-PyPI package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows
-binary is added only if it builds and runs without special effort. The
-`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
-the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
-instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
+arm64 and Linux x86_64 with SHA-256 checksums, the export gate's `reg-export-gate`
+binaries for the same targets (named by the gate crate's own version,
+`reg-export-gate-<version>-<target>`; the Linux build links the runner's glibc, so it
+needs an Ubuntu 24.04-era distribution or newer on the data VM), and two DB assets,
+`reg_meta.db.zst` (documents included) and the paired `reg_meta_swecov.db.zst`, built in
+the same run (the holdings pin the base's `catalog_sha256`). There is no separate docs
+asset. The `reg-meta` binaries serve local HTTP or MCP; the catalog is downloaded with
+`curl` and `zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use
+hosted MCP; a local Windows binary is added only if it builds and runs without special
+effort. The `microdata-tools-se` plugin declares one hosted MCP server whose URL is a
+user setting: the global catalog by default, a hosted steward catalog
+(`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the agent's
+MCP configuration by hand.
 
 ## The catalog builder
 
@@ -1003,6 +1007,14 @@ set, `coded` unknown, and `state` clear (the default) are all left out, which ke
 agent context small. Storage type stays in the catalog (orders use it) and is shown only
 when stated.
 
+**Names next to ids.** A response that refers to a register, table or variable carries
+its name next to the FQID, as `show` gives it (a reference row's name over a steward
+overlay's), so a reader needs no `show` per id: `segments` rows have `table_name`,
+`findings` subjects `name` and `table_name`, and the `order` and `validate` rows and
+findings `table_name`, `variable_name` and `successor_name` (`NamedIssue`). One batched
+read per origin names a whole response (`refs::names`), never a read per row. The MONA
+order file carries ids only.
+
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
@@ -1119,7 +1131,8 @@ In short: `catalog` and `project` identify the generation and the project (with
 `project_hash`); `entries` are per source, per binding in declaration order, then by
 period start; `row_keys` are per source and period start; `clips` record every
 availability clip, also when nothing blocks; `findings` are the non-blocking ones
-(warnings and infos), as `Issue`. Periods are half-open ISO-day intervals, with `null`
+(warnings and infos), as `NamedIssue`. Every table and variable id in a row has its name
+beside it ("Names next to ids"). Periods are half-open ISO-day intervals, with `null`
 for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 - An **entry** is one merged segment of one binding in one table. With a table
@@ -1188,28 +1201,36 @@ and `sun2000niva`.
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2003-01-01", "end": "2004-01-01"},
        "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/sun2000niva", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/sun2000niva", "variable_name": "Utbildningsnivå",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "Sun2000niva", "type": "char", "length": 3,
        "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
     ],
     "row_keys": [
-      {"source": "lisa", "table": "scb/lisa/individ",
+      {"source": "lisa", "table": "scb/lisa/individ", "table_name": "Individer",
        "period": {"start": "2003-01-01", "end": "2007-01-01"},
-       "columns": [{"variable": "scb/lisa/lopnr", "spelling": "LopNr"}]}
+       "columns": [{"variable": "scb/lisa/lopnr", "variable_name": "Löpnummer",
+                    "spelling": "LopNr"}]}
     ],
     "clips": [
       {"source": "lisa", "variable": "scb/lisa/sun2000niva",
+       "variable_name": "Utbildningsnivå",
        "requested": [{"start": "2003-01-01", "end": "2007-01-01"}],
        "ordered": [{"start": "2004-01-01", "end": "2007-01-01"}]}
     ],
@@ -1217,11 +1238,13 @@ and `sun2000niva`.
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
        "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null},
+       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
+       "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
       {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
        "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
        "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
+       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null,
+       "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
   "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
@@ -1248,7 +1271,8 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
          "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
-         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null}
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null,
+         "variable_name": "Kommun", "table_name": "Individer", "successor_name": null}
       ]
     }
   },
@@ -1355,7 +1379,14 @@ evidence). Pin selected delivery-document evidence there too, retaining original
 privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
 the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
 inputs. The compiled holdings file carries presentation/config data needed at runtime;
-serving never checks out that repo or parses its TOML.
+serving never checks out that repo or parses its TOML. `context` serves only what the
+site shows: the steward's presentation and logo, the server version and the period span.
+In steward mode the span is the hull of the placements, not of the reference registers
+(which cover years the steward does not hold); outside it, the hull of the registers. A
+timeless period (both bounds open) is left out, so one timeless table cannot take the
+study-years slider's bounds; an ongoing register still leaves the end open. Dropping
+whole periods, not single open bounds, keeps the hull ordered. A hull open at both ends
+(one period open at the start, another at the end) has no span either.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,
@@ -2355,7 +2386,12 @@ The validate operation runs the supported-version decision, then the structural
 validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), and concatenates their issues with
 the order check's findings ("The logical order"). A failing project is a result, not an
 error. A structural failure skips the catalog layer, so a rejected document costs no
-catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
+catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order. On
+a steward server `validate` and `order` also run the holdings stage of
+`materialize_order`, so `ok` is true, and `order` succeeds, exactly when
+`materialize_order` would not block: a variable the steward does not hold is
+`mapping_missing` at check time, not when the coordinator makes the order (#2194). A
+steward `order` that succeeds carries the holdings stage's warnings with its own.
 
 ### Project document 5.2.0
 
@@ -2591,10 +2627,15 @@ located warnings, while release builds collect the refusals in their report.
 
 `show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
 optional `description`, register public id, ordered `axes`, and `members`. Each member
-supplies `fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members
-sort by facet value in axis order (missing coordinates first), then by name and public id.
-`tags` is the union of the members' tags in public-id order. The summary contains
-curated presentation data; source evidence remains on the individual variables.
+supplies `fqid`, `name`, `segments` (its whole per-period list: every row `segments`
+serves for it, unpaged, in that order and shape, without evidence) and `facets` (`axis`,
+`value`, `label`) in axis order, so the group page needs one request. The set's
+`description` is its curated one; without one, a description every member states alike
+is sent once as the set's (maintainer 2026-11-04). A member carries its own
+`description` only where it differs from the set's. Members sort by facet value in axis
+order (missing coordinates first), then by name and public id. `tags` is the union of
+the members' tags in public-id order. The summary contains curated presentation data;
+source evidence remains on the individual variables.
 
 `show` at a register lists its `sets` (`fqid`, `name`, member variable `fqid`s, each in
 public-id order) for the register page's grouping, and `tags`, the union of its

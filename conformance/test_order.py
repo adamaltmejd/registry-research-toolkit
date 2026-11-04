@@ -82,12 +82,13 @@ def test_logical_order_or_located_finding(case: Path, http_servers) -> None:
         assert [i for i in validation["issues"] if i["level"] == "error"] == blocking
 
 
-def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
+def test_steward_order_carries_declared_keys_not_catalog_identifiers(
     tmp_path, server_cmd
 ):
     # Fails if catalog identifier roles auto-carry RelativeId or replace the
-    # declared received Id. The corpus keeps RelativeId as an explicit binding;
-    # reference-only order cases cannot exercise the holdings key authority.
+    # declared received Id; reference-only order cases cannot exercise the holdings
+    # key authority. RelativeId is not bound: Pool holds no column of it, so a
+    # steward order binding it is `mapping_missing` (test_materialize's blocked cases).
     base, _, command = prepare_holdings(tmp_path)
     output = tmp_path / "reg_meta_fixture.db"
     built = run([*command, "--out", output])
@@ -101,12 +102,6 @@ def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]
         assert data["row_keys"] == expected["row_keys"]
-        linking = expected["explicit_linking_entry"]
-        assert [
-            {key: entry[key] for key in linking}
-            for entry in data["entries"]
-            if entry["variable"] == linking["variable"]
-        ] == [linking]
 
 
 def test_steward_only_slot_orders_paired_and_is_unresolved_base_only(

@@ -23,7 +23,23 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
     # semantics, mixes bm25 groups, or filters possession after search counts or
     # paging. The 2021 query is inside Late's reference coverage but outside its
     # physical reach; no existing reference-only case can catch that distinction.
-    base, _, command = prepare_holdings(tmp_path)
+    base, root, command = prepare_holdings(tmp_path)
+    # Spare holds the timeless demo/owners/spare through Tally only; Id is a column
+    # of that table too, held in demo/owners alone.
+    for name, line in [
+        ("census.csv", "Synthetic,Spare,Spare,Tally,,,,,,,,\n"),
+        ("storage.csv", "dbo,Spare,BASE TABLE,Tally,int,,10,0,1\n"),
+        (
+            "holdings.toml",
+            '\n[[table]]\nphysical_name = "Spare"\ndisposition = "timeless"\n'
+            'table_pids = ["demo/owners/spare"]\nlocator = "fixture:spare"\n'
+            '[[table.key]]\nentity = ["demo/owners/tally"]\ntime = []\n'
+            'locator = "fixture:spare-key"\n',
+        ),
+    ]:
+        with (root / name).open("a") as f:
+            f.write(line)
+    pin_steward(root, tmp_path / "stewards.toml")
     (tmp_path / "reg_meta.db").symlink_to(base)
     output = tmp_path / "reg_meta_fixture.db"
     built = run([*command, "--out", output])
@@ -32,18 +48,21 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         client = pool.client(artifact_env(output))
         context = client.get("/api/context")
         assert context.status_code == 200
-        context = context.json()["data"]
-        assert context["steward"]["owner"] == "fixture"
+        context = context.json()
+        # Fails if the span counts the timeless Spare placement (its open bounds
+        # would take the start) instead of the years held, 2017..2021.
+        assert context["data"]["period_span"] == {
+            "start": "2017-01-01",
+            "end": "2022-01-01",
+        }
+        assert context["meta"]["steward"]["owner"] == "fixture"
+        context = context["data"]
         assert context["steward_config"]["presentation"] == {
             "id": "fixture",
             "name": "Synthetic steward",
         }
-        assert context["steward_sizes"] == {
-            "providers": 1,
-            "registers": 1,
-            "tables": 1,
-            "variables": 2,
-        }
+        # Fails if context passes steward config the site does not show (the scope).
+        assert sorted(context["steward_config"]) == ["logo", "presentation"]
         # Fails if possession resolves placements through one origin only: demo/*
         # tables are reference tables, steward/slots a steward-only register.
         providers = client.get("/api/catalog").json()["data"]["providers"]
@@ -58,6 +77,22 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
             "demo/held/value",
             "demo/held/year",
         ]
+        # Fails if a held variable lists a table no placement names it in (Id is
+        # also a column of demo/owners/spare, which Spare holds through Tally only),
+        # or the register serves the provider's unparsed release names (demo/owners'
+        # draft) as `unplaced`.
+        owners = client.get("/api/catalog/demo/owners").json()["data"]
+        assert {v["fqid"]: v["tables"] for v in owners["variables"]} == {
+            "demo/owners/first": ["demo/owners"],
+            "demo/owners/id": ["demo/owners"],
+            "demo/owners/second": ["demo/owners"],
+            "demo/owners/tally": ["demo/owners/spare"],
+        }
+        assert owners["unplaced"] == []
+        # Fails if a held table lists a row key held elsewhere but not in it: Id is
+        # spare's reference key and held in demo/owners only.
+        spare = client.get("/api/catalog/demo/owners/spare").json()["data"]
+        assert spare["row_keys"] == []
         unheld = client.get("/api/catalog/demo/held/relative-id")
         assert unheld.status_code == 404
         assert unheld.json()["error"]["code"] == "not_found"
@@ -161,6 +196,46 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         refused = run(pool.argv(tmp_path, 0))
         assert refused.returncode == 10
         assert json.loads(refused.stderr)["code"] == "schema_incompatible"
+
+
+def test_steward_context_spans_the_years_held(tmp_path, server_cmd):
+    # Fails if steward-mode context spans the reference registers instead of the
+    # placements (data.swecov.se served a null span from the reference hull). The
+    # base frame's demo registers run 2017-01-01..2021-12-31; with the two 2021
+    # partitions excluded the steward holds 2017..2020 only (holdings.toml: Owners
+    # 2017..2019, Pool 2017..2020, Parent and Child 2018), so the half-open span ends
+    # 2021-01-01, a year before the reference hull.
+    base, root, command = prepare_holdings(tmp_path)
+    path = root / "holdings.toml"
+    text = path.read_text()
+    for part in "AB":
+        dated = (
+            f'physical_name = "Part {part}"\ndisposition = "dated"\ndelivery = "2021"\n'
+            f'partition = "{part.lower()}"\ntable_pids = ["demo/held"]\n'
+            f'locator = "fixture:partition-{part.lower()}"\n\n\n[[table.key]]\n'
+            'entity = ["demo/held/id"]\ntime = []\nperiod_key = "year"\n'
+            'locator = "fixture:declared-entity-time-key"\n'
+        )
+        assert dated in text
+        text = text.replace(
+            dated,
+            f'physical_name = "Part {part}"\ndisposition = "excluded"\ntable_pids = []\n'
+            f'reason = "Outside the authored observation scope"\n'
+            f'locator = "fixture:partition-{part.lower()}"\n',
+        )
+    path.write_text(text)
+    pin_steward(root, tmp_path / "stewards.toml")
+    (tmp_path / "reg_meta.db").symlink_to(base)
+    output = tmp_path / "reg_meta_fixture.db"
+    built = run([*command, "--out", output])
+    assert built.returncode == 0, built.stderr
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
+        context = pool.client(artifact_env(output)).get("/api/context")
+        assert context.status_code == 200, context.text
+        assert context.json()["data"]["period_span"] == {
+            "start": "2017-01-01",
+            "end": "2021-01-01",
+        }
 
 
 def test_same_variable_attestation_extends_holdings_without_global_validity(
@@ -308,6 +383,20 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         data = register.json()["data"]
         assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
         assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
+        # Fails if show reads the reference origin only: AttestedMember holds Id in
+        # demo/owners/received, a key membership the reference table omits, so the
+        # register must list received under Id and the table must list Id as a key.
+        owners = pool.client(artifact_env(output)).get("/api/catalog/demo/owners")
+        assert owners.status_code == 200, owners.text
+        tables = {v["fqid"]: v["tables"] for v in owners.json()["data"]["variables"]}
+        assert tables["demo/owners/id"] == ["demo/owners", "demo/owners/received"]
+        received = pool.client(artifact_env(output)).get(
+            "/api/catalog/demo/owners/received"
+        )
+        assert received.status_code == 200, received.text
+        assert [k["fqid"] for k in received.json()["data"]["row_keys"]] == [
+            "demo/owners/id"
+        ]
         # Fails if schema reads the reference origin only: the steward-minted
         # variables on the reference register are held in the holdings origin.
         schema = pool.client(artifact_env(output)).get("/api/schema/demo/projected")

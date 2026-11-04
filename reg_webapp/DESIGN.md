@@ -24,18 +24,21 @@ browser persistence fails.
 The banner and project page share one catalog check (`useProjectCheck`): `order`,
 through the shared abortable resource hook, 350 ms after the last accepted edit, with no
 manual trigger. `order` answers everything the page shows, so the SPA does not call
-`validate`: both run the same check, an `order_blocked` refusal carries every finding
-that `validate` would list, and a success carries the non-blocking findings with the
-entries, row keys and clips the delivery summary draws. The SPA sends only drafts WASM
-accepted; a `project_invalid` refusal, should the server disagree, is read the same way.
-One verdict function names the result for both, in the words of `frontend/DESIGN.md` →
-Words. Issues sit under their table or column, with links from the verdict that focus
-them. The banner retains the project name, table and column counts, verdict and download
-save state across routes. A restored local draft is recovery, so it remains unsaved
-until downloaded. The study window is an inline window-band picker bounded by the
-catalog's half-open period span. A new project carries over the browsing window or
-starts at 2015 through the catalog's last year. Moving the study window never rewrites
-source periods.
+`validate`: both run the same check (on a steward server including the holdings stage of
+`materialize_order`, so a column the steward does not hold blocks here too), an
+`order_blocked` refusal carries every finding that `validate` would list, and a success
+carries the non-blocking findings with the entries, row keys and clips the delivery
+summary draws. Those clips are the logical order's: years the steward's tables lack
+(`coverage_gap`) are listed as a warning but not subtracted from the summary's years.
+The SPA sends only drafts WASM accepted; a `project_invalid` refusal, should the server
+disagree, is read the same way. One verdict function names the result for both, in the
+words of `frontend/DESIGN.md` → Words. Issues sit under their table or column, with
+links from the verdict that focus them. The banner retains the project name, table and
+column counts, verdict and download save state across routes. A restored local draft is
+recovery, so it remains unsaved until downloaded. The study window is an inline
+window-band picker bounded by the catalog's half-open period span. A new project carries
+over the browsing window or starts at 2015 through the catalog's last year. Moving the
+study window never rewrites source periods.
 
 Variable pages project their segments into a single coverage LaneGraph. A column is the
 exact table and spelling pair; selection and its availability-bounded add window are
@@ -143,11 +146,13 @@ Documentation lives in the same admitted catalog. The docs operations search doc
 sections, return a document by content hash, list linked documents and serve embedded
 PDF bytes. There is no separate docs database or schema gate.
 
-## Context and catalog sizes (the Rust server)
+## Context (the Rust server)
 
-`GET /api/context` returns catalog metadata and headline sizes as `{data, meta}`. The
-committed OpenAPI snapshot describes its response; a Rust snapshot test keeps it
-identical to the server's rendered document.
+`GET /api/context` returns what the SPA shell shows as `{data, meta}`: the period span,
+the server version and, in steward mode, the steward's presentation and logo
+(`steward_config`). Catalog identity is in `meta`. The committed OpenAPI snapshot
+describes its response; a Rust snapshot test keeps it identical to the server's rendered
+document.
 
 ## ETag / Cache-Control
 
@@ -194,10 +199,11 @@ schemas, and pinned catalog SHA-256 must match. Published catalog invariants bel
 `reg-build verify`. The paired holdings artifact supplies steward branding and delivery
 metadata; no runtime steward repository is loaded.
 
-The Rust server's `context` reports schema version, catalog version, server version and
-catalog sizes. Every JSON response's `meta` carries contract version, catalog version
-and generation. Context's optional `period_span` is the hull of the catalog's register
-periods; it is null when the catalog has no registers.
+Every JSON response's `meta` carries contract version, catalog version and generation
+(and the steward's identity in steward mode). Context's `period_span` bounds the
+study-years slider: in steward mode the hull of the years held, otherwise of the
+registers' periods, leaving out timeless periods (an ongoing register leaves the end
+open); it is null when every period served is timeless.
 
 ## OpenAPI snapshot (the drift gate)
 

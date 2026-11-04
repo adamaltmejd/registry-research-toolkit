@@ -8,6 +8,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::refs::{self, Entity};
+use super::segments::{self, Segment};
 use super::shape::{self, Release};
 use super::show_evidence::{self, VariableEvidence};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, flag};
@@ -18,10 +19,11 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
     description: "Describe a provider, register, table, variable or set by id or name (a set \
-        only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables \
-        show curated metadata, with the provider's text only as a fallback. `evidence=true` \
-        adds the provider's original texts, column names, curation locators and linked \
-        documents.",
+        only by `set/<provider>/<register>/<slug>`; it carries each member's whole \
+        `segments` list, so no `segments` call per member is needed). No `ref` lists the \
+        providers. Variables show curated metadata, with the provider's text only as a \
+        fallback. `evidence=true` adds the provider's original texts, column names, curation \
+        locators and linked documents.",
     params: &[
         Param::optional("ref", Type::Ref),
         Param::optional("evidence", Type::Boolean),
@@ -81,6 +83,8 @@ pub enum Show {
     Set {
         fqid: String,
         name: String,
+        /// The curated description; without one, the description every member states
+        /// alike.
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
         description: Option<String>,
@@ -185,20 +189,14 @@ pub struct ShowSetAxis {
 pub struct ShowSetMember {
     fqid: String,
     name: String,
-    /// The member's columns, ordered by table then spelling.
-    columns: Vec<ShowSetColumn>,
+    /// The curated description, only where it differs from the set's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    description: Option<String>,
+    /// The member's whole per-period list, as `segments` serves it without evidence.
+    segments: Vec<Segment>,
     /// The member's coordinates in the set's axis order.
     facets: Vec<ShowSetFacet>,
-}
-
-/// A table and column name the member appears under.
-#[derive(Serialize, ToSchema)]
-pub struct ShowSetColumn {
-    /// The table's fqid.
-    table: String,
-    spelling: String,
-    /// The column's periods, in time order.
-    periods: Vec<Period>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -336,12 +334,20 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 .filter(|t| !known.contains(&t.fqid)),
         );
         tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        let known: BTreeSet<_> = variables.iter().map(|v| v.fqid.clone()).collect();
-        variables.extend(
-            steward_variables
-                .into_iter()
-                .filter(|v| !known.contains(&v.fqid)),
-        );
+        // A shared variable keeps the reference row but gains the tables the steward
+        // attests it in (a membership the reference member list omits).
+        let mut steward_variables: BTreeMap<_, _> = steward_variables
+            .into_iter()
+            .map(|v| (v.fqid.clone(), v))
+            .collect();
+        for variable in &mut variables {
+            if let Some(steward) = steward_variables.remove(&variable.fqid) {
+                variable.tables.extend(steward.tables);
+                variable.tables.sort();
+                variable.tables.dedup();
+            }
+        }
+        variables.extend(steward_variables.into_values());
         variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
         let (steward_sets, steward_tags) = groupings(&extra, &entity.pid)?;
         let known: BTreeSet<_> = sets.iter().map(|s| s.fqid.clone()).collect();
@@ -363,20 +369,32 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     // keeps its held members and goes when none is held.
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
     variables.retain(|v| server.catalog.serves("variable", &v.fqid));
+    for variable in &mut variables {
+        let fqid = &variable.fqid;
+        variable
+            .tables
+            .retain(|table| server.catalog.serves_in(fqid, table));
+    }
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
     }
     sets.retain(|set| !set.members.is_empty());
-    let unplaced = rows(
-        conn,
-        "SELECT DISTINCT n.body
-             FROM release r JOIN tbl t ON t.id = r.table_id
-               JOIN text n ON n.id = r.name_text
-             WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
-        [entity.id],
-        |row| row.get(0),
-    )?;
+    // Unplaced names are the provider's releases, not the steward's files
+    // (maintainer 2026-11-04), so a steward deployment serves none.
+    let unplaced = if server.catalog.steward().is_some() {
+        vec![]
+    } else {
+        rows(
+            conn,
+            "SELECT DISTINCT n.body
+                 FROM release r JOIN tbl t ON t.id = r.table_id
+                   JOIN text n ON n.id = r.name_text
+                 WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
+            [entity.id],
+            |row| row.get(0),
+        )?
+    };
     Ok(Show::Register {
         fqid: entity.pid.clone(),
         name,
@@ -543,21 +561,43 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             |row| Ok(server.period(row.get(0)?, row.get(1)?)),
         )?,
     };
-    let row_keys = rows(
-        conn,
-        "SELECT v.pid, sp.exact, s.start, s.end
-             FROM segment s JOIN variable v ON v.id = s.variable_id
-               JOIN spelling sp ON sp.id = s.spelling_id
-             WHERE s.table_id = ? AND s.role = 'row_key' ORDER BY s.start, v.pid",
-        [entity.id],
-        |row| {
-            Ok(ShowRowKey {
-                fqid: row.get(0)?,
-                spelling: row.get(1)?,
-                period: server.period(row.get(2)?, row.get(3)?),
-            })
-        },
-    )?;
+    // By table pid: in steward mode the holdings origin adds the key memberships the
+    // steward attests on a reference table.
+    let keys = |conn: &Connection| {
+        rows(
+            conn,
+            "SELECT v.pid, sp.exact, s.start, s.end
+                 FROM segment s JOIN variable v ON v.id = s.variable_id
+                   JOIN spelling sp ON sp.id = s.spelling_id
+                   JOIN tbl t ON t.id = s.table_id
+                 WHERE t.pid = ? AND s.role = 'row_key'",
+            [&entity.pid],
+            |row| {
+                Ok((
+                    row.get(2)?,
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get(3)?,
+                ))
+            },
+        )
+    };
+    let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        found.extend(keys(&extra)?);
+    }
+    found.sort();
+    found.dedup();
+    // Steward mode: a key column whose variable is not held in this table is not shown.
+    let row_keys: Vec<ShowRowKey> = found
+        .into_iter()
+        .filter(|(_, fqid, _, _)| server.catalog.serves_in(fqid, &entity.pid))
+        .map(|(start, fqid, spelling, end)| ShowRowKey {
+            fqid,
+            spelling,
+            period: server.period(start, end),
+        })
+        .collect();
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,
@@ -633,40 +673,6 @@ fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowM
     )?)
 }
 
-/// A variable's columns from its segments as `segments` reads them, one per (table,
-/// spelling); the open start sorts first.
-fn columns(
-    server: &Server,
-    segments: &mut rusqlite::Statement,
-    variable: impl rusqlite::Params,
-) -> Result<Vec<ShowSetColumn>, Error> {
-    let rows = segments
-        .query_map(variable, |row| {
-            Ok((
-                row.get::<_, String>(0)?,
-                row.get::<_, String>(1)?,
-                server.period(row.get(2)?, row.get(3)?),
-            ))
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
-    let mut columns: Vec<ShowSetColumn> = vec![];
-    for (table, spelling, period) in rows {
-        match columns.last_mut() {
-            Some(c) if c.table == table && c.spelling == spelling => {
-                if c.periods.last() != Some(&period) {
-                    c.periods.push(period);
-                }
-            }
-            _ => columns.push(ShowSetColumn {
-                table,
-                spelling,
-                periods: vec![period],
-            }),
-        }
-    }
-    Ok(columns)
-}
-
 /// Members by their facet values in axis order, then name, then fqid.
 fn by_axes(axes: &[ShowSetAxis], a: &ShowSetMember, b: &ShowSetMember) -> std::cmp::Ordering {
     axes.iter()
@@ -707,6 +713,20 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
     )?;
     let mut members = set_members(server, conn, entity)?;
     members.sort_by(|(_, a), (_, b)| by_axes(&axes, a, b));
+    // The curated description, else one every member states alike, is sent once.
+    let description = description.or_else(|| {
+        let (_, first) = members.first()?;
+        let shared = first.description.as_ref()?;
+        members
+            .iter()
+            .all(|(_, m)| m.description.as_ref() == Some(shared))
+            .then(|| shared.clone())
+    });
+    for (_, member) in &mut members {
+        if member.description == description {
+            member.description = None;
+        }
+    }
     let tags = rows(
         conn,
         "SELECT DISTINCT t.pid, n.body FROM var_set_member m
@@ -732,8 +752,9 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
     })
 }
 
-/// A set's members with their facets and columns; in steward mode only the held
-/// members, each over its held columns and years (`not_found` when none is held).
+/// A set's members with their descriptions, facets and per-period lists; in steward
+/// mode only the held members, each over its held columns and years (`not_found` when
+/// none is held).
 fn set_members(
     server: &Server,
     conn: &Connection,
@@ -741,9 +762,11 @@ fn set_members(
 ) -> Result<Vec<(i64, ShowSetMember)>, Error> {
     let mut members: Vec<(i64, ShowSetMember)> = rows(
         conn,
-        "SELECT v.id, v.pid, l.body FROM var_set_member m
+        "SELECT v.id, v.pid, l.body, d.body FROM var_set_member m
          JOIN variable v ON v.id = m.variable_id
-         JOIN text l ON l.id = v.label_text WHERE m.set_id = ? ORDER BY v.pid",
+         JOIN text l ON l.id = v.label_text
+         LEFT JOIN text d ON d.id = v.description_text
+         WHERE m.set_id = ? ORDER BY v.pid",
         [entity.id],
         |row| {
             Ok((
@@ -751,7 +774,8 @@ fn set_members(
                 ShowSetMember {
                     fqid: row.get(1)?,
                     name: row.get(2)?,
-                    columns: vec![],
+                    description: row.get(3)?,
+                    segments: vec![],
                     facets: vec![],
                 },
             ))
@@ -763,36 +787,19 @@ fn set_members(
          JOIN text l ON l.id = f.label_text
          WHERE f.set_id = ? AND f.variable_id = ? ORDER BY a.ord",
     )?;
-    let mut segments = conn.prepare(
-        "SELECT t.pid, sp.exact, s.start, s.end FROM segment s
-         JOIN tbl t ON t.id = s.table_id
-         JOIN spelling sp ON sp.id = s.spelling_id
-         WHERE s.variable_id = ? ORDER BY t.pid, sp.exact, s.start, s.end",
-    )?;
     members.retain(|(_, member)| server.catalog.serves("variable", &member.fqid));
-    let extra = server.catalog.connect_holdings()?;
-    if extra.is_some() && members.is_empty() {
+    if server.catalog.steward().is_some() && members.is_empty() {
         return Err(Error::new(
             Code::NotFound,
             format!("Nothing is named {:?}.", entity.pid),
             vec![entity.pid.clone().into()],
         ));
     }
-    let mut held = extra
-        .as_ref()
-        .map(|extra| {
-            extra.prepare(
-                "SELECT m.table_pid, c.name, m.start, m.end FROM holding_mapping m
-                 JOIN holding_column c ON c.id = m.column_id
-                 WHERE m.variable_pid = ? ORDER BY m.table_pid, c.name, m.start, m.end",
-            )
-        })
-        .transpose()?;
+    let origins = segments::origins(server, server.catalog.connect()?)?;
+    // simplify: one segments list per member; batch by variable id if a set reaches
+    // hundreds of members.
     for (id, member) in &mut members {
-        member.columns = match held.as_mut() {
-            Some(held) => columns(server, held, [member.fqid.clone()])?,
-            None => columns(server, &mut segments, [*id])?,
-        };
+        member.segments = segments::all(server, &origins, &member.fqid)?;
         member.facets = facets
             .query_map(rusqlite::params![entity.id, *id], |row| {
                 Ok(ShowSetFacet {

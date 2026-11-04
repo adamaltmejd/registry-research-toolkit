@@ -135,10 +135,11 @@ export function triggerDownload(blob: Blob, filename: string): void {
 // `show` summarizes any ref (no ref is the catalog root). Entity facets return
 // with their routed pages in W2–W5.
 
-/** The Rust server's `context`: artifact identity and catalog counts. */
+/** The Rust server's `context`: the period span, server version and steward
+ * presentation the shell shows. */
 export type Context = RustSchemas["Context"];
 
-/** The steward's presentation, logo and scope; present in paired mode only. */
+/** The steward's presentation and logo; present in paired mode only. */
 export type StewardConfig = RustSchemas["StewardConfig"];
 
 export function stewardConfig(context: Context | null): StewardConfig | null {
@@ -252,6 +253,10 @@ function refusedIssues(error: unknown): Issue[] | null {
   return Array.isArray(issues) && issues.every(isIssue) ? issues : null;
 }
 
+/** A steward's placement caveats are working notes, not shown until the steward
+ * curates them for readers (DESIGN.md → Findings). */
+const forReaders = (issue: Issue) => issue.code !== "mapping_caveat";
+
 /** Check a draft against the loaded catalog through `order`. A blocked order is
  * a result, not a failure; only a refused request (`rate_limited`, a proxy
  * error) throws. */
@@ -267,11 +272,11 @@ export async function checkProjectOrder(
         options,
       )
     ).data;
-    return { order, issues: order.findings };
+    return { order, issues: order.findings.filter(forReaders) };
   } catch (error) {
     const issues = refusedIssues(error);
     if (issues === null) throw error;
-    return { order: null, issues };
+    return { order: null, issues: issues.filter(forReaders) };
   }
 }
 

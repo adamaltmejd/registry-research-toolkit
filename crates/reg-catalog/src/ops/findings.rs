@@ -6,7 +6,8 @@ use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
-use super::{Cache, Components, Operation, Param, Params, Period, Server, Type, component, refs};
+use super::refs::{self, Named};
+use super::{Cache, Components, Operation, Param, Params, Period, Server, Type, component};
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -55,9 +56,15 @@ pub struct Subject {
     /// The register, table or variable it is about.
     #[schema(required = true)]
     fqid: Option<String>,
+    /// The name of `fqid`, as `show` gives it.
+    #[schema(required = true)]
+    name: Option<String>,
     /// Its table.
     #[schema(required = true)]
     table: Option<String>,
+    /// The name of `table`.
+    #[schema(required = true)]
+    table_name: Option<String>,
     /// Its period; `null` when not known.
     #[schema(required = true)]
     period: Option<Period>,
@@ -110,7 +117,7 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     let window = super::days(params, "period")?;
     let code = params.get("code").copied();
 
-    let items = rows(
+    let mut items = rows(
         &conn,
         &sql(scope),
         named_params! {
@@ -130,7 +137,9 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 subject: Subject {
                     kind: row.get(2)?,
                     fqid: row.get(3)?,
+                    name: None,
                     table: row.get(4)?,
+                    table_name: None,
                     period: placed(row.get(5)?, row.get(6)?),
                     release: row.get(7)?,
                     spelling: row.get(8)?,
@@ -142,6 +151,26 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
             })
         },
     )?;
+    let names = refs::names(
+        server,
+        items
+            .iter()
+            .flat_map(|f| [&f.subject.fqid, &f.subject.table])
+            .flatten()
+            .map(String::as_str),
+    )?;
+    for Finding { subject, .. } in &mut items {
+        let kind = match subject.kind.as_str() {
+            "register" => Named::Register,
+            "table" => Named::Table,
+            _ => Named::Variable,
+        };
+        subject.name = subject.fqid.as_ref().and_then(|f| names.get(kind, f));
+        subject.table_name = subject
+            .table
+            .as_ref()
+            .and_then(|t| names.get(Named::Table, t));
+    }
     Ok(serde_json::to_value(items).expect("findings serialize"))
 }
 

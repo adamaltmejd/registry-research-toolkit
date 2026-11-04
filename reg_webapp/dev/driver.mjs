@@ -887,9 +887,19 @@ async function stewardHeldCase(page, shoot) {
   await shoot("steward-held");
   await open(page, "/project");
   const fixture = JSON.parse(readFileSync(new URL("../../conformance/cases/holdings/order-key-requirements.json", import.meta.url), "utf8"));
+  // RelativeId is in the catalog but Pool holds no column of it. Fails if the
+  // project page reads a steward order the server would not make as orderable
+  // (the check skipping the holdings stage reads "Ready to order").
+  fixture.project.sources[0].bindings.push({ variable: "demo/held/relative-id", type: "numeric" });
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("main").getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles({ name: "paired-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fixture.project)) });
+  const checkRegion = page.getByRole("main").getByRole("region", { name: "Check", exact: true });
+  await checkRegion.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
+  // The steward site has no name for a variable it does not hold, so its Remove
+  // button carries the card's fallback name.
+  await page.getByRole("main").getByRole("button", { name: "Remove Variable name unavailable from s", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
   const rowKeys = page.getByRole("main").getByRole("region", { name: "What will be delivered", exact: true });
   await rowKeys.getByText("Received_Id", { exact: true }).waitFor();
   await settled(page);
