@@ -49,7 +49,7 @@ bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthet
 ```
 
 `--paired-fixture` (instead of `--fixture-db`) builds the synthetic SWECOV holdings pair
-into a temp directory (`conformance/paired_fixture.py`) and exports
+into a temp directory (`target/debug/reg-fixture --paired`) and exports
 `REG_WEBAPP_FIXTURE=paired`. The SPA is steward-only, so the pair is the state to render
 for steward pages (e.g. `/catalog/demo/held`).
 
@@ -90,7 +90,7 @@ dev: repo /path/to/checkout HEAD 0123456789abcdef… shots $TMPDIR/reg-webapp-sh
 
 **`--fixture-db`** serves a deterministic synthetic catalog as `REG_META_DB`: current
 `reg-build` output for `conformance/cases/fixtures/webapp-dev`, from the shared fixture
-cache (`conformance/fixture_cache.py`, built on a miss), copied into a temp dir that is
+cache (`target/debug/reg-fixture`, built on a miss), copied into a temp dir that is
 deleted on exit. It contains `demo/bas`, `demo/hush` and `demo2/reg`. Use a real DB for
 density questions.
 

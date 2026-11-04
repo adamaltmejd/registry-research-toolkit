@@ -1,6 +1,6 @@
 # Operation table: the API contract the Rust server implements, defined once and
 # exposed over HTTP and MCP (crates/DESIGN.md, "Agent and web interface"). Error codes live in
-# `errors.toml`; `conformance/test_api_spec.py` lints both and the `api` cases.
+# `errors.toml`; the conformance suite's `api_spec` module lints both and the `api` cases.
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #

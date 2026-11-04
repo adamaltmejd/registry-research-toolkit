@@ -129,8 +129,7 @@ def generation_dir(build_inputs: str) -> Path:
 def cached_reader_artifact(fixture: str | Path) -> Path:
     """Return the cached, read-only `reg_meta.db` of a fixture, building it on first use.
 
-    Entries are immutable: callers that mutate an artifact use `build_reader_artifact`,
-    which copies one. A miss builds into a private staging directory and renames it
+    Entries are immutable: a caller that mutates an artifact copies it. A miss builds into a private staging directory and renames it
     into place, so concurrent builders of the same key never expose a partial entry;
     the loser discards its copy.
     """
@@ -166,13 +165,4 @@ def cached_reader_artifact(fixture: str | Path) -> Path:
         if built.returncode:
             raise RuntimeError(f"reg-build build {source.name}: {built.stderr.strip()}")
         (staging / "reg_meta.db").chmod(0o444)
-    return path
-
-
-def build_reader_artifact(directory: Path, fixture: str | Path) -> Path:
-    """Copy the cached artifact into `directory` as a private, writable file."""
-    cached = cached_reader_artifact(fixture)
-    directory.mkdir(parents=True, exist_ok=True)
-    path = directory / "reg_meta.db"
-    shutil.copyfile(cached, path)
     return path

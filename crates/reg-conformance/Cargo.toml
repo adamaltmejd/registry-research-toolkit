@@ -1,0 +1,32 @@
+[package]
+name = "reg-conformance"
+version = "0.0.0"
+edition.workspace = true
+publish.workspace = true
+
+# The library is the fixture cache and the synthetic holdings pair, std and reg-core
+# only, so `cargo build --workspace` unifies no test-only feature into `reg-meta`.
+[dependencies]
+reg-core = { path = "../reg-core" }
+
+# The black-box suite (conformance/README.md). `test = false`: `cargo test --workspace`
+# does not rebuild `target/debug/reg-meta` or `reg-build` as executables, so this
+# target would test a stale binary. `scripts/gate.py rust` builds the workspace, then
+# runs it by name (`--test conformance`).
+[[test]]
+name = "conformance"
+path = "tests/conformance/main.rs"
+test = false
+
+[dev-dependencies]
+form_urlencoded = "1.2.2"
+http-body-util = "0.1.5"
+hyper = { version = "1.12.0", features = ["client", "http1"] }
+hyper-util = { version = "0.1.21", features = ["tokio"] }
+rusqlite = { version = "0.41.0", features = ["bundled"] }
+serde_json = "1.0.154"
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "net", "time"] }
+toml = "1.1.8"
+
+[lints]
+workspace = true
