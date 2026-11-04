@@ -1486,17 +1486,19 @@ means a logical row shape and its `Release` a stated provider delivery.
 
 No new crate is needed for the physical layer. Pure serialized holdings/order types live
 in `reg-core`; format readers in `reg-readers`; compilation and SQLite emission in
-`reg-build/src/holdings/`; queries and materialization in
-`reg-catalog/src/ops/holdings/`. The latter consumes the existing order check. Normal
-catalog curation stays in `curation/registers/<provider>/<register>/ids.toml`,
-`curation.toml` and `curation.lock`. Steward topology is data, with a closed schema,
-source locations and exact pins, not another catalog statement language. Provider and
-format names remain confined to readers/configuration, as for the catalog builder.
+`reg-build/src/holdings/`; queries in `reg-catalog/src/holdings.rs` and materialization
+in `reg-catalog/src/ops/order/materialize.rs`. The latter consumes the existing order
+check. Normal catalog curation stays in
+`curation/registers/<provider>/<register>/ids.toml`, `curation.toml` and
+`curation.lock`. Steward topology is data, with a closed schema, source locations and
+exact pins, not another catalog statement language. Provider and format names remain
+confined to readers/configuration, as for the catalog builder.
 
 ### Routing and auto-mapping
 
-`series/*.toml` in the pinned steward repo gives each named physical table a default
-list of current `table_pid`s in its named source register. The converter resolves old
+Each physical table in the steward's `inputs.holdings` topology lists its default
+current `table_pid`s (`table_pids`) in its named source register; `series/*.toml` is
+conversion evidence, not read by the compiler. The one-shot conversion resolved old
 `register` + `variants` through D's `[tables]` ledger using source table handles, never
 by copying an old slug. `bu_insats_pnrq0` already routes to `sos/bu/bu-insats-pnrq0`; an
 implicit logical table uses its register pid.
@@ -1528,20 +1530,22 @@ The generic compiler does the following against the exact catalog/semantic-view 
    history. Spellings are candidate evidence, never part of the compiled logical key.
 3. Normalize each physical edition through the existing period grammar. A plain mapping
    owes the physical table's complete served interval set; a column window owes its
-   stated subset; a temporal slot owes its year/month; a positional slot owes the whole
-   table interval. School-year/term anchors use the authored `edition_spelling`
-   (`spring`: year Y → LA(Y−1); `autumn`: Y → LAY; `vt`/`ht`: VTY/HTY). Point-status
-   `2015-12-31` remains a one-day interval, not an invented year. Timeless can match
-   only timeless. Intersect the delivered interval set with that variable's documented
-   orderable clear/preliminary coverage in the routed table. Emit the nonempty
-   intersection deterministically, with `period_clipped` notice carrying requested,
-   documented and admitted intervals; a partial overlap is not a publication refusal.
-   Authored column windows override the inferred reach and must validate as authored;
-   they are not silently rewritten by this automatic clipping rule. Carried keys serve
-   no ordered cell but must be evidenced row keys inside the file's reach. Current
-   coding before 2018 remains the open coding question, never a generic warning-shaped
-   coverage extension. Preserve final preference and `preliminary_data`; ambiguous
-   windows remain blocked.
+   stated subset; a positional or temporal slot owes the whole table interval (a
+   year/month index is topology, checked for form only, as `CIS2006.emp04` below).
+   School-year/term periods are spelled in the authored `delivery` with the period
+   grammar; the legacy `edition_spelling` anchors (`spring`: year Y → LA(Y−1); `autumn`:
+   Y → LAY; `vt`/`ht`: VTY/HTY) were converted into it. Point-status `2015-12-31`
+   remains a one-day interval, not an invented year. Timeless can match only timeless.
+   Intersect the delivered interval set with that variable's documented orderable
+   clear/preliminary coverage in the routed table. Emit the nonempty intersection
+   deterministically, with `period_clipped` notice carrying requested, documented and
+   admitted intervals; a partial overlap is not a publication refusal. Authored column
+   windows override the inferred reach and must validate as authored; they are not
+   silently rewritten by this automatic clipping rule. Carried keys serve no ordered
+   cell but must be evidenced row keys inside the file's reach. Current coding before
+   2018 remains the open coding question, never a generic warning-shaped coverage
+   extension. Preserve final preference and `preliminary_data`; ambiguous windows remain
+   blocked.
 4. Keep distinct rival owners ambiguous. The same `variable_pid` reached through two
    explicitly routed tables is one owner, grouped by variable identity within each table
    coordinate; it yields two valid placements, not two rival variables. Different
@@ -1882,8 +1886,7 @@ documents live in the holdings document tables. Runtime TOML is not read. Each
 response's generation identifies the selected pair; the manifest also records both
 component generations. The default global installation still requires only one file.
 Project-file loading is deferred; hosted `serve` derives its steward from startup
-configuration and accepts no owner override in a request. This extends today's hardcoded
-`reg-catalog::Catalog::open`, rather than claiming these flags already exist.
+configuration and accepts no owner override in a request.
 
 Generation hashes cover the exact base generation and file digest, pinned inputs,
 topology/curation digests, schema and compiler semantics. Sort natural keys before row
@@ -1911,13 +1914,13 @@ the hand-off in `steward.json.order_instructions`: the researcher sends only
 `project_data.json`; the coordinator reviews it and generates/downloads `order.json`.
 This is not reopened as a choice of operation-only format parameters.
 
-`scope = reference|steward` selects discovery against the configured artifact pair.
-Project loading/scope are deferred. New operations/shapes/refusals are registered in
-`conformance/api/operations.toml` and `errors.toml`. A blank or whitespace-only project
-name refuses physical materialization as `project_unnamed`, because provenance must
-identify the named order; it remains a valid logical draft. Report all located findings
-in `order_blocked`, with no partial manifest. Failures name physical metadata and source
-or binding paths, never row values.
+There is no scope parameter: the configured deployment decides ("A steward deployment
+serves its holdings only" above). Project loading is deferred. New
+operations/shapes/refusals are registered in `conformance/api/operations.toml` and
+`errors.toml`. A blank or whitespace-only project name refuses physical materialization
+as `project_unnamed`, because provenance must identify the named order; it remains a
+valid logical draft. Report all located findings in `order_blocked`, with no partial
+manifest. Failures name physical metadata and source or binding paths, never row values.
 
 The v3 `global_fallback` manifest is **dropped**: it described already-held data without
 physical tables, filters or added held keys, and ordered nothing. Today's global logical
@@ -2038,8 +2041,8 @@ entry:
 - each file: safe `name`, exact physical `schema`, `table`, `delivery`, optional
   partition or projection, one optional `row_filter`, and ordered `columns`;
 - each column: exact physical `name`, optional `stata_name`, expected storage metadata,
-  logical source/binding/table/variable/form references, row-key/carried role and
-  optional steward slot topology metadata (maintainer 2026-10-29). Several logical
+  logical source/binding/table/variable/period/spelling references, row-key/carried role
+  and optional steward slot topology metadata (maintainer 2026-10-29). Several logical
   references may share one physical column.
 
 For a 2019–2020 request on `SWECOV_SOS_SV`, the logical interval is
@@ -2225,23 +2228,20 @@ E must expose enough metadata to support that skill. Existing operations already
 - `order` on the coarse `order` MCP tool: logical entries with type/length/value-set and
   classification references, plus row keys, clips and findings (`ops/order/mod.rs`).
 
-`coverage` currently exposes documented provider spans, not possession
-(`ops/coverage.rs`). E must add holdings-aware coverage with accepted held intervals and
-unavailable/mapping-missing intervals, clearly distinct from reference coverage. The
-existing semantic operations must also read the configured supplemental steward semantic
-part. The planned `materialize_order` operation on the same `order` tool adds exact file
-names, physical headers, slot topology, filters, keys and logical
-source/binding/table/variable/form/window references. Each column must expose its
-adopted logical/output type, length and value-set/classification references, or provide
-those exact references so `schema`/`segments`/`values` can retrieve them. Current
-logical row-key entries have only variable/spelling; fetch key type through those
-semantic operations rather than infer it from the header. Unknown remains unknown; N1
-proposals become effective output types only after review/adoption. These metadata gaps
-belong to e-holdings/e-order/e-types, not a mock service.
+In reference mode `coverage` exposes documented provider spans, not possession
+(`ops/coverage.rs`). In steward mode it reports the held years per table, with no
+unavailable or mapping-missing intervals (#2175), and the semantic operations read the
+supplemental steward part. `materialize_order` on the same `order` tool adds exact file
+names, physical headers, slot topology, filters, keys and logical references. Each
+column must expose its adopted logical/output type, length and value-set/classification
+references, or provide exact references so `schema`/`segments`/`values` can retrieve
+them. Logical row-key entries have only variable/spelling; key types come from those
+semantic operations, never from the header. Unknown remains unknown; N1 proposals become
+effective output types only after review/adoption.
 
-The e-types audit (#2071) found them filled: in steward mode `segments` rows are the
-holdings file's placements (column, file, years held); `materialize_order` columns carry
-exact `refs` (source, binding, table, variable, period, spelling) that join the logical
+The e-types audit (#2152) found no gap: in steward mode `segments` rows are the holdings
+file's placements (column, file, years held); `materialize_order` columns carry exact
+`refs` (source, binding, table, variable, period, spelling) that join the logical
 order's entries, which carry the adopted type, length, value set and classification;
 row-key types and identifier kinds come from `schema`/`segments`; `values` flags
 sentinels; open N1 reviews are read through `findings`. The manifest keeps storage types
@@ -2336,26 +2336,20 @@ holdings, obtains physical names/windows/keys from an independent relational cen
 compares plans without reimplementing logical resolution. It must not use the
 materializer to derive expected values. Real-artifact runs are maintainer scheduled.
 
-Update the runner and its manifests atomically. Its `partitions`, `projections`,
-`column-windows`, `row-filter` and `stata-names` expected directories currently depend
-on physical conformance goldens removed at the catalog switch. Reconnect them to the new
-physical corpus; their existence is not evidence that those cases currently run. Keep
-pre-database refusals and the SQL Server type/encoding cases, updating versions and
-independent expected files. Local fixtures prove machinery only. E exits only after the
-maintainer runs one reviewed real order on MONA.
+The runner and its manifests moved together (#2125). Its testthat suite reads the
+materialize corpus's manifests and covers the pre-database refusals only; extraction is
+verified by hand on MONA, with no SQL Server suite (#2126; [runner
+design](../reg_mona_runner/DESIGN.md), "Tests"). Local fixtures prove machinery only. E
+exits only after the maintainer runs one reviewed real order on MONA.
 
-**Holdings comparison, e-compare.** Follow REBUILD's proof model against the released
-0.64.0 SWECOV artifact, not byte parity. Produce an orderable-column/held-period census
-per physical table, plus representative orders (pooled filters, partitions, projections,
-slots, windows and keys). Classify every difference as intended design/curation
-carryover, defect, or unresolved input work, with a source locator and a next action. A
-failed/missing mapping is never dropped from the report's denominator. Compare the
-selected auto-map rules and missing-target dispositions especially; totals alone cannot
-prove coverage. This is a comparison-script step and existing boundary harness
-adaptation, not a new helper-test suite. Real-asset comparisons/builds are scheduled by
-the Operator; this design PR runs none. Repeat after e-types changes the catalog
-generation, rebuild the holdings pin, and repeat real-artifact conformance before
-release.
+**Holdings comparison, e-compare.** Follow REBUILD's proof model, not byte parity. The
+orderable-column/held-period census per physical table was compared with the released
+0.64.0 SWECOV artifact (#2103), classifying every difference as intended design/curation
+carryover, defect, or unresolved input work; a failed/missing mapping is never dropped
+from the denominator. From 0.72.0 on, every release compares the census with the
+previous paired release (`reg-build diff --holdings`, #2143, #2172; release step 8g).
+The representative-order comparison with 0.64.0 was ruled unneeded (maintainer
+2026-11-04; #2070 closed).
 
 This stage replaces `reg_webapp/stewards/swecov/build_catalog.py` and Python
 `extend-db`; they remain frozen until F deletes them. No Rust port of their overlay or
