@@ -61,11 +61,6 @@ pub(super) fn stored(db: &Connection) -> Result<BTreeSet<(String, String)>> {
 }
 
 pub(super) fn write(db: &Connection, rows: &BTreeSet<Occurrence>) -> Result<()> {
-    db.execute_batch(
-        "CREATE TABLE holding_reference_occurrence (
-      table_pid TEXT NOT NULL, variable_pid TEXT NOT NULL,
-      PRIMARY KEY(table_pid,variable_pid)) STRICT, WITHOUT ROWID;",
-    )?;
     for r in rows {
         db.execute(
             "INSERT INTO holding_reference_occurrence VALUES (?,?)",

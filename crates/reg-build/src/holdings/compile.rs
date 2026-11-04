@@ -47,31 +47,30 @@ pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
     )
 }
 
-pub(super) fn periods(value: &str) -> Result<Vec<Span>> {
-    let mut out = Vec::new();
-    for token in value.split(',') {
-        let period: reg_core::Period = token
-            .trim()
-            .parse()
-            .map_err(|_| "inventory_window_invalid: invalid period spelling")?;
-        let (lo, hi) = period.iso_bounds();
-        out.push((crate::emit::start(&lo), crate::emit::end(&hi)));
-    }
-    Ok(days::merge(out))
-}
-
-pub(super) fn canonical_period(value: &str) -> Result<String> {
-    let spans = value
+/// The ISO bounds of each period of a comma-separated list.
+fn bounds(value: &str) -> Result<Vec<(String, String)>> {
+    value
         .split(',')
         .map(|token| {
             token
                 .trim()
                 .parse::<reg_core::Period>()
                 .map(reg_core::Period::iso_bounds)
-                .map_err(|_| "inventory_window_invalid: invalid period spelling".to_owned())
+                .map_err(|_| "inventory_window_invalid: invalid period spelling".into())
         })
-        .collect::<Result<Vec<_>, _>>()?;
-    Ok(reg_core::render(&reg_core::merge(spans)))
+        .collect()
+}
+
+pub(super) fn periods(value: &str) -> Result<Vec<Span>> {
+    let spans = bounds(value)?
+        .iter()
+        .map(|(lo, hi)| (crate::emit::start(lo), crate::emit::end(hi)))
+        .collect();
+    Ok(days::merge(spans))
+}
+
+pub(super) fn canonical_period(value: &str) -> Result<String> {
+    Ok(reg_core::render(&reg_core::merge(bounds(value)?)))
 }
 
 pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>> {
@@ -604,20 +603,17 @@ pub(super) fn write(
                     authored.locator
                 ).into());
             }
-            tx.execute("INSERT INTO holding_table(id,physical_name,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
-          projection_token,period_encoding,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,schema_name,table_type,
+            // The period column and its encoding are set together once the columns exist.
+            tx.execute("INSERT INTO holding_table(id,physical_name,key_requirements,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,serde_json::to_string(&authored.key)?,schema_name,table_type,
           file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,authored.partition,projection,authored.projection_token,
-          Option::<String>::None,authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
+          authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
                 tx.execute(
                     "INSERT INTO holding_period VALUES(?,?,?)",
                     params![id, start, end],
                 )?;
             }
-            tx.execute(
-                "UPDATE holding_table SET key_requirements=? WHERE id=?",
-                params![serde_json::to_string(&authored.key)?, id],
-            )?;
             for route in &authored.routes {
                 if !index.contains_key(route) {
                     return Err("holdings_table_route_unresolved: default table absent".into());

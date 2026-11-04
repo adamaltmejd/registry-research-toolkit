@@ -1668,9 +1668,8 @@ the global member list omits them. The occurrences' own text and locators are no
 served: a release carries catalog items, never steward working files or census row
 references (maintainer 2026-11-03).
 
-`reg-build/src/holdings/schema.sql` owns the holdings DDL, except
-`holding_reference_occurrence` (created in `reg-build/src/holdings/references.rs`) and
-`holding_relation` (`reg-build/src/holdings/relations.sql`), and
+`reg-build/src/holdings/schema.sql` owns the holdings DDL, except `holding_relation`
+(`reg-build/src/holdings/relations.sql`), and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
 schema. `meta` records owner kind/id, holdings generation, catalog generation and file
 digest, the steward pin, the input-manifest digest and the compiler digest. Admission

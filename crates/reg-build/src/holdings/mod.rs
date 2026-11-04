@@ -194,6 +194,8 @@ fn write(
     let declarations = references::read(root, config)?;
     drop(semantic);
     let semantic = Connection::open(scratch)?;
+    semantic.execute_batch(include_str!("schema.sql"))?;
+    semantic.execute_batch(include_str!("relations.sql"))?;
     references::write(&semantic, &declarations)?;
     verify::distinct(&semantic, &base_db, &declarations)?;
     let base_generation = meta(&base_db, "generation_id")?;
@@ -208,8 +210,6 @@ fn write(
     )?;
     let mut db = Connection::open(scratch)?;
     db.execute_batch("PRAGMA foreign_keys=ON;")?;
-    db.execute_batch(include_str!("schema.sql"))?;
-    db.execute_batch(include_str!("relations.sql"))?;
     let counts = compile::write(&mut db, &base_db, topology, census.tables)?;
     let mut hasher = Sha256::new();
     hasher.update(crate::sha256_file(&input::path(root, &pin.config)?)?.0);

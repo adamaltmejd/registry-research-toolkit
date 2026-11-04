@@ -2,7 +2,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::days::{self, Span};
-use rusqlite::{Connection, params};
+use reg_core::issue::iso_day;
+use rusqlite::Connection;
 
 use super::{compile, input};
 use crate::error::{Result, rows};
@@ -177,7 +178,7 @@ pub(super) fn periods(db: &Connection, holding: i64) -> Result<Vec<Span>> {
 }
 
 /// A table period supplies one constant key value, never a pooled row's year.
-fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bool> {
+fn constant_period(spans: &[Span], encoding: &str) -> Result<bool> {
     let width = match encoding {
         "year" => 4,
         "month" => 7,
@@ -191,14 +192,12 @@ fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bo
         }
         _ => return Err("holdings_period_key_invalid: expected year, month, day or period".into()),
     };
+    // A day outside the four-digit years 0000-01-01..=9999-12-31 has no ISO date (catalog
+    // periods stay inside them).
+    let iso = |day: i64| (-719_528..=2_932_896).contains(&day).then(|| iso_day(day));
     let mut values = BTreeSet::new();
-    for (start, end) in spans {
-        let (lo, hi): (Option<String>, Option<String>) = db.query_row(
-            "SELECT date(?1*86400,'unixepoch'),date((?2-1)*86400,'unixepoch')",
-            params![start, end],
-            |r| Ok((r.get(0)?, r.get(1)?)),
-        )?;
-        let (Some(lo), Some(hi)) = (lo, hi) else {
+    for &(start, end) in spans {
+        let (Some(lo), Some(hi)) = (iso(start), iso(end - 1)) else {
             return Ok(false);
         };
         if lo.get(..width) != hi.get(..width) {
@@ -249,7 +248,7 @@ fn validate(db: &Connection, base: &Connection, holding: i64, key: &input::RowKe
         };
     }
     if let Some(encoding) = &key.period_key
-        && !constant_period(db, &periods(db, holding)?, encoding)?
+        && !constant_period(&periods(db, holding)?, encoding)?
     {
         return Err(format!(
             "holdings:table={holding}: {}: holdings_period_key_invalid: table does not supply one constant value",
