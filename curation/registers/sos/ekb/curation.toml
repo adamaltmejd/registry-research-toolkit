@@ -4165,13 +4165,13 @@ evidence = "Utbetalningsmarkeringen avser delkategorier av livsföring i övrigt
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap"
+subject = "var:utrikesfodd-sokande-medsokande"
 fields = { "sets" = ["utrikes-fodelse"] }
 evidence = "Källans etikett står i konflikt med definitionen och värdekoderna. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897\n\nDefinition pass 2026-11-02: Both the definition and the binary valueset concern foreign birth rather than citizenship.\nrel070-base/reg_meta.db:occurrence:521392"
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap"
+subject = "var:utrikesfodd-sokande-medsokande"
 fields = { "tags" = ["demographics"] }
 evidence = "Källans etikett står i konflikt med definitionen och värdekoderna. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0501: Ingen vald variabel i denna sektion kodar medborgarskap eller uttryckligen utländskt hushåll. membership-0502: Det skyddade medlemskapet och kandidatens fasta inkludering behålls trots källkonflikten. De entydiga utrikesfödelsevariablerna omfattas inte. membership-0503: Etiketten utländskt hushåll omfattas uttryckligen av den fasta kandidaten och behålls trots den dokumenterade konflikten med beskrivning och värdekoder.\ncatalog:valueset:12410\ncatalog:valueset:12534\ncatalog:variable_text:56434:10227:15340\ncatalog:variable_text:56577:15340:16071\ncatalog:variable_text:56579:7305:2932897\ncatalog:variable_text:56580:7305:2932897"
 
@@ -6451,7 +6451,7 @@ evidence = "The September obstacle field belongs to the subsistence-obstacle bat
 
 [[statement]]
 kind = "set"
-subject = "var:medborgarskap"
+subject = "var:utrikesfodd-sokande-medsokande"
 fields = { "description" = "Anger om sökande eller medsökande i hushållet är utrikesfödd." }
 evidence = "Definition pass 2026-11-02: Both the definition and the binary valueset concern foreign birth rather than citizenship.\nrel070-base/reg_meta.db:occurrence:521392"
 
@@ -6796,3 +6796,153 @@ kind = "set"
 subject = "var:totalbelopp"
 fields = { "label" = "Totalt belopp under året, inkl. introduktionsersättning" }
 evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): judged different meaning, high confidence; Definitionerna skiljer: EKBTOTALBELOPP exkluderar och TOTALBELOPP inkluderar introduktionsersättning."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-januari"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i januari (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND01: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND01 is a separate column in the same table (row 261). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND01 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 15 (ANNATIND01), row 261 (OVRIGSKULDIND01), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-februari"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i februari (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND02: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND02 is a separate column in the same table (row 262). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND02 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 16 (ANNATIND02), row 262 (OVRIGSKULDIND02), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-mars"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i mars (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND03: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND03 is a separate column in the same table (row 263). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND03 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 17 (ANNATIND03), row 263 (OVRIGSKULDIND03), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-april"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i april (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND04: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND04 is a separate column in the same table (row 264). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND04 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 18 (ANNATIND04), row 264 (OVRIGSKULDIND04), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-maj"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i maj (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND05: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND05 is a separate column in the same table (row 265). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND05 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 19 (ANNATIND05), row 265 (OVRIGSKULDIND05), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-juni"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i juni (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND06: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND06 is a separate column in the same table (row 266). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND06 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 20 (ANNATIND06), row 266 (OVRIGSKULDIND06), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-juli"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i juli (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND07: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND07 is a separate column in the same table (row 267). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND07 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 21 (ANNATIND07), row 267 (OVRIGSKULDIND07), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-augusti"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i augusti (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND08: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND08 is a separate column in the same table (row 268). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND08 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 22 (ANNATIND08), row 268 (OVRIGSKULDIND08), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-september"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i september (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND09: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND09 is a separate column in the same table (row 269). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND09 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 23 (ANNATIND09), row 269 (OVRIGSKULDIND09), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-oktober"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i oktober (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND10: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND10 is a separate column in the same table (row 270). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND10 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 24 (ANNATIND10), row 270 (OVRIGSKULDIND10), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-november"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i november (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND11: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND11 is a separate column in the same table (row 271). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND11 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 25 (ANNATIND11), row 271 (OVRIGSKULDIND11), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-annat-december"
+fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i december (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
+evidence = "ANNATIND12: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND12 is a separate column in the same table (row 272). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND12 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 26 (ANNATIND12), row 272 (OVRIGSKULDIND12), row 482."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-januari"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i januari." }
+evidence = "TANDVBELOPP01: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND01 (row 465), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 453 (TANDVBELOPP01), row 465 (TANDVIND01)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-februari"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i februari." }
+evidence = "TANDVBELOPP02: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND02 (row 466), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 454 (TANDVBELOPP02), row 466 (TANDVIND02)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-mars"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i mars." }
+evidence = "TANDVBELOPP03: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND03 (row 467), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 455 (TANDVBELOPP03), row 467 (TANDVIND03)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-april"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i april." }
+evidence = "TANDVBELOPP04: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND04 (row 468), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 456 (TANDVBELOPP04), row 468 (TANDVIND04)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-maj"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i maj." }
+evidence = "TANDVBELOPP05: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND05 (row 469), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 457 (TANDVBELOPP05), row 469 (TANDVIND05)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-juni"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i juni." }
+evidence = "TANDVBELOPP06: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND06 (row 470), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 458 (TANDVBELOPP06), row 470 (TANDVIND06)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-juli"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i juli." }
+evidence = "TANDVBELOPP07: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND07 (row 471), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 459 (TANDVBELOPP07), row 471 (TANDVIND07)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-augusti"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i augusti." }
+evidence = "TANDVBELOPP08: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND08 (row 472), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 460 (TANDVBELOPP08), row 472 (TANDVIND08)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-september"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i september." }
+evidence = "TANDVBELOPP09: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND09 (row 473), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 461 (TANDVBELOPP09), row 473 (TANDVIND09)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-oktober"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i oktober." }
+evidence = "TANDVBELOPP10: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND10 (row 474), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 462 (TANDVBELOPP10), row 474 (TANDVIND10)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-november"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i november." }
+evidence = "TANDVBELOPP11: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND11 (row 475), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 463 (TANDVBELOPP11), row 475 (TANDVIND11)."
+
+[[statement]]
+kind = "set"
+subject = "var:tandvard-belopp-december"
+fields = { "description" = "Utbetalt belopp i kronor (positivt tal) i ekonomiskt bistånd för livsföringen i övrigt, kategorin tandvård, i december." }
+evidence = "TANDVBELOPP12: label 'Belopp för livsföring i övrigt, kategorin, tandvård' and Värdemängd 'Mätvärde, positivt tal. Belopp i kr' state an amount; the definition text 'Utbetalning finns för ...' is copied from the indicator TANDVIND12 (row 476), which has the 1/0 code list. Same pattern for ANNATBELOPP, where label and definition agree.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 464 (TANDVBELOPP12), row 476 (TANDVIND12)."
+
+[[statement]]
+kind = "set"
+subject = "var:utlanskt-hushall"
+fields = { "description" = "Anger om sökande eller medsökande i hushållet är utrikesfödd: 0 = ingen av dem, 1 = en av dem, 2 = båda." }
+evidence = "Definition 'Anger om sökande eller medsökande i hushållet är utrikesfödd' and the 0/1/2 codes (value set #12410) agree; only the label 'Utlänskt hushåll' is looser. The sibling UTRFODH has the same definition and codes.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 600 (UTLHH), row 601 (UTRFODH)."
