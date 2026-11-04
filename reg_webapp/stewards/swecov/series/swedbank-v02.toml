@@ -1,8 +1,0 @@
-id = "swedbank-v02"
-register = "swedbank/konsumtion"
-variants = ["swedbank/konsumtion/_default"]
-
-[[table]]
-table = "Swedbank_V02"
-edition = 2020
-partition = "v02"

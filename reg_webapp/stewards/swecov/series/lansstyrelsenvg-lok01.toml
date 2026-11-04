@@ -1,7 +1,0 @@
-id = "lansstyrelsenvg-lok01"
-register = "sabo/patienter"
-variants = ["sabo/patienter/hyresstod"]
-
-[[table]]
-table = "LansstyrelsenVG_LOK01"
-edition = { from = 2020, to = 2021 }

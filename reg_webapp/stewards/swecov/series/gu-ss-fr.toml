@@ -1,8 +1,0 @@
-id = "gu-ss-fr"
-register = "sabo/patienter"
-variants = ["sabo/patienter/enheter"]
-
-[[table]]
-table = "GU_ss_fr"
-edition = { from = 2018, to = 2020 }
-period_column = { name = "year", encoding = "year" }
