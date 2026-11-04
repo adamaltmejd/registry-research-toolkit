@@ -17,12 +17,11 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
-    description: "The summary of a provider, register, table or variable by public id or bare \
-                  name; a set only by set/<provider>/<register>/<slug>. Without a ref, \
-                  the catalog's providers. Variables show curated \
-                  metadata by default, with marked provider text only as a fallback. \
-                  Use evidence=true for provider text history, source keys/spellings, \
-                  curation statement locators and linked documents.",
+    description: "Describe a provider, register, table, variable or set by id or name (a set \
+        only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables \
+        show curated metadata, with the provider's text only as a fallback. `evidence=true` \
+        adds the provider's original texts, column names, curation locators and linked \
+        documents.",
     params: &[
         Param::optional("ref", Type::Ref),
         Param::optional("evidence", Type::Boolean),
@@ -32,17 +31,16 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result: component::<Show>,
 }];
 
-/// `shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the
-/// resolved `fqid`, so a bare-name request gets the id back.
+/// A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back.
 #[derive(Serialize, ToSchema)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Show {
-    /// In steward mode, the steward's own providers too.
+    /// On a data holder's catalog, the holder's own providers too.
     Root { providers: Vec<ShowProviderRef> },
     Provider {
         fqid: String,
         name: String,
-        /// In steward mode, the steward's own registers too.
+        /// On a data holder's catalog, the holder's own registers too.
         registers: Vec<ShowRegisterRef>,
     },
     Register {
@@ -53,11 +51,11 @@ pub enum Show {
         period: Period,
         tables: Vec<ShowTable>,
         variables: Vec<ShowVariableRef>,
-        /// The register's curated sets (groups), in public-id order.
+        /// The register's curated sets (groups), in id order.
         sets: Vec<ShowRegisterSet>,
         /// The union of its variables' tags, in public-id order.
         tags: Vec<ShowMembership>,
-        /// The literal names of the releases the reader could not place in time.
+        /// Names of deliveries with no known period.
         unplaced: Vec<String>,
     },
     Table {
@@ -75,7 +73,7 @@ pub enum Show {
         #[schema(required = true)]
         cadence: Option<String>,
         spans: Vec<Period>,
-        /// Absent when none, and on a steward catalog.
+        /// Absent when none, and on a data holder's catalog.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         releases: Vec<Release>,
         row_keys: Vec<ShowRowKey>,
@@ -98,9 +96,9 @@ pub enum Show {
         name: String,
         /// The register's fqid.
         register: String,
-        /// The coverage hull; `coverage` supplies detailed spans and gaps.
+        /// The whole span; `coverage` has the gaps.
         period: Period,
-        /// The one curated description, separate from source text runs.
+        /// The curated description.
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
         description: Option<String>,
@@ -108,7 +106,7 @@ pub enum Show {
         sets: Vec<ShowMembership>,
         #[serde(skip_serializing_if = "Vec::is_empty")]
         tags: Vec<ShowMembership>,
-        /// Provenance is present only when requested with `evidence=true`.
+        /// Only with `evidence=true`.
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
         evidence: Option<VariableEvidence>,
@@ -133,7 +131,7 @@ pub struct ShowVariableRef {
     fqid: String,
     name: String,
     period: Period,
-    /// The fqids of the register's tables the variable has segments in.
+    /// The tables the variable appears in.
     tables: Vec<String>,
 }
 
@@ -152,7 +150,7 @@ pub struct ShowTable {
     period: Period,
 }
 
-/// A segment of the table that holds its rows' key.
+/// The row-key column's period in this table.
 #[derive(Serialize, ToSchema)]
 pub struct ShowRowKey {
     fqid: String,
@@ -193,13 +191,13 @@ pub struct ShowSetMember {
     facets: Vec<ShowSetFacet>,
 }
 
-/// One (table, spelling) a set member has segments in.
+/// A table and column name the member appears under.
 #[derive(Serialize, ToSchema)]
 pub struct ShowSetColumn {
     /// The table's fqid.
     table: String,
     spelling: String,
-    /// The column's segment periods, in time order.
+    /// The column's periods, in time order.
     periods: Vec<Period>,
 }
 

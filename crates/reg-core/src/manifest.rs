@@ -12,20 +12,19 @@ use crate::project::ExtractFormat;
 /// The manifest `version` this crate writes; the runner refuses every other.
 pub const MANIFEST_VERSION: u32 = 4;
 
-/// The order file: per physical table and delivery, one file and its columns.
+/// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
-    /// Always [`MANIFEST_VERSION`].
+    /// Always 4.
     pub version: u32,
     /// The project's format, resolved to `dta` when it states none.
     pub extract_format: ExtractFormat,
     pub provenance: Provenance,
-    /// By first logical appearance, then name.
+    /// By first appearance in the order, then name.
     pub files: Vec<File>,
-    /// Every binding the order delivers less of than the project requests, logical
-    /// availability and physical possession together.
+    /// Every requested variable the order delivers less of than requested.
     pub clips: Vec<Clip>,
     /// The non-blocking findings (level `warning` or `info`).
     pub findings: Vec<Issue>,
@@ -37,7 +36,7 @@ pub struct Manifest {
 #[serde(deny_unknown_fields)]
 pub struct Provenance {
     pub mode: Mode,
-    /// The steward whose holdings serve the order.
+    /// The data holder whose tables serve the order.
     pub steward: String,
     pub catalog: CatalogIdentity,
     pub holdings: HoldingsIdentity,
@@ -53,7 +52,7 @@ pub enum Mode {
     StewardHoldings,
 }
 
-/// The served catalog: its release, schema and the paired generation (`meta.generation`).
+/// The catalog version the order was checked against.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
@@ -76,20 +75,20 @@ pub struct HoldingsIdentity {
 #[serde(deny_unknown_fields)]
 pub struct ProjectIdentity {
     pub schema_version: String,
-    /// `project::project_hash` of the document.
+    /// A hash of the project document.
     pub project_hash: String,
     /// Never blank: an unnamed project is `project_unnamed`.
     pub name: String,
 }
 
-/// One output file: one physical table in its authored delivery.
+/// One output file: one of the holder's tables in one delivery.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ManifestFile))]
 #[serde(deny_unknown_fields)]
 pub struct File {
-    /// The file's stem, a [`safe_file_name`]; the runner adds the format's extension.
+    /// The file's name without the extension; the runner adds the format's extension.
     pub name: String,
-    /// The exact physical schema and table.
+    /// The exact schema and table in the database.
     pub schema: String,
     pub table: String,
     /// The authored delivery period; null for a timeless table.
@@ -103,7 +102,7 @@ pub struct File {
     /// Absent: every row of the table.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub row_filter: Option<RowFilter>,
-    /// Ordered columns in logical request order, then the held row keys.
+    /// Requested columns in request order, then the row keys.
     pub columns: Vec<Column>,
 }
 
@@ -141,7 +140,7 @@ impl Encoding {
     }
 }
 
-/// Inclusive ISO days; an absent bound cuts no held day.
+/// Inclusive ISO days; an absent bound means no limit.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = RowFilterRange))]
 #[serde(deny_unknown_fields)]
@@ -152,14 +151,14 @@ pub struct Range {
     pub to: Option<String>,
 }
 
-/// One physical column, once per file, with every logical reference it serves.
+/// One column of the file, with every requested variable it delivers.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ManifestColumn))]
 #[serde(deny_unknown_fields)]
 pub struct Column {
-    /// The exact physical header.
+    /// The exact column name in the file.
     pub name: String,
-    /// On a `dta` order only, when `name` is not a Stata variable name ([`stata_name`]).
+    /// Only on a `dta` order, when `name` is not a valid Stata variable name.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub stata_name: Option<String>,
     pub storage: Storage,
@@ -185,8 +184,7 @@ pub struct Storage {
     pub scale: Option<i64>,
 }
 
-/// `ordered`: a binding names it; `row_key`/`carried`: a held key the file requires
-/// (`carried` when the table carries its parent's key copy).
+/// `ordered`: requested; `row_key`: a key the file needs; `carried`: the parent table's key copied into this one.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ColumnRole))]
 #[serde(rename_all = "snake_case")]
@@ -196,24 +194,24 @@ pub enum Role {
     Carried,
 }
 
-/// A logical reference a column serves.
+/// A requested variable this column delivers.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ColumnRef))]
 #[serde(deny_unknown_fields)]
 pub struct Ref {
     pub source: String,
-    /// The binding's index in the source; null for a held key no binding orders.
+    /// The variable's position in the source; null for a row key nobody requested.
     #[cfg_attr(feature = "openapi", schema(required = true))]
     pub binding: Option<usize>,
     pub table: String,
     pub variable: String,
     /// The days of this reference the file holds.
     pub period: Period,
-    /// The logical spelling (the catalog's form); the physical `name` wins in the file.
+    /// The catalog's column name; the file uses `name`.
     pub spelling: String,
 }
 
-/// Steward slot topology of a column.
+/// How the column is laid out in the holder's files.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
@@ -224,7 +222,7 @@ pub struct Slot {
     pub index: String,
 }
 
-/// A binding delivered over less than requested.
+/// A requested variable that covers less than the requested period.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ManifestClip))]
 #[serde(deny_unknown_fields)]

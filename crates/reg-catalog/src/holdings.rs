@@ -113,7 +113,7 @@ impl Possession {
     }
 }
 
-/// The selected steward and the identities of its admitted catalog/holdings pair.
+/// The data holder and the versions of its data.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Steward {
     pub owner: String,
@@ -122,9 +122,7 @@ pub struct Steward {
     pub schema_version: String,
 }
 
-/// `Context.steward_config`: the steward's compiled presentation, logo and scope. The
-/// server passes the admitted JSON through; this type is its API schema and the
-/// admission check that keeps the schema true.
+/// The data holder's name, logo and description.
 #[derive(ToSchema)]
 #[expect(
     dead_code,
@@ -134,12 +132,10 @@ pub struct StewardConfig {
     presentation: StewardPresentation,
     /// The logo's SVG markup.
     logo: String,
-    /// The steward's `scope.toml` as JSON; its shape is the steward spec's, not this API's.
     #[schema(value_type = Object)]
     scope: serde_json::Value,
 }
 
-/// The steward's `steward.json`. Other keys pass through untyped.
 #[derive(Deserialize, ToSchema)]
 #[expect(dead_code, reason = "deserialized only to check the admitted JSON")]
 pub struct StewardPresentation {
@@ -428,7 +424,7 @@ impl Catalog {
         match (first, second) {
             (Ok(a), Ok(b)) => Err(Error::new(
                 Code::AmbiguousRef,
-                "Name occurs in both catalog and steward metadata; use a public id.",
+                "The name is used in both the catalog and the holder's data; use an id.",
                 vec![
                     value.into(),
                     serde_json::json!([

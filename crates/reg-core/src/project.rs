@@ -218,7 +218,7 @@ impl ProjectData {
     }
 }
 
-/// One logical extraction: a table, a requested period and its bindings.
+/// One table, a requested period and its variables.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSource))]
 #[serde(deny_unknown_fields)]
@@ -291,8 +291,7 @@ pub enum PeriodSegment {
     Range(PeriodRange),
 }
 
-/// `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
-/// series).
+/// One period, or a sorted list of periods for an interrupted series.
 //
 // A list variant comes first in each untagged enum: serde also reads a struct from a
 // JSON array, by position, so `["2018-01", "2018-04"]` would otherwise become a

@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{IssueLevel, ValidationIssue};
 
-/// `shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.
+/// A half-open `[start, end)` of ISO days, `null` for an open end.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
@@ -59,7 +59,7 @@ pub fn iso_day(day: i64) -> String {
     format!("{y:04}-{m:02}-{d:02}")
 }
 
-/// `shape.Issue`: a project issue or an order finding, located in the project.
+/// A project issue or an order finding, located in the project.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]

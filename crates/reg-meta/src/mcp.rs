@@ -105,9 +105,7 @@ fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
             .zip(&signatures)
             .map(|(op, signature)| format!("- `{}` ({signature}): {}", op.name, op.description));
         std::iter::once(
-            "`operation` names one of these operations; the other arguments are its \
-            parameters (`?` marks an optional one)."
-                .to_owned(),
+            "Set `operation` to one of these; `?` marks an optional argument.".to_owned(),
         )
         .chain(lines)
         .collect::<Vec<_>>()
