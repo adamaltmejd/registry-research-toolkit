@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of a provider, register, table or variable by public id or bare name; a set only by set/<provider>/<register>/<slug>. Without a ref, the catalog's providers. Variables show curated metadata by default, with marked provider text only as a fallback. Use evidence=true for provider text history, source keys/spellings, curation statement locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -45,7 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The catalog's identity and headline counts, for the SPA. */
+        /** @description The catalog's identity and headline counts. */
         get: operations["context"];
         put?: never;
         post?: never;
@@ -62,7 +62,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases. */
+        /** @description Which years a register, table or variable exists: per table its periods, gaps (with reason) and releases. */
         get: operations["coverage"];
         put?: never;
         post?: never;
@@ -79,7 +79,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A table's or a register's schema at two periods, joined on variable: what was added, removed or changed (spelling, type, length, value set). A rename is a changed spelling. */
+        /** @description Compare a table's or register's columns at two periods: added, removed and changed (name, type, length, value set). */
         get: operations["diff"];
         put?: never;
         post?: never;
@@ -96,7 +96,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text. */
+        /** @description A document by hash: what it covers, an excerpt and, when available, the full text. */
         get: operations["docs_get"];
         put?: never;
         post?: never;
@@ -163,7 +163,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables. */
+        /** @description The documents about a register (including its tables and variables), table, variable or classification. */
         get: operations["docs_related"];
         put?: never;
         post?: never;
@@ -180,7 +180,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables. */
+        /** @description Search the catalog's documents; without `q`, list them by title. `register` keeps that register's documents. */
         get: operations["docs_search"];
         put?: never;
         post?: never;
@@ -197,7 +197,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The review items and notices on a register, a table or a variable (its segments and occurrences included), optionally narrowed to a period, a table or a rule code. */
+        /** @description The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code. */
         get: operations["findings"];
         put?: never;
         post?: never;
@@ -214,7 +214,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage. */
+        /** @description What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage. */
         get: operations["graph"];
         put?: never;
         post?: never;
@@ -233,7 +233,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description The MONA order file of a project_data.json document on this steward's holdings: per physical table and delivery one file, with its exact columns, held row keys and row filter, the clips and the non-blocking findings; or `order_blocked` with every logical and physical finding. */
+        /** @description The MONA order file for a project_data.json on this data holder's tables: one file per table and delivery, with its columns, row keys, row filter, undeliverable periods and warnings; or `order_blocked` listing every problem. */
         post: operations["materialize_order"];
         delete?: never;
         options?: never;
@@ -250,7 +250,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description The logical order of a project_data.json document: per binding, each window's table, period, spelling and form, with the availability clips, the row keys and the non-blocking findings; or `order_blocked` with every finding. */
+        /** @description What a project_data.json would order: per requested variable, the table, period and column name, the periods that cannot be delivered, the row keys and any warnings; or `order_blocked` listing every problem. */
         post: operations["order"];
         delete?: never;
         options?: never;
@@ -267,7 +267,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Validate a project_data.json document: its structural issues, then the order check's findings at their levels. A 200 even when the project is invalid; `ok` is true exactly when `order` returns a logical order. */
+        /** @description Check a project_data.json: every problem with its level. Always 200; `ok` is true when `order` would succeed. */
         post: operations["validate"];
         delete?: never;
         options?: never;
@@ -282,7 +282,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched. */
+        /** @description Find the variables behind column names (up to 200), optionally in one register. Names that match nothing are reported as unmatched. */
         get: operations["resolve"];
         put?: never;
         post?: never;
@@ -299,7 +299,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The columns of a table, a register's tables or one variable's tables over a period: one line per variable and delivered spelling, with its type, length, value set and role. */
+        /** @description The columns of a table, a register or a variable's tables over a period, with type, length, value set and role. */
         get: operations["schema"];
         put?: never;
         post?: never;
@@ -316,7 +316,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Paired steward results have separate ranks, counts and cursors; scope=steward filters held intervals before ranking. Exact column names are `resolve`. Use tag to keep variables belonging to that thematic tag. Use show with evidence=true to check a variable's provenance. */
+        /** @description Search registers, tables, variables, codes and documents by text, best match first. `tag` keeps only that tag's variables. For exact column names use `resolve`. */
         get: operations["search"];
         put?: never;
         post?: never;
@@ -333,7 +333,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Per register, how many variables a search query matches, for the SPA's register filter. */
+        /** @description Per register, how many variables a search query matches. */
         get: operations["search_facets"];
         put?: never;
         post?: never;
@@ -350,7 +350,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a row. On a steward catalog, the held columns and files over the years held. With `evidence`, each row's source occurrences and the rule overrides that changed them. */
+        /** @description A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's. */
         get: operations["segments"];
         put?: never;
         post?: never;
@@ -367,7 +367,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A value set's items, by its hash or by a classification version's ref, with a hierarchical set paged one level at a time by `parent` and searched flat by `q`; or, given a `code` and optionally its `label`, the value sets that hold that pair. The blank code is an item like any other. */
+        /** @description The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other. */
         get: operations["values"];
         put?: never;
         post?: never;
@@ -381,31 +381,29 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description The served catalog: its release, schema and the paired generation (`meta.generation`). */
+        /** @description The catalog version the order was checked against. */
         CatalogIdentity: {
             generation: string;
             release: string;
             schema: string;
         };
-        /** @description A logical reference a column serves. */
+        /** @description A requested variable this column delivers. */
         ColumnRef: {
-            /** @description The binding's index in the source; null for a held key no binding orders. */
+            /** @description The variable's position in the source; null for a row key nobody requested. */
             binding: number | null;
             /** @description The days of this reference the file holds. */
             period: components["schemas"]["Period"];
             source: string;
-            /** @description The logical spelling (the catalog's form); the physical `name` wins in the file. */
+            /** @description The catalog's column name; the file uses `name`. */
             spelling: string;
             table: string;
             variable: string;
         };
         /**
-         * @description `ordered`: a binding names it; `row_key`/`carried`: a held key the file requires
-         *     (`carried` when the table carries its parent's key copy).
+         * @description `ordered`: requested; `row_key`: a key the file needs; `carried`: the parent table's key copied into this one.
          * @enum {string}
          */
         ColumnRole: "ordered" | "row_key" | "carried";
-        /** @description `shape.Context`. */
         Context: {
             catalog_version: string;
             period_span: components["schemas"]["Period"] | null;
@@ -417,34 +415,37 @@ export interface components {
             steward_config?: components["schemas"]["StewardConfig"];
             steward_sizes?: components["schemas"]["Sizes"] | null;
         };
-        /** @description `shape.Coverage`. */
         Coverage: {
             fqid: string;
             kind: string;
-            /** @description The entity's hull. */
+            /** @description Its whole span. */
             period: components["schemas"]["Period"];
             tables: components["schemas"]["CoverageTable"][];
         };
         CoverageGap: {
             period: components["schemas"]["Period"];
+            /**
+             * @description `no_release`: no release; `release_without_column`: released without this column;
+             *     `documented_without_column`: documented but not delivered; `ambiguous`: more than
+             *     one form; `withheld`: not delivered on purpose.
+             */
             reason: string;
         };
         CoverageTable: {
             fqid: string;
             gaps?: components["schemas"]["CoverageGap"][];
             name: string;
-            /** @description Absent for a variable ref (releases belong to tables) and in steward mode. */
+            /** @description Absent for a variable (releases belong to tables) and on a data holder's catalog. */
             releases?: components["schemas"]["Release"][];
             spans: components["schemas"]["Period"][];
         };
-        /** @description An authored curation statement that contributed a field of this variable. */
+        /** @description A curated statement that supplied a field of this variable. */
         CurationStatement: {
             caveat: string | null;
             field: string;
             statement: components["schemas"]["StatementLocation"];
             value: string | null;
         };
-        /** @description `shape.Diff`. */
         Diff: {
             fqid: string;
             /** @description The request's `from`. */
@@ -479,7 +480,6 @@ export interface components {
             summary: components["schemas"]["DiffSummary"];
             table: string;
         };
-        /** @description `shape.DocDetail`. */
         DocDetail: {
             /** @description The sections joined by a blank line; `null` for a pdf. */
             body: string | null;
@@ -495,7 +495,6 @@ export interface components {
             title: string;
             url: string | null;
         };
-        /** @description `shape.DocHit`. */
         DocHit: {
             doc: string;
             /** @description The published document this text is taken from; `null` when unknown. */
@@ -507,7 +506,6 @@ export interface components {
             snippet: string | null;
             title: string;
         };
-        /** @description `docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`. */
         DocPage: {
             items: components["schemas"]["DocHit"][];
             next_cursor: string | null;
@@ -516,7 +514,7 @@ export interface components {
             /** Format: int64 */
             total: number;
         };
-        /** @description One entity a document is about (`shape.DocDetail.subjects`). */
+        /** @description One thing a document is about. */
         DocSubject: {
             fqid: string;
             kind: string;
@@ -533,7 +531,7 @@ export interface components {
             message: string;
             remediation: string;
         };
-        /** @description A delivered or curated folded alias; source occurrences retain exact spellings. */
+        /** @description A column name the variable is known by (case ignored). */
         EvidenceSpelling: {
             kind: string;
             spelling: string;
@@ -543,9 +541,8 @@ export interface components {
             fqid: string;
             name: string;
         };
-        /** @description `shape.Finding`. */
         Finding: {
-            /** @description An acked statement's caveat. */
+            /** @description A curator's caveat. */
             caveat: string | null;
             /** @description A rule code and its sub-kind, `F7:edition-disagreement`. */
             code: string;
@@ -555,7 +552,7 @@ export interface components {
             severity: string;
             subject: components["schemas"]["Subject"];
         };
-        /** @description `shape.Graph`: the focus, its nodes and the relations between them. */
+        /** @description The focus, its nodes and the relations between them. */
         Graph: {
             edges: components["schemas"]["GraphEdge"][];
             /** @description The ref's fqid. */
@@ -586,7 +583,7 @@ export interface components {
             generation: string;
             owner: string;
         };
-        /** @description `shape.Issue`: a project issue or an order finding, located in the project. */
+        /** @description A project issue or an order finding, located in the project. */
         Issue: {
             code: string;
             level: components["schemas"]["IssueLevel"];
@@ -610,12 +607,11 @@ export interface components {
             input: string;
             locator: string;
         };
-        /** @description `shape.LogicalOrder` (crates/DESIGN.md, "The logical order"). */
         LogicalOrder: {
             catalog: components["schemas"]["OrderCatalog"];
-            /** @description Every availability clip, also when nothing blocks. */
+            /** @description Every period that cannot be delivered, also when the order succeeds. */
             clips: components["schemas"]["OrderClip"][];
-            /** @description Per source, per binding in declaration order, then by period start. */
+            /** @description Per source, per requested variable in request order, then by period start. */
             entries: components["schemas"]["OrderEntry"][];
             /** @description The non-blocking findings (level `warning` or `info`). */
             findings: components["schemas"]["Issue"][];
@@ -623,27 +619,24 @@ export interface components {
             /** @description Per source, then by period start. */
             row_keys: components["schemas"]["OrderRowKeys"][];
         };
-        /** @description The order file: per physical table and delivery, one file and its columns. */
+        /** @description The order file: one file per table and delivery, with its columns. */
         Manifest: {
-            /**
-             * @description Every binding the order delivers less of than the project requests, logical
-             *     availability and physical possession together.
-             */
+            /** @description Every requested variable the order delivers less of than requested. */
             clips: components["schemas"]["ManifestClip"][];
             /** @description The project's format, resolved to `dta` when it states none. */
             extract_format: components["schemas"]["ProjectExtractFormat"];
-            /** @description By first logical appearance, then name. */
+            /** @description By first appearance in the order, then name. */
             files: components["schemas"]["ManifestFile"][];
             /** @description The non-blocking findings (level `warning` or `info`). */
             findings: components["schemas"]["Issue"][];
             provenance: components["schemas"]["Provenance"];
             /**
              * Format: int32
-             * @description Always [`MANIFEST_VERSION`].
+             * @description Always 4.
              */
             version: number;
         };
-        /** @description A binding delivered over less than requested. */
+        /** @description A requested variable that covers less than the requested period. */
         ManifestClip: {
             binding: number;
             ordered: components["schemas"]["Period"][];
@@ -651,43 +644,42 @@ export interface components {
             source: string;
             variable: string;
         };
-        /** @description One physical column, once per file, with every logical reference it serves. */
+        /** @description One column of the file, with every requested variable it delivers. */
         ManifestColumn: {
-            /** @description The exact physical header. */
+            /** @description The exact column name in the file. */
             name: string;
             refs: components["schemas"]["ColumnRef"][];
             role: components["schemas"]["ColumnRole"];
             slot?: components["schemas"]["Slot"] | null;
-            /** @description On a `dta` order only, when `name` is not a Stata variable name ([`stata_name`]). */
+            /** @description Only on a `dta` order, when `name` is not a valid Stata variable name. */
             stata_name?: string | null;
             storage: components["schemas"]["Storage"];
         };
-        /** @description One output file: one physical table in its authored delivery. */
+        /** @description One output file: one of the holder's tables in one delivery. */
         ManifestFile: {
-            /** @description Ordered columns in logical request order, then the held row keys. */
+            /** @description Requested columns in request order, then the row keys. */
             columns: components["schemas"]["ManifestColumn"][];
             /** @description The authored delivery period; null for a timeless table. */
             delivery: string | null;
-            /** @description The file's stem, a [`safe_file_name`]; the runner adds the format's extension. */
+            /** @description The file's name without the extension; the runner adds the format's extension. */
             name: string;
             partition?: string | null;
             /** @description The projection token. */
             projection?: string | null;
             row_filter?: components["schemas"]["RowFilter"] | null;
-            /** @description The exact physical schema and table. */
+            /** @description The exact schema and table in the database. */
             schema: string;
             table: string;
         };
         /** @enum {string} */
         ManifestMode: "steward_holdings";
-        /** @description The response `meta` (`shape.Meta`). */
         Meta: {
             catalog_version: string;
             contract_version: string;
             generation: string;
             steward?: components["schemas"]["Steward"] | null;
         };
-        /** @description One occurrence behind a segment (`shape.Segment.evidence`). */
+        /** @description One delivery behind this row. */
         Occurrence: {
             label: string | null;
             locators: components["schemas"]["Locator"][];
@@ -704,35 +696,32 @@ export interface components {
             generation_id: string;
             schema_version: string;
         };
-        /** @description An availability clip of one binding. */
+        /** @description A requested variable that covers less than the requested period. */
         OrderClip: {
             ordered: components["schemas"]["Period"][];
             requested: components["schemas"]["Period"][];
             source: string;
             variable: string;
         };
-        /** @description One merged segment of one binding in one table. */
+        /** @description One stretch of one requested variable in one table. */
         OrderEntry: {
-            /** @description The binding's index in the source. */
+            /** @description The variable's position in the source. */
             binding: number;
             /** @description A class version's public id. */
             classification: string | null;
-            /** @description As the binding states it. */
+            /** @description As the project states it. */
             display_name: string | null;
             /** Format: int64 */
             length: number | null;
-            /**
-             * @description The clipped request over the merged segment; `{start: null, end: null}` for a
-             *     timeless table.
-             */
+            /** @description The requested period cut to what the table has; `{start: null, end: null}` for a timeless table. */
             period: components["schemas"]["Period"];
             provider: string;
             register: string;
             /** @description The project source's name. */
             source: string;
-            /** @description The merged segment's exact spelling. */
+            /** @description The exact column name. */
             spelling: string;
-            /** @description The table that serves the window. */
+            /** @description The table that serves the period. */
             table: string;
             type: string | null;
             value_set: components["schemas"]["OrderValueSet"] | null;
@@ -741,7 +730,7 @@ export interface components {
         /** @description The project an order was checked for. */
         OrderProject: {
             name: string;
-            /** @description `reg_core::project::project_hash` of the document. */
+            /** @description A hash of the project document. */
             project_hash: string;
             reg_meta_version: string;
             schema_version: string;
@@ -759,7 +748,7 @@ export interface components {
             /** Format: int64 */
             n_items: number;
         };
-        /** @description A non-source winner over one field of an occurrence. */
+        /** @description A curated value that replaced the provider's. */
         Override: {
             field: string;
             prov: string;
@@ -768,12 +757,12 @@ export interface components {
             statement: components["schemas"]["StatementLocation"] | null;
             value: string | null;
         };
-        /** @description `shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end. */
+        /** @description A half-open `[start, end)` of ISO days, `null` for an open end. */
         Period: {
             end: string | null;
             start: string | null;
         };
-        /** @description One population a release states (`shape.Release.populations`). */
+        /** @description One population a release states. */
         Population: {
             definition: string | null;
             name: string;
@@ -822,7 +811,7 @@ export interface components {
         ProjectIdentity: {
             /** @description Never blank: an unnamed project is `project_unnamed`. */
             name: string;
-            /** @description `project::project_hash` of the document. */
+            /** @description A hash of the project document. */
             project_hash: string;
             schema_version: string;
         };
@@ -847,7 +836,7 @@ export interface components {
          *     included, which only a scalar source period may hold).
          */
         ProjectPeriodValue: number | string;
-        /** @description One logical extraction: a table, a requested period and its bindings. */
+        /** @description One table, a requested period and its variables. */
         ProjectSource: {
             bindings: components["schemas"]["ProjectBinding"][];
             name: string;
@@ -858,10 +847,7 @@ export interface components {
              */
             table: string;
         };
-        /**
-         * @description `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
-         *     series).
-         */
+        /** @description One period, or a sorted list of periods for an interrupted series. */
         ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];
         /** @description The optional study window, in plain int years. */
         ProjectStudyWindow: {
@@ -878,16 +864,15 @@ export interface components {
             holdings: components["schemas"]["HoldingsIdentity"];
             mode: components["schemas"]["ManifestMode"];
             project: components["schemas"]["ProjectIdentity"];
-            /** @description The steward whose holdings serve the order. */
+            /** @description The data holder whose tables serve the order. */
             steward: string;
         };
-        /** @description One provider text, with its coverage and every contributing source occurrence. */
+        /** @description One provider text, the years it covers and the deliveries it comes from. */
         ProviderText: {
             periods: components["schemas"]["Period"][];
             sources: components["schemas"]["ProviderTextSource"][];
             text: string;
         };
-        /** @description Source values remain distinct from curated winners, including silent sources. */
         ProviderTextSource: {
             field?: string | null;
             label: string | null;
@@ -915,7 +900,6 @@ export interface components {
             registers: components["schemas"]["RegisterFacet"][];
             steward?: components["schemas"]["StewardRegisterFacets"] | null;
         };
-        /** @description `shape.RelatedDocument`. */
         RelatedDocument: {
             /** Format: int64 */
             bytes: number;
@@ -932,7 +916,7 @@ export interface components {
             title: string;
             url: string | null;
         };
-        /** @description `shape.Release`: a delivery of a table. */
+        /** @description A delivery of a table. */
         Release: {
             edition: string;
             name: string;
@@ -947,7 +931,7 @@ export interface components {
         Resolved: {
             columns: components["schemas"]["ResolvedColumn"][];
         };
-        /** @description `shape.ResolvedColumn`: a requested column and the variables it names. */
+        /** @description A requested column and the variables it names. */
         ResolvedColumn: {
             /** @description As asked. */
             column: string;
@@ -971,7 +955,7 @@ export interface components {
             /** @description Sorted and disjoint. */
             ranges: components["schemas"]["RowFilterRange"][];
         };
-        /** @description Inclusive ISO days; an absent bound cuts no held day. */
+        /** @description Inclusive ISO days; an absent bound means no limit. */
         RowFilterRange: {
             from?: string | null;
             to?: string | null;
@@ -981,13 +965,13 @@ export interface components {
             spelling: string;
             variable: string;
         };
-        /** @description `shape.SchemaLine`: one variable's delivery under one folded spelling in one table. */
+        /** @description One variable under one column name in one table. */
         SchemaLine: {
             /** Format: int64 */
             length: number | null;
             /** @description The variable's label. */
             name: string;
-            /** @description The line's segments merged, clipped to the request. */
+            /** @description Its period, cut to the requested one. */
             period: components["schemas"]["Period"];
             role: string;
             spelling: string;
@@ -997,12 +981,11 @@ export interface components {
             value_set: components["schemas"]["ValueSetRef"] | null;
             variable: string;
         };
-        /** @description `Page<SchemaLine>`. */
         SchemaPage: {
             items: components["schemas"]["SchemaLine"][];
             next_cursor: string | null;
         };
-        /** @description `shape.SearchHit`: one hit, tagged by its kind. */
+        /** @description One hit, tagged by its kind. */
         SearchHit: {
             description: string | null;
             fqid: string;
@@ -1025,7 +1008,7 @@ export interface components {
             name: string;
             period: components["schemas"]["Period"];
             register_name: string;
-            /** @description The folded names it was delivered under, sorted. */
+            /** @description Its column names, sorted. */
             spellings: string[];
             /** @enum {string} */
             type: "variable";
@@ -1042,7 +1025,7 @@ export interface components {
             type: "code";
             /**
              * Format: int64
-             * @description The value sets some segment references that hold the pair.
+             * @description How many value sets in use contain this code and label.
              */
             value_set_count: number;
         } | {
@@ -1056,7 +1039,6 @@ export interface components {
             /** @enum {string} */
             type: "document";
         };
-        /** @description `Page<SearchHit>`; paired mode adds a count and an independently ranked steward group. */
         SearchPage: {
             items: components["schemas"]["SearchHit"][];
             next_cursor: string | null;
@@ -1064,22 +1046,17 @@ export interface components {
             /** Format: int64 */
             total?: number | null;
         };
-        /**
-         * @description `shape.Segment`: one row of the variable's one per-period list, a column of one
-         *     table over one period with one form and one provider wording. A fact the catalog
-         *     does not state is absent, never `null`: no type, no value set, `coded` or
-         *     `temporality` unknown, and `state` clear (the default) are all left out.
-         */
+        /** @description One row of the variable's per-period list: a column of one table over one period with one form and one provider wording. A fact the catalog does not state is left out, never `null`: no type, no value set, `coded` or `temporality` unknown, and `state` clear (the default). */
         Segment: {
             /** @description A classification version's ref. */
             classification?: string;
             /** @description `yes` or `no`. */
             coded?: string;
-            /** @description The column name it is delivered under; in steward mode, the held column's. */
+            /** @description The column name it is delivered under; on a data holder's catalog, the holder's column. */
             column: string;
             /** @description Present only when `evidence` is asked for. */
             evidence?: components["schemas"]["Occurrence"][] | null;
-            /** @description In steward mode, the file the steward holds the column in. */
+            /** @description On a data holder's catalog, the file the holder has the column in. */
             file?: string;
             format?: string;
             id_kind?: string;
@@ -1099,15 +1076,11 @@ export interface components {
             /** @description The provider's definition over this period; a change of wording starts a row. */
             wording?: string;
         };
-        /** @description `Page<Segment>`. */
         SegmentPage: {
             items: components["schemas"]["Segment"][];
             next_cursor: string | null;
         };
-        /**
-         * @description `shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the
-         *     resolved `fqid`, so a bare-name request gets the id back.
-         */
+        /** @description A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back. */
         Show: {
             /** @enum {string} */
             kind: "root";
@@ -1117,7 +1090,7 @@ export interface components {
             /** @enum {string} */
             kind: "provider";
             name: string;
-            /** @description In steward mode, the steward's own registers too. */
+            /** @description On a data holder's catalog, the holder's own registers too. */
             registers: components["schemas"]["ShowRegisterRef"][];
         } | {
             description: string | null;
@@ -1126,12 +1099,12 @@ export interface components {
             kind: "register";
             name: string;
             period: components["schemas"]["Period"];
-            /** @description The register's curated sets (groups), in public-id order. */
+            /** @description The register's curated sets (groups), in id order. */
             sets: components["schemas"]["ShowRegisterSet"][];
             tables: components["schemas"]["ShowTable"][];
             /** @description The union of its variables' tags, in public-id order. */
             tags: components["schemas"]["ShowMembership"][];
-            /** @description The literal names of the releases the reader could not place in time. */
+            /** @description Names of deliveries with no known period. */
             unplaced: string[];
             variables: components["schemas"]["ShowVariableRef"][];
         } | {
@@ -1144,7 +1117,7 @@ export interface components {
             name: string;
             /** @description The register's fqid. */
             register: string;
-            /** @description Absent when none, and on a steward catalog. */
+            /** @description Absent when none, and on a data holder's catalog. */
             releases?: components["schemas"]["Release"][];
             role: string;
             row_keys: components["schemas"]["ShowRowKey"][];
@@ -1164,15 +1137,15 @@ export interface components {
             /** @description The union of the members' tags, in public-id order. */
             tags: components["schemas"]["ShowMembership"][];
         } | {
-            /** @description The one curated description, separate from source text runs. */
+            /** @description The curated description. */
             description?: string;
-            /** @description Provenance is present only when requested with `evidence=true`. */
+            /** @description Only with `evidence=true`. */
             evidence?: components["schemas"]["VariableEvidence"];
             fqid: string;
             /** @enum {string} */
             kind: "variable";
             name: string;
-            /** @description The coverage hull; `coverage` supplies detailed spans and gaps. */
+            /** @description The whole span; `coverage` has the gaps. */
             period: components["schemas"]["Period"];
             /** @description The register's fqid. */
             register: string;
@@ -1200,7 +1173,7 @@ export interface components {
             members: string[];
             name: string;
         };
-        /** @description A segment of the table that holds its rows' key. */
+        /** @description The row-key column's period in this table. */
         ShowRowKey: {
             fqid: string;
             period: components["schemas"]["Period"];
@@ -1211,9 +1184,9 @@ export interface components {
             id: string;
             label: string;
         };
-        /** @description One (table, spelling) a set member has segments in. */
+        /** @description A table and column name the member appears under. */
         ShowSetColumn: {
-            /** @description The column's segment periods, in time order. */
+            /** @description The column's periods, in time order. */
             periods: components["schemas"]["Period"][];
             spelling: string;
             /** @description The table's fqid. */
@@ -1247,7 +1220,7 @@ export interface components {
             fqid: string;
             name: string;
             period: components["schemas"]["Period"];
-            /** @description The fqids of the register's tables the variable has segments in. */
+            /** @description The tables the variable appears in. */
             tables: string[];
         };
         /** @description Every provider, register, table (implicit ones included) and variable. */
@@ -1261,7 +1234,7 @@ export interface components {
             /** Format: int64 */
             variables: number;
         };
-        /** @description Steward slot topology of a column. */
+        /** @description How the column is laid out in the holder's files. */
         Slot: {
             family?: string | null;
             index: string;
@@ -1272,26 +1245,20 @@ export interface components {
             /** Format: int64 */
             line: number;
         };
-        /** @description The selected steward and the identities of its admitted catalog/holdings pair. */
+        /** @description The data holder and the versions of its data. */
         Steward: {
             catalog_generation: string;
             holdings_generation: string;
             owner: string;
             schema_version: string;
         };
-        /**
-         * @description `Context.steward_config`: the steward's compiled presentation, logo and scope. The
-         *     server passes the admitted JSON through; this type is its API schema and the
-         *     admission check that keeps the schema true.
-         */
+        /** @description The data holder's name, logo and description. */
         StewardConfig: {
             /** @description The logo's SVG markup. */
             logo: string;
             presentation: components["schemas"]["StewardPresentation"];
-            /** @description The steward's `scope.toml` as JSON; its shape is the steward spec's, not this API's. */
             scope: Record<string, never>;
         };
-        /** @description The steward's `steward.json`. Other keys pass through untyped. */
         StewardPresentation: {
             /** @description Inline markdown: emphasis and `[text](https://…)` links. */
             description?: string | null;
@@ -1305,10 +1272,7 @@ export interface components {
             owner: string;
             registers: components["schemas"]["RegisterFacet"][];
         };
-        /**
-         * @description Supplemental matches have their own rank, count and cursor. Independent bm25
-         *     scores from different databases are never compared.
-         */
+        /** @description Matches in the data holder's own data, with their own count and cursor. */
         StewardSearchPage: {
             items: components["schemas"]["SearchHit"][];
             next_cursor?: string | null;
@@ -1326,21 +1290,18 @@ export interface components {
             scale: number | null;
             type: string | null;
         };
-        /** @description `shape.Subject`: what a finding is about, by natural key. */
+        /** @description What a finding is about. */
         Subject: {
-            /** @description The register, table or variable; for a segment or an occurrence, its variable. */
+            /** @description The register, table or variable it is about. */
             fqid: string | null;
-            /**
-             * @description `register`, `table`, `release`, `variable`, `segment`, `occurrence` or
-             *     `valueset`.
-             */
+            /** @description `register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`. */
             kind: string;
             period: components["schemas"]["Period"] | null;
             /** @description A release's literal delivery name. */
             release: string | null;
-            /** @description An occurrence's exact spelling. */
+            /** @description The exact column name in that delivery. */
             spelling: string | null;
-            /** @description The table of a release, segment or occurrence. */
+            /** @description Its table. */
             table: string | null;
             /** @description A value set's hash. */
             value_set: string | null;
@@ -1350,7 +1311,6 @@ export interface components {
             issues: components["schemas"]["Issue"][];
             ok: boolean;
         };
-        /** @description `shape.ValueItem`. */
         ValueItem: {
             /**
              * Format: int64
@@ -1366,7 +1326,6 @@ export interface components {
             parent: string | null;
             sentinel: boolean;
         };
-        /** @description `Page<ValueItem>` plus the value set and `total`. */
         ValueItemsPage: {
             items: components["schemas"]["ValueItem"][];
             next_cursor: string | null;
@@ -1377,12 +1336,9 @@ export interface components {
             total: number;
             value_set: components["schemas"]["ValueSetRef"];
         };
-        /** @description `shape.ValueSetRef`: a value set by its hash, with the names sources gave it. */
+        /** @description A value set by its hash, with the names sources gave it. */
         ValueSetRef: {
-            /**
-             * @description The classification version whose content this set is, or whose codes contain it
-             *     for every segment curated to it; `null` when no single version is curated.
-             */
+            /** @description The classification this value set belongs to; `null` when none. */
             classification: string | null;
             hash: string;
             hierarchical: boolean;
@@ -1390,12 +1346,11 @@ export interface components {
             n_items: number;
             names: string[];
         };
-        /** @description `Page<ValueSetRef>`, ordered by hash. */
         ValueSetsPage: {
             items: components["schemas"]["ValueSetRef"][];
             next_cursor: string | null;
         };
-        /** @description Provider text and curation provenance, returned only when evidence is requested. */
+        /** @description The provider's texts and the curated values behind them. */
         VariableEvidence: {
             documents: components["schemas"]["RelatedDocument"][];
             source_only: components["schemas"]["ProviderTextSource"][];

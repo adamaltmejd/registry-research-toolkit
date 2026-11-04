@@ -4,7 +4,7 @@
       "level": "error",
       "code": "ambiguous_window",
       "path": "/sources/0/bindings/0",
-      "message": "demo/amb/del cannot be placed on one form in demo/amb over [2018-01-01, 2020-01-01); the window needs curation",
+      "message": "demo/amb/del has more than one form in demo/amb over [2018-01-01, 2020-01-01) (name, type or codes differ); pick a shorter period or ask the maintainer",
       "source": "s",
       "variable": "demo/amb/del",
       "table": "demo/amb",

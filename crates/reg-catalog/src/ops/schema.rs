@@ -18,9 +18,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "schema",
         paths: &["/api/schema/{ref}"],
         tool: Some("schema"),
-        description: "The columns of a table, a register's tables or one variable's tables \
-            over a period: one line per variable and delivered spelling, with its type, \
-            length, value set and role.",
+        description: "The columns of a table, a register or a variable's tables over a period, \
+            with type, length, value set and role.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),
@@ -36,9 +35,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "diff",
         paths: &["/api/diff/{ref}"],
         tool: Some("schema"),
-        description: "A table's or a register's schema at two periods, joined on variable: \
-            what was added, removed or changed (spelling, type, length, value set). A \
-            rename is a changed spelling.",
+        description: "Compare a table's or register's columns at two periods: added, removed \
+            and changed (name, type, length, value set).",
         params: &[
             Param::required("ref", Type::Ref),
             Param::required("from", Type::Period),
@@ -51,7 +49,6 @@ pub const OPERATIONS: &[Operation] = &[
     },
 ];
 
-/// `Page<SchemaLine>`.
 #[derive(Serialize, ToSchema)]
 pub struct SchemaPage {
     items: Vec<SchemaLine>,
@@ -59,7 +56,7 @@ pub struct SchemaPage {
     next_cursor: Option<String>,
 }
 
-/// `shape.SchemaLine`: one variable's delivery under one folded spelling in one table.
+/// One variable under one column name in one table.
 #[derive(Serialize, ToSchema)]
 pub struct SchemaLine {
     table: String,
@@ -75,11 +72,10 @@ pub struct SchemaLine {
     value_set: Option<ValueSetRef>,
     role: String,
     state: String,
-    /// The line's segments merged, clipped to the request.
+    /// Its period, cut to the requested one.
     period: Period,
 }
 
-/// `shape.Diff`.
 #[derive(Serialize, ToSchema)]
 pub struct Diff {
     fqid: String,

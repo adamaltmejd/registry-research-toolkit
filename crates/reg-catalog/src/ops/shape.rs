@@ -9,15 +9,14 @@ use utoipa::ToSchema;
 use super::{Period, Server, iso_day};
 use crate::{Error, rows};
 
-/// `shape.ValueSetRef`: a value set by its hash, with the names sources gave it.
+/// A value set by its hash, with the names sources gave it.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct ValueSetRef {
     hash: String,
     n_items: i64,
     hierarchical: bool,
     names: Vec<String>,
-    /// The classification version whose content this set is, or whose codes contain it
-    /// for every segment curated to it; `null` when no single version is curated.
+    /// The classification this value set belongs to; `null` when none.
     #[schema(required = true)]
     classification: Option<String>,
 }
@@ -54,7 +53,7 @@ pub fn value_set_ref(conn: &Connection, valueset_id: i64) -> Result<ValueSetRef,
     Ok(value_set)
 }
 
-/// `shape.Release`: a delivery of a table.
+/// A delivery of a table.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Release {
     name: String,
@@ -70,7 +69,7 @@ pub struct Release {
     populations: Vec<Population>,
 }
 
-/// One population a release states (`shape.Release.populations`).
+/// One population a release states.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Population {
     name: String,
