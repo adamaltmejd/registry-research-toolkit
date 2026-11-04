@@ -32,8 +32,6 @@ Run, with ``<inputs>`` a worktree of the private inputs repo:
         --out <inputs>/catalog/source/classifications/
 
 Add --download-pdfs to also fetch the PDF editions for 2015–2021.
-Add --emit-toml to print starter curation/classifications/LKF{YEAR}.toml files on
-stdout.
 """
 
 from __future__ import annotations
@@ -326,39 +324,6 @@ def write_csv(year: int, codes: dict[str, str], out_dir: Path) -> Path:
     return out
 
 
-def emit_toml_entry(year: int) -> str:
-    """Emit a starter curation/classifications/LKF{year}.toml."""
-    # The value-set labels are inconsistent across years — see the existing
-    # curation/classifications/LKF*.toml files for the variants. The script
-    # prints a starter; reconcile against actual observed labels before
-    # committing.
-    #
-    # No `supersedes` field: classification succession lives in
-    # `classification_replaced_by`, auto-derived from the lkf<year> slug-tail
-    # chain during common catalog resolution. The file declares
-    # no succession.
-    return f"""\
-[classification]
-short_name = "LKF{year}"
-slug = "lkf{year}"
-name = "Län, kommuner och församlingar {year}"
-name_en = "Counties, municipalities and parishes {year}"
-publisher = "SCB"
-valid_from = {year}
-valid_to = {year}
-url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
-codes_file = "lkf{year}.csv"
-
-[binding]
-value_set_labels = [
-  # TODO: add the year's normalized value-set labels here. Sample patterns:
-  #   "LKF {year}-01-01/ Län, kommuner och församlingar"
-  #   "{year}-01-01/ Län, kommuner och församlingar"       (no LKF prefix, 2018+)
-  #   "{year}-01-01 /Län, kommuner och församlingar"       (space before /, 2023+)
-]
-"""
-
-
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -383,11 +348,6 @@ def main() -> int:
             "kommun + derived län from knkodnyckel.xls (no parishes). "
             "2016–2026 read full LKF (län + kommun + parish) from per-year XLS."
         ),
-    )
-    p.add_argument(
-        "--emit-toml",
-        action="store_true",
-        help="Print starter curation/classifications/LKF{YEAR}.toml files on stdout.",
     )
     p.add_argument(
         "--download-pdfs",
@@ -429,9 +389,6 @@ def main() -> int:
                 f"  wrote {out} ({len(codes)} codes from {source_note})",
                 file=sys.stderr,
             )
-            if args.emit_toml:
-                sys.stdout.write(emit_toml_entry(year))
-                sys.stdout.write("\n")
         # Best-effort per-year boundary: download/xls/pdf parsing raise many types; a
         # failed year is recorded and reported, never fatal mid-sweep.
         except Exception as exc:  # noqa: BLE001

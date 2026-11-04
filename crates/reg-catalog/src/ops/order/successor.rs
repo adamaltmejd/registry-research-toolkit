@@ -9,7 +9,7 @@ use rusqlite::params;
 
 use super::window::{self, Outcome, Scope};
 use super::{Issue, OrderClip, Serving, day, interval, period, table_ref};
-use crate::Error;
+use crate::{Error, rows};
 
 pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
     let mut out = Outcome::default();
@@ -51,18 +51,17 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         }
         // Edges point from successor to predecessor. Do not filter by provenance:
         // source and curated relations have the same authority here.
-        let successors: Vec<(String, Option<i64>)> = scope
-            .conn
-            .prepare(
-                "SELECT v.pid, r.at_start FROM relation r
+        let successors: Vec<(String, Option<i64>)> = rows(
+            scope.conn,
+            "SELECT v.pid, r.at_start FROM relation r
              JOIN variable v ON v.id = r.subject_id
              WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
                AND r.object_kind = 'variable' AND r.object_id = ?1
                AND (r.at_start IS NULL OR r.at_start < ?2)
              ORDER BY v.pid, r.at_start",
-            )?
-            .query_map(params![id, until], |row| Ok((row.get(0)?, row.get(1)?)))?
-            .collect::<rusqlite::Result<_>>()?;
+            params![id, until],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?;
         let needs_next = end < until && !successors.is_empty();
         let stop = if needs_next { end } else { until };
         let requested = overlap(scope.requested, &[interval(lower, stop.max(lower + 1))]);
@@ -216,17 +215,16 @@ fn tables(
 ) -> Result<Vec<Serving>, Error> {
     // Explicit-chain membership must not change when the requested period changes.
     let in_source = window::in_chain(scope, variable)?;
-    let rows: Vec<(String, i64, i64)> = scope
-        .conn
-        .prepare(&format!(
+    let rows: Vec<(String, i64, i64)> = rows(
+        scope.conn,
+        &format!(
             "SELECT t.pid, s.start, s.end FROM ({}) s JOIN tbl t ON t.id = s.table_id
              WHERE s.variable_id = ? ORDER BY t.pid, s.start",
             window::segments(scope)
-        ))?
-        .query_map([variable], |row| {
-            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        [variable],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
     let mut serving: Vec<Serving> = Vec::new();
     for (table, start, end) in rows {
         let days = overlap(requested, &[interval(start, end)]);
@@ -285,14 +283,14 @@ fn tables(
 
 fn refusal(scope: &Scope, b: usize, variable: &str, code: &str, message: &str) -> Issue {
     Issue {
-        level: IssueLevel::Error,
-        code: code.to_owned(),
-        path: format!("/sources/{}/bindings/{b}", scope.index),
-        message: message.to_owned(),
         source: Some(scope.source.name.clone()),
         variable: Some(variable.to_owned()),
         table: Some(scope.table.to_owned()),
-        period: None,
-        successor_fqid: None,
+        ..Issue::new(
+            IssueLevel::Error,
+            code,
+            format!("/sources/{}/bindings/{b}", scope.index),
+            message,
+        )
     }
 }

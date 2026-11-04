@@ -64,7 +64,7 @@ export function CatalogNodeView({
     case "register":
       return <RegisterView key={node.fqid} node={node} context={context} />;
     case "table":
-      return <TableView node={node} context={context} />;
+      return <TableView node={node} />;
     case "variable":
       return (
         <VariableView

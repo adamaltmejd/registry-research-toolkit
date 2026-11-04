@@ -29,22 +29,27 @@ export interface VariableColumn {
   table: string;
   spelling: string;
   segments: CatalogSegment[];
+  /** The file the steward holds the column in; absent off a steward
+   * deployment, where the table's name stands for it. */
+  file?: string;
 }
 
-/** A delivery column's identity is its table and exact delivered spelling. */
+/** A delivery column's identity is its table, exact column name and, on a
+ * steward deployment, the file it is held in. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
   for (const segment of segments) {
-    const id = JSON.stringify([segment.table, segment.spelling]);
+    const id = JSON.stringify([segment.table, segment.column, segment.file]);
     let column = columns.get(id);
     if (!column) {
       column = {
         id,
         table: segment.table,
-        spelling: segment.spelling,
+        spelling: segment.column,
         segments: [],
+        ...(segment.file ? { file: segment.file } : {}),
       };
       columns.set(id, column);
     }

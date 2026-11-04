@@ -13,16 +13,14 @@ merely forwarded arbitrary `gh` invocations could not soundly filter — `gh api
 this gate can't enumerate, so a "filter everything gh returns" promise would be a lie the
 first time an un-modelled shape slipped through. Instead this exposes exactly the one
 ingestion read the automation needs (`view <n> [--comments]`, a single issue), gated on
-maintainer authorship, plus the `maintainer-login` CLI — a non-content utility that names
-the trusted login WITHOUT surfacing any issue/PR text.
+maintainer authorship.
 
 **Fail-closed** everywhere: an issue/comment with a missing, None, or non-maintainer
 author is DROPPED, never surfaced. A refusal is reported to stderr (observability — the
 gate never *silently* discards), but the untrusted content itself is never printed.
 
 Stdlib only, and a CLI: `uv run --no-project python scripts/gh_issue.py view <n>
-[--comments]` or `... maintainer-login` (print the trusted maintainer login, for author
-checks).
+[--comments]`.
 
 The `gh` process primitives are the small private section below. They lived in a shared
 `_gh.py` while several sibling scripts used them; this is the only consumer left, so they
@@ -172,18 +170,10 @@ def main(argv: list[str] | None = None) -> int:
     v.add_argument("number", type=int, help="issue number")
     v.add_argument("--comments", action="store_true",
                    help="include maintainer-authored comments")  # fmt: skip
-    sub.add_parser(
-        "maintainer-login",
-        help="print the trusted maintainer login (for PR-comment author checks)",
-    )
     try:
         args = ap.parse_args(argv)
     except SystemExit:
         return EXIT_USAGE
-
-    if args.cmd == "maintainer-login":
-        print(maintainer_login())
-        return EXIT_OK
 
     code, text = view(args.number, args.comments)
     if text:

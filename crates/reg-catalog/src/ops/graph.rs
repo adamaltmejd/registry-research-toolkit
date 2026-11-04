@@ -8,7 +8,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// `relation.kind`.
 const KINDS: &[&str] = &["continues", "equivalent", "derived_from", "label_of"];
@@ -70,6 +70,16 @@ type End = (String, i64);
 type Nodes = BTreeMap<(String, String), String>;
 type Edge = ((String, String, String, Option<i64>), GraphEdge);
 
+/// Steward mode: a neighbour the steward does not hold is not served, nor its edges.
+fn held_only<K>(server: &Server, nodes: &mut Nodes, edges: &mut Vec<(K, GraphEdge)>) {
+    nodes.retain(|(fqid, kind), _| server.catalog.serves(kind, fqid));
+    edges.retain(|(_, edge)| {
+        [&edge.from, &edge.to]
+            .iter()
+            .all(|end| nodes.keys().any(|(fqid, _)| fqid == *end))
+    });
+}
+
 fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
@@ -84,10 +94,12 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
         "register" => {
             // A register with an implicit table has that table's relations too: the
             // table carries the register's pid.
-            let implicit = conn
-                .prepare("SELECT id FROM tbl WHERE pid = ?")?
-                .query_map([&entity.pid], |row| row.get::<_, i64>(0))?
-                .collect::<rusqlite::Result<Vec<_>>>()?;
+            let implicit = rows(
+                &conn,
+                "SELECT id FROM tbl WHERE pid = ?",
+                [&entity.pid],
+                |row| row.get::<_, i64>(0),
+            )?;
             ends.extend(implicit.into_iter().map(|id| ("table".to_owned(), id)));
         }
         // simplify: classification graphs (versions and their correspondences) are not
@@ -100,10 +112,9 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             ));
         }
         other => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {other}, not a variable, a table or a register."),
-                vec![value.into()],
             ));
         }
     }
@@ -163,6 +174,7 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
     // NULL `at_start` sorts first; the key is the contract's, which `relation`'s
     // uniqueness makes total up to the implicit table's shared pid.
     edges.sort_by(|a, b| a.0.cmp(&b.0));
+    held_only(server, &mut nodes, &mut edges);
     Ok(serde_json::to_value(Graph {
         focus: entity.pid,
         nodes: nodes

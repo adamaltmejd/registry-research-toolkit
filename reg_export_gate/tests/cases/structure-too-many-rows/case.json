@@ -1,0 +1,79 @@
+{
+  "description": "A file over the 100,000-row cap refuses, however small it is on disk: a few compressed bytes can hold many rows, and every row is a cell the disclosure rules and the reviewer must cover.",
+  "schema": "../../../schemas/trial.schema.json",
+  "policy": "../../../schemas/trial.policy.json",
+  "candidate": {
+    "persons_by_year_group.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019,
+            2019,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "2019-2020 cohort",
+            "batch 19121212121212",
+            "2019-2020 cohort"
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            5,
+            120,
+            null,
+            37
+          ]
+        }
+      ]
+    },
+    "summary_by_year.parquet": {
+      "columns": [
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2019
+          ],
+          "repeat": 100001
+        },
+        {
+          "name": "n_persons",
+          "type": "int32",
+          "values": [
+            125
+          ],
+          "repeat": 100001
+        },
+        {
+          "name": "mean_value",
+          "type": "double",
+          "values": [
+            312.5
+          ],
+          "repeat": 100001
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "structure",
+    "findings": [
+      {
+        "file": "summary_by_year.parquet",
+        "rule": "too_large"
+      }
+    ]
+  }
+}

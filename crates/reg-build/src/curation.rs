@@ -91,7 +91,7 @@ impl Lock {
 }
 
 fn object_key(object: &SourcePremise) -> String {
-    reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(object)))
+    reg_core::sha256_hex(reg_frame::canonical_line(object))
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
@@ -129,7 +129,7 @@ impl LockedPremise {
             LockedSubjects::Variable {
                 variable: variable.to_owned(),
                 count: locators.len(),
-                locators_sha256: reg_frame::hex(&hash.finalize()),
+                locators_sha256: reg_core::hex(&hash.finalize()),
             }
         } else {
             LockedSubjects::Rows(premise.subjects.clone())
@@ -404,7 +404,7 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
             .sentinel_codes
             .as_ref()
             .map(|codes| codes.iter().cloned().collect());
-        let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
+        let hash = reg_core::sha256_hex(reg_frame::canonical_line(c));
         out.statements.push(crate::emit::StatementRow {
             hash: hash.clone(),
             kind: "assert".into(),

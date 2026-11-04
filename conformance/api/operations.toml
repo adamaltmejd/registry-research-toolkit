@@ -47,7 +47,7 @@ contract_version = "5.2.0"
 name = "search"
 http = ["GET /api/search"]
 tool = "search"
-params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", tag = "string?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?", scope = "enum(reference|steward)?" }
+params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", tag = "string?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?" }
 result = "Page<SearchHit>"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """One ranked list per call over primary `search` and fallback `search_description` \
@@ -68,13 +68,15 @@ most 200 characters with no NUL; a query with no letter or digit returns no item
 an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
 50, maximum 200. A paired steward returns a separately labelled `steward` group \
 with its own total and cursor (`steward_cursor`); reference ranks never mix with \
-supplemental ranks. `scope=steward` filters accepted holdings before ranks, counts \
-and paging. Both cursors bind the scope and both component generations."""
+supplemental ranks. A paired catalog serves only what the steward holds: registers, \
+tables and variables without an accepted placement (over `period`, when given) are \
+filtered out before ranks, counts and paging; classifications, codes and documents are \
+shared and always match. Both cursors bind both component generations."""
 
 [[operation]]
 name = "search_facets"
 http = ["GET /api/search/facets"]
-params = { q = "string", register = "ref?", limit = "limit?", scope = "enum(reference|steward)?" }
+params = { q = "string", register = "ref?", limit = "limit?" }
 result = "RegisterFacets: {registers: [{fqid, name?, variable_matches, variables?: [{fqid, name}]}]} in FQID order"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """Per register, the count of `search`'s `variable` hits for `q`, counted in one \
@@ -85,8 +87,8 @@ name) in FQID order, never cut. Without `register`, `limit` adds each register's
 `limit` matched variables, `variable_matches` still counting them all, and a listed \
 entry adds the register's `name`. Absent, it is counts only. No MCP tool: it feeds \
 the SPA's in-place register filter, and an agent narrows with `search`'s `register`. \
-Paired mode adds a separate `steward` group; `scope=steward` narrows both groups \
-to accepted holdings before aggregation."""
+Paired mode adds a separate `steward` group, and both groups count only held \
+variables."""
 
 [[operation]]
 name = "context"
@@ -105,10 +107,10 @@ errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The summary for any ref; no ref is the catalog root. Sets require \
 set/<provider>/<register>/<slug>; malformed set refs are invalid_ref. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
-(`coverage`). Variable summaries show curated description, coverage, tables, sets and \
-tags. Without a curated description, source_definition returns the latest available \
-provider definition/operational definition as one text and its period, marked origin=provider. \
-`evidence=true` adds provider text history, source keys/spellings, statement locators \
+(`coverage`). Variable summaries show the curated description, the coverage hull, and \
+sets and tags when it has any; the provider's wording is per period on `segments`. A \
+paired catalog serves only what the steward holds: any other register, table or \
+variable is not_found, and lists leave it out. `evidence=true` adds provider text history, source keys/spellings, statement locators (file, line, field, value, caveat; a statement's own `evidence` string is build provenance and stays in the build) \
 and linked documents; provenance is absent by default."""
 
 [[operation]]
@@ -118,12 +120,16 @@ tool = "segments"
 params = { ref = "ref", period = "period?", table = "ref?", value_set_name = "string?", evidence = "boolean?", limit = "limit?", cursor = "cursor?" }
 result = "Page<Segment>"
 errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
-note = """A variable's segments (schema §1.2), `ORDER BY start, table` (index \
-`segment_variable`), keyset-paged on (start, table pid). Renamed from `states`: v4 has \
-no state entity, and the segment is its main reader row. `table` narrows to one table \
+note = """A variable's one per-period list: per table, column name and period one row, \
+`ORDER BY start, table, column, file`, offset-paged. A segment (schema §1.2) is cut \
+where the provider's wording changes (`variable_text`), so each row carries one \
+`wording`. On a paired catalog the rows are the accepted placements: the held column \
+name, the `file` it is held in and the years held, with the form of the catalog \
+segments they overlap in their table (preferring the same column name); `period` \
+filters after that projection. `table` narrows to one table \
 of the variable's register. `value_set_name` keeps segments whose value set a source \
 names so (`valueset_name`), replacing `value_set_version`. `evidence` adds each \
-segment's occurrences, their provenance and the losing source values (schema §2.1, \
+row's occurrences, their provenance and the losing source values (schema §2.1, \
 "Per-period detail"; design §2.4). Facet routes are `/api/<operation>/{ref}` rather \
 than `/api/catalog/{ref}/<facet>`, which a variable named `segments` could shadow."""
 
@@ -187,8 +193,8 @@ result = "Coverage"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """For a register, a table or a variable (schema §2.1, "Coverage"). A table: \
 its `tbl_span` periods, gaps and releases. A register: that per table. A variable: its \
-segments merged per table, its gaps, and per column (folded spelling) the periods it \
-was delivered under."""
+segments merged per table and its gaps. A paired catalog: per table, the held years \
+(accepted placements merged), with no gaps or releases."""
 
 [[operation]]
 name = "schema"
@@ -363,8 +369,8 @@ note = """A `kind`-tagged summary: root (providers), provider (registers), regis
 (name, description, period, tables [{fqid, name, role, implicit, timeless, unit_type, \
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, unit_type, cadence, spans \
-[Period], releases [Release], row_keys [{fqid, spelling, period}]), variable (name, \
-optional description or provider-marked source_definition {period, text}, register, period, tables [fqid], sets/tags [{fqid, name}], \
+[Period], releases? [Release], row_keys [{fqid, spelling, period}]), variable (name, \
+optional description, register, period, sets/tags [{fqid, name}] when non-empty, \
 optional evidence {texts, source_only, spellings, statements, documents}), \
 set (name, optional description, register, ordered axes [{id, label}], \
 members [{fqid, name, columns [{table, spelling, periods [Period]}], facets [{axis, value, label}]}] sorted by axis values then name, \
@@ -372,9 +378,11 @@ tags [{fqid, name}] unioned across members), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \
 Registers list their tables and variables unpaged. Paired roots and provider \
-summaries also list the steward's own providers and registers, each ref with \
-`held` (whether the steward holds any of its tables); paired register summaries \
-mark each table and variable `held` (whether an accepted placement names it)."""
+summaries also list the steward's own providers and registers. A paired catalog lists \
+only what the steward holds: providers, registers, tables, variables and set members \
+without an accepted placement are left out, and a set left empty is dropped. There, \
+every provider, register, table and variable `period` is the years held, a table's \
+`spans` are its held years, and its releases (the provider's) are left out."""
 
 [shape.Release]
 name = "string; the literal delivery name"
@@ -386,21 +394,24 @@ parse_state = "\"parsed\" | \"unparsed\" | \"curated\""
 populations = "[{name, definition, ref_day}]"
 
 [shape.Segment]
+note = "A fact the catalog does not state is absent, never null: `coded` and `temporality` unknown and `state` clear are left out too."
 table = "string; the table's fqid"
+column = "string; the column name, the latest primary occurrence's spelling; on a paired catalog the held column's"
 period = "Period"
-spelling = "string; the exact spelling of the latest primary occurrence"
-type = "string | null; null when occurrences disagree, including an exempt type-only disagreement"
-length = "integer | null"
-format = "string | null"
-value_set = "ValueSetRef | null; null = no value set"
-classification = "string | null; a classification version's ref"
-coded = "\"yes\" | \"no\" | \"unknown\""
-sensitive = "boolean | null"
-identifier = "boolean | null"
-id_kind = "string | null; an identifier kind slug"
+file = "string?; paired catalog only: the file the steward holds the column in"
+wording = "string?; the provider's definition over the row's period, definition and operational definition one per line when they differ"
+type = "string?; absent when occurrences disagree, including an exempt type-only disagreement"
+length = "integer?"
+format = "string?"
+value_set = "ValueSetRef?"
+classification = "string?; a classification version's ref"
+coded = "\"yes\" | \"no\"?"
+sensitive = "boolean?"
+identifier = "boolean?"
+id_kind = "string?; an identifier kind slug"
 role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
-temporality = "\"fixed\" | \"status\" | \"accumulated\" | \"event\" | \"unknown\""
-state = "\"clear\" | \"ambiguous\" | \"preliminary\""
+temporality = "\"fixed\" | \"status\" | \"accumulated\" | \"event\"?"
+state = "\"ambiguous\" | \"preliminary\"?"
 evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
 
 [shape.Finding]
@@ -425,12 +436,10 @@ nodes = "[{fqid, kind, name}]"
 edges = "[{kind, from, to, at (Period | null), prov (\"source\" | \"curated\" | \"rule\"), caveat}]"
 
 [shape.Coverage]
-held = "paired mode only: accepted placements [{table, variable, physical_table, column, period, role, carried, caveat}]; public ids resolved in their own database origin"
 fqid = "string"
 kind = "\"register\" | \"table\" | \"variable\""
 period = "Period; the hull"
-tables = "[{fqid, name, spans [Period], gaps [{period, reason}], releases [Release] (table and register refs)}]"
-columns = "variable only: [{spelling, spans [Period]}]"
+tables = "[{fqid, name, spans [Period], gaps? [{period, reason}], releases? [Release] (table and register refs)}]"
 
 [shape.SchemaLine]
 table = "string"

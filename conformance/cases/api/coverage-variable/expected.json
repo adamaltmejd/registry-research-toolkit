@@ -4,24 +4,39 @@
     "json": {
       "/data/fqid": "demo/sp/kon",
       "/data/kind": "variable",
-      "/data/period": {"start": "2017-01-01", "end": "2021-01-01"},
-      "/data/tables/*/fqid": ["demo/sp/a"],
+      "/data/period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      },
+      "/data/tables/*/fqid": [
+        "demo/sp/a"
+      ],
       "/data/tables/0/spans": [
-        {"start": "2017-01-01", "end": "2018-01-01"},
-        {"start": "2020-01-01", "end": "2021-01-01"}
+        {
+          "start": "2017-01-01",
+          "end": "2018-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
       ],
       "/data/tables/0/gaps": [
-        {"period": {"start": "2018-01-01", "end": "2019-01-01"}, "reason": "release_without_column"}
-      ],
-      "/data/tables/0/releases": [],
-      "/data/columns": [
         {
-          "spelling": "kon",
-          "spans": [
-            {"start": "2017-01-01", "end": "2018-01-01"},
-            {"start": "2020-01-01", "end": "2021-01-01"}
-          ]
+          "period": {
+            "start": "2018-01-01",
+            "end": "2019-01-01"
+          },
+          "reason": "release_without_column"
         }
+      ]
+    },
+    "keys": {
+      "/data/tables/0": [
+        "fqid",
+        "gaps",
+        "name",
+        "spans"
       ]
     }
   },
@@ -29,15 +44,26 @@
     "status": 200,
     "json": {
       "/data/fqid": "demo/sp/lankod",
-      "/data/period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "/data/period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      },
       "/data/tables/0/spans": [
-        {"start": "2017-01-01", "end": "2019-01-01"},
-        {"start": "2020-01-01", "end": "2021-01-01"}
-      ],
-      "/data/tables/0/gaps": [],
-      "/data/columns": [
-        {"spelling": "lan", "spans": [{"start": "2017-01-01", "end": "2019-01-01"}]},
-        {"spelling": "lankod", "spans": [{"start": "2020-01-01", "end": "2021-01-01"}]}
+        {
+          "start": "2017-01-01",
+          "end": "2019-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
+      ]
+    },
+    "keys": {
+      "/data/tables/0": [
+        "fqid",
+        "name",
+        "spans"
       ]
     }
   },
@@ -47,21 +73,57 @@
       "/error/code": "ambiguous_ref",
       "/error/fields/ref": "kon",
       "/error/fields/candidates": [
-        {"fqid": "demo/sp/kon", "kind": "variable", "name": "Kön"},
-        {"fqid": "demo/sp2/kon", "kind": "variable", "name": "Kön"}
+        {
+          "fqid": "demo/sp/kon",
+          "kind": "variable",
+          "name": "Kön"
+        },
+        {
+          "fqid": "demo/sp2/kon",
+          "kind": "variable",
+          "name": "Kön"
+        }
       ]
     }
   },
   {
     "status": 404,
-    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "demo/nope"
+    }
   },
   {
     "status": 422,
-    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/a/b/c"}
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "demo/a/b/c"
+    }
   },
   {
     "status": 422,
-    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "limit"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": [
+        "Lan",
+        "LanKod"
+      ],
+      "/data/items/*/period": [
+        {
+          "start": "2017-01-01",
+          "end": "2019-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
+      ]
+    }
   }
 ]

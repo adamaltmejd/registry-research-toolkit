@@ -4,21 +4,44 @@
     "json": {
       "/data/fqid": "demo/sp",
       "/data/kind": "register",
-      "/data/period": {"start": "2017-01-01", "end": "2021-01-01"},
-      "/data/columns": null,
-      "/data/tables/*/fqid": ["demo/sp/a", "demo/sp/b"],
-      "/data/tables/*/name": ["Tabell A", "Tabell B"],
+      "/data/period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      },
+      "/data/tables/*/fqid": [
+        "demo/sp/a",
+        "demo/sp/b"
+      ],
+      "/data/tables/*/name": [
+        "Tabell A",
+        "Tabell B"
+      ],
       "/data/tables/0/spans": [
-        {"start": "2017-01-01", "end": "2019-01-01"},
-        {"start": "2020-01-01", "end": "2021-01-01"}
+        {
+          "start": "2017-01-01",
+          "end": "2019-01-01"
+        },
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
       ],
       "/data/tables/0/gaps": [
-        {"period": {"start": "2019-01-01", "end": "2020-01-01"}, "reason": "no_release"}
+        {
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          },
+          "reason": "no_release"
+        }
       ],
       "/data/tables/0/releases": [
         {
           "name": "Tabell A 2017",
-          "period": {"start": "2017-01-01", "end": "2018-01-01"},
+          "period": {
+            "start": "2017-01-01",
+            "end": "2018-01-01"
+          },
           "edition": "final",
           "qualifier": "",
           "primary": true,
@@ -27,7 +50,10 @@
         },
         {
           "name": "Tabell A 2018",
-          "period": {"start": "2018-01-01", "end": "2019-01-01"},
+          "period": {
+            "start": "2018-01-01",
+            "end": "2019-01-01"
+          },
           "edition": "final",
           "qualifier": "",
           "primary": true,
@@ -36,7 +62,10 @@
         },
         {
           "name": "Tabell A 2020",
-          "period": {"start": "2020-01-01", "end": "2021-01-01"},
+          "period": {
+            "start": "2020-01-01",
+            "end": "2021-01-01"
+          },
           "edition": "final",
           "qualifier": "",
           "primary": true,
@@ -44,9 +73,23 @@
           "populations": []
         }
       ],
-      "/data/tables/1/spans": [{"start": "2020-01-01", "end": "2021-01-01"}],
-      "/data/tables/1/gaps": [],
-      "/data/tables/1/releases/*/name": ["Tabell B 2020"]
+      "/data/tables/1/spans": [
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        }
+      ],
+      "/data/tables/1/releases/*/name": [
+        "Tabell B 2020"
+      ]
+    },
+    "keys": {
+      "/data/tables/1": [
+        "fqid",
+        "name",
+        "releases",
+        "spans"
+      ]
     }
   }
 ]

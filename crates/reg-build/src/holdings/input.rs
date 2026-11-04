@@ -260,7 +260,7 @@ pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
     for (path, sha) in pins {
         hasher.update(format!("{path}\t{sha}\n"));
     }
-    reg_frame::hex(&hasher.finalize())
+    reg_core::hex(&hasher.finalize())
 }
 
 fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), String> {

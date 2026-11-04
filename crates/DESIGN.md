@@ -123,6 +123,9 @@ HTTP API             MCP over stdio (local catalog)
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
+- `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
+  data side. It reads no catalog. Being built (#1803); its design is
+  [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of
@@ -825,7 +828,13 @@ overlapping curated overrides are refused at both locations.
   variable id is listed as moved when both occurrence target sets are non-empty and no
   old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
   periods. Explicit table ids are compared by table name; implicit tables share their
-  register's id and are excluded.
+  register's id and are excluded. `--holdings` compares two holdings catalogs of the
+  same holdings schema instead (release step 8g): census columns by (physical table,
+  column), with placed, held and unplaced counts, changed placements grouped by old and
+  new `table_pid` and classed newly placed, folded or renamed, variable or interval
+  changed, or unmapped; reader-visible text by kind, keyed by pid and source key and
+  listing keys, never bodies; and finding and holdings-notice deltas by code, compared
+  by (code, subject, period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -976,19 +985,23 @@ Rules:
 
 **Curated by default, evidence on request (maintainer, 2026-11-02).** A variable's
 `show` summary returns its name, the one optional curated `description`, register,
-coverage hull (`period`), tables, sets (groups) and tags. Detailed coverage spans and
-gaps remain the `coverage` facet. The description combines meaning, measurement and
-derivation; `texts`, source spellings and a promoted top-level `definition` are not
-summary fields.
+coverage hull (`period`), and its sets (groups) and tags when it has any. Detailed
+coverage spans and gaps remain the `coverage` facet; its tables and column names are
+`segments` rows. The description combines meaning, measurement and derivation; `texts`,
+source spellings and a promoted top-level `definition` are not summary fields.
 
-When no curated description exists, `source_definition` supplies the most recent used
-occurrence's available source definition and operational definition as one `text`, with
-its period and `origin: "provider"`. Equal or contained wording is shown once; otherwise
-the two original texts are joined by a newline. Comparison collapses whitespace, folds
-case and ignores trailing Unicode punctuation; displayed wording stays original. The
-fields are never assembled from different occurrences or years. A completely silent
-provider has no invented fallback. This is explicitly provider wording, not a curated
-description.
+**One per-period list (maintainer, 2026-11-04).** `segments` is the variable's one list
+of table, column name, period and provider wording, which the SPA timeline and MCP both
+read; no other operation repeats it. A segment is cut where the provider's wording
+changes, so each row carries one `wording`: the latest used occurrence's source
+definition and operational definition in that table over that period, never a curated
+correction. Equal or contained wording is shown once; otherwise the two original texts
+are joined by a newline. Comparison collapses whitespace, folds case and ignores
+trailing Unicode punctuation; displayed wording stays original. A silent provider has no
+`wording`. A fact the catalog does not state is absent, never `null`: no type, no value
+set, `coded` or `temporality` unknown, and `state` clear (the default) are all left out,
+which keeps agent context small. Storage type stays in the catalog (orders use it) and
+is shown only when stated.
 
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
@@ -1287,15 +1300,28 @@ remains a domain requirement, not a claim that this path ships in E.
 
 The published catalog and a holdings database remain separate (schema-v3, prefatory
 maintainer rulings; clean-room design §0 and §13 D7). The reader opens their pinned pair
-read-only. Reference browsing uses the catalog; held browsing joins accepted mappings by
-public id and applies scope before ranking, counts and pagination. Cursors bind scope
-and both generations. Neither an alias, a successor nor equivalence grants possession.
-Base-only `order`/`validate` use the published reference catalog (§9). In steward mode,
-those same functions read a composed semantic view including the steward provider
-definitions and slot variables (maintainer 2026-10-29): the answer may include
-steward-specific slot variables and pre-2018 delivery codings absent from the base. That
-is an explicit mode divergence, not a claim of identical base-only answers. The
-implementation of the logical check is shared; physical mapping then adds possession
+read-only. Reference browsing uses the catalog alone.
+
+**A steward deployment serves its holdings only (maintainer, 2026-11-04):** "everything
+shown is held, everything held is shown." There is no scope parameter. A register,
+table, variable or provider with no accepted placement is `not_found` by ref
+(`Catalog::connect_for_ref`, `serves`) and is left out of every list: `show`'s children
+and set members (a set's own page included), `schema` and `diff` lines, search hits and
+facets (filtered by public id and the requested interval before ranking, counts and
+pagination), and graph neighbours. Classifications, value sets, codes and documents are
+shared and always served. Every `period` and a table's `spans` are the years held, and
+`coverage` reports them per table; a table's releases are the provider's and are left
+out. `segments` rows are the accepted placements: the held column name, the `file` it is
+held in and the years held, with the form of the catalog segments they overlap in either
+origin (preferring the same column name among those); held years no segment covers state
+only the role. The reference periods, gaps and releases are not the steward's and are
+not served. Cursors bind both generations. Neither an alias, a successor nor equivalence
+grants possession. Base-only `order`/`validate` use the published reference catalog
+(§9). In steward mode, those same functions read a composed semantic view including the
+steward provider definitions and slot variables (maintainer 2026-10-29): the answer may
+include steward-specific slot variables and pre-2018 delivery codings absent from the
+base. That is an explicit mode divergence, not a claim of identical base-only answers.
+The implementation of the logical check is shared; physical mapping then adds possession
 restrictions. Its provenance names both generations and the selected semantic mode.
 
 An open provider end stays open and keeps its `coverage_end_unstated` notice. A finite
@@ -1676,11 +1702,10 @@ origins, including reverse graph queries. Only derivation crosses this boundary;
 identity/succession relations are not imported as shortcuts. Standalone catalog builds
 do not admit `--base` or emit a catalog with unresolved external endpoints.
 
-In paired metadata search, `scope=steward` restricts register, table and variable hits
-to accepted placements and their requested intervals before counts and ranking. A code
-or document hit is not itself a possession claim; linked values and documents remain
-available through semantic metadata. Supplemental results retain their own group, count
-and cursor. Reference-only response fields remain unchanged.
+Paired metadata search filters register, table and variable hits to accepted placements
+and their requested intervals before counts and ranking (above). A code or document hit
+is not itself a possession claim; linked values and documents remain available through
+semantic metadata. Supplemental results retain their own group, count and cursor.
 
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
@@ -1714,11 +1739,11 @@ pinned input. Holdings schema 2 adds `holding_reference_occurrence`; older holdi
 recompiled.
 
 Reference `coverage` spans retain their original meaning. In selected steward mode, the
-attested periods reach readers only as accepted physical `held` intervals; variable
-holdings include these steward-attested memberships even when the global member list
-omits them. The occurrences' own text and locators are not served: a release carries
-catalog items, never steward working files or census row references (maintainer
-2026-11-03), and the per-occurrence listing repeated what `held` already shows.
+attested periods reach readers only as held years (`coverage`) and placement rows
+(`segments`); a variable's holdings include these steward-attested memberships even when
+the global member list omits them. The occurrences' own text and locators are not
+served: a release carries catalog items, never steward working files or census row
+references (maintainer 2026-11-03).
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -2211,13 +2236,13 @@ through those semantic operations rather than infer it from the header. Unknown 
 unknown; N1 proposals become effective output types only after review/adoption. These
 metadata gaps belong to e-holdings/e-order/e-types, not a mock service.
 
-The e-types audit (#2071) found them filled: `coverage` returns `held` placements from
-the holdings file; `materialize_order` columns carry exact `refs` (source, binding,
-table, variable, period, spelling) that join the logical order's entries, which carry
-the adopted type, length, value set and classification; row-key types and identifier
-kinds come from `schema`/`segments`; `values` flags sentinels; open N1 reviews are read
-through `findings`. The manifest keeps storage types only, as the runner checks SQL
-storage; it gains no logical type.
+The e-types audit (#2071) found them filled: in steward mode `segments` rows are the
+holdings file's placements (column, file, years held); `materialize_order` columns carry
+exact `refs` (source, binding, table, variable, period, spelling) that join the logical
+order's entries, which carry the adopted type, length, value set and classification;
+row-key types and identifier kinds come from `schema`/`segments`; `values` flags
+sentinels; open N1 reviews are read through `findings`. The manifest keeps storage types
+only, as the runner checks SQL storage; it gains no logical type.
 
 Mocks read no MONA rows or empirical distributions. Use adopted types, lengths, value
 sets and classification pins; refuse unknown/unsupported types needing a guess. Generate

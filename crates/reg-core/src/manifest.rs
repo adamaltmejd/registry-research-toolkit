@@ -2,8 +2,6 @@
 //! manifest `materialize_order` writes and `reg_mona_runner/swecov_extract.R` reads.
 //! Every object refuses an unknown field; an absent optional field means none.
 
-use std::fmt::Write as _;
-
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
@@ -305,9 +303,7 @@ pub fn stata_name(name: &str) -> Option<String> {
     }
     let mut alias: String = alias.chars().take(25).collect();
     alias.push('_');
-    for byte in &Sha256::digest(name.as_bytes())[..3] {
-        let _ = write!(alias, "{byte:02x}");
-    }
+    alias.push_str(&crate::hex(&Sha256::digest(name.as_bytes())[..3]));
     debug_assert!(is_stata_name(&alias), "{alias} is a Stata name");
     Some(alias)
 }

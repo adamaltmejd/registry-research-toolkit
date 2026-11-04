@@ -7,10 +7,9 @@ mod holdings;
 pub mod ops;
 
 use std::collections::BTreeMap;
-use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::{Connection, OpenFlags, Params, Row};
 use serde_json::Value;
 
 pub use error::{Code, Error, Spec};
@@ -142,16 +141,6 @@ fn unavailable(path: &Path, err: &rusqlite::Error) -> Error {
     )
 }
 
-/// Lowercase hex of `bytes`: cursors and `ETag` digests.
-#[must_use]
-pub fn hex(bytes: &[u8]) -> String {
-    let mut out = String::with_capacity(2 * bytes.len());
-    for byte in bytes {
-        write!(out, "{byte:02x}").expect("write to String");
-    }
-    out
-}
-
 /// The default `PRAGMA mmap_size` (`serve --mmap-size`): memory-map the file (SQLite
 /// caps the size at its compile-time maximum, about 2 GiB), since a connection per
 /// request otherwise reads every page through its own small cache, and concurrent
@@ -175,6 +164,16 @@ pub(crate) fn read_uri(path: &Path) -> String {
     }
     uri.push_str("?mode=ro&immutable=1");
     uri
+}
+
+/// The rows of `sql` for `params`, each mapped by `map`, in the query's order.
+pub(crate) fn rows<T>(
+    conn: &Connection,
+    sql: &str,
+    params: impl Params,
+    map: impl FnMut(&Row<'_>) -> rusqlite::Result<T>,
+) -> rusqlite::Result<Vec<T>> {
+    conn.prepare(sql)?.query_map(params, map)?.collect()
 }
 
 pub(crate) fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
