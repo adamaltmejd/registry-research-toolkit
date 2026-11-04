@@ -335,7 +335,7 @@ pub fn finalize(
                 .iter()
                 .fold(0, |mask, value| mask | override_bit(&value.field));
             if occurrence.stated.is_some() && occurrence.status == "used" {
-                if mask & (1 << 16) == 0 {
+                if mask & override_bit("period") == 0 {
                     let render = |p: &Interval| reg_core::render(std::slice::from_ref(p));
                     values.push(FinalValue {
                         subject,
@@ -345,7 +345,7 @@ pub fn finalize(
                         origin: Origin::Rule("T1"),
                     });
                 }
-                mask |= 1 << 16;
+                mask |= override_bit("period");
             }
             if mask != 0 {
                 result.occurrence_masks.insert((ri, oi), mask);
