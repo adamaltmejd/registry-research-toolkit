@@ -153,20 +153,15 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         i64::try_from(limit + 1).expect("a limit fits i64"),
     ));
     let mut rows = segment_rows(server, &conn, &filter, args)?;
-    let next_cursor = if rows.len() > limit {
-        rows.truncate(limit);
-        // A keyset cursor restarts from its position; the offset only has to be valid.
-        rows.last().map(|(_, _, _, (start, table))| {
-            cursor::encode(
-                server.catalog.generation(),
-                &cursor::context(params),
-                limit,
-                &format!("{start}\u{1f}{table}"),
-            )
-        })
-    } else {
-        None
-    };
+    // A keyset cursor restarts from its position; the offset only has to be valid.
+    let next_cursor = cursor::next(&mut rows, limit, |(_, _, _, (start, table))| {
+        Some(cursor::encode(
+            server.catalog.generation(),
+            &cursor::context(params),
+            limit,
+            &format!("{start}\u{1f}{table}"),
+        ))
+    });
     let mut items = Vec::with_capacity(rows.len());
     for (id, valueset_id, mut segment, _) in rows {
         segment.value_set = valueset_id

@@ -291,14 +291,13 @@ fn content(
         .filter(|&ord| after.is_none_or(|after| ord > after))
         .take(limit + 1)
         .collect();
-    let next_cursor = (page.len() > limit).then(|| {
-        page.truncate(limit);
-        cursor::encode(
+    let next_cursor = cursor::next(&mut page, limit, |last| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &cursor::context(params),
             limit,
-            &page[limit - 1].to_string(),
-        )
+            &last.to_string(),
+        ))
     });
     let items = page.into_iter().map(|ord| items[ord].0.clone()).collect();
     Ok(serde_json::to_value(ValueItemsPage {
@@ -364,14 +363,13 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
         }
     }
     let mut page: Vec<(String, i64)> = found.into_iter().take(limit + 1).collect();
-    let next_cursor = (page.len() > limit).then(|| {
-        page.truncate(limit);
-        cursor::encode(
+    let next_cursor = cursor::next(&mut page, limit, |(hash, _)| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &cursor::context(params),
             limit,
-            &page[limit - 1].0,
-        )
+            hash,
+        ))
     });
     let items = page
         .into_iter()

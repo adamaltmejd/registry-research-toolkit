@@ -345,15 +345,9 @@ fn search_origin(
         ],
         |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
     )?;
-    let more = rows.len() > take;
-    rows.truncate(take);
-    let next_cursor = (more && offset + take < DEPTH).then(|| {
-        cursor::encode(
-            generation,
-            &context,
-            offset + take,
-            &rows.last().expect("nonempty page").3,
-        )
+    let next_cursor = cursor::next(&mut rows, take, |last| {
+        (offset + take < DEPTH)
+            .then(|| cursor::encode(generation, &context, offset + take, &last.3))
     });
     let items = rows
         .iter()

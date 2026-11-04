@@ -229,15 +229,15 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         take + 1,
         offset,
     )?;
-    let more = items.len() > take;
-    items.truncate(take);
-    let next_cursor = (more && offset + take < SEARCH_DEPTH).then(|| {
-        cursor::encode(
-            server.catalog.generation(),
-            &context,
-            offset + take,
-            items.last().map_or("", |hit| hit.doc.as_str()),
-        )
+    let next_cursor = cursor::next(&mut items, take, |last| {
+        (offset + take < SEARCH_DEPTH).then(|| {
+            cursor::encode(
+                server.catalog.generation(),
+                &context,
+                offset + take,
+                &last.doc,
+            )
+        })
     });
     let register_ingested = register
         .map(|id| {

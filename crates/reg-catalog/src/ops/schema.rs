@@ -353,18 +353,16 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         })
         .take(limit + 1)
         .collect();
-    let next_cursor = (rest.len() > limit).then(|| {
-        rest.truncate(limit);
-        let last = rest.last().expect("a page holds at least one line");
-        cursor::encode(
+    let next_cursor = cursor::next(&mut rest, limit, |last| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &context,
-            offset + rest.len(),
+            offset + limit,
             &format!(
                 "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",
                 last.table, last.variable, last.start, last.spelling
             ),
-        )
+        ))
     });
     let items = rest
         .into_iter()

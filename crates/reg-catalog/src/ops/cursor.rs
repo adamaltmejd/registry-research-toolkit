@@ -21,6 +21,21 @@ pub(super) fn context(params: &Params) -> String {
         .join("&")
 }
 
+/// The page tail: a fetch of `take` rows plus one that came back longer than `take`
+/// has a next page. `rows` is cut to `take`, and `after` makes the cursor from the last
+/// row kept (`None` there, or when `rows` was not longer, is no next page).
+pub(super) fn next<T>(
+    rows: &mut Vec<T>,
+    take: usize,
+    after: impl FnOnce(&T) -> Option<String>,
+) -> Option<String> {
+    if rows.len() <= take {
+        return None;
+    }
+    rows.truncate(take);
+    rows.last().and_then(after)
+}
+
 #[must_use]
 pub fn invalid(message: &str) -> Error {
     Error::new(Code::InvalidCursor, message, vec![])
