@@ -177,14 +177,12 @@ export function useVariableCoverage({
         throw new Error(
           "Table availability is not loaded. Reload the page and try again.",
         );
-      // A project binds a variable once per table, so ticking one file's lane adds
-      // the column's years in every file of that table inside the add window.
+      // A project binds a variable once per table, so ticking one lane adds the
+      // variable's years in every column and file of that table inside the window.
       const adding = columns.filter(
         (column) =>
-          picked.some(
-            (pick) =>
-              pick.table === column.table && pick.spelling === column.spelling,
-          ) && columnWindowPeriod(column, active) !== null,
+          picked.some((pick) => pick.table === column.table) &&
+          columnWindowPeriod(column, active) !== null,
       );
       const candidate = addColumns(current, node.fqid, adding, active, tables);
       projectStore.updateField("sources", candidate.sources);

@@ -56,8 +56,8 @@ function overlapPeriod(
  * years held, never the reference catalog's wider periods. Each placement
  * borrows the facts (type, coding) of the catalog segments it overlaps in its
  * table, preferring the same spelling among those; a placement no segment
- * overlaps states only its role, since another period's facts would be a
- * guess. */
+ * covers in its held years states only its role there, since another
+ * period's facts would be a guess. */
 export function heldColumns(
   segments: readonly CatalogSegment[],
   held: readonly Placement[],
@@ -72,29 +72,49 @@ export function heldColumns(
     const spelled = overlapping.filter(
       (s) => s.spelling.toLowerCase() === placement.column.toLowerCase(),
     );
-    const parts = overlapping.length
-      ? spelled.length
-        ? spelled
-        : overlapping
-      : [
-          {
-            classification: null,
-            coded: "unknown",
-            format: null,
-            id_kind: null,
-            identifier: null,
-            length: null,
-            period: placement.period,
-            role: placement.role,
-            sensitive: null,
-            spelling: placement.column,
-            state: "clear",
-            table: placement.table,
-            temporality: "unknown",
-            type: null,
-            value_set: null,
-          },
-        ];
+    const chosen = (spelled.length ? spelled : overlapping).sort((a, b) =>
+      (a.period.start ?? "").localeCompare(b.period.start ?? ""),
+    );
+    const bare = (period: CatalogSegment["period"]): CatalogSegment => ({
+      classification: null,
+      coded: "unknown",
+      format: null,
+      id_kind: null,
+      identifier: null,
+      length: null,
+      period,
+      role: placement.role,
+      sensitive: null,
+      spelling: placement.column,
+      state: "clear",
+      table: placement.table,
+      temporality: "unknown",
+      type: null,
+      value_set: null,
+    });
+    // Held years no catalog segment covers state only the role.
+    const parts: CatalogSegment[] = [];
+    let covered = placement.period.start;
+    for (const segment of chosen) {
+      if (
+        covered !== null &&
+        segment.period.start !== null &&
+        covered < segment.period.start
+      )
+        parts.push(bare({ start: covered, end: segment.period.start }));
+      parts.push(segment);
+      if (covered !== null)
+        covered =
+          segment.period.end === null || segment.period.end > covered
+            ? segment.period.end
+            : covered;
+    }
+    // A null `covered` is an open end: nothing after it is uncovered.
+    if (
+      covered !== null &&
+      (placement.period.end === null || covered < placement.period.end)
+    )
+      parts.push(bare({ start: covered, end: placement.period.end }));
     const id = JSON.stringify([
       placement.table,
       placement.column,
