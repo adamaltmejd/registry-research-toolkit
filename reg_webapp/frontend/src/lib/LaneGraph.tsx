@@ -1,4 +1,11 @@
-import { type ReactNode, useCallback, useId, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import {
   Checkbox,
   Focusable,
@@ -265,6 +272,7 @@ export function LaneGraph({
                       width={geometry.stacked ? width : geometry.trackX - 16}
                       onHeight={lane.detail ? onNameHeight : undefined}
                       focus={lane.id === focus}
+                      top={placed.y}
                     />
                     <ul className={styles.spans}>
                       {(spansByLane.get(lane.id) ?? []).map((span) => {
@@ -578,11 +586,13 @@ function LaneName({
   width,
   onHeight,
   focus = false,
+  top,
 }: {
   lane: LaneModel;
   width?: number;
   onHeight?: (id: string, height: number) => void;
   focus?: boolean;
+  top?: number;
 }) {
   // The action is a sibling of the text block, not inside it: the block's
   // `overflow: hidden` (the ellipsis) would clip the action's focus ring.
@@ -595,7 +605,13 @@ function LaneName({
     );
   }
   return (
-    <LaneText lane={lane} width={width} onHeight={onHeight} focus={focus} />
+    <LaneText
+      lane={lane}
+      width={width}
+      onHeight={onHeight}
+      focus={focus}
+      top={top}
+    />
   );
 }
 
@@ -604,11 +620,15 @@ function LaneText({
   width,
   onHeight,
   focus = false,
+  top,
 }: {
   lane: LaneModel;
   width?: number;
   onHeight?: (id: string, height: number) => void;
   focus?: boolean;
+  /** The lane's place in the drawing, which moves while the lanes above
+   * measure their names. */
+  top?: number;
 }) {
   const subId = useId();
   const id = lane.id;
@@ -626,16 +646,23 @@ function LaneText({
     },
     [id, onHeight],
   );
-  // Once, when the lane is first drawn: the lanes mount only after the graph
-  // is measured, so this runs with the lane in place.
+  // Focus once, when the lane is first drawn (the lanes mount only after the
+  // graph is measured); keep it in view while the lanes above it grow to
+  // their measured names, until focus moves on.
+  const focused = useRef<HTMLElement | null>(null);
   const focusName = useCallback(
     (node: HTMLElement | null) => {
       if (!node || !focus) return;
+      focused.current = node;
       node.focus({ preventScroll: true });
-      node.scrollIntoView({ block: "center" });
     },
     [focus],
   );
+  useEffect(() => {
+    const node = focused.current;
+    if (top !== undefined && node && document.activeElement === node)
+      node.scrollIntoView({ block: "center" });
+  }, [top]);
   return (
     <div
       ref={measure}

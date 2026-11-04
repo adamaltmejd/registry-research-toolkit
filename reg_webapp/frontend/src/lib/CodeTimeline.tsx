@@ -202,7 +202,6 @@ export function CodeTimeline({
         ) : (
           geometry && (
             <>
-              <Axis geometry={geometry} />
               {all.map((block) => (
                 <Block
                   key={block.map((list) => list.valueSet.hash).join(" ")}
@@ -400,75 +399,87 @@ function Rows({
     width: Math.max(x(run.to + 1) - x(run.from), 2),
   });
   return (
-    <ol className={styles.rows} data-stacked={geometry.stacked || undefined}>
-      {sorted.map((row, index) => {
-        const used = runsOf(row.years.keys());
-        // Columns that have codes in a year this code is used, but not this
-        // one: named under the label, with years only where that is part of
-        // the column's years here.
-        const lacking = new Map<string, number[]>();
-        for (const [year, columns] of coded) {
-          const using = row.years.get(year);
-          if (!using) continue;
-          for (const column of columns)
-            if (!using.has(column))
-              lacking.set(column, [...(lacking.get(column) ?? []), year]);
-        }
-        const users = [
-          ...new Set([...row.years.values()].flatMap((set) => [...set])),
-        ];
-        const note =
-          lacking.size === 0 ? null : users.length < lacking.size ? (
-            <>
-              Only in{" "}
-              {users.map((column) => (
-                <ColumnChip key={column} name={column} />
-              ))}
-            </>
-          ) : (
-            <>
-              Not in{" "}
-              {[...lacking].map(([column, years]) => {
-                const own = [...(columnYears.get(column) ?? [])].filter(
-                  (year) => row.years.has(year),
-                );
-                const whole = label(runsOf(years)) === label(runsOf(own));
-                return (
-                  <span key={column} className={styles.lack}>
-                    <ColumnChip name={column} />
-                    {!whole && ` ${label(runsOf(years))}`}
-                  </span>
-                );
-              })}
-            </>
-          );
-        const continued = index > 0 && sorted[index - 1].code === row.code;
-        return (
-          <li
-            key={`${row.code}\u0000${row.label}`}
-            className={styles.row}
-            data-continued={continued || undefined}
-            style={{ gridTemplateColumns: columnsStyle }}
-          >
-            <span className={styles.text}>
-              <code className={styles.code}>{continued ? "" : row.code}</code>
-              <span className={styles.label}>
-                {row.label}
-                <span className="visually-hidden">, used {label(used)}</span>
-                {note && <span className={styles.note}>{note}</span>}
+    <>
+      {/* The axis heads each drawn block, never a block still to be asked. */}
+      <Axis geometry={geometry} />
+      <ol className={styles.rows} data-stacked={geometry.stacked || undefined}>
+        {sorted.map((row, index) => {
+          const used = runsOf(row.years.keys());
+          // Columns that have codes in a year this code is used, but not this
+          // one: named under the label, with years only where that is part of
+          // the column's years here.
+          const lacking = new Map<string, number[]>();
+          for (const [year, columns] of coded) {
+            const using = row.years.get(year);
+            if (!using) continue;
+            for (const column of columns)
+              if (!using.has(column))
+                lacking.set(column, [...(lacking.get(column) ?? []), year]);
+          }
+          const users = [
+            ...new Set([...row.years.values()].flatMap((set) => [...set])),
+          ];
+          const note =
+            lacking.size === 0 ? null : users.length < lacking.size ? (
+              <>
+                Only in{" "}
+                {users.map((column) => (
+                  <ColumnChip key={column} name={column} />
+                ))}
+              </>
+            ) : (
+              <>
+                Not in{" "}
+                {[...lacking].map(([column, years]) => {
+                  const own = [...(columnYears.get(column) ?? [])].filter(
+                    (year) => row.years.has(year),
+                  );
+                  const whole = label(runsOf(years)) === label(runsOf(own));
+                  return (
+                    <span key={column} className={styles.lack}>
+                      <ColumnChip name={column} />
+                      {!whole && ` ${label(runsOf(years))}`}
+                    </span>
+                  );
+                })}
+              </>
+            );
+          const continued = index > 0 && sorted[index - 1].code === row.code;
+          return (
+            <li
+              key={`${row.code}\u0000${row.label}`}
+              className={styles.row}
+              data-continued={continued || undefined}
+              style={{ gridTemplateColumns: columnsStyle }}
+            >
+              <span className={styles.text}>
+                <code className={styles.code}>{continued ? "" : row.code}</code>
+                <span className={styles.label}>
+                  {row.label}
+                  <span className="visually-hidden">, used {label(used)}</span>
+                  {note && <span className={styles.note}>{note}</span>}
+                </span>
               </span>
-            </span>
-            <span className={styles.track} aria-hidden="true">
-              {track.map((run) => (
-                <span key={run.from} className={styles.base} style={bar(run)} />
-              ))}
-              {used.map((run) => (
-                <span key={run.from} className={styles.box} style={bar(run)} />
-              ))}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
+              <span className={styles.track} aria-hidden="true">
+                {track.map((run) => (
+                  <span
+                    key={run.from}
+                    className={styles.base}
+                    style={bar(run)}
+                  />
+                ))}
+                {used.map((run) => (
+                  <span
+                    key={run.from}
+                    className={styles.box}
+                    style={bar(run)}
+                  />
+                ))}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </>
   );
 }
