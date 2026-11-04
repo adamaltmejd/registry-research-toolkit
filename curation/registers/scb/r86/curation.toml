@@ -13431,3 +13431,93 @@ kind = "set"
 subject = "var:wvikt"
 fields = { "label" = "Hushållsvikt (WVIKT99/WVIKT00/WVIKT01)" }
 evidence = "#2102 fold: the label names every folded column. WVIKT99, WVIKT00, WVIKT01 in hushall-1999-2001, one per year: same definition and opdef, no value set, adjacent."
+
+[[statement]]
+kind = "set"
+subject = "var:faktbfv"
+fields = { "description" = "Veckan då hushållet faktiskt började föra bokföring i undersökningen (antal veckor)." }
+evidence = "Opdef and column FAKTBFV, unit Antal veckor: week of actual start of bookkeeping; definition copied from DELURV."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för hushållets första person." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-2"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 2 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-3"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 3 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-4"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 4 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-5"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 5 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-6"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 6 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-7"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 7 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum-person-8"
+fields = { "description" = "Födelseår och födelsemånad (ååååmm) för person 8 i hushållet." }
+evidence = "Opdef + length 6: birth year and month."
+
+[[statement]]
+kind = "set"
+subject = "var:rad107c"
+fields = { "description" = "Hushållets utgift för underkläder och strumpor, i kronor. Delpost av RAD107 Kläder." }
+evidence = "Sub-item of RAD107 Kläder: underkläder och strumpor, kronor; \"livsmedel\" in the definition is a joining artifact."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-uppgift"
+fields = { "description" = "Anger varifrån utgiftsuppgiften kommer: 1 = från kassabok, 2 = från enkät." }
+evidence = "1 = från kassabok, 2 = från enkät."
+
+[[statement]]
+kind = "set"
+subject = "var:utgift-for-fritidsbostad-utlamnande-rep"
+fields = { "description" = "Hushållets utgift för utlämnade reparationer av fritidsbostad, i kronor." }
+evidence = "\"rep\" = reparationer as in VK2504/VK2525: utlämnade reparationer av fritidsbostad."
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2052 where key = 'v40440' and unit = 'Hektar'"
+fields = { "unit" = "kronor" }
+evidence = "VK2052 is an \"Utgift för ...\" variable; unit Hektar is a copy error (1050 of ~1067 such rows and siblings RAD102/VK2525 are kronor)."
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2504 where key = 'v40946' and unit = 'Typkod'"
+fields = { "unit" = "kronor" }
+evidence = "Same class: unit Typkod on an expenditure variable."
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: VK2642 where key = 'v41020' and unit = 'Antal  minuter'"
+fields = { "unit" = "kronor" }
+evidence = "Same class: unit Antal  minuter on an expenditure variable."

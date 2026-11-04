@@ -5510,3 +5510,9 @@ kind = "set"
 subject = "djur: svinö @1992-01-01..1993-12-31 where key = 'v44589'"
 fields = { "variable" = "antal-svin-over-20-kg" }
 evidence = "#2141 Q4 (evidence rule): svinö (1992-1994) then svin2050 (1994-1998) in djur: same definition, no value set, adjacent, one column on each side of the boundary; folded into antal-svin-over-20-kg."
+
+[[statement]]
+kind = "set"
+subject = "var:arealklass-akermark-nya-kriterier"
+fields = { "description" = "Storleksklass för åkermarken enligt de nya kriterierna: 0 = upp till 2 hektar åkermark, 1 = mer än 2 hektar åkermark eller minst 5 hektar jordbruksmark (åker och betesmark)." }
+evidence = "Indicator: code list #8387 0 = upp till 2 ha åkermark, 1 = mer än 2 ha åkermark eller minst 5 ha jordbruksmark; label says Areal."
