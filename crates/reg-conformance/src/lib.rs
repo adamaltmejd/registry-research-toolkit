@@ -414,7 +414,7 @@ pub fn pin_steward(root: &Path, registry: &Path) -> Result<(), String> {
         "[inputs]"
     };
     let config = format!(
-        "owner = \"fixture\"\nscope = \"scope.toml\"\nseries_root = \"series\"\n\
+        "owner = \"fixture\"\nscope = \"scope.toml\"\n\
          curation_root = \"curation/registers\"\n\n[presentation]\n\
          steward = \"branding/steward.json\"\nlogo = \"branding/logo.svg\"\n\n{inputs}\n\
          census = \"census.csv\"\nstorage_export = \"storage.csv\"\n\
