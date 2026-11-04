@@ -519,6 +519,7 @@ async function browseGroupCase(page, shoot) {
   const bound = saved.sources.flatMap((source) => source.bindings.map((binding) => binding.variable)).sort();
   check(JSON.stringify(bound) === JSON.stringify(["demo/bas/gross-household", "demo/bas/inkomst"]),
     `the group page's add bound the wrong variables: ${JSON.stringify(bound)}`);
+  await shoot("browse-group-project");
 }
 
 // Project + catalog → saved project boundary. Fails if changing a binding's
@@ -958,7 +959,7 @@ const scenarios = {
   },
   "browse-group": {
     fixture: "webapp-dev",
-    shots: 1,
+    shots: 2,
     route: "/catalog/demo/bas/inkomst",
     run: browseGroupCase,
   },
