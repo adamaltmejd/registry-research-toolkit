@@ -1,9 +1,7 @@
-//! Claude Code (`.claude/skills/`) and Codex (`.agents/skills/`) serve the same skills.
-//!
-//! Each skill is a real directory in one catalog and a relative symlink to it in the
-//! other, so the two cannot drift and the link survives any clone or worktree. The
-//! canonical directory also holds the Codex `agents/openai.yaml`. Fails on a skill
-//! present in only one catalog, a copied directory, or an absolute or repointed link.
+//! Each skill is a real directory in `.agents/skills/` or `.claude/skills/` and a relative
+//! symlink to it in the other, so the two cannot drift and the link survives any clone or
+//! worktree. Fails on a skill present in only one catalog, a copied directory, or an
+//! absolute or repointed link.
 
 use std::collections::BTreeSet;
 use std::fs;
@@ -46,9 +44,6 @@ fn skill_is_real_in_one_catalog_and_aliased_in_the_other() {
         let front = fs::read_to_string(alias.join("SKILL.md")).unwrap_or_default();
         if !front.starts_with(&format!("---\nname: {skill}\n")) {
             errors.push(format!("{skill}: SKILL.md must open with `name: {skill}`"));
-        }
-        if !paths[1 - alias_at].join("agents/openai.yaml").is_file() {
-            errors.push(format!("{skill}: no agents/openai.yaml in {canonical}"));
         }
     }
     assert!(errors.is_empty(), "{}", errors.join("\n"));
