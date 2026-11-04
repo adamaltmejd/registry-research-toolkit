@@ -918,9 +918,10 @@ overlapping curated overrides are refused at both locations.
 - **Search keeps diacritics.** The new catalog's `search` index holds the text as
   written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
   `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
-  for it; the reader folds queries with `reg_core::normalized_search_query` (case and
-  whitespace only). The `fold_search` paragraph under "Search" below describes the old
-  indexes.
+  for it. The reader passes `q` to FTS unfolded, so the index tokenizer folds query and
+  text alike (C-9); pre-folding with `reg_core::normalized_search_query` (full case
+  folding, `ß` to `ss`) would miss an indexed `ß`. The `fold_search` paragraph under
+  "Search" below describes the old indexes.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

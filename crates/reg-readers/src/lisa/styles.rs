@@ -183,28 +183,33 @@ fn walk(
 ) -> Result<(), String> {
     let mut xml = quick_xml::Reader::from_reader(bytes);
     loop {
-        match xml.read_event().map_err(|e| e.to_string())? {
-            Event::Start(e) | Event::Empty(e) => {
-                let mut attrs = BTreeMap::new();
-                for a in e.attributes() {
-                    let a = a.map_err(|e| e.to_string())?;
-                    let key = a.key.as_ref().to_owned();
-                    let value = a
-                        .normalized_value(quick_xml::XmlVersion::Implicit1_0)
-                        .map_err(|e| e.to_string())?
-                        .into_owned();
-                    attrs.insert(key, value);
-                }
-                let local = e.local_name();
-                let name = local.as_ref();
-                visit(name, true, &attrs)?;
-            }
+        let (e, empty) = match xml.read_event().map_err(|e| e.to_string())? {
+            Event::Start(e) => (e, false),
+            Event::Empty(e) => (e, true),
             Event::End(e) => {
                 let local = e.local_name();
                 visit(local.as_ref(), false, &BTreeMap::new())?;
+                continue;
             }
             Event::Eof => return Ok(()),
-            _ => (),
+            _ => continue,
+        };
+        let mut attrs = BTreeMap::new();
+        for a in e.attributes() {
+            let a = a.map_err(|e| e.to_string())?;
+            let key = a.key.as_ref().to_owned();
+            let value = a
+                .normalized_value(quick_xml::XmlVersion::Implicit1_0)
+                .map_err(|e| e.to_string())?
+                .into_owned();
+            attrs.insert(key, value);
+        }
+        let local = e.local_name();
+        let name = local.as_ref();
+        visit(name, true, &attrs)?;
+        // An empty element is entered and left, so `<fonts/>` closes its section.
+        if empty {
+            visit(name, false, &BTreeMap::new())?;
         }
     }
 }

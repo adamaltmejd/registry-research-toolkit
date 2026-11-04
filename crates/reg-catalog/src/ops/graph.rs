@@ -90,8 +90,8 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
                 .collect::<rusqlite::Result<Vec<_>>>()?;
             ends.extend(implicit.into_iter().map(|id| ("table".to_owned(), id)));
         }
-        // simplify: classification graphs (versions and their correspondences) land in D
-        // with curated versions; C has no `class_*` rows, so these refs cannot resolve.
+        // simplify: classification graphs (versions and their correspondences) are not
+        // served; serve them when a reader needs version correspondences.
         "class_family" | "class_version" => {
             return Err(Error::new(
                 Code::InternalError,
