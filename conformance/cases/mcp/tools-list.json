@@ -1842,7 +1842,7 @@
           "type": "object"
         },
         "Segment": {
-          "description": "One row of the variable's per-period list: a column of one table over one period with one form and one provider wording. A fact the catalog does not state is left out, never `null`: no type, no value set, `coded` or `temporality` unknown, and `state` clear (the default).",
+          "description": "One row of the variable's per-period list: a column of one table over one period\nwith one form and one provider wording. A fact the catalog does not state is left\nout, never `null`: no type, no value set, `coded` unknown, and `state` clear (the\ndefault).",
           "properties": {
             "classification": {
               "description": "A classification version's ref.",
@@ -1873,9 +1873,6 @@
             "format": {
               "type": "string"
             },
-            "id_kind": {
-              "type": "string"
-            },
             "identifier": {
               "type": "boolean"
             },
@@ -1898,9 +1895,6 @@
             },
             "table": {
               "description": "The table's fqid.",
-              "type": "string"
-            },
-            "temporality": {
               "type": "string"
             },
             "type": {

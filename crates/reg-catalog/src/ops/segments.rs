@@ -46,7 +46,10 @@ pub struct SegmentPage {
     next_cursor: Option<String>,
 }
 
-/// One row of the variable's per-period list: a column of one table over one period with one form and one provider wording. A fact the catalog does not state is left out, never `null`: no type, no value set, `coded` or `temporality` unknown, and `state` clear (the default).
+/// One row of the variable's per-period list: a column of one table over one period
+/// with one form and one provider wording. A fact the catalog does not state is left
+/// out, never `null`: no type, no value set, `coded` unknown, and `state` clear (the
+/// default).
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Segment {
     /// The table's fqid.
@@ -88,13 +91,7 @@ pub struct Segment {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
     identifier: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    id_kind: Option<String>,
     role: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    temporality: Option<String>,
     /// Present only when the column is ambiguous; absent means clear.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
@@ -339,13 +336,12 @@ fn segment_rows(
     table: Option<&str>,
 ) -> Result<Vec<Row>, Error> {
     let sql = "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
-                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier, ik.slug,
-                s.role, s.temporality, s.state
+                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier,
+                s.role, s.state
          FROM segment s
            JOIN tbl t ON t.id = s.table_id
            JOIN spelling sp ON sp.id = s.spelling_id
            LEFT JOIN class_version cv ON cv.id = s.class_version_id
-           LEFT JOIN id_kind ik ON ik.id = s.id_kind_id
          WHERE s.variable_id = ?1 AND (?2 IS NULL OR t.pid = ?2)";
     let stated = |value: String, unstated: &str| (value != unstated).then_some(value);
     Ok(rows(
@@ -376,10 +372,8 @@ fn segment_rows(
                     coded: stated(row.get(10)?, "unknown"),
                     sensitive: row.get(11)?,
                     identifier: row.get(12)?,
-                    id_kind: row.get(13)?,
-                    role: row.get(14)?,
-                    temporality: stated(row.get(15)?, "unknown"),
-                    state: stated(row.get(16)?, "clear"),
+                    role: row.get(13)?,
+                    state: stated(row.get(14)?, "clear"),
                     evidence: None,
                 },
             })
@@ -501,9 +495,7 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
             coded: None,
             sensitive: None,
             identifier: None,
-            id_kind: None,
             role: role.to_owned(),
-            temporality: None,
             state: None,
             evidence: None,
         },

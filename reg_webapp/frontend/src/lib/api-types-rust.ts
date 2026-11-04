@@ -1046,7 +1046,12 @@ export interface components {
             /** Format: int64 */
             total?: number | null;
         };
-        /** @description One row of the variable's per-period list: a column of one table over one period with one form and one provider wording. A fact the catalog does not state is left out, never `null`: no type, no value set, `coded` or `temporality` unknown, and `state` clear (the default). */
+        /**
+         * @description One row of the variable's per-period list: a column of one table over one period
+         *     with one form and one provider wording. A fact the catalog does not state is left
+         *     out, never `null`: no type, no value set, `coded` unknown, and `state` clear (the
+         *     default).
+         */
         Segment: {
             /** @description A classification version's ref. */
             classification?: string;
@@ -1059,7 +1064,6 @@ export interface components {
             /** @description On a data holder's catalog, the file the holder has the column in. */
             file?: string;
             format?: string;
-            id_kind?: string;
             identifier?: boolean;
             /** Format: int64 */
             length?: number;
@@ -1070,7 +1074,6 @@ export interface components {
             state?: string;
             /** @description The table's fqid. */
             table: string;
-            temporality?: string;
             type?: string;
             value_set?: components["schemas"]["ValueSetRef"];
             /** @description The provider's definition over this period; a change of wording starts a row. */
