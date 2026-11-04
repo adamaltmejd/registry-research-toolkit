@@ -20,9 +20,10 @@ so a reuse is safe exactly when all of those are unchanged:
   this release's `reg-meta` version and to the base's `meta.catalog_version`.
 - Bytes: `catalog/reg_meta.db` still hashes to the recorded `base.sha256`.
 
-A step's result carries over only when the evidence's `passed` file lists it (each
-step appends its name once it passes), and the pair only when it still hashes to
-`holdings.sha256`, recorded when 8e passed. It also says what the diff does touch:
+A step's result carries over only when the evidence's `passed` file lists it against
+this base digest (each step appends `<step> <base sha>` once it passes), and the pair
+only when it still hashes to `holdings.sha256`, recorded when 8e passed, and pins this
+base's `catalog_sha256`. It also says what the diff does touch:
 
 - `stewards.toml` changed: rebuild the holdings and redo their checks (8d-8g).
 - A reader-side path changed (a workspace crate outside the builder closure,
@@ -40,6 +41,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -102,8 +104,8 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def check_records(evidence: Path, repo: Path) -> str:
-    """The built commit, once every record supports reusing its base."""
+def check_records(evidence: Path, repo: Path) -> tuple[str, str]:
+    """The built commit and base digest, once every record supports reusing it."""
     built = record(evidence, "source-revision")
     try:
         run("git", "cat-file", "-e", f"{built}^{{commit}}")
@@ -135,19 +137,36 @@ def check_records(evidence: Path, repo: Path) -> str:
     recorded = record(evidence, "base.sha256").split()[0]
     if sha256(db) != recorded:
         raise Refused(f"{db} no longer matches base.sha256")
-    return built
+    return built, recorded
 
 
-def holdings_reason(evidence: Path, passed: set[str], steward_change: list[str]) -> str:
+def passed_steps(evidence: Path, base_sha: str) -> set[str]:
+    """Steps `passed` records against this base digest (`<step> <base sha>` lines)."""
+    path = evidence / "passed"
+    if not path.is_file():
+        return set()
+    lines = (line.split() for line in path.read_text().splitlines())
+    return {f[0] for f in lines if len(f) == 2 and f[1] == base_sha}
+
+
+def holdings_reason(
+    evidence: Path, passed: set[str], steward_change: list[str], base_sha: str
+) -> str:
     """Why the earlier pair cannot be reused, or "" when it can."""
     if steward_change:
         return "stewards.toml changed"
     pair = evidence / "catalog/reg_meta_swecov.db"
     if not pair.is_file() or "8e" not in passed:
-        return "no pair that passed 8e in the evidence"
+        return "no pair that passed 8e against this base in the evidence"
     digest = evidence / "holdings.sha256"
     if not digest.is_file() or sha256(pair) != digest.read_text().split()[0]:
         return "the pair no longer matches holdings.sha256"
+    with sqlite3.connect(f"file:{pair}?mode=ro", uri=True) as conn:
+        row = conn.execute(
+            "SELECT value FROM meta WHERE key = 'catalog_sha256'"
+        ).fetchone()
+    if row is None or row[0] != base_sha:
+        return "the pair does not pin this base's catalog_sha256"
     return ""
 
 
@@ -157,12 +176,14 @@ def main(argv: list[str]) -> int:
         return 2
     evidence = Path(argv[1]).resolve()
     repo = Path(run("git", "rev-parse", "--show-toplevel").strip())
+    # Every pathspec below is repository-relative.
+    os.chdir(repo)
     if run("git", "status", "--porcelain"):
         print("refused: the release checkout is dirty", file=sys.stderr)
         return 2
     release = run("git", "rev-parse", "HEAD").strip()
     try:
-        built = check_records(evidence, repo)
+        built, base_sha = check_records(evidence, repo)
     except Refused as refused:
         print(f"refused: {refused}; rebuild the base", file=sys.stderr)
         return 2
@@ -186,11 +207,7 @@ def main(argv: list[str]) -> int:
     if base:
         print("base: rebuild (builder input changed):", *base, sep="\n  ")
         return 1
-    passed = (
-        set((evidence / "passed").read_text().split())
-        if (evidence / "passed").is_file()
-        else set()
-    )
+    passed = passed_steps(evidence, base_sha)
     print("base: reuse")
     for step in ("8b", "8c"):
         print(
@@ -198,7 +215,9 @@ def main(argv: list[str]) -> int:
             if step in passed
             else f"{step}: run it (not passed in the evidence)"
         )
-    holdings = holdings_reason(evidence, passed, changed(built, release, HOLDINGS))
+    holdings = holdings_reason(
+        evidence, passed, changed(built, release, HOLDINGS), base_sha
+    )
     if holdings:
         print(f"holdings: rebuild, redo 8d-8g ({holdings})")
     else:

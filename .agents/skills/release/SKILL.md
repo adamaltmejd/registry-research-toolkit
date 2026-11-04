@@ -109,11 +109,15 @@ build then name the same revision.
 
 ### 5. Fast-forward main
 
-Once the PR's CI is green, fast-forward `main` to the bump (GitHub then shows the PR as
-merged) and **verify the bump is `origin/main`** before tagging:
+Once `ci.yml` is green on the bump (only `ci.yml`: a schema bump's PR is red at
+`container-build.yml`'s `schema-guard` until the release publishes, step 3),
+fast-forward `main` to the bump (GitHub then shows the PR as merged) and **verify the
+bump is `origin/main`** before tagging:
 
 ```sh
-gh pr checks release/<package>-vX.Y.Z --watch --fail-fast
+run=$(gh run list --workflow ci.yml --commit "$(git rev-parse HEAD)" --limit 1 \
+  --json databaseId -q '.[0].databaseId')
+gh run watch "$run" --exit-status
 git push origin HEAD:main
 git fetch origin main
 if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
@@ -191,7 +195,8 @@ inputs=/absolute/path/to/pinned-inputs-worktree
 assets=/absolute/path/to/pinned-release-assets
 evidence=/absolute/path/to/release-evidence
 version=X.Y.Z
-mkdir -p "$evidence/catalog"
+mkdir "$evidence"  # a new directory per build: refuses an existing one
+mkdir "$evidence/catalog"
 test -z "$(git status --porcelain)"
 git rev-parse HEAD > "$evidence/source-revision"
 rustc -vV > "$evidence/rustc.txt"
@@ -206,7 +211,9 @@ base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")
 ```
 
 `source-revision`, `rustc.txt`, `build-args.txt` and `base.sha256` are the records a
-later reuse is checked against (below). `--out` is a database filename, not a directory.
+later reuse is checked against (below). Every build gets a new evidence directory, so an
+interrupted build leaves no `base.sha256` and an older one's records and pass marks
+never describe a newer base. `--out` is a database filename, not a directory.
 `--release` refuses unplaced or split ledger ids and variables without a ledger id. Read
 the report's warnings and confirm all expected providers and inputs are present.
 `base_sha` is the digest every later step re-checks: the holdings pin it, and the base
@@ -229,10 +236,12 @@ It diffs the two commits over the builder's dependency closure, read from
 inconsistent record fails closed (exit 2). Follow what it prints:
 
 - `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
-- `base: reuse`: keep `$earlier_evidence` as `$evidence`.
+- `base: reuse`: keep `$earlier_evidence` as `$evidence` and set
+  `base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")`.
 - A step carries over only when `$evidence/passed` lists it; otherwise the script says
-  `run it`. Each step below appends its name to `passed` once it passes, so a build
-  whose checks never finished carries nothing over.
+  `run it`. Each step below appends `<step> <base sha>` to `passed` once it passes, so a
+  build whose checks never finished carries nothing over, and a mark made against
+  another base does not count.
 - `holdings: rebuild` (`stewards.toml` changed, no pair that passed 8e, or a pair that
   no longer matches `holdings.sha256`): redo 8d-8g.
 - `8f: rerun` (a reader-side crate, `conformance/` or the Python lock changed, or the
@@ -274,7 +283,8 @@ Exit 0 means no changes, 1 means differences to review, and 2 means an error tha
 the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
 the diff, confirms only intended changes, and puts its summary in the release notes.
 After 8b passes, and again after the diff review, record each step:
-`echo 8b >> "$evidence/passed"`, `echo 8c >> "$evidence/passed"`.
+`echo "8b $base_sha" >> "$evidence/passed"`,
+`echo "8c $base_sha" >> "$evidence/passed"`.
 
 #### 8d. Compile the holdings
 
@@ -319,7 +329,7 @@ digest and the step:
 
 ```sh
 shasum -a 256 "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings.sha256"
-echo 8e >> "$evidence/passed"
+echo "8e $base_sha" >> "$evidence/passed"
 ```
 
 #### 8f. Run conformance against the pair
@@ -341,8 +351,8 @@ uv run python -m pytest conformance -q -n auto -m release --run-release \
 `gate.py release` itself selects a synthetic artifact and accepts no artifact override;
 that run does not validate the release DB. A red artifact run stops publication; a
 failure only in the pair run stops it too. When both pass,
-`echo 8f >> "$evidence/passed"`. Do not change tests to get a pass. If pair admission
-times out at server start, raise `SERVER_READY_SECONDS` (120) in
+`echo "8f $base_sha" >> "$evidence/passed"`. Do not change tests to get a pass. If pair
+admission times out at server start, raise `SERVER_READY_SECONDS` (120) in
 `conformance/http_cases.py` through a reviewed PR, not in place.
 
 Reading the pair run: the tests read `reg_meta.db` directly and serve both files. Under
@@ -379,7 +389,8 @@ target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
 
 Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
 exit 2 is an error and stops the release. The maintainer reads that summary for
-go/no-go; its counts go in the release notes. On a go, `echo 8g >> "$evidence/passed"`.
+go/no-go; its counts go in the release notes. On a go,
+`echo "8g $base_sha" >> "$evidence/passed"`.
 
 #### 8h. Scope check
 
