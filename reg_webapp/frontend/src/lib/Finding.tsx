@@ -104,8 +104,15 @@ export function IssueLink({
         href={`#${encodeURIComponent(issueId(issue))}`}
         onPress={() => document.getElementById(issueId(issue))?.focus()}
       >
-        {table.value ?? place.source}
-        {place.variable && variable.value ? `: ${variable.value}` : ""}:{" "}
+        {/* The table's catalog name, as on its card; nothing while it loads,
+          rather than the join key flashing first. */}
+        {[
+          table.loading ? null : (table.value ?? place.source),
+          place.variable ? variable.value : null,
+        ]
+          .filter(Boolean)
+          .map((part) => `${part}: `)
+          .join("")}
         {plainIssueText(issueTitle(issue), refs, names, raw)}
       </Link>
     </li>

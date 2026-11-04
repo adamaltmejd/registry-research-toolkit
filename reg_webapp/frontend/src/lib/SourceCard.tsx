@@ -310,7 +310,7 @@ export function SourceCard({
       )}
       <p className={styles.meta}>
         <a className="link" href={catalogHref(source.table)}>
-          {names.get(source.table) ?? "Table name unavailable"}
+          {tableName}
         </a>
         <span>
           Years:{" "}
