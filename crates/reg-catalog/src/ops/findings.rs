@@ -157,7 +157,7 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     // The query streams every finding in order; each group's count is its rows, and
     // only the rows in the page are read past their code. Ranking in SQL instead
     // (ROW_NUMBER and COUNT over each group) sorted every wide row twice more: about
-    // 550 ms against 200 ms for scb/ulf's 37,616 findings.
+    // 550 ms against 200 ms for a register with about 37,000 findings.
     let mut last: Option<(String, String)> = None;
     let mut position = 0usize;
     let found = rows(

@@ -930,8 +930,8 @@ Rules:
   `{"items": [...], "next_cursor": ...}`. A list bounded by the request or the entity is
   a plain array. `findings` answers one group per severity and code, with its count and
   a page of its items: an entity's findings are bounded but run to thousands in a few
-  codes, and a reader wants the counts first. Cursors bind to the generation, so a
-  stale cursor fails loudly. No offsets.
+  codes, and a reader wants the counts first. Cursors bind to the generation, so a stale
+  cursor fails loudly. No offsets.
 - **One parameter per concept and one result shape per operation**, independent of
   result count.
 - **Errors** are `{error, meta}` with
