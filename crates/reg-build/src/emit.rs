@@ -16,7 +16,7 @@ use reg_resolve::{Resolved, Subject};
 use crate::docs::Document;
 use crate::link::{self, Entity};
 use rusqlite::Connection;
-use rusqlite::types::{ToSql, ToSqlOutput};
+use rusqlite::types::{ToSqlOutput, ValueRef};
 
 const SCHEMA: &str = include_str!("schema.sql");
 
@@ -94,25 +94,6 @@ enum Cell {
     Text(String),
     Fold(String),
     Spelling(String),
-}
-
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
-enum Value {
-    Null,
-    Int(i64),
-    Str(String),
-    Blob(Vec<u8>),
-}
-
-impl ToSql for Value {
-    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
-        match self {
-            Value::Null => Ok(ToSqlOutput::from(rusqlite::types::Null)),
-            Value::Int(i) => Ok(ToSqlOutput::from(*i)),
-            Value::Str(s) => Ok(ToSqlOutput::from(s.as_str())),
-            Value::Blob(b) => Ok(ToSqlOutput::from(b.as_slice())),
-        }
-    }
 }
 
 fn opt_text(s: Option<&String>) -> Cell {
@@ -1434,7 +1415,10 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     }
     let mut db = Connection::open(scratch).map_err(sql)?;
     db.execute_batch(&format!(
+        // The cache and temp-store settings are connection state, not file content:
+        // `VACUUM INTO` writes the same bytes; they spare index builds the disk (#2196).
         "PRAGMA journal_mode = OFF; PRAGMA synchronous = OFF; PRAGMA auto_vacuum = NONE;
+         PRAGMA cache_size = -1048576; PRAGMA temp_store = MEMORY;
          PRAGMA user_version = {};",
         reg_core::CATALOG_SCHEMA_VERSION
     ))
@@ -1513,30 +1497,27 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         let Some(table_rows) = rows.tables.get(table) else {
             continue;
         };
-        let values: Vec<Vec<Value>> = table_rows
-            .iter()
-            .map(|row| {
-                row.iter()
-                    .map(|cell| match cell {
-                        Cell::Null => Value::Null,
-                        Cell::Int(i) => Value::Int(*i),
-                        Cell::Str(s) => Value::Str(s.clone()),
-                        Cell::Blob(b) => Value::Blob(b.clone()),
-                        Cell::Text(s) => Value::Int(text_id[s.as_str()]),
-                        Cell::Fold(s) => Value::Int(fold_id[s.as_str()]),
-                        Cell::Spelling(s) => Value::Int(spelling_id[s.as_str()]),
-                    })
-                    .collect()
-            })
-            .collect();
-        let width = values[0].len();
+        let width = table_rows[0].len();
         let placeholders = vec!["?"; width].join(",");
         let mut insert = tx
             .prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))
             .map_err(sql)?;
-        for row in &values {
+        // One row's values at a time: a whole table of owned copies held the
+        // largest tables twice (#2196).
+        for row in table_rows {
+            let values = row.iter().map(|cell| {
+                ToSqlOutput::Borrowed(match cell {
+                    Cell::Null => ValueRef::Null,
+                    Cell::Int(i) => ValueRef::Integer(*i),
+                    Cell::Str(s) => ValueRef::Text(s.as_bytes()),
+                    Cell::Blob(b) => ValueRef::Blob(b),
+                    Cell::Text(s) => ValueRef::Integer(text_id[s.as_str()]),
+                    Cell::Fold(s) => ValueRef::Integer(fold_id[s.as_str()]),
+                    Cell::Spelling(s) => ValueRef::Integer(spelling_id[s.as_str()]),
+                })
+            });
             insert
-                .execute(rusqlite::params_from_iter(row))
+                .execute(rusqlite::params_from_iter(values))
                 .map_err(|e| format!("{table}: {e}"))?;
         }
     }
