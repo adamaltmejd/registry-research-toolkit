@@ -36,12 +36,11 @@ FRONTEND = ROOT / "reg_webapp/frontend"
 os.environ["UV_EXCLUDE_NEWER"] = "false"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
 # A raised write limit: the suite and release admission replay many projects from one
-# address (conformance/test_mcp.py's burst case drops it to pin the default).
+# address (the Rust suite's MCP burst case drops it to pin the default).
 SERVER_CMD = (
     "--server-cmd='target/debug/reg-meta serve --db {db} --port {port}"
     " --write-limit 100000'"
 )
-MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
 ALL = ("g0", "rust", "flows", "frontend")
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
