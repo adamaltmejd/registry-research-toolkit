@@ -46,7 +46,8 @@ A Rust server and MCP tools that let researchers browse a catalog, validate a
 per-project variable list, and export it as a logical data order. A steward deployment
 adds its holdings (`--catalog <steward>`), from which an order's physical manifest is
 built. HTTP and MCP are equal surfaces over the same `reg-catalog` operations. The SPA
-is archived on `archive/reg-webapp-spa` and returns in milestone E.
+(`reg_webapp/frontend/`) is a client of the HTTP API; its redesign is tracked in
+[SPA-REDESIGN.md](SPA-REDESIGN.md).
 
 The unifying research-intent artifact is **`project_data.json`** — authored by
 researchers or agents and checked against the catalog by the order check. Its schema and

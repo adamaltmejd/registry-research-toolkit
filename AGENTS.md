@@ -175,8 +175,8 @@ and to a sweep.
 
 # Run
 
-`reg-meta serve --db <catalog-dir> --port 8000` serves the HTTP API and `/mcp`. The SPA
-is archived on `archive/reg-webapp-spa` and returns in milestone E.
+`reg-meta serve --db <catalog-dir> --port 8000` serves the HTTP API and `/mcp`.
+`reg_webapp/dev/dev.sh` runs it with the SPA (`reg_webapp/frontend/`) on free ports.
 
 # Lint and test
 

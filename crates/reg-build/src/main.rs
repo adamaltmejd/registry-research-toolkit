@@ -27,7 +27,8 @@
 //! without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
 //! key (exit 0 same, 1 different, 2 error); see `diff.rs`. `holdings` compiles a
-//! steward's holdings database against a `--release` base catalog, and `verify --catalog`
+//! steward's holdings database against a base catalog (a release build in production),
+//! and `verify --catalog`
 //! checks that pair; `lock --base` locks a steward repository's curation against a base
 //! catalog (`holdings/`).
 
