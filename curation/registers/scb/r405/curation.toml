@@ -6896,3 +6896,9 @@ kind = "set"
 subject = "var:trygghet-i-bostadsomradet-dagtid-grad"
 fields = { "label" = "Trygghet:i bostadsområdet dagtid (graderad)" }
 evidence = "#2102 same-label cluster 'Trygghet:i bostadsområdet dagtid' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; sec_day has ja/nej (0/1) codes up to 2016, sec_day2 the graded scale from 2016, with different question wording per the definition."
+
+[[statement]]
+kind = "set"
+subject = "var:barnsyss"
+fields = { "description" = "Barnets sysselsättning. Till och med 2016: om barnet går i skolan (1 = ja, 2 = nej). Från 2017: vilken skolform barnet går i (grundskola, gymnasium, annan utbildning, slutat skolan)." }
+evidence = "Code lists: 2012-2016 ja/nej (#10815), 2017-2019 skolform (#2899). Dated change."

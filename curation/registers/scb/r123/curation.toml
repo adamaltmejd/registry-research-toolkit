@@ -15324,3 +15324,47 @@ kind = "set"
 subject = "var:chef"
 fields = { "label" = "Antal underställda (chef)" }
 evidence = "#2102 same-label cluster 'Antal underställda' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; chef carries a five-interval code list and, from 2011, an opdef computing it from understl counts; UNDERSTL/UnderStl has no code list and concurs with chef in 2005-2006 in the same table."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: KRAV where key = 'v3888'"
+fields = { "variable" = "krav" }
+evidence = "1997 (r15497) lists KRAV under v3888 'Krav i arbetet' with the index text, but its code list (#2974: 1 = låga kunskapskrav, 2 = ej låga) is that of v3901 krav from 2001. The 1997 release has UTBILDNI (v3981) and LAROKRAV (v3927), the inputs of krav, and no ixkrav/ixkontr/stix; those first appear in 2001 (r567), where ixkrav = v3888 and krav = v3901 coexist.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=568790 (r15497)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=382789 (r567, ixkrav v3888)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=382791 (r567, krav v3901)"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: VRIDEROF where key = 'v3991' and release = 'r15050'"
+fields = { "variable" = "vriderof" }
+evidence = "Column VRIDEROF has the code list #9747 (frequency, 1 = varje dag .. 7 = inte alls de sista 12 månaderna), identical to v16137 VriderOf from 2005. The definition text under v3991 ('Arbetar du ibland i vriden ställning?') is the same as on the coexisting column VRIDENMY (v3990, proportion scale #6215), so it cannot describe both.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=615123 (r15050)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=77801 (r648, VriderOf v16137)"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: VRIDEROF where key = 'v3991' and release = 'r567'"
+fields = { "variable" = "vriderof" }
+evidence = "Same as r15050: VRIDEROF carries #9747, the scale of v16137 VriderOf; the definition text under v3991 is the one of VRIDENMY (v3990).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=382845 (r567)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=924457 (r567, VRIDENMY v3990)"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: vriderof where key = 'v3991' and release = 'r606'"
+fields = { "variable" = "vriderof" }
+evidence = "Same as r15050: vriderof carries #9747, the scale of v16137 VriderOf (r648, 2005).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=382936 (r606)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=77801 (r648)"
+
+
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-frekvens"
+fields = { "description" = "Anger om den sysselsatte arbetar kvällstid minst hälften av arbetsdagarna (1 = ja, 2 = nej)." }
+evidence = "Binary question: works evenings/nights at least half of the working days; codes 1 ja, 2 nej, 8, 9."
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-frekvens"
+fields = { "description" = "Anger om den sysselsatte arbetar nattetid minst hälften av arbetsdagarna (1 = ja, 2 = nej)." }
+evidence = "Binary question: works evenings/nights at least half of the working days; codes 1 ja, 2 nej, 8, 9."
+
+[[statement]]
+kind = "set"
+subject = "var:vriderof"
+fields = { "description" = "Hur ofta den sysselsatte upprepat böjer eller vrider kroppen i arbetet (frekvensskala)." }
+evidence = "Frequency of repeated bending/twisting, scale #9747."

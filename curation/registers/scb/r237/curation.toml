@@ -72290,42 +72290,6 @@ evidence = "Identitetsfaktumet behöver bedömas mot den senare variabeln.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:individvikt-1980-2009"
-fields = { "sets" = [] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497333\ncatalog:occurrence:498466\ncatalog:variable_text:49984:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt-1980-2009"
-fields = { "tags" = ["methods"] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497333\ncatalog:occurrence:498466\ncatalog:variable_text:49984:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt-1986-2009"
-fields = { "sets" = [] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497338\ncatalog:occurrence:499109\ncatalog:variable_text:49985:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt-1986-2009"
-fields = { "tags" = ["methods"] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497338\ncatalog:occurrence:499109\ncatalog:variable_text:49985:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt-1998-2009"
-fields = { "sets" = [] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497330\ncatalog:occurrence:499101\ncatalog:variable_text:49986:13879:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt-1998-2009"
-fields = { "tags" = ["methods"] }
-evidence = "Motpartens definition saknas i identitetsfaktens tidigare period.\ncatalog:occurrence:497330\ncatalog:occurrence:499101\ncatalog:variable_text:49986:13879:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:individvikt-kalibrerad"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktumet behöver bedömas mot den senare variabeln.\ncatalog:occurrence:493824\ncatalog:occurrence:499219"
@@ -108574,48 +108538,6 @@ evidence = "ULF BA3005: count with relation code 5; successor's own definition s
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2008-01-01..2008-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2009-01-01..2009-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2010-01-01..2010-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2011-01-01..2011-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2012-01-01..2012-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2013-01-01..2013-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba3005 @2014-01-01..2014-12-31 where key = 'v47864'"
-fields = { "variable" = "antal-med-kod-05-i-tablan" }
-evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
-
-[[statement]]
-kind = "set"
 subject = "individer-16plus-ulf: ha1345 @2009-01-01..2009-12-31 where key = 'v49175'"
 fields = { "variable" = "ansokt-om-fardtjanst" }
 evidence = "ULF HA1345 'Ansökt om färdtjänst': the successor (2009-11) uses value set vs2680, the same set the predecessor already used in 2002-2003; the recode happened inside the predecessor, same question and label."
@@ -111823,3 +111745,136 @@ kind = "set"
 subject = "var:tk0"
 fields = { "label" = "Tillgång till butiksbuss e dyl (TK0083)" }
 evidence = "#2102 same-label cluster 'Tillgång till butiksbuss e dyl' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; TK0083 is asked of those with 3 km or more to a food shop; TK0183 is the follow-up for those with shorter distance and mobility or sight problems (opdefs), in the same tables 1978-1984."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0030 where key = 'v49379'"
+fields = { "variable" = "individvikt" }
+evidence = "Same column BA0030, no overlap (2002-2004 vs 2006-2009), no value sets. Both define the individual weight with one decimal that weights the sample to population level (v11393: 'Individvikt inklusive 1 decimal. Används för att väga upp urvalet till befolkningsnivå'; v49379: 'Individvikt för att väga upp urvalet till befolkningsnivå', opdef 'inklusive 1 decimal').\ncurrent-scb-inputs.zip/Registerinformation.csv:row=469282 (r20186)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=470092 (r20086)"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0036 where key = 'v49380'"
+fields = { "variable" = "ny-vikt" }
+evidence = "Same column BA0036, no overlap (2002-2004 vs 2008-2009). v12336 defines 'Efterstratifierar även efter KU-uppgift (dvs Up har haft arbetsinkomst under året)'; v49380's opdef repeats it and adds one decimal. The new label starts in 1986, the first year of v12336.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=470093 (r20086)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=470209 (r19891)"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0027 where key = 'v49381'"
+fields = { "variable" = "ny-nyvikt" }
+evidence = "Same column BA0027, no overlap (2002-2004 vs 2008-2009). v12335 is 'Ny nyvikt (1998)' with no further text; v49381 is labelled 1998-2009 and its opdef (post-stratified also on KU, low wage replaced by 2*prisbasbelopp) does not contradict it. Medium confidence: the old key gives no method text.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=470094 (r20086)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=470210 (r19891)"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1173 where key = 'v11288' and release = 'r723'"
+fields = { "spelling" = "TR1273" }
+evidence = "In r723 (2000) v11288 (Händelse 3 sjukskriven, TR0012) is listed as TR1173, the column of v18838 (Händelse 3 sjukskriven, TR0011) in the same release. The same release spells the other TR0012 events TR1271 (v18859) and TR1272 (v11278), and v11288 is TR1273 in r722 (2001).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=87438 (r723, v11288)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=87437 (r723, v18838)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=111009 (r722, v11288 TR1273)"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: go0107r where key = 'v13621'"
+fields = { "variable" = "go0107r" }
+evidence = "GO0107R is under v42860 in 2008-2015 and 2018-2020, but under v13621 (Tillsyn 2 barn 1) in r19264 (2016) and r19219 (2017). Same column, same opdef ('Härledd från fråga om barntillsyn ...') and same code list (#9380). v13621's own GO0107 (2004, 2006) has the older list #519.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=583882 (r19264, v13621)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=583893 (r19219, v13621)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=477733 (r19289, v42860)"
+
+
+[[statement]]
+kind = "set"
+subject = "var:hektar-akerjord-far"
+fields = { "description" = "Antal hektar åker som fadern hade, om fadern var jordbrukare. Ställdes bara till direkt intervjuade. Skog har en egen variabel (BA0257)." }
+evidence = "The åker question is consistent in all years; the 2006 opdef \"Hektar av skog - se BA0257\" is a cross-reference to the skog sibling (r20186)."
+
+[[statement]]
+kind = "set"
+subject = "var:hektar-akerjord-mor"
+fields = { "description" = "Antal hektar åker som modern hade, om modern var jordbrukare. Ställdes bara till direkt intervjuade. Skog har en egen variabel (BA0267)." }
+evidence = "The åker question is consistent in all years; the 2006 opdef \"Hektar av skog - se BA0257\" is a cross-reference to the skog sibling (r20186)."
+
+[[statement]]
+kind = "set"
+subject = "var:ha0392"
+fields = { "description" = "Antal timmar per vecka som personen är fysiskt aktiv på minst promenadnivå, inklusive vardagsmotion, under vinterhalvåret. Svaret ges i sju intervall (1 = mindre än 1 timme till 7 = mer än 30 timmar)." }
+evidence = "Label \"Timmar motion vinter\" (sibling HA0391 = sommar); the definition text is HA0391's and ends with sommarhalvåret, so the winter wording is not attested. A description claims less than a rewritten definition."
+
+[[statement]]
+kind = "set"
+subject = "var:ha14dress"
+fields = { "description" = "Anger om urvalspersonen behöver hjälp att klä på eller av sig (1 = ja, 2 = nej). Frågan ställs till personer som är 75 år eller äldre eller som uppgett att de behöver hjälp med att städa, handla mat, laga mat, tvätta och duscha eller bada." }
+evidence = "Definition and opdef describe who is asked (75+ or needs help with all of ...); the label and column say klä på/av sig."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning"
+fields = { "description" = "Anger om personen utöver tidigare nämnd utbildning har någon yrkesutbildning som varat minst två månader (1 = ja, 2 = nej). Frågans ordalydelse har varierat något mellan åren." }
+evidence = "Question text is stated in the definition; wording varies by year (SCB treats it as one variable)."
+
+[[statement]]
+kind = "set"
+subject = "var:har-dyslexi-eller-dyskalkyli"
+fields = { "description" = "Anger om urvalspersonen har dyslexi eller dyskalkyli (1 = ja, 2 = nej)." }
+evidence = "Definition covers dyslexi eller dyskalkyli (as BHA0004); the 2004-2011 dyslexi-only question is the separate variable dyslexi (HA0768)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: GO0484 where key = 'v9248'"
+fields = { "unit" = "Antal timmar" }
+evidence = "Siblings GO0481-GO0483 (v9230, v9236, v9242) have Antal timmar."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA6023 where key = 'v9295' and unit = 'Dagar'"
+fields = { "unit" = "Antal år" }
+evidence = "Definition \"Kod = Sammanlagt antal år\"; the other release (r720) has Antal år."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BHA0004_4 where key = 'v48912'"
+fields = { "definition" = "Om barn nr 4 i hushållet har dyslexi eller dyskalkyli." }
+evidence = "Siblings BHA0004_1..7 name the matching child; _4 says nr 1 (rows 829040, r19602)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BHA0006_5 where key = 'v48927'"
+fields = { "definition" = "Om barn nr 5 i hushållet har synnedsättning." }
+evidence = "Siblings name the matching child; _5 says nr 1 (row 830385, r19602)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BHA0100C_3 where key = 'v49047'"
+fields = { "definition" = "Om barn nr 3 i hushållet har tre mediciner som han/hon tar regelbundet för någonting." }
+evidence = "Label \"Barn 3 tar tre mediciner\" and opdef \"tre mediciner\"; definition says två (row 828677, r19602)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: GO1517 where key = 'v9650'"
+fields = { "definition" = "Längd för barn 5 i hushållet, som ingår i fördjupningsfrågor om barnhälsa -- den del som gäller för barn i hushållet som är 3-15 år." }
+evidence = "Label \"Barn 5 längd\"; definition says barn 2 (row 28706, r717)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: GO1518 where key = 'v9656'"
+fields = { "definition" = "Vikt för barn 5 i hushållet, som ingår i fördjupningsfrågor om barnhälsa -- den del som gäller för barn i hushållet som är 3-15 år." }
+evidence = "Label \"Barn 5 vikt\"; definition says barn 3 (row 28707, r717)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: GO1319 where key = 'v12313'"
+fields = { "definition" = "Om barn 3 i hushållet har nickelallergi. Barnet ingår i fördjupningsfrågor om barnhälsa -- den del som gäller för barn i hushållet som är 3-15 år. Barn 3 enl GO1304." }
+evidence = "Label \"Nickelallergi barn 3\" and the tail \"Barn 3 enl GO1304\"; the first sentence says barn 2 (row 36894, r717)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: GO1519 where key = 'v12315'"
+fields = { "definition" = "Om barn 5 i hushållet har nickelallergi. Barnet ingår i fördjupningsfrågor om barnhälsa -- den del som gäller för barn i hushållet som är 3-15 år. Barn 5 enl GO1504." }
+evidence = "Label \"Nickelallergi barn 5\" and the tail \"Barn 5 enl GO1504\"; the first sentence says barn 2 (row 36896, r717)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA0613M where key = 'v48048'"
+fields = { "definition" = "Sjukdomsdiagnos för sjukdom nr 3." }
+evidence = "Label \"Sjukdomsdiagnos 3, ICD-10\"; HA0611M..HA0619M say nr 1..9 except this one (nr 1)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: HA14ASTMAB where key = 'v31077'"
+fields = { "definition" = "Urvalspersonen har angett att han/hon har astma samt bedömt om besvären är svåra eller lätta." }
+evidence = "Label \"Hur svåra besvär med astma\"; text copied from HA14ALLERB (allergi); HA14ASTMAA says astma."
