@@ -55,6 +55,16 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
             "demo/held/value",
             "demo/held/year",
         ]
+        # Fails if a held variable lists a table no placement names (Id is also a
+        # column of the unheld demo/owners/spare), or the register serves the
+        # provider's unparsed release names (demo/owners' draft) as `unplaced`.
+        owners = client.get("/api/catalog/demo/owners").json()["data"]
+        assert {v["fqid"]: v["tables"] for v in owners["variables"]} == {
+            "demo/owners/first": ["demo/owners"],
+            "demo/owners/id": ["demo/owners"],
+            "demo/owners/second": ["demo/owners"],
+        }
+        assert owners["unplaced"] == []
         unheld = client.get("/api/catalog/demo/held/relative-id")
         assert unheld.status_code == 404
         assert unheld.json()["error"]["code"] == "not_found"
@@ -345,6 +355,15 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         data = register.json()["data"]
         assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
         assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
+        # Fails if a held table lists a row key no placement names: AttestedMember
+        # holds demo/owners/received, whose reference key Other is held nowhere.
+        received = pool.client(artifact_env(output)).get(
+            "/api/catalog/demo/owners/received"
+        )
+        assert received.status_code == 200, received.text
+        assert "demo/owners/other" not in {
+            k["fqid"] for k in received.json()["data"]["row_keys"]
+        }
         # Fails if schema reads the reference origin only: the steward-minted
         # variables on the reference register are held in the holdings origin.
         schema = pool.client(artifact_env(output)).get("/api/schema/demo/projected")

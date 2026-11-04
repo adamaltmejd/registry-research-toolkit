@@ -363,20 +363,31 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     // keeps its held members and goes when none is held.
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
     variables.retain(|v| server.catalog.serves("variable", &v.fqid));
+    for variable in &mut variables {
+        variable
+            .tables
+            .retain(|table| server.catalog.serves("table", table));
+    }
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
     }
     sets.retain(|set| !set.members.is_empty());
-    let unplaced = rows(
-        conn,
-        "SELECT DISTINCT n.body
-             FROM release r JOIN tbl t ON t.id = r.table_id
-               JOIN text n ON n.id = r.name_text
-             WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
-        [entity.id],
-        |row| row.get(0),
-    )?;
+    // Unplaced names are the provider's releases, not the steward's files
+    // (maintainer 2026-11-04), so a steward deployment serves none.
+    let unplaced = if server.catalog.steward().is_some() {
+        vec![]
+    } else {
+        rows(
+            conn,
+            "SELECT DISTINCT n.body
+                 FROM release r JOIN tbl t ON t.id = r.table_id
+                   JOIN text n ON n.id = r.name_text
+                 WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
+            [entity.id],
+            |row| row.get(0),
+        )?
+    };
     Ok(Show::Register {
         fqid: entity.pid.clone(),
         name,
@@ -543,7 +554,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             |row| Ok(server.period(row.get(0)?, row.get(1)?)),
         )?,
     };
-    let row_keys = rows(
+    let mut row_keys: Vec<ShowRowKey> = rows(
         conn,
         "SELECT v.pid, sp.exact, s.start, s.end
              FROM segment s JOIN variable v ON v.id = s.variable_id
@@ -558,6 +569,8 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             })
         },
     )?;
+    // Steward mode: a key column whose variable is held nowhere is not shown.
+    row_keys.retain(|key| server.catalog.serves("variable", &key.fqid));
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,

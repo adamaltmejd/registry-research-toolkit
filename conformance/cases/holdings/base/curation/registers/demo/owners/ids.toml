@@ -1,6 +1,7 @@
 [tables]
 empty = "empty"
 received = "received"
+spare = "spare"
 
 [variables]
 first = ["Alpha @ 2017-01-01"]

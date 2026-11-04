@@ -47,9 +47,7 @@ impl Context {
         // ongoing register) stays open. Dropping only whole periods keeps the hull
         // ordered, which dropping open bounds one by one does not.
         let hull: (Option<i64>, Option<i64>) = conn.query_row(
-            &format!(
-                "SELECT MIN(start), MAX(end) FROM {from} WHERE NOT (start = ?1 AND end = ?2)"
-            ),
+            &format!("SELECT MIN(start), MAX(end) FROM {from} WHERE NOT (start = ?1 AND end = ?2)"),
             [open.0, open.1],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )?;

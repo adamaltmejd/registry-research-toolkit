@@ -445,11 +445,15 @@ impl Catalog {
     }
 
     /// Physical facts attached under an explicit database origin for public-id joins.
+    /// Steward mode only: every caller checks for the holdings pair first.
     pub(crate) fn attach_holdings(&self, conn: &Connection) -> Result<(), Error> {
-        let holdings = self
-            .holdings
-            .as_ref()
-            .ok_or_else(|| Error::invalid_parameter("scope"))?;
+        let holdings = self.holdings.as_ref().ok_or_else(|| {
+            Error::new(
+                Code::InternalError,
+                "Holdings attached without a holdings database.",
+                vec![],
+            )
+        })?;
         conn.execute(
             "ATTACH DATABASE ? AS held",
             [crate::read_uri(&holdings.path)],
