@@ -51,7 +51,7 @@ CREATE INDEX spelling_fold ON spelling(fold_id);
 CREATE TABLE statement (
   id            INTEGER PRIMARY KEY,
   hash          TEXT NOT NULL UNIQUE,     -- hash of normalized content
-  kind          TEXT NOT NULL CHECK (kind IN ('bind','assert','assign','set','link','ack')),
+  kind          TEXT NOT NULL CHECK (kind IN ('assert','set','link','ack')),
   file          TEXT NOT NULL,            -- curation path, repo-relative
   line          INTEGER NOT NULL,
   evidence_text INTEGER REFERENCES text(id),  -- NULL only for an ack of a notice
@@ -211,7 +211,7 @@ CREATE INDEX vs_item_code ON vs_item(code_text, label_text);
 CREATE TABLE class_family (
   id               INTEGER PRIMARY KEY,
   pid              TEXT NOT NULL UNIQUE,  -- 'class/sun'
-  kind             TEXT NOT NULL CHECK (kind IN ('classification','codelist')),
+  kind             TEXT NOT NULL CHECK (kind IN ('classification')),
   name_text        INTEGER NOT NULL REFERENCES text(id),
   publisher_text   INTEGER REFERENCES text(id),
   description_text INTEGER REFERENCES text(id)
@@ -228,31 +228,6 @@ CREATE TABLE class_version (
   CHECK (start < end)
 ) STRICT;
 CREATE INDEX class_version_family ON class_version(family_id, start);
-
-CREATE TABLE class_level (
-  version_id INTEGER NOT NULL REFERENCES class_version(id),
-  level      INTEGER NOT NULL,
-  name_text  INTEGER NOT NULL REFERENCES text(id),
-  PRIMARY KEY (version_id, level)
-) STRICT, WITHOUT ROWID;
-
-CREATE TABLE correspondence (
-  id                INTEGER PRIMARY KEY,
-  source_version_id INTEGER NOT NULL REFERENCES class_version(id),
-  target_version_id INTEGER NOT NULL REFERENCES class_version(id),
-  source_level      INTEGER NOT NULL,
-  target_level      INTEGER NOT NULL,
-  description_text  INTEGER REFERENCES text(id),
-  UNIQUE (source_version_id, target_version_id, source_level, target_level)
-) STRICT;
-CREATE INDEX corr_target ON correspondence(target_version_id);
-
-CREATE TABLE corr_map (
-  correspondence_id INTEGER NOT NULL REFERENCES correspondence(id),
-  source_code_text  INTEGER NOT NULL REFERENCES text(id),
-  target_code_text  INTEGER NOT NULL REFERENCES text(id),
-  PRIMARY KEY (correspondence_id, source_code_text, target_code_text)
-) STRICT, WITHOUT ROWID;
 
 -- Segments: maximal runs of one form of a variable in one table. One folded
 -- spelling per (variable, table) at a time. spelling_id = exact spelling of the latest
@@ -492,7 +467,7 @@ CREATE TABLE doc_link (
   subject_kind TEXT NOT NULL CHECK (subject_kind IN ('register','table','variable','class_family','valueset')),
   subject_id   INTEGER NOT NULL,
   page         INTEGER NOT NULL DEFAULT 0,  -- 0 = whole document
-  prov         TEXT NOT NULL CHECK (prov IN ('source','curated','rule')),
+  prov         TEXT NOT NULL CHECK (prov IN ('source')),
   PRIMARY KEY (doc_id, subject_kind, subject_id, page)
 ) STRICT, WITHOUT ROWID;
 CREATE INDEX doc_link_subject ON doc_link(subject_kind, subject_id);
@@ -516,12 +491,12 @@ CREATE TABLE ident_retired (
   reason     TEXT NOT NULL CHECK (reason IN ('merged','split','withdrawn'))
 ) STRICT, WITHOUT ROWID;
 
--- Every folded name a variable was ever documented under (any status but withheld),
--- plus curated other names. Serves header lookup.
+-- Every folded name a variable was ever documented under (any status but withheld).
+-- Serves header lookup.
 CREATE TABLE alias (
   fold_id     INTEGER NOT NULL REFERENCES name_fold(id),
   variable_id INTEGER NOT NULL REFERENCES variable(id),
-  kind        TEXT NOT NULL CHECK (kind IN ('delivered','curated')),
+  kind        TEXT NOT NULL CHECK (kind IN ('delivered')),
   PRIMARY KEY (fold_id, variable_id)
 ) STRICT, WITHOUT ROWID;
 CREATE INDEX alias_variable ON alias(variable_id);
@@ -532,7 +507,7 @@ CREATE INDEX alias_variable ON alias(variable_id);
 -- deterministically (pid, or 'code' U+001F 'label').
 CREATE TABLE search_item (
   id          INTEGER PRIMARY KEY,
-  kind        TEXT NOT NULL CHECK (kind IN ('register','table','variable','set','classification','code','document')),
+  kind        TEXT NOT NULL CHECK (kind IN ('register','table','variable','code','document')),
   entity_id   INTEGER,                    -- NULL for 'code'
   code_text   INTEGER REFERENCES text(id),      -- 'code' only
   label_text  INTEGER REFERENCES text(id),      -- 'code' only; NULL when the item has no label

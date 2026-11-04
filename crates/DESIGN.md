@@ -2487,7 +2487,7 @@ A value set is content-addressed: its hash covers the sorted `(code, label, pare
 items, so segments that deliver the same codes share one set, and a segment with no
 value set has `value_set: null`. `values` reads a set by its hash, or lists the sets
 holding a code and label. The blank code `""` is an item like any other. Classifications
-(versions, codes, correspondences) use curated identities.
+(versions, codes) use curated identities.
 `curation/classifications.toml` holds family/version metadata, served names, publisher,
 existence periods, sentinel codes and explicit succession edges. Its code lists
 reference reader value sets; they are never copied into inventory items. Inventory

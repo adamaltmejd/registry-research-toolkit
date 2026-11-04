@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "8"
+    "schema_version": "9"
   },
   "project": {
     "name": "Order case",
