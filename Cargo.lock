@@ -1198,11 +1198,13 @@ version = "0.1.0"
 dependencies = [
  "arrow-array",
  "arrow-schema",
+ "arrow-select",
  "bytes",
  "libc",
  "parquet",
  "serde",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]

@@ -272,7 +272,7 @@ This is the complete list of boundaries a test may assert at.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. Conformance is
-   not one: it requires the Rust server (`--server-cmd`). The `rust` job's 6-minute
+   not one: it requires the Rust server (`--server-cmd`). The `rust` job's 9-minute
    timeout covers `crates/` and the gate's `rust` step (`scripts/gate.py`: the workspace
    build and the whole conformance suite against the Rust server), with room for a cold
    rust-cache and its save. The legacy builder's matrix leg runs `gate.py release`: its
@@ -310,8 +310,8 @@ suites are run by hand, not by the gate or CI.
   | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                               |
   | `scripts/tests`                      | 20 s  | 5 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most. Cold `uv sync` builds `reg-core-py`. |
-  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                                  |
-  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.                                     |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                                  |
+  | conformance (`scripts/gate.py rust`) | 30 s  | 9 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.                                     |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                                               |
   | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                                              |
 

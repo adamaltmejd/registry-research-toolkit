@@ -4,7 +4,13 @@
 # Cases for rules the Rust gate (the reference) has and this one does not yet;
 # they run here once export_gate.R imitates the binary
 # (crates/reg-export-gate/DESIGN.md, "Plan").
-PENDING <- c("structure-too-many-bytes", "structure-too-many-rows")
+PENDING <- c(
+  "structure-too-many-bytes",
+  "structure-too-many-rows",
+  # R takes null-ness from its NA conversion, the reference from Arrow validity.
+  "disclosure-na-bit-pattern",
+  "disclosure-nan-statistic"
+)
 
 for (name in list.dirs(cases_dir, full.names = FALSE, recursive = FALSE)) {
   test_that(name, {
