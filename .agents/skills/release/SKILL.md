@@ -3,9 +3,8 @@ name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
   the release workflow, bump and release reg_meta (the `reg-meta` crate and its paired
-  DB assets) or reg_meta_build, create package tags/releases, upload the reg_meta DB
-  assets, or monitor the release workflows. Usage: /release [package]
-  (patch|minor|major)
+  DB assets), create the tag and release, upload the reg_meta DB assets, or monitor the
+  release workflows. Usage: /release [reg_meta] (patch|minor|major)
 ---
 
 # Release pipeline
@@ -20,22 +19,20 @@ draft or tag already exists, follow Error recovery first.
 
 ## Packages
 
-  | Package        | Version files                                                                    | Release workflow                                                                            |
-  | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
-  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
+  | Package  | Version files                                   | Release workflow                                                                            |
+  | -------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+  | reg_meta | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`) | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
-`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` binaries (step 10). A
-`reg_meta_build/v*` release is a tag with no assets.
+`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` binaries (step 10).
 
 ## Validation
 
 1. **Bump level**: one of `patch`, `minor`, `major`. If none is given, stop and ask.
 
-2. **Package(s)**: use the one named, or infer from unreleased commits since each
-   package's last `<package>/vX.Y.Z` tag. `reg_meta` sources are `crates/`,
-   `reg_webapp/` and `conformance/`; `reg_meta_build` sources are `reg_meta_build/`:
+2. **Package**: `reg_meta`; check for unreleased commits since its last
+   `<package>/vX.Y.Z` tag. `reg_meta` sources are `crates/`, `reg_webapp/` and
+   `conformance/`:
 
    ```sh
    git fetch --tags origin
@@ -43,8 +40,6 @@ A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
    if [ -n "$tag" ]; then git log --oneline "$tag"..HEAD -- <paths>; else git log --oneline -- <paths>; fi
    ```
 
-   - Several packages changed: release them sequentially, each with its own commit, tag
-     and release.
    - **Also compare the builder and inputs since the last `reg_meta/v*` tag**: catalog
      content or schema changes under `crates/reg-build/`, `crates/reg-resolve/`,
      `crates/reg-readers/`, `crates/reg-frame/`, `curation/` (including the inputs pin)
@@ -67,13 +62,11 @@ linked inline; append `(HT @username)` to a non-owner's bullet
 
 ### 3. Bump version
 
-- reg_meta: the `version` line in `crates/reg-meta/Cargo.toml`, then
-  `cargo update -p reg-meta --offline` to refresh `Cargo.lock`.
-- reg_meta_build: `version` in `reg_meta_build/pyproject.toml` and `__version__` in
-  `reg_meta_build/src/reg_meta_build/__init__.py`, then `uv lock`.
+The `version` line in `crates/reg-meta/Cargo.toml`, then
+`cargo update -p reg-meta --offline` to refresh `Cargo.lock`.
 
-**reg_meta only — schema version check.** Compare the DDL and the single version
-authority with the previous release:
+**Schema version check.** Compare the DDL and the single version authority with the
+previous release:
 
 ```sh
 git diff <prev-tag>..HEAD -- crates/reg-build/src/schema.sql crates/reg-build/src/holdings/schema.sql crates/reg-core/src/lib.rs
@@ -92,11 +85,10 @@ maintainer runs it. A gap is allowed; the guard blocks deployment throughout it.
 ### 4. Gate the committed bump in CI
 
 The bump commit, `Bump <package> version to X.Y.Z`, contains **only** the version files
-(and `Cargo.lock` / `uv.lock`). Commit it on `origin/main` and push it to a PR branch;
-CI is the gate, so there is no local `gate.py all`. `ci.yml` runs every step
-`gate.py all` runs (lint, the builder and scripts suites, `rust` with the synthetic
-release admission, and, because the `webapp` filter matches `Cargo.toml`, the frontend
-and flows jobs):
+(and `Cargo.lock`). Commit it on `origin/main` and push it to a PR branch; CI is the
+gate, so there is no local `gate.py all`. `ci.yml` runs every step `gate.py all` runs
+(lint, the builder and scripts suites, `rust` with the synthetic release admission, and,
+because the `webapp` filter matches `Cargo.toml`, the frontend and flows jobs):
 
 ```sh
 git push origin HEAD:refs/heads/release/<package>-vX.Y.Z
@@ -140,11 +132,11 @@ target="$(git rev-parse origin/main)"
 gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package> vX.Y.Z" --notes-file <notes-file>
 ```
 
-### 7. (reg_meta_build) Publish and stop
+### 8. Build and upload release assets
 
-`gh release edit reg_meta_build/vX.Y.Z --draft=false`, and report it done.
-
-### 8. Build and upload release assets (reg_meta only)
+There is no step 7: it published the old Python builder's tag-only release. The numbers
+stay because `scripts/release_base_reuse.py` and each evidence directory's `passed`
+marks name steps 8a–8i.
 
 Every release builds a **pair**: `reg_meta.db.zst` (the reference catalog, documents
 inside) and `reg_meta_swecov.db.zst` (the SWECOV holdings: the catalog schema's

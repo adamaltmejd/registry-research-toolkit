@@ -171,10 +171,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     };
     // simplify: the whole list is built, then paged; a variable has tens of rows.
     // Page in SQL again if a variable's list reaches thousands.
-    let origins = match server.catalog.connect_holdings()? {
-        Some(extra) => vec![server.catalog.connect()?, extra],
-        None => vec![conn],
-    };
+    let origins = origins(server, conn)?;
     let value_set_name = params.get("value_set_name").copied();
     let rows = listed(&origins, &variable.pid, table.as_deref(), value_set_name)?;
     let mut rows: Vec<Row> = match days(params, "period")? {
@@ -184,6 +181,43 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             .collect(),
         None => rows,
     };
+    sort(&mut rows);
+    let mut page: Vec<Row> = rows.into_iter().skip(offset).take(limit + 1).collect();
+    let next_cursor = cursor::next(&mut page, limit, |_| {
+        Some(cursor::encode(
+            server.catalog.generation(),
+            &cursor::context(params),
+            offset + limit,
+            "",
+        ))
+    });
+    let items = served(server, &origins, page, evidence)?;
+    Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
+}
+
+/// The origins a variable's list reads: `catalog` (the catalog's own connection), or on
+/// a data holder's catalog the catalog and its holdings.
+pub(super) fn origins(server: &Server, catalog: Connection) -> Result<Vec<Connection>, Error> {
+    Ok(match server.catalog.connect_holdings()? {
+        Some(extra) => vec![server.catalog.connect()?, extra],
+        None => vec![catalog],
+    })
+}
+
+/// A variable's whole list as `segments` serves it unnarrowed: every row, unpaged, in
+/// the same order and shape, without evidence.
+pub(super) fn all(
+    server: &Server,
+    origins: &[Connection],
+    variable: &str,
+) -> Result<Vec<Segment>, Error> {
+    let mut rows = listed(origins, variable, None, None)?;
+    sort(&mut rows);
+    served(server, origins, rows, false)
+}
+
+/// The list's order: by start day, then table, column and file.
+fn sort(rows: &mut [Row]) {
     rows.sort_by(|a, b| {
         (
             a.start,
@@ -198,16 +232,17 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
                 &b.segment.file,
             ))
     });
-    let mut page: Vec<Row> = rows.into_iter().skip(offset).take(limit + 1).collect();
-    let next_cursor = cursor::next(&mut page, limit, |_| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &cursor::context(params),
-            offset + limit,
-            "",
-        ))
-    });
-    let mut items = Vec::with_capacity(page.len());
+}
+
+/// The rows as served: each with its period and value set, and its deliveries when
+/// `evidence` is asked for.
+fn served(
+    server: &Server,
+    origins: &[Connection],
+    rows: Vec<Row>,
+    evidence: bool,
+) -> Result<Vec<Segment>, Error> {
+    let mut items = Vec::with_capacity(rows.len());
     for Row {
         id,
         origin,
@@ -215,7 +250,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         start,
         end,
         mut segment,
-    } in page
+    } in rows
     {
         let conn = &origins[origin];
         segment.period = server.period(start, end);
@@ -229,7 +264,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         };
         items.push(segment);
     }
-    Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
+    Ok(items)
 }
 
 /// The variable's rows over every origin, before the `period` filter and paging. A

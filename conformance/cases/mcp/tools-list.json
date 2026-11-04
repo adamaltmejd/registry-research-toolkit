@@ -471,7 +471,7 @@
   },
   {
     "name": "show",
-    "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+    "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -601,6 +601,111 @@
             "contract_version",
             "generation",
             "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Occurrence": {
+          "description": "One delivery behind this row.",
+          "properties": {
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "locators": {
+              "items": {
+                "$ref": "#/$defs/Locator"
+              },
+              "type": "array"
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/Override"
+              },
+              "type": "array"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "release": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Release"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source_key": {
+              "type": "string"
+            },
+            "spelling": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "release",
+            "period",
+            "spelling",
+            "label",
+            "source_key",
+            "status",
+            "locators",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "Override": {
+          "description": "A curated value that replaced the provider's.",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "prov": {
+              "type": "string"
+            },
+            "rule": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "statement": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/StatementLocation",
+                  "description": "Where the curated value is written."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value",
+            "prov",
+            "statement",
+            "rule",
+            "source_value"
           ],
           "type": "object"
         },
@@ -837,6 +942,81 @@
           ],
           "type": "object"
         },
+        "Segment": {
+          "description": "One row of the variable's per-period list: a column of one table over one period\nwith one form and one provider wording. A fact the catalog does not state is left\nout, never `null`: no type, no value set, `coded` unknown, and `state` clear (the\ndefault).",
+          "properties": {
+            "classification": {
+              "description": "A classification version's ref.",
+              "type": "string"
+            },
+            "coded": {
+              "description": "`yes` or `no`.",
+              "type": "string"
+            },
+            "column": {
+              "description": "The column name it is delivered under; on a data holder's catalog, the holder's column.",
+              "type": "string"
+            },
+            "evidence": {
+              "description": "Present only when `evidence` is asked for.",
+              "items": {
+                "$ref": "#/$defs/Occurrence"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "file": {
+              "description": "On a data holder's catalog, the file the holder has the column in.",
+              "type": "string"
+            },
+            "format": {
+              "type": "string"
+            },
+            "identifier": {
+              "type": "boolean"
+            },
+            "length": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "role": {
+              "type": "string"
+            },
+            "sensitive": {
+              "type": "boolean"
+            },
+            "state": {
+              "description": "Present only when the column is ambiguous; absent means clear.",
+              "type": "string"
+            },
+            "table": {
+              "description": "The table's fqid.",
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "value_set": {
+              "$ref": "#/$defs/ValueSetRef"
+            },
+            "wording": {
+              "description": "The provider's definition over this period; a change of wording starts a row.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "table",
+            "column",
+            "period",
+            "role"
+          ],
+          "type": "object"
+        },
         "Show": {
           "description": "A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back.",
           "oneOf": [
@@ -1053,6 +1233,7 @@
                   "type": "array"
                 },
                 "description": {
+                  "description": "The curated description; without one, the description every member states\nalike.",
                   "type": "string"
                 },
                 "fqid": {
@@ -1260,31 +1441,6 @@
           ],
           "type": "object"
         },
-        "ShowSetColumn": {
-          "description": "A table and column name the member appears under.",
-          "properties": {
-            "periods": {
-              "description": "The column's periods, in time order.",
-              "items": {
-                "$ref": "#/$defs/Period"
-              },
-              "type": "array"
-            },
-            "spelling": {
-              "type": "string"
-            },
-            "table": {
-              "description": "The table's fqid.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "table",
-            "spelling",
-            "periods"
-          ],
-          "type": "object"
-        },
         "ShowSetFacet": {
           "properties": {
             "axis": {
@@ -1306,12 +1462,9 @@
         },
         "ShowSetMember": {
           "properties": {
-            "columns": {
-              "description": "The member's columns, ordered by table then spelling.",
-              "items": {
-                "$ref": "#/$defs/ShowSetColumn"
-              },
-              "type": "array"
+            "description": {
+              "description": "The curated description, only where it differs from the set's.",
+              "type": "string"
             },
             "facets": {
               "description": "The member's coordinates in the set's axis order.",
@@ -1325,12 +1478,19 @@
             },
             "name": {
               "type": "string"
+            },
+            "segments": {
+              "description": "The member's whole per-period list, as `segments` serves it without evidence.",
+              "items": {
+                "$ref": "#/$defs/Segment"
+              },
+              "type": "array"
             }
           },
           "required": [
             "fqid",
             "name",
-            "columns",
+            "segments",
             "facets"
           ],
           "type": "object"
@@ -1445,6 +1605,42 @@
             "catalog_generation",
             "holdings_generation",
             "schema_version"
+          ],
+          "type": "object"
+        },
+        "ValueSetRef": {
+          "description": "A value set by its hash, with the names sources gave it.",
+          "properties": {
+            "classification": {
+              "description": "The classification this value set belongs to; `null` when none.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hash": {
+              "type": "string"
+            },
+            "hierarchical": {
+              "type": "boolean"
+            },
+            "n_items": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "hash",
+            "n_items",
+            "hierarchical",
+            "names",
+            "classification"
           ],
           "type": "object"
         },
