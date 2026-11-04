@@ -8,7 +8,7 @@ use utoipa::ToSchema;
 
 use super::refs;
 use super::{Cache, Operation, Param, Params, Server, Type, component};
-use crate::{Code, Error};
+use crate::Error;
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "resolve",
@@ -61,10 +61,9 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
             if entity.kind == "register" {
                 Ok(entity.pid)
             } else {
-                Err(Error::new(
-                    Code::InvalidRef,
+                Err(Error::invalid_ref(
+                    value,
                     format!("{value:?} is a {}, not a register.", entity.kind),
-                    vec![(*value).into()],
                 ))
             }
         })

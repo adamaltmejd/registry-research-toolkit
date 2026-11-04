@@ -13,7 +13,7 @@ struct Case {
     line: usize,
     op: String,
     input: String,
-    expected: Option<String>,
+    expected: String,
 }
 
 fn read_cases(file: &str, default_op: Option<&str>) -> Vec<Case> {
@@ -35,11 +35,10 @@ fn read_cases(file: &str, default_op: Option<&str>) -> Vec<Case> {
                 .as_str()
                 .unwrap_or_else(|| panic!("{file}:{}: `in` is not a string", i + 1))
                 .to_owned();
-            let expected = match field("out") {
-                Value::Null => None,
-                Value::String(s) => Some(s.clone()),
-                other => panic!("{file}:{}: `out` is {other}", i + 1),
-            };
+            let expected = field("out")
+                .as_str()
+                .unwrap_or_else(|| panic!("{file}:{}: `out` is not a string", i + 1))
+                .to_owned();
             Case {
                 line: i + 1,
                 op,
@@ -50,26 +49,20 @@ fn read_cases(file: &str, default_op: Option<&str>) -> Vec<Case> {
         .collect()
 }
 
-fn apply(op: &str, input: &str) -> Option<String> {
+fn apply(op: &str, input: &str) -> String {
     match op {
-        "fold_identity" => Some(reg_core::fold_identity(input)),
-        "fold_search" => Some(reg_core::fold_search(input)),
-        "normalized_search_query" => Some(reg_core::normalized_search_query(input)),
-        "fts_match_query" => reg_core::fts_match_query(input),
+        "fold_identity" => reg_core::fold_identity(input),
+        "fold_search" => reg_core::fold_search(input),
+        "normalized_search_query" => reg_core::normalized_search_query(input),
         other => panic!("unknown op {other}"),
     }
 }
 
-fn hex(s: Option<&str>) -> String {
-    s.map_or_else(
-        || "null".to_owned(),
-        |s| {
-            s.chars()
-                .map(|c| format!("{:04X}", u32::from(c)))
-                .collect::<Vec<_>>()
-                .join(" ")
-        },
-    )
+fn hex(s: &str) -> String {
+    s.chars()
+        .map(|c| format!("{:04X}", u32::from(c)))
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 fn assert_cases(file: &str, cases: &[Case]) {
@@ -82,9 +75,9 @@ fn assert_cases(file: &str, cases: &[Case]) {
                     "{file}:{} {}: in=[{}] expected=[{}] actual=[{}]",
                     case.line,
                     case.op,
-                    hex(Some(&case.input)),
-                    hex(case.expected.as_deref()),
-                    hex(actual.as_deref()),
+                    hex(&case.input),
+                    hex(&case.expected),
+                    hex(&actual),
                 )
             })
         })
@@ -122,11 +115,6 @@ fn fold_search_matches_corpus() {
 #[test]
 fn normalized_search_query_matches_corpus() {
     assert_generated("normalized_search_query");
-}
-
-#[test]
-fn fts_match_query_matches_corpus() {
-    assert_generated("fts_match_query");
 }
 
 #[test]

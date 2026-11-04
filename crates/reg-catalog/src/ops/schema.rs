@@ -11,7 +11,7 @@ use utoipa::ToSchema;
 
 use super::shape::{ValueSetRef, value_set_ref};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, refs};
-use crate::{Code, Error};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -133,10 +133,9 @@ struct Scope {
 }
 
 fn invalid_ref(value: &str, kind: &str, operation: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
+    Error::invalid_ref(
+        value,
         format!("{value:?} is a {kind}, which {operation} does not take."),
-        vec![value.into()],
     )
 }
 
@@ -163,17 +162,14 @@ fn scope(
         ),
         kind => return Err(invalid_ref(value, kind, operation)),
     };
-    let mut tables: Vec<(i64, String)> = conn
-        .prepare(sql)?
-        .query_map([hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?
-        .collect::<rusqlite::Result<_>>()?;
+    let mut tables: Vec<(i64, String)> =
+        rows(conn, sql, [hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?;
     if let Some(table) = table {
         let id = refs::table(conn, table)?;
         if !tables.iter().any(|(t, _)| *t == id) {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                table,
                 format!("{table:?} is not one of the tables of {value:?}."),
-                vec![table.into()],
             ));
         }
         tables.retain(|(t, _)| *t == id);
@@ -357,18 +353,16 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         })
         .take(limit + 1)
         .collect();
-    let next_cursor = (rest.len() > limit).then(|| {
-        rest.truncate(limit);
-        let last = rest.last().expect("a page holds at least one line");
-        cursor::encode(
+    let next_cursor = cursor::next(&mut rest, limit, |last| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &context,
-            offset + rest.len(),
+            offset + limit,
             &format!(
                 "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",
                 last.table, last.variable, last.start, last.spelling
             ),
-        )
+        ))
     });
     let items = rest
         .into_iter()

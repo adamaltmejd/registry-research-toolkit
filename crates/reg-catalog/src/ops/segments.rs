@@ -12,7 +12,7 @@ use super::{
     Cache, Operation, Param, Params, Period, Server, Type, component, cursor, days, flag, limit,
     refs,
 };
-use crate::{Code, Error};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "segments",
@@ -126,10 +126,9 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let given = params["ref"];
     let variable = refs::resolve(&conn, given)?;
     if variable.kind != "variable" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            given,
             format!("{given:?} is a {}, not a variable.", variable.kind),
-            vec![given.into()],
         ));
     }
     let (mut filter, mut args) = narrowing(&conn, params, &variable)?;
@@ -154,20 +153,15 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         i64::try_from(limit + 1).expect("a limit fits i64"),
     ));
     let mut rows = segment_rows(server, &conn, &filter, args)?;
-    let next_cursor = if rows.len() > limit {
-        rows.truncate(limit);
-        // A keyset cursor restarts from its position; the offset only has to be valid.
-        rows.last().map(|(_, _, _, (start, table))| {
-            cursor::encode(
-                server.catalog.generation(),
-                &cursor::context(params),
-                limit,
-                &format!("{start}\u{1f}{table}"),
-            )
-        })
-    } else {
-        None
-    };
+    // A keyset cursor restarts from its position; the offset only has to be valid.
+    let next_cursor = cursor::next(&mut rows, limit, |(_, _, _, (start, table))| {
+        Some(cursor::encode(
+            server.catalog.generation(),
+            &cursor::context(params),
+            limit,
+            &format!("{start}\u{1f}{table}"),
+        ))
+    });
     let mut items = Vec::with_capacity(rows.len());
     for (id, valueset_id, mut segment, _) in rows {
         segment.value_set = valueset_id
@@ -197,10 +191,9 @@ fn narrowing(
         if register("SELECT register_id FROM tbl WHERE id = ?", id)?
             != register("SELECT register_id FROM variable WHERE id = ?", variable.id)?
         {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                table,
                 format!("{table:?} is not a table of {given:?}'s register."),
-                vec![table.into()],
             ));
         }
         filter.push("s.table_id = ?".to_owned());
@@ -246,49 +239,46 @@ fn segment_rows(
          LIMIT ?",
         filter.join(" AND ")
     );
-    Ok(conn
-        .prepare(&sql)?
-        .query_map(params_from_iter(args), |row| {
-            Ok((
-                row.get::<_, i64>(0)?,
-                row.get::<_, Option<i64>>(8)?,
-                Segment {
-                    table: row.get(1)?,
-                    period: server.period(row.get(2)?, row.get(3)?),
-                    spelling: row.get(4)?,
-                    dtype: row.get(5)?,
-                    length: row.get(6)?,
-                    format: row.get(7)?,
-                    value_set: None,
-                    classification: row.get(9)?,
-                    coded: row.get(10)?,
-                    sensitive: row.get(11)?,
-                    identifier: row.get(12)?,
-                    id_kind: row.get(13)?,
-                    role: row.get(14)?,
-                    temporality: row.get(15)?,
-                    state: row.get(16)?,
-                    evidence: None,
-                },
-                // The keyset position: the start day and the table pid.
-                (row.get::<_, i64>(2)?, row.get::<_, String>(1)?),
-            ))
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?)
+    Ok(rows(conn, &sql, params_from_iter(args), |row| {
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, Option<i64>>(8)?,
+            Segment {
+                table: row.get(1)?,
+                period: server.period(row.get(2)?, row.get(3)?),
+                spelling: row.get(4)?,
+                dtype: row.get(5)?,
+                length: row.get(6)?,
+                format: row.get(7)?,
+                value_set: None,
+                classification: row.get(9)?,
+                coded: row.get(10)?,
+                sensitive: row.get(11)?,
+                identifier: row.get(12)?,
+                id_kind: row.get(13)?,
+                role: row.get(14)?,
+                temporality: row.get(15)?,
+                state: row.get(16)?,
+                evidence: None,
+            },
+            // The keyset position: the start day and the table pid.
+            (row.get::<_, i64>(2)?, row.get::<_, String>(1)?),
+        ))
+    })?)
 }
 
 /// A segment's occurrences, in time, then source key and spelling order.
 fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<Occurrence>, Error> {
-    let rows = conn
-        .prepare(
-            "SELECT o.id, o.release_id, o.start, o.end, sp.exact, l.body, o.source_key, o.status
+    let rows = rows(
+        conn,
+        "SELECT o.id, o.release_id, o.start, o.end, sp.exact, l.body, o.source_key, o.status
              FROM occurrence o
                JOIN spelling sp ON sp.id = o.spelling_id
                LEFT JOIN text l ON l.id = o.label_text
              WHERE o.segment_id = ?
              ORDER BY o.start, o.source_key, sp.exact, o.id",
-        )?
-        .query_map([segment], |row| {
+        [segment],
+        |row| {
             Ok((
                 row.get::<_, i64>(0)?,
                 row.get::<_, Option<i64>>(1)?,
@@ -299,8 +289,8 @@ fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<O
                 row.get::<_, String>(6)?,
                 row.get::<_, String>(7)?,
             ))
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     let mut locators = conn.prepare(
         "SELECT i.name, l.locator
          FROM occurrence_locator l JOIN input i ON i.id = l.input_id

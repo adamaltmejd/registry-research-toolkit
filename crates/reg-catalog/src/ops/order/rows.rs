@@ -9,7 +9,7 @@ use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
 use crate::ops::Server;
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
@@ -32,14 +32,14 @@ fn key_segments(
     serving: &Serving,
 ) -> Result<Vec<KeySegment>, Error> {
     if server.catalog.steward().is_none() {
-        return Ok(conn
-            .prepare(
-                "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
+        return Ok(rows(
+            conn,
+            "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
              LEFT JOIN id_kind k ON k.id=s.id_kind_id
              WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
-            )?
-            .query_map([serving.table.id], |r| {
+            [serving.table.id],
+            |r| {
                 Ok(KeySegment {
                     variable: r.get(0)?,
                     spelling: r.get(1)?,
@@ -49,8 +49,8 @@ fn key_segments(
                     kind: r.get(5)?,
                     entity: true,
                 })
-            })?
-            .collect::<rusqlite::Result<_>>()?);
+            },
+        )?);
     }
     let mut mappings = conn.prepare(
         "WITH semantics AS (
@@ -232,18 +232,19 @@ pub(super) fn row_keys(
                         period.end.as_deref().unwrap_or("open")
                     );
                     findings.push(Issue {
-                        level,
-                        code: code.to_owned(),
-                        path: format!("/sources/{index}"),
-                        message: format!(
-                            "Row key {variable} {verb} {} over {over}{tail}",
-                            s.table.pid
-                        ),
                         source: Some(source.name.clone()),
                         variable: Some(variable.clone()),
                         table: Some(s.table.pid.clone()),
                         period: Some(period),
-                        successor_fqid: None,
+                        ..Issue::new(
+                            level,
+                            code,
+                            format!("/sources/{index}"),
+                            format!(
+                                "Row key {variable} {verb} {} over {over}{tail}",
+                                s.table.pid
+                            ),
+                        )
                     });
                 }
                 pieces.push((lo, hi, (variable.clone(), spelling.clone())));
@@ -327,21 +328,16 @@ pub(super) fn panel(
             )
         })
         .collect();
-    Ok(vec![Issue {
-        level: IssueLevel::Warning,
-        code: "panel_row_keys_differ".to_owned(),
-        path: format!("/panels/{index}"),
-        message: format!(
+    Ok(vec![Issue::new(
+        IssueLevel::Warning,
+        "panel_row_keys_differ",
+        format!("/panels/{index}"),
+        format!(
             "The members of panel {} key their rows on different identifier kinds: {}.",
             panel.panel_id,
             listed.join("; ")
         ),
-        source: None,
-        variable: None,
-        table: None,
-        period: None,
-        successor_fqid: None,
-    }])
+    )])
 }
 
 /// Suppress duplicate window findings already reported by an explicit binding.

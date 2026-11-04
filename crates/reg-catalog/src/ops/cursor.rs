@@ -2,7 +2,9 @@
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
 use super::Params;
-use crate::{Code, Error, hex};
+use reg_core::hex;
+
+use crate::{Code, Error};
 
 /// The cursor context of a request: every parameter but `cursor` and `limit`, sorted
 /// by name, as `name=<hex of the value>` joined by `&`. Hex, because a free-text
@@ -19,6 +21,21 @@ pub(super) fn context(params: &Params) -> String {
         })
         .collect::<Vec<_>>()
         .join("&")
+}
+
+/// The page tail: a fetch of `take` rows plus one that came back longer than `take`
+/// has a next page. `rows` is cut to `take`, and `after` makes the cursor from the last
+/// row kept (`None` there, or when `rows` was not longer, is no next page).
+pub(super) fn next<T>(
+    rows: &mut Vec<T>,
+    take: usize,
+    after: impl FnOnce(&T) -> Option<String>,
+) -> Option<String> {
+    if rows.len() <= take {
+        return None;
+    }
+    rows.truncate(take);
+    rows.last().and_then(after)
 }
 
 #[must_use]

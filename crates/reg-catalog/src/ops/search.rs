@@ -9,7 +9,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, fts, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// The `type` values: a `search_item.kind` each.
 const TYPES: &[&str] = &[
@@ -198,10 +198,9 @@ pub struct FacetVariable {
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
     let entity = refs::resolve(conn, value)?;
     if entity.kind != "register" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            value,
             format!("{value:?} is a {}, not a register.", entity.kind),
-            vec![value.into()],
         ));
     }
     Ok(entity.id)
@@ -327,35 +326,28 @@ fn search_origin(
         params![expression, kind, register, start, end, tag], |r| r.get(0))).transpose()?;
     let take = limit.min(DEPTH - offset);
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
-    let mut rows: Vec<(i64, String, Option<i64>, String)> = conn
-        .prepare(&format!(
+    let mut rows: Vec<(i64, String, Option<i64>, String)> = rows(
+        conn,
+        &format!(
             "{MATCHES} SELECT i.id, i.kind, i.entity_id, i.sort_key
          FROM matched m JOIN search_item i ON i.id = m.id
          WHERE {filter} ORDER BY {ORDER} LIMIT ?7 OFFSET ?8"
-        ))?
-        .query_map(
-            params![
-                expression,
-                kind,
-                register,
-                start,
-                end,
-                tag,
-                sql_int(take + 1),
-                sql_int(offset)
-            ],
-            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
-        )?
-        .collect::<rusqlite::Result<_>>()?;
-    let more = rows.len() > take;
-    rows.truncate(take);
-    let next_cursor = (more && offset + take < DEPTH).then(|| {
-        cursor::encode(
-            generation,
-            &context,
-            offset + take,
-            &rows.last().expect("nonempty page").3,
-        )
+        ),
+        params![
+            expression,
+            kind,
+            register,
+            start,
+            end,
+            tag,
+            sql_int(take + 1),
+            sql_int(offset)
+        ],
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+    )?;
+    let next_cursor = cursor::next(&mut rows, take, |last| {
+        (offset + take < DEPTH)
+            .then(|| cursor::encode(generation, &context, offset + take, &last.3))
     });
     let items = rows
         .iter()
@@ -441,13 +433,13 @@ fn hit(
         )?,
         "variable" => {
             let variable = entity()?;
-            let spellings = conn
-                .prepare(
-                    "SELECT n.folded FROM alias a JOIN name_fold n ON n.id = a.fold_id
+            let spellings = rows(
+                conn,
+                "SELECT n.folded FROM alias a JOIN name_fold n ON n.id = a.fold_id
                      WHERE a.variable_id = ? ORDER BY n.folded",
-                )?
-                .query_map([variable], |row| row.get(0))?
-                .collect::<rusqlite::Result<_>>()?;
+                [variable],
+                |row| row.get(0),
+            )?;
             conn.query_row(
                 "SELECT v.pid, l.body, rn.body, d.body, v.start, v.end
                  FROM variable v
@@ -594,8 +586,9 @@ fn facets(
     } else {
         ""
     };
-    let mut registers: Vec<(i64, RegisterFacet)> = conn
-        .prepare(&format!(
+    let mut registers: Vec<(i64, RegisterFacet)> = rows(
+        conn,
+        &format!(
             "{MATCHES}
              SELECT r.id, r.pid, n.body, m.matches
              FROM (SELECT i.register_id AS id, COUNT(*) AS matches
@@ -607,8 +600,9 @@ fn facets(
                JOIN register r ON r.id = m.id
                JOIN text n ON n.id = r.name_text
              ORDER BY r.pid"
-        ))?
-        .query_map(params![expression, register], |row| {
+        ),
+        params![expression, register],
+        |row| {
             Ok((
                 row.get(0)?,
                 RegisterFacet {
@@ -618,8 +612,8 @@ fn facets(
                     variables: None,
                 },
             ))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     // A named register lists every match; otherwise `limit` per register, or none.
     let listed = match (register, limit) {
         (Some(_), _) => Some(i64::MAX),
@@ -633,8 +627,9 @@ fn facets(
         return Ok(registers.into_iter().map(|(_, facet)| facet).collect());
     };
     let mut variables: BTreeMap<i64, Vec<FacetVariable>> = BTreeMap::new();
-    let rows = conn
-        .prepare(&format!(
+    let rows = rows(
+        conn,
+        &format!(
             "{MATCHES}
              SELECT register_id, pid, label FROM (
                SELECT i.register_id, v.pid, l.body AS label,
@@ -646,8 +641,9 @@ fn facets(
                  AND (?2 IS NULL OR i.register_id = ?2){scope})
              WHERE n <= ?3
              ORDER BY register_id, pid"
-        ))?
-        .query_map(params![expression, register, listed], |row| {
+        ),
+        params![expression, register, listed],
+        |row| {
             Ok((
                 row.get::<_, i64>(0)?,
                 FacetVariable {
@@ -655,8 +651,8 @@ fn facets(
                     name: row.get(2)?,
                 },
             ))
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     for (id, variable) in rows {
         variables.entry(id).or_default().push(variable);
     }

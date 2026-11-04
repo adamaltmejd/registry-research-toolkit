@@ -10,7 +10,7 @@ use utoipa::ToSchema;
 
 use super::shape::{self, Release};
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "coverage",
@@ -99,10 +99,9 @@ fn periods(server: &Server, spans: &[Span]) -> Vec<Period> {
 
 /// The `(start, end)` rows of `sql` for `params`, in the query's order.
 fn spans(conn: &Connection, sql: &str, params: impl rusqlite::Params) -> Result<Vec<Span>, Error> {
-    Ok(conn
-        .prepare(sql)?
-        .query_map(params, |row| Ok((row.get(0)?, row.get(1)?)))?
-        .collect::<rusqlite::Result<_>>()?)
+    Ok(rows(conn, sql, params, |row| {
+        Ok((row.get(0)?, row.get(1)?))
+    })?)
 }
 
 fn gaps(
@@ -111,15 +110,12 @@ fn gaps(
     sql: &str,
     params: impl rusqlite::Params,
 ) -> Result<Vec<CoverageGap>, Error> {
-    Ok(conn
-        .prepare(sql)?
-        .query_map(params, |row| {
-            Ok(CoverageGap {
-                period: server.period(row.get(0)?, row.get(1)?),
-                reason: row.get(2)?,
-            })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
+    Ok(rows(conn, sql, params, |row| {
+        Ok(CoverageGap {
+            period: server.period(row.get(0)?, row.get(1)?),
+            reason: row.get(2)?,
+        })
+    })?)
 }
 
 fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -144,18 +140,16 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
              WHERE s.variable_id = ? ORDER BY t.pid",
         ),
         kind => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {kind}, which coverage does not take."),
-                vec![value.into()],
             ));
         }
     };
     let hull: Span = conn.query_row(hull_sql, [hit.id], |row| Ok((row.get(0)?, row.get(1)?)))?;
-    let rows: Vec<(i64, String, String)> = conn
-        .prepare(tables_sql)?
-        .query_map([hit.id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?
-        .collect::<rusqlite::Result<_>>()?;
+    let rows: Vec<(i64, String, String)> = rows(&conn, tables_sql, [hit.id], |row| {
+        Ok((row.get(0)?, row.get(1)?, row.get(2)?))
+    })?;
     let variable = hit.kind == "variable";
     let mut tables = Vec::new();
     for (id, fqid, name) in rows {
