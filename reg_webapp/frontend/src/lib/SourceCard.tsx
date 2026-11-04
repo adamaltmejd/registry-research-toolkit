@@ -348,7 +348,6 @@ export function SourceCard({
             years: null,
             outside:
               selection && !timeless ? uncoveredYears(selection, covered) : [],
-            bandName: selection && !timeless ? "Source period" : null,
           }}
           overlay={
             selection && thumbBounds && !timeless ? (

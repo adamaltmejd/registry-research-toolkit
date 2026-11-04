@@ -105,7 +105,9 @@ export function columnWindowPeriod(
     : null;
 }
 
-function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
+/** A segment's binding type: what an add writes and what the variable page's
+ * Type pill shows, so the two never disagree. */
+export function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
   if (segment.identifier === true) return "id";
   if (segment.coded === "yes") return "categorical";
   if (segment.type === "int" || segment.type === "decimal") return "numeric";
@@ -168,7 +170,7 @@ export function addColumns(
       : columnWindowOverlap(column, window);
     if (!table.timeless && overlap.intervals.length === 0)
       throw new Error(
-        `${column.spelling} has no delivery in the add window. Change the window or untick the column.`,
+        `${column.spelling} has no delivery in the years to add. Change the years or untick the column.`,
       );
     const requested = byTable.get(column.table) ?? {
       segments: [],

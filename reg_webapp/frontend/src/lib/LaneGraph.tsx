@@ -1,5 +1,6 @@
-import { type ReactNode, useCallback, useId, useState } from "react";
-import { Checkbox } from "react-aria-components";
+import { type ReactNode, useCallback, useId, useRef, useState } from "react";
+import { Checkbox, Tooltip, TooltipTrigger } from "react-aria-components";
+import findingStyles from "./Finding.module.css";
 import styles from "./LaneGraph.module.css";
 import {
   COVERAGE_HEIGHT,
@@ -55,6 +56,9 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** A checkbox when true; a mark to read otherwise. */
   selectable: boolean;
   isSelected?: boolean;
+  /** The table (on a steward site, the file) the column is in, named in the
+   * span's tooltip. */
+  where?: string;
   /** Starts with the column name, then the variable, the years and the
    * state. */
   accessibleName: string;
@@ -78,8 +82,6 @@ export interface LaneCoverage {
   years: readonly number[] | null;
   /** The band's years outside coverage, in `info-bg` on this row. */
   outside: readonly ProjectStudyWindow[];
-  /** What the band is, for the legend. */
-  bandName: string | null;
 }
 
 interface Props {
@@ -111,7 +113,9 @@ interface Props {
  * are HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
- * Timeline and the columns are one drawing on one axis (#1833).
+ * Timeline and the columns are one drawing on one axis (#1833). There is no
+ * legend: a span's tooltip names it, and the relations are sentences in each
+ * lane (maintainer 2026-11-04).
  */
 export function LaneGraph({
   label,
@@ -174,7 +178,6 @@ export function LaneGraph({
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
   }
-  const kinds = new Set(geometry?.edges.map((e) => e.kind));
 
   return (
     <div className={styles.frame}>
@@ -210,26 +213,18 @@ export function LaneGraph({
                 {overlay}
               </div>
             )}
-            {!geometry.stacked && (
-              <span
-                className={styles.axisCaption}
-                style={{ top: geometry.axisY - 18 }}
-                aria-hidden="true"
-              >
-                Variable
-              </span>
-            )}
-            {!geometry.stacked && geometry.coverageY !== null && (
+            {geometry.coverageY !== null && (
               <span
                 className={styles.coverageCaption}
+                data-stacked={geometry.stacked || undefined}
                 style={{
                   top: geometry.coverageY,
-                  height: COVERAGE_HEIGHT,
-                  width: geometry.trackX - 16,
+                  height: geometry.stacked ? undefined : COVERAGE_HEIGHT,
+                  width: geometry.stacked ? undefined : geometry.trackX - 16,
                 }}
                 aria-hidden="true"
               >
-                Coverage
+                Years
               </span>
             )}
             <ol className={styles.lanes} aria-label={label}>
@@ -288,22 +283,8 @@ export function LaneGraph({
         )}
       </div>
       {spans.some((s) => s.selectable) && (
-        <p className={styles.hint}>
-          Click a column to tick it for the project.
-        </p>
+        <p className={styles.hint}>Click a column to add it to your project.</p>
       )}
-      <Legend
-        coverage={coverage}
-        window={window !== null}
-        succession={kinds.has("succession")}
-        rename={kinds.has("rename")}
-        addWindow={addWindow !== null}
-        selectable={spans.some((s) => s.selectable)}
-        inProject={spans.some((s) => s.state === "in")}
-        blocked={spans.some((s) => s.blocked)}
-        changes={spans.some((s) => s.changes?.length)}
-        selected={spans.some((s) => s.staged === "add")}
-      />
     </div>
   );
 }
@@ -643,6 +624,8 @@ function Span({
   onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
 }) {
+  const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
   const showYears =
     at.label === "inside" &&
     at.segments.length === 1 &&
@@ -697,9 +680,6 @@ function Span({
       {at.label !== "inside" && (
         <span className={styles.outside} data-side={at.label}>
           {span.name}
-          {at.table && (
-            <span className={styles.outsideTable}> {span.table}</span>
-          )}
         </span>
       )}
       {(span.changes ?? []).map((year) => (
@@ -724,125 +704,67 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
+  const tip = (
+    <Tooltip
+      triggerRef={face}
+      className={({ isEntering, isExiting }) =>
+        `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
+      }
+      offset={6}
+      style={{ zIndex: "var(--z-popover)" }}
+    >
+      <span>
+        <code>{span.name}</code>
+        {span.where && ` in ${span.where}`}, {span.years}
+      </span>
+      {span.note && <span>{span.note.text}</span>}
+    </Tooltip>
+  );
+  const show = (on: boolean) => {
+    setOpen(on);
+    onActive(on ? span.id : null);
+  };
   if (!span.selectable || !onToggle) {
     return (
-      <span className={styles.span} {...attributes}>
-        {body}
-        <span className="visually-hidden">{span.accessibleName}</span>
-      </span>
+      // The trigger props go unused: a read-only span is no tab stop, and its
+      // name is the visually hidden line, so only hover opens its tooltip.
+      <TooltipTrigger isOpen={open} delay={0} closeDelay={0}>
+        <span
+          ref={face}
+          className={styles.span}
+          onPointerEnter={() => setOpen(true)}
+          onPointerLeave={() => setOpen(false)}
+          {...attributes}
+        >
+          {body}
+          <span className="visually-hidden">{span.accessibleName}</span>
+        </span>
+        {tip}
+      </TooltipTrigger>
     );
   }
   return (
-    <Checkbox
-      className={`${styles.span} ${styles.pick}`}
-      style={{ height: SPAN_HEIGHT }}
-      aria-label={span.accessibleName}
-      isSelected={span.isSelected ?? false}
-      isDisabled={isDisabled}
-      onChange={() => onToggle(span.id)}
-      onHoverStart={() => onActive(span.id)}
-      onHoverEnd={() => onActive(null)}
-      onFocus={() => onActive(span.id)}
-      onBlur={() => onActive(null)}
-      {...attributes}
-    >
-      {body}
-    </Checkbox>
-  );
-}
-
-function Legend({
-  coverage,
-  window,
-  addWindow,
-  selectable,
-  succession,
-  rename,
-  inProject,
-  blocked,
-  changes,
-  selected,
-}: {
-  coverage: LaneCoverage | undefined;
-  window: boolean;
-  addWindow: boolean;
-  selectable: boolean;
-  succession: boolean;
-  rename: boolean;
-  inProject: boolean;
-  blocked: boolean;
-  changes: boolean;
-  selected: boolean;
-}) {
-  // Without a coverage row (a group page) the band is the study window.
-  const bandName = coverage
-    ? coverage.bandName
-    : window
-      ? "Study window"
-      : null;
-  return (
-    <ul className={styles.legend} aria-hidden="true">
-      {bandName && (
-        <li>
-          <i className={styles.keyBand} />
-          {bandName}
-        </li>
-      )}
-      {addWindow && (
-        <li>
-          <i className={styles.keyAddBand} />
-          Add window
-        </li>
-      )}
-      {coverage && (
-        <li>
-          <i className={styles.keyCoverage} />
-          Delivered years
-        </li>
-      )}
-      {succession && (
-        <li>
-          <i className={styles.keySuccession} />
-          Succeeded by (definition change)
-        </li>
-      )}
-      {rename && (
-        <li>
-          <i className={styles.keyRename} />
-          Renamed, same definition
-        </li>
-      )}
-      {selectable && (
-        <li>
-          <ColumnChip name="" className={styles.keyChip} /> Click to select
-        </li>
-      )}
-      {inProject && (
-        <li>
-          <ColumnChip name="" state="in" className={styles.keyChip} /> In
-          project
-        </li>
-      )}
-      {blocked && (
-        <li>
-          <span className={styles.keyBlocked}>✕</span> In project, outside the
-          study window
-        </li>
-      )}
-      {changes && (
-        <li>
-          <span className={styles.keyChange}>▲</span> Coding change
-        </li>
-      )}
-      {selected && (
-        <li>
-          <ColumnChip
-            name=""
-            className={`${styles.keyChip} ${styles.selectedSample}`}
-          />{" "}
-          Selected
-        </li>
-      )}
-    </ul>
+    // The trigger's focus props land on the checkbox's input, so focus opens
+    // the tooltip through onOpenChange; hover is the face's own, since the
+    // input is visually hidden. The tooltip is placed on the visible face.
+    <TooltipTrigger isOpen={open} onOpenChange={show} delay={0} closeDelay={0}>
+      <Checkbox
+        ref={face}
+        className={`${styles.span} ${styles.pick}`}
+        style={{ height: SPAN_HEIGHT }}
+        aria-label={span.accessibleName}
+        isSelected={span.isSelected ?? false}
+        isDisabled={isDisabled}
+        onChange={() => onToggle(span.id)}
+        onHoverStart={() => show(true)}
+        onHoverEnd={() => show(false)}
+        onFocus={() => show(true)}
+        onBlur={() => show(false)}
+        {...attributes}
+      >
+        {body}
+      </Checkbox>
+      {tip}
+    </TooltipTrigger>
   );
 }

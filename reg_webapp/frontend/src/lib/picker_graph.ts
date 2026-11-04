@@ -109,6 +109,7 @@ export function variableSpans({
       lane: `${idPrefix}${column.table}`,
       name: column.spelling,
       table: column.file,
+      where: column.file ?? names.get(column.table),
       from: first,
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
@@ -120,7 +121,7 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${column.file ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${column.spelling}, ${variable.name}, ${column.file ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the years to add")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly

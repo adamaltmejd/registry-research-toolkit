@@ -79,7 +79,8 @@ export interface PlacedSpan {
   /** Where the name sits: inside the span, or beside it. */
   label: "inside" | "right" | "left";
   /** Whether the span's file is set after its name (cut short inside a
-   * narrow span); false beside a span where only the name fits. */
+   * narrow span); false where only a few characters of it would fit, and
+   * always beside a span, where only the name is set. */
   table: boolean;
 }
 
@@ -142,6 +143,9 @@ const LABEL_PAD = 14;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
+// The least of a file worth showing after the name: four characters and the
+// gap, else it is dropped rather than cut to an ellipsis alone.
+const TABLE_MIN = 4 * COLUMN_CHAR + LABEL_GAP;
 
 /** The text a span carries: its column name, then its file when it has one. */
 export function spanLabel(span: { name: string; table?: string }): string {
@@ -184,23 +188,21 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     for (const span of spans) {
       const left = x(span.from);
       const width = Math.max(x(span.to + 1) - left, MIN_SPAN);
-      // The name and file inside, else beside. Where neither fits, the name
-      // alone decides, and the file is cut short inside the span or dropped
-      // beside it.
-      const fit = (need: number) =>
+      // The column name is never cut (maintainer 2026-11-04): it sits inside
+      // when it fits, with the file after it cut short, or dropped where only
+      // a few of its characters would show. A span too narrow for the name is
+      // a plain bar with the name beside it, right, or left at the axis end.
+      const need = labelWidth(span.name);
+      const label: PlacedSpan["label"] =
         need <= width
-          ? ("inside" as const)
+          ? "inside"
           : left + width + LABEL_GAP + need <= trackEnd
-            ? ("right" as const)
+            ? "right"
             : left - LABEL_GAP - need >= trackX
-              ? ("left" as const)
-              : null;
-      const full = labelWidth(spanLabel(span));
-      const fullFit = fit(full);
-      const need = fullFit ? full : labelWidth(span.name);
-      const label: PlacedSpan["label"] = fullFit ?? fit(need) ?? "inside";
+              ? "left"
+              : "inside";
       const withTable =
-        !!span.table && (fullFit !== null || label === "inside");
+        !!span.table && label === "inside" && need + TABLE_MIN <= width;
       const start = label === "left" ? left - LABEL_GAP - need : left;
       const end = left + width + (label === "right" ? LABEL_GAP + need : 0);
       let row = rowEnds.findIndex((rowEnd) => rowEnd + PACK_GAP <= start);
