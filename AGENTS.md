@@ -14,9 +14,9 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
   `reg-core-wasm` (`reg-core` for the SPA), and the catalog builder: `reg-frame`,
   `reg-readers`, `reg-resolve` and `reg-build`, with its reader config, curation and id
-  ledgers under `curation/`. `xtask` is repository and release tooling (`cargo xtask
-  gh-issue`, `scope-check`, `release-base-reuse`) and the repo-policy lints; it is not
-  released.
+  ledgers under `curation/`. `xtask` is repository and release tooling
+  (`cargo xtask gh-issue`, `scope-check`, `release-base-reuse`, `gen-case-folding`,
+  `search-eval`) and the repo-policy lints; it is not released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's
@@ -126,8 +126,8 @@ and to a sweep.
   never from Python literals of database rows. The synthetic artifact is the unit.
 - **At most one case per behavior, at its hardest case, and only where no existing case
   covers it**: a second run, reordered input, an interval edge, a refusal beside its
-  allowed twin. Not the first case that passes. Named by behavior; no integration test file over 800
-  lines, split by contract surface.
+  allowed twin. Not the first case that passes. Named by behavior; no integration test
+  file over 800 lines, split by contract surface.
 - **Expected values come from outside the code under test**, or the test is
   tautological: a golden, the source fixture, the spec, or agreement between two
   adapters. Derive them from the spec or fixture before implementing.
@@ -169,9 +169,8 @@ and to a sweep.
   compatibility, regenerate-not-migrate, no ORM).
 - **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
   materializer, HTTP API and MCP tools. There is no Python web backend.
-- **Tests**: `cargo test` (crates), pytest + pytest-xdist (conformance,
-  `scripts/tests`), `@pytest.mark.release` for real-artifact tests. Build coverage is
-  fully synthetic.
+- **Tests**: `cargo test` (crates), pytest + pytest-xdist (conformance),
+  `@pytest.mark.release` for real-artifact tests. Build coverage is fully synthetic.
 - **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
   and run with `uvx` (not a dev dep).
 
@@ -191,8 +190,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty and plugin
   schema drift. The repo-policy lints (provider vocabulary, skill reads and aliases,
   test size) are `crates/xtask` tests, run by `crates`.
-- `uv run --no-project scripts/gate.py g0 rust` — lint, crates and `scripts/tests`, plus
-  the conformance run against the Rust server.
+- `uv run --no-project scripts/gate.py g0 rust` — lint and crates, plus the conformance
+  run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
   files; after a rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
@@ -203,7 +202,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Local prerequisite: `cargo install cargo-machete --locked`.
 - A new worktree needs no setup step: Python syncs on the first `uv run`.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs
-  repository) is a build artifact — fix `scripts/parse_lisa_docs.py`, not the output.
+  repository) is a build artifact — fix that repository's `tools/parse_lisa_docs.py`,
+  not the output.
 
 # Issue tracker
 
