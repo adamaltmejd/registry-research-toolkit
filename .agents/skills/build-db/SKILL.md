@@ -45,7 +45,7 @@ without a ledger id. Read the report's warnings and confirm all expected provide
 inputs are present.
 
 `reg-build read --inputs … --curation … --out DIR` dumps the source frames as JSONL (and
-the LISA section map) without resolving: use it to inspect what a reader produced.
+each input's warnings) without resolving: use it to inspect what a reader produced.
 
 ## Curation locks
 

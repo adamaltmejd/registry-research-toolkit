@@ -5,8 +5,8 @@
 //!
 //! A document's subject is stated in source coordinates and resolved by the link stage:
 //! a markdown document whose frontmatter names a variable is about that variable of the
-//! input's register, with the key folded by [`name_key`] (the key the LISA reader gives
-//! its columns), unless the config translates that key to reviewed endpoints.
+//! input's register, with the key folded by [`name_key`] (the folded column name),
+//! unless the config translates that key to reviewed endpoints.
 //! One without is about the register. A listed PDF is about the register
 //! whose handle is its list key. A subject that matches nothing leaves the document
 //! searchable, and the link stage warns.
