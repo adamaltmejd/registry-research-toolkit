@@ -76,6 +76,8 @@ def base_artifact() -> Path:
 def crates() -> None:
     run("cargo fmt --all --check")
     run("cargo clippy --workspace --all-targets --locked -- -D warnings")
+    # `--all-targets` skips `test = false` targets: the conformance suite, by name.
+    run("cargo clippy -p reg-conformance --test conformance --locked -- -D warnings")
     run("cargo test --workspace --locked")
     # Unused crate dependencies; a false positive is ignored in that crate's
     # Cargo.toml (`[package.metadata.cargo-machete] ignored`) with a reason.
