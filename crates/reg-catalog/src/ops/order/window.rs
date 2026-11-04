@@ -345,6 +345,7 @@ fn materialize(
         outcome.clip = Some(OrderClip {
             source: scope.source.name.clone(),
             variable: variable.pid.clone(),
+            variable_name: String::new(),
             requested: periods(scope.server, scope.requested),
             ordered: periods(scope.server, &ordered),
         });
@@ -745,7 +746,9 @@ fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry
             provider: table.provider.clone(),
             register: table.register.clone(),
             table: table.pid.clone(),
+            table_name: String::new(),
             variable: at.variable.pid.clone(),
+            variable_name: String::new(),
             display_name: binding.display_name.clone(),
             period: period(scope.server, days),
             spelling: p.spelling.clone(),

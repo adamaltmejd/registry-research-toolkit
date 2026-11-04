@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/imp",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "variable": "demo/imp/kon",
+      "variable_name": "Kön",
       "display_name": null,
       "period": {
         "start": "2018-01-01",
@@ -35,6 +37,7 @@
     {
       "source": "s",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "period": {
         "start": "2018-01-01",
         "end": "2019-03-01"
@@ -42,6 +45,7 @@
       "columns": [
         {
           "variable": "demo/imp/lopnr",
+          "variable_name": "Löpnummer",
           "spelling": "Lopnr"
         }
       ]
@@ -51,6 +55,7 @@
     {
       "source": "s",
       "variable": "demo/imp/kon",
+      "variable_name": "Kön",
       "requested": [
         {
           "start": "2017-01-01",
@@ -73,12 +78,15 @@
       "message": "demo/imp/kon is not available over [2017-01-01, 2018-01-01); that part is not ordered",
       "source": "s",
       "variable": "demo/imp/kon",
+      "variable_name": "Kön",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "period": {
         "start": "2017-01-01",
         "end": "2018-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

@@ -2455,7 +2455,7 @@
           "findings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Issue"
+              "$ref": "#/components/schemas/NamedIssue"
             },
             "description": "The non-blocking findings (level `warning` or `info`)."
           },
@@ -2700,6 +2700,97 @@
           }
         }
       },
+      "NamedIssue": {
+        "type": "object",
+        "description": "A located finding with the names of the catalog entities it is about. The MONA order file carries the bare `Issue`.",
+        "required": [
+          "level",
+          "code",
+          "path",
+          "message",
+          "source",
+          "variable",
+          "table",
+          "period",
+          "successor_fqid",
+          "variable_name",
+          "table_name",
+          "successor_name"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "level": {
+            "$ref": "#/components/schemas/IssueLevel"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "description": "An RFC 6901 pointer into the project; empty for the whole document."
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The project source's name."
+          },
+          "successor_fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The successor a `variable_replaced` finding names, or the successor table of an\nundated succession (`table_succession_undated`)."
+          },
+          "successor_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The name of `successor_fqid`; `null` when that is null."
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "table_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The name of `table`; `null` when `table` is null or names no catalog table."
+          },
+          "variable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variable_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The name of `variable`, as `show` gives it; `null` when `variable` is null or names no catalog variable."
+          }
+        },
+        "additionalProperties": false
+      },
       "Occurrence": {
         "type": "object",
         "description": "One delivery behind this row.",
@@ -2782,6 +2873,7 @@
         "required": [
           "source",
           "variable",
+          "variable_name",
           "requested",
           "ordered"
         ],
@@ -2803,6 +2895,10 @@
           },
           "variable": {
             "type": "string"
+          },
+          "variable_name": {
+            "type": "string",
+            "description": "The variable's name."
           }
         }
       },
@@ -2815,7 +2911,9 @@
           "provider",
           "register",
           "table",
+          "table_name",
           "variable",
+          "variable_name",
           "display_name",
           "period",
           "spelling",
@@ -2873,6 +2971,10 @@
             "type": "string",
             "description": "The table that serves the period."
           },
+          "table_name": {
+            "type": "string",
+            "description": "The table's name, as `show` gives it."
+          },
           "type": {
             "type": [
               "string",
@@ -2891,6 +2993,10 @@
           },
           "variable": {
             "type": "string"
+          },
+          "variable_name": {
+            "type": "string",
+            "description": "The variable's name, as `show` gives it."
           }
         }
       },
@@ -2925,6 +3031,7 @@
         "required": [
           "source",
           "table",
+          "table_name",
           "period",
           "columns"
         ],
@@ -2943,6 +3050,10 @@
           },
           "table": {
             "type": "string"
+          },
+          "table_name": {
+            "type": "string",
+            "description": "The table's name."
           }
         }
       },
@@ -3740,6 +3851,7 @@
         "description": "A row-key column: its variable and the spelling it is delivered under.",
         "required": [
           "variable",
+          "variable_name",
           "spelling"
         ],
         "properties": {
@@ -3748,6 +3860,10 @@
           },
           "variable": {
             "type": "string"
+          },
+          "variable_name": {
+            "type": "string",
+            "description": "The variable's name."
           }
         }
       },
@@ -4094,6 +4210,7 @@
         "description": "One row of the variable's per-period list: a column of one table over one period\nwith one form and one provider wording. A fact the catalog does not state is left\nout, never `null`: no type, no value set, `coded` unknown, and `state` clear (the\ndefault).",
         "required": [
           "table",
+          "table_name",
           "column",
           "period",
           "role"
@@ -4151,6 +4268,10 @@
           "table": {
             "type": "string",
             "description": "The table's fqid."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "The table's name, as `show` gives it."
           },
           "type": {
             "type": "string"
@@ -4977,7 +5098,9 @@
         "required": [
           "kind",
           "fqid",
+          "name",
           "table",
+          "table_name",
           "period",
           "release",
           "spelling",
@@ -4994,6 +5117,13 @@
           "kind": {
             "type": "string",
             "description": "`register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`."
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The name of `fqid`, as `show` gives it."
           },
           "period": {
             "oneOf": [
@@ -5027,6 +5157,13 @@
             ],
             "description": "Its table."
           },
+          "table_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The name of `table`."
+          },
           "value_set": {
             "type": [
               "string",
@@ -5047,7 +5184,7 @@
           "issues": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Issue"
+              "$ref": "#/components/schemas/NamedIssue"
             }
           },
           "ok": {

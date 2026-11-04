@@ -297,7 +297,9 @@
           "provider": "demo",
           "register": "demo/held",
           "table": "demo/held",
+          "table_name": "Held reference metadata",
           "variable": "demo/held/value",
+          "variable_name": "Value",
           "display_name": null,
           "period": {"start": "2015-01-01", "end": "2017-01-01"},
           "spelling": "ReceivedOld",
@@ -314,8 +316,11 @@
         {
           "source": "s",
           "table": "demo/held",
+          "table_name": "Held reference metadata",
           "period": {"start": "2015-01-01", "end": "2017-01-01"},
-          "columns": [{"variable": "demo/held/id", "spelling": "Id"}]
+          "columns": [
+            {"variable": "demo/held/id", "variable_name": "Identifier", "spelling": "Id"}
+          ]
         }
       ],
       "clips": []

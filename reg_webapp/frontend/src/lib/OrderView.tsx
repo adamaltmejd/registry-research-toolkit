@@ -446,6 +446,7 @@ function OrderFindings({
       names,
       raw,
     );
+    const fqid = place.variable ?? place.table;
     return {
       caveat: null,
       code: issue.code,
@@ -454,8 +455,10 @@ function OrderFindings({
       severity: issue.level === "info" ? "notice" : "review",
       subject: {
         kind: place.variable ? "variable" : "table",
-        fqid: place.variable ?? place.table,
+        fqid,
+        name: fqid ? (names.get(fqid) ?? null) : null,
         table: place.table,
+        table_name: place.table ? (names.get(place.table) ?? null) : null,
         period: issue.period,
         release: null,
         spelling: null,

@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/imp",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "variable": "demo/imp/ink",
+      "variable_name": "Inkomst",
       "display_name": null,
       "period": {
         "start": "2019-01-01",
@@ -32,6 +34,7 @@
     {
       "source": "s",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "period": {
         "start": "2019-01-01",
         "end": "2021-01-01"
@@ -39,6 +42,7 @@
       "columns": [
         {
           "variable": "demo/imp/lopnr",
+          "variable_name": "Löpnummer",
           "spelling": "Lopnr"
         }
       ]
@@ -48,6 +52,7 @@
     {
       "source": "s",
       "variable": "demo/imp/ink",
+      "variable_name": "Inkomst",
       "requested": [
         {
           "start": "2016-01-01",
@@ -74,12 +79,15 @@
       "message": "demo/imp/ink is not available over [2016-01-01, 2017-01-01); that part is not ordered",
       "source": "s",
       "variable": "demo/imp/ink",
+      "variable_name": "Inkomst",
       "table": "demo/imp",
+      "table_name": "Implicitregistret",
       "period": {
         "start": "2016-01-01",
         "end": "2017-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

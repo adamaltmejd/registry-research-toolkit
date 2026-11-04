@@ -7,7 +7,9 @@
       "message": "demo/rep/gammal is not available over [2019-01-01, 2020-01-01).",
       "source": "s",
       "variable": "demo/rep/gammal",
+      "variable_name": "Gammal kod",
       "table": "demo/rep",
+      "table_name": "Ersättningsregistret",
       "period": {
         "start": "2019-01-01",
         "end": "2020-01-01"
@@ -20,12 +22,15 @@
       "message": "demo/rep/gammal is continued by demo/rep/ny from 2018-01-01: Ny ersätter Gammal från 2018.",
       "source": "s",
       "variable": "demo/rep/gammal",
+      "variable_name": "Gammal kod",
       "table": "demo/rep",
+      "table_name": "Ersättningsregistret",
       "period": {
         "start": "2019-01-01",
         "end": "2020-01-01"
       },
-      "successor_fqid": "demo/rep/ny"
+      "successor_fqid": "demo/rep/ny",
+      "successor_name": "Ny kod"
     }
   ]
 }
