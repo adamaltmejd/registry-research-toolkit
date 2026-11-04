@@ -4,9 +4,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_readers::holdings as census;
 use rusqlite::{Connection, params};
 
-use super::input;
+use reg_core::days::{self, Span};
 
-type Span = (i64, i64);
+use super::input;
 
 #[derive(Clone)]
 pub(super) struct Segment {
@@ -50,41 +50,6 @@ pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>, String> {
         .map_err(|e| e.to_string())
 }
 
-pub(super) fn merge(mut spans: Vec<Span>) -> Vec<Span> {
-    spans.sort_unstable();
-    let mut out: Vec<Span> = Vec::new();
-    for (start, end) in spans {
-        if let Some(last) = out.last_mut()
-            && start <= last.1
-        {
-            last.1 = last.1.max(end);
-        } else {
-            out.push((start, end));
-        }
-    }
-    out
-}
-
-pub(super) fn covered(wanted: &[Span], by: &[Span]) -> bool {
-    let by = merge(by.to_vec());
-    wanted
-        .iter()
-        .all(|(a, b)| by.iter().any(|(c, d)| c <= a && b <= d))
-}
-
-pub(super) fn overlap(left: &[Span], right: &[Span]) -> Vec<Span> {
-    merge(
-        left.iter()
-            .flat_map(|(a, b)| {
-                right.iter().filter_map(move |(c, d)| {
-                    let span = ((*a).max(*c), (*b).min(*d));
-                    (span.0 < span.1).then_some(span)
-                })
-            })
-            .collect(),
-    )
-}
-
 pub(super) fn periods(value: &str) -> Result<Vec<Span>, String> {
     let mut out = Vec::new();
     for token in value.split(',') {
@@ -95,7 +60,7 @@ pub(super) fn periods(value: &str) -> Result<Vec<Span>, String> {
         let (lo, hi) = period.iso_bounds();
         out.push((crate::emit::start(&lo), crate::emit::end(&hi)));
     }
-    Ok(merge(out))
+    Ok(days::merge(out))
 }
 
 pub(super) fn canonical_period(value: &str) -> Result<String, String> {
@@ -221,7 +186,7 @@ pub(super) fn candidates(
             let wanted = match &mapping.delivery {
                 Some(window) => {
                     let wanted = periods(window)?;
-                    if !covered(&wanted, owed) {
+                    if !days::covered(&wanted, owed) {
                         return Err(
                             "inventory_window_invalid: authored window escapes file/slot reach"
                                 .into(),
@@ -231,7 +196,7 @@ pub(super) fn candidates(
                 }
                 None => owed.to_vec(),
             };
-            let documented = merge(
+            let documented = days::merge(
                 variable
                     .iter()
                     .filter(|s| {
@@ -240,14 +205,14 @@ pub(super) fn candidates(
                     .map(|s| (s.start, s.end))
                     .collect(),
             );
-            if mapping.delivery.is_some() && !covered(&wanted, &documented) {
+            if mapping.delivery.is_some() && !days::covered(&wanted, &documented) {
                 return Err("inventory_window_invalid: authored window lacks unambiguous documented coverage".into());
             }
             for segment in variable {
                 if segment.timeless != (table.disposition == "timeless") {
                     continue;
                 }
-                let spans = overlap(&wanted, &[(segment.start, segment.end)]);
+                let spans = days::overlap(&wanted, &[(segment.start, segment.end)]);
                 if !spans.is_empty() {
                     out.push(Candidate {
                         segment: segment.clone(),
@@ -271,7 +236,7 @@ pub(super) fn candidates(
                 {
                     continue;
                 }
-                let spans = overlap(owed, &[(segment.start, segment.end)]);
+                let spans = days::overlap(owed, &[(segment.start, segment.end)]);
                 if !spans.is_empty() {
                     out.push(Candidate {
                         segment: segment.clone(),
@@ -309,16 +274,10 @@ pub(super) fn plan(candidates: &[Candidate]) -> Result<Vec<Placement<'_>>, Strin
     }
     let mut placements = Vec::new();
     for cs in by_table.values() {
-        let cuts: BTreeSet<_> = cs
-            .iter()
-            .flat_map(|c| c.spans.iter().flat_map(|(a, b)| [*a, *b]))
-            .collect();
-        let cuts: Vec<_> = cuts.into_iter().collect();
-        for pair in cuts.windows(2) {
-            let span = (pair[0], pair[1]);
+        for span in days::slices(cs.iter().flat_map(|c| c.spans.iter().copied())) {
             let active: Vec<_> = cs
                 .iter()
-                .filter(|c| covered(&[span], &c.spans))
+                .filter(|c| days::covered(&[span], &c.spans))
                 .copied()
                 .collect();
             if active.is_empty() {
@@ -442,7 +401,7 @@ fn placements(
         admitted.push(span);
         accepted.push(c.segment.clone());
     }
-    let admitted = merge(admitted);
+    let admitted = days::merge(admitted);
     if admitted.is_empty() {
         notice(
             db,
@@ -450,17 +409,17 @@ fn placements(
             Some(column),
             "mapping_missing",
             None,
-            (owed, &merge(documented), &[]),
+            (owed, &days::merge(documented), &[]),
             "No accepted semantic placement; retained in the coverage denominator",
         )?;
-    } else if !covered(owed, &admitted) {
+    } else if !days::covered(owed, &admitted) {
         notice(
             db,
             holding,
             Some(column),
             "period_clipped",
             None,
-            (owed, &merge(documented), &admitted),
+            (owed, &days::merge(documented), &admitted),
             "Physical reach intersects documented orderable coverage",
         )?;
     }

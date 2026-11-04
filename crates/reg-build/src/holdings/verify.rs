@@ -2,6 +2,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
+use reg_core::days;
 use rusqlite::Connection;
 
 use super::{compile, input, meta, open, references};
@@ -194,7 +195,7 @@ fn sources(
             for key in period_keys {
                 let scope = key.period.as_deref().map(compile::periods).transpose()?;
                 if scope.as_ref().map_or(!spans.is_empty(), |scope| {
-                    !compile::overlap(&spans, scope).is_empty()
+                    !days::overlap(&spans, scope).is_empty()
                 }) {
                     period_offered = true;
                     break;
@@ -500,7 +501,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             })
             .map(|s| (s.start, s.end))
             .collect();
-        if !compile::covered(&[(start, end)], &admitted) {
+        if !days::covered(&[(start, end)], &admitted) {
             return Err("inventory_window_invalid: mapping escapes unambiguous semantic coverage or declared role".into());
         }
         let mut periods = db
@@ -511,10 +512,10 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<(), Strin
             .map_err(|e| e.to_string())?
             .collect::<Result<Vec<_>, _>>()
             .map_err(|e| e.to_string())?;
-        if !compile::covered(&[(start, end)], &periods)
+        if !days::covered(&[(start, end)], &periods)
             || caveat.is_some_and(|c| c.trim().is_empty())
             || window
-                .map(|w| compile::periods(&w).map(|w| !compile::covered(&[(start, end)], &w)))
+                .map(|w| compile::periods(&w).map(|w| !days::covered(&[(start, end)], &w)))
                 .transpose()?
                 .unwrap_or(false)
         {

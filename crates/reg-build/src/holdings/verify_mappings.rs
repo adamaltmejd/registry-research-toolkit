@@ -1,11 +1,11 @@
 //! Source-derived mapping equality, independent of compiler candidate/placement logic.
 use std::collections::BTreeMap;
 
+use reg_core::days::{self, Span};
 use rusqlite::Connection;
 
 use super::{compile, input};
 
-type Span = (i64, i64);
 type Mappings = BTreeMap<Attributes, Vec<Span>>;
 /// Blocked spans by (notice code, rival table, rival variable).
 type Contested = BTreeMap<(String, String, String), Vec<Span>>;
@@ -59,11 +59,11 @@ fn projection_copy(
                         .transpose()
                         .map(|s| s.unwrap_or_else(|| vec![span]))
                 };
-                shared.extend(compile::overlap(&scope(child)?, &scope(parent)?));
+                shared.extend(days::overlap(&scope(child)?, &scope(parent)?));
             }
         }
     }
-    Ok(compile::covered(&[span], &shared))
+    Ok(days::covered(&[span], &shared))
 }
 
 fn claims(
@@ -115,7 +115,7 @@ fn claims(
                 .map(|s| (s.start, s.end))
                 .collect();
             if mapping.delivery.is_some()
-                && (!compile::covered(&wanted, &spans) || !compile::covered(&wanted, &documented))
+                && (!days::covered(&wanted, &spans) || !days::covered(&wanted, &documented))
             {
                 return Err(
                     "inventory_window_invalid: authored window escapes file or documented coverage"
@@ -167,7 +167,7 @@ fn claim(
             caveat,
             window,
         },
-        spans: compile::overlap(wanted, &[(segment.start, segment.end)]),
+        spans: days::overlap(wanted, &[(segment.start, segment.end)]),
         ambiguous: segment.state == "ambiguous",
     }
 }
@@ -187,17 +187,10 @@ fn expected(
     let mut expected = Mappings::new();
     let mut contested = Contested::new();
     for claims in routes.values() {
-        let mut cuts: Vec<_> = claims
-            .iter()
-            .flat_map(|c| c.spans.iter().flat_map(|(a, b)| [*a, *b]))
-            .collect();
-        cuts.sort_unstable();
-        cuts.dedup();
-        for bounds in cuts.windows(2) {
-            let span = (bounds[0], bounds[1]);
+        for span in days::slices(claims.iter().flat_map(|c| c.spans.iter().copied())) {
             let active: Vec<_> = claims
                 .iter()
-                .filter(|c| compile::covered(&[span], &c.spans))
+                .filter(|c| days::covered(&[span], &c.spans))
                 .collect();
             let Some(first) = active.first() else {
                 continue;
@@ -300,7 +293,7 @@ pub(super) fn verify(
                 }
                 for mappings in [&mut stored, &mut expected] {
                     for spans in mappings.values_mut() {
-                        *spans = compile::merge(std::mem::take(spans));
+                        *spans = days::merge(std::mem::take(spans));
                     }
                 }
                 if stored != expected {
@@ -319,7 +312,7 @@ pub(super) fn verify(
                     recorded.entry(key).or_default().push(span);
                 }
                 for spans in recorded.values_mut().chain(contested.values_mut()) {
-                    *spans = compile::merge(std::mem::take(spans));
+                    *spans = days::merge(std::mem::take(spans));
                 }
                 Ok((recorded != contested).then_some(
                     "holdings_contested_source_mismatch: blocked intervals or their recorded rivals differ",

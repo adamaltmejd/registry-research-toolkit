@@ -1,7 +1,7 @@
 //! Row keys use the steward's declared physical entity/time components.
 //! Reference-only orders use catalog segments with role `row_key`.
 
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::sync::{Arc, Mutex, PoisonError};
 
 use reg_core::IssueLevel;
@@ -154,31 +154,30 @@ fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySeg
     Ok(merge_key_segments(out))
 }
 
-fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
+fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
     // Several served columns can expose overlapping pieces of the same physical key.
-    out.sort_by(|a, b| {
-        (&a.variable, &a.spelling, &a.state, a.entity, a.start, a.end).cmp(&(
-            &b.variable,
-            &b.spelling,
-            &b.state,
-            b.entity,
-            b.start,
-            b.end,
-        ))
-    });
-    let mut merged: Vec<KeySegment> = Vec::new();
+    let mut groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
     for key in out {
-        if let Some(last) = merged.last_mut()
-            && (&last.variable, &last.spelling, &last.state, last.entity)
-                == (&key.variable, &key.spelling, &key.state, key.entity)
-            && key.start <= last.end
-        {
-            last.end = last.end.max(key.end);
-        } else {
-            merged.push(key);
-        }
+        groups
+            .entry((key.variable, key.spelling, key.state, key.entity))
+            .or_default()
+            .push((key.start, key.end));
     }
-    merged
+    groups
+        .into_iter()
+        .flat_map(|((variable, spelling, state, entity), spans)| {
+            reg_core::days::merge(spans)
+                .into_iter()
+                .map(move |(start, end)| KeySegment {
+                    variable: variable.clone(),
+                    spelling: spelling.clone(),
+                    start,
+                    end,
+                    state: state.clone(),
+                    entity,
+                })
+        })
+        .collect()
 }
 
 /// A source's row keys: per serving table, the requested days cut where its row-key
@@ -255,11 +254,8 @@ pub(super) fn row_keys(
                 pieces.push((lo, hi, (variable.clone(), spelling.clone())));
             }
         }
-        let cuts: BTreeSet<i64> = pieces.iter().flat_map(|(lo, hi, _)| [*lo, *hi]).collect();
-        let cuts: Vec<i64> = cuts.into_iter().collect();
         let mut keyed: Vec<(i64, i64, Columns)> = Vec::new();
-        for pair in cuts.windows(2) {
-            let (lo, hi) = (pair[0], pair[1]);
+        for (lo, hi) in reg_core::days::slices(pieces.iter().map(|(lo, hi, _)| (*lo, *hi))) {
             let columns: Columns = pieces
                 .iter()
                 .filter(|(a, b, _)| *a <= lo && hi <= *b)

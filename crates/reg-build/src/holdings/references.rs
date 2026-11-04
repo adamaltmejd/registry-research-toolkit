@@ -1,7 +1,8 @@
 //! Explicit same-identity supplemental occurrences. Public ids cross the pair;
 //! source occurrences, their local ids and provenance (locator, evidence) remain in
 //! the steward file and only locate refusals.
-use super::{compile, input};
+use super::input;
+use reg_core::days;
 use rusqlite::{Connection, params};
 use serde::Deserialize;
 use std::collections::BTreeSet;
@@ -123,7 +124,7 @@ pub(super) fn admitted(
         if extra.is_empty() {
             return Err(refuse("holdings_reference_occurrence_empty"));
         }
-        if !compile::overlap(&extra, &global).is_empty() {
+        if !days::overlap(&extra, &global).is_empty() {
             return Err(refuse("holdings_reference_occurrence_overlap"));
         }
         // One declaration owns every supplemental segment of this canonical variable.

@@ -38,7 +38,7 @@ pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, add_iso_months, is_slug, iso_day_number,
     next_iso_day, period_token_for_bounds, prev_iso_day,
 };
-pub use interval::{Interval, gaps, intersect, merge, overlap, render};
+pub use interval::{Interval, days, gaps, hull, intersect, merge, overlap, render};
 pub use structural::{q as quote, validate_structural};
 use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
 pub use validation::{IssueLevel, ValidationIssue, ValidationResult};

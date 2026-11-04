@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
+use reg_core::days::Span;
 use reg_core::hex;
 
 use crate::{Catalog, Code, Error, connect, read_meta};
@@ -20,9 +21,6 @@ pub(crate) struct Holdings {
     meta: BTreeMap<String, String>,
     possession: Possession,
 }
-
-/// `[start, end)` day numbers.
-type Span = (i64, i64);
 
 /// What a steward deployment serves: the public ids an accepted placement names, and
 /// the registers and providers above them, each with the years held (placements
@@ -92,15 +90,7 @@ impl Possession {
             &mut possession.providers,
         ] {
             for spans in map.values_mut() {
-                spans.sort_unstable();
-                let mut merged: Vec<Span> = Vec::with_capacity(spans.len());
-                for &(start, end) in spans.iter() {
-                    match merged.last_mut() {
-                        Some(last) if start <= last.1 => last.1 = last.1.max(end),
-                        _ => merged.push((start, end)),
-                    }
-                }
-                *spans = merged;
+                *spans = reg_core::days::merge(std::mem::take(spans));
             }
         }
         Ok(possession)

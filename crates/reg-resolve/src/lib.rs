@@ -1249,18 +1249,7 @@ pub(crate) fn resolve_located(
         }
 
         let o = &resolved[last].occurrence;
-        let hull = (
-            periods
-                .iter()
-                .map(|p| p.0.clone())
-                .min()
-                .expect("a variable is used"),
-            periods
-                .iter()
-                .map(|p| p.1.clone())
-                .max()
-                .expect("a variable is used"),
-        );
+        let hull = reg_core::hull(&periods).expect("a variable is used");
         variables.push(Variable {
             sets: BTreeSet::new(),
             facets: BTreeMap::new(),
@@ -1489,18 +1478,8 @@ pub(crate) fn resolve_located(
         }
     }
 
-    let dated: Vec<&Interval> = tables
-        .iter()
-        .filter(|t| !t.timeless)
-        .flat_map(|t| &t.spans)
-        .collect();
-    let coverage = match (
-        dated.iter().map(|p| &p.0).min(),
-        dated.iter().map(|p| &p.1).max(),
-    ) {
-        (Some(lo), Some(hi)) => (lo.clone(), hi.clone()),
-        _ => (OPEN_START.to_owned(), OPEN_END.to_owned()),
-    };
+    let coverage = reg_core::hull(tables.iter().filter(|t| !t.timeless).flat_map(|t| &t.spans))
+        .unwrap_or_else(|| (OPEN_START.to_owned(), OPEN_END.to_owned()));
     let public = match &ledger.public {
         Some(public) if !reg_core::is_slug(public) => {
             return Err(format!("ledger public name {public:?} is not a slug"));

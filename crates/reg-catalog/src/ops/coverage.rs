@@ -3,6 +3,7 @@
 
 use std::collections::BTreeMap;
 
+use reg_core::days::{Span, merge};
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
@@ -52,21 +53,6 @@ pub struct CoverageGap {
     /// `documented_without_column`: documented but not delivered; `ambiguous`: more than
     /// one form; `withheld`: not delivered on purpose.
     reason: String,
-}
-
-/// `[start, end)` day numbers.
-type Span = (i64, i64);
-
-/// `spans` (in start order) with those that touch or overlap merged.
-fn merge(spans: impl IntoIterator<Item = Span>) -> Vec<Span> {
-    let mut out: Vec<Span> = Vec::new();
-    for (start, end) in spans {
-        match out.last_mut() {
-            Some(last) if start <= last.1 => last.1 = last.1.max(end),
-            _ => out.push((start, end)),
-        }
-    }
-    out
 }
 
 fn periods(server: &Server, spans: &[Span]) -> Vec<Period> {
