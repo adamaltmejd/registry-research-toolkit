@@ -1118,13 +1118,13 @@ evidence = "Variabeln anger utbildningsnivå.\ncatalog:occurrence:21704\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-2"
+subject = "var:sun2020niva"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Källkolumn och klassifikation anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21731\ncatalog:valueset:5052\ncatalog:variable_text:3029:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-2"
+subject = "var:sun2020niva"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumn och klassifikation anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21731\ncatalog:valueset:5052\ncatalog:variable_text:3029:18993:19358"
 
@@ -1142,13 +1142,13 @@ evidence = "Variabeln anger utbildningsnivå i text.\ncatalog:occurrence:21707\n
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000nivatext-2"
+subject = "var:sun2020nivatext"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "Källkolumnen anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21734\ncatalog:variable_text:3031:18993:19358"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000nivatext-2"
+subject = "var:sun2020nivatext"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnen anger SUN 2020, men etikett och definition anger SUN 2000.\ncatalog:occurrence:21734\ncatalog:variable_text:3031:18993:19358"
 
@@ -1642,7 +1642,7 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000niva-2"
+subject = "var:sun2020niva"
 fields = { "label" = "Utbildningsnivå (SUN 2020, kod)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label names only sun2000), each as code and text."
 
@@ -1654,7 +1654,7 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000nivatext-2"
+subject = "var:sun2020nivatext"
 fields = { "label" = "Utbildningsnivå (SUN 2020, text)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (sun2000)' (4 variables): judged different meaning, high confidence; Columns are SUN 2000 and SUN 2020 levels (the current label names only sun2000), each as code and text."
 
@@ -1789,3 +1789,27 @@ kind = "set"
 subject = "riksdagsval: kd_antrost @1994-01-01..2022-12-31 where key = 'v24267'"
 fields = { "variable" = "antal-giltiga-roster-kristdemokraterna-kds-antrost" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): kds_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval; KD_antrost/kd_antrost in kommunfullmaktigeval, regionfullmaktigeval, riksdagsval: same definition and code list, never concurrent under another spelling in one table; folded into antal-giltiga-roster-kristdemokraterna-kds-antrost."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "description" = "Utbildningsnivå enligt SUN 2020 (nivåkod)." }
+evidence = "Column SUN2020Niva/SUN2020NivaText; the 2022 code list (#5052) uses SUN 2020 wording with 999 Okänt. Definition text \"SUN 2000\" is copied."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020nivatext"
+fields = { "description" = "Utbildningsnivå enligt SUN 2020, i klartext." }
+evidence = "Column SUN2020Niva/SUN2020NivaText; the 2022 code list (#5052) uses SUN 2020 wording with 999 Okänt. Definition text \"SUN 2000\" is copied."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-2"
+fields = { "description" = "Grov utbildningsnivå, sammanslagen från nivåerna i SUN 2020." }
+evidence = "Grov level aggregated from SUN 2020 levels (same register, same columns)."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-aggregat-grov-text-2"
+fields = { "description" = "Grov utbildningsnivå enligt SUN 2020, i klartext." }
+evidence = "Grov level aggregated from SUN 2020 levels (same register, same columns)."

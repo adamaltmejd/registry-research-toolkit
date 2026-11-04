@@ -11,18 +11,14 @@ import {
 import type { Context } from "./api";
 import styles from "./ProjectBanner.module.css";
 import { clampYearWindow } from "./period";
-import { type ProjectStudyWindow, regMetaReleaseTag } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import { router } from "./router";
 import { Button } from "./ui/Button";
 import band from "./ui/WindowBand.module.css";
 import { type ProjectValidation, useProject } from "./use_project";
-import { windowStore } from "./window";
-import {
-  defaultStudyWindow,
-  type WindowBounds,
-  windowBounds,
-} from "./window_bounds";
+import { createProject } from "./window";
+import { type WindowBounds, windowBounds } from "./window_bounds";
 
 const VERDICTS = {
   checking: { label: "Checking", glyph: "", findings: false },
@@ -48,15 +44,7 @@ export function ProjectBanner({
           isInert={!context}
           onPress={() => {
             if (!context) return;
-            const bounds = windowBounds(context);
-            projectStore.newProject({
-              reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
-              window: clampYearWindow(
-                windowStore.value ?? defaultStudyWindow(bounds),
-                bounds.min,
-                bounds.max,
-              ),
-            });
+            createProject(context);
             router.navigate("/project");
           }}
         >

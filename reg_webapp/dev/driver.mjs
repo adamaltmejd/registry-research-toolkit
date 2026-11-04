@@ -1,4 +1,4 @@
-// Shell and browse-search flows × four viewports, against the source-built
+// Shell and browse-search flows × the flow viewports (four by default), against the source-built
 // webapp-dev fixture. Run from reg_webapp/frontend via dev.sh flows; screenshots
 // land in the required <out-dir>.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
@@ -134,12 +134,20 @@ async function capture(page, name) {
   console.log(`flows: shot ${file}`);
 }
 
-const FLOW_VIEWPORTS = [
-  VIEWPORTS.mobile,
-  VIEWPORTS.tablet,
-  VIEWPORTS.desktop,
-  VIEWPORTS.wide,
-];
+// All four by default; CI sets REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop to halve
+// the run. A layout regression only at tablet or wide is then caught by the
+// design-review skill's four-width review, not by CI.
+const FLOW_VIEWPORTS = (process.env.REG_WEBAPP_FLOW_VIEWPORTS ?? "mobile,tablet,desktop,wide")
+  .split(",")
+  .map((name) => {
+    const viewport = VIEWPORTS[name];
+    if (!viewport) {
+      throw new Error(
+        `driver: unknown viewport "${name}" in REG_WEBAPP_FLOW_VIEWPORTS (use ${Object.keys(VIEWPORTS)})`,
+      );
+    }
+    return viewport;
+  });
 
 // The retained shell boundary case fails if filtering leaves an unrelated provider,
 // palette focus/closing breaks, or a chosen action leaks its query into the filter.
@@ -284,7 +292,7 @@ async function browsePagesCase(page, shoot) {
   // Match the value at the end while retaining the table-cell boundary.
   // One "Releases" heading: the panel's own, with the entries always shown.
   check((await main.getByRole("heading", { name: "Releases", exact: true }).count()) === 1, "Releases heading is duplicated");
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
   await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
@@ -381,7 +389,7 @@ async function projectPagesCase(page, shoot) {
   await openProjectFile({ name: "blocked-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(blockedProject)) }, true);
   await main.getByRole("link", { name: "Order", exact: true }).click();
   await main.getByText("The order is blocked. Review the findings and update the project.", { exact: true }).waitFor();
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   const group = findings.getByRole("button", { name: /Needs review: catalog finding/ }).first();
   await group.hover();
   await page.getByRole("tooltip").getByText("variable_not_in_table", { exact: true }).waitFor();
@@ -420,6 +428,24 @@ async function projectPagesCase(page, shoot) {
     "the rejected project changed during persistence or download");
   check((await banner.getByText("unsaved", { exact: true }).count()) === 0, "downloading the rejected file did not clear its unsaved state");
   await shoot("project-invalid");
+
+  // A saved window wider than the catalog opens clamped to its span (#1037); the
+  // download is the project the user would hand on. Fails if open stops clamping.
+  const span = (await page.evaluate(() => fetch("/api/context").then((r) => r.json()))).data.period_span;
+  const spanEnd = new Date(`${span.end}T00:00:00Z`);
+  spanEnd.setUTCDate(spanEnd.getUTCDate() - 1);
+  const spanYears = [Number(span.start.slice(0, 4)), spanEnd.getUTCFullYear()];
+  const wide = JSON.parse(readFileSync(projectFile, "utf8"));
+  wide.window = { from: 1900, to: 2200 };
+  await openProjectFile(
+    { name: "wide.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(wide)) },
+    true,
+  );
+  const wideDownload = page.waitForEvent("download");
+  await main.getByRole("button", { name: "Download project_data.json", exact: true }).click();
+  const clamped = JSON.parse(readFileSync(await (await wideDownload).path(), "utf8")).window;
+  check(clamped?.from === spanYears[0] && clamped.to === spanYears[1],
+    `the opened project's window ${JSON.stringify(clamped)} was not clamped to the catalog span ${spanYears}`);
 }
 
 // Browser boundary: group links, member lanes and member navigation.
@@ -472,7 +498,7 @@ async function sourceCardsCase(page, shoot) {
   await settled(page);
 
   await main.getByRole("button", { name: /Type for Ålder in baseline/ }).click();
-  await page.getByRole("option", { name: "Opaque", exact: true }).click();
+  await page.getByRole("option", { name: "Other", exact: true }).click();
   const period = main.getByRole("group", { name: "Period for baseline (years)", exact: true });
   const toYear = period.getByRole("slider", { name: /^To year/ });
   await toYear.focus();
@@ -530,9 +556,10 @@ async function openWindowedFixture(page, name) {
 
 // Project + catalog → saved project boundary. Fails if a variable-page add
 // confuses identical spellings in different tables, loses the binding/type or
-// add-window years, retains a tick outside the moved window,
+// years to add, retains a tick outside the moved years,
 // leaves an already-bound column selectable, or strands a failed register read
-// without a working Retry. The older
+// without a working Retry, or a focused span stops naming its column, table
+// and years in its tooltip (maintainer 2026-11-04). The older
 // project case opens complete files; none adds a column from the catalog.
 // Names, tables and numeric type are from webapp-dev.jsonl; the window is this
 // readable fixture project's explicit study window and the stated thumb move.
@@ -555,12 +582,12 @@ async function addVariableColumnsCase(page, shoot) {
   failRegister = false;
   await registerFailure.getByRole("button", {name:"Retry", exact:true}).click();
   await settled(page);
-  await main.getByRole("group", {name:"Add window (years)",exact:true}).waitFor();
+  await main.getByRole("group", {name:"Years to add",exact:true}).waitFor();
   check(registerRequests >= 2, "Retry reused the failed register request");
   await page.unroute(registerRoute, readRegister);
   const familyColumn = main.getByRole("checkbox", { name: /Antal.*Familjer/ });
   const individualColumn = main.getByRole("checkbox", { name: /Antal.*Individer/ });
-  const addWindow = main.getByRole("group", { name: "Add window (years)", exact: true });
+  const addWindow = main.getByRole("group", { name: "Years to add", exact: true });
   const fromYear = addWindow.getByRole("slider", { name: /^From year/ });
   await individualColumn.focus();
   await individualColumn.press("Space");
@@ -572,14 +599,15 @@ async function addVariableColumnsCase(page, shoot) {
   check(!(await individualColumn.isChecked()), "returning to a column's delivery years restored its dropped tick");
   await fromYear.press("ArrowRight");
   await familyColumn.focus();
+  await page.getByRole("tooltip").getByText(/^Antal in Familjer, 20\d\d/).waitFor();
   await familyColumn.press("Space");
   check(await familyColumn.isChecked(), "the column did not tick from the keyboard");
   check((await individualColumn.count()) === 0, "the column outside the add window remained selectable");
   await shoot("add-variable-selected");
   await main.getByRole("button", { name: "Add 1 column to project", exact: true }).click();
   await familyColumn.waitFor({ state: "detached" });
-  await main.getByText(/Antal.*Familjer.*in project/i).waitFor();
-  await main.getByText(/Antal.*Individer.*outside the add window/i).waitFor();
+  await main.getByRole("img", { name: /Antal.*Familjer.*in project/i }).waitFor();
+  await main.getByRole("img", { name: /Antal.*Individer.*outside the years to add/i }).waitFor();
   check((await main.getByRole("button", { name: /^Add \d+ columns? to project$/ }).count()) === 0,
     "the add bar kept the committed selection staged");
 
@@ -604,11 +632,13 @@ async function addVariableColumnsCase(page, shoot) {
 
 }
 
-// #2056, browser boundary over webapp-dev's Antal occurrences, provider text
-// and variable notice. Fails if variable dispatch or cross-table segments are
-// lost, named table links/storage are lost in the compact layout, evidence is
-// fetched eagerly, or reopening refetches it. Existing cases
-// only browse register/table pages and never request variable evidence.
+// #2056, browser boundary over webapp-dev's Antal segments and its variable
+// notice. Fails if variable dispatch or the timeline's lane per table is lost,
+// the Type fact stops reading the binding type an add writes (Numeric for int,
+// as add-variable-columns downloads), the no-project line's "Create a project"
+// stops making the spans selectable in place, or the page fetches evidence again
+// (maintainer 2026-11-04: no source and provenance in the web app). Existing
+// cases only browse register/table pages.
 async function browseVariableCase(page, shoot) {
   const evidenceRequests = [];
   page.on("request", (request) => {
@@ -620,37 +650,27 @@ async function browseVariableCase(page, shoot) {
   await main.locator('a[href="/catalog/demo/hush/antal"]').click();
   await page.waitForURL("**/catalog/demo/hush/antal");
   await settled(page);
-  const segments = main.locator("section").filter({ has: page.getByRole("heading", { name: "Segments", exact: true }) });
-  await segments.getByRole("link", { name: "Familjer", exact: true }).waitFor();
-  await segments.getByRole("link", { name: "Individer", exact: true }).waitFor();
-  await segments.getByRole("cell", { name: /^(?:Storage )?int$/ }).first().waitFor();
-  check(
-    (await segments.getByRole("row").count()) >= 3,
-    "the variable lost its segments across the family and individual tables",
-  );
-  const source = main.getByRole("button", { name: "Source and provenance", exact: true });
-  check((await source.getAttribute("aria-expanded")) === "false", "source and provenance must start collapsed");
-  check(evidenceRequests.length === 0, "variable evidence was fetched before opening its disclosure");
-  await shoot("browse-variable");
-  await source.click();
-  await settled(page);
-  check(evidenceRequests.length === 1, "opening source and provenance must issue exactly one evidence request");
-  const sourcePanel = main.locator(`[id="${await source.getAttribute("aria-controls")}"]`);
-  await sourcePanel.getByRole("button", { name: /^Provider wording/ }).first().click();
-  await sourcePanel.getByText("Antal personer i hushållet vid årets slut.", { exact: true }).waitFor();
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const timeline = main.getByRole("list", { name: "Variable columns", exact: true });
+  await timeline.getByText("Familjer", { exact: true }).waitFor();
+  await timeline.getByText("Individer", { exact: true }).waitFor();
+  const type = main.locator("header div").filter({ has: page.locator("dt", { hasText: /^Type$/ }) });
+  check((await type.locator("dd").innerText()).trim() === "Numeric", "the Type fact lost the binding type");
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
   await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
-  await shoot("browse-variable-evidence");
-  await source.click();
-  await source.click();
-  await settled(page);
-  check(evidenceRequests.length === 1, "reopening source and provenance refetched cached evidence");
+  await shoot("browse-variable");
+  // With no project open the page offers to create one in place, and the
+  // spans become selectable without leaving it.
+  check(await main.getByRole("checkbox").count() === 0, "a span was selectable with no project open");
+  await main.getByRole("button", { name: "Create a project", exact: true }).click();
+  await main.getByRole("checkbox").first().waitFor();
+  check(evidenceRequests.length === 0, "the variable page requested evidence");
 }
 
 // Browser boundary over webapp-dev's undated Antal succession and its caveat.
-// Fails if the graph filter is lost, succession lanes/legend disappear, or a
-// neighbour becomes selectable, or a cross-register lane loses its register name.
+// Fails if the graph filter is lost, succession lanes or their relation
+// sentences disappear, or a neighbour becomes selectable, or a cross-register
+// lane loses its register name.
 // Existing browse cases do not check succession.
 // The two focus columns and neighbour href come from webapp-dev.jsonl; the
 // project window keeps both focus columns available, and names come from the page.
@@ -682,7 +702,9 @@ async function variableSuccessionCase(page, shoot) {
     has: page.locator('a[href="/catalog/demo/bas/antalbas"]'),
   });
   await crossRegisterLane.getByText("Basregistret", { exact: true }).waitFor();
-  await main.getByText("Succeeded by (definition change)", { exact: true }).waitFor();
+  // The arrows are drawn only; each lane states its relations in words.
+  await lanes.getByText(/Succeeded by /).first().waitFor({ state: "attached" });
+  await lanes.getByText(/Continues /).first().waitFor({ state: "attached" });
   check(await lanes.getByRole("checkbox").count() === 2,
     "only the focus variable's two columns may be selectable");
   await shoot("variable-succession");
@@ -806,8 +828,9 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 // Paired catalog → browse/coverage/order UI boundary. Fails if pairing is ignored,
-// scope drops supplemental facets, filtering hides their variables, or coverage
-// placements / received row keys disappear. Names, spellings and periods are from
+// held-only search drops supplemental facets, filtering hides their variables, the
+// timeline stops drawing the held file, column and years, or received row keys
+// disappear. Names, spellings and periods are from
 // cases/holdings readable inputs and order-key-requirements.json; global cases
 // cannot exercise this boundary because their artifact has no paired catalog.
 async function stewardHeldCase(page, shoot) {
@@ -817,9 +840,6 @@ async function stewardHeldCase(page, shoot) {
   check(await page.locator('link[rel="icon"]').getAttribute("href")?.then((href) => href.startsWith("data:image/svg+xml,")), "paired favicon is missing");
   const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
   if (narrow) await page.getByRole("link", { name: "Browse registers", exact: true }).click();
-  const scope = page.getByRole("button", { name: /Variable search scope/ });
-  await scope.waitFor();
-  check((await scope.innerText()).includes("Held matches"), "paired scope did not default to steward");
   const search = page.getByRole("searchbox", { name: /^Search registers/ });
   if (narrow) await page.getByRole("button", { name: /^Search registers/ }).click();
   await search.fill("position");
@@ -850,17 +870,10 @@ async function stewardHeldCase(page, shoot) {
   if (narrow) await page.getByRole("main").getByRole("link", { name: "Late measure", exact: true }).click();
   else await page.getByRole("option", { name: /Late measure/ }).click();
   await page.waitForURL("**/catalog/demo/held/late");
-  const panel = page.locator("section").filter({ has: page.getByRole("heading", { name: "Held", exact: true }) });
-  await panel.getByText("Late", { exact: true }).waitFor();
-  await panel.getByText("Pool", { exact: true }).waitFor();
-  await panel.getByText("2019–2020", { exact: true }).waitFor();
+  await page.getByRole("main").getByRole("img", { name: /^Late, .*, Pool, 2019–2020,/ }).first().waitFor({ state: "attached" });
   await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });
   await settled(page);
   await shoot("steward-held");
-  if (narrow) await page.getByRole("link", { name: "Show matching registers", exact: true }).click();
-  await scope.click();
-  await page.getByRole("option", { name: "All matches", exact: true }).click();
-  check((await scope.innerText()).includes("All matches"), "reference scope could not be selected");
   await open(page, "/project");
   const fixture = JSON.parse(readFileSync(new URL("../../conformance/cases/holdings/order-key-requirements.json", import.meta.url), "utf8"));
   const chooser = page.waitForEvent("filechooser");
@@ -919,7 +932,7 @@ const scenarios = {
   },
   "browse-variable": {
     fixture: "webapp-dev",
-    shots: 2,
+    shots: 1,
     route: "/catalog/demo/hush",
     run: browseVariableCase,
   },

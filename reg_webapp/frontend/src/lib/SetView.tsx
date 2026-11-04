@@ -124,7 +124,7 @@ export function SetView({
           ...(node.tags.length
             ? [
                 {
-                  term: "Tags",
+                  term: "Topics",
                   value: node.tags.map((tag) => tag.name).join(", "),
                 },
               ]

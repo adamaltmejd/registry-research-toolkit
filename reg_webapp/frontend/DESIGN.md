@@ -230,7 +230,7 @@ machine identifiers that look like machine identifiers.
 
 **The project is the primary object.** Browsing exists to collect columns for a project,
 so the interface tells you, everywhere, what you have already collected and whether a
-column covers the study window you set.
+column covers the study years you set.
 
 The look is ink on neutral paper, with one colour for what is yours. The base is
 monochrome: near-black text and rules on a near-white sheet. Colour appears only where
@@ -246,6 +246,42 @@ view is that it is indistinguishable in language from the best existing view.
 Planned axis: per-provider themes. A provider theme (SCB, Socialstyrelsen,
 Försäkringskassan, …) is a remap of the `accent*` roles under a `[data-provider]`
 attribute and nothing else. Do not pre-build it; design so that it stays that small.
+
+## Words
+
+The site is a steward site (SWECOV now, IFAU next) and shows only what its steward
+holds. Screens use the researcher's words, never the catalog's internal model
+(maintainer 2026-11-04, #2066). The steward's own name, description and order
+instructions come from `/api/context`, never from code. Some screens still use the old
+words; the slices in `SPA-REDESIGN.md` bring them in line.
+
+  | Say                                                              | Not                                    |
+  | ---------------------------------------------------------------- | -------------------------------------- |
+  | (nothing: everything shown is held)                              | held, holdings, held matches           |
+  | (nothing: the timeline shows it)                                 | segments, census                       |
+  | Column name                                                      | spelling                               |
+  | Description                                                      | provider wording                       |
+  | Years                                                            | coverage                               |
+  | Years to add                                                     | add window                             |
+  | Study years                                                      | study window                           |
+  | Topics                                                           | tags                                   |
+  | Group                                                            | groups, part of                        |
+  | Notes on this data                                               | findings, data warnings                |
+  | Row identifier                                                   | row keys                               |
+  | Who is included                                                  | populations                            |
+  | Table (in a project)                                             | source                                 |
+  | Column, variable                                                 | binding                                |
+  | Check                                                            | draft check, catalog check             |
+  | Years not available                                              | period adjustments, clips              |
+  | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
+
+**Type** is one list for every screen: Categorical, Numeric, Date, Date and time,
+Identifier, Other (uncoded text is Other). It is shown as a pill with a glyph, with
+years only when the type changes by period.
+
+**Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
+source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
+stated has no row. A yes/no fact (identifier, sensitive) shows only when yes.
 
 ## Colors
 
@@ -347,48 +383,46 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem:
   iOS Safari zooms the page into a focused field under 16px and leaves it zoomed, cut
   off at the left.
-- **Browse columns (`ColumnList`):** in paired mode, the Registers header places a
-  Select beside Collapse all, with accessible labels for the register list and scope.
-  Under the default held scope the register list holds only the providers and registers
-  the steward holds anything in, and variable search matches only held variables
-  (maintainer 2026-11-03: "Held only"); "All matches" lists every register and matches
-  every reference variable. A register outside the list stays reachable through the
-  palette, "All matches" and links; opened that way, it and its provider keep a row
-  while its page is open. The variables column of a chosen register stays unscoped
-  without search text. Registers grouped under sticky provider headers, then the
-  selected register's or group's variables, then the detail pane capped at
-  `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
-  to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
-  and centred, so a wide screen gets wider lists, not a stranded pane. The variables
-  column is always there: before a register is chosen it holds an empty state ("Choose a
-  register to list its variables."). The two column headers share one height, so their
-  rules line up. Every group is open by default; a header triangle collapses it, the
-  column header offers one toggle that reads "Collapse all" while any group is open and
-  "Expand all" once all are closed, and collapse state is remembered per user. A group's
-  items are indented `spacing.3` from the group's label, not a full column (toggle and
-  indent maintainer-decided 2026-10-22). A group header is the `label` level at weight
-  500 in `text-muted` on `bg`, its disclosure a small `text-faint` triangle turned −90°
-  when closed, with no rule under it. Rows are selectable options, not links. On a
-  variable or group page its register's row stays selected, and pressing it opens the
-  register. Selection moves with arrow keys across columns, and selecting a row opens
-  its page; type-ahead moves focus only. Left on a group header collapses it, Right
-  expands it; Right on a register row moves to the variables column, and Left there
-  moves back. Collapsing a group never changes the selection: the detail pane keeps its
-  page, and keyboard focus moves to the group row. For a register the second column is
-  flat, a concept group folded to one item (#303), its identifier and panel-key
-  variables first and the rest in Swedish collation; on a group's page (or a member's,
-  which redirects there) the same list stays and the group's row is selected. The
-  members are lanes on that page, not rows in the column. A browse column fills the
-  viewport below the top bar and scrolls its own list. Every item and group carries its
-  in-project mark on the right when it has one. Below the single narrow breakpoint
-  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
-  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
-  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
-  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
-  below the breakpoint (and only there: beside the columns it would repeat them), and it
-  opens the register list; while the search holds text it reads "Show matching
-  registers", since the list the search filters is off screen. Do not mint new
-  breakpoints.
+- **Browse columns (`ColumnList`):** a steward deployment shows only what the steward
+  holds, and never says so: everything shown is held, everything held is shown
+  (maintainer 2026-11-04). The server does this, not the SPA: on a steward catalog it
+  lists, searches and serves only what the steward holds, and every period it returns is
+  the years held (crates/DESIGN.md). There is no scope control and no held or unheld
+  wording anywhere in the SPA: it filters nothing by that, and reads no such field.
+  Registers grouped under sticky provider headers, then the selected register's or
+  group's variables, one name per row with no period under it (maintainer 2026-11-04),
+  then the detail pane capped at `content-max`. The two columns grow with the viewport
+  from `col-browse` and `col-list` to `col-browse-max` and `col-list-max`, and the whole
+  shell is capped at `shell-max` and centred, so a wide screen gets wider lists, not a
+  stranded pane. The variables column is always there: before a register is chosen it
+  holds an empty state ("Choose a register to list its variables."). The two column
+  headers share one height, so their rules line up. Every group is open by default; a
+  header triangle collapses it, the column header offers one toggle that reads "Collapse
+  all" while any group is open and "Expand all" once all are closed, and collapse state
+  is remembered per user. A group's items are indented `spacing.3` from the group's
+  label, not a full column (toggle and indent maintainer-decided 2026-10-22). A group
+  header is the `label` level at weight 500 in `text-muted` on `bg`, its disclosure a
+  small `text-faint` triangle turned −90° when closed, with no rule under it. Rows are
+  selectable options, not links. On a variable or group page its register's row stays
+  selected, and pressing it opens the register. Selection moves with arrow keys across
+  columns, and selecting a row opens its page; type-ahead moves focus only. Left on a
+  group header collapses it, Right expands it; Right on a register row moves to the
+  variables column, and Left there moves back. Collapsing a group never changes the
+  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
+  For a register the second column is flat, a concept group folded to one item (#303),
+  its identifier and panel-key variables first and the rest in Swedish collation; on a
+  group's page (or a member's, which redirects there) the same list stays and the
+  group's row is selected. The members are lanes on that page, not rows in the column. A
+  browse column fills the viewport below the top bar and scrolls its own list. Every
+  item and group carries its in-project mark on the right when it has one. Below the
+  single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two columns leave
+  the detail pane under 400px, #2107) the columns stack, one at a time; the way back is
+  the breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its
+  own line above the trail so it reads as an action, not a path segment (#1824). Every
+  page's trail leads with it below the breakpoint (and only there: beside the columns it
+  would repeat them), and it opens the register list; while the search holds text it
+  reads "Show matching registers", since the list the search filters is off screen. Do
+  not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -430,23 +464,37 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns, findings, then source documents. On a variable page, source and provenance
-  follows the documents. Padding `spacing.5`. A variable group page carries the Group
-  kind mark and a member-of line naming its register, with constant facets shown once in
-  the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
-  order: a lane is titled by its varying facets in curated axis order, with the member's
-  name on the line under it, and by the name alone when no axis varies. Paired variable
-  and table pages show a Held panel grouped by physical table, with delivered column
-  chips, periods and plain-word placement details, or an EmptyState when nothing is
-  held. A caveat shared by a group's placements is a fact row, one that varies is a
-  Notes cell; neither is a tooltip, which a touch screen cannot open. A register page
-  has no tables table and no Held summary: its tables are FilterChips over the variable
-  list, each with its period, a lens with OR within the selection, offered only when two
-  or more tables deliver variables (the archived variant chips, maintainer 2026-11-03).
-  A Tables definition row links every table's page by name. The Held panel does not
-  appear while its data is loading. In steward mode a supplemental-only variable is
-  selectable for a project like a reference variable: `order` and `validate` read the
-  composed steward view (crates/DESIGN.md, "Three questions, three scopes").
+  columns, "Notes on this data" (the findings, only when there are any; maintainer
+  2026-11-04), then source documents. A variable page has no source and provenance
+  section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A
+  variable group page carries the Group kind mark and a member-of line naming its
+  register, with constant facets shown once in the facets row. Members are read-only
+  `LaneGraph` lanes on the page's axis, in API order: a lane is titled by its varying
+  facets in curated axis order, with the member's name on the line under it, and by the
+  name alone when no axis varies. A variable page's facts are Type, Classification,
+  Sensitive (only when yes; an identifier is its Type pill), Topics and Group
+  (maintainer 2026-11-04); role, coding, state, temporality, storage and period are not
+  shown. Type is one `TypePill` per type its columns are written as, with the years
+  inside only where it changes over time. The other facts are what its columns state:
+  one value where every column states it alike, each value with its years where they
+  differ, and no row where none states it, never "Not stated" down the list. The
+  `Timeline` states the years and carries the columns, their tables and years, so there
+  is no Years row, no tables list and no table of columns under it; value sets have
+  their own panel, so the facts name only the classification. Where there is no curated
+  description, the provider's wording is the Description: once when every period agrees,
+  otherwise each wording under its years. It sits under the facts, above the `Timeline`.
+  Timeline and facts read the one per-period list (`segments`): on a steward deployment
+  its rows are the files and columns the steward has, over the years it has them. A
+  table page leaves out a Row keys, Populations or Releases panel with nothing to list,
+  and Timeless or Implicit when "No". Placement caveats are steward working notes, not
+  shown until the steward curates them for readers. A register page has no tables table:
+  its tables are FilterChips over the variable list, each with its period, a lens with
+  OR within the selection, offered only when two or more tables deliver variables (the
+  archived variant chips, maintainer 2026-11-03). A Tables definition row links every
+  table's page by name. A register page has no "Unplaced releases" panel (maintainer
+  2026-11-04). In steward mode a supplemental-only variable is selectable for a project
+  like a reference variable: `order` and `validate` read the composed steward view
+  (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -488,29 +536,28 @@ Time is the axis every relation is drawn on.
   while the window's years and its band stay where they are (maintainer ruling
   2026-10-23).
 
-- The **add window** is a variable page's band: the years the columns ticked there are
-  added for (#1838). On a variable page the `Timeline`'s band is a selection, two thumbs
-  on the coverage row bounded by the variable's availability. The thumbs move live while
-  dragged (the band and the columns' in/out follow them) and the window is applied when
-  they come to rest (on release, or on each key press); there are no year fields and no
-  Apply (maintainer ruling 2026-10-22). Where the add window differs from the study
-  window inside the variable's availability it is a second encoding over the study
-  window's: the stronger `accent-band` between the thumbs, with no bounds of its own,
-  running through every lane; the study window's shade and bounds stay drawn, so a
-  narrower add window shows the study window is larger, and an add window that reaches
-  past the study window extends the stronger band beyond its bounds. The legend's "Study
-  window" key never changes; an "Add window" key appears only while the add window
-  differs. A "Clear period" ghost action in the header drops the period, and shows only
-  while it differs; thumbs that come to rest on the study window (inside the
-  availability) drop the period rather than write one equal to it. Only the drawn
-  windows' years without availability are `info-bg` (below); the add window's fill never
-  means a narrowing. While an add window is drawn the axis years are its bounds in
-  `accent-ink`; the study window's bounds keep their rules, unlabelled. An add widens
-  its source's period to the union and never narrows it, so the add window raises no
-  warning; a column already in the project whose source years differ from the study
-  window says so in its tooltip and accessible name, not in a line under the graph
-  (#1833); one outside the window is still named there at `err`. A register or group
-  pane draws the `Timeline` read-only.
+- The **add window** is a variable page's band, named "Years to add" on screen
+  (maintainer 2026-11-04): the years the columns ticked there are added for (#1838). On
+  a variable page the `Timeline`'s band is a selection, two thumbs on the coverage row
+  bounded by the variable's availability. The thumbs move live while dragged (the band
+  and the columns' in/out follow them) and the window is applied when they come to rest
+  (on release, or on each key press); there are no year fields and no Apply (maintainer
+  ruling 2026-10-22). Where the add window differs from the study window inside the
+  variable's availability it is a second encoding over the study window's: the stronger
+  `accent-band` between the thumbs, with no bounds of its own, running through every
+  lane; the study window's shade and bounds stay drawn, so a narrower add window shows
+  the study window is larger, and an add window that reaches past the study window
+  extends the stronger band beyond its bounds. There is no legend. A "Clear period"
+  ghost action above the drawing drops the period, and shows only while it differs;
+  thumbs that come to rest on the study window (inside the availability) drop the period
+  rather than write one equal to it. Only the drawn windows' years without availability
+  are `info-bg` (below); the add window's fill never means a narrowing. While an add
+  window is drawn the axis years are its bounds in `accent-ink`; the study window's
+  bounds keep their rules, unlabelled. An add widens its source's period to the union
+  and never narrows it, so the add window raises no warning; a column already in the
+  project whose source years differ from the study window says so in its tooltip and
+  accessible name, not in a line under the graph (#1833); one outside the window is
+  still named there at `err`. A register or group pane draws the `Timeline` read-only.
 
 - A **source period** is set on `/project`, on the source's card, where the source is
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
@@ -566,20 +613,36 @@ Time is the axis every relation is drawn on.
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
   `Timeline`, and a page with several sources draws them on one axis.
 
-- A **`Timeline`** is drawn on the page's axis, under a `label` header, "Coverage", that
-  states the covered years (years only: no edition count); where the coverage row
-  carries its own "Coverage" caption (a variable or group page) the header's label is
-  for a screen reader only. Coverage is an ink bar with `viz-edition` ticks per
-  delivered year, empty where a year has no delivery, and a `label` legend of the marks
-  it shows. On a variable page it is one drawing with the columns (#1833, maintainer
-  ruling 2026-10-23): it is drawn as a `LaneGraph` headed by a coverage row (axis, then
-  coverage with the period thumbs, then lanes), so the band runs through every lane. The
-  variable's columns are the first lane, labelled spans in the `ColumnChip` shape with a
-  coding change as a `warn` mark; the variables a succession reaches are further lanes
-  in time order, with their arrows. A line under the drawing says plainly that clicking
-  a column ticks it, and there is no second graph on the page. Succession reaches one
-  hop of read-only lanes, with arrows from predecessor to successor and each neighbour's
-  name linking to its variable page.
+- A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
+  the name column (dropped when the names stack, where the axis heads the row), with no
+  header, no "Variable" column header and no legend (maintainer 2026-11-04); a screen
+  reader hears the covered years and the years to add. Coverage is one ink box per
+  delivered year, a `surface` hairline between boxes, empty where a year has no
+  delivery. On a variable page it is one drawing with the columns (#1833, maintainer
+  ruling 2026-10-23): it is drawn as a `LaneGraph` headed by the coverage row (axis,
+  then coverage with the period thumbs, then lanes), so the band runs through every
+  lane. The variable's columns are its lanes, one per table and titled by the table's
+  name, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark.
+  One span per column name on a table: a steward's yearly files of one table are the
+  same column delivered in several files, one box over their years with a gap where a
+  year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
+  sits inside the widest delivered part when it fits there. After it, in muted mono,
+  come the files the steward holds it in on a steward deployment, yearly files as year
+  runs after their stem (`UtdAdr1 RTB_SaBo_Adress_2015–2020`, `RTB_2015–2017, 2019`),
+  others as a list: cut short with an ellipsis where the span is narrow, and dropped
+  where only a few characters would show. A span too narrow for the column name is a
+  plain bar with the name beside it: to the right, to the left at the axis end, else in
+  a gap between its deliveries, and only where no room is free over the bars at the
+  track's end, never cut. Hovering or focusing a span shows its column, table and years
+  at once in a RAC `Tooltip` with no delay. The variables a succession reaches are
+  further lanes in time order, with their arrows. A line under the drawing says "Click a
+  column to add it to your project."; with no project open it says "Create a project to
+  add columns." beside a "Create a project" button, the top bar's action, since the top
+  bar scrolls away below the breakpoint. There is no second graph on the page. While it
+  loads the region is a `Skeleton`; a failed load is an error `StatusRow` in the region
+  with Retry; a variable with no years says "No years recorded for this variable." in
+  place of the lanes. Succession reaches one hop of read-only lanes, with arrows from
+  predecessor to successor and each neighbour's name linking to its variable page.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one read-only row of a
@@ -602,11 +665,11 @@ Time is the axis every relation is drawn on.
   highlights its edges. On `/project` a column's findings sit across its lane, under its
   spans. It shares the page's axis with the `Timeline`. It draws the study window's band
   and, over it, an add window that differs, as on the variable page, with the axis years
-  on the add window's bounds when one is drawn. Its legend keys only the marks drawn:
-  the plain chip is "Click to select" and the filled one "In project"; a chip outside
-  the window needs no key. Its add bar shows only while a change is staged. On a
-  variable page the `LaneGraph` is the `Timeline` (above). Don't draw free-form node
-  graphs; the time axis is the information.
+  on the add window's bounds when one is drawn. It has no legend: a span's tooltip names
+  it, its accessible name carries its state, and each lane states its relations in words
+  to a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
+  staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
+  free-form node graphs; the time axis is the information.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
@@ -658,19 +721,19 @@ Motion explains where things come from; state changes are near-instant.
   `--duration-quick`, and the skeleton shimmer stops.
 - The transitions are named once in `src/lib/ui/motion.css` (`motion-rise-in`,
   `motion-dialog-in`, `motion-fade-in`, `motion-slide-in`, `motion-disclose`,
-  `motion-swap`, `motion-quick`, each with its `-out`); a component applies a class
-  rather than writing its own keyframes, and inherits the reduced-motion collapse.
+  `motion-quick`, each with its `-out`); a component applies a class rather than writing
+  its own keyframes, and inherits the reduced-motion collapse.
 
 ## Components
 
 Behavior comes from React Aria Components (RAC, the sanctioned headless primitives
 dependency); visuals come from each component's CSS Module reading semantic roles. The
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
-`ColumnList`, `ColumnChip`, `TypeTag`, `FilterChip`, `VariableRow`, `Timeline`,
-`LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current
-`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`, …) are
-the stepping stones: they keep reading the same roles until each is replaced, and must
-not grow new visual language meanwhile.
+`ColumnList`, `ColumnChip`, `TypeTag`, `TypePill`, `FilterChip`, `VariableRow`,
+`Timeline`, `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`.
+The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `KeyValue`,
+…) are the stepping stones: they keep reading the same roles until each is replaced, and
+must not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
@@ -705,7 +768,8 @@ not grow new visual language meanwhile.
   Clear keep one line. With no project open it is the same box, empty and untinted with
   a `border` leading bar, holding a `default` "Create a project" Button, which starts a
   project and opens it, and nothing in the catalog is tinted.
-- **Findings** are `StatusRow`s in their level's tone, set under what they concern: a
+- **Findings** (titled "Notes on this data" wherever they are listed, maintainer
+  2026-11-04) are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
   `Tooltip` (`mono`, press to copy); no code chip on the page. The summary panel under
@@ -726,6 +790,12 @@ not grow new visual language meanwhile.
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
   signal). The same shape as a lane span, so the two read as one object.
+- **TypePill:** a column's type: a 12 px glyph in `text-muted` and the word in a
+  `border` hairline `sm` box on `surface`, 0.75 rem, line-height 1.4, padding 0 6 px,
+  with its years in micro mono `text-muted` only where the type changes over time. The
+  words are the binding types: Identifier, Categorical, Numeric, Date, Date and time,
+  Other (uncoded text is Other; maintainer 2026-11-04). No hue: the type is a fact, not
+  a node kind, so it never borrows a `TypeTag` colour.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
   for a register, one filled column of it for a variable). A group page's kind mark has
@@ -767,11 +837,10 @@ not grow new visual language meanwhile.
   `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
   Button that names the next action ("Browse registers"). The title states what is
   empty; the next step is the description and the button, never packed into the title.
-  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
-  crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
-  respects reduced motion. A loading region carries no "Loading…" line beside it. A
-  region that would otherwise show only its legend (a source card's timelines) shows one
-  info `StatusRow`, "Loading coverage…", in place of the legend and graph.
+  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it in place.
+  It exposes `aria-busy="true"`, and respects reduced motion. A loading region carries
+  no "Loading…" line beside it. A source card's timeline region shows one info
+  `StatusRow`, "Loading coverage…", in place of the graph while it loads.
 
 ## Do's and Don'ts
 

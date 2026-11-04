@@ -17,7 +17,9 @@
 #                          a server.
 #   dev.sh flows <out-dir> [scenario...]
 #                          ONE-SHOT — start, run the Playwright driver (driver.mjs)
-#                          (the shell/search case at four viewports), tear down,
+#                          (the flow cases at four viewports; the env var
+#                          REG_WEBAPP_FLOW_VIEWPORTS, e.g. mobile,desktop, narrows
+#                          them), tear down,
 #                          exit with the driver's status. The PNGs land in
 #                          <out-dir>. Named scenarios run only those cases;
 #                          no names runs cases matching the selected fixture.
@@ -42,7 +44,9 @@
 #                          from conformance/cases/fixtures/webapp-dev, looked up in the
 #                          shared fixture cache (conformance/fixture_cache.py, built on
 #                          a miss) and exported as REG_META_DB. Without the flag,
-#                          REG_META_DB (a directory holding reg_meta.db) is required.
+#                          REG_META_DB (a directory holding reg_meta.db) is required;
+#                          REG_META_CATALOG=<name> also serves its holdings partner
+#                          reg_meta_<name>.db there (a steward site, e.g. swecov).
 #   --paired-fixture       build the synthetic holdings pair into a per-session
 #                          temp directory (conformance/paired_fixture.py), export
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
@@ -304,7 +308,7 @@ trap 'exit 143' TERM
 # COPIED into a per-session temp dir after the trap: the cache prunes a generation
 # idle for 6 hours, and serving requests does not mark it used, so a long session
 # served straight from the cache would lose its catalog mid-run.
-catalog=""
+catalog="${REG_META_CATALOG:-}"
 if [ -n "$paired_fixture" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
 	catalog=$(.venv/bin/python conformance/paired_fixture.py "$fixture_db_dir") || {
@@ -321,6 +325,7 @@ elif [ -n "$fixture_db" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
 	cp "$fixture_catalog" "$fixture_db_dir/reg_meta.db" || exit 1
 	export REG_META_DB="$fixture_db_dir"
+	catalog="" # the fixture has no holdings partner; ignore REG_META_CATALOG
 	export REG_WEBAPP_FIXTURE=webapp-dev
 fi
 

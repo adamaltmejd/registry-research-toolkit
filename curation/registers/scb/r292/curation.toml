@@ -28,3 +28,9 @@ kind = "set"
 subject = "var:belopp"
 fields = { "tags" = ["public-finance"] }
 evidence = "The definition consistently identifies county-council operating expenditure (r2, r3, r4), supporting public-finance. The register's finance theme (r5, r1) does not override this explicit meaning.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:96716\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:96720\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:10891\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+[[statement]]
+kind = "set"
+subject = "var:belopp"
+fields = { "description" = "Belopp i tusental kronor för en post i balans- eller resultaträkningen (Kontopost), per rapporterande institut och tidpunkt." }
+evidence = "Tabellens kolumner Kontopost, Institut och Tid i r11675 och r11676; enhet 1000-tal kronor (KSEK). Källans etikett och definition (\"Kostnad för driften\", landstingets utlägg) stämmer inte med tabellens övriga kolumner.\n0.74.0 catalog, key v23860, releases r11675, r11676; reg_meta.db:occurrence:96956,96960"

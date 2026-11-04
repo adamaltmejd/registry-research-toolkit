@@ -1,7 +1,6 @@
 //! Curation statements: typed content only, without matching, precedence or locks.
 
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
 
 use crate::address::{Address, PeriodSet};
 
@@ -253,11 +252,11 @@ impl Statement {
     /// Local premise locks still use [`Self::identity`] within their register file.
     #[must_use]
     pub fn scoped_identity(&self, provider: &str, register: &str) -> String {
-        crate::hex(&Sha256::digest(crate::canonical_line(&(
+        reg_core::sha256_hex(crate::canonical_line(&(
             provider,
             register,
             self.identity(),
-        ))))
+        )))
     }
 
     /// SHA-256 of normalized typed content, independent of TOML order and layout.
@@ -285,7 +284,7 @@ impl Statement {
             }
             Self::Ack { .. } => {}
         }
-        crate::hex(&Sha256::digest(crate::canonical_line(&normalized)))
+        reg_core::sha256_hex(crate::canonical_line(&normalized))
     }
 }
 

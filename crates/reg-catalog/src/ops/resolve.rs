@@ -8,14 +8,14 @@ use utoipa::ToSchema;
 
 use super::refs;
 use super::{Cache, Operation, Param, Params, Server, Type, component};
-use crate::{Code, Error};
+use crate::Error;
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "resolve",
     paths: &["/api/resolve"],
     tool: Some("resolve"),
-    description: "Match delivered column names (at most 200) to variables, optionally within \
-                  one register. A name that matches nothing is reported as unmatched.",
+    description: "Find the variables behind column names (up to 200), optionally in one \
+        register. Names that match nothing are reported as unmatched.",
     params: &[
         Param::required("columns", Type::Strings),
         Param::optional("register", Type::Ref),
@@ -31,7 +31,7 @@ pub struct Resolved {
     columns: Vec<ResolvedColumn>,
 }
 
-/// `shape.ResolvedColumn`: a requested column and the variables it names.
+/// A requested column and the variables it names.
 #[derive(Serialize, ToSchema)]
 pub struct ResolvedColumn {
     /// As asked.
@@ -61,10 +61,9 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
             if entity.kind == "register" {
                 Ok(entity.pid)
             } else {
-                Err(Error::new(
-                    Code::InvalidRef,
+                Err(Error::invalid_ref(
+                    value,
                     format!("{value:?} is a {}, not a register.", entity.kind),
-                    vec![(*value).into()],
                 ))
             }
         })
@@ -116,6 +115,8 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
                     .collect::<rusqlite::Result<Vec<_>>>()?,
             );
         }
+        // Steward mode: a variable the steward does not hold is not served.
+        matches.retain(|m| server.catalog.serves("variable", &m.fqid));
         matches.sort_by(|a, b| a.fqid.cmp(&b.fqid));
         matches.dedup_by(|a, b| a.fqid == b.fqid);
         columns.push(ResolvedColumn {

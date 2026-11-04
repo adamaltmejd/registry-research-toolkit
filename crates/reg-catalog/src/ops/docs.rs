@@ -12,16 +12,15 @@ use super::{
     Cache, Components, Download, Operation, Param, Params, Raw, Server, Type, component, cursor,
     fts, hash, limit,
 };
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "docs_search",
         paths: &["/api/docs/search"],
         tool: Some("docs"),
-        description: "Search the documents the catalog holds, by the words of their sections; \
-                      without `q`, list them by title. `register` narrows to the documents \
-                      linked to a register, its tables or its variables.",
+        description: "Search the catalog's documents; without `q`, list them by title. \
+            `register` keeps that register's documents.",
         params: &[
             Param::optional("q", Type::String),
             Param::optional("register", Type::Ref),
@@ -36,8 +35,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "docs_get",
         paths: &["/api/docs/doc/{doc}"],
         tool: Some("docs"),
-        description: "A document by its content hash: its metadata, the entities it is about, \
-                      a 500-character excerpt and, for a parsed document, its full text.",
+        description: "A document by hash: what it covers, an excerpt and, when available, the \
+            full text.",
         params: &[Param::required("doc", Type::Hash)],
         cache: Cache::Day,
         run: get,
@@ -47,9 +46,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "docs_related",
         paths: &["/api/docs/related/{ref}"],
         tool: Some("docs"),
-        description: "The documents linked to a register, table, variable or classification \
-                      family, one row per link; a register also takes the documents of its \
-                      tables and variables.",
+        description: "The documents about a register (including its tables and variables), \
+            table, variable or classification.",
         params: &[Param::required("ref", Type::Ref)],
         cache: Cache::Day,
         run: related,
@@ -71,7 +69,6 @@ const EXCERPT_CHARS: usize = 500;
 /// `docs_search` is ranked, so it is offset-paged; the deepest page it reaches.
 const SEARCH_DEPTH: usize = 1000;
 
-/// `shape.DocHit`.
 #[derive(Serialize, ToSchema)]
 pub struct DocHit {
     doc: String,
@@ -88,7 +85,6 @@ pub struct DocHit {
     snippet: Option<String>,
 }
 
-/// `docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.
 #[derive(Serialize, ToSchema)]
 pub struct DocPage {
     items: Vec<DocHit>,
@@ -100,7 +96,7 @@ pub struct DocPage {
     register_ingested: Option<bool>,
 }
 
-/// One entity a document is about (`shape.DocDetail.subjects`).
+/// One thing a document is about.
 #[derive(Serialize, ToSchema)]
 pub struct DocSubject {
     kind: String,
@@ -108,7 +104,6 @@ pub struct DocSubject {
     page: i64,
 }
 
-/// `shape.DocDetail`.
 #[derive(Serialize, ToSchema)]
 pub struct DocDetail {
     doc: String,
@@ -128,7 +123,6 @@ pub struct DocDetail {
     body: Option<String>,
 }
 
-/// `shape.RelatedDocument`.
 #[derive(Serialize, ToSchema)]
 pub struct RelatedDocument {
     doc: String,
@@ -184,13 +178,12 @@ fn links_of(kind: &str) -> &'static str {
 }
 
 fn invalid_ref(value: &str, entity: &Entity) -> Error {
-    Error::new(
-        Code::InvalidRef,
+    Error::invalid_ref(
+        value,
         format!(
             "{value:?} is a {}, which this operation does not take.",
             entity.kind
         ),
-        vec![value.into()],
     )
 }
 
@@ -230,15 +223,15 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         take + 1,
         offset,
     )?;
-    let more = items.len() > take;
-    items.truncate(take);
-    let next_cursor = (more && offset + take < SEARCH_DEPTH).then(|| {
-        cursor::encode(
-            server.catalog.generation(),
-            &context,
-            offset + take,
-            items.last().map_or("", |hit| hit.doc.as_str()),
-        )
+    let next_cursor = cursor::next(&mut items, take, |last| {
+        (offset + take < SEARCH_DEPTH).then(|| {
+            cursor::encode(
+                server.catalog.generation(),
+                &context,
+                offset + take,
+                &last.doc,
+            )
+        })
     });
     let register_ingested = register
         .map(|id| {
@@ -317,13 +310,15 @@ fn hits(
     )?;
     args.push(i64::try_from(rows).expect("a limit fits").into());
     args.push(i64::try_from(offset).expect("an offset fits").into());
-    let items = conn
-        .prepare(&format!(
+    let items = crate::rows(
+        conn,
+        &format!(
             "SELECT {columns} {from} {filter} {order} LIMIT ?{} OFFSET ?{}",
             args.len() - 1,
             args.len()
-        ))?
-        .query_map(params_from_iter(args.iter()), |row| {
+        ),
+        params_from_iter(args.iter()),
+        |row| {
             Ok(DocHit {
                 doc: row.get(0)?,
                 title: row.get(1)?,
@@ -333,8 +328,8 @@ fn hits(
                 snippet: row.get(5)?,
                 document_title: row.get(6)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     Ok((items, total))
 }
 
@@ -372,9 +367,9 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
         .optional()?
         .ok_or_else(|| not_found(doc))?;
     // A value-set subject is addressed by its hash.
-    let subjects = conn
-        .prepare(
-            "SELECT kind, fqid, page FROM (
+    let subjects = rows(
+        &conn,
+        "SELECT kind, fqid, page FROM (
                SELECT l.subject_kind AS kind, l.page AS page,
                       CASE l.subject_kind
                         WHEN 'register' THEN (SELECT pid FROM register WHERE id = l.subject_id)
@@ -385,21 +380,24 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
                       END AS fqid
                FROM doc_link l WHERE l.doc_id = ?)
              ORDER BY kind, fqid, page",
-        )?
-        .query_map([id], |row| {
+        [id],
+        |row| {
             Ok(DocSubject {
                 kind: row.get(0)?,
                 fqid: row.get(1)?,
                 page: row.get(2)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     let body = (kind == "parsed")
         .then(|| {
-            conn.prepare("SELECT body FROM doc_section WHERE doc_id = ? ORDER BY ord")?
-                .query_map([id], |row| row.get::<_, String>(0))?
-                .collect::<rusqlite::Result<Vec<_>>>()
-                .map(|sections| sections.join("\n\n"))
+            rows(
+                &conn,
+                "SELECT body FROM doc_section WHERE doc_id = ? ORDER BY ord",
+                [id],
+                |row| row.get::<_, String>(0),
+            )
+            .map(|sections| sections.join("\n\n"))
         })
         .transpose()?;
     let excerpt = body.as_deref().map_or_else(String::new, |body| {
@@ -442,8 +440,9 @@ pub(super) fn related_documents(
 ) -> Result<Vec<RelatedDocument>, Error> {
     // DISTINCT: a register's own link and its table's link to one page of one
     // document are one row to the reader.
-    Ok(conn
-        .prepare(&format!(
+    Ok(rows(
+        conn,
+        &format!(
             "SELECT DISTINCT d.hash, t.body, d.kind, d.licence, d.url, d.bytes, l.page, dt.body
              FROM doc_link l
                JOIN doc d ON d.id = l.doc_id
@@ -452,8 +451,9 @@ pub(super) fn related_documents(
              WHERE {}
              ORDER BY t.body, d.hash, l.page",
             links_of(&entity.kind)
-        ))?
-        .query_map([entity.id], |row| {
+        ),
+        [entity.id],
+        |row| {
             Ok(RelatedDocument {
                 doc: row.get(0)?,
                 title: row.get(1)?,
@@ -464,8 +464,8 @@ pub(super) fn related_documents(
                 page: row.get(6)?,
                 document_title: row.get(7)?,
             })
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?)
+        },
+    )?)
 }
 
 /// `docs_get`'s file: the stored bytes of a `pdf` document, shown inline.

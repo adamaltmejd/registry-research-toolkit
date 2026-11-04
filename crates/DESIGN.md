@@ -123,6 +123,9 @@ HTTP API             MCP over stdio (local catalog)
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
+- `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
+  data side. It reads no catalog. Being built (#1803); its design is
+  [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of
@@ -253,7 +256,7 @@ Accepting one requires reviewed curation and a premise lock.
 - A column the source cannot place on one variable is ambiguous. Orders over that window
   are blocked; nothing is guessed.
 - Variables never span registers. Cross-register relations are `continues` and
-  `derived-from` links, identifier kinds, and tags.
+  `derived-from` links and tags.
 
 **Three identifiers.**
 
@@ -825,7 +828,13 @@ overlapping curated overrides are refused at both locations.
   variable id is listed as moved when both occurrence target sets are non-empty and no
   old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
   periods. Explicit table ids are compared by table name; implicit tables share their
-  register's id and are excluded.
+  register's id and are excluded. `--holdings` compares two holdings catalogs of the
+  same holdings schema instead (release step 8g): census columns by (physical table,
+  column), with placed, held and unplaced counts, changed placements grouped by old and
+  new `table_pid` and classed newly placed, folded or renamed, variable or interval
+  changed, or unmapped; reader-visible text by kind, keyed by pid and source key and
+  listing keys, never bodies; and finding and holdings-notice deltas by code, compared
+  by (code, subject, period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -915,12 +924,14 @@ overlapping curated overrides are refused at both locations.
   register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
   implicit table has the register's pid. A 2-part table value naming a register with
   named tables is `table_is_register`, listing the tables.
-- **Search keeps diacritics.** The new catalog's `search` index holds the text as
-  written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
-  `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
-  for it; the reader folds queries with `reg_core::normalized_search_query` (case and
-  whitespace only). The `fold_search` paragraph under "Search" below describes the old
-  indexes.
+- **Search ignores diacritics.** The new catalog's `search` indexes fold diacritics
+  under `unicode61 remove_diacritics 2` (schema §3.2), so `lan` finds `län` and `lon`
+  finds `Lön` (non-Swedish keyboards). The maintainer ruling in #2163 reversed plan
+  decision C-9, which kept them. `reg_core::fold_search` is not used for it. The reader
+  passes `q` to FTS unfolded, so the index tokenizer folds query and text alike;
+  pre-folding with `reg_core::normalized_search_query` (full case folding, `ß` to `ss`)
+  would miss an indexed `ß`. The `fold_search` paragraph under "Search" below describes
+  the old indexes.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
@@ -974,19 +985,23 @@ Rules:
 
 **Curated by default, evidence on request (maintainer, 2026-11-02).** A variable's
 `show` summary returns its name, the one optional curated `description`, register,
-coverage hull (`period`), tables, sets (groups) and tags. Detailed coverage spans and
-gaps remain the `coverage` facet. The description combines meaning, measurement and
-derivation; `texts`, source spellings and a promoted top-level `definition` are not
-summary fields.
+coverage hull (`period`), and its sets (groups) and tags when it has any. Detailed
+coverage spans and gaps remain the `coverage` facet; its tables and column names are
+`segments` rows. The description combines meaning, measurement and derivation; `texts`,
+source spellings and a promoted top-level `definition` are not summary fields.
 
-When no curated description exists, `source_definition` supplies the most recent used
-occurrence's available source definition and operational definition as one `text`, with
-its period and `origin: "provider"`. Equal or contained wording is shown once; otherwise
-the two original texts are joined by a newline. Comparison collapses whitespace, folds
-case and ignores trailing Unicode punctuation; displayed wording stays original. The
-fields are never assembled from different occurrences or years. A completely silent
-provider has no invented fallback. This is explicitly provider wording, not a curated
-description.
+**One per-period list (maintainer, 2026-11-04).** `segments` is the variable's one list
+of table, column name, period and provider wording, which the SPA timeline and MCP both
+read; no other operation repeats it. A segment is cut where the provider's wording
+changes, so each row carries one `wording`: the latest used occurrence's source
+definition and operational definition in that table over that period, never a curated
+correction. Equal or contained wording is shown once; otherwise the two original texts
+are joined by a newline. Comparison collapses whitespace, folds case and ignores
+trailing Unicode punctuation; displayed wording stays original. A silent provider has no
+`wording`. A fact the catalog does not state is absent, never `null`: no type, no value
+set, `coded` unknown, and `state` clear (the default) are all left out, which keeps
+agent context small. Storage type stays in the catalog (orders use it) and is shown only
+when stated.
 
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
@@ -1128,11 +1143,11 @@ whole-project finding) and `source_outside_window` (a dated source period wholly
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`panel_row_keys_differ`, `period_clipped`, `form_change`, `table_succession_undated`,
-`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
-source, binding or panel and whose `source`, `variable`, `table` and `period` say what
-it is about (`null` for a whole-project finding). The conditions are the order check's
-to state in its own tests; the rules that shape them:
+`period_clipped`, `form_change`, `table_succession_undated`, `identifier` and
+`coverage_end_unstated`. Each is an `Issue` whose `path` points at the source, binding
+or panel and whose `source`, `variable`, `table` and `period` say what it is about
+(`null` for a whole-project finding). The conditions are the order check's to state in
+its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -1147,10 +1162,8 @@ to state in its own tests; the rules that shape them:
   pin preserves `ambiguous_window` refusals, including ambiguous segments that state no
   version; it cannot turn them into coverage clips.
 - Variables are register-scoped, so members of different registers never share a row-key
-  variable. `panel_row_keys_differ` compares the row-key segments' identifier kinds
-  (`segment.id_kind_id`, the full kind, pseudonymised form included) and warns only when
-  every member's kind is known and they differ. Which keys join is the researcher's
-  call.
+  variable. Which keys join is the researcher's call; the catalog stores no identifier
+  kind, so the order check does not compare panel members' keys.
 - A request partly outside availability is a clip (`period_clipped`), never silent and
   never an error. Only availability empty across the whole request blocks.
 - A table succession with no `at` is not followed: the check returns
@@ -1285,15 +1298,28 @@ remains a domain requirement, not a claim that this path ships in E.
 
 The published catalog and a holdings database remain separate (schema-v3, prefatory
 maintainer rulings; clean-room design §0 and §13 D7). The reader opens their pinned pair
-read-only. Reference browsing uses the catalog; held browsing joins accepted mappings by
-public id and applies scope before ranking, counts and pagination. Cursors bind scope
-and both generations. Neither an alias, a successor nor equivalence grants possession.
-Base-only `order`/`validate` use the published reference catalog (§9). In steward mode,
-those same functions read a composed semantic view including the steward provider
-definitions and slot variables (maintainer 2026-10-29): the answer may include
-steward-specific slot variables and pre-2018 delivery codings absent from the base. That
-is an explicit mode divergence, not a claim of identical base-only answers. The
-implementation of the logical check is shared; physical mapping then adds possession
+read-only. Reference browsing uses the catalog alone.
+
+**A steward deployment serves its holdings only (maintainer, 2026-11-04):** "everything
+shown is held, everything held is shown." There is no scope parameter. A register,
+table, variable or provider with no accepted placement is `not_found` by ref
+(`Catalog::connect_for_ref`, `serves`) and is left out of every list: `show`'s children
+and set members (a set's own page included), `schema` and `diff` lines, search hits and
+facets (filtered by public id and the requested interval before ranking, counts and
+pagination), and graph neighbours. Classifications, value sets, codes and documents are
+shared and always served. Every `period` and a table's `spans` are the years held, and
+`coverage` reports them per table; a table's releases are the provider's and are left
+out. `segments` rows are the accepted placements: the held column name, the `file` it is
+held in and the years held, with the form of the catalog segments they overlap in either
+origin (preferring the same column name among those); held years no segment covers state
+only the role. The reference periods, gaps and releases are not the steward's and are
+not served. Cursors bind both generations. Neither an alias, a successor nor equivalence
+grants possession. Base-only `order`/`validate` use the published reference catalog
+(§9). In steward mode, those same functions read a composed semantic view including the
+steward provider definitions and slot variables (maintainer 2026-10-29): the answer may
+include steward-specific slot variables and pre-2018 delivery codings absent from the
+base. That is an explicit mode divergence, not a claim of identical base-only answers.
+The implementation of the logical check is shared; physical mapping then adds possession
 restrictions. Its provenance names both generations and the selected semantic mode.
 
 An open provider end stays open and keeps its `coverage_end_unstated` notice. A finite
@@ -1674,11 +1700,10 @@ origins, including reverse graph queries. Only derivation crosses this boundary;
 identity/succession relations are not imported as shortcuts. Standalone catalog builds
 do not admit `--base` or emit a catalog with unresolved external endpoints.
 
-In paired metadata search, `scope=steward` restricts register, table and variable hits
-to accepted placements and their requested intervals before counts and ranking. A code
-or document hit is not itself a possession claim; linked values and documents remain
-available through semantic metadata. Supplemental results retain their own group, count
-and cursor. Reference-only response fields remain unchanged.
+Paired metadata search filters register, table and variable hits to accepted placements
+and their requested intervals before counts and ranking (above). A code or document hit
+is not itself a possession claim; linked values and documents remain available through
+semantic metadata. Supplemental results retain their own group, count and cursor.
 
 Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
 supplemental semantic part of the holdings file. No existing global register is
@@ -1712,11 +1737,11 @@ pinned input. Holdings schema 2 adds `holding_reference_occurrence`; older holdi
 recompiled.
 
 Reference `coverage` spans retain their original meaning. In selected steward mode, the
-attested periods reach readers only as accepted physical `held` intervals; variable
-holdings include these steward-attested memberships even when the global member list
-omits them. The occurrences' own text and locators are not served: a release carries
-catalog items, never steward working files or census row references (maintainer
-2026-11-03), and the per-occurrence listing repeated what `held` already shows.
+attested periods reach readers only as held years (`coverage`) and placement rows
+(`segments`); a variable's holdings include these steward-attested memberships even when
+the global member list omits them. The occurrences' own text and locators are not
+served: a release carries catalog items, never steward working files or census row
+references (maintainer 2026-11-03).
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -1767,9 +1792,8 @@ table through its authored default or explicit mapping routes. Those mappings mu
 each offered span; a globally existing variable or a mapping on an unrelated route
 cannot satisfy the declaration. There is no identifier-based or missing-key fallback.
 Steward orders use the same declared entity/time components and their received column
-names. Panel identifier-kind comparisons use the declared entity subset; time components
-do not define identifier kinds. Linking identifiers remain ordinary columns and enter
-the order only when explicitly selected.
+names. Linking identifiers remain ordinary columns and enter the order only when
+explicitly selected.
 
 A time component can instead be supplied by a declared physical period column, or by the
 table's period (`year`, `month`, `day`, or the attested delivery `period`). A constant
@@ -2133,15 +2157,15 @@ automatically rewrite a segment, clear ambiguity or silence F1. This follows D's
 2026-10-28 ruling in REBUILD.md: curate only evidenced affected occurrences; unresolved
 integer/decimal switches remain visible. The input basis is settled: N1 infers from the
 type string and value pattern and emits review on disagreement (clean-room design §4.5).
-Value patterns mean documented code literals/pattern metadata, never MONA row samples.
-Column roles and identifier kinds remain separate attributes (§2.2); a row-key role is
-not a dtype disagreement. The implementer uses a conservative closed pattern table:
-complete documented code literals and normalized type strings only, no sampling
-threshold or name-only inference. An all-integer code domain with no significant leading
-zero may propose integer; alphanumeric or zero-padded codes preserve text, and
-documented non-integral numeric literals may propose decimal. Unsupported/ambiguous
-domains propose nothing. This is review output, not permission to reinterpret an amount
-from an incomplete code list.
+Value patterns mean documented code literals/pattern metadata, never MONA row samples. A
+column's role is a separate attribute (§2.2); a row-key role is not a dtype
+disagreement. The implementer uses a conservative closed pattern table: complete
+documented code literals and normalized type strings only, no sampling threshold or
+name-only inference. An all-integer code domain with no significant leading zero may
+propose integer; alphanumeric or zero-padded codes preserve text, and documented
+non-integral numeric literals may propose decimal. Unsupported/ambiguous domains propose
+nothing. This is review output, not permission to reinterpret an amount from an
+incomplete code list.
 
 The implemented table reads a used occurrence's documented codes less its
 statement-declared sentinels and emits `N1:logical-type` (review, on the occurrence)
@@ -2188,8 +2212,8 @@ E must expose enough metadata to support that skill. Existing operations already
 
 - `schema`: table/variable/spelling windows with adopted type, length, value-set
   reference, role and state (`reg-catalog/src/ops/schema.rs`);
-- `segments`: adopted type/length/format, value-set/classification references,
-  identifier kinds and optional provenance (`ops/segments.rs`);
+- `segments`: adopted type/length/format, value-set/classification references, role,
+  state and optional provenance (`ops/segments.rs`);
 - `values`: paged codes, labels, sentinels and hierarchy by value-set hash or pinned
   classification (`ops/values.rs`);
 - `order` on the coarse `order` MCP tool: logical entries with type/length/value-set and
@@ -2204,18 +2228,18 @@ names, physical headers, slot topology, filters, keys and logical
 source/binding/table/variable/form/window references. Each column must expose its
 adopted logical/output type, length and value-set/classification references, or provide
 those exact references so `schema`/`segments`/`values` can retrieve them. Current
-logical row-key entries have only variable/spelling; fetch key type/identifier kind
-through those semantic operations rather than infer it from the header. Unknown remains
-unknown; N1 proposals become effective output types only after review/adoption. These
-metadata gaps belong to e-holdings/e-order/e-types, not a mock service.
+logical row-key entries have only variable/spelling; fetch key type through those
+semantic operations rather than infer it from the header. Unknown remains unknown; N1
+proposals become effective output types only after review/adoption. These metadata gaps
+belong to e-holdings/e-order/e-types, not a mock service.
 
-The e-types audit (#2071) found them filled: `coverage` returns `held` placements from
-the holdings file; `materialize_order` columns carry exact `refs` (source, binding,
-table, variable, period, spelling) that join the logical order's entries, which carry
-the adopted type, length, value set and classification; row-key types and identifier
-kinds come from `schema`/`segments`; `values` flags sentinels; open N1 reviews are read
-through `findings`. The manifest keeps storage types only, as the runner checks SQL
-storage; it gains no logical type.
+The e-types audit (#2071) found them filled: in steward mode `segments` rows are the
+holdings file's placements (column, file, years held); `materialize_order` columns carry
+exact `refs` (source, binding, table, variable, period, spelling) that join the logical
+order's entries, which carry the adopted type, length, value set and classification;
+row-key types and identifier kinds come from `schema`/`segments`; `values` flags
+sentinels; open N1 reviews are read through `findings`. The manifest keeps storage types
+only, as the runner checks SQL storage; it gains no logical type.
 
 Mocks read no MONA rows or empirical distributions. Use adopted types, lengths, value
 sets and classification pins; refuse unknown/unsupported types needing a guess. Generate
@@ -2399,8 +2423,8 @@ table succession chain when the successor occurs there, honoring its dated table
 routing. Otherwise use the successor's segment tables, requiring exactly one table per
 requested day. This also permits a cross-register successor without inventing a
 cross-register variable or a new source. Those serving tables contribute their own row
-keys and panel identifier kinds. Overlapping candidate tables are `ambiguous_window`,
-never an arbitrary table choice.
+keys. Overlapping candidate tables are `ambiguous_window`, never an arbitrary table
+choice.
 
 When the request extends beyond a predecessor's end, multiple successor rows or an
 undated successor block with `variable_replaced` at error level. A cycle or a hop that
@@ -2423,7 +2447,7 @@ order with the existing structured findings, never returns a partial order.
   | panel `entity_key`, `time_key`            | removed                                                  | Steward keys come from the pinned holdings table's declared entity/time requirements, not all identifier roles. Reference-only orders use catalog `row_key` segments; their time axis is the member table's `time_point` / `time_start` segment, else the source period. |
 
 A panel is a named grouping of sources with a comment. Which keys join across members is
-the researcher's call; the order check warns (`panel_row_keys_differ`).
+the researcher's call; the order check does not compare them.
 
 Structural rules (`reg-core`, the document alone). Removed with their fields:
 `invalid_slug` and `invalid_enum_value` on `steward` and `extract_format`,
@@ -2451,9 +2475,9 @@ Everything else is unchanged: `invalid_root`, `missing_required_field`,
 Catalog rules are the order check's, listed in "The logical order": `fqid_unresolved`
 (also for an unknown table or classification), `retired_ref`,
 `period_default_on_dated_table`, `period_on_timeless_table`, `variable_not_in_table`,
-`table_is_register` and the warning `panel_row_keys_differ`. `steward_mismatch`,
-`fqid_outside_steward_catalog`, the `representation_*` codes, `value_set_missing` and
-`binding_state_drifts_within_period` go; the last becomes the `form_change` notice.
+`table_is_register`. `steward_mismatch`, `fqid_outside_steward_catalog`, the
+`representation_*` codes, `value_set_missing` and `binding_state_drifts_within_period`
+go; the last becomes the `form_change` notice.
 
 ## Search
 
@@ -2461,9 +2485,11 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
 description. Both use `search_item.id` as rowid. The builder indexes raw text under
-`unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
-of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
-A call returns one ranked list.
+`unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
+no fold of its own: `lan` finds `län` (#2163). A third index, `search_exact`, holds each
+row's widest text (its description row's, else its primary row's) under
+`remove_diacritics 0`, only to rank exact matches first. Pins, synonyms and type priors
+are curation (D). A call returns one ranked list.
 
 1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
    term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
@@ -2473,11 +2499,13 @@ A call returns one ranked list.
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
-   match set. Within each index, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
-   ascending. The primary corpus and its scores are unaffected by descriptions. FTS5
-   scores a row by its weighted hit count against its whole token count, so a hit weighs
-   most in an id or spelling and least in a definition or document text: a variable
-   labelled `Vikt` ranks above a longer one whose definition says vikt.
+   match set. Within each, rows that also match `search_exact` (the query as typed,
+   diacritics kept, case folded) come first, so `här` lists `här` before `har` and `har`
+   lists `har` before `här` (#2163). Then `bm25(index, 10.0, 5.0, 1.0)` (name, label,
+   body), ascending. The primary corpus and its scores are unaffected by descriptions.
+   FTS5 scores a row by its weighted hit count against its whole token count, so a hit
+   weighs most in an id or spelling and least in a definition or document text: a
+   variable labelled `Vikt` ranks above a longer one whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
    `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
    unique. Two rows tie on bm25 when the query hits the same weighted count in rows of

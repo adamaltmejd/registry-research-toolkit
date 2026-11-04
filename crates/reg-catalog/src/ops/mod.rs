@@ -83,6 +83,16 @@ impl Server {
     pub fn period(&self, start: i64, end: i64) -> Period {
         Period::new(self.open, start, end)
     }
+
+    /// An entity's hull: in steward mode the years it is held, else `[start, end)`.
+    #[must_use]
+    pub fn hull(&self, kind: &str, pid: &str, start: i64, end: i64) -> Period {
+        match self.catalog.held_spans(kind, pid) {
+            Some([first, .., last]) => self.period(first.0, last.1),
+            Some([only]) => self.period(only.0, only.1),
+            _ => self.period(start, end),
+        }
+    }
 }
 
 pub use reg_core::issue::Period;
@@ -426,7 +436,6 @@ pub fn hash<'a>(params: &Params<'a>, name: &str) -> Result<Option<&'a str>, Erro
     }
 }
 
-/// The response `meta` (`shape.Meta`).
 #[derive(Serialize, ToSchema)]
 pub struct Meta {
     pub contract_version: &'static str,

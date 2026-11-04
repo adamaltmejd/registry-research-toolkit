@@ -1,6 +1,6 @@
 """Release-tier `search` checks over the selected artifact (`--artifact-dir`).
 
-`gate.py release` runs them on the `base` fixture's artifact, where the depth check
+`gate.py rust` runs them on the `base` fixture's artifact, where the depth check
 skips (fewer than 1000 rows); on a real artifact every check runs. Assertions are at
 the HTTP boundary; failure messages carry counts and kinds, never row content.
 """

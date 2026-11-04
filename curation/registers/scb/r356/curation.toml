@@ -731,3 +731,9 @@ kind = "set"
 subject = "var:sunniva-old-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, medium confidence; FUNIVA and SunNiva_Far_Omkodad share the 3-level code list and adjacent periods; 3-digit SUN 2000, 7-level and old 7-level coding are separate concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "var:sv-ej-de"
+fields = { "description" = "Markering för om eleven deltog i alla delprov i det nationella provet i svenska i årskurs 5: 0 = deltagit, 1 = ej deltagit. Etiketten säger 'undervisning', men SCB:s operationella definition avser deltagande i delproven." }
+evidence = "Opdef (Registerinformation.csv:row=981387) 'Om eleven har deltagit i alla delproven i svenska sätts värdet Deltagit, annars Ej deltagit'; identical pattern for En_Ej_De (row=981385) and Ma_Ej_De (row=981386); value set #11246. Medium: the label wording is SCB's."

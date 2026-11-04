@@ -22,14 +22,6 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 
-/** A node's display label — its `name` when present, else its FQID. */
-export function nodeLabel(node: {
-  fqid: string;
-  name?: string | null;
-}): string {
-  return node.name ?? node.fqid;
-}
-
 // ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so
@@ -224,28 +216,6 @@ export function sourceCardHeading(
   coordinate: string,
 ): string {
   return register?.trim() || coordinate;
-}
-
-/** Display the storage `data_type` with its length parenthetical, DROPPING a
- * meaningless length. `data_length` arrives as a string (`str | None` on the
- * wire); many source rows carry `"0"` / `""` as a "no precision" sentinel
- * (rendered verbatim as the artifact "bigint(0)"), and 64 rows carry `"-1"` —
- * SQL Server's varchar(MAX) sentinel. A length is shown only when it parses to
- * a POSITIVE number (e.g. `char(25)`, `Decimaltal(4)`); zero/negative/empty/
- * non-numeric are suppressed. Returns "" when there is no data_type at all (the
- * caller already gates the "Data type" row on a present type). */
-export function formatDataType(
-  dataType: string | null | undefined,
-  dataLength: string | null | undefined,
-): string {
-  const type = (dataType ?? "").trim();
-  if (!type) {
-    return "";
-  }
-  const len = (dataLength ?? "").trim();
-  const n = Number(len);
-  // Show the parenthetical only for a positive numeric length; "0"/"-1"/""/garbage drop.
-  return len !== "" && Number.isFinite(n) && n > 0 ? `${type}(${len})` : type;
 }
 
 /** The DISTINCT delivery columns among `states` that genuinely CO-EXIST — a column
@@ -497,25 +467,6 @@ export function windowRunLabels<
   }
   if (run !== null) out.push(runText(run));
   return out;
-}
-
-/** The "showing N of M" caption when the displayed slice is smaller than the full
- * match count (N = rendered rows, M = total before the server's per-request
- * limit), else null (don't caption a complete group). */
-export function showingOf(shown: number, total: number): string | null {
-  return shown < total ? `showing ${shown} of ${total}` : null;
-}
-
-/** The exact-dates tooltip for a window — the sentinel reads "open-ended"
- * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
-export function windowTitle(
-  validFrom: string | null,
-  validTo: string | null,
-  periodScope?: string,
-): string {
-  if (periodScope === "year_independent") return "Year-independent delivery";
-  if (validFrom === null && validTo === null) return "Delivery dates unknown";
-  return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
 }
 
 /** The calendar years a set of ISO spans delivers: the Timeline's delivered

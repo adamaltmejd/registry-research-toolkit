@@ -22,7 +22,10 @@ from keyed_cache import staged, tree_digest
 
 CASES = Path(__file__).resolve().parent / "cases"
 REPO = CASES.parents[1]
-REG_BUILD = REPO / "target/debug/reg-build"
+# `REG_BUILD_BIN` points the harness at another build of the same binary: artifact
+# conformance (integration.yml) runs `reg-build verify` on a real catalog with the
+# release build.
+REG_BUILD = Path(os.environ.get("REG_BUILD_BIN") or REPO / "target/debug/reg-build")
 
 FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # A generation idle this long is pruned when a new one is created. Every lookup

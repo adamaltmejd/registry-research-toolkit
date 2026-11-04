@@ -1,4 +1,5 @@
-//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two catalogs
+//! `reg-build diff [--holdings] OLD NEW [--json] [-n N]`: what changed between two
+//! catalogs, or with `--holdings` two holdings catalogs (`holdings.rs`)
 //! (`crates/DESIGN.md`, "Release diff").
 //!
 //! Everything is compared by natural key (pid, table name, meta key), never by row id:
@@ -9,12 +10,15 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::process::ExitCode;
 
+use reg_core::issue::iso_day;
 use rusqlite::{Connection, OpenFlags, Row};
 use serde_json::{Value, json};
 
+mod holdings;
+
 type Res<T> = Result<T, String>;
 
-const USAGE: &str = "usage: reg-build diff OLD NEW [--json] [-n N]";
+const USAGE: &str = "usage: reg-build diff [--holdings] OLD NEW [--json] [-n N]";
 /// Meta keys that differ on every release: shown, but never a difference.
 const VOLATILE_META: [&str; 4] = [
     "generation_id",
@@ -30,16 +34,18 @@ struct Args {
     old: String,
     new: String,
     json: bool,
+    holdings: bool,
     limit: usize,
 }
 
 fn parse(args: &[String]) -> Res<Args> {
     let mut paths = Vec::new();
-    let (mut json, mut limit) = (false, 20);
+    let (mut json, mut holdings, mut limit) = (false, false, 20);
     let mut it = args.iter();
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "--json" => json = true,
+            "--holdings" => holdings = true,
             "-n" => {
                 limit = it
                     .next()
@@ -55,6 +61,7 @@ fn parse(args: &[String]) -> Res<Args> {
         old,
         new,
         json,
+        holdings,
         limit,
     })
 }
@@ -367,24 +374,8 @@ fn ids(p: &Pair) -> Res<Section> {
     })
 }
 
-/// The ISO date of a day number (days since 1970-01-01, half-open ends included).
-// simplify: reg-core has `iso_day_number` but no inverse; move this to reg-core's
-// grammar module if a second caller needs it.
-fn iso(day: i64) -> String {
-    let z = day + 719_468;
-    let era = z.div_euclid(146_097);
-    let doe = z.rem_euclid(146_097);
-    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2) / 153;
-    let d = doy - (153 * mp + 2) / 5 + 1;
-    let m = if mp < 10 { mp + 3 } else { mp - 9 };
-    let y = yoe + era * 400 + i64::from(m <= 2);
-    format!("{y:04}-{m:02}-{d:02}")
-}
-
 pub(super) fn span(start: i64, end: i64) -> String {
-    format!("[{}, {})", iso(start), iso(end))
+    format!("[{}, {})", iso_day(start), iso_day(end))
 }
 
 #[derive(PartialEq)]
@@ -402,7 +393,7 @@ impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
                "role": self.role, "unit_type": self.unit_type, "timeless": self.timeless, "cadence": self.cadence,
-               "spans": self.spans.iter().map(|&(s, e)| json!([iso(s), iso(e)])).collect::<Vec<_>>()})
+               "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>()})
     }
 
     fn text(&self) -> String {
@@ -500,7 +491,7 @@ struct Seg {
 
 impl Seg {
     fn json(&self) -> Value {
-        json!({"table": self.table, "start": iso(self.start), "end": iso(self.end),
+        json!({"table": self.table, "start": iso_day(self.start), "end": iso_day(self.end),
                "spelling": self.spelling, "dtype": self.dtype, "valueset": self.valueset,
                "state": self.state, "coded": self.coded, "sensitive": self.sensitive,
                "identifier": self.identifier, "role": self.role})
@@ -572,7 +563,7 @@ struct Run {
 
 impl Run {
     fn json(&self) -> Value {
-        json!({"start": iso(self.start), "end": iso(self.end), "label": self.label,
+        json!({"start": iso_day(self.start), "end": iso_day(self.end), "label": self.label,
                "definition": self.definition, "opdef": self.opdef, "unit": self.unit})
     }
 }
@@ -824,7 +815,7 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
             format!("{}{tail}", shown.join(" "))
         };
         code_items.push(Item::new(
-            json!({"variable": c.pid, "table": c.table, "start": iso(c.start), "end": iso(c.end),
+            json!({"variable": c.pid, "table": c.table, "start": iso_day(c.start), "end": iso_day(c.end),
                    "old_hash": c.old, "new_hash": c.new,
                    "added": added, "removed": removed}),
             format!(
@@ -923,12 +914,8 @@ fn findings(p: &Pair) -> Res<Section> {
     Ok(Section::flat("findings", "findings", items))
 }
 
-/// The report: text or JSON, and whether any counted difference exists.
-fn diff(args: &Args) -> Res<(String, bool)> {
-    let pair = Pair {
-        old: open(&args.old)?,
-        new: open(&args.new)?,
-    };
+/// The catalog sections, after the schema-version check.
+fn catalog(pair: &Pair, args: &Args) -> Res<Vec<Section>> {
     let expected = reg_core::CATALOG_SCHEMA_VERSION.to_string();
     for (conn, path) in [(&pair.old, &args.old), (&pair.new, &args.new)] {
         let version = schema_version(conn, path)?;
@@ -938,18 +925,31 @@ fn diff(args: &Args) -> Res<(String, bool)> {
             ));
         }
     }
-    let (variables, hash_changes) = variables(&pair)?;
-    let sections = [
-        schema(&pair)?,
-        meta(&pair)?,
-        rows(&pair)?,
-        ids(&pair)?,
-        registers(&pair)?,
-        tables(&pair)?,
+    let (variables, hash_changes) = variables(pair)?;
+    Ok(vec![
+        schema(pair)?,
+        meta(pair)?,
+        rows(pair)?,
+        ids(pair)?,
+        registers(pair)?,
+        tables(pair)?,
         variables,
-        valuesets(&pair, &hash_changes)?,
-        findings(&pair)?,
-    ];
+        valuesets(pair, &hash_changes)?,
+        findings(pair)?,
+    ])
+}
+
+/// The report: text or JSON, and whether any counted difference exists.
+fn diff(args: &Args) -> Res<(String, bool)> {
+    let pair = Pair {
+        old: open(&args.old)?,
+        new: open(&args.new)?,
+    };
+    let sections = if args.holdings {
+        holdings::sections(&pair, &args.old, &args.new)?
+    } else {
+        catalog(&pair, args)?
+    };
     let differs = sections.iter().any(Section::differs);
     let out = if args.json {
         let mut tree = Value::Object(

@@ -14,7 +14,6 @@ import {
   type RegisterChild,
   type RootChild,
   SEARCH_MIN_QUERY_LENGTH,
-  type StewardConfig,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -22,9 +21,7 @@ import {
   allRegisterFacets,
   browseMatches,
   browseOrder,
-  browseScope,
   useBrowseFilter,
-  useBrowseScope,
   useSettledFilter,
 } from "./browse_filter";
 import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
@@ -36,7 +33,6 @@ import { Button } from "./ui/Button";
 import { InProjectMark } from "./ui/ColumnList";
 import columnStyles from "./ui/ColumnList.module.css";
 import { focusBrowseColumn } from "./ui/column_keys";
-import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useSelectionBar } from "./ui/selection_bar";
 import { useAsyncResource } from "./use_async_resource";
@@ -148,31 +144,18 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-/** With `heldOnly` (a steward deployment's default scope), the providers and
- * registers the steward holds anything in, plus the current page's register
- * and provider (`current`), so a page opened by link keeps its row; the rest
- * stay reachable through the palette, links and the "All matches" scope. */
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
-  heldOnly: boolean,
-  current: string | null,
 ): BrowseNode[] {
-  const pinned = new Set(
-    current === null ? [] : [current, current.split("/")[0]],
-  );
-  const kept = <T extends { fqid: string; held?: boolean }>(items: T[]) =>
-    heldOnly
-      ? items.filter((item) => item.held !== false || pinned.has(item.fqid))
-      : items;
-  return kept(root).map((child) => ({
+  return root.map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
     children:
       registers === null
         ? null
-        : kept(registers[child.fqid] ?? []).map((register) => ({
+        : (registers[child.fqid] ?? []).map((register) => ({
             id: register.fqid,
             name: register.name ?? register.fqid,
             href: catalogHref(register.fqid),
@@ -191,13 +174,7 @@ function browseNodes(
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
-export function BrowseTree({
-  className,
-  config = null,
-}: {
-  className?: string;
-  config?: StewardConfig | null;
-}) {
+export function BrowseTree({ className }: { className?: string }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -224,10 +201,8 @@ export function BrowseTree({
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
   const facetKey = useSettledFilter();
-  const scope = useBrowseScope(config);
-  const facetResource = useAsyncResource(
-    facetKey === null ? null : `${scope ?? ""}\u0000${facetKey}`,
-    (signal) => searchFacets(facetKey ?? "", { signal, scope }),
+  const facetResource = useAsyncResource(facetKey, (signal) =>
+    searchFacets(facetKey ?? "", { signal }),
   );
   const facets = new Map(
     (facetKey === null ? [] : allRegisterFacets(facetResource.data)).flatMap(
@@ -242,8 +217,6 @@ export function BrowseTree({
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
-    scope === "steward",
-    currentKey,
   );
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.
@@ -412,44 +385,28 @@ export function BrowseTree({
       onKeyDownCapture={onKeyDownCapture}
     >
       <div className={styles.header}>
-        <span className={config ? "visually-hidden" : "micro-label"}>
+        <span className="micro-label">
           {/* While filtering, the label is how many registers the filter
             leaves: a separate count wrapped the header to two lines, out of
             line with the variables column's (#2107). */}
-          {config || matchCount === null
+          {matchCount === null
             ? "Registers"
             : matchCount === 1
               ? "1 register"
               : `${matchCount} registers`}
         </span>
-        <div className={config ? styles.controls : undefined}>
-          {config && (
-            <div className={styles.scope}>
-              <Select
-                label={`Variable search scope for ${config.presentation.name}`}
-                labelHidden
-                value={scope ?? "steward"}
-                options={[
-                  { id: "steward", name: "Held matches" },
-                  { id: "reference", name: "All matches" },
-                ]}
-                onChange={browseScope.set}
-              />
-            </div>
-          )}
-          {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
-            group is open, and expands once all are closed. */}
-          <Button
-            variant="ghost"
-            onPress={() =>
-              onExpandedChange(
-                expandedKeys.size > 0 ? new Set() : new Set(expandable),
-              )
-            }
-          >
-            {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
-          </Button>
-        </div>
+        {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
+          group is open, and expands once all are closed. */}
+        <Button
+          variant="ghost"
+          onPress={() =>
+            onExpandedChange(
+              expandedKeys.size > 0 ? new Set() : new Set(expandable),
+            )
+          }
+        >
+          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
+        </Button>
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>

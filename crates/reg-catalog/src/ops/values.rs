@@ -13,16 +13,16 @@ use super::shape::{self, ValueSetRef};
 use super::{
     Cache, Components, Operation, Param, Params, Server, Type, component, cursor, hash, limit, refs,
 };
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "values",
     paths: &["/api/values"],
     tool: Some("values"),
-    description: "A value set's items, by its hash or by a classification version's ref, \
-        with a hierarchical set paged one level at a time by `parent` and searched flat by \
-        `q`; or, given a `code` and optionally its `label`, the value sets that hold that \
-        pair. The blank code is an item like any other.",
+    description: "The codes and labels of a value set, by `value_set` hash or `classification`. \
+        `parent` steps through a hierarchy one level at a time; `q` searches it. Or give \
+        `code` (and `label`) to find the value sets that contain it. The blank code is a code \
+        like any other.",
     params: &[
         Param::optional("value_set", Type::Hash),
         Param::optional("classification", Type::Ref),
@@ -48,7 +48,6 @@ fn result(components: &mut Components) -> RefOr<Schema> {
     ))
 }
 
-/// `Page<ValueItem>` plus the value set and `total`.
 #[derive(Serialize, ToSchema)]
 pub struct ValueItemsPage {
     items: Vec<ValueItem>,
@@ -59,7 +58,6 @@ pub struct ValueItemsPage {
     total: i64,
 }
 
-/// `Page<ValueSetRef>`, ordered by hash.
 #[derive(Serialize, ToSchema)]
 pub struct ValueSetsPage {
     items: Vec<ValueSetRef>,
@@ -67,7 +65,6 @@ pub struct ValueSetsPage {
     next_cursor: Option<String>,
 }
 
-/// `shape.ValueItem`.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct ValueItem {
     /// May be `""`: a real item.
@@ -150,13 +147,12 @@ fn by_content(conn: &Connection, hash: &str) -> Result<i64, Error> {
 fn classification_set(conn: &Connection, given: &str) -> Result<i64, Error> {
     let version = refs::resolve(conn, given)?;
     if version.kind != "class_version" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            given,
             format!(
                 "{given:?} is a {}, not a classification version.",
                 version.kind
             ),
-            vec![given.into()],
         ));
     }
     Ok(conn.query_row(
@@ -192,15 +188,15 @@ fn load_items(
     valueset_id: i64,
     hierarchical: bool,
 ) -> Result<Vec<(ValueItem, Option<usize>)>, Error> {
-    let mut items: Vec<(ValueItem, Option<usize>)> = conn
-        .prepare(
-            "SELECT c.body, l.body, i.level, i.parent_ord, i.sentinel
+    let mut items: Vec<(ValueItem, Option<usize>)> = rows(
+        conn,
+        "SELECT c.body, l.body, i.level, i.parent_ord, i.sentinel
              FROM vs_item i
                JOIN text c ON c.id = i.code_text
                LEFT JOIN text l ON l.id = i.label_text
              WHERE i.valueset_id = ? ORDER BY i.ord",
-        )?
-        .query_map([valueset_id], |row| {
+        [valueset_id],
+        |row| {
             Ok((
                 ValueItem {
                     code: row.get(0)?,
@@ -213,8 +209,8 @@ fn load_items(
                 row.get::<_, Option<i64>>(3)?
                     .and_then(|ord| usize::try_from(ord).ok()),
             ))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     for ord in 0..items.len() {
         if let Some(parent) = items[ord].1 {
             items[ord].0.parent = Some(items[parent].0.code.clone());
@@ -292,14 +288,13 @@ fn content(
         .filter(|&ord| after.is_none_or(|after| ord > after))
         .take(limit + 1)
         .collect();
-    let next_cursor = (page.len() > limit).then(|| {
-        page.truncate(limit);
-        cursor::encode(
+    let next_cursor = cursor::next(&mut page, limit, |last| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &cursor::context(params),
             limit,
-            &page[limit - 1].to_string(),
-        )
+            &last.to_string(),
+        ))
     });
     let items = page.into_iter().map(|ord| items[ord].0.clone()).collect();
     Ok(serde_json::to_value(ValueItemsPage {
@@ -331,19 +326,17 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
     };
     let mut found: BTreeMap<String, i64> = BTreeMap::new();
     if let Some(phrase) = phrase {
-        let pairs = conn
-            .prepare(
-                "SELECT si.code_text, si.label_text
+        let pairs = rows(
+            conn,
+            "SELECT si.code_text, si.label_text
                  FROM search s
                    JOIN search_item si ON si.id = s.rowid AND si.kind = 'code'
                    JOIN text c ON c.id = si.code_text
                    LEFT JOIN text l ON l.id = si.label_text
                  WHERE search MATCH ? AND c.body = ? AND l.body IS ?",
-            )?
-            .query_map(rusqlite::params![phrase, code, label], |row| {
-                Ok((row.get::<_, i64>(0)?, row.get::<_, Option<i64>>(1)?))
-            })?
-            .collect::<rusqlite::Result<Vec<_>>>()?;
+            rusqlite::params![phrase, code, label],
+            |row| Ok((row.get::<_, i64>(0)?, row.get::<_, Option<i64>>(1)?)),
+        )?;
         let mut sets = conn.prepare(
             "SELECT v.id, v.hash FROM vs_item i JOIN valueset v ON v.id = i.valueset_id
              WHERE i.code_text = ? AND i.label_text IS ? AND v.hash > ?
@@ -367,14 +360,13 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
         }
     }
     let mut page: Vec<(String, i64)> = found.into_iter().take(limit + 1).collect();
-    let next_cursor = (page.len() > limit).then(|| {
-        page.truncate(limit);
-        cursor::encode(
+    let next_cursor = cursor::next(&mut page, limit, |(hash, _)| {
+        Some(cursor::encode(
             server.catalog.generation(),
             &cursor::context(params),
             limit,
-            &page[limit - 1].0,
-        )
+            hash,
+        ))
     });
     let items = page
         .into_iter()

@@ -80,7 +80,7 @@ export function RegisterView({
             term: "Period",
             value: <code>{catalogPeriodLabel(node.period)}</code>,
           },
-          // The route to each table's page (role, cadence, held placements),
+          // The route to each table's page (role, cadence, placements),
           // including tables no chip names.
           ...(tables.length > 0
             ? [
@@ -152,18 +152,6 @@ export function RegisterView({
           </>
         )}
       </Panel>
-      {node.unplaced.length > 0 && (
-        <Panel title="Unplaced releases">
-          <p className={styles.prose}>
-            These releases could not be placed in time.
-          </p>
-          <ul className={styles.plainList}>
-            {node.unplaced.map((name) => (
-              <li key={name}>{name}</li>
-            ))}
-          </ul>
-        </Panel>
-      )}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} filterable />
     </article>

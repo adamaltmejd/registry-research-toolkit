@@ -1,4 +1,4 @@
-/** Reader vocabulary rendered as ordinary language, shared by facts and evidence. */
+/** Reader vocabulary rendered as ordinary language. */
 const labels: Record<string, string> = {
   unknown: "Not stated",
   unstated: "Not stated",
@@ -39,7 +39,6 @@ const labels: Record<string, string> = {
   bool: "Boolean",
   datetime: "Date and time",
   state: "State",
-  temporality: "Temporality",
   invariant: "Time independent",
   varying: "Changes over time",
   time_invariant: "Time independent",
@@ -55,10 +54,4 @@ export function catalogWords(value: string | null | undefined): string {
       .replaceAll("-", " ")
       .replace(/^./u, (letter) => letter.toUpperCase())
   );
-}
-
-export function yesNo(value: boolean | string | null | undefined): string {
-  if (value === true || value === "yes") return "Yes";
-  if (value === false || value === "no") return "No";
-  return "Not stated";
 }

@@ -1,16 +1,15 @@
 //! Artifact verification: the one authority for a written catalog file's invariants
-//! (schema v4 §4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
+//! (§4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
 //! runs it on any file.
 
 use std::path::Path;
 
 use reg_frame::Item;
-use rusqlite::{Connection, OpenFlags};
-use sha2::{Digest, Sha256};
+use rusqlite::{Connection, OpenFlags, OptionalExtension};
 
 const CHECKS: &str = include_str!("checks.sql");
 
-/// Every invariant of a written catalog file (schema v4 §4.2, §4.3). Read-only.
+/// Every invariant of a written catalog file (§4.2, §4.3). Read-only.
 ///
 /// # Errors
 /// The first failure, naming the check: `integrity_check: …`, `post-write check failed:\n<sql>`,
@@ -134,11 +133,7 @@ fn schema_version(db: &Connection) -> Result<(), String> {
             [],
             |r| r.get(0),
         )
-        .map(Some)
-        .or_else(|e| match e {
-            rusqlite::Error::QueryReturnedNoRows => Ok(None),
-            e => Err(e),
-        })
+        .optional()
         .map_err(sql)?;
     let expected = reg_core::CATALOG_SCHEMA_VERSION;
     if user != i64::from(expected) || meta.as_deref() != Some(expected.to_string().as_str()) {
@@ -200,7 +195,7 @@ fn valuesets(db: &Connection) -> Result<(), String> {
                     .map(|p| p.0.clone()),
             })
             .collect();
-        let actual = reg_frame::hex(&Sha256::digest(reg_frame::canonical_line(&list)));
+        let actual = reg_core::sha256_hex(reg_frame::canonical_line(&list));
         if actual != hash {
             return Err(format!("valueset {hash}: content hashes to {actual}"));
         }
@@ -217,12 +212,12 @@ fn pdfs(db: &Connection) -> Result<(), String> {
     let mut rows = stmt.query([]).map_err(sql)?;
     while let Some(row) = rows.next().map_err(sql)? {
         let hash: String = row.get(0).map_err(sql)?;
-        let actual = reg_frame::hex(&Sha256::digest(
+        let actual = reg_core::sha256_hex(
             row.get_ref(1)
                 .map_err(sql)?
                 .as_blob()
                 .map_err(|e| e.to_string())?,
-        ));
+        );
         if actual != hash {
             return Err(format!("doc {hash}: content hashes to {actual}"));
         }
@@ -254,11 +249,8 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             [],
             |r| r.get(0),
         )
-        .map(Some)
-        .or_else(|e| match e {
-            rusqlite::Error::QueryReturnedNoRows => Ok(None),
-            e => Err(fail(format!("{}: {e}", previous.display()))),
-        })
+        .optional()
+        .map_err(|e| fail(format!("{}: {e}", previous.display())))
     };
     let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
     match version("prev")? {

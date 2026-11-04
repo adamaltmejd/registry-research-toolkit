@@ -9,6 +9,11 @@
   min-width: 0;
 }
 
+.graph[data-scroll] {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 /* ── Marks (one decorative SVG under the lanes) ─────────────────────────── */
 
 .marks {
@@ -56,14 +61,6 @@
 .tickWindow {
   font-weight: 500;
   fill: var(--accent-ink);
-}
-
-.axisCaption {
-  position: absolute;
-  left: 0;
-  color: var(--text-muted);
-  font-size: var(--text-micro);
-  font-weight: 500;
 }
 
 .edge {
@@ -250,8 +247,7 @@ a.nameText {
 }
 
 /* Will be added: the selection wash, pine as text. */
-.span[data-staged="add"] .face,
-.legend .selectedSample {
+.span[data-staged="add"] .face {
   border-color: var(--accent);
   border-width: 2px;
   background: var(--accent-band);
@@ -309,14 +305,6 @@ a.nameText {
   transform: translateY(-50%);
 }
 
-.outside[data-side="right"] {
-  left: calc(100% + 4px);
-}
-
-.outside[data-side="left"] {
-  right: calc(100% + 4px);
-}
-
 .span[data-state="out"] .outside {
   color: var(--text-muted);
 }
@@ -328,53 +316,6 @@ a.nameText {
   font-family: var(--font-mono);
   font-size: var(--text-axis);
   white-space: nowrap;
-}
-
-/* ── Legend ──────────────────────────────────────────────────────────────── */
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-4);
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  color: var(--text-muted);
-  font-size: var(--text-micro);
-  list-style: none;
-}
-
-.legend li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.keySuccession,
-.keyRename {
-  display: inline-block;
-  width: 22px;
-  border-top: 1.2px solid var(--viz-edge-succession);
-}
-
-.keyBlocked {
-  color: var(--err);
-  font-family: var(--font-mono);
-  font-weight: 600;
-}
-
-.keyChange {
-  color: var(--warn);
-}
-
-.keyChip {
-  min-inline-size: 1rem;
-  min-block-size: 0.75rem;
-}
-
-.keyRename {
-  border-top-style: dashed;
-  border-color: var(--viz-edge-rename);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -408,39 +349,18 @@ a.nameText {
   fill: var(--info-bg);
 }
 
-/* Coverage: an ink bar, cut by an edition tick at every year boundary. */
+/* Coverage: one ink box per delivered year, a surface hairline between
+   them (maintainer 2026-11-04). */
 .coverage {
   fill: var(--text);
 }
 
 .edition {
-  stroke: var(--viz-edition);
+  stroke: var(--surface);
 }
 
 .hint {
   margin: 0;
   color: var(--text-muted);
   font-size: var(--text-sm);
-}
-
-.keyBand,
-.keyAddBand,
-.keyCoverage {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  box-sizing: border-box;
-}
-
-.keyBand {
-  border: 1px solid var(--accent);
-  background: var(--accent-bg);
-}
-
-.keyAddBand {
-  background: var(--accent-band);
-}
-
-.keyCoverage {
-  background: var(--text);
 }

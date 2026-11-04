@@ -44,7 +44,7 @@ export function DataWarnings({
     else groups.set(key, [finding]);
   }
   return (
-    <Panel title="Findings">
+    <Panel title="Notes on this data">
       {[...groups]
         .sort(
           ([, a], [, b]) =>

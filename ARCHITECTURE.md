@@ -187,8 +187,8 @@ The export gate is the toolkit's disclosure checker and transfer: the only path 
 results computed on microdata reach an agent. Its design (components, trust boundaries,
 schemas and policy, the check, the receipt, MONA mode and the shared case corpus) is in
 [`reg_export_gate/DESIGN.md`](reg_export_gate/DESIGN.md). The MONA check
-(`reg_export_gate/export_gate.R`) is built; the `reg-export-gate` Rust binary is not
-(#1803).
+(`reg_export_gate/export_gate.R`) is built; the `reg-export-gate` Rust binary is being
+built (#1803).
 
 ## Repo-wide invariants
 
@@ -272,17 +272,20 @@ This is the complete list of boundaries a test may assert at.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. Conformance is
-   not one: it requires the Rust server (`--server-cmd`). The `rust` job's 6-minute
+   not one: it requires the Rust server (`--server-cmd`). The `rust` job's 9-minute
    timeout covers `crates/` and the gate's `rust` step (`scripts/gate.py`: the workspace
-   build and the whole conformance suite against the Rust server), with room for a cold
-   rust-cache and its save. The legacy builder's matrix leg runs `gate.py release`: its
-   full Python suite, then the `release`-marked admission checks on the synthetic
-   catalog artifact. The `lint` job runs `gate.py lint` (ruff, panache, ty, plugin
-   schema drift and provider vocabulary). The OpenAPI snapshot is a `crates/reg-meta`
-   test. The `reg-webapp-frontend` job runs install, WASM generation, type checks, lint,
-   unit tests, build and codegen drift; `reg-webapp-flows` runs the production bootstrap
-   and shell/search browser flows against a source-built synthetic fixture. Each
-   frontend job has a 6-minute timeout. A job that exceeds its budget fails.
+   build, the whole conformance suite against the Rust server, then the `release`-marked
+   admission checks on the synthetic catalog artifact), with room for a cold rust-cache
+   and its save. The legacy builder's matrix leg runs `gate.py builder`: its full Python
+   suite only, which needs no Rust binary (`uv sync` builds the `reg-core-py`
+   extension), so each binary is built once, in `rust`. The `lint` job runs
+   `gate.py lint` (ruff, panache, ty, plugin schema drift and provider vocabulary). The
+   OpenAPI snapshot is a `crates/reg-meta` test. The `reg-webapp-frontend` job runs
+   install, WASM generation, type checks, lint, unit tests, build and codegen drift;
+   `reg-webapp-flows` runs the production bootstrap and shell/search browser flows
+   against a source-built synthetic fixture, at the phone (375 px) and desktop viewports
+   only; the four-width review is the design-review skill's. Each frontend job has a
+   6-minute timeout. A job that exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -306,14 +309,14 @@ over budget is a finding for the `test-audit` skill, not a reason to raise the n
 The R packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat
 suites are run by hand, not by the gate or CI.
 
-  | Suite                                | Local | CI job | Rationale                                                                                                                           |
-  | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation. |
-  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.        |
-  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                    |
-  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.       |
-  | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                 |
-  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                |
+  | Suite                                | Local | CI job | Rationale                                                                                                                                                         |
+  | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                               |
+  | `scripts/tests`                      | 20 s  | 5 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most. Cold `uv sync` builds `reg-core-py`. |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                                  |
+  | conformance (`scripts/gate.py rust`) | 30 s  | 9 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.                                     |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                                               |
+  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                                              |
 
 One verification gate cuts across the tiers. It is named G0 so it is not confused with
 the tiers. G1 and G2 (the byte-for-byte differential harness against the previous
@@ -325,7 +328,7 @@ and each release is checked by `reg-build diff` against the previous one.
   | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change |
 
 Local G0 defaults to `scripts/tests`. Until cutover F, the legacy `reg_meta_build` suite
-runs in `gate.py release` and remains mandatory on every PR in its CI matrix leg. It is
+runs in `gate.py builder` and remains mandatory on every PR in its CI matrix leg. It is
 also available through `g0 --packages reg_meta_build` for release fixes; plain `pytest`
 still runs both Python suites. No legacy cases are removed by this tier split.
 

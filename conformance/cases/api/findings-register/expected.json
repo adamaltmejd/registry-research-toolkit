@@ -33,7 +33,7 @@
             "value_set": null
           },
           "period": null,
-          "message": "delivery \"Ny leverans\" is not placed in time; its columns are unplaced",
+          "message": "delivery \"Ny leverans\" has no known period; its columns are not dated",
           "caveat": null
         },
         {
@@ -49,7 +49,7 @@
             "value_set": null
           },
           "period": {"start": "2019-01-01", "end": "2020-01-01"},
-          "message": "delivery \"Ny 2019 prel\" disagrees with the primary edition on the spelling or type of 1 key(s): k3",
+          "message": "delivery \"Ny 2019 prel\" differs from the main release in the name or type of 1 column(s): k3",
           "caveat": null
         },
         {
@@ -97,7 +97,7 @@
             "value_set": null
           },
           "period": {"start": "2015-01-01", "end": "2018-01-01"},
-          "message": "Inkomst cannot be placed on one variable form here",
+          "message": "Inkomst has more than one form here (name, type or codes differ)",
           "caveat": null
         },
         {
@@ -113,7 +113,7 @@
             "value_set": null
           },
           "period": {"start": "2017-01-01", "end": "2018-01-01"},
-          "message": "Inkomst cannot be placed on one variable form here",
+          "message": "Inkomst has more than one form here (name, type or codes differ)",
           "caveat": null
         }
       ]

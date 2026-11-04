@@ -148,19 +148,6 @@ export function stewardConfig(context: Context | null): StewardConfig | null {
   return context?.steward_config ?? null;
 }
 
-export type Coverage = RustSchemas["Coverage"];
-
-export function getCoverage(
-  ref: string,
-  options?: { signal?: AbortSignal },
-): Promise<Coverage> {
-  return rustGet<Coverage>(`/coverage/${encodeFqid(ref)}`, undefined, options);
-}
-
-/** The headline catalog-size counts (#675) the landing page renders — slugged
- * (browse-addressable) providers, registers and variables in the read scope. */
-export type CatalogSizes = RustSchemas["Sizes"];
-
 /** `show`'s `kind`-tagged summary of a ref. */
 export type ShowNode = RustSchemas["Show"];
 
@@ -275,14 +262,6 @@ export type SearchPage = RustSchemas["SearchPage"];
 
 export type SearchHit = RustSchemas["SearchHit"];
 
-export type RegisterHit = Extract<SearchHit, { type: "register" }>;
-
-export type VariableHit = Extract<SearchHit, { type: "variable" }>;
-
-export type ClassificationHit = Extract<SearchHit, { type: "classification" }>;
-
-export type CodeHit = Extract<SearchHit, { type: "code" }>;
-
 /** The arm a search keeps (`?type=`); omitted, the search ranks every arm. */
 export type SearchType = NonNullable<
   RustOperations["search"]["parameters"]["query"]["type"]
@@ -311,7 +290,6 @@ function searchGet<T>(
     type?: SearchType;
     register?: string;
     cursor?: string;
-    scope?: "steward" | "reference";
   },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
@@ -327,7 +305,6 @@ function searchGet<T>(
   if (options?.cursor !== undefined) {
     params.set("cursor", options.cursor);
   }
-  if (options?.scope !== undefined) params.set("scope", options.scope);
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
     signals.push(options.signal);
@@ -373,7 +350,6 @@ export async function searchFacets(
     signal?: AbortSignal;
     register?: string;
     limit?: number;
-    scope?: "steward" | "reference";
   },
 ): Promise<RegisterFacets> {
   return (
@@ -394,7 +370,6 @@ export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogSegment = RustSchemas["Segment"];
-export type VariableEvidence = RustSchemas["VariableEvidence"];
 export type Graph = RustSchemas["Graph"];
 
 export function getGraph(
@@ -427,22 +402,6 @@ export async function getSegments(
     cursor = page.next_cursor;
   } while (cursor !== null);
   return items;
-}
-
-/** Requested only when the variable's provenance disclosure is first opened. */
-export async function getVariableEvidence(
-  ref: string,
-  options?: { signal?: AbortSignal },
-): Promise<VariableEvidence> {
-  const node = await rustGet<ShowNode>(
-    `/catalog/${encodeFqid(ref)}`,
-    new URLSearchParams({ evidence: "true" }),
-    options,
-  );
-  if (node.kind !== "variable" || !node.evidence) {
-    throw new Error("The catalog returned no variable evidence.");
-  }
-  return node.evidence;
 }
 
 /** Review items and notices for a catalog subject, including its descendants. */

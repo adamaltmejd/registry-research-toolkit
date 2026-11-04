@@ -45,12 +45,13 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. The current tracker is [REBUILD.md](REBUILD.md), the
-  rebuild that replaces `reg_meta_build`; its gate is "Deleted when milestone F
-  (cutover) ships". Each tracker is **scoped and self-deleting**: it ships with an
-  explicit completion gate (e.g. "deleted when stage X ships"), gets deleted at that
-  gate, and never outlives the refactor it tracks. Per-package DESIGN.md notes for the
-  same effort are still preferred where the scope is package-local.
+  for cross-PR coordination. The current trackers are [REBUILD.md](REBUILD.md), the
+  rebuild that replaces `reg_meta_build` (gate: "Deleted when milestone F (cutover)
+  ships"), and [SPA-REDESIGN.md](SPA-REDESIGN.md), the plain-language SPA redesign
+  (gate: deleted in its last slice). Each tracker is **scoped and self-deleting**: it
+  ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets
+  deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md
+  notes for the same effort are still preferred where the scope is package-local.
 
 # Maturity and compatibility
 
@@ -188,7 +189,7 @@ is archived on `archive/reg-webapp-spa` and returns in milestone E.
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `release`). The R packages are not gated: their testthat suites run only by hand
+  `builder`). The R packages are not gated: their testthat suites run only by hand
   (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty, plugin
   schema drift and provider vocabulary.
@@ -199,7 +200,7 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
   Operator schedules them with the maintainer.
 - Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
-- Real-artifact conformance: the `release` step in `scripts/gate.py` shows the flags
+- Real-artifact conformance: the `rust` step in `scripts/gate.py` shows the flags
   (`--run-release --artifact-dir=… --server-cmd=…`).
 - Local prerequisite: `cargo install cargo-machete --locked`.
 - A new worktree needs no setup step: Python syncs on the first `uv run`.

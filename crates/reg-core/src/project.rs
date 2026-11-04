@@ -9,12 +9,11 @@
 //! every shape the types would misread (serde reads a struct from a JSON array by
 //! position), and deserializes only an accepted document.
 
-use std::fmt::{self, Write as _};
+use std::fmt;
 
 use serde::de::{Deserializer, Error as _};
 use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
-use sha2::{Digest, Sha256};
 
 use crate::structural::validate_source_period;
 use crate::{
@@ -219,7 +218,7 @@ impl ProjectData {
     }
 }
 
-/// One logical extraction: a table, a requested period and its bindings.
+/// One table, a requested period and its variables.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSource))]
 #[serde(deny_unknown_fields)]
@@ -292,8 +291,7 @@ pub enum PeriodSegment {
     Range(PeriodRange),
 }
 
-/// `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
-/// series).
+/// One period, or a sorted list of periods for an interrupted series.
 //
 // A list variant comes first in each untagged enum: serde also reads a struct from a
 // JSON array, by position, so `["2018-01", "2018-04"]` would otherwise become a
@@ -602,29 +600,10 @@ fn tree<T: Serialize>(value: &T) -> Value {
     tree
 }
 
-/// The manifest and validation-result encoding: sorted keys, two-space indent,
-/// non-ASCII as is, trailing newline. Python's
-/// `json.dumps(..., sort_keys=True, indent=2, ensure_ascii=False) + "\n"`.
-///
-/// # Panics
-///
-/// If `value` has a map with non-string keys, which no type of this crate has.
-#[must_use]
-pub fn to_json_pretty<T: Serialize>(value: &T) -> String {
-    let mut text = serde_json::to_string_pretty(&tree(value)).expect("a JSON tree encodes");
-    text.push('\n');
-    text
-}
-
 /// The project identity of an order manifest: SHA-256, as lowercase hex, of the
 /// project's compact canonical JSON (sorted keys, no whitespace, non-ASCII as is).
 #[must_use]
 pub fn project_hash(project: &ProjectData) -> String {
     let canonical = tree(project).to_string();
-    Sha256::digest(canonical.as_bytes())
-        .iter()
-        .fold(String::new(), |mut hex, b| {
-            let _ = write!(hex, "{b:02x}");
-            hex
-        })
+    crate::sha256_hex(canonical)
 }

@@ -94,8 +94,7 @@ def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
     assert built.returncode == 0, built.stderr
     (tmp_path / "reg_meta.db").symlink_to(base)
     expected = json.loads((HOLDINGS_CASE / "order-key-requirements.json").read_text())
-    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
-    try:
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
         answer = pool.client(artifact_env(output)).post(
             "/api/project/order", json=expected["project"]
         )
@@ -108,8 +107,6 @@ def test_steward_order_carries_declared_keys_and_keeps_linking_ids_as_bindings(
             for entry in data["entries"]
             if entry["variable"] == linking["variable"]
         ] == [linking]
-    finally:
-        pool.close()
 
 
 def test_steward_only_slot_orders_paired_and_is_unresolved_base_only(
@@ -124,16 +121,13 @@ def test_steward_only_slot_orders_paired_and_is_unresolved_base_only(
     assert built.returncode == 0, built.stderr
     (tmp_path / "reg_meta.db").symlink_to(base)
     expected = json.loads((HOLDINGS_CASE / "order-steward-slot.json").read_text())
-    pool = ServerPool(server_cmd + " --catalog fixture", tmp_path)
-    try:
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
         answer = pool.client(artifact_env(output)).post(
             "/api/project/order", json=expected["project"]
         )
         assert answer.status_code == 200, answer.text
         data = answer.json()["data"]
         assert {key: data[key] for key in expected["paired"]} == expected["paired"]
-    finally:
-        pool.close()
     blocked = http_servers.client(artifact_env(base)).post(
         "/api/project/order", json=expected["project"]
     )

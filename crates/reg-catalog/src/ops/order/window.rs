@@ -11,7 +11,7 @@ use super::{
     span,
 };
 use crate::ops::{Server, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// What a binding is checked against: its source and the source's serving tables.
 pub(super) struct Scope<'a> {
@@ -121,15 +121,15 @@ pub(super) fn refs(
     let mut findings = Vec::new();
     let mut issue = |field: &str, variable: Option<&str>, (code, message): (&str, String)| {
         findings.push(Issue {
-            level: IssueLevel::Error,
-            code: code.to_owned(),
-            path: format!("/sources/{index}/bindings/{b}/{field}"),
-            message,
             source: Some(source.name.clone()),
             variable: variable.map(str::to_owned),
             table: table.map(str::to_owned),
-            period: None,
-            successor_fqid: None,
+            ..Issue::new(
+                IssueLevel::Error,
+                code,
+                format!("/sources/{index}/bindings/{b}/{field}"),
+                message,
+            )
         });
     };
     let unresolved = |value: &str, what: &str| {
@@ -311,7 +311,7 @@ fn materialize(
                 scope.table,
                 Some(&hull(scope.requested)),
                 format!(
-                    "{} has no curated window for {} over the requested period.",
+                    "{} has no codes from {} over the requested period.",
                     variable.pid,
                     binding.classification.as_deref().expect("resolved pin")
                 ),
@@ -407,15 +407,16 @@ impl Located<'_> {
         message: String,
     ) -> Issue {
         Issue {
-            level,
-            code: code.to_owned(),
-            path: format!("/sources/{}/bindings/{}", self.scope.index, self.b),
-            message,
             source: Some(self.scope.source.name.clone()),
             variable: Some(self.variable.pid.clone()),
             table: Some(table.to_owned()),
             period: days.map(|d| period(self.scope.server, d)),
-            successor_fqid: None,
+            ..Issue::new(
+                level,
+                code,
+                format!("/sources/{}/bindings/{}", self.scope.index, self.b),
+                message,
+            )
         }
     }
 
@@ -448,20 +449,18 @@ pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
 /// segments, clipped to them.
 fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
-    let rows: Vec<Piece> = scope
-        .conn
-        .prepare(&format!(
+    let rows: Vec<Piece> = rows(
+        scope.conn,
+        &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
              identifier, state, end = ?3
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
-        ))?
-        .query_map(
-            rusqlite::params![variable, s.table.id, scope.server.open.1],
-            |row| piece(k, row),
-        )?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        rusqlite::params![variable, s.table.id, scope.server.open.1],
+        |row| piece(k, row),
+    )?;
     let mut pieces = Vec::new();
     for row in rows {
         for days in overlap(std::slice::from_ref(&row.days), &s.requested) {
@@ -512,7 +511,9 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         IssueLevel::Error,
         "ambiguous_window",
         &|t, p| {
-            format!("{pid} cannot be placed on one form in {t} over {p}; the window needs curation")
+            format!(
+                "{pid} has more than one form in {t} over {p} (name, type or codes differ); pick a shorter period or ask the maintainer"
+            )
         },
     );
     each(
@@ -531,13 +532,17 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         &|p| p.identifier,
         IssueLevel::Info,
         "identifier",
-        &|t, p| format!("{pid} identifies units in {t} over {p}"),
+        &|t, p| format!("{pid} is an identifier in {t} over {p}"),
     );
     each(
         &|p| p.open && !scope.serving[p.serving].table.timeless,
         IssueLevel::Info,
         "coverage_end_unstated",
-        &|t, p| format!("{pid} in {t} has no stated coverage end; data over {p} is not confirmed"),
+        &|t, p| {
+            format!(
+                "{pid} in {t}: the provider states no end year, so data over {p} is not confirmed"
+            )
+        },
     );
     found
 }
@@ -619,7 +624,7 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
                 &s.table.pid,
                 Some(&days),
                 format!(
-                    "editions of {} disagree on {} over {}",
+                    "the preliminary and final releases of {} differ on {} over {}",
                     s.table.pid,
                     at.variable.pid,
                     span(scope.server, &days)
@@ -643,9 +648,9 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     } else {
         ("", at.variable.id)
     };
-    let rows: Vec<(String, Option<i64>, Option<String>)> = scope
-        .conn
-        .prepare(&format!(
+    let rows: Vec<(String, Option<i64>, Option<String>)> = rows(
+        scope.conn,
+        &format!(
             "SELECT v.pid, r.at_start, c.body
              FROM {origin}relation r JOIN {origin}variable v ON v.id = r.subject_id
                LEFT JOIN {origin}text c ON c.id = r.caveat_text
@@ -653,11 +658,10 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
                AND r.object_kind = 'variable' AND r.object_id = ?1
                AND (r.at_start IS NULL OR r.at_start <= ?2)
              ORDER BY r.at_start, v.pid"
-        ))?
-        .query_map(rusqlite::params![id, day(&requested.1)], |row| {
-            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        ),
+        rusqlite::params![id, day(&requested.1)],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
     Ok(rows
         .into_iter()
         .map(|(successor, at_start, caveat)| {

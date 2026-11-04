@@ -1,0 +1,162 @@
+[
+  {
+    "text": "1212121212",
+    "match": true
+  },
+  {
+    "text": "121212-1212",
+    "match": true
+  },
+  {
+    "text": "121212+1212",
+    "match": true
+  },
+  {
+    "text": "191212121212",
+    "match": true
+  },
+  {
+    "text": "19121212-1212",
+    "match": true
+  },
+  {
+    "text": "201212121212",
+    "match": true
+  },
+  {
+    "text": "20121212+1212",
+    "match": true
+  },
+  {
+    "text": "181212121212",
+    "match": false
+  },
+  {
+    "text": "18121212-1212",
+    "match": false
+  },
+  {
+    "text": "1213121212",
+    "match": false
+  },
+  {
+    "text": "1200121212",
+    "match": false
+  },
+  {
+    "text": "1212001212",
+    "match": false
+  },
+  {
+    "text": "1212321212",
+    "match": false
+  },
+  {
+    "text": "1212601212",
+    "match": false
+  },
+  {
+    "text": "1212611212",
+    "match": true
+  },
+  {
+    "text": "1212911212",
+    "match": true
+  },
+  {
+    "text": "1212921212",
+    "match": false
+  },
+  {
+    "text": "1212891212",
+    "match": true
+  },
+  {
+    "text": "121212121",
+    "match": false
+  },
+  {
+    "text": "12121212123",
+    "match": false
+  },
+  {
+    "text": "1912121212123",
+    "match": false
+  },
+  {
+    "text": "x1212121212y",
+    "match": true
+  },
+  {
+    "text": "id 121212-1212.",
+    "match": true
+  },
+  {
+    "text": "121212--1212",
+    "match": false
+  },
+  {
+    "text": "121212-12123",
+    "match": false
+  },
+  {
+    "text": "121212-121",
+    "match": false
+  },
+  {
+    "text": "1212121212-1234",
+    "match": true
+  },
+  {
+    "text": "a19121212-1212b",
+    "match": true
+  },
+  {
+    "text": "0001010000",
+    "match": true
+  },
+  {
+    "text": "9912310000",
+    "match": true
+  },
+  {
+    "text": "batch 19121212121212",
+    "match": false
+  },
+  {
+    "text": "2019-2020 cohort",
+    "match": false
+  },
+  {
+    "text": "12 12 12 1212",
+    "match": false
+  },
+  {
+    "text": "121212 1212",
+    "match": false
+  },
+  {
+    "text": "-1212121212",
+    "match": true
+  },
+  {
+    "text": "1212121212.5",
+    "match": true
+  },
+  {
+    "text": "١٢١٢١٢١٢١٢",
+    "match": false
+  },
+  {
+    "text": "1212121212\n",
+    "match": true
+  },
+  {
+    "text": "abc",
+    "match": false
+  },
+  {
+    "text": "",
+    "match": false
+  }
+]

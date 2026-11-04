@@ -1,23 +1,16 @@
-/* Five fixed tracks fit the detail pane; secondary facts live in Definitions. */
-.registerRead:focus-visible {
+/* The timeline's region: the focus target after Retry. */
+.timeline:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
 
-.segments table {
-  table-layout: fixed;
+/* The Type row's pills, wrapping on a narrow pane. */
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
 }
-.segments th,
-.segments td {
-  padding-inline: var(--space-1);
-  box-sizing: border-box;
-}
-.spelling {
-  max-inline-size: 100%;
-  box-sizing: border-box;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
+
 .valueSet {
   display: flex;
   align-items: baseline;
@@ -45,15 +38,11 @@
 .more {
   flex-shrink: 0;
 }
-.listGap {
-  display: grid;
-  gap: var(--space-2);
-  overflow-wrap: anywhere;
-}
-.wordingPeriod {
-  margin: 0 0 var(--space-2);
+/* A fact that differs across the variable's columns: each value with its
+   years, the years muted. */
+.factYears {
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
 }
 
 .singleLine {
@@ -80,4 +69,8 @@
 .valueSetCell .valueSet {
   flex: 1;
   min-width: 0;
+}
+
+.wording + .wording {
+  margin-top: var(--space-3);
 }

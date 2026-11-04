@@ -7,15 +7,14 @@ use utoipa::ToSchema;
 use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
 use super::{Cache, Components, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "findings",
     paths: &["/api/findings/{ref}"],
     tool: None,
-    description: "The review items and notices on a register, a table or a variable \
-        (its segments and occurrences included), optionally narrowed to a period, a \
-        table or a rule code.",
+    description: "The review items and notices on a register, table or variable (including its \
+        column histories), optionally for one period, table or rule code.",
     params: &[
         Param::required("ref", Type::Ref),
         Param::optional("period", Type::Period),
@@ -33,7 +32,6 @@ fn result(components: &mut Components) -> RefOr<Schema> {
         .into()
 }
 
-/// `shape.Finding`.
 #[derive(Serialize, ToSchema)]
 pub struct Finding {
     /// A rule code and its sub-kind, `F7:edition-disagreement`.
@@ -44,30 +42,29 @@ pub struct Finding {
     #[schema(required = true)]
     period: Option<Period>,
     message: String,
-    /// An acked statement's caveat.
+    /// A curator's caveat.
     #[schema(required = true)]
     caveat: Option<String>,
 }
 
-/// `shape.Subject`: what a finding is about, by natural key.
+/// What a finding is about.
 #[derive(Serialize, ToSchema)]
 pub struct Subject {
-    /// `register`, `table`, `release`, `variable`, `segment`, `occurrence` or
-    /// `valueset`.
+    /// `register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`.
     kind: String,
-    /// The register, table or variable; for a segment or an occurrence, its variable.
+    /// The register, table or variable it is about.
     #[schema(required = true)]
     fqid: Option<String>,
-    /// The table of a release, segment or occurrence.
+    /// Its table.
     #[schema(required = true)]
     table: Option<String>,
-    /// The release's, segment's or occurrence's period; `null` when unplaced.
+    /// Its period; `null` when not known.
     #[schema(required = true)]
     period: Option<Period>,
     /// A release's literal delivery name.
     #[schema(required = true)]
     release: Option<String>,
-    /// An occurrence's exact spelling.
+    /// The exact column name in that delivery.
     #[schema(required = true)]
     spelling: Option<String>,
     /// A value set's hash.
@@ -100,10 +97,9 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
         "table" => SCOPE_TABLE,
         "variable" => SCOPE_VARIABLE,
         kind => {
-            return Err(Error::new(
-                Code::InvalidRef,
+            return Err(Error::invalid_ref(
+                value,
                 format!("{value:?} is a {kind}, not a register, a table or a variable."),
-                vec![value.into()],
             ));
         }
     };
@@ -114,39 +110,38 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     let window = super::days(params, "period")?;
     let code = params.get("code").copied();
 
-    let items = conn
-        .prepare(&sql(scope))?
-        .query_map(
-            named_params! {
-                ":id": entity.id,
-                ":table": table,
-                ":lo": window.map(|w| w.0),
-                ":hi": window.map(|w| w.1),
-                ":code": code,
-            },
-            |row| {
-                let placed = |start: Option<i64>, end: Option<i64>| {
-                    start.zip(end).map(|(s, e)| server.period(s, e))
-                };
-                Ok(Finding {
-                    code: row.get(0)?,
-                    severity: row.get(1)?,
-                    subject: Subject {
-                        kind: row.get(2)?,
-                        fqid: row.get(3)?,
-                        table: row.get(4)?,
-                        period: placed(row.get(5)?, row.get(6)?),
-                        release: row.get(7)?,
-                        spelling: row.get(8)?,
-                        value_set: row.get(9)?,
-                    },
-                    period: placed(row.get(10)?, row.get(11)?),
-                    message: row.get(12)?,
-                    caveat: row.get(13)?,
-                })
-            },
-        )?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let items = rows(
+        &conn,
+        &sql(scope),
+        named_params! {
+            ":id": entity.id,
+            ":table": table,
+            ":lo": window.map(|w| w.0),
+            ":hi": window.map(|w| w.1),
+            ":code": code,
+        },
+        |row| {
+            let placed = |start: Option<i64>, end: Option<i64>| {
+                start.zip(end).map(|(s, e)| server.period(s, e))
+            };
+            Ok(Finding {
+                code: row.get(0)?,
+                severity: row.get(1)?,
+                subject: Subject {
+                    kind: row.get(2)?,
+                    fqid: row.get(3)?,
+                    table: row.get(4)?,
+                    period: placed(row.get(5)?, row.get(6)?),
+                    release: row.get(7)?,
+                    spelling: row.get(8)?,
+                    value_set: row.get(9)?,
+                },
+                period: placed(row.get(10)?, row.get(11)?),
+                message: row.get(12)?,
+                caveat: row.get(13)?,
+            })
+        },
+    )?;
     Ok(serde_json::to_value(items).expect("findings serialize"))
 }
 

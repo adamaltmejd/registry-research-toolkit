@@ -129,5 +129,6 @@
 "startdatum-for-psykiatrisk-vardform" = ["PAR_SV: START"]
 "tillhorande-atg-kod-ar-en-atc-kod" = ["PAR_OV: ATCO @ 2015-01-01"]
 "tillhorande-dia-eller-yo-kod-ar-en-atc-kod" = ["PAR_OV: ATC @ 2015-01-01"]
-"typ-av-diagnos" = ["PAR_OV: HDIA"]
+"typ-av-diagnos" = ["PAR_TV: HDIA"]
+"huvuddiagnoskod" = ["PAR_SV: HDIA @ 1964-01-01"]
 "yttre-orsakskoder" = ["PAR_OV: EKOD"]

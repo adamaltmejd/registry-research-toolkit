@@ -340,7 +340,7 @@ impl Period {
     }
 }
 
-fn iso((y, m, d): Date) -> String {
+pub(crate) fn iso((y, m, d): Date) -> String {
     format!("{y:04}-{m:02}-{d:02}")
 }
 

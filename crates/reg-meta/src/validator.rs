@@ -21,8 +21,8 @@ use axum::extract::{Request, State};
 use axum::http::{HeaderValue, StatusCode, Uri, header};
 use axum::middleware::Next;
 use axum::response::{IntoResponse, Response};
-use reg_catalog::hex;
 use reg_catalog::ops::{Cache, Server};
+use reg_core::hex;
 use sha2::{Digest, Sha256};
 
 use crate::{EDGE_VERSION_PARAM, VERSION};

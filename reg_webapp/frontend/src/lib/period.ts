@@ -28,13 +28,6 @@ import {
   studyWindowInterval,
 } from "./reg_core";
 
-/** The narrowing modifiers carried in the URL query alongside `?period`. */
-export interface ResolutionParams {
-  period?: string;
-  variant?: string;
-  value_set_version?: string;
-}
-
 /** Sentinel `?value_set_version` selecting the empty/default label (a state with
  * `value_set_version_label === ""`). The empty string can't ride in the query
  * (≡ absent), so the picker sends this for the unlabeled-version option; the Rust
@@ -53,14 +46,6 @@ export function datedIntervals(period: unknown): Interval[] | null {
   return "intervals" in days ? days.intervals : null;
 }
 
-/** Whether a `?period` wire is a period a source may hold: the year-independent
- * `_default`, or a dated period reg-core accepts (an unsorted or overlapping list
- * and an inverted range are refused). Used where a wire is written straight into
- * project_data. */
-export function periodWireValid(wire: string): boolean {
-  return !("error" in sourcePeriodIntervals(sourcePeriodFromWire(wire)));
-}
-
 /** The period that requests exactly `days`: merged, rendered, shaped back from
  * the rendered wire (each interval its coarsest token, else a range with year
  * endpoints where they fall on a year's first or last day). */
@@ -70,20 +55,6 @@ function coveragePeriod(days: readonly Interval[]): ProjectSourcePeriod {
 
 function sameIntervals(a: readonly Interval[], b: readonly Interval[]) {
   return JSON.stringify(a) === JSON.stringify(b);
-}
-
-/** Whether two periods request the same days (`2018`, `"2018"` and
- * `{from: 2018, to: 2018}` do); periods without placeable days compare as
- * written. */
-export function samePeriod(
-  a: ProjectSourcePeriod,
-  b: ProjectSourcePeriod,
-): boolean {
-  const da = datedIntervals(a);
-  const db = datedIntervals(b);
-  return da !== null && db !== null
-    ? sameIntervals(da, db)
-    : JSON.stringify(a) === JSON.stringify(b);
 }
 
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
@@ -168,56 +139,6 @@ export function periodCoverageUnion(
   return segments.length === 1 ? segments[0] : segments;
 }
 
-// ── Query-string builder ─────────────────────────────────────────────────────
-
-/** Build a `?query` string from the resolution params, omitting undefined /
- * empty values and emitting a SINGLE value per param (no repeated or nested
- * keys — the server reads one `?period=`/`?variant=`/`?value_set_version=` each).
- * Returns the query WITHOUT a leading `?` (the empty string when no params), so
- * callers do `pathname + (q ? "?" + q : "")`. */
-export function queryFromParams(params: ResolutionParams): string {
-  const qs = new URLSearchParams();
-  if (params.period) {
-    qs.set("period", params.period);
-  }
-  if (params.variant) {
-    qs.set("variant", params.variant);
-  }
-  if (params.value_set_version) {
-    qs.set("value_set_version", params.value_set_version);
-  }
-  return qs.toString();
-}
-
-/** Merge a partial resolution change against the CURRENT params and produce the
- * next `?query` string (no leading `?`). The narrowing rule: `?variant` and
- * `?value_set_version` are MODIFIERS of a `?period` resolve (the server 422s them
- * without one), so clearing the period (`next.period` empty/null) DROPS them —
- * the result is the empty query (full history). A field left `undefined` in
- * `next` inherits from `current`; an explicit empty string clears that field.
- * Pure (no `window`) so it's unit-tested directly. */
-export function nextResolutionQuery(
-  current: ResolutionParams,
-  next: {
-    period?: string | null;
-    variant?: string | null;
-    value_set_version?: string | null;
-  },
-): string {
-  const period =
-    next.period === undefined ? current.period : (next.period ?? undefined);
-  if (!period) {
-    return "";
-  }
-  const variant =
-    next.variant === undefined ? current.variant : (next.variant ?? undefined);
-  const value_set_version =
-    next.value_set_version === undefined
-      ? current.value_set_version
-      : (next.value_set_version ?? undefined);
-  return queryFromParams({ period, variant, value_set_version });
-}
-
 // ── Year-window slider (#615 availability-aware local period) ────────────────
 // The default subject-page period control is a year-grain dual-thumb slider over
 // the project WINDOW + the subject's data COVERAGE (#611 → Period model). It is
@@ -269,16 +190,6 @@ export function yearSegmentsFromWire(
   return windows;
 }
 
-/** Whether a wire `?period` is a pure year window the year slider can hold (a
- * bare year or a uniform-year range) — the slider's representability gate. A
- * sub-annual token / `_default` / segment list / junk remains valid URL state but
- * is displayed as read-only active text instead of being authored by the slider. */
-export function yearWindowRepresentable(
-  wire: string | null | undefined,
-): boolean {
-  return yearWindowFromWire(wire) !== null;
-}
-
 /** Clamp a year window to `[min, max]` (and keep `from <= to`) — the slider's
  * bounds guard for a seed that falls outside the rendered track (an older
  * `?period` predating the current bounds). */
@@ -316,21 +227,6 @@ export function dataAxis(
   return to + AXIS_GRID > catalog[1]
     ? [from - AXIS_GRID, to]
     : [from, to + AXIS_GRID];
-}
-
-/** Clamp only a year-grain `?period` wire to `[min, max]`. Non-year-grain
- * values stay verbatim because the year slider renders them read-only instead of
- * silently rewriting richer period grammar. */
-export function clampYearPeriodWire(
-  wire: string | null | undefined,
-  min: number,
-  max: number,
-): string | null {
-  const value = wire ?? null;
-  const window = yearWindowFromWire(value);
-  return window === null
-    ? value
-    : yearWindowToWire(clampYearWindow(window, min, max));
 }
 
 /** The subject's data-availability span with INDEPENDENTLY-bounded sides (#615):

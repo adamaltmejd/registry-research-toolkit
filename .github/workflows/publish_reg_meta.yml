@@ -8,22 +8,26 @@ on:
   release:
     types: [published]
   # Build-only: builds and smoke-tests the binaries as workflow artifacts on any ref.
-  # `ci` is gated on a reg_meta/v* release tag, so a dispatch skips it and every job
-  # that needs it (integration, deploy-image), and it uploads no release asset.
+  # `wait-ci` is gated on a reg_meta/v* release tag, so a dispatch skips it and every
+  # job that needs it (integration, deploy-image), and it uploads no release asset.
   workflow_dispatch:
 
 jobs:
-  ci:
+  # The tagged commit is the bump, already `origin/main` (release skill, step 5), and
+  # CI already ran on it (its PR and its push to main). Read that result by SHA rather
+  # than re-run ci.yml on the tag: a tag on a commit whose CI failed, or never ran,
+  # still stops integration and deploy (fails, or times out after 20 minutes).
+  wait-ci:
     if: startsWith(github.event.release.tag_name, 'reg_meta/v')
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/wait-ci.yml
 
   # Post-release check of this release's DB assets: conformance against the global
   # artifact and, when the release has it, the paired reg_meta_swecov.db.zst, served by
   # the Rust server (integration.yml). Inherits the
-  # reg_meta/v* gate via `needs: ci` (a skipped `ci` skips it), so it never fires for
+  # reg_meta/v* gate via `needs: wait-ci` (a skipped `wait-ci` skips it), so it never fires for
   # reg_meta_build/v* releases.
   integration:
-    needs: ci
+    needs: wait-ci
     uses: ./.github/workflows/integration.yml
 
   # Deploy after a release: a reg_meta release can ship the DB asset an
@@ -40,7 +44,7 @@ jobs:
   # The deployed image's entrypoint smoke gate admits the baked assets before the
   # origin serves them.
   deploy-image:
-    needs: ci
+    needs: wait-ci
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -52,7 +56,7 @@ jobs:
 
   # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), built
   # natively on each runner, each with a `shasum -a 256 -c` checksum file. Not gated
-  # on `ci`: the tagged commit already passed CI on main, and gating would skip the
+  # on `wait-ci`: the tagged commit already passed CI on main, and gating would skip the
   # dispatch build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era
   # distributions and newer.
   binaries:
@@ -99,15 +103,32 @@ jobs:
           cat smoke.err
           test "$status" -eq 10
           grep -q '"code":"db_not_found"' smoke.err
-      # `--clobber` keeps a rerun of a partly green run idempotent.
+      # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
+      # or a gh retry after the first upload landed (HTTP 422), skips an asset that
+      # exists with the same digest and fails on a different one.
       - name: Upload to the release
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
-        run: >-
-          gh release upload "$TAG" "dist/$ASSET" "dist/$ASSET.sha256"
-          --clobber --repo "$GITHUB_REPOSITORY"
+        run: |
+          for name in "$ASSET" "$ASSET.sha256"; do
+            remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+              --jq ".assets[] | select(.name == \"$name\") | .digest")
+            if [ -z "$remote" ]; then
+              gh release upload "$TAG" "dist/$name" --repo "$GITHUB_REPOSITORY" ||
+                {
+                  # gh may have retried after the first attempt landed: re-check.
+                  remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+                    --jq ".assets[] | select(.name == \"$name\") | .digest")
+                  test -n "$remote" || exit 1
+                }
+            fi
+            if [ -n "$remote" ]; then
+              test "$remote" = "sha256:$(shasum -a 256 "dist/$name" | cut -d' ' -f1)" ||
+                { echo "::error::$name exists on $TAG with a different digest"; exit 1; }
+            fi
+          done
       - name: Upload as workflow artifact
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

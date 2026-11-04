@@ -928,18 +928,6 @@ evidence = "Sammanräknat meritvärde.\ncatalog:variable_text:43188:15887:20270"
 
 [[statement]]
 kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "sets" = [] }
-evidence = "Källkolumnens operativa definition anger antal underkända ämnen, medan etiketten anger en indikator.\ncatalog:occurrence:449295\ncatalog:occurrence:449358"
-
-[[statement]]
-kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "tags" = ["education"] }
-evidence = "Källkolumnens operativa definition anger antal underkända ämnen, medan etiketten anger en indikator.\ncatalog:occurrence:449295\ncatalog:occurrence:449358"
-
-[[statement]]
-kind = "set"
 subject = "var:minst-ett-godkant-betyg-2"
 fields = { "sets" = [] }
 evidence = "Suffixet 2 är en tilldelad räknare som inte finns i källkolumnen; etiketten kolliderar och målet behöver hållas för D-12.\ncatalog:variable_text:43190:18078:20270"
@@ -1813,12 +1801,6 @@ evidence = "#2102 same-label cluster 'Meritvärde' (2 variables): judged differe
 
 [[statement]]
 kind = "set"
-subject = "var:minst-ett-godkant-betyg"
-fields = { "label" = "Minst ett godkänt betyg (antal ämnen med betyget F)" }
-evidence = "#2102 same-label cluster 'Minst ett godkänt betyg' (2 variables): judged different meaning, medium confidence; Opdefs: Antal_Ettor counts subjects with grade F, Betyg is the yes/no flag for at least one passed subject."
-
-[[statement]]
-kind = "set"
 subject = "var:moderna-sprak-elevens-val-betyg"
 fields = { "label" = "Moderna språk inom ramen för elevens val (betyg)" }
 evidence = "#2102 same-label cluster 'Moderna språk inom ramen för elevens val' (3 variables): judged different meaning, high confidence; Opdefs: grade, language read, and grade for deaf/hard-of-hearing pupils."
@@ -2002,3 +1984,9 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "label" = "Utländsk/svensk bakgrund (4 grupper)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; Three differently grouped classifications (3 groups, 3 groups version 2, 4 groups) with different value sets; the 4-group one has its own derivation opdef."
+
+[[statement]]
+kind = "set"
+subject = "betyg-ak10: Antal_Ettor where key = 'v30653'"
+fields = { "variable" = "antal-ettor" }
+evidence = "In r12522 (2012/2013) key v30653 sits on two columns, Antal_Ettor and Betyg. Betyg carries v30653's own text in every release 2012-2024. The Antal_Ettor row has the counting operational text of v3594 (number of subjects with grade F), and Antal_Ettor is v3594's column in 2005-2011.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=929163 (r12522)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992502 (r12522)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=409441 (r12524)"

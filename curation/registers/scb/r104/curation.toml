@@ -1308,3 +1308,9 @@ kind = "set"
 subject = "var:upprakningstal-viktak9"
 fields = { "label" = "Uppräkningstal (årskurs 9)" }
 evidence = "#2102 same-label cluster 'Uppräkningstal' (8 variables): judged different meaning, medium confidence; Calibrated weights ViktAK3-AK9 per grade, decoded from the column names; Elevvikt has opdefs naming grade 3 and grade 4 inconsistently, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "var:flyttat"
+fields = { "description" = "Anger om eleven bytt skola under läsåret och när. 2002-2007 anges tidpunkten för flytten (2002-2005 som ÅÅMM, 2006 som MMDD). Från 2008 anges i stället en kod för när flytten skedde, till exempel före läsårets start eller före respektive efter en gränsdag under året. Kodlistan och gränsdagarna skiljer sig mellan tabellerna, se värdemängden för respektive tabell." }
+evidence = "Opdef per table: elevpanel-6 2002-2005 'flyttidpunkt enligt ÅÅMM', 2006 'i form av MMDD'; elevpanel-7 2008-2012 'Härleds från insamlad flyttidpunkt' with value set #5857 (before school start, before/after 1 Feb, after school year); elevpanel-6 2008 #10829 and elevpanel-8 2015-2020 #5851 use 1 Jan/31 Mar boundaries. The categories are a coarser coding of the same fact (when the pupil left the school), so one variable with a dated description."

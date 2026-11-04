@@ -85,11 +85,10 @@ export function App() {
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
-            <BrowseTree className={styles.browse} config={config} />
+            <BrowseTree className={styles.browse} />
             {registerFqid && route.name === "catalog-node" ? (
               <VariableList
                 registerFqid={registerFqid}
-                config={config}
                 selectedFqid={
                   unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
                   route.fqidPath.split("/").length > 2
@@ -131,7 +130,7 @@ function RoutedView({
   context,
   validation,
 }: {
-  route: Route;
+  route: Exclude<Route, { name: "project" }>;
   context: Context | null;
   validation: ValidationResultModel | null;
 }) {
@@ -162,10 +161,6 @@ function RoutedView({
           context={context}
           validation={validation}
         />
-      );
-    case "project":
-      return (
-        <StatusRow tone="info">Not ported to the current API yet</StatusRow>
       );
     case "not-found":
       return <NotFound path={route.path} />;

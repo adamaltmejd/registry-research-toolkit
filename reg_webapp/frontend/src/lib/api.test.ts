@@ -39,23 +39,22 @@ describe("apiGet", () => {
       status: 422,
       json: async () => ({
         error: {
-          code: "scope_unavailable",
+          code: "invalid_parameter",
           class: "usage",
-          message: "This catalog has no holdings scope.",
-          remediation: "Drop `scope`.",
-          fields: ["holdings"],
+          message: "Unknown parameter `x`.",
+          remediation: "Drop `x`.",
+          fields: ["x"],
         },
         meta: {
           contract_version: "4.0.0",
           generation: "0",
-          scope: "reference",
         },
       }),
     }));
     const err = (await getContext().catch((e) => e)) as ApiError;
     expect(err).toBeInstanceOf(ApiError);
     expect(err.status).toBe(422);
-    expect(err.message).toBe("This catalog has no holdings scope.");
+    expect(err.message).toBe("Unknown parameter `x`.");
   });
 
   it("falls back to a status-line message when the error body is not JSON", async () => {
@@ -330,7 +329,7 @@ describe("search", () => {
           status: 200,
           json: async () => ({
             data: { items: [], next_cursor: "c1" },
-            meta: { scope: "reference" },
+            meta: {},
           }),
         }),
       ),

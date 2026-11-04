@@ -67,7 +67,7 @@ from pathlib import Path
 # The output lives outside this repo, so panache gets this repo's config explicitly.
 PANACHE_CONFIG = Path(__file__).resolve().parent.parent / ".panache.toml"
 
-# Footer pattern from pymupdf4llm output
+# Page-footer pattern in the converted markdown
 FOOTER_RE = re.compile(
     r"^(?:\d+\s+)?SCB\s*[–-]\s*(?:LISA|Föränd)",
     re.IGNORECASE,
@@ -1275,20 +1275,16 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--bakgrundsfakta",
-        type=Path,
-        help="Path to bakgrundsfakta PDF",
-    )
-    parser.add_argument(
         "--forandringar",
         type=Path,
         nargs="*",
-        help="Paths to förändringar PDFs",
+        help="Paths to förändringar markdown files (marker output)",
     )
     parser.add_argument(
         "--cached-md",
         type=Path,
-        help="Use pre-converted markdown instead of PDF (for bakgrundsfakta)",
+        required=True,
+        help="Bakgrundsfakta markdown (marker output)",
     )
     parser.add_argument(
         "--out",
@@ -1304,17 +1300,8 @@ def main() -> None:
     args = parser.parse_args()
 
     # Read bakgrundsfakta markdown first (needed for column extraction)
-    if args.cached_md:
-        print(f"Reading cached markdown: {args.cached_md}")
-        md_text = args.cached_md.read_text(encoding="utf-8")
-    elif args.bakgrundsfakta:
-        print(f"Converting PDF: {args.bakgrundsfakta}")
-        import pymupdf4llm
-
-        md_text = pymupdf4llm.to_markdown(str(args.bakgrundsfakta))
-    else:
-        print("ERROR: Supply --bakgrundsfakta or --cached-md")
-        sys.exit(1)
+    print(f"Reading cached markdown: {args.cached_md}")
+    md_text = args.cached_md.read_text(encoding="utf-8")
 
     known_cols = get_lisa_columns(md_text)
 
@@ -1359,19 +1346,13 @@ def main() -> None:
         if missing:
             print(f"Missing ({len(missing)}): {', '.join(sorted(missing)[:30])}...")
 
-    # Parse förändringar files (PDF or pre-converted markdown)
+    # Parse förändringar files
     forandringar_paths = list(args.forandringar or [])
     for path in forandringar_paths:
         year_match = re.search(r"(\d{4})", path.name)
         year = year_match.group(1) if year_match else "unknown"
-        if path.suffix == ".md":
-            print(f"Reading förändringar markdown: {path.name} (year: {year})")
-            md = path.read_text(encoding="utf-8")
-        else:
-            print(f"Converting förändringar PDF: {path.name} (year: {year})")
-            import pymupdf4llm
-
-            md = pymupdf4llm.to_markdown(str(path))
+        print(f"Reading förändringar markdown: {path.name} (year: {year})")
+        md = path.read_text(encoding="utf-8")
         entry = parse_forandringar(md, year, path.name)
         if not args.dry_run:
             write_entries([entry], known_cols, args.out)

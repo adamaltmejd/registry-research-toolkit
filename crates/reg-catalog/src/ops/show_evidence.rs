@@ -10,9 +10,9 @@ use super::docs::{self, RelatedDocument};
 use super::refs::Entity;
 use super::segments::{Locator, StatementLocation};
 use super::{Period, Server};
-use crate::Error;
+use crate::{Error, rows};
 
-/// Provider text and curation provenance, returned only when evidence is requested.
+/// The provider's texts and the curated values behind them.
 #[derive(Serialize, ToSchema)]
 pub struct VariableEvidence {
     texts: Vec<ProviderText>,
@@ -22,7 +22,7 @@ pub struct VariableEvidence {
     documents: Vec<RelatedDocument>,
 }
 
-/// One provider text, with its coverage and every contributing source occurrence.
+/// One provider text, the years it covers and the deliveries it comes from.
 #[derive(Serialize, ToSchema)]
 pub struct ProviderText {
     text: String,
@@ -30,7 +30,6 @@ pub struct ProviderText {
     sources: Vec<ProviderTextSource>,
 }
 
-/// Source values remain distinct from curated winners, including silent sources.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct ProviderTextSource {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -48,14 +47,14 @@ pub struct ProviderTextSource {
     locators: Vec<Locator>,
 }
 
-/// A delivered or curated folded alias; source occurrences retain exact spellings.
+/// A column name the variable is known by (case ignored).
 #[derive(Serialize, ToSchema)]
 pub struct EvidenceSpelling {
     spelling: String,
     kind: String,
 }
 
-/// An authored curation statement that contributed a field of this variable.
+/// A curated statement that supplied a field of this variable.
 #[derive(Serialize, ToSchema)]
 pub struct CurationStatement {
     field: String,
@@ -63,17 +62,7 @@ pub struct CurationStatement {
     value: Option<String>,
     statement: StatementLocation,
     #[schema(required = true)]
-    evidence: Option<String>,
-    #[schema(required = true)]
     caveat: Option<String>,
-}
-
-/// Latest provider text, used only when no curated description exists.
-#[derive(Serialize, ToSchema)]
-pub struct SourceDefinition {
-    origin: &'static str,
-    period: Period,
-    text: String,
 }
 
 // An override row distinguishes a silent source (NULL) from no override. COALESCE
@@ -168,18 +157,57 @@ fn provider_texts<'a>(
     }
 }
 
+/// A used occurrence's provider wording: its table, `[start, end)` and its distinct
+/// source texts (definition, operational definition), one per line; `None` when the
+/// source is silent. Source values, never a curated correction (design §2.4).
+pub(super) struct Wording {
+    pub table: String,
+    pub start: i64,
+    pub end: i64,
+    pub text: Option<String>,
+}
+
+/// The variable's used occurrences' wordings, latest first, then in source order.
+pub(super) fn wordings(conn: &Connection, variable: i64) -> Result<Vec<Wording>, Error> {
+    Ok(rows(
+        conn,
+        &format!(
+            "{SOURCE_ROWS} AND o.status = 'used'
+             ORDER BY o.start DESC, o.end DESC, t.pid, o.source_key, spelling, o.id"
+        ),
+        [variable],
+        |row| {
+            let definition: Option<String> = row.get(8)?;
+            let operational: Option<String> = row.get(9)?;
+            let texts = provider_texts(definition.as_deref(), operational.as_deref());
+            Ok(Wording {
+                table: row.get(1)?,
+                start: row.get(2)?,
+                end: row.get(3)?,
+                text: (!texts.is_empty()).then(|| {
+                    texts
+                        .iter()
+                        .map(|(_, text)| *text)
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                }),
+            })
+        },
+    )?)
+}
+
 /// All source occurrences, including shadowed evidence, in table/period/key order.
 pub(super) fn load(
     server: &Server,
     conn: &Connection,
     entity: &Entity,
 ) -> Result<VariableEvidence, Error> {
-    let mut rows = conn
-        .prepare(&format!(
-            "{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"
-        ))?
-        .query_map([entity.id], |row| source_row(server, row))?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+    let mut rows = rows(
+        conn,
+        &format!("{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"),
+        [entity.id],
+        |row| source_row(server, row),
+    )?;
     let mut locators = conn.prepare(
         "SELECT i.name, l.locator
          FROM occurrence_locator l JOIN input i ON i.id = l.input_id
@@ -245,18 +273,18 @@ pub(super) fn load(
             text
         })
         .collect();
-    let spellings = conn
-        .prepare(
-            "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
+    let spellings = crate::rows(
+        conn,
+        "SELECT f.folded, a.kind FROM alias a JOIN name_fold f ON f.id = a.fold_id
              WHERE a.variable_id = ? ORDER BY f.folded",
-        )?
-        .query_map([entity.id], |row| {
+        [entity.id],
+        |row| {
             Ok(EvidenceSpelling {
                 spelling: row.get(0)?,
                 kind: row.get(1)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     Ok(VariableEvidence {
         texts,
         source_only,
@@ -267,22 +295,21 @@ pub(super) fn load(
 }
 
 fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>, Error> {
-    Ok(conn
-        .prepare(
-            "WITH decisions AS (
+    Ok(rows(
+        conn,
+        "WITH decisions AS (
                SELECT field, value, statement_id FROM override
                WHERE subject_kind = 'variable' AND subject_id = ?1
                UNION
                SELECT x.field, x.value, x.statement_id FROM occurrence o
                  JOIN override x ON x.subject_kind = 'occurrence' AND x.subject_id = o.id
                WHERE o.variable_id = ?1)
-             SELECT x.field, x.value, s.file, s.line, e.body, c.body
+             SELECT x.field, x.value, s.file, s.line, c.body
              FROM decisions x JOIN statement s ON s.id = x.statement_id
-               LEFT JOIN text e ON e.id = s.evidence_text
                LEFT JOIN text c ON c.id = s.caveat_text
              ORDER BY s.file, s.line, x.field, x.value",
-        )?
-        .query_map([variable], |row| {
+        [variable],
+        |row| {
             Ok(CurationStatement {
                 field: row.get(0)?,
                 value: row.get(1)?,
@@ -290,40 +317,8 @@ fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>
                     file: row.get(2)?,
                     line: row.get(3)?,
                 },
-                evidence: row.get(4)?,
-                caveat: row.get(5)?,
+                caveat: row.get(4)?,
             })
-        })?
-        .collect::<rusqlite::Result<_>>()?)
-}
-
-/// The two provider text fields from the same latest used occurrence; never a pair
-/// assembled from different periods. An entirely silent source yields no fallback.
-pub(super) fn latest_source_text(
-    server: &Server,
-    conn: &Connection,
-    variable: i64,
-) -> Result<Option<SourceDefinition>, Error> {
-    let mut statement = conn.prepare(&format!(
-        "{SOURCE_ROWS} AND o.status = 'used'
-         ORDER BY o.start DESC, o.end DESC, t.pid, o.source_key, spelling, o.id"
-    ))?;
-    let mut rows = statement.query([variable])?;
-    while let Some(row) = rows.next()? {
-        let definition: Option<String> = row.get(8)?;
-        let operational: Option<String> = row.get(9)?;
-        let texts = provider_texts(definition.as_deref(), operational.as_deref());
-        if !texts.is_empty() {
-            return Ok(Some(SourceDefinition {
-                origin: "provider",
-                period: server.period(row.get(2)?, row.get(3)?),
-                text: texts
-                    .into_iter()
-                    .map(|(_, text)| text)
-                    .collect::<Vec<_>>()
-                    .join("\n"),
-            }));
-        }
-    }
-    Ok(None)
+        },
+    )?)
 }

@@ -16,12 +16,13 @@
 
 /// The catalog file's schema version: `PRAGMA user_version` and
 /// `meta.schema_version` (as decimal text). Readers admit exactly this version.
-pub const CATALOG_SCHEMA_VERSION: u32 = 7;
+pub const CATALOG_SCHEMA_VERSION: u32 = 8;
 
 /// A holdings file's physical schema. Its semantic tables retain the catalog schema.
 pub const HOLDINGS_SCHEMA_VERSION: u32 = 5;
 
 mod case_folding;
+mod digest;
 mod grammar;
 mod interval;
 pub mod issue;
@@ -32,34 +33,22 @@ mod validation;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
+pub use digest::{hex, sha256_hex};
 pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, add_iso_months, is_slug, iso_day_number,
     next_iso_day, period_token_for_bounds, prev_iso_day,
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
-pub use structural::{q as quote, quoted_list, validate_structural};
+pub use structural::{q as quote, validate_structural};
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
-use unicode_properties::{GeneralCategory, GeneralCategoryGroup, UnicodeGeneralCategory};
+use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
 pub use validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 /// Python `str.isspace()`: `White_Space` plus the four information separators
 /// U+001C..U+001F, which Python treats as whitespace and Unicode does not.
 fn py_isspace(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
-}
-
-/// Python `str.strip()` with no arguments.
-#[must_use]
-pub fn py_strip(s: &str) -> &str {
-    s.trim_matches(py_isspace)
-}
-
-/// The class `\d` in Python's `re`: general category Nd (decimal digits), not the
-/// superscripts, fractions and other numbers `char::is_numeric` also admits.
-#[must_use]
-pub fn py_isdecimal(c: char) -> bool {
-    c.general_category() == GeneralCategory::DecimalNumber
 }
 
 /// Python `str.split()` with no arguments.
@@ -180,18 +169,6 @@ pub fn normalized_search_query(s: &str) -> String {
     case_fold(&py_split(s).collect::<Vec<_>>().join(" "))
 }
 
-/// The FTS5 query builder: each whitespace token with an alphanumeric character becomes
-/// a quoted prefix term (`"tok"*`, embedded quotes doubled), space-joined. `None` when
-/// no token qualifies.
-#[must_use]
-pub fn fts_match_query(raw: &str) -> Option<String> {
-    let terms: Vec<String> = py_split(raw)
-        .filter(|t| t.chars().any(py_isalnum))
-        .map(|t| format!("\"{}\"*", t.replace('"', "\"\"")))
-        .collect();
-    (!terms.is_empty()).then(|| terms.join(" "))
-}
-
 /// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its
 /// [`fold_search`] fold, in order.
 #[must_use]
@@ -201,22 +178,4 @@ pub fn fts_terms(s: &str) -> Vec<String> {
         .filter(|t| !t.is_empty())
         .map(str::to_owned)
         .collect()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{py_isdecimal, py_strip};
-
-    /// Fails if `py_isdecimal` widens to every number (`²`, `½`, `Ⅻ`) or misses a
-    /// non-ASCII decimal digit, or `py_strip` misses Python's U+001C..U+001F.
-    #[test]
-    fn python_decimal_and_strip() {
-        assert!(['3', '\u{0663}', '\u{FF13}'].into_iter().all(py_isdecimal));
-        assert!(
-            !['\u{00B2}', '\u{00BD}', '\u{216B}']
-                .into_iter()
-                .any(py_isdecimal)
-        );
-        assert_eq!(py_strip("\u{1c} \u{3000}F32\u{1f}\n"), "F32");
-    }
 }

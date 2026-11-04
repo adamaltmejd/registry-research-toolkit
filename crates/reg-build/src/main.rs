@@ -6,7 +6,7 @@
 //!                 [--catalog-version V] [--release]
 //! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]
 //! reg-build verify FILE [--previous FILE]
-//! reg-build diff OLD NEW [--json] [-n N]
+//! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
 //!
 //! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
@@ -253,7 +253,7 @@ fn read(args: &Args) -> Result<(), String> {
 fn sha256_file(path: &Path) -> Result<(String, i64), String> {
     let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let len = i64::try_from(bytes.len()).map_err(|e| e.to_string())?;
-    Ok((reg_frame::hex(&Sha256::digest(&bytes)), len))
+    Ok((reg_core::sha256_hex(&bytes), len))
 }
 
 /// The digest of a set of files: SHA-256 over `path\tsha256\n` lines in path order,
@@ -269,7 +269,7 @@ fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64), String
         hasher.update(format!("{file}\t{sha}\n"));
         total += bytes;
     }
-    Ok((reg_frame::hex(&hasher.finalize()), total))
+    Ok((reg_core::hex(&hasher.finalize()), total))
 }
 
 /// Every file under `dir`, relative to it, `/`-separated; symlinks are followed and
@@ -293,10 +293,6 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
         }
     }
     Ok(())
-}
-
-fn build(args: &Args) -> Result<(), String> {
-    build_with_provenance(args, None, None)
 }
 
 /// A steward commit covers its own generated transcription inputs; putting that
@@ -557,7 +553,7 @@ fn build_with_provenance(
         hasher.update(&base.generation);
         hasher.update(&base.sha256);
     }
-    let generation_id = reg_frame::hex(&hasher.finalize());
+    let generation_id = reg_core::hex(&hasher.finalize());
     let day = |iso| reg_core::iso_day_number(iso).expect("an ISO day");
     let meta = BTreeMap::from([
         ("schema_version", schema_version),
@@ -718,7 +714,7 @@ fn main() -> ExitCode {
     } else {
         parse_args(args).and_then(|args| match args.command.as_str() {
             "read" => read(&args),
-            "build" => build(&args),
+            "build" => build_with_provenance(&args, None, None),
             "lock" => lock(&args),
             other => Err(format!("unknown command {other:?}")),
         })

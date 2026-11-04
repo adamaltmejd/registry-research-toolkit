@@ -196,3 +196,57 @@ kind = "set"
 subject = "var:verksamhet"
 fields = { "label" = "Total energianvändning (verksamhet)" }
 evidence = "#2102 same-label cluster 'Total energianvändning' (6 variables): judged different meaning, high confidence; Opdefs: total MWh per fuel, purchased at fuel station, with biofuel blend, buildings, transports, operations."
+
+[[statement]]
+kind = "set"
+subject = "var:energi"
+fields = { "description" = "Total energianvändning per bränsle, i MWh." }
+evidence = "Etiketten anger MWh; källans enhet (megawatt, MW) är en effektenhet och rättas i en egen sats.\n0.74.0 catalog, key v7873, releases r12660; reg_meta.db:occurrence:56144"
+
+[[statement]]
+kind = "set"
+subject = "energianvandning-inom-byggsektorn: Energi where key = 'v7873' and release = 'r12660'"
+fields = { "unit" = "Megawattimmar" }
+evidence = "Etiketten anger MWh; en energimängd anges inte i MW.\nold unit: 'megawatt (MW)'; Registerinformation.csv:row=537999 (r12660)"
+
+[[statement]]
+kind = "set"
+subject = "var:total-energianvandning"
+fields = { "description" = "Total energianvändning för byggnader, i MWh." }
+evidence = "Etiketten anger MWh; källans enhet (megawatt, MW) är en effektenhet och rättas i en egen sats.\n0.74.0 catalog, key v7873, releases r12660; reg_meta.db:occurrence:56143"
+
+[[statement]]
+kind = "set"
+subject = "energianvandning-inom-byggsektorn: Byggnader where key = 'v7873' and release = 'r12660'"
+fields = { "unit" = "Megawattimmar" }
+evidence = "Etiketten anger MWh; en energimängd anges inte i MW.\nold unit: 'megawatt (MW)'; Registerinformation.csv:row=537996 (r12660)"
+
+[[statement]]
+kind = "set"
+subject = "var:transporter"
+fields = { "description" = "Total energianvändning för transporter, i MWh." }
+evidence = "Etiketten anger MWh; källans enhet (megawatt, MW) är en effektenhet och rättas i en egen sats.\n0.74.0 catalog, key v7873, releases r12660; reg_meta.db:occurrence:56160"
+
+[[statement]]
+kind = "set"
+subject = "energianvandning-inom-byggsektorn: Transporter where key = 'v7873' and release = 'r12660'"
+fields = { "unit" = "Megawattimmar" }
+evidence = "Etiketten anger MWh; en energimängd anges inte i MW.\nold unit: 'megawatt (MW)'; Registerinformation.csv:row=537997 (r12660)"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhet"
+fields = { "description" = "Total energianvändning för verksamheten, i MWh." }
+evidence = "Etiketten anger MWh; källans enhet (megawatt, MW) är en effektenhet och rättas i en egen sats.\n0.74.0 catalog, key v7873, releases r12660; reg_meta.db:occurrence:56161"
+
+[[statement]]
+kind = "set"
+subject = "energianvandning-inom-byggsektorn: Verksamhet where key = 'v7873' and release = 'r12660'"
+fields = { "unit" = "Megawattimmar" }
+evidence = "Etiketten anger MWh; en energimängd anges inte i MW.\nold unit: 'megawatt (MW)'; Registerinformation.csv:row=537998 (r12660)"
+
+[[statement]]
+kind = "set"
+subject = "var:lillan"
+fields = { "description" = "Antal svarande företagsenheter i stratumet (lilla n)." }
+evidence = "Operationell definition \"Antal svarande FE\" (r12660); definitionen talar om utvalda företag, och den operationella definitionen anger svarande.\n0.74.0 catalog, key v4030, releases r12660; reg_meta.db:occurrence:56151"

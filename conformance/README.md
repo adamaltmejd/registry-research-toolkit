@@ -9,7 +9,6 @@ product imports or internal patches are allowed.
 ```sh
 cargo build --workspace
 uv run --no-project scripts/gate.py rust
-uv run --no-project scripts/gate.py release
 ```
 
 Every run needs `--server-cmd`: the suite's boundary is the Rust server, and a run
@@ -17,14 +16,11 @@ without it is refused at startup. The sampled projects all come from one address
 template raises the server's write limit (`--write-limit`); the burst case in
 `test_mcp.py` drops the flag and pins the default. `scripts/gate.py` holds the commands.
 
-The `rust` step runs the whole suite on the synthetic `base` artifact. The `release`
-step runs only the checks on exactly the selected artifact
-(`-m release --run-release --artifact-dir=…`). Both flags are required for tier 3. Use
-the equals form for `--artifact-dir`: pytest discovers roots before loading custom
-options, and a space-separated external directory can select that directory's checkout
-configuration.
-
-Holdings and steward cases return in milestone E, written over the new builder.
+The `rust` step runs the whole suite on the synthetic `base` artifact, then only the
+checks on exactly the selected artifact (`-m release --run-release --artifact-dir=…`),
+again on the `base` artifact. Both flags are required for tier 3. Use the equals form
+for `--artifact-dir`: pytest discovers roots before loading custom options, and a
+space-separated external directory can select that directory's checkout configuration.
 
 ## Case contract
 
@@ -148,11 +144,11 @@ served by the Rust server. They use the HTTP case shape above, with these additi
 `test_artifact.py` runs `reg-build verify` on the selected artifact (`--artifact-dir`),
 the one structural authority over a catalog file, and fails on a non-zero exit printing
 only the first line of its stderr. Synthetic artifacts are verified when they are built.
-The `release` step runs it on the `base` fixture's artifact; a release runs it on the
-artifact it ships. The release search checks sample each indexed kind and traverse
-paging to the depth cap when the artifact has enough hits. The release order check
-compares sampled whole-table projects with an independent artifact census and checks
-HTTP/MCP agreement. Both compare repeated responses as raw bytes.
+The `rust` step's release admission runs it on the `base` fixture's artifact; a release
+runs it on the artifact it ships. The release search checks sample each indexed kind and
+traverse paging to the depth cap when the artifact has enough hits. The release order
+check compares sampled whole-table projects with an independent artifact census and
+checks HTTP/MCP agreement. Both compare repeated responses as raw bytes.
 
 ## Verification gates
 

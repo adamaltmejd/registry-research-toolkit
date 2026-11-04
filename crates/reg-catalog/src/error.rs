@@ -56,9 +56,9 @@ codes! {
     ProjectInvalid "project_invalid" "usage" 422 0 ["issues"]
         "Fix the listed issues; validate reports them.";
     ProjectUnnamed "project_unnamed" "usage" 422 0 []
-        "Name the project; the order file's provenance carries its name.";
+        "Give the project a name; the order file records it.";
     HoldingsUnavailable "holdings_unavailable" "usage" 400 0 []
-        "Materialize on a server that serves a steward's holdings; this one serves the reference catalog only, whose logical order is `order`.";
+        "This server has no data holder's tables; use `order`, or the holder's own server.";
     NotFound "not_found" "not_found" 404 0 ["ref"]
         "Search for the entity and use its FQID.";
     RetiredRef "retired_ref" "not_found" 404 0 ["ref", "kind", "retired_in", "reason"]
@@ -66,7 +66,7 @@ codes! {
     TableIsRegister "table_is_register" "usage" 422 0 ["ref", "tables"]
         "Pass one of the listed table ids.";
     DocsUnavailable "docs_unavailable" "not_found" 404 0 []
-        "This catalog has no documentation index.";
+        "This catalog has no documents.";
     AmbiguousRef "ambiguous_ref" "conflict" 409 0 ["ref", "candidates"]
         "Repeat the call with one of the candidates' FQIDs.";
     StaleCursor "stale_cursor" "conflict" 409 0 ["generation"]
@@ -125,6 +125,12 @@ impl Error {
                 .zip(values)
                 .collect(),
         }
+    }
+
+    /// `invalid_ref` for `value`, a ref (or a table or tag ref) the operation cannot take.
+    #[must_use]
+    pub fn invalid_ref(value: &str, message: impl Into<String>) -> Self {
+        Self::new(Code::InvalidRef, message, vec![value.into()])
     }
 
     #[must_use]

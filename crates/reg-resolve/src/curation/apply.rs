@@ -511,13 +511,8 @@ pub fn apply(
     }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
-        sets: Vec::new(),
         records: records.to_vec(),
-        changes: Vec::new(),
-        classifications: Vec::new(),
-        assignments: BTreeMap::new(),
-        metadata: Vec::new(),
-        sentinels: BTreeMap::new(),
+        ..Applied::default()
     };
     match statement {
         Statement::Set {

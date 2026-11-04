@@ -1082,42 +1082,6 @@ evidence = "Anställningslängd i folkhögskolan.\ncatalog:variable_text:11517:1
 
 [[statement]]
 kind = "set"
-subject = "var:folkbokforingskommun"
-fields = { "sets" = ["hemkommun"] }
-evidence = "Katalogen anger angränsande ägare för samma kolumn.\ncatalog:occurrence:100075\ncatalog:occurrence:100139"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun"
-fields = { "tags" = ["geography"] }
-evidence = "Katalogen anger angränsande ägare för samma kolumn.\ncatalog:occurrence:100075\ncatalog:occurrence:100139"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-ht"
-fields = { "sets" = ["hemkommun"] }
-evidence = "Samma terminskommun är uppdelad på angränsande perioder med hemkommun-ht.\ncatalog:occurrence:100013\ncatalog:occurrence:100076\ncatalog:occurrence:100140"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-ht"
-fields = { "tags" = ["geography"] }
-evidence = "Samma terminskommun är uppdelad på angränsande perioder med hemkommun-ht.\ncatalog:occurrence:100013\ncatalog:occurrence:100076\ncatalog:occurrence:100140"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-vt"
-fields = { "sets" = ["hemkommun"] }
-evidence = "Samma terminskommun är uppdelad på angränsande perioder med hemkommun-vt.\ncatalog:occurrence:100014\ncatalog:occurrence:100077\ncatalog:occurrence:100141"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-vt"
-fields = { "tags" = ["geography"] }
-evidence = "Samma terminskommun är uppdelad på angränsande perioder med hemkommun-vt.\ncatalog:occurrence:100014\ncatalog:occurrence:100077\ncatalog:occurrence:100141"
-
-[[statement]]
-kind = "set"
 subject = "var:folklar-examen"
 fields = { "sets" = ["pedagogisk-utbildning"] }
 evidence = "Indikator för folkhögskollärarexamen.\ncatalog:variable_text:11523:14245:20089"
@@ -2746,24 +2710,6 @@ evidence = "#2102 same-label cluster 'Behörighet till Yrkeshögskolan' (2 varia
 
 [[statement]]
 kind = "set"
-subject = "var:folkbokforingskommun"
-fields = { "label" = "Folkbokföringskommun (31 december referensåret)" }
-evidence = "#2102 same-label cluster 'Folkbokföringskommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun is the municipality on 31 December of the reference year, Hemkommun_HT and _VT the municipality before the start of the autumn and spring term."
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-ht"
-fields = { "label" = "Folkbokföringskommun (före höstterminens start)" }
-evidence = "#2102 same-label cluster 'Folkbokföringskommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun is the municipality on 31 December of the reference year, Hemkommun_HT and _VT the municipality before the start of the autumn and spring term."
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingskommun-vt"
-fields = { "label" = "Folkbokföringskommun (före vårterminens start)" }
-evidence = "#2102 same-label cluster 'Folkbokföringskommun' (3 variables): judged different meaning, high confidence; Opdefs: Hemkommun is the municipality on 31 December of the reference year, Hemkommun_HT and _VT the municipality before the start of the autumn and spring term."
-
-[[statement]]
-kind = "set"
 subject = "var:folkhogskola"
 fields = { "label" = "Folkhögskola (skolenhetskod)" }
 evidence = "#2102 same-label cluster 'Folkhögskola' (2 variables): judged different meaning, low confidence; Skolkod holds both 7- and 9-digit school codes, Skolenhetskod only 7-digit school unit codes; both occur in deltagare-i-sfi 2018-2019 and no text describes them."
@@ -3253,3 +3199,21 @@ kind = "set"
 subject = "grupper-varterminen: a-24 @2010-01-01..2014-12-31 where key = 'v8625'"
 fields = { "variable" = "alder-18-24-ar-folkhogskolan-ald1824" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Ald1824 in grupper-hostterminen, grupper-varterminen; A-24 in grupper-hostterminen, grupper-varterminen: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Opdefs are identical apart from capitalisation of 'arbetsförmedlingen' and a trailing full stop); folded into alder-18-24-ar-folkhogskolan-ald1824."
+
+[[statement]]
+kind = "set"
+subject = "deltagarregister: Hemkommun where key = 'v6809'"
+fields = { "variable" = "kommun" }
+evidence = "Deltagarregister 2020 (r16349) lists Hemkommun under key v6809 (Folkbokföringskommun); 2021-2024 list the same column under key v36 (Kommun). Operational text is identical (municipality where the person is registered on 31 December of the reference year) and both use value set #13.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=752182 (r16349)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=752183 (r18321)"
+
+[[statement]]
+kind = "set"
+subject = "deltagarregister: Hemkommun_HT where key = 'v6809'"
+fields = { "variable" = "hemkommun-ht" }
+evidence = "Deltagarregister 2020 (r16349) lists Hemkommun_HT under key v6809; 2017-2019 and 2021-2024 list the same column under key v36. The 2020 and 2021 operational texts are identical (municipality before the start of the autumn term) and both use value set #13.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=961323 (r16349)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=960243 (r18321)"
+
+[[statement]]
+kind = "set"
+subject = "deltagarregister: Hemkommun_VT where key = 'v6809'"
+fields = { "variable" = "hemkommun-vt" }
+evidence = "Deltagarregister 2020 (r16349) lists Hemkommun_VT under key v6809; 2017-2019 and 2021-2024 list the same column under key v36. The 2020 and 2021 operational texts are identical (municipality before the start of the spring term) and both use value set #13.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=960060 (r16349)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=960244 (r18321)"

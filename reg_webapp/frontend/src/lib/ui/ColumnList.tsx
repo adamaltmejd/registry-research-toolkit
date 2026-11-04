@@ -24,8 +24,6 @@ export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
   id: string;
   name: string;
-  /** Already formatted period, available to a stable row renderer. */
-  period?: string;
   /** The option's accessible name where `name` repeats across sections
    * (another register's match); the visible text stays `name`. */
   label?: string;
@@ -260,11 +258,6 @@ export function ColumnList({
                           className={styles.register}
                           title={section.label}
                         >
-                          {section.groupLabel && (
-                            <span className={`micro-label ${styles.group}`}>
-                              {section.groupLabel}
-                            </span>
-                          )}
                           {section.label}
                         </Header>
                         <Collection

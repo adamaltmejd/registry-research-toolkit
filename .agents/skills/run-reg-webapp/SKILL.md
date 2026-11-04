@@ -62,10 +62,11 @@ job.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
   design-reviewer skill judges.
-- **`flows`** runs the shell/search scenario at four viewports, each in a fresh browser
-  context against the real servers, and writes the PNGs into `<out-dir>`. It uses the
-  `demo` / `demo2` content of `--fixture-db`. Entity and project flows return with
-  W2–W5; their routes currently show a not-ported notice.
+- **`flows`** runs the shell/search scenario at four viewports (CI sets
+  `REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop`: phone and desktop only), each in a fresh
+  browser context against the real servers, and writes the PNGs into `<out-dir>`. It
+  uses the `demo` / `demo2` content of `--fixture-db`. Entity and project flows return
+  with W2–W5; their routes currently show a not-ported notice.
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 

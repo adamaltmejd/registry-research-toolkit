@@ -11,9 +11,8 @@ import { registerRead, segmentsRead } from "./catalog_names";
 import { focusAfterRemoval } from "./focus_after_removal";
 import { OrderView } from "./OrderView";
 import styles from "./ProjectEditor.module.css";
-import { clampYearWindow, dataAxis } from "./period";
+import { dataAxis } from "./period";
 import type { ProjectData } from "./project_data";
-import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store";
 import { sourcePeriodYears } from "./reg_core";
 import { SourceCard } from "./SourceCard";
@@ -29,8 +28,8 @@ import { useQueryParam } from "./use_router";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import { ValidationPanel } from "./ValidationPanel";
 import type { ValidationIssue } from "./validation";
-import { windowStore } from "./window";
-import { defaultStudyWindow, windowBounds } from "./window_bounds";
+import { createProject, windowStore } from "./window";
+import { windowBounds } from "./window_bounds";
 
 export function ProjectEditor({
   context,
@@ -49,6 +48,14 @@ export function ProjectEditor({
   } | null>(null);
   const raw = project.raw;
   const draft = project.draft;
+  // A saved window outside this deployment's catalog span is clamped into it at
+  // open, so the exported project never keeps decades the catalog cannot hold (#1037).
+  const open = (text: string, fromFile = false) => {
+    projectStore.open(text, fromFile);
+    const bounds = windowBounds(context);
+    if (bounds.enforced && projectStore.draft)
+      windowStore.clampTo(bounds.min, bounds.max);
+  };
   const replace = (action: () => void) => {
     if (raw === null) action();
     else setPending({ action });
@@ -62,18 +69,7 @@ export function ProjectEditor({
         <Button
           isInert={!context}
           onPress={() => {
-            if (context)
-              replace(() => {
-                const bounds = windowBounds(context);
-                projectStore.newProject({
-                  reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
-                  window: clampYearWindow(
-                    windowStore.value ?? defaultStudyWindow(bounds),
-                    bounds.min,
-                    bounds.max,
-                  ),
-                });
-              });
+            if (context) replace(() => createProject(context));
           }}
         >
           Create a project
@@ -207,7 +203,7 @@ export function ProjectEditor({
                 replace(() => {
                   void file.text().then(
                     (text) => {
-                      projectStore.open(text, true);
+                      open(text, true);
                       setFileError(null);
                     },
                     (error: unknown) =>
@@ -232,7 +228,7 @@ export function ProjectEditor({
           <Button
             isInert={!pasted.trim()}
             onPress={() => {
-              if (pasted.trim()) replace(() => projectStore.open(pasted));
+              if (pasted.trim()) replace(() => open(pasted));
             }}
           >
             Open project
