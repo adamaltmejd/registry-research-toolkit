@@ -366,7 +366,6 @@ pub fn prepare_holdings(directory: &Path) -> Result<Holdings, String> {
 pub fn pin_steward(root: &Path, registry: &Path) -> Result<(), String> {
     let mut roles = vec![
         "scope.toml",
-        "series",
         "curation",
         "inputs/slots",
         "branding/steward.json",
