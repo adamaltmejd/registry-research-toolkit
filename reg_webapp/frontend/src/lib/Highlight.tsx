@@ -1,5 +1,5 @@
+import { foldSearch } from "./catalog";
 import styles from "./Highlight.module.css";
-import { foldSearch } from "./reg_core";
 
 /** Where `needle` matches in `text`, as UTF-16 offsets into `text`, under the
  * same fold `rankFilter` matches with, so "alder" marks "Ålder". The text is
