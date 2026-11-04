@@ -181,7 +181,7 @@ describe("periods (reg-core-wasm)", () => {
 
   // Fails when hostile input aborts the module (a panic is a trap that leaves it
   // unusable): a byte-sliced year in render, a period endpoint the grammar refuses
-  // reaching the days, an inverted range, text that is not JSON.
+  // reaching the days, an inverted range.
   it("answers hostile input without aborting the module", () => {
     expect(renderIntervals([["日日-01-01", "日日-12-31"]])).toBe("日日..日日");
     expect(sourcePeriodIntervals([{ from: "x", to: 2020 }])).toMatchObject({

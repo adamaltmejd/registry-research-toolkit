@@ -28,14 +28,14 @@ export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 // and "lön" (diacritic-blind), and the needle is matched against BOTH display
 // name AND slug/FQID.
 
-/** The browse filter's fold: lower case, NFKD, combining marks dropped, one
+/** The browse filter's fold: NFKD, lower case, combining marks dropped, one
  * space between words. It is close to the server search's fold, not the same
  * (maintainer 2026-11-04): "ss" does not match "ß", since JavaScript lower-cases
  * "ß" to itself where full case folding gives "ss". */
 export function foldSearch(text: string): string {
   return text
-    .toLowerCase()
     .normalize("NFKD")
+    .toLowerCase()
     .replace(/\p{M}/gu, "")
     .replace(/\s+/gu, " ")
     .trim();
