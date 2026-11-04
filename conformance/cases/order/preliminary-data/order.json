@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/pre",
       "table": "demo/pre",
+      "table_name": "Preliminära registret",
       "variable": "demo/pre/mat",
+      "variable_name": "Mätvärde",
       "display_name": null,
       "period": {
         "start": "2020-01-01",
@@ -38,12 +40,15 @@
       "message": "demo/pre/mat in demo/pre over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
       "source": "s",
       "variable": "demo/pre/mat",
+      "variable_name": "Mätvärde",
       "table": "demo/pre",
+      "table_name": "Preliminära registret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

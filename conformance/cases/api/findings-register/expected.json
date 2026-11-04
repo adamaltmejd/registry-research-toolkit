@@ -10,7 +10,9 @@
           "subject": {
             "kind": "release",
             "fqid": null,
+            "name": null,
             "table": "demo/rel/gammal",
+            "table_name": "Gammal tabell",
             "period": {"start": "2016-01-01", "end": "2017-01-01"},
             "release": "Gammal 2016",
             "spelling": null,
@@ -26,7 +28,9 @@
           "subject": {
             "kind": "release",
             "fqid": null,
+            "name": null,
             "table": "demo/rel/ny",
+            "table_name": "Ny tabell",
             "period": null,
             "release": "Ny leverans",
             "spelling": null,
@@ -42,7 +46,9 @@
           "subject": {
             "kind": "release",
             "fqid": null,
+            "name": null,
             "table": "demo/rel/ny",
+            "table_name": "Ny tabell",
             "period": {"start": "2019-01-01", "end": "2020-01-01"},
             "release": "Ny 2019 prel",
             "spelling": null,
@@ -58,7 +64,9 @@
           "subject": {
             "kind": "variable",
             "fqid": "demo/rel/inkomst",
+            "name": "Inkomst efter skatt",
             "table": null,
+            "table_name": null,
             "period": null,
             "release": null,
             "spelling": null,
@@ -74,7 +82,9 @@
           "subject": {
             "kind": "variable",
             "fqid": "demo/rel/inkomst",
+            "name": "Inkomst efter skatt",
             "table": null,
+            "table_name": null,
             "period": null,
             "release": null,
             "spelling": null,
@@ -90,7 +100,9 @@
           "subject": {
             "kind": "segment",
             "fqid": "demo/rel/inkomst",
+            "name": "Inkomst efter skatt",
             "table": "demo/rel/gammal",
+            "table_name": "Gammal tabell",
             "period": {"start": "2015-01-01", "end": "2018-01-01"},
             "release": null,
             "spelling": null,
@@ -106,7 +118,9 @@
           "subject": {
             "kind": "segment",
             "fqid": "demo/rel/inkomst-2",
+            "name": "Inkomst, dubblett",
             "table": "demo/rel/gammal",
+            "table_name": "Gammal tabell",
             "period": {"start": "2017-01-01", "end": "2018-01-01"},
             "release": null,
             "spelling": null,

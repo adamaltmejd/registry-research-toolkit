@@ -7,7 +7,9 @@
       "message": "demo/pins/kod has no codes from class/other/v1 over the requested period.",
       "source": "s",
       "variable": "demo/pins/kod",
+      "variable_name": "Code",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"

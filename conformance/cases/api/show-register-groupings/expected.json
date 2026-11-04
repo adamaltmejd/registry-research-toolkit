@@ -12,6 +12,14 @@
             "demo/bas/inkomst",
             "demo/bas/net-household"
           ]
+        },
+        {
+          "fqid": "set/demo/bas/person",
+          "name": "person",
+          "members": [
+            "demo/bas/alder",
+            "demo/bas/kommun"
+          ]
         }
       ],
       "/data/tags": [

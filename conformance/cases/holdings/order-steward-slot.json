@@ -21,7 +21,9 @@
         "provider": "steward",
         "register": "steward/slots",
         "table": "steward/slots",
+        "table_name": "Delivery slots",
         "variable": "steward/slots/slot2",
+        "variable_name": "Second position",
         "display_name": null,
         "period": {"start": "2018-01-01", "end": "2019-01-01"},
         "spelling": "Slot2",
@@ -35,8 +37,15 @@
       {
         "source": "s",
         "table": "steward/slots",
+        "table_name": "Delivery slots",
         "period": {"start": "2018-01-01", "end": "2019-01-01"},
-        "columns": [{"variable": "demo/held/id", "spelling": "Received_Id"}]
+        "columns": [
+          {
+            "variable": "demo/held/id",
+            "variable_name": "Identifier",
+            "spelling": "Received_Id"
+          }
+        ]
       }
     ],
     "clips": [],
