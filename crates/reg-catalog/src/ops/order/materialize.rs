@@ -69,11 +69,11 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
     };
     let order = match check(server, &project)? {
         Ok(order) => order,
-        Err(findings) => return Err(super::blocked(findings)),
+        Err(findings) => return Err(super::blocked(server, findings)?),
     };
     let manifest = match build(server, &held, &project, order, provenance)? {
         Ok(manifest) => manifest,
-        Err(findings) => return Err(super::blocked(findings)),
+        Err(findings) => return Err(super::blocked(server, findings)?),
     };
     Ok(serde_json::to_value(manifest).expect("Manifest serializes"))
 }
@@ -316,7 +316,7 @@ fn build(
     files.sort_by(|a, b| (a.0, &a.1.name).cmp(&(b.0, &b.1.name)));
     let mut physical: Vec<Issue> = findings;
     physical.sort_by(|a, b| (&a.path, a.key()).cmp(&(&b.path, b.key())));
-    let mut all = order.findings;
+    let mut all: Vec<Issue> = order.findings.into_iter().map(|f| f.issue).collect();
     all.extend(physical);
     if all.iter().any(Issue::blocks) {
         return Ok(Err(all));

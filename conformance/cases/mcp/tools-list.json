@@ -1897,6 +1897,10 @@
               "description": "The table's fqid.",
               "type": "string"
             },
+            "table_name": {
+              "description": "The table's name, as `show` gives it.",
+              "type": "string"
+            },
             "type": {
               "type": "string"
             },
@@ -1910,6 +1914,7 @@
           },
           "required": [
             "table",
+            "table_name",
             "column",
             "period",
             "role"
@@ -3814,7 +3819,7 @@
             "findings": {
               "description": "The non-blocking findings (level `warning` or `info`).",
               "items": {
-                "$ref": "#/$defs/Issue"
+                "$ref": "#/$defs/NamedIssue"
               },
               "type": "array"
             },
@@ -4068,6 +4073,97 @@
           ],
           "type": "object"
         },
+        "NamedIssue": {
+          "additionalProperties": false,
+          "description": "A located finding with the names of the catalog entities it is about. The MONA order file carries the bare `Issue`.",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/$defs/IssueLevel"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "description": "An RFC 6901 pointer into the project; empty for the whole document.",
+              "type": "string"
+            },
+            "period": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Period"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source": {
+              "description": "The project source's name.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "successor_fqid": {
+              "description": "The successor a `variable_replaced` finding names, or the successor table of an\nundated succession (`table_succession_undated`).",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "successor_name": {
+              "description": "The name of `successor_fqid`; `null` when that is null.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table_name": {
+              "description": "The name of `table`; `null` when `table` is null or names no catalog table.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variable": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variable_name": {
+              "description": "The name of `variable`, as `show` gives it; `null` when `variable` is null or names no catalog variable.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "level",
+            "code",
+            "path",
+            "message",
+            "source",
+            "variable",
+            "table",
+            "period",
+            "successor_fqid",
+            "variable_name",
+            "table_name",
+            "successor_name"
+          ],
+          "type": "object"
+        },
         "OrderCatalog": {
           "description": "The catalog generation an order was checked against (`meta`).",
           "properties": {
@@ -4108,11 +4204,16 @@
             },
             "variable": {
               "type": "string"
+            },
+            "variable_name": {
+              "description": "The variable's name.",
+              "type": "string"
             }
           },
           "required": [
             "source",
             "variable",
+            "variable_name",
             "requested",
             "ordered"
           ],
@@ -4169,6 +4270,10 @@
               "description": "The table that serves the period.",
               "type": "string"
             },
+            "table_name": {
+              "description": "The table's name, as `show` gives it.",
+              "type": "string"
+            },
             "type": {
               "type": [
                 "string",
@@ -4187,6 +4292,10 @@
             },
             "variable": {
               "type": "string"
+            },
+            "variable_name": {
+              "description": "The variable's name, as `show` gives it.",
+              "type": "string"
             }
           },
           "required": [
@@ -4195,7 +4304,9 @@
             "provider",
             "register",
             "table",
+            "table_name",
             "variable",
+            "variable_name",
             "display_name",
             "period",
             "spelling",
@@ -4248,11 +4359,16 @@
             },
             "table": {
               "type": "string"
+            },
+            "table_name": {
+              "description": "The table's name.",
+              "type": "string"
             }
           },
           "required": [
             "source",
             "table",
+            "table_name",
             "period",
             "columns"
           ],
@@ -4415,10 +4531,15 @@
             },
             "variable": {
               "type": "string"
+            },
+            "variable_name": {
+              "description": "The variable's name.",
+              "type": "string"
             }
           },
           "required": [
             "variable",
+            "variable_name",
             "spelling"
           ],
           "type": "object"
@@ -4515,7 +4636,7 @@
           "properties": {
             "issues": {
               "items": {
-                "$ref": "#/$defs/Issue"
+                "$ref": "#/$defs/NamedIssue"
               },
               "type": "array"
             },

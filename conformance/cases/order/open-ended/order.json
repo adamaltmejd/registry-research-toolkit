@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/opn",
       "table": "demo/opn",
+      "table_name": "Öppna registret",
       "variable": "demo/opn/y",
+      "variable_name": "Värde",
       "display_name": null,
       "period": {
         "start": "2019-01-01",
@@ -38,12 +40,15 @@
       "message": "demo/opn/y in demo/opn: the provider states no end year, so data over [2019-01-01, 2021-01-01) is not confirmed",
       "source": "s",
       "variable": "demo/opn/y",
+      "variable_name": "Värde",
       "table": "demo/opn",
+      "table_name": "Öppna registret",
       "period": {
         "start": "2019-01-01",
         "end": "2021-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

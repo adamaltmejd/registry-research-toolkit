@@ -54,6 +54,8 @@ pub struct SegmentPage {
 pub struct Segment {
     /// The table's fqid.
     table: String,
+    /// The table's name, as `show` gives it.
+    table_name: String,
     /// The column name it is delivered under; on a data holder's catalog, the holder's column.
     column: String,
     period: Period,
@@ -207,6 +209,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             "",
         ))
     });
+    let names = refs::names(server, page.iter().map(|row| row.segment.table.as_str()))?;
     let mut items = Vec::with_capacity(page.len());
     for Row {
         id,
@@ -218,6 +221,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     } in page
     {
         let conn = &origins[origin];
+        segment.table_name = names.of(refs::Named::Table, &segment.table)?;
         segment.period = server.period(start, end);
         segment.value_set = valueset_id
             .map(|valueset| shape::value_set_ref(conn, valueset))
@@ -357,6 +361,8 @@ fn segment_rows(
                 end: row.get(3)?,
                 segment: Segment {
                     table: row.get(1)?,
+                    // Named per page in `segments`, after paging.
+                    table_name: String::new(),
                     column: row.get(4)?,
                     period: Period {
                         start: None,
@@ -480,6 +486,7 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
         end,
         segment: Segment {
             table: table.to_owned(),
+            table_name: String::new(),
             column: column.to_owned(),
             period: Period {
                 start: None,

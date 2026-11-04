@@ -14,7 +14,9 @@
       "message": "Distinct owners claim the physical column of demo/owners/first in demo/owners over [2018-01-01, 2019-01-01); no placement is accepted there, so the cell needs curation",
       "source": "a",
       "variable": "demo/owners/first",
+      "variable_name": "First owner",
       "table": "demo/owners",
+      "table_name": "Interval-local rival owners",
       "period": {
         "start": "2018-01-01",
         "end": "2019-01-01"

@@ -7,7 +7,9 @@
       "message": "demo/pins/kod has more than one form in demo/pins over [2015-01-01, 2016-01-01) (name, type or codes differ); pick a shorter period or ask the maintainer",
       "source": "s",
       "variable": "demo/pins/kod",
+      "variable_name": "Code",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "period": {
         "start": "2015-01-01",
         "end": "2016-01-01"

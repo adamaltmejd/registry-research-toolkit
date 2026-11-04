@@ -247,10 +247,15 @@ pub(super) fn row_keys(
             OrderRowKeys {
                 source: source.name.clone(),
                 table: s.table.pid.clone(),
+                table_name: String::new(),
                 period: server.period(lo, hi),
                 columns: columns
                     .into_iter()
-                    .map(|(variable, spelling)| RowKeyColumn { variable, spelling })
+                    .map(|(variable, spelling)| RowKeyColumn {
+                        variable,
+                        variable_name: String::new(),
+                        spelling,
+                    })
                     .collect(),
             }
         }));

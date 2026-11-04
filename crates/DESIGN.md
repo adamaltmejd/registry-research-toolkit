@@ -1003,6 +1003,14 @@ set, `coded` unknown, and `state` clear (the default) are all left out, which ke
 agent context small. Storage type stays in the catalog (orders use it) and is shown only
 when stated.
 
+**Names next to ids.** A response that refers to a register, table or variable carries
+its name next to the FQID, as `show` gives it (a reference row's name over a steward
+overlay's), so a reader needs no `show` per id: `segments` rows have `table_name`,
+`findings` subjects `name` and `table_name`, and the `order` and `validate` rows and
+findings `table_name`, `variable_name` and `successor_name` (`NamedIssue`). One batched
+read per origin names a whole response (`refs::names`), never a read per row. The MONA
+order file carries ids only.
+
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
@@ -1119,7 +1127,8 @@ In short: `catalog` and `project` identify the generation and the project (with
 `project_hash`); `entries` are per source, per binding in declaration order, then by
 period start; `row_keys` are per source and period start; `clips` record every
 availability clip, also when nothing blocks; `findings` are the non-blocking ones
-(warnings and infos), as `Issue`. Periods are half-open ISO-day intervals, with `null`
+(warnings and infos), as `NamedIssue`. Every table and variable id in a row has its name
+beside it ("Names next to ids"). Periods are half-open ISO-day intervals, with `null`
 for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 - An **entry** is one merged segment of one binding in one table. With a table
@@ -1188,28 +1197,36 @@ and `sun2000niva`.
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2003-01-01", "end": "2004-01-01"},
        "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
-       "table": "scb/lisa/individ", "variable": "scb/lisa/sun2000niva", "display_name": null,
+       "table": "scb/lisa/individ", "table_name": "Individer",
+       "variable": "scb/lisa/sun2000niva", "variable_name": "Utbildningsnivå",
+       "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
        "spelling": "Sun2000niva", "type": "char", "length": 3,
        "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
     ],
     "row_keys": [
-      {"source": "lisa", "table": "scb/lisa/individ",
+      {"source": "lisa", "table": "scb/lisa/individ", "table_name": "Individer",
        "period": {"start": "2003-01-01", "end": "2007-01-01"},
-       "columns": [{"variable": "scb/lisa/lopnr", "spelling": "LopNr"}]}
+       "columns": [{"variable": "scb/lisa/lopnr", "variable_name": "Löpnummer",
+                    "spelling": "LopNr"}]}
     ],
     "clips": [
       {"source": "lisa", "variable": "scb/lisa/sun2000niva",
+       "variable_name": "Utbildningsnivå",
        "requested": [{"start": "2003-01-01", "end": "2007-01-01"}],
        "ordered": [{"start": "2004-01-01", "end": "2007-01-01"}]}
     ],
@@ -1217,11 +1234,13 @@ and `sun2000niva`.
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
        "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null},
+       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
+       "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
       {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
        "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
        "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
-       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
+       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null,
+       "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
   "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
@@ -1248,7 +1267,8 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
          "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
-         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null}
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null,
+         "variable_name": "Kommun", "table_name": "Individer", "successor_name": null}
       ]
     }
   },

@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/eda",
       "table": "demo/eda",
+      "table_name": "Hel utgåva",
       "variable": "demo/eda/v",
+      "variable_name": "Värde",
       "display_name": null,
       "period": {
         "start": "2019-03-01",
