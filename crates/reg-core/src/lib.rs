@@ -167,18 +167,6 @@ pub fn normalized_search_query(s: &str) -> String {
     case_fold(&py_split(s).collect::<Vec<_>>().join(" "))
 }
 
-/// The FTS5 query builder: each whitespace token with an alphanumeric character becomes
-/// a quoted prefix term (`"tok"*`, embedded quotes doubled), space-joined. `None` when
-/// no token qualifies.
-#[must_use]
-pub fn fts_match_query(raw: &str) -> Option<String> {
-    let terms: Vec<String> = py_split(raw)
-        .filter(|t| t.chars().any(py_isalnum))
-        .map(|t| format!("\"{}\"*", t.replace('"', "\"\"")))
-        .collect();
-    (!terms.is_empty()).then(|| terms.join(" "))
-}
-
 /// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its
 /// [`fold_search`] fold, in order.
 #[must_use]
