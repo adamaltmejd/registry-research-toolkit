@@ -54,8 +54,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), built
-  # natively on each runner, each with a `shasum -a 256 -c` checksum file. Not gated
+  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), and
+  # the export gate's `reg-export-gate`, named by the gate crate's own version
+  # (crates/reg-export-gate/DESIGN.md), built natively on each runner, each with a
+  # `shasum -a 256 -c` checksum file. Not gated
   # on `wait-ci`: the tagged commit already passed CI on main, and gating would skip the
   # dispatch build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era
   # distributions and newer.
@@ -75,25 +77,30 @@ jobs:
       contents: write
     env:
       ASSET: reg-meta-${{ matrix.target }}
+      TARGET: ${{ matrix.target }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       # A runner image that changes architecture must fail here, not ship a
       # mislabelled asset.
       - name: Check the host target
-        env:
-          TARGET: ${{ matrix.target }}
         run: |
           test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
       # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
-      - run: cargo build --release --locked -p reg-meta
-      - name: Package with checksum
+      - run: cargo build --release --locked -p reg-meta -p reg-export-gate
+      - name: Package with checksums
         run: |
+          gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
+          GATE_ASSET="reg-export-gate-$gate_version-$TARGET"
+          echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
           mkdir dist
           cp target/release/reg-meta "dist/$ASSET"
+          cp target/release/reg-export-gate "dist/$GATE_ASSET"
           cd dist
-          shasum -a 256 "$ASSET" > "$ASSET.sha256"
-          shasum -a 256 -c "$ASSET.sha256"
+          for name in "$ASSET" "$GATE_ASSET"; do
+            shasum -a 256 "$name" > "$name.sha256"
+            shasum -a 256 -c "$name.sha256"
+          done
       # The binary has no --help; a missing catalog is its documented refusal
       # (`db_not_found`, exit 10), which proves it loads and parses its arguments.
       - name: Smoke-test the binary
@@ -103,6 +110,15 @@ jobs:
           cat smoke.err
           test "$status" -eq 10
           grep -q '"code":"db_not_found"' smoke.err
+      # A missing staging folder is a setup refusal (exit 10, one stdout line).
+      - name: Smoke-test the gate binary
+        run: |
+          status=0
+          out=$("dist/$GATE_ASSET" check --staging "$RUNNER_TEMP/no-staging" \
+            --output "$RUNNER_TEMP/no-output") || status=$?
+          echo "$out"
+          test "$status" -eq 10
+          test "$out" = "refused: setup"
       # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
       # or a gh retry after the first upload landed (HTTP 422), skips an asset that
       # exists with the same digest and fails on a different one.
@@ -112,7 +128,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
-          for name in "$ASSET" "$ASSET.sha256"; do
+          for name in "$ASSET" "$ASSET.sha256" "$GATE_ASSET" "$GATE_ASSET.sha256"; do
             remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
               --jq ".assets[] | select(.name == \"$name\") | .digest")
             if [ -z "$remote" ]; then

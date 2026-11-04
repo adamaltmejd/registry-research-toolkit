@@ -24,7 +24,8 @@ draft or tag already exists, follow Error recovery first.
   | reg_meta | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`) | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
-`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` binaries (step 10).
+`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` and `reg-export-gate` binaries
+(step 10; the gate's is named by its own crate version).
 
 ## Validation
 
@@ -64,6 +65,14 @@ linked inline; append `(HT @username)` to a non-owner's bullet
 
 The `version` line in `crates/reg-meta/Cargo.toml`, then
 `cargo update -p reg-meta --offline` to refresh `Cargo.lock`.
+
+The export gate too: bump `version` in `crates/reg-export-gate/Cargo.toml` (then
+`cargo update -p reg-export-gate --offline`) when its sources or its `Cargo.lock`
+dependency closure changed since the previous `reg_meta/v*`
+(`cargo tree -p reg-export-gate` against that tag's lock). Its asset is named by that
+version, receipts record it and `export` relies on byte identity per version, so two
+different binaries must never ship under one version. Unchanged: leave it, and the
+release ships the same version again.
 
 **Schema version check.** Compare the DDL and the single version authority with the
 previous release:
@@ -496,9 +505,9 @@ The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, cal
 with no `ref`: it must answer and its `meta.catalog_version` must equal the version
 passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
 Then SWECOV, once `SWECOV_DEPLOY` is `on` and its deploy jobs are green: the public
-`GET https://data.swecov.se/api/context` must answer with `data.catalog_version` equal
+`GET https://data.swecov.se/api/context` must answer with `meta.catalog_version` equal
 to the version, `data.steward_config.presentation` present, and
-`data.steward.catalog_generation` and `data.steward.holdings_generation` equal to the
+`meta.steward.catalog_generation` and `meta.steward.holdings_generation` equal to the
 `generation_id` in `meta` of the local `reg_meta.db` and `reg_meta_swecov.db`. Record
 what the checks exercised, the steward pin, the `holdings:` summary line from
 `holdings.log` and the census-comparison counts (8g) in the release notes.

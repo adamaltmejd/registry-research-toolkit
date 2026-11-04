@@ -177,7 +177,9 @@ passing set during the review and swap in another before the hash or the export.
    decodes to the same values). A rewritten file over 8 MiB is `too_large` in `check` as
    well, so `export` accepts exactly the outputs `check` can write. The gate writes
    uncompressed, so a compressed staging file under the cap can grow past it. That costs
-   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB.
+   capacity: at 100,000 rows, about ten non-null `int64` columns fill 8 MiB. The
+   maintainer kept the cap at that cost (2026-11-04), over dropping it and letting
+   `export` read larger outputs.
 4. The destination and every folder above it must be safe from everyone but the user
    running `export`, or the pipeline could move the destination aside and put its own
    folder or a link there (`destination_writable`). The destination is owned by that
@@ -201,31 +203,12 @@ probe folder (`.export-gate-probe-*`) and the new folder (`.export-gate-*`) appe
 the destination for a moment, and a killed export can leave the latter behind with
 verified gate bytes in it. The agent's side ignores dot-folders.
 
-## Plan
+## The R gate follows
 
-Tracks the build of #1803; deleted when the binary ships. Decisions (maintainer,
-2026-11-04): no review UI in v1 (the reviewer runs
-`export --project X --receipt <sha256>`); approved files go to a shared folder the agent
-VM sees read-only; staging files over 8 MiB or 100,000 rows are refused (`too_large`);
-the binary ships as an extra asset in the `reg_meta/v*` release, versioned by this
-crate.
-
-1. **Library: loading, inventory, structure, the size caps** (#2176). The corpus runner
-   (`tests/corpus/`) runs every refusal these checks decide and lists the rest, and
-   every pass, as pending. Two corpus cases (`structure-too-many-*`) and the corpus
-   format's `repeat` are new; the R runner materializes `repeat` and lists the two cases
-   as pending until the R gate has the caps.
-2. **Library: disclosure, backstop, the rewrite, the receipt, the report, clearing a
-   prior export** (#2177). `export_gate()` is the whole gate. `na_not_null` leaves the
-   rule list, and the two NaN cases gain `unsupported_statistic` (pending in the R
-   runner). The whole corpus runs; nothing is pending here.
-3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
-   `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes
-   (#2212). The corpus runs through the binary too.
-4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,
-   copy to the destination, re-hash there (this PR).
-5. **Ship**: the release asset; this section goes.
-
-After 5, one R PR makes `export_gate.R` imitate the binary: the size caps, the
-`na_not_null` change, and a duplicate column refused as `column_order` (today R ends in
-`internal_error` there, since `GetFieldByName` gives NULL).
+`export_gate.R` stays the MONA implementation (MONA runs no executables) and imitates
+this one in its own PR, naming the gate version it matches: the size caps (the rewrite's
+too), the `na_not_null` change (a NaN beside a null count is `unsupported_statistic`),
+and a duplicate column refused as `column_order` (today R ends in `internal_error`
+there, since `GetFieldByName` gives NULL). The binary's first release is 0.3.0, after
+R's 0.2.0, since it changes behaviour; R moves to 0.3.0 when it imitates (maintainer,
+2026-11-04). From then on a corpus change lands with the Rust change, and R follows.
