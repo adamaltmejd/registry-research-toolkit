@@ -115,6 +115,9 @@ pub mod days {
         merge(
             a.iter()
                 .flat_map(|&(lo, hi)| b.iter().map(move |&(x, y)| (lo.max(x), hi.min(y))))
+                // Drop empty pairs before collecting: fragmented lists would otherwise
+                // allocate and sort every pair, not only the intersections.
+                .filter(|&(lo, hi)| lo < hi)
                 .collect(),
         )
     }
