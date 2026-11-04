@@ -486,10 +486,6 @@ pub fn apply(
     at: &Locator,
     premise: &Premise,
 ) -> Result<Applied, String> {
-    if matches!(statement, Statement::Set { subject: Address::Occurrence { .. }, fields, .. } if fields.description.is_some())
-    {
-        return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
-    }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
         records: records.to_vec(),
@@ -546,14 +542,6 @@ pub fn apply(
             }
         }
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
-            if stated_fields(fields)
-                .keys()
-                .any(|field| !matches!(field.as_str(), "table" | "variable"))
-            {
-                return Err(
-                    "set table/variable with other fields requires separate statements".into(),
-                );
-            }
             let target_handle = fields
                 .table
                 .as_ref()
@@ -1041,9 +1029,6 @@ fn apply_fields(
 ) -> Result<(), String> {
     let metadata_fields = fields;
     let fields = stated_fields(fields);
-    if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
-        return Err("set coverage/period with other fields requires separate statements".into());
-    }
     let mut selected = false;
     for (index, record) in records.iter().enumerate() {
         let before = tree(record);
