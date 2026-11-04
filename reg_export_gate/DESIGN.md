@@ -291,7 +291,7 @@ like a changed data file. Its format is fixed by the toolkit, not by the schema:
 {
   "format": "reg-export-gate/receipt",
   "format_version": 1,
-  "gate": { "implementation": "rust", "version": "0.1.0" },
+  "gate": { "implementation": "rust", "version": "0.3.0" },
   "schema": { "name": "trial", "version": 1, "sha256": "…" },
   "policy": { "name": "trial-min5", "version": 1, "sha256": "…" },
   "files": [{ "name": "persons_by_year_group.parquet", "sha256": "…" }]

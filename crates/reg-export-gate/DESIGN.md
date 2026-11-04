@@ -209,5 +209,6 @@ verified gate bytes in it. The agent's side ignores dot-folders.
 this one in its own PR, naming the gate version it matches: the size caps (the rewrite's
 too), the `na_not_null` change (a NaN beside a null count is `unsupported_statistic`),
 and a duplicate column refused as `column_order` (today R ends in `internal_error`
-there, since `GetFieldByName` gives NULL). From then on a corpus change lands with the
-Rust change, and R follows.
+there, since `GetFieldByName` gives NULL). The binary's first release is 0.3.0, after
+R's 0.2.0, since it changes behaviour; R moves to 0.3.0 when it imitates (maintainer,
+2026-11-04). From then on a corpus change lands with the Rust change, and R follows.
