@@ -544,10 +544,17 @@ jobs:
           echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
           printf '%s\n' "$kept"
           kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
+          # An image newer than the one just deployed may belong to a run still on its
+          # way to deploy (this job no longer holds the deploy lock), so it is never
+          # pruned. If the deployed tag is not listed, every tag counts as newer and
+          # nothing is pruned.
+          deployed_created=$(printf '%s' "$listing" | awk -v t="$DEPLOYED_TAG" '$2 == t {print $1}')
           printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
-            | while read -r _ tag digest; do
+            | while read -r created tag digest; do
               if [ "$tag" = "$DEPLOYED_TAG" ]; then
                 echo "skip $tag (just deployed)"
+              elif [ -z "$deployed_created" ] || [[ "$created" > "$deployed_created" ]]; then
+                echo "skip $tag (newer than the deployed image: may be deploying)"
               elif printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
                 echo "skip $tag (digest shared with a kept tag)"
               else
