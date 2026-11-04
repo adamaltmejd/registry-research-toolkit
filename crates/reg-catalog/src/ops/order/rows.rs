@@ -1,7 +1,8 @@
 //! Row keys use the steward's declared physical entity/time components.
 //! Reference-only orders use catalog segments with role `row_key`.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashMap};
+use std::sync::{Arc, Mutex, PoisonError};
 
 use reg_core::IssueLevel;
 use reg_core::project::Source;
@@ -24,14 +25,24 @@ struct KeySegment {
     entity: bool,
 }
 
+/// The steward branch of [`key_segments`] per table pid. Its query scans every
+/// segment of both databases (~350 ms per table), and its answer depends on the table
+/// alone: the catalog and holdings are opened immutable and replaced only by a
+/// redeploy, so an answer holds for the life of the process. Errors are not cached.
+// simplify: unbounded, one entry per table asked about (at most the catalog's tables;
+// ~154 held today), filled lazily; move the computation into the holdings build if
+// the table count grows or the map shows in memory.
+#[derive(Default)]
+pub(crate) struct StewardKeys(Mutex<HashMap<String, Arc<Vec<KeySegment>>>>);
+
 /// Physical key declarations select the key set; metadata supplies state only.
 fn key_segments(
     server: &Server,
     conn: &Connection,
     serving: &Serving,
-) -> Result<Vec<KeySegment>, Error> {
+) -> Result<Arc<Vec<KeySegment>>, Error> {
     if server.catalog.steward().is_none() {
-        return Ok(rows(
+        return Ok(Arc::new(rows(
             conn,
             "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
@@ -47,8 +58,27 @@ fn key_segments(
                     entity: true,
                 })
             },
-        )?);
+        )?));
     }
+    let cache = &server.steward_keys.0;
+    let pid = &serving.table.pid;
+    if let Some(hit) = cache
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .get(pid)
+    {
+        return Ok(Arc::clone(hit));
+    }
+    // Computed outside the lock: two first requests for one table both compute it.
+    let keys = Arc::new(steward_key_segments(conn, pid)?);
+    cache
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .insert(pid.clone(), Arc::clone(&keys));
+    Ok(keys)
+}
+
+fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySegment>, Error> {
     let mut mappings = conn.prepare(
         "WITH semantics AS (
            SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state
@@ -75,7 +105,7 @@ fn key_segments(
          ORDER BY m.variable_pid,c.name,m.start",
     )?;
     let mut out = Vec::new();
-    for row in mappings.query_map([&serving.table.pid], |r| {
+    for row in mappings.query_map([table_pid], |r| {
         Ok((
             KeySegment {
                 variable: r.get(0)?,
@@ -177,10 +207,10 @@ pub(super) fn row_keys(
             end,
             state,
             ..
-        } in rows
+        } in rows.iter()
         {
             for (lo, hi) in &s.requested {
-                let (lo, hi) = (start.max(day(lo)), end.min(day(hi) + 1));
+                let (lo, hi) = ((*start).max(day(lo)), (*end).min(day(hi) + 1));
                 if lo >= hi {
                     continue;
                 }
