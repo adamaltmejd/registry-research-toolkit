@@ -141,8 +141,9 @@ fn run(
 /// write each checked table afresh, with `receipt.json`, as `output`. A refusal
 /// after the paths check leaves no `output` folder (unless it held something
 /// not the gate's to clear); a refusal of the paths themselves leaves `output`
-/// as it was. Every run writes its report to `.diagnostics/` beside `output`
-/// where that touches neither it nor staging. Staging is left as it was.
+/// as it was. The report goes to `.diagnostics/` beside `output` wherever that
+/// touches neither it nor staging, and only if staging resolves. Staging is
+/// left as it was.
 ///
 /// # Errors
 ///

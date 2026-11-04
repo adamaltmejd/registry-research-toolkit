@@ -60,12 +60,12 @@ fn inside(inner: &Path, outer: &Path) -> bool {
         .any(|a| identity(a).as_ref() == Some(&outer))
 }
 
-/// Whether staging (resolved, if it exists), the output and the diagnostics
+/// Whether staging `s` (resolved), the output and the diagnostics
 /// folder beside the output are apart: none is another of them or inside one.
 /// Compared by identity on disk, and the output's name also case-blind against
 /// `.diagnostics`, which may not exist yet. `None` if the output's folder
 /// cannot be resolved or the output has no name.
-fn apart(staging: Option<&Path>, output: &Path) -> Option<bool> {
+fn apart(s: &Path, output: &Path) -> Option<bool> {
     let parent = parent(output).canonicalize().ok()?;
     let name = output.file_name()?;
     let o = parent.join(name);
@@ -76,14 +76,16 @@ fn apart(staging: Option<&Path>, output: &Path) -> Option<bool> {
     };
     let d = parent.join(DIAGNOSTICS);
     let same = identity(&o).is_some_and(|o| identity(&d) == Some(o));
-    let overlap = staging.is_some_and(|s| inside(&o, s) || inside(s, &o) || inside(s, &d));
+    // The parent too: an output that is a link inside staging resolves out of
+    // it, but the diagnostics folder would still be created in staging.
+    let overlap = inside(&parent, s) || inside(&o, s) || inside(s, &o) || inside(s, &d);
     Some(!(name.eq_ignore_ascii_case(DIAGNOSTICS) || same || overlap))
 }
 
 /// `apart`, then again once the diagnostics folder exists (created here if
 /// the first check passes): only then can identity see an output whose name
 /// the volume folds to `.diagnostics` (another case or Unicode form).
-fn apart_settled(staging: Option<&Path>, output: &Path) -> Option<bool> {
+fn apart_settled(staging: &Path, output: &Path) -> Option<bool> {
     if apart(staging, output)? {
         let _ = std::fs::create_dir(parent(output).canonicalize().ok()?.join(DIAGNOSTICS));
         apart(staging, output)
@@ -105,7 +107,7 @@ pub(crate) fn check_paths(staging: &Path, output: &Path) -> Result<(), Refusal> 
     let s = staging
         .canonicalize()
         .map_err(|_| setup("internal_error"))?;
-    match apart_settled(Some(&s), output) {
+    match apart_settled(&s, output) {
         Some(true) => Ok(()),
         Some(false) => Err(setup("paths_overlap")),
         None => Err(setup("internal_error")),
@@ -369,22 +371,16 @@ struct Report<'a> {
 /// into a real folder, as a new file: a planted link or hard link named like
 /// the report is unlinked, never written through.
 pub(crate) fn write_report(staging: &Path, output: &Path, refusal: Option<&Refusal>) {
-    // A staging path that is there but does not resolve (a dangling link, a
-    // folder that cannot be searched) could be anywhere: no report.
-    let staging = match staging.canonicalize() {
-        Ok(s) => Some(s),
-        Err(_)
-            if std::fs::symlink_metadata(staging)
-                .is_err_and(|e| e.kind() == std::io::ErrorKind::NotFound) =>
-        {
-            None
-        }
-        Err(_) => return,
+    // Only beside a staging folder that resolves: a path that does not (absent,
+    // a dangling link) could come to name the diagnostics folder once it is
+    // created, and the report would land in staging.
+    let Ok(staging) = staging.canonicalize() else {
+        return;
     };
     let Ok(dir) = parent(output).canonicalize().map(|p| p.join(DIAGNOSTICS)) else {
         return;
     };
-    if apart_settled(staging.as_deref(), output) != Some(true) {
+    if apart_settled(&staging, output) != Some(true) {
         return;
     }
     let report = Report {

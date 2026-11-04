@@ -71,10 +71,10 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   output, one named `.diagnostics` in any ASCII case, or staging inside that folder, is
   `paths_overlap`.
 - **The report** is written beside `output` only where it can touch neither staging nor
-  the export, checked again once its folder exists, and not at all when staging exists
-  but cannot be resolved. It goes into a real folder, as a new file (`O_NOFOLLOW`, never
-  over an existing one; a planted link or hard link named like the report is unlinked
-  first). The export's own files are written the same way.
+  the export, checked again once its folder exists, and only when staging resolves (no
+  report on `staging_missing`). It goes into a real folder, as a new file (`O_NOFOLLOW`,
+  never over an existing one; a planted link or hard link named like the report is
+  unlinked first). The export's own files are written the same way.
 - **Setup loading is stricter than R** on toolkit files: `1.0` is not the integer 1, a
   non-string `description` is invalid, and a duplicate JSON key is `schema_invalid` or
   `policy_invalid`.

@@ -138,3 +138,20 @@ fn an_output_that_is_a_link_is_not_cleared() {
         );
     }
 }
+
+#[cfg(unix)]
+#[test]
+fn an_output_linked_from_inside_staging_leaves_staging_alone() {
+    // Regression: the output resolved out of staging through the link, so
+    // the diagnostics folder and report were created inside staging.
+    let (root, staging, schema, policy) = trial("output-in-staging");
+    std::fs::create_dir(root.join("elsewhere")).expect("a folder");
+    let output = staging.join("output");
+    std::os::unix::fs::symlink(root.join("elsewhere"), &output).expect("a link");
+    let result = export_gate(&staging, &output, Some(&schema), Some(&policy));
+    assert_eq!(
+        result.map_err(|r| (r.code, r.findings[0].rule)),
+        Err((Code::Setup, "paths_overlap"))
+    );
+    assert!(!staging.join(".diagnostics").exists());
+}
