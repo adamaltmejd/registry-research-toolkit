@@ -658,18 +658,18 @@ Time is the axis every relation is drawn on.
   where only a few characters would show. A span too narrow for the column name is a
   plain bar with the name beside it: to the right, to the left at the axis end, else in
   a gap between its deliveries, and only where no room is free over the bars at the
-  track's end, never cut; the bar carries the span's years where they fit, so it is not
-  an empty box. Stacked below the breakpoint, a lane's spans start just under its name.
-  Hovering or focusing a span shows its column, table and years at once in a RAC
-  `Tooltip` with no delay. The variables a succession reaches are further lanes in time
-  order, with their arrows. A line under the drawing says "Click a column to add it to
-  your project."; with no project open it says "Create a project to add columns." beside
-  a "Create a project" button, the top bar's action, since the top bar scrolls away
-  below the breakpoint. There is no second graph on the page. While it loads the region
-  is a `Skeleton`; a failed load is an error `StatusRow` in the region with Retry; a
-  variable with no years says "No years recorded for this variable." in place of the
-  lanes. Succession reaches one hop of read-only lanes, with arrows from predecessor to
-  successor and each neighbour's name linking to its variable page.
+  track's end, never cut; the bar carries the span's years where they fit. Stacked below
+  the breakpoint, a lane's spans start just under its name. Hovering or focusing a span
+  shows its column, table and years at once in a RAC `Tooltip` with no delay. The
+  variables a succession reaches are further lanes in time order, with their arrows. A
+  line under the drawing says "Click a column to add it to your project."; with no
+  project open it says "Create a project to add columns." beside a "Create a project"
+  button, the top bar's action, since the top bar scrolls away below the breakpoint.
+  There is no second graph on the page. While it loads the region is a `Skeleton`; a
+  failed load is an error `StatusRow` in the region with Retry; a variable with no years
+  says "No years recorded for this variable." in place of the lanes. Succession reaches
+  one hop of read-only lanes, with arrows from predecessor to successor and each
+  neighbour's name linking to its variable page.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
   cover the window is visible before it is added. It is one read-only row of a
