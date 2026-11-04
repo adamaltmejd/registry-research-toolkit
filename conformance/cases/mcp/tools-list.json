@@ -998,6 +998,10 @@
               "description": "The table's fqid.",
               "type": "string"
             },
+            "table_name": {
+              "description": "The table's name, as `show` gives it.",
+              "type": "string"
+            },
             "type": {
               "type": "string"
             },
@@ -1011,6 +1015,7 @@
           },
           "required": [
             "table",
+            "table_name",
             "column",
             "period",
             "role"

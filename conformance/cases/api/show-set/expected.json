@@ -25,6 +25,7 @@
             "segments": [
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "gross-household",
                 "period": {
                   "start": "2022-01-01",
@@ -53,6 +54,7 @@
             "segments": [
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "net-household",
                 "period": {
                   "start": "2022-01-01",
@@ -81,6 +83,7 @@
             "segments": [
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "gross-person",
                 "period": {
                   "start": "2022-01-01",
@@ -110,6 +113,7 @@
             "segments": [
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "Inkomst",
                 "period": {
                   "start": "2015-01-01",
@@ -121,6 +125,7 @@
               },
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "Inkomst",
                 "period": {
                   "start": "2018-01-01",
@@ -132,6 +137,7 @@
               },
               {
                 "table": "demo/bas",
+                "table_name": "Basregistret",
                 "column": "Inkomst",
                 "period": {
                   "start": "2019-01-01",
