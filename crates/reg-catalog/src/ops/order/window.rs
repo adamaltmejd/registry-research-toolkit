@@ -769,10 +769,7 @@ pub(super) fn periods(server: &Server, intervals: &[Interval]) -> Vec<crate::ops
     intervals.iter().map(|i| period(server, i)).collect()
 }
 
-/// The first to the last day of ascending intervals.
+/// The first to the last day of non-empty intervals.
 fn hull(intervals: &[Interval]) -> Interval {
-    (
-        intervals[0].0.clone(),
-        intervals[intervals.len() - 1].1.clone(),
-    )
+    reg_core::hull(intervals).expect("non-empty intervals")
 }
