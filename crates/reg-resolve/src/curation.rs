@@ -1115,56 +1115,89 @@ pub fn variable_members(
     Ok(variables)
 }
 
-/// Snapshot the source facts behind a register or ledger variable link target. The
-/// build boundary supplies these snapshots for external FQID objects; this module
-/// never reads another register or resolves a class reference by guessing.
-///
-/// # Errors
-/// An unresolved ledger variable, invalid source register or an empty source target.
-pub fn reference(
-    records: &[Record],
-    ledger: &Ledger,
-    variable: Option<&str>,
-    assignments: &BTreeMap<crate::OccurrenceKey, String>,
-    shared: &SharedSources,
-) -> Result<Vec<SourcePremise>, String> {
-    let mut view = sources(records, ledger);
-    view.extend(shared.sources.iter().cloned());
-    let variables = if variable.is_some() {
-        variable_members(records, ledger, assignments)?
-    } else {
-        BTreeMap::new()
-    };
-    let matches = if let Some(variable) = variable {
-        select(&Address::Variable(variable.to_owned()), &view, &variables)
-    } else {
-        view.iter()
-            .enumerate()
-            .filter(|(_, s)| s.text("kind") == Some("register"))
-            .map(|(source, s)| Match {
-                source,
-                spans: vec![
-                    s.period
-                        .clone()
-                        .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
-                ],
-            })
-            .collect()
-    };
-    if matches.is_empty() {
-        return Err("unresolved source reference".into());
+/// The source facts behind a register or ledger variable link target. The build
+/// boundary supplies these snapshots for external FQID objects; this module never reads
+/// another register or resolves a class reference by guessing. Built once per source
+/// register so many link objects into one register resolve it once (#2196).
+pub struct ReferenceView {
+    view: Vec<Source>,
+    variables: Option<BTreeMap<String, BTreeSet<crate::OccurrenceKey>>>,
+}
+
+impl ReferenceView {
+    #[must_use]
+    pub fn new(records: &[Record], ledger: &Ledger, shared: &SharedSources) -> Self {
+        let mut view = sources(records, ledger);
+        view.extend(shared.sources.iter().cloned());
+        Self {
+            view,
+            variables: None,
+        }
     }
-    let fields = matches
-        .iter()
-        .flat_map(|m| {
-            view[m.source]
-                .fields
-                .keys()
-                .filter(|k| !matches!(k.as_str(), "locator" | "also"))
-                .cloned()
-        })
-        .collect();
-    Ok(PremiseSnapshots::default().premise(&matches, &view, &fields))
+
+    /// Whether `premise` for a variable needs `with_variables` first.
+    #[must_use]
+    pub fn has_variables(&self) -> bool {
+        self.variables.is_some()
+    }
+
+    /// Resolve the register's ledger variables, for variable targets.
+    ///
+    /// # Errors
+    /// The register does not resolve under its ledger.
+    pub fn with_variables(
+        &mut self,
+        records: &[Record],
+        ledger: &Ledger,
+        assignments: &BTreeMap<crate::OccurrenceKey, String>,
+    ) -> Result<(), String> {
+        if self.variables.is_none() {
+            self.variables = Some(variable_members(records, ledger, assignments)?);
+        }
+        Ok(())
+    }
+
+    /// Snapshot the register (`variable` `None`) or one ledger variable.
+    ///
+    /// # Errors
+    /// An unresolved ledger variable or an empty source target.
+    ///
+    /// # Panics
+    /// A variable target before `with_variables`.
+    pub fn premise(&self, variable: Option<&str>) -> Result<Vec<SourcePremise>, String> {
+        let view = &self.view;
+        let matches = if let Some(variable) = variable {
+            let variables = self.variables.as_ref().expect("with_variables first");
+            select(&Address::Variable(variable.to_owned()), view, variables)
+        } else {
+            view.iter()
+                .enumerate()
+                .filter(|(_, s)| s.text("kind") == Some("register"))
+                .map(|(source, s)| Match {
+                    source,
+                    spans: vec![
+                        s.period
+                            .clone()
+                            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
+                    ],
+                })
+                .collect()
+        };
+        if matches.is_empty() {
+            return Err("unresolved source reference".into());
+        }
+        let fields = matches
+            .iter()
+            .flat_map(|m| {
+                view[m.source]
+                    .fields
+                    .keys()
+                    .filter(|k| !matches!(k.as_str(), "locator" | "also"))
+                    .cloned()
+            })
+            .collect();
+        Ok(PremiseSnapshots::default().premise(&matches, view, &fields))
+    }
 }
 
 type DependencyCoordinate = (
