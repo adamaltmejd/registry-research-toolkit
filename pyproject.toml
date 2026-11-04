@@ -70,7 +70,7 @@ combine-as-imports = true
 [tool.ty.src]
 # Tests use sibling-module sys.path injection and JSON-shaped fixtures that
 # defeat ty's narrowing. The three excluded scripts lazily import one-off deps
-# that aren't in any workspace pyproject.toml (xlrd, certifi, pymupdf4llm). None
+# that aren't in any workspace pyproject.toml (xlrd, certifi). None
 # of these categories are part of the shipped library surface, so exclude from
 # the type baseline.
 exclude = [
