@@ -146,17 +146,20 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 token,
                 server.catalog.generation(),
                 &cursor::context(params),
-                // Cursors are plain hex, so a forged one may carry any offset; keep it
-                // within what SQLite binds.
-                usize::try_from(i64::MAX).unwrap_or(usize::MAX),
+                usize::MAX,
             )?
             .0
         }
         None => 0,
     };
     let end = offset.saturating_add(take);
-    let bind = |n: usize| i64::try_from(n).unwrap_or(i64::MAX);
 
+    // The query streams every finding in order; each group's count is its rows, and
+    // only the rows in the page are read past their code. Ranking in SQL instead
+    // (ROW_NUMBER and COUNT over each group) sorted every wide row twice more: about
+    // 550 ms against 200 ms for scb/ulf's 37,616 findings.
+    let mut last: Option<(String, String)> = None;
+    let mut position = 0usize;
     let found = rows(
         &conn,
         &sql(scope),
@@ -166,16 +169,24 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
             ":lo": window.map(|w| w.0),
             ":hi": window.map(|w| w.1),
             ":code": code,
-            ":offset": bind(offset),
-            ":end": bind(end),
         },
         |row| {
+            let key: (String, String) = (row.get(0)?, row.get(1)?);
+            if last.as_ref() == Some(&key) {
+                position += 1;
+            } else {
+                position = 1;
+                last = Some(key.clone());
+            }
+            if position <= offset || position > end {
+                return Ok((key, None));
+            }
             let placed = |start: Option<i64>, end: Option<i64>| {
                 start.zip(end).map(|(s, e)| server.period(s, e))
             };
             let finding = Finding {
-                code: row.get(0)?,
-                severity: row.get(1)?,
+                code: key.0.clone(),
+                severity: key.1.clone(),
                 subject: Subject {
                     kind: row.get(2)?,
                     fqid: row.get(3)?,
@@ -191,20 +202,35 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 message: row.get(12)?,
                 caveat: row.get(13)?,
             };
-            let count = usize::try_from(row.get::<_, i64>(14)?).unwrap_or(0);
-            Ok((finding, count))
+            Ok((key, Some(finding)))
         },
     )?;
     let names = refs::names(
         server,
         found
             .iter()
-            .flat_map(|(f, _)| [&f.subject.fqid, &f.subject.table])
+            .filter_map(|(_, f)| f.as_ref())
+            .flat_map(|f| [&f.subject.fqid, &f.subject.table])
             .flatten()
             .map(String::as_str),
     )?;
     let mut groups: Vec<FindingGroup> = Vec::new();
-    for (mut finding, count) in found {
+    for ((code, severity), finding) in found {
+        let group = match groups.last_mut() {
+            Some(group) if group.code == code && group.severity == severity => group,
+            _ => {
+                groups.push(FindingGroup {
+                    code,
+                    severity,
+                    count: 0,
+                    items: Vec::new(),
+                    next_cursor: None,
+                });
+                groups.last_mut().expect("just pushed")
+            }
+        };
+        group.count += 1;
+        let Some(mut finding) = finding else { continue };
         let subject = &mut finding.subject;
         let kind = match subject.kind.as_str() {
             "register" => Named::Register,
@@ -216,55 +242,39 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
             .table
             .as_ref()
             .and_then(|t| names.get(Named::Table, t));
-        match groups.last_mut() {
-            Some(group) if group.severity == finding.severity && group.code == finding.code => {
-                group.items.push(finding);
-            }
-            _ => {
-                let next_cursor = (end < count).then(|| {
-                    let mut next = Params {
-                        values: params.values.clone(),
-                    };
-                    next.values.insert("code", vec![finding.code.as_str()]);
-                    cursor::encode(
-                        server.catalog.generation(),
-                        &cursor::context(&next),
-                        end,
-                        "",
-                    )
-                });
-                groups.push(FindingGroup {
-                    code: finding.code.clone(),
-                    severity: finding.severity.clone(),
-                    count,
-                    items: vec![finding],
-                    next_cursor,
-                });
-            }
-        }
+        group.items.push(finding);
+    }
+    // A group with no item in the page is left out (only a cursor past its end does
+    // that).
+    groups.retain(|group| !group.items.is_empty());
+    for group in &mut groups {
+        group.next_cursor = (end < group.count).then(|| {
+            let mut next = Params {
+                values: params.values.clone(),
+            };
+            next.values.insert("code", vec![group.code.as_str()]);
+            cursor::encode(
+                server.catalog.generation(),
+                &cursor::context(&next),
+                end,
+                "",
+            )
+        });
     }
     Ok(serde_json::to_value(FindingGroups { groups }).expect("findings serialize"))
 }
 
-/// The query for one `scope`: each (severity, code) group's total and its items
-/// `:offset` < position <= `:end`, groups review first, then by code. Each subject kind
-/// joins only its own table, so `fqid`, `table` and the period come out per kind.
-/// Within a group, items run by subject kind, then subject, start and message; NULLs
-/// sort first, which is the order the contract asks for. A group with no item in the
-/// window is left out (only a cursor past its end does that).
+/// The query for one `scope`: its findings by group, review groups first, then by code.
+/// Each subject kind joins only its own table, so `fqid`, `table` and the period come
+/// out per kind. Within a group, items run by subject kind, then subject, start and
+/// message; NULLs sort first, which is the order the contract asks for.
 fn sql(scope: &str) -> String {
     format!(
-        "WITH hit AS (
-         SELECT f.code AS code, f.severity AS severity, f.subject_kind AS kind,
+        "SELECT f.code, f.severity, f.subject_kind,
                 CASE f.subject_kind WHEN 'register' THEN reg.pid WHEN 'table' THEN tb.pid
-                     ELSE vr.pid END AS fqid,
-                st.pid AS tbl, COALESCE(rl.start, sg.start, oc.start) AS s_start,
-                COALESCE(rl.end, sg.end, oc.end) AS s_end,
-                rn.body AS rel, sp.exact AS spelling, vs.hash AS value_set,
-                f.start AS f_start, f.end AS f_end, m.body AS message, c.body AS caveat,
-                CASE f.subject_kind WHEN 'register' THEN 0 WHEN 'table' THEN 1
-                     WHEN 'release' THEN 2 WHEN 'variable' THEN 3 WHEN 'segment' THEN 4
-                     WHEN 'occurrence' THEN 5 ELSE 6 END AS kind_rank
+                     ELSE vr.pid END,
+                st.pid, COALESCE(rl.start, sg.start, oc.start), COALESCE(rl.end, sg.end, oc.end),
+                rn.body, sp.exact, vs.hash, f.start, f.end, m.body, c.body
          FROM finding f
            JOIN text m ON m.id = f.message_text
            LEFT JOIN text c ON c.id = f.caveat_text
@@ -285,18 +295,11 @@ fn sql(scope: &str) -> String {
            AND (:table IS NULL OR COALESCE(st.id, tb.id) = :table)
            AND (:lo IS NULL OR f.start IS NULL OR (f.start < :hi AND :lo < f.end))
            AND (:code IS NULL OR f.code = :code
-                OR substr(f.code, 1, length(:code) + 1) = :code || ':')),
-         ranked AS (
-         SELECT *,
-                ROW_NUMBER() OVER (PARTITION BY severity, code
-                    ORDER BY kind_rank, fqid, tbl, s_start, rel, spelling, value_set, f_start,
-                             message) AS position,
-                COUNT(*) OVER (PARTITION BY severity, code) AS total
-         FROM hit)
-         SELECT code, severity, kind, fqid, tbl, s_start, s_end, rel, spelling, value_set,
-                f_start, f_end, message, caveat, total
-         FROM ranked
-         WHERE position > :offset AND position <= :end
-         ORDER BY severity <> 'review', code, position"
+                OR substr(f.code, 1, length(:code) + 1) = :code || ':')
+         ORDER BY f.severity <> 'review', f.code,
+                  CASE f.subject_kind WHEN 'register' THEN 0 WHEN 'table' THEN 1
+                      WHEN 'release' THEN 2 WHEN 'variable' THEN 3 WHEN 'segment' THEN 4
+                      WHEN 'occurrence' THEN 5 ELSE 6 END,
+                  4, 5, 6, 8, 9, 10, 11, 13"
     )
 }
