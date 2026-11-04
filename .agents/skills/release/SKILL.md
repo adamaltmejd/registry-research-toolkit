@@ -117,7 +117,7 @@ bump is `origin/main`** before tagging:
 ```sh
 run=$(gh run list --workflow ci.yml --commit "$(git rev-parse HEAD)" --limit 1 \
   --json databaseId -q '.[0].databaseId')
-gh run watch "$run" --exit-status
+gh run watch "$run" --exit-status || { echo "ci.yml is not green on the bump" >&2; exit 1; }
 git push origin HEAD:main
 git fetch origin main
 if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
@@ -229,11 +229,12 @@ uv run --no-project scripts/release_base_reuse.py "$earlier_evidence"
 ```
 
 It diffs the two commits over the builder's dependency closure, read from
-`cargo metadata` (the workspace crates `reg-build` depends on), plus `curation/`
-(including the inputs pin), `Cargo.toml`, `Cargo.lock`, `.cargo/` and any
-`rust-toolchain*`. It also checks the recorded toolchain, `--release`,
-`--catalog-version` and that the base still hashes to `base.sha256`. A missing or
-inconsistent record fails closed (exit 2). Follow what it prints:
+`cargo metadata` (the workspace crates `reg-build` depends on), every workspace member's
+`Cargo.toml` (a `--workspace` build unifies features), plus `curation/` (including the
+inputs pin), `Cargo.toml`, `Cargo.lock`, `.cargo/` and any `rust-toolchain*`. It also
+checks the recorded toolchain, `--release`, `--catalog-version` and that the base still
+hashes to `base.sha256`. A missing or inconsistent record fails closed (exit 2). Follow
+what it prints:
 
 - `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
 - `base: reuse`: keep `$earlier_evidence` as `$evidence` and set

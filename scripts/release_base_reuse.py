@@ -13,7 +13,9 @@ so a reuse is safe exactly when all of those are unchanged:
 - Builder closure: the workspace crates `reg-build` depends on (normal and build
   dependencies, not dev), read from `cargo metadata` at the release commit, so a new
   crate joins without editing this script. A new dependency edge changes a closure
-  crate's `Cargo.toml`, which the diff sees. Plus `curation/`, the root `Cargo.toml` and
+  crate's `Cargo.toml`, which the diff sees. Every other member's `Cargo.toml` too:
+  the `--workspace` build unifies features, so a reader crate's manifest can change
+  what the builder links. Plus `curation/`, the root `Cargo.toml` and
   `Cargo.lock`, `.cargo/` and any `rust-toolchain*`.
 - Toolchain: `rustc -vV` at the release checkout equals the recorded `rustc.txt`.
 - Flags: the recorded `build-args.txt` has `--release` and `--catalog-version` equal to
@@ -197,7 +199,11 @@ def main(argv: list[str]) -> int:
     }
     builder = workspace_closure(meta, "reg-build")
     reader = members - builder
-    builder_paths = sorted(dirs[i] for i in builder) + ALWAYS_BUILDER
+    # `--workspace` builds unify features across every member, so any member's
+    # manifest can change what the builder links (e.g. a reader crate enabling a
+    # feature of a shared dependency) without touching Cargo.lock.
+    manifests = sorted(f"{dirs[i]}/Cargo.toml" for i in reader)
+    builder_paths = sorted(dirs[i] for i in builder) + manifests + ALWAYS_BUILDER
     reader_paths = sorted(dirs[i] for i in reader) + READER_EXTRA
 
     print(f"built   {built} ({evidence})")
