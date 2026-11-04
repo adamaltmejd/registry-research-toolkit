@@ -5,7 +5,7 @@
 //! line is checked for a raw read: `gh issue view`, `gh issue list` without `--search` in
 //! its own arguments (it defaults to open issues, so `--state` does not matter),
 //! `gh api .../issues/`, `gh api graphql` and `gh search issues`. Writes
-//! (`gh issue create/edit/comment`), PR reads and a line naming `xtask gh-issue` are
+//! (`gh issue create/edit/comment`), PR reads and the phrase `xtask gh-issue` itself are
 //! allowed.
 //!
 //! The phrases match on word boundaries (`\b`, Unicode word characters), as the regexes
@@ -51,9 +51,8 @@ fn raw_issue_list(line: &str) -> bool {
 }
 
 fn is_forbidden(line: &str) -> bool {
-    if line.contains(EXEMPT) {
-        return false;
-    }
+    // The exempt phrase is removed, not the line: the rest of the line is still checked.
+    let line = &line.replace(EXEMPT, "");
     let api_issues = {
         let mut from = 0;
         let mut hit = false;
@@ -139,6 +138,7 @@ fn verdicts() {
         ("gh api repos/{owner}/{repo}/pulls/{n}/reviews", false),
         ("cargo xtask gh-issue view <n> --comments", false),
         ("run `gh issue view 328` to read it", true),
+        ("use cargo xtask gh-issue, not gh issue view 5", true),
         ("gh issue list", true),
         ("gh issue list --state all --json number", true),
         (

@@ -17,5 +17,6 @@
     ]
   },
   "exit": 0,
+  "stderr_excludes": ["INJECT"],
   "stdout": "{\"number\": 328, \"title\": \"epic\", \"state\": \"OPEN\", \"body\": \"plan\", \"comments\": [{\"id\": \"c1\", \"author\": {\"login\": \"test-maintainer\"}, \"body\": \"trusted\", \"reactionGroups\": []}]}\n"
 }

@@ -1,0 +1,9 @@
+{
+  "why": "the gate is an argv allowlist, not a gh passthrough; fails if `--jq` or `--template` reaches gh, where it could print a stranger's body past the author check",
+  "args": ["view", "5", "--jq", ".body"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 5, "title": "t", "state": "OPEN", "body": "evil", "author": {"login": "stranger"}},
+  "exit": 2,
+  "stdout": "",
+  "stderr_excludes": ["evil"]
+}

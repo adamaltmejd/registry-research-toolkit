@@ -125,7 +125,7 @@ and to a sweep.
   never from Python literals of database rows. The synthetic artifact is the unit.
 - **At most one case per behavior, at its hardest case, and only where no existing case
   covers it**: a second run, reordered input, an interval edge, a refusal beside its
-  allowed twin. Not the first case that passes. Named by behavior; no test file over 800
+  allowed twin. Not the first case that passes. Named by behavior; no integration test file over 800
   lines, split by contract surface.
 - **Expected values come from outside the code under test**, or the test is
   tautological: a golden, the source fixture, the spec, or agreement between two

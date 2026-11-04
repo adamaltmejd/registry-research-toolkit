@@ -5,5 +5,6 @@
   "gh": {"number": 7, "title": "t", "body": "evil", "author": {"login": null}},
   "exit": 3,
   "stdout": "",
-  "stderr_contains": "not maintainer-authored"
+  "stderr_contains": "not maintainer-authored",
+  "stderr_excludes": ["evil"]
 }

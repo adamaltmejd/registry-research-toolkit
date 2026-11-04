@@ -3,6 +3,9 @@
 //! `serde_json::Value` sorts object keys unless its `preserve_order` feature is on, and
 //! that feature would unify into every workspace crate built alongside this one. `gh`
 //! emits comment keys in its own order, which the gate must pass through unchanged.
+//! Two limits are latent: `visit_map` keeps duplicate keys (Python collapsed them, last
+//! wins), and the order-preserving map breaks if any workspace crate enables
+//! `serde_json`'s `arbitrary_precision`.
 
 use std::fmt;
 use std::io::{self, Write};

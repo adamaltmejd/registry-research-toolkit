@@ -32,11 +32,10 @@ Do not run the sabotage by hand. Review the named change as the failure proof.
 Read-only. One subagent per test tree (each package's, plus `conformance/` and
 `scripts/tests/`), through the harness's subagent tool (in Claude Code, the Agent tool
 with the `general-purpose` type; Explore locates code and does not audit it), told to
-edit nothing. Launch as many at once as the harness allows (Codex runs three children at
-a time) and the rest in waves. Where the harness lets a call choose its model, use the
-family's mid tier (in Claude, Opus). Each prompt carries AGENTS.md, the "Testing
-strategy" section, the tree's conftest and helpers, a scratchpad file name unique to the
-tree, and this section verbatim.
+edit nothing. Launch as many at once as the harness allows and the rest in waves. Where
+the harness lets a call choose its model, use the family's mid tier (in Claude, Opus).
+Each prompt carries AGENTS.md, the "Testing strategy" section, the tree's conftest and
+helpers, a scratchpad file name unique to the tree, and this section verbatim.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
 at a boundary), `delete` (name the boundary case that covers it), or `gap` (no corpus

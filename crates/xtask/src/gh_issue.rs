@@ -177,7 +177,7 @@ fn login_of(obj: &Json) -> Option<&str> {
         .filter(|login| !login.is_empty())
 }
 
-// simplify: lowercase, not Python's full `casefold()`; GitHub logins are ASCII.
+/// GitHub logins are ASCII, so an ASCII case-insensitive match is the whole comparison.
 fn is_maintainer(obj: &Json, maintainer: &str) -> bool {
-    login_of(obj).is_some_and(|login| login.to_lowercase() == maintainer.to_lowercase())
+    login_of(obj).is_some_and(|login| login.eq_ignore_ascii_case(maintainer))
 }

@@ -157,9 +157,9 @@ tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
   directory (`AGENT_BROWSER_SOCKET_DIR`, removed on exit), not `~/.agent-browser`, so a
   shell that cannot write `$HOME` still gets a daemon. Set the variable yourself to
   choose the directory; the path must stay short (unix socket, 103 bytes). Verified from
-  a Claude Bash shell only; a codex `-s workspace-write` run is untested. The Chrome
-  install (`agent-browser install`) still writes `~/.agent-browser`, so install it
-  outside the sandbox or use an installed Google Chrome.
+  a Claude Bash shell only. The Chrome install (`agent-browser install`) still writes
+  `~/.agent-browser`, so install it outside the sandbox or use an installed Google
+  Chrome.
 - Chromium fails to launch in `flows` → `driver.mjs` tries a ladder (sandboxed,
   no-sandbox, single-process; `LAUNCH_LADDER`) and reports each rung's error; read the
   FIRST.

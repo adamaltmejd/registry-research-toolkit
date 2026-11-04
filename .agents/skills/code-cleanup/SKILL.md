@@ -60,14 +60,14 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 Do not read the modules yourself. Launch one subagent per module through the harness's
 subagent tool (in Claude Code, the Agent tool with the `general-purpose` type; Explore
 locates code and does not audit it), told to edit nothing. Launch as many at once as the
-harness allows (Codex runs three children at a time) and the rest in waves. Where the
-harness lets a call choose its model, set it on every call: the family's mid tier (in
-Claude, Opus) for code, the tier below for docs. Every tracked non-test source file
-(`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
-the split below misses joins its nearest module. Today's split: `reg_webapp/edge` with
-the Dockerfile and deploy scripts; `scripts/`; the `conformance/` harness;
-`plugins/microdata-tools-se/`; and `crates/` (Rust). The test trees are the `test-audit`
-skill's: run its sweep in the same waves and merge its list into step 3.
+harness allows and the rest in waves. Where the harness lets a call choose its model,
+set it on every call: the family's mid tier (in Claude, Opus) for code, the tier below
+for docs. Every tracked non-test source file (`git ls-files`, minus tests and committed
+data) belongs to exactly one module; a file the split below misses joins its nearest
+module. Today's split: `reg_webapp/edge` with the Dockerfile and deploy scripts;
+`scripts/`; the `conformance/` harness; `plugins/microdata-tools-se/`; and `crates/`
+(Rust). The test trees are the `test-audit` skill's: run its sweep in the same waves and
+merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step

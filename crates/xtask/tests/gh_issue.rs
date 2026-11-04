@@ -1,8 +1,8 @@
 //! `cargo xtask gh-issue`, the maintainer-author trust gate, run as a process.
 //!
 //! Each `tests/gh_issue/*.json` case gives the argv, the environment, the issue payload
-//! `gh` holds (`null`: `gh` exits 1, a missing number) and the expected exit, stdout and
-//! stderr substring. Its `why` names the regression that fails it. The one boundary faked
+//! `gh` holds (`null`: `gh` exits 1, a missing number) and the expected exit, stdout, stderr substring
+//! and `stderr_excludes`, strings (an injected payload) that must not reach stderr. Its `why` names the regression that fails it. The one boundary faked
 //! is `gh`: a sh script first on `PATH` that, like `gh`, answers only the `--json` fields
 //! it is asked for, so a case fails if the gate stops requesting a field it surfaces.
 
@@ -113,6 +113,13 @@ fn run_case(path: &Path) -> Vec<String> {
         && !stderr.contains(str_of(needle))
     {
         errors.push(format!("{name}: stderr {stderr:?}"));
+    }
+    if let Some(Json::Array(banned)) = case.get("stderr_excludes") {
+        for needle in banned.iter().map(str_of) {
+            if stderr.contains(needle) {
+                errors.push(format!("{name}: stderr leaks {needle:?}: {stderr:?}"));
+            }
+        }
     }
     errors
 }

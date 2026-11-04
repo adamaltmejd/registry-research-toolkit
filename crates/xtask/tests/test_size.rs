@@ -1,7 +1,7 @@
 //! Test modules stay at or under 800 lines; an oversized module is split by contract
 //! surface.
 //!
-//! Rust: every `.rs` file under a `tests/` directory. Python, until it is gone:
+//! Rust: every integration test file, a `.rs` file under a `tests/` directory. Python, until it is gone:
 //! `test_*.py` and `conftest.py` under `tests/` or `conformance/`. Source fixtures and
 //! support scripts are not test modules. Untracked, unignored files count too.
 

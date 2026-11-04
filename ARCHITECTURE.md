@@ -343,8 +343,9 @@ Repeated search and successful order comparisons use raw bytes; no fields are re
 and key/list order remains observable. HTTP/MCP order agreement compares JSON documents.
 The existing `crates/reg-core/tests/project/corpus/` serves its Rust consumers.
 
-Oversized test modules are gated by a repo lint (`crates/xtask/tests/test_size.rs`) with
-no exemptions or file allowlists. The Rust reader runs against these oracles.
+Oversized integration test files are gated by a repo lint
+(`crates/xtask/tests/test_size.rs`) with no exemptions or file allowlists. The Rust
+reader runs against these oracles.
 
 Coverage is measured as boundaries with a corpus, not as line percentage; a boundary
 without a corpus is the gap.
