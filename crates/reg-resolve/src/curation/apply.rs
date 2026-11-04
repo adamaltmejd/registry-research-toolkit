@@ -1365,8 +1365,37 @@ fn apply_fields(
     Ok(())
 }
 
+/// An occurrence's identity and source rows before a phase changes coordinates.
+#[derive(Debug, Clone)]
+pub struct SourceKey {
+    pub identity: crate::OccurrenceIdentity,
+    /// The occurrence's locator, then the other rows stating it.
+    pub locators: Vec<Locator>,
+}
+
+/// One entry per record, `Some` for an occurrence: what [`rekey`] needs from the
+/// records before a phase, without keeping copies of them (#2196).
+#[must_use]
+pub fn source_keys(records: &[&Record]) -> Vec<Option<SourceKey>> {
+    let context = crate::OccurrenceContext::new(records.iter().copied());
+    records
+        .iter()
+        .map(|record| match record {
+            Record::Occurrence(row) => Some(SourceKey {
+                identity: context.identity(row),
+                locators: std::iter::once(&row.locator)
+                    .chain(&row.also)
+                    .cloned()
+                    .collect(),
+            }),
+            _ => None,
+        })
+        .collect()
+}
+
 /// Carry identity assignments and field provenance through a phase's coordinate
 /// changes. Source values remain the evidence reviewed before application.
+/// `before` is [`source_keys`] of the records before the phase.
 ///
 /// # Errors
 /// A field change collapses distinct source occurrences onto one occurrence key.
@@ -1374,7 +1403,7 @@ fn apply_fields(
 /// # Panics
 /// The caller must preserve frame length and order when merging field changes.
 pub fn rekey(
-    before: &[Record],
+    before: &[Option<SourceKey>],
     after: &[&Record],
     assignments: &mut BTreeMap<crate::OccurrenceKey, String>,
     claims: &mut [crate::provenance::Claim],
@@ -1385,7 +1414,6 @@ pub fn rekey(
         after.len(),
         "field phase preserves record order"
     );
-    let old_context = crate::OccurrenceContext::new(before);
     let new_context = crate::OccurrenceContext::new(after.iter().copied());
     let releases: BTreeMap<_, _> = after
         .iter()
@@ -1408,19 +1436,18 @@ pub fn rekey(
         .iter()
         .zip(after)
         .filter_map(|(before, after)| match (before, after) {
-            (Record::Occurrence(before), Record::Occurrence(after)) => Some((
-                before,
-                old_context.identity(before),
-                new_context.identity(after),
-            )),
+            (Some(before), Record::Occurrence(after)) => {
+                Some((before, new_context.identity(after)))
+            }
             _ => None,
         })
         .collect::<Vec<_>>();
     let mut changed = BTreeMap::new();
     let mut owners = BTreeMap::new();
     let mut destinations = BTreeMap::new();
-    for (before, old, new) in &identities {
-        for at in std::iter::once(&before.locator).chain(&before.also) {
+    for (before, new) in &identities {
+        let old = &before.identity;
+        for at in &before.locators {
             let old_key = (old, at);
             let new_key = (new, at);
             if destinations

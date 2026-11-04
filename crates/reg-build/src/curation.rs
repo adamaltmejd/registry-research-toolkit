@@ -1252,19 +1252,20 @@ fn run_selected(
                     && phase(&s.statement) == stage
             })
         {
-            field_snapshot = records
-                .iter()
-                .filter(|r| {
-                    matches!(
-                        r,
-                        Record::Register(_)
-                            | Record::Table(_)
-                            | Record::Release(_)
-                            | Record::Occurrence(_)
-                    )
-                })
-                .cloned()
-                .collect();
+            field_snapshot = reg_resolve::curation::apply::source_keys(
+                &records
+                    .iter()
+                    .filter(|r| {
+                        matches!(
+                            r,
+                            Record::Register(_)
+                                | Record::Table(_)
+                                | Record::Release(_)
+                                | Record::Occurrence(_)
+                        )
+                    })
+                    .collect::<Vec<_>>(),
+            );
         }
         // Borrowed from `records`, which the group loop below only reads.
         let mut locators = BTreeMap::<_, Vec<_>>::new();
@@ -1582,7 +1583,9 @@ fn run_selected(
             let application = application.and_then(|applied| {
                 if stage == Phase::Moves {
                     reg_resolve::curation::apply::rekey(
-                        &source,
+                        &reg_resolve::curation::apply::source_keys(
+                            &source.iter().collect::<Vec<_>>(),
+                        ),
                         &applied.records.iter().collect::<Vec<_>>(),
                         &mut result.variables,
                         &mut result.overrides,
@@ -1716,11 +1719,9 @@ fn run_selected(
                         }
                         let text =
                             |key| subject.fields.get(key).and_then(serde_json::Value::as_str);
-                        field_snapshot.iter().any(|record| {
-                            let Record::Occurrence(row) = record else {
-                                return false;
-                            };
-                            (row.locator == at || row.also.contains(&at))
+                        field_snapshot.iter().flatten().any(|key| {
+                            let row = &key.identity;
+                            key.locators.contains(&at)
                                 && text("provider") == Some(row.provider.as_str())
                                 && text("register") == Some(row.register.as_str())
                                 && text("table") == Some(row.table.as_str())
