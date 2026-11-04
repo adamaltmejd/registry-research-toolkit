@@ -8648,3 +8648,21 @@ kind = "set"
 subject = "gymnasieintyg: inriktninggr @2011-07-01..2024-06-30 where key = 'v26963'"
 fields = { "variable" = "inriktning-fristaende-grundskola-inriktning" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Inriktning in slutbetyg; InriktningGr in gymnasieintyg: same definition and code list, never concurrent under another spelling in one table; folded into inriktning-fristaende-grundskola-inriktning."
+
+[[statement]]
+kind = "set"
+subject = "var:amne"
+fields = { "description" = "Kod för det ämne som eleven fått betyg i under läsåret. 2011 avser variabeln grundskoleämnen, till exempel biologi, engelska och idrott och hälsa. Från 2012 kan även gymnasieämnen förekomma, och kodlistan innehåller då även gymnasiekurser." }
+evidence = "2011 value set #8068 has 25 grundskola subjects; 2012 opdef adds 'Kan även förekomma gymnasieämnen i variabeln' with value set #8582 (4847 codes, e.g. ADM1201 Administration A); 2013-2023 value set #11503 has the same 4848 codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-examen"
+fields = { "description" = "Kalenderår då eleven fick slutbetyg från grundskolan (avgångsåret från årskurs 9)." }
+evidence = "Short definition 'Kalenderår för uttaget utbildningsbevis' and opdef 'Anger det år som eleven fick slutbetyg från grundskolan' (column AvgAr_Ak9) describe the same year in both tables, gymnasieintyg and slutbetyg. The question 'utbildningsbevis or slutbetyg' is one fact."
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Den termin då det nya slutbetyget från grundskolan utfärdades." }
+evidence = "Only occurrence: nytt-grundskolebetyg, key v1579, opdef 'Anger den termin som det nya slutbetyget från grundskolan är utfärdat'. The short definition ('ordningsnummer i elevens utbildning') is the generic text of key v1579 shared with other registers; no code list is given, so no format is stated."
