@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Button,
+  Button as AriaButton,
   Disclosure,
   DisclosurePanel,
   Heading,
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
-import type { CatalogFinding } from "./api";
+import { type CatalogFinding, getFindings } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import type { WarningGroup } from "./finding_groups";
+import { Button } from "./ui/Button";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
@@ -27,47 +29,90 @@ function SubjectLink({ fqid, names }: { fqid: string; names?: Names }) {
   );
 }
 
-/** Catalog findings, grouped before any entries are mounted. */
+/** Catalog findings by group: each group's count, and its items once opened. */
 export function DataWarnings({
-  findings,
+  groups,
   names,
 }: {
-  findings: readonly CatalogFinding[];
+  groups: readonly WarningGroup[];
   names?: Names;
 }) {
-  if (findings.length === 0) return null;
-  const groups = new Map<string, CatalogFinding[]>();
-  for (const finding of findings) {
-    const key = JSON.stringify([finding.severity, finding.code]);
-    const group = groups.get(key);
-    if (group) group.push(finding);
-    else groups.set(key, [finding]);
-  }
+  if (groups.length === 0) return null;
   return (
     <Panel title="Notes on this data">
-      {[...groups]
-        .sort(
-          ([, a], [, b]) =>
-            Number(b[0].severity === "review") -
-              Number(a[0].severity === "review") ||
-            a[0].code.localeCompare(b[0].code),
-        )
-        .map(([key, entries]) => (
-          <FindingGroup key={key} entries={entries} names={names} />
-        ))}
+      {groups.map((group) => (
+        <FindingGroup
+          key={JSON.stringify([group.ref, group.severity, group.code])}
+          group={group}
+          names={names}
+        />
+      ))}
     </Panel>
   );
 }
 
 function FindingGroup({
-  entries,
+  group,
   names,
 }: {
-  entries: readonly CatalogFinding[];
+  group: WarningGroup;
   names?: Names;
 }) {
   const [copied, setCopied] = useState(false);
-  const { severity, code } = entries[0];
+  const [more, setMore] = useState<{
+    items: CatalogFinding[];
+    cursor: string | null;
+    dropped: number;
+  }>({ items: [], cursor: group.next_cursor, dropped: 0 });
+  const [loading, setLoading] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
+  const moreButton = useRef<HTMLButtonElement>(null);
+  // The first item of the page just loaded, focused once it renders, so Tab carries
+  // on from where the reader is rather than from the top of the list.
+  const focusAt = useRef<number | null>(null);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
+  const { severity, code, ref } = group;
+  const entries = [...group.items, ...more.items];
+  const count = group.count - more.dropped;
+  const showMore = () => {
+    const cursor = more.cursor;
+    if (loading || cursor === null || ref === null) return;
+    setLoading(true);
+    setFailure(null);
+    const controller = new AbortController();
+    request.current = controller;
+    getFindings(ref, { code, cursor, signal: controller.signal }).then(
+      (page) => {
+        if (controller.signal.aborted) return;
+        const next = page.find((g) => g.severity === severity);
+        // Move focus only if the reader has not moved it elsewhere meanwhile.
+        const active = document.activeElement;
+        if (active === moreButton.current || active === document.body)
+          focusAt.current = entries.length;
+        // A merged group's first page may hold another ref's copy of a finding.
+        setMore((m) => {
+          const shown = new Set(
+            [...group.items, ...m.items].map((f) => JSON.stringify(f)),
+          );
+          const fresh = (next?.items ?? []).filter(
+            (f) => !shown.has(JSON.stringify(f)),
+          );
+          return {
+            items: [...m.items, ...fresh],
+            cursor: next?.next_cursor ?? null,
+            dropped: m.dropped + (next?.items.length ?? 0) - fresh.length,
+          };
+        });
+        setLoading(false);
+      },
+      (error: unknown) => {
+        if (controller.signal.aborted) return;
+        setFailure(error instanceof Error ? error.message : String(error));
+        setLoading(false);
+      },
+    );
+  };
   const label = code.includes(":")
     ? code.slice(code.indexOf(":") + 1).replaceAll("-", " ")
     : "catalog finding";
@@ -83,7 +128,7 @@ function FindingGroup({
                 if (!open) setCopied(false);
               }}
             >
-              <Button
+              <AriaButton
                 slot="trigger"
                 className={styles.disclosureButton}
                 onPress={() => {
@@ -96,9 +141,9 @@ function FindingGroup({
                 <TreeChevron />
                 <span>
                   {severity === "review" ? "Needs review" : "Notice"}: {label} (
-                  <code>{entries.length}</code>)
+                  <code>{count}</code>)
                 </span>
-              </Button>
+              </AriaButton>
               <Tooltip
                 className={({ isEntering, isExiting }) =>
                   `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
@@ -119,9 +164,21 @@ function FindingGroup({
           >
             <div>
               {isExpanded && (
-                <ul className={styles.findings}>
-                  {entries.map((finding) => (
-                    <li key={JSON.stringify(finding)}>
+                <ul
+                  aria-busy={loading || undefined}
+                  className={styles.findings}
+                >
+                  {entries.map((finding, i) => (
+                    <li
+                      key={JSON.stringify(finding)}
+                      tabIndex={-1}
+                      ref={(el) => {
+                        if (el && focusAt.current === i) {
+                          focusAt.current = null;
+                          el.focus();
+                        }
+                      }}
+                    >
                       <StatusRow tone={severity === "review" ? "warn" : "info"}>
                         <div className={styles.finding}>
                           <span>
@@ -162,6 +219,30 @@ function FindingGroup({
                     </li>
                   ))}
                 </ul>
+              )}
+              {isExpanded && failure && (
+                <StatusRow tone="error" live="alert">
+                  More notes did not load ({failure}). Press Show more to try
+                  again.
+                </StatusRow>
+              )}
+              {isExpanded && group.partial && entries.length < count && (
+                <p className={`${styles.shown} ${styles.findingsFoot}`}>
+                  {entries.length} of {count} shown
+                </p>
+              )}
+              {isExpanded && more.cursor !== null && ref !== null && (
+                // Padded so the panel's clipping box leaves the focus ring whole.
+                <div className={styles.findingsFoot}>
+                  <Button
+                    ref={moreButton}
+                    isBusy={loading}
+                    onPress={showMore}
+                    aria-label={`Show more (${count - entries.length} left): ${label}`}
+                  >
+                    Show more ({count - entries.length} left)
+                  </Button>
+                </div>
               )}
             </div>
           </DisclosurePanel>
