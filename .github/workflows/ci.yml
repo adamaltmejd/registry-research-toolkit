@@ -85,7 +85,7 @@ jobs:
             hypothesis_profile: thorough
             sparse: *no-locks
           - suite: scripts/tests
-            budget: 2
+            budget: 5
             command: uv run python -m pytest scripts/tests -n auto
             sparse: *no-locks
     steps:

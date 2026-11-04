@@ -306,14 +306,14 @@ over budget is a finding for the `test-audit` skill, not a reason to raise the n
 The R packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat
 suites are run by hand, not by the gate or CI.
 
-  | Suite                                | Local | CI job | Rationale                                                                                                                           |
-  | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation. |
-  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.        |
-  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                    |
-  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.       |
-  | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                 |
-  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                |
+  | Suite                                | Local | CI job | Rationale                                                                                                                                                         |
+  | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                               |
+  | `scripts/tests`                      | 20 s  | 5 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most. Cold `uv sync` builds `reg-core-py`. |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                                  |
+  | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.                                     |
+  | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.                                               |
+  | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.                                              |
 
 One verification gate cuts across the tiers. It is named G0 so it is not confused with
 the tiers. G1 and G2 (the byte-for-byte differential harness against the previous
