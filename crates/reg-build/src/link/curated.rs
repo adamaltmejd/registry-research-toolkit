@@ -74,12 +74,8 @@ fn endpoints(
                 .find(|t| t.slug.as_deref().unwrap_or(&resolved.public) == slug)
                 .ok_or("unresolved table endpoint")?;
             super::Index::new(registers).entities(&reg_frame::Endpoint {
-                kind: "table".into(),
-                provider: provider.into(),
-                register: Some(register.into()),
-                register_name: None,
                 table: Some(table.table.table.clone()),
-                key: None,
+                ..reg_frame::Endpoint::new("table", provider, Some(register))
             })
         }
         Address::Set(_) => {
