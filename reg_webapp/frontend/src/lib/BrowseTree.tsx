@@ -22,7 +22,6 @@ import {
   allRegisterFacets,
   browseMatches,
   browseOrder,
-  searchScope,
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
@@ -221,10 +220,8 @@ export function BrowseTree({
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
   const facetKey = useSettledFilter();
-  const scope = searchScope(config);
-  const facetResource = useAsyncResource(
-    facetKey === null ? null : `${scope ?? ""}\u0000${facetKey}`,
-    (signal) => searchFacets(facetKey ?? "", { signal, scope }),
+  const facetResource = useAsyncResource(facetKey, (signal) =>
+    searchFacets(facetKey ?? "", { signal }),
   );
   const facets = new Map(
     (facetKey === null ? [] : allRegisterFacets(facetResource.data)).flatMap(

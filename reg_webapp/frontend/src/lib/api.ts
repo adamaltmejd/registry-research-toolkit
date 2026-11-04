@@ -299,7 +299,6 @@ function searchGet<T>(
     type?: SearchType;
     register?: string;
     cursor?: string;
-    scope?: "steward" | "reference";
   },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
@@ -315,7 +314,6 @@ function searchGet<T>(
   if (options?.cursor !== undefined) {
     params.set("cursor", options.cursor);
   }
-  if (options?.scope !== undefined) params.set("scope", options.scope);
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
     signals.push(options.signal);
@@ -361,7 +359,6 @@ export async function searchFacets(
     signal?: AbortSignal;
     register?: string;
     limit?: number;
-    scope?: "steward" | "reference";
   },
 ): Promise<RegisterFacets> {
   return (

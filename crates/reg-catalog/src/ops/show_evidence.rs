@@ -63,17 +63,7 @@ pub struct CurationStatement {
     value: Option<String>,
     statement: StatementLocation,
     #[schema(required = true)]
-    evidence: Option<String>,
-    #[schema(required = true)]
     caveat: Option<String>,
-}
-
-/// Latest provider text, used only when no curated description exists.
-#[derive(Serialize, ToSchema)]
-pub struct SourceDefinition {
-    origin: &'static str,
-    period: Period,
-    text: String,
 }
 
 // An override row distinguishes a silent source (NULL) from no override. COALESCE
@@ -166,6 +156,45 @@ fn provider_texts<'a>(
         (None, Some(text)) => vec![("operational_definition", text)],
         (None, None) => Vec::new(),
     }
+}
+
+/// A used occurrence's provider wording: its table, `[start, end)` and its distinct
+/// source texts (definition, operational definition), one per line; `None` when the
+/// source is silent. Source values, never a curated correction (design §2.4).
+pub(super) struct Wording {
+    pub table: String,
+    pub start: i64,
+    pub end: i64,
+    pub text: Option<String>,
+}
+
+/// The variable's used occurrences' wordings, latest first, then in source order.
+pub(super) fn wordings(conn: &Connection, variable: i64) -> Result<Vec<Wording>, Error> {
+    Ok(rows(
+        conn,
+        &format!(
+            "{SOURCE_ROWS} AND o.status = 'used'
+             ORDER BY o.start DESC, o.end DESC, t.pid, o.source_key, spelling, o.id"
+        ),
+        [variable],
+        |row| {
+            let definition: Option<String> = row.get(8)?;
+            let operational: Option<String> = row.get(9)?;
+            let texts = provider_texts(definition.as_deref(), operational.as_deref());
+            Ok(Wording {
+                table: row.get(1)?,
+                start: row.get(2)?,
+                end: row.get(3)?,
+                text: (!texts.is_empty()).then(|| {
+                    texts
+                        .iter()
+                        .map(|(_, text)| *text)
+                        .collect::<Vec<_>>()
+                        .join("\n")
+                }),
+            })
+        },
+    )?)
 }
 
 /// All source occurrences, including shadowed evidence, in table/period/key order.
@@ -276,9 +305,8 @@ fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>
                SELECT x.field, x.value, x.statement_id FROM occurrence o
                  JOIN override x ON x.subject_kind = 'occurrence' AND x.subject_id = o.id
                WHERE o.variable_id = ?1)
-             SELECT x.field, x.value, s.file, s.line, e.body, c.body
+             SELECT x.field, x.value, s.file, s.line, c.body
              FROM decisions x JOIN statement s ON s.id = x.statement_id
-               LEFT JOIN text e ON e.id = s.evidence_text
                LEFT JOIN text c ON c.id = s.caveat_text
              ORDER BY s.file, s.line, x.field, x.value",
         [variable],
@@ -290,40 +318,8 @@ fn statements(conn: &Connection, variable: i64) -> Result<Vec<CurationStatement>
                     file: row.get(2)?,
                     line: row.get(3)?,
                 },
-                evidence: row.get(4)?,
-                caveat: row.get(5)?,
+                caveat: row.get(4)?,
             })
         },
     )?)
-}
-
-/// The two provider text fields from the same latest used occurrence; never a pair
-/// assembled from different periods. An entirely silent source yields no fallback.
-pub(super) fn latest_source_text(
-    server: &Server,
-    conn: &Connection,
-    variable: i64,
-) -> Result<Option<SourceDefinition>, Error> {
-    let mut statement = conn.prepare(&format!(
-        "{SOURCE_ROWS} AND o.status = 'used'
-         ORDER BY o.start DESC, o.end DESC, t.pid, o.source_key, spelling, o.id"
-    ))?;
-    let mut rows = statement.query([variable])?;
-    while let Some(row) = rows.next()? {
-        let definition: Option<String> = row.get(8)?;
-        let operational: Option<String> = row.get(9)?;
-        let texts = provider_texts(definition.as_deref(), operational.as_deref());
-        if !texts.is_empty() {
-            return Ok(Some(SourceDefinition {
-                origin: "provider",
-                period: server.period(row.get(2)?, row.get(3)?),
-                text: texts
-                    .into_iter()
-                    .map(|(_, text)| text)
-                    .collect::<Vec<_>>()
-                    .join("\n"),
-            }));
-        }
-    }
-    Ok(None)
 }

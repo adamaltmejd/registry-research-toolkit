@@ -349,13 +349,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   off at the left.
 - **Browse columns (`ColumnList`):** a steward deployment shows only what the steward
   holds, and never says so: everything shown is held, everything held is shown
-  (maintainer 2026-11-04). The register list holds only the providers and registers the
-  steward holds anything in, the variables column only the variables an accepted
-  placement names, and search matches only held variables. There is no scope control and
-  no held or unheld wording anywhere on the site. A register or variable outside the
-  lists stays reachable by a link; opened that way, it keeps its row (a register with
-  its provider) while its page is open. Registers grouped under sticky provider headers,
-  then the selected register's or group's variables, then the detail pane capped at
+  (maintainer 2026-11-04). The server does this, not the SPA: on a steward catalog it
+  lists, searches and serves only what the steward holds, and every period it returns is
+  the years held (crates/DESIGN.md). There is no scope control and no held or unheld
+  wording anywhere on the site. Registers grouped under sticky provider headers, then
+  the selected register's or group's variables, then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
   to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
   and centred, so a wide screen gets wider lists, not a stranded pane. The variables
@@ -438,12 +436,13 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   page's facts are what its columns state: one value where every column states it alike,
   each value with its years where they differ, and no row where none states it, never
   "Not stated" down the list. The `Timeline` carries the columns, their tables and
-  years, so there is no tables list and no table of columns under it; the provider's
-  definition, where there is no curated description, is the Description. On a steward
-  deployment the variable page's `Timeline` and facts read the held placements, never
-  the reference catalog's wider periods: one span per held file and column over the
-  years held; a register page lists only the held tables and variables, with no
-  reference Period; and a table page's Years are the years held. Placement caveats are
+  years, so there is no tables list and no table of columns under it; value sets have
+  their own panel, so the facts name only the classification. Where there is no curated
+  description, the provider's wording is the Description: once when every period agrees,
+  otherwise each wording under its years. Timeline and facts read the one per-period
+  list (`segments`): on a steward deployment its rows are the held files and columns
+  over the years held. A table page leaves out a Row keys, Populations or Releases panel
+  with nothing to list, and Timeless or Implicit when "No". Placement caveats are
   steward working notes, not shown until the steward curates them for readers. A
   register page has no tables table: its tables are FilterChips over the variable list,
   each with its period, a lens with OR within the selection, offered only when two or

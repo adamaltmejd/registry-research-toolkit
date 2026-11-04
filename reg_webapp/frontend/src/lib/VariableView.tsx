@@ -7,11 +7,10 @@ import {
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
-import { heldColumns, variableColumns } from "./add_columns";
+import { variableColumns } from "./add_columns";
 import {
   type CatalogSegment,
   type Context,
-  getCoverage,
   getGraph,
   getSegments,
   getVariableEvidence,
@@ -72,21 +71,17 @@ const FACTS: readonly {
   {
     term: "Coded",
     of: (row) =>
-      row.coded === "yes" || row.coded === "no"
-        ? { key: row.coded, value: yesNo(row.coded) }
-        : null,
+      row.coded ? { key: row.coded, value: yesNo(row.coded === "yes") } : null,
   },
   {
     term: "State",
     of: (row) =>
-      row.state === "clear" || row.state === "unknown"
-        ? null
-        : { key: row.state, value: catalogWords(row.state) },
+      row.state ? { key: row.state, value: catalogWords(row.state) } : null,
   },
   {
     term: "Identifier",
     of: (row) =>
-      row.identifier === null
+      row.identifier === undefined
         ? null
         : {
             key: `${row.identifier}${row.id_kind ?? ""}`,
@@ -96,16 +91,16 @@ const FACTS: readonly {
   {
     term: "Sensitive",
     of: (row) =>
-      row.sensitive === null
+      row.sensitive === undefined
         ? null
         : { key: String(row.sensitive), value: yesNo(row.sensitive) },
   },
   {
     term: "Temporality",
     of: (row) =>
-      row.temporality === "unknown"
-        ? null
-        : { key: row.temporality, value: catalogWords(row.temporality) },
+      row.temporality
+        ? { key: row.temporality, value: catalogWords(row.temporality) }
+        : null,
   },
   {
     term: "Storage",
@@ -118,7 +113,7 @@ const FACTS: readonly {
         row.type && row.format && row.format !== row.type ? row.format : "";
       const storage = [type, format].filter(Boolean).join(" ");
       if (storage) return { key: storage, value: <code>{storage}</code> };
-      if (row.length !== null)
+      if (row.length !== undefined)
         return {
           key: `length ${row.length}`,
           value: (
@@ -130,31 +125,56 @@ const FACTS: readonly {
       return null;
     },
   },
+  // Value sets have their own panel (ValueSetView); only the classification
+  // they code is a fact here.
   {
-    term: "Value set",
+    term: "Classification",
     of: (row) =>
-      row.value_set === null && row.classification === null
-        ? null
-        : {
-            key: `${row.value_set?.hash ?? ""} ${row.classification ?? ""}`,
+      row.classification
+        ? {
+            key: row.classification,
             value: (
-              <span className={variableStyles.valueSetCell}>
-                {row.value_set && <ValueSetLabel valueSet={row.value_set} />}
-                {row.classification && (
-                  <a
-                    className={`link ${variableStyles.classification}`}
-                    href={catalogHref(row.classification)}
-                  >
-                    {humanizeClassificationSlug(
-                      row.classification.split("/").at(-1) ?? "",
-                    )}
-                  </a>
+              <a className="link" href={catalogHref(row.classification)}>
+                {humanizeClassificationSlug(
+                  row.classification.split("/").at(-1) ?? "",
                 )}
-              </span>
+              </a>
             ),
-          },
+          }
+        : null,
   },
 ];
+
+/** The segments grouped by one fact's value, in first-seen order, and
+ * whether any segment leaves it unstated. */
+function groupFact(
+  segments: readonly CatalogSegment[],
+  of: (row: CatalogSegment) => SegmentFact,
+) {
+  const groups = new Map<
+    string,
+    { value: ReactNode; segments: CatalogSegment[] }
+  >();
+  let unstated = false;
+  for (const segment of segments) {
+    const fact = of(segment);
+    if (!fact) {
+      unstated = true;
+      continue;
+    }
+    const group = groups.get(fact.key) ?? { value: fact.value, segments: [] };
+    group.segments.push(segment);
+    groups.set(fact.key, group);
+  }
+  return { groups: [...groups], unstated };
+}
+
+function factYears(
+  segments: readonly CatalogSegment[],
+  bounds: readonly [number, number],
+) {
+  return columnYearRuns(segments, bounds).map(yearWindowLabel).join(", ");
+}
 
 /** The facts of a variable's segments (DESIGN.md → Detail pane): a fact every
  * segment states alike is one value; one that differs lists each value with
@@ -164,36 +184,20 @@ function segmentFacts(
   bounds: readonly [number, number],
 ): Definition[] {
   return FACTS.flatMap(({ term, of }) => {
-    const groups = new Map<
-      string,
-      { value: ReactNode; segments: CatalogSegment[] }
-    >();
-    let unstated = false;
-    for (const segment of segments) {
-      const fact = of(segment);
-      if (!fact) {
-        unstated = true;
-        continue;
-      }
-      const group = groups.get(fact.key) ?? { value: fact.value, segments: [] };
-      group.segments.push(segment);
-      groups.set(fact.key, group);
-    }
-    if (groups.size === 0) return [];
-    if (groups.size === 1 && !unstated)
-      return [{ term, value: [...groups.values()][0].value }];
+    const { groups, unstated } = groupFact(segments, of);
+    if (groups.length === 0) return [];
+    if (groups.length === 1 && !unstated)
+      return [{ term, value: groups[0][1].value }];
     return [
       {
         term,
         value: (
           <ul className={styles.plainList}>
-            {[...groups].map(([key, group]) => (
+            {groups.map(([key, group]) => (
               <li key={key}>
                 {group.value}{" "}
                 <span className={variableStyles.factYears}>
-                  {columnYearRuns(group.segments, bounds)
-                    .map(yearWindowLabel)
-                    .join(", ")}
+                  {factYears(group.segments, bounds)}
                 </span>
               </li>
             ))}
@@ -202,6 +206,49 @@ function segmentFacts(
       },
     ];
   });
+}
+
+/** The curated description, else the provider's wording: once when every
+ * stated period agrees, otherwise each wording with the years it is used. */
+function Description({
+  description,
+  segments,
+  bounds,
+}: {
+  description: string | undefined;
+  segments: readonly CatalogSegment[];
+  bounds: readonly [number, number];
+}) {
+  const lines = (text: string) =>
+    text.split("\n").map((line) => (
+      <p key={line} className={styles.prose}>
+        {line}
+      </p>
+    ));
+  if (description)
+    return (
+      <Panel title="Description">
+        <p className={styles.prose}>{description}</p>
+      </Panel>
+    );
+  const { groups, unstated } = groupFact(segments, (row) =>
+    row.wording ? { key: row.wording, value: row.wording } : null,
+  );
+  if (groups.length === 0) return null;
+  return (
+    <Panel title="Description">
+      {groups.length === 1 && !unstated
+        ? lines(groups[0][0])
+        : groups.map(([text, group]) => (
+            <div key={text} className={variableStyles.wording}>
+              <p className={variableStyles.factYears}>
+                {factYears(group.segments, bounds)}
+              </p>
+              {lines(text)}
+            </div>
+          ))}
+    </Panel>
+  );
 }
 
 export function ValueSetLabel({
@@ -312,23 +359,10 @@ export function VariableView({
     evidenceRequested ? node.fqid : null,
     (signal) => getVariableEvidence(node.fqid, { signal }),
   );
-  // A steward deployment shows what it holds: the timeline and the facts read
-  // its held placements, never the reference catalog's wider periods.
-  const steward = context?.steward_config != null;
-  const held = useAsyncResource(steward ? node.fqid : null, (signal) =>
-    getCoverage(node.fqid, { signal }),
-  );
-  const heldPlacements = steward ? (held.data?.held ?? []) : null;
   const bounds = windowBounds(context);
-  const factSegments = heldPlacements
-    ? heldColumns(segments.data ?? [], heldPlacements).flatMap(
-        (column) => column.segments,
-      )
-    : (segments.data ?? []);
   const coverage = useVariableCoverage({
     node,
     segments: segments.data ?? [],
-    held: heldPlacements,
     names,
     context,
     tables: register?.tables ?? null,
@@ -338,7 +372,7 @@ export function VariableView({
     successionError,
     allowAdd: context !== null,
   });
-  const facts = segmentFacts(factSegments, [bounds.min, bounds.max]);
+  const facts = segmentFacts(segments.data ?? [], [bounds.min, bounds.max]);
   return (
     <article className={styles.page}>
       <Definitions
@@ -357,29 +391,23 @@ export function VariableView({
         }
         definitions={[
           ...facts,
-          // On a steward deployment the timeline's header gives the held years;
-          // the reference period would claim more.
-          ...(steward
-            ? []
-            : [
-                {
-                  term: "Period",
-                  value: <code>{catalogPeriodLabel(node.period)}</code>,
-                },
-              ]),
-          ...(node.tags.length
+          {
+            term: "Period",
+            value: <code>{catalogPeriodLabel(node.period)}</code>,
+          },
+          ...(node.tags?.length
             ? [
                 {
                   term: "Tags",
-                  value: node.tags.map((tag) => tag.name).join(", "),
+                  value: node.tags?.map((tag) => tag.name).join(", "),
                 },
               ]
             : []),
-          ...(node.sets.length
+          ...(node.sets?.length
             ? [
                 {
                   term: "Groups",
-                  value: node.sets.map((set, index) => (
+                  value: node.sets?.map((set, index) => (
                     <span key={set.fqid}>
                       {index > 0 && ", "}
                       <a className="link" href={catalogHref(set.fqid)}>
@@ -399,12 +427,11 @@ export function VariableView({
         aria-busy={
           registerResource.loading ||
           successionLoading ||
-          held.loading ||
           segments.loading ||
           undefined
         }
       >
-        {registerResource.loading || held.loading || segments.loading ? (
+        {registerResource.loading || segments.loading ? (
           <Skeleton count={2} />
         ) : registerResource.error ? (
           <StatusRow
@@ -424,29 +451,21 @@ export function VariableView({
           >
             Could not load the register's tables.
           </StatusRow>
-        ) : held.error ? (
+        ) : segments.error ? (
           <StatusRow tone="error" live="alert">
-            The years held did not load ({held.error}). Reload the page to try
-            again.
+            The variable's columns did not load ({segments.error}). Reload the
+            page to try again.
           </StatusRow>
         ) : (
           coverage.graph
         )}
       </div>
-      {(node.description ?? node.source_definition?.text) && (
-        <Panel title="Description">
-          <p className={styles.prose}>
-            {node.description ?? node.source_definition?.text}
-          </p>
-        </Panel>
-      )}
-      {segments.error && (
-        <StatusRow tone="error" live="alert">
-          The variable's columns did not load ({segments.error}). Reload the
-          page to try again.
-        </StatusRow>
-      )}
-      {segments.data && <ValueSetView segments={factSegments} names={names} />}
+      <Description
+        description={node.description}
+        segments={segments.data ?? []}
+        bounds={[bounds.min, bounds.max]}
+      />
+      {segments.data && <ValueSetView segments={segments.data} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
       <Disclosure

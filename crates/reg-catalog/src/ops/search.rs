@@ -58,7 +58,6 @@ pub const OPERATIONS: &[Operation] = &[
             Param::optional("limit", Type::Limit),
             Param::optional("cursor", Type::Cursor),
             Param::optional("steward_cursor", Type::Cursor),
-            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search,
@@ -74,7 +73,6 @@ pub const OPERATIONS: &[Operation] = &[
             Param::required("q", Type::String),
             Param::optional("register", Type::Ref),
             Param::optional("limit", Type::Limit),
-            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search_facets,
@@ -207,11 +205,8 @@ fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
-    let held = match params.get("scope").copied().unwrap_or("reference") {
-        "reference" => false,
-        "steward" if server.catalog.steward().is_some() => true,
-        _ => return Err(Error::invalid_parameter("scope")),
-    };
+    // Steward mode serves only what the steward holds (maintainer 2026-11-04).
+    let held = server.catalog.steward().is_some();
     let conn = server.catalog.connect()?;
     if let Some(tag) = params.get("tag") {
         require_tag(server, &conn, tag)?;
@@ -361,18 +356,20 @@ fn search_origin(
     })
 }
 
-/// Count and page share all filters. Possession is restricted by public id and
-/// requested interval; code/document presence grants no possession.
+/// Count and page share all filters. In steward mode a register, table or variable
+/// matches only when held (by public id, over the requested interval); classifications,
+/// codes and documents are shared and always match.
 fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<String, Error> {
     let scope = if held {
         server.catalog.attach_holdings(conn)?;
-        " AND EXISTS (SELECT 1 FROM held.holding_mapping hm
+        " AND (i.kind NOT IN ('register', 'table', 'variable')
+            OR EXISTS (SELECT 1 FROM held.holding_mapping hm
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))
               AND ((i.kind = 'variable' AND i.entity_id = hv.id)
                OR (i.kind = 'table' AND i.entity_id = ht.id)
-               OR (i.kind = 'register' AND i.entity_id = ht.register_id)))"
+               OR (i.kind = 'register' AND i.entity_id = ht.register_id))))"
     } else {
         ""
     };
@@ -405,11 +402,12 @@ fn hit(
              WHERE r.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Register {
-                    fqid: row.get(0)?,
+                    period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    fqid,
                     name: row.get(1)?,
                     description: row.get(2)?,
-                    period: server.period(row.get(3)?, row.get(4)?),
                 })
             },
         )?,
@@ -422,12 +420,13 @@ fn hit(
              WHERE t.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Table {
-                    fqid: row.get(0)?,
+                    period: server.hull("table", &fqid, row.get(4)?, row.get(5)?),
+                    fqid,
                     name: row.get(1)?,
                     register_name: row.get(2)?,
                     role: row.get(3)?,
-                    period: server.period(row.get(4)?, row.get(5)?),
                 })
             },
         )?,
@@ -450,13 +449,14 @@ fn hit(
                  WHERE v.id = ?",
                 [variable],
                 |row| {
+                    let fqid: String = row.get(0)?;
                     Ok(SearchHit::Variable {
-                        fqid: row.get(0)?,
+                        period: server.hull("variable", &fqid, row.get(4)?, row.get(5)?),
+                        fqid,
                         name: row.get(1)?,
                         register_name: row.get(2)?,
                         definition: row.get(3)?,
                         spellings,
-                        period: server.period(row.get(4)?, row.get(5)?),
                     })
                 },
             )?
@@ -532,11 +532,8 @@ fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
         .is_some()
         .then(|| super::limit(params))
         .transpose()?;
-    let held = match params.get("scope").copied().unwrap_or("reference") {
-        "reference" => false,
-        "steward" if server.catalog.steward().is_some() => true,
-        _ => return Err(Error::invalid_parameter("scope")),
-    };
+    // Steward mode serves only what the steward holds (maintainer 2026-11-04).
+    let held = server.catalog.steward().is_some();
     let run = |conn: &Connection| -> Result<Vec<RegisterFacet>, Error> {
         let register = match params
             .get("register")

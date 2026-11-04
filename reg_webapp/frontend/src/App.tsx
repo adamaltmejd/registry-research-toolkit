@@ -89,7 +89,6 @@ export function App() {
             {registerFqid && route.name === "catalog-node" ? (
               <VariableList
                 registerFqid={registerFqid}
-                config={config}
                 selectedFqid={
                   unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
                   route.fqidPath.split("/").length > 2

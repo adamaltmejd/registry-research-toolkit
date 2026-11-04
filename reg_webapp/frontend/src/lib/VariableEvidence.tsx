@@ -96,12 +96,7 @@ function groupSources(sources: Source[]): SourceGroup[] {
 function groupStatements(statements: Statement[]): StatementGroup[] {
   const groups = new Map<string, StatementGroup>();
   for (const { statement, ...facts } of statements) {
-    const key = JSON.stringify([
-      facts.field,
-      facts.value,
-      facts.evidence,
-      facts.caveat,
-    ]);
+    const key = JSON.stringify([facts.field, facts.value, facts.caveat]);
     const group = groups.get(key);
     if (group) group.locations.push(statement);
     else groups.set(key, { ...facts, locations: [statement] });
@@ -117,7 +112,7 @@ function groupStatements(statements: Statement[]): StatementGroup[] {
 }
 
 function visibleText(value: string | null): string | null {
-  // Internal text references may follow useful prose in the same evidence field.
+  // Internal text references may follow useful prose in the same caveat field.
   return (
     value
       ?.replace(/\bcatalog:[^\s]+/g, "")
@@ -148,11 +143,11 @@ function statementValue(
       return periodText(renderIntervals([[value[0], value[1]]]));
     }
     const members =
-      statement.field === "tags"
+      (statement.field === "tags"
         ? node.tags
         : statement.field === "sets"
           ? node.sets
-          : [];
+          : undefined) ?? [];
     const text = value
       .map((item) => {
         const name = members.find(
@@ -366,7 +361,6 @@ export function EvidenceContent({
           <ul className={`${styles.plainList} ${evidenceStyles.list}`}>
             {groupStatements(evidence.statements).map((statement) => {
               const value = statementValue(statement, node);
-              const evidenceText = visibleText(statement.evidence);
               const caveatText = visibleText(statement.caveat);
               return (
                 <li
@@ -377,14 +371,6 @@ export function EvidenceContent({
                     rows={[
                       { label: "Field", value: catalogWords(statement.field) },
                       ...(value !== null ? [{ label: "Value", value }] : []),
-                      ...(evidenceText
-                        ? [
-                            {
-                              label: "Evidence",
-                              value: evidenceText,
-                            },
-                          ]
-                        : []),
                       ...(caveatText
                         ? [
                             {

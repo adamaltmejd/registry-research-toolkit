@@ -115,6 +115,8 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
                     .collect::<rusqlite::Result<Vec<_>>>()?,
             );
         }
+        // Steward mode: a variable the steward does not hold is not served.
+        matches.retain(|m| server.catalog.serves("variable", &m.fqid));
         matches.sort_by(|a, b| a.fqid.cmp(&b.fqid));
         matches.dedup_by(|a, b| a.fqid == b.fqid);
         columns.push(ResolvedColumn {

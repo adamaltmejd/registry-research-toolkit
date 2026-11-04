@@ -70,6 +70,16 @@ type End = (String, i64);
 type Nodes = BTreeMap<(String, String), String>;
 type Edge = ((String, String, String, Option<i64>), GraphEdge);
 
+/// Steward mode: a neighbour the steward does not hold is not served, nor its edges.
+fn held_only<K>(server: &Server, nodes: &mut Nodes, edges: &mut Vec<(K, GraphEdge)>) {
+    nodes.retain(|(fqid, kind), _| server.catalog.serves(kind, fqid));
+    edges.retain(|(_, edge)| {
+        [&edge.from, &edge.to]
+            .iter()
+            .all(|end| nodes.keys().any(|(fqid, _)| fqid == *end))
+    });
+}
+
 fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
@@ -164,6 +174,7 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
     // NULL `at_start` sorts first; the key is the contract's, which `relation`'s
     // uniqueness makes total up to the implicit table's shared pid.
     edges.sort_by(|a, b| a.0.cmp(&b.0));
+    held_only(server, &mut nodes, &mut edges);
     Ok(serde_json::to_value(Graph {
         focus: entity.pid,
         nodes: nodes

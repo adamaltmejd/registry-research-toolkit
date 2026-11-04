@@ -11,10 +11,6 @@
         "start": "2018-01-01",
         "end": "2023-01-01"
       },
-      "/data/tables": [
-        "demo/descriptions/main",
-        "demo/descriptions/other"
-      ],
       "/data/sets": [
         {
           "fqid": "set/demo/descriptions/analysis",
@@ -37,7 +33,6 @@
         "period",
         "register",
         "sets",
-        "tables",
         "tags"
       ]
     }
@@ -51,21 +46,12 @@
         "start": "2019-01-01",
         "end": "2023-01-01"
       },
-      "/data/source_definition": {
-        "origin": "provider",
-        "period": {
-          "start": "2020-01-01",
-          "end": "2021-01-01"
-        },
-        "text": "Recent scope\nRecent computation"
-      },
       "/data/sets": [
         {
           "fqid": "set/demo/descriptions/analysis",
           "name": "analysis"
         }
-      ],
-      "/data/tags": []
+      ]
     },
     "keys": {
       "/data": [
@@ -74,10 +60,26 @@
         "name",
         "period",
         "register",
-        "sets",
-        "source_definition",
-        "tables",
-        "tags"
+        "sets"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/2/period": {
+        "start": "2022-01-01",
+        "end": "2023-01-01"
+      },
+      "/data/items/0/wording": "Scope\nOld computation",
+      "/data/items/1/wording": "Recent scope\nRecent computation"
+    },
+    "keys": {
+      "/data/items/2": [
+        "column",
+        "period",
+        "role",
+        "table"
       ]
     }
   }

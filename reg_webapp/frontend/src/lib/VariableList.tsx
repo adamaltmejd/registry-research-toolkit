@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { RegisterFacet, StewardConfig } from "./api";
+import type { RegisterFacet } from "./api";
 import {
   useBrowseFilter,
   useOtherRegisterMatches,
@@ -68,26 +68,21 @@ export function VariableList({
   registerFqid,
   selectedFqid,
   className,
-  config = null,
 }: {
   registerFqid: string;
   selectedFqid: string | null;
   className?: string;
-  config?: StewardConfig | null;
 }) {
   const resource = useAsyncResource(registerFqid, (signal) =>
     sharedShow(registerFqid, signal),
   );
   const needle = useBrowseFilter();
-  const matches = useRegisterMatches(registerFqid, config);
-  const otherMatches = useOtherRegisterMatches(registerFqid, config);
+  const matches = useRegisterMatches(registerFqid);
+  const otherMatches = useOtherRegisterMatches(registerFqid);
   const node = resource.data?.kind === "register" ? resource.data : null;
-  // A steward deployment lists only the variables it holds, plus the open one,
-  // so a page opened by a link keeps its row (as the tree keeps its register).
-  const listed = (node?.variables ?? []).filter(
-    (row) => config === null || row.held !== false || row.fqid === selectedFqid,
+  const variables = [...(node?.variables ?? [])].sort((a, b) =>
+    svCollator.compare(a.name, b.name),
   );
-  const variables = listed.sort((a, b) => svCollator.compare(a.name, b.name));
   const ranked = rankFilter(variables, needle, (row) => [
     row.name,
     leafSlug(row.fqid),
