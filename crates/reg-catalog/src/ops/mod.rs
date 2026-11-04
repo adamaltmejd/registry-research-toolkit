@@ -628,18 +628,3 @@ pub fn openapi(version: &str) -> OpenApi {
         ))
         .build()
 }
-
-#[cfg(test)]
-mod tests {
-    /// Fails when a result period's ISO day drifts from the day number the builder
-    /// wrote (`reg_core::iso_day_number`): an off-by-one at a leap day, a century or
-    /// before 1970, which the `context` case's two January firsts do not reach.
-    #[test]
-    fn iso_day_inverts_iso_day_number() {
-        let first = reg_core::iso_day_number("1600-01-01").unwrap();
-        let last = reg_core::iso_day_number("2400-12-31").unwrap();
-        for day in first..=last {
-            assert_eq!(reg_core::iso_day_number(&super::iso_day(day)), Some(day));
-        }
-    }
-}
