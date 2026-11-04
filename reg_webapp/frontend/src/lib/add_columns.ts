@@ -60,17 +60,21 @@ export function variableColumns(
   return [...columns.values()];
 }
 
-/** The files as one name: a run of yearly files reads as a range
- * (`RTB_2015–2020`), anything else as a list. */
+/** The files as one name: yearly files of one stem read as year runs after the
+ * stem (`RTB_2015–2017, 2019`), so a gap stays visible; anything else is a list. */
 export function filesLabel(files: readonly string[]): string | undefined {
   if (files.length <= 1) return files[0];
   const parts = files.map((file) => /^(.*?)(\d{4})$/.exec(file));
-  const prefix = parts[0]?.[1];
-  if (parts.every((part) => part && part[1] === prefix)) {
-    const years = parts.map((part) => Number(part?.[2])).sort((a, b) => a - b);
-    return `${prefix}${years[0]}–${years.at(-1)}`;
+  const stem = parts[0]?.[1];
+  if (!parts.every((part) => part && part[1] === stem)) return files.join(", ");
+  const years = parts.map((part) => Number(part?.[2])).sort((a, b) => a - b);
+  const runs: [number, number][] = [];
+  for (const year of years) {
+    const run = runs.at(-1);
+    if (run && year === run[1] + 1) run[1] = year;
+    else runs.push([year, year]);
   }
-  return files.join(", ");
+  return `${stem}${runs.map(([from, to]) => (from === to ? `${from}` : `${from}–${to}`)).join(", ")}`;
 }
 
 export function columnInProject(

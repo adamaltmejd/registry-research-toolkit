@@ -1,5 +1,10 @@
 import { type ReactNode, useCallback, useId, useRef, useState } from "react";
-import { Checkbox, Tooltip, TooltipTrigger } from "react-aria-components";
+import {
+  Checkbox,
+  Focusable,
+  Tooltip,
+  TooltipTrigger,
+} from "react-aria-components";
 import findingStyles from "./Finding.module.css";
 import styles from "./LaneGraph.module.css";
 import {
@@ -725,25 +730,27 @@ function Span({
   };
   if (!span.selectable || !onToggle) {
     return (
-      // The trigger props go unused: a read-only span is no tab stop, and its
-      // name is the visually hidden line, so only hover opens its tooltip.
-      // onOpenChange lets RAC close the tooltip on Escape.
+      // A read-only span is no tab stop: Focusable hands it the trigger's
+      // hover, focus and Escape handling, and its role and name carry the
+      // column, so hovering opens the tooltip and Escape closes it.
       <TooltipTrigger
         isOpen={open}
         onOpenChange={setOpen}
         delay={0}
         closeDelay={0}
       >
-        <span
-          ref={face}
-          className={styles.span}
-          onPointerEnter={() => setOpen(true)}
-          onPointerLeave={() => setOpen(false)}
-          {...attributes}
-        >
-          {body}
-          <span className="visually-hidden">{span.accessibleName}</span>
-        </span>
+        <Focusable ref={face} excludeFromTabOrder>
+          <span
+            // Focusable needs a named role; an <img> cannot hold the drawing.
+            // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
+            role="img"
+            aria-label={span.accessibleName}
+            className={styles.span}
+            {...attributes}
+          >
+            {body}
+          </span>
+        </Focusable>
         {tip}
       </TooltipTrigger>
     );

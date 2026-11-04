@@ -194,9 +194,22 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       // when it fits, with the file after it cut short, or dropped where only
       // a few of its characters would show. A span too narrow for the name is
       // a plain bar with the name beside it, right, or left at the axis end.
+      // The name is drawn in one delivered segment, the widest, so it must fit
+      // that segment, not the envelope across gaps.
+      const segments = (
+        span.segments ?? [{ name: null, from: span.from, to: span.to }]
+      ).map((segment) => {
+        const segLeft = x(segment.from) - left;
+        return {
+          name: segment.name,
+          x: segLeft,
+          width: Math.max(x(segment.to + 1) - left - segLeft, MIN_SPAN),
+        };
+      });
+      const room = Math.max(...segments.map((segment) => segment.width));
       const need = labelWidth(span.name);
       const label: PlacedSpan["label"] =
-        need <= width
+        need <= room
           ? "inside"
           : left + width + LABEL_GAP + need <= trackEnd
             ? "right"
@@ -204,7 +217,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
               ? "left"
               : "inside";
       const withTable =
-        !!span.table && label === "inside" && need + TABLE_MIN <= width;
+        !!span.table && label === "inside" && need + TABLE_MIN <= room;
       const start = label === "left" ? left - LABEL_GAP - need : left;
       const end = left + width + (label === "right" ? LABEL_GAP + need : 0);
       let row = rowEnds.findIndex((rowEnd) => rowEnd + PACK_GAP <= start);
@@ -216,16 +229,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       }
       rowOf.set(span.id, row);
       ends.set(span.id, end);
-      const segments = (
-        span.segments ?? [{ name: null, from: span.from, to: span.to }]
-      ).map((segment) => {
-        const segLeft = x(segment.from) - left;
-        return {
-          name: segment.name,
-          x: segLeft,
-          width: Math.max(x(segment.to + 1) - left - segLeft, MIN_SPAN),
-        };
-      });
       placed.set(span.id, {
         id: span.id,
         x: left,

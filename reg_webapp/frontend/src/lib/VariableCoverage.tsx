@@ -269,7 +269,13 @@ export function useVariableCoverage({
         {allowAdd && !draft && (
           <p className={styles.create}>
             Create a project to add columns.
-            <Button onPress={() => createProject(context)}>
+            <Button
+              onPress={() => {
+                createProject(context);
+                // The button goes once a project exists; focus stays on the timeline.
+                heading.current?.focus();
+              }}
+            >
               Create a project
             </Button>
           </p>
