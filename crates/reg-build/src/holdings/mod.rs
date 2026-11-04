@@ -12,7 +12,6 @@ use std::path::{Path, PathBuf};
 
 use crate::error::Result;
 use rusqlite::{Connection, OpenFlags, params};
-use sha2::{Digest, Sha256};
 
 pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     let flags = flags(args)?;
@@ -211,8 +210,7 @@ fn write(
     let mut db = Connection::open(scratch)?;
     db.execute_batch("PRAGMA foreign_keys=ON;")?;
     let counts = compile::write(&mut db, &base_db, topology, census.tables)?;
-    let mut hasher = Sha256::new();
-    hasher.update(crate::sha256_file(&input::path(root, &pin.config)?)?.0);
+    let mut generation = crate::sha256_file(&input::path(root, &pin.config)?)?.0;
     for part in [
         &base_generation,
         &base_sha,
@@ -223,13 +221,10 @@ fn write(
         &reg_core::HOLDINGS_SCHEMA_VERSION.to_string(),
         &compiler_digest(),
     ] {
-        hasher.update(part);
-        hasher.update(b"\n");
+        generation += part;
+        generation += "\n";
     }
-    for (path, sha) in &config.pins {
-        hasher.update(format!("{path}\t{sha}\n"));
-    }
-    let generation = reg_core::hex(&hasher.finalize());
+    let generation = reg_core::sha256_hex(generation + &input::pin_lines(&config.pins));
     let config_json = |relative: &str, json: bool| -> Result<String> {
         let text = std::fs::read_to_string(input::path(root, relative)?)?;
         let value = if json {
@@ -320,10 +315,5 @@ fn compiler_digest() -> String {
         include_str!("../curation.rs"),
         include_str!("../link/curated.rs"),
     ];
-    let mut hasher = Sha256::new();
-    hasher.update(env!("CARGO_PKG_VERSION"));
-    for source in sources {
-        hasher.update(source);
-    }
-    reg_core::hex(&hasher.finalize())
+    reg_core::sha256_hex(env!("CARGO_PKG_VERSION").to_owned() + &sources.concat())
 }

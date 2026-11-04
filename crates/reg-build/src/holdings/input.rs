@@ -1,11 +1,11 @@
 //! Closed, pinned steward input contract; no legacy inventory is read at runtime.
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
 use crate::error::Result;
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -257,11 +257,15 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
 /// One digest over the pinned input list, so the artifact names its inputs without
 /// carrying their paths. The per-file pins stay in the build report.
 pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
-    let mut hasher = Sha256::new();
-    for (path, sha) in pins {
-        hasher.update(format!("{path}\t{sha}\n"));
-    }
-    reg_core::hex(&hasher.finalize())
+    reg_core::sha256_hex(pin_lines(pins))
+}
+
+/// `path\tsha256\n` per pin, in path order.
+pub(super) fn pin_lines(pins: &BTreeMap<String, String>) -> String {
+    pins.iter().fold(String::new(), |mut lines, (path, sha)| {
+        writeln!(lines, "{path}\t{sha}").expect("write to String");
+        lines
+    })
 }
 
 fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<()> {

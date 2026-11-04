@@ -48,6 +48,7 @@ mod timing;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -55,7 +56,6 @@ use crate::error::Result;
 use reg_frame::Record;
 use reg_readers::curation::Lines;
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
 
 /// `curation/inputs.toml`: the pinned inputs and the providers they belong to.
 #[derive(Debug, Deserialize)]
@@ -292,14 +292,13 @@ fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64)> {
     if let [only] = files.iter().collect::<Vec<_>>()[..] {
         return sha256_file(&root.join(only));
     }
-    let mut hasher = Sha256::new();
-    let mut total = 0;
+    let (mut lines, mut total) = (String::new(), 0);
     for file in files {
         let (sha, bytes) = sha256_file(&root.join(file))?;
-        hasher.update(format!("{file}\t{sha}\n"));
+        writeln!(lines, "{file}\t{sha}").expect("write to String");
         total += bytes;
     }
-    Ok((reg_core::hex(&hasher.finalize()), total))
+    Ok((reg_core::sha256_hex(lines), total))
 }
 
 /// Every file under `dir`, relative to it, `/`-separated; symlinks are followed and
@@ -589,23 +588,22 @@ fn build_with_provenance(
     let schema_version = reg_core::CATALOG_SCHEMA_VERSION.to_string();
     let builder_version = env!("CARGO_PKG_VERSION");
     let sqlite_version = rusqlite::version();
-    let mut hasher = Sha256::new();
-    hasher.update(format!(
-        "{schema_version}\n{builder_version}\n{sqlite_version}\n"
-    ));
+    let mut generation = format!("{schema_version}\n{builder_version}\n{sqlite_version}\n");
     for &i in &order {
         let row = &inputs[i];
-        hasher.update(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\n",
+        writeln!(
+            generation,
+            "{}\t{}\t{}\t{}\t{}\t{}",
             row.name, row.repo, row.commit, row.path, row.sha256, row.bytes
-        ));
+        )
+        .expect("write to String");
     }
-    hasher.update(&curation_digest);
+    generation += &curation_digest;
     if let Some(base) = base {
-        hasher.update(&base.generation);
-        hasher.update(&base.sha256);
+        generation += &base.generation;
+        generation += &base.sha256;
     }
-    let generation_id = reg_core::hex(&hasher.finalize());
+    let generation_id = reg_core::sha256_hex(generation);
     let day = |iso| reg_core::iso_day_number(iso).expect("an ISO day");
     let meta = BTreeMap::from([
         ("schema_version", schema_version),

@@ -9,7 +9,6 @@ use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
 use reg_resolve::curation::{Premise, SourcePremise, variable_level_setter};
 use serde::{Deserialize, Serialize};
-use sha2::Digest;
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -149,15 +148,15 @@ impl LockedPremise {
                 .iter()
                 .map(|row| reg_frame::canonical_line(&row.locator))
                 .collect::<BTreeSet<_>>();
-            let mut hash = sha2::Sha256::new();
-            for locator in &locators {
-                hash.update(locator.as_bytes());
-                hash.update(b"\n");
-            }
             LockedSubjects::Variable {
                 variable: variable.to_owned(),
                 count: locators.len(),
-                locators_sha256: reg_core::hex(&hash.finalize()),
+                locators_sha256: reg_core::sha256_hex(
+                    locators
+                        .iter()
+                        .map(|l| l.clone() + "\n")
+                        .collect::<String>(),
+                ),
             }
         } else {
             LockedSubjects::Rows(premise.subjects.clone())
