@@ -19,10 +19,11 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
     description: "Describe a provider, register, table, variable or set by id or name (a set \
-        only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables \
-        show curated metadata, with the provider's text only as a fallback. `evidence=true` \
-        adds the provider's original texts, column names, curation locators and linked \
-        documents.",
+        only by `set/<provider>/<register>/<slug>`; it carries each member's whole \
+        `segments` list, so no `segments` call per member is needed). No `ref` lists the \
+        providers. Variables show curated metadata, with the provider's text only as a \
+        fallback. `evidence=true` adds the provider's original texts, column names, curation \
+        locators and linked documents.",
     params: &[
         Param::optional("ref", Type::Ref),
         Param::optional("evidence", Type::Boolean),
