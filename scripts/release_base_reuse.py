@@ -20,7 +20,9 @@ so a reuse is safe exactly when all of those are unchanged:
   this release's `reg-meta` version and to the base's `meta.catalog_version`.
 - Bytes: `catalog/reg_meta.db` still hashes to the recorded `base.sha256`.
 
-It also says what the diff does touch:
+A step's result carries over only when the evidence's `passed` file lists it (each
+step appends its name once it passes), and the pair only when it still hashes to
+`holdings.sha256`, recorded when 8e passed. It also says what the diff does touch:
 
 - `stewards.toml` changed: rebuild the holdings and redo their checks (8d-8g).
 - A reader-side path changed (a workspace crate outside the builder closure,
@@ -136,6 +138,19 @@ def check_records(evidence: Path, repo: Path) -> str:
     return built
 
 
+def holdings_reason(evidence: Path, passed: set[str], steward_change: list[str]) -> str:
+    """Why the earlier pair cannot be reused, or "" when it can."""
+    if steward_change:
+        return "stewards.toml changed"
+    pair = evidence / "catalog/reg_meta_swecov.db"
+    if not pair.is_file() or "8e" not in passed:
+        return "no pair that passed 8e in the evidence"
+    digest = evidence / "holdings.sha256"
+    if not digest.is_file() or sha256(pair) != digest.read_text().split()[0]:
+        return "the pair no longer matches holdings.sha256"
+    return ""
+
+
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
@@ -171,18 +186,35 @@ def main(argv: list[str]) -> int:
     if base:
         print("base: rebuild (builder input changed):", *base, sep="\n  ")
         return 1
-    print("base: reuse; 8b and 8c carry over")
-    if changed(built, release, HOLDINGS):
-        print("holdings: rebuild, redo 8d-8g (stewards.toml changed)")
-    elif not (evidence / "catalog/reg_meta_swecov.db").is_file():
-        print("holdings: rebuild, redo 8d-8g (no earlier pair in the evidence)")
+    passed = (
+        set((evidence / "passed").read_text().split())
+        if (evidence / "passed").is_file()
+        else set()
+    )
+    print("base: reuse")
+    for step in ("8b", "8c"):
+        print(
+            f"{step}: carries over"
+            if step in passed
+            else f"{step}: run it (not passed in the evidence)"
+        )
+    holdings = holdings_reason(evidence, passed, changed(built, release, HOLDINGS))
+    if holdings:
+        print(f"holdings: rebuild, redo 8d-8g ({holdings})")
     else:
-        print("holdings: reuse; 8d-8g carry over")
+        print("holdings: reuse; 8d and 8e carry over")
+        print(
+            "8g: carries over"
+            if "8g" in passed
+            else "8g: run it (not passed in the evidence)"
+        )
     readers = changed(built, release, reader_paths)
     if readers:
-        print("conformance: rerun 8f (reader-side change):", *readers, sep="\n  ")
+        print("8f: rerun (reader-side change):", *readers, sep="\n  ")
+    elif holdings or "8f" not in passed:
+        print("8f: run it (holdings rebuilt, or not passed in the evidence)")
     else:
-        print("conformance: 8f carries over")
+        print("8f: carries over")
     print("always: 8h scope check and the 8i base_sha check at the release commit")
     return 0
 

@@ -229,10 +229,14 @@ It diffs the two commits over the builder's dependency closure, read from
 inconsistent record fails closed (exit 2). Follow what it prints:
 
 - `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
-- `base: reuse`: keep `$earlier_evidence` as `$evidence`; 8b and 8c carry over.
-- `holdings: rebuild` (`stewards.toml` changed, or no earlier pair): redo 8d-8g.
-- `conformance: rerun 8f` (a reader-side crate, `conformance/` or the Python lock
-  changed): rerun 8f with binaries built at the release commit.
+- `base: reuse`: keep `$earlier_evidence` as `$evidence`.
+- A step carries over only when `$evidence/passed` lists it; otherwise the script says
+  `run it`. Each step below appends its name to `passed` once it passes, so a build
+  whose checks never finished carries nothing over.
+- `holdings: rebuild` (`stewards.toml` changed, no pair that passed 8e, or a pair that
+  no longer matches `holdings.sha256`): redo 8d-8g.
+- `8f: rerun` (a reader-side crate, `conformance/` or the Python lock changed, or the
+  holdings were rebuilt): rerun 8f with binaries built at the release commit.
 - Always rerun 8h and the 8i `base_sha` check at the release commit.
 
 The release notes record both commits, the built one and the release one, and the
@@ -269,6 +273,8 @@ target/release/reg-build diff "$prev/reg_meta.db" "$evidence/catalog/reg_meta.db
 Exit 0 means no changes, 1 means differences to review, and 2 means an error that stops
 the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
 the diff, confirms only intended changes, and puts its summary in the release notes.
+After 8b passes, and again after the diff review, record each step:
+`echo 8b >> "$evidence/passed"`, `echo 8c >> "$evidence/passed"`.
 
 #### 8d. Compile the holdings
 
@@ -308,7 +314,13 @@ sqlite3 -readonly "$evidence/catalog/reg_meta_swecov.db" "SELECT value FROM meta
 ```
 
 The pair verifier takes `--catalog` and `--steward-repo` and no `--previous`. The `meta`
-value must equal `$base_sha`. A failure stops publication.
+value must equal `$base_sha`. A failure stops publication. On a pass, record the pair's
+digest and the step:
+
+```sh
+shasum -a 256 "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings.sha256"
+echo 8e >> "$evidence/passed"
+```
 
 #### 8f. Run conformance against the pair
 
@@ -328,8 +340,9 @@ uv run python -m pytest conformance -q -n auto -m release --run-release \
 
 `gate.py release` itself selects a synthetic artifact and accepts no artifact override;
 that run does not validate the release DB. A red artifact run stops publication; a
-failure only in the pair run stops it too. Do not change tests to get a pass. If pair
-admission times out at server start, raise `SERVER_READY_SECONDS` (120) in
+failure only in the pair run stops it too. When both pass,
+`echo 8f >> "$evidence/passed"`. Do not change tests to get a pass. If pair admission
+times out at server start, raise `SERVER_READY_SECONDS` (120) in
 `conformance/http_cases.py` through a reviewed PR, not in place.
 
 Reading the pair run: the tests read `reg_meta.db` directly and serve both files. Under
@@ -366,7 +379,7 @@ target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
 
 Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
 exit 2 is an error and stops the release. The maintainer reads that summary for
-go/no-go; its counts go in the release notes.
+go/no-go; its counts go in the release notes. On a go, `echo 8g >> "$evidence/passed"`.
 
 #### 8h. Scope check
 
