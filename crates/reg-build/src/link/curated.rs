@@ -119,7 +119,7 @@ fn validity(at: Option<&reg_frame::address::PeriodSet>) -> Vec<(Option<String>, 
     let Some(at) = at else {
         return vec![(None, None)];
     };
-    reg_core::merge(reg_resolve::curation::periods(at))
+    reg_core::merge(at.intervals())
         .into_iter()
         .map(|(start, end)| (Some(start), Some(end)))
         .collect()
