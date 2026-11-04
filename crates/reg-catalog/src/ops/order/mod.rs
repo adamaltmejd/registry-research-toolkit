@@ -22,6 +22,8 @@ mod rows;
 mod successor;
 mod window;
 
+pub(crate) use rows::StewardKeys;
+
 use std::collections::BTreeSet;
 
 use reg_core::project::{ProjectData, Source, StudyWindow};

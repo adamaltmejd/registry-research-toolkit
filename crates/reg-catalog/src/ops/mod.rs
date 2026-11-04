@@ -49,6 +49,8 @@ pub struct Server {
     /// `meta` `open_start` and `open_end`: the day numbers a result period renders as
     /// `null`.
     open: (i64, i64),
+    /// The steward row-key segments per table, filled on first use.
+    steward_keys: order::StewardKeys,
 }
 
 impl Server {
@@ -75,6 +77,7 @@ impl Server {
             context,
             version,
             open,
+            steward_keys: order::StewardKeys::default(),
         })
     }
 
