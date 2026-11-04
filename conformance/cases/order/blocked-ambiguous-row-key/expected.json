@@ -7,7 +7,9 @@
       "message": "Row key demo/ark/id has more than one form in demo/ark over [2019-01-01, 2020-01-01) (name, type or codes differ); pick a shorter period or ask the maintainer",
       "source": "s",
       "variable": "demo/ark/id",
+      "variable_name": "Id",
       "table": "demo/ark",
+      "table_name": "Radnyckelregistret",
       "period": {
         "start": "2019-01-01",
         "end": "2020-01-01"
@@ -20,7 +22,9 @@
       "message": "Row key demo/ark/id-2 has more than one form in demo/ark over [2019-01-01, 2020-01-01) (name, type or codes differ); pick a shorter period or ask the maintainer",
       "source": "s",
       "variable": "demo/ark/id-2",
+      "variable_name": "Idnummer",
       "table": "demo/ark",
+      "table_name": "Radnyckelregistret",
       "period": {
         "start": "2019-01-01",
         "end": "2020-01-01"

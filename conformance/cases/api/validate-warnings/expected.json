@@ -63,6 +63,30 @@
         "demo/und/ink",
         "demo/rep/ny"
       ],
+      "/data/issues/*/variable_name": [
+        "Löpnummer",
+        "Känslig uppgift",
+        "Mätvärde",
+        "Gammal kod",
+        "Gammal kod",
+        "Belopp",
+        "Värde",
+        null,
+        "Inkomst",
+        "Ny kod"
+      ],
+      "/data/issues/*/table_name": [
+        "Implicitregistret",
+        "Implicitregistret",
+        "Preliminära registret",
+        "Ersättningsregistret",
+        "Ersättningsregistret",
+        "Tabell A",
+        "Öppna registret",
+        "Tabell ett",
+        "Tabell ett",
+        "Ersättningsregistret"
+      ],
       "/data/issues/*/table": [
         "demo/imp",
         "demo/imp",
@@ -98,6 +122,18 @@
         "demo/und/tva",
         null,
         "demo/rep/nyast"
+      ],
+      "/data/issues/*/successor_name": [
+        null,
+        null,
+        null,
+        null,
+        "Ny kod",
+        null,
+        null,
+        "Tabell två",
+        null,
+        "Nyaste kod"
       ]
     }
   },

@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/nam",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "variable": "demo/nam/belopptot",
+      "variable_name": "Belopp",
       "display_name": null,
       "period": {
         "start": "2018-01-01",
@@ -33,7 +35,9 @@
       "provider": "demo",
       "register": "demo/nam",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "variable": "demo/nam/belopptot",
+      "variable_name": "Belopp",
       "display_name": null,
       "period": {
         "start": "2020-01-01",
@@ -51,7 +55,9 @@
       "provider": "demo",
       "register": "demo/nam",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "variable": "demo/nam/flagga",
+      "variable_name": "Flagga",
       "display_name": null,
       "period": {
         "start": "2018-01-01",
@@ -68,6 +74,7 @@
     {
       "source": "s",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "period": {
         "start": "2018-01-01",
         "end": "2021-01-01"
@@ -75,6 +82,7 @@
       "columns": [
         {
           "variable": "demo/nam/lopnr",
+          "variable_name": "Löpnummer",
           "spelling": "Lopnr"
         }
       ]
@@ -89,12 +97,15 @@
       "message": "demo/nam/belopptot changes form at 2020-01-01 (Belopp -> BeloppTot)",
       "source": "s",
       "variable": "demo/nam/belopptot",
+      "variable_name": "Belopp",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "period": {
         "start": "2018-01-01",
         "end": "2021-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     },
     {
       "level": "warning",
@@ -103,12 +114,15 @@
       "message": "demo/nam/flagga is sensitive in demo/nam/a over [2020-01-01, 2021-01-01)",
       "source": "s",
       "variable": "demo/nam/flagga",
+      "variable_name": "Flagga",
       "table": "demo/nam/a",
+      "table_name": "Tabell A",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

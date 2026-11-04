@@ -5,6 +5,7 @@
       "/data/items": [
         {
           "table": "demo/sg/t",
+          "table_name": "Tabell T",
           "column": "Kanslig",
           "period": {
             "start": "2018-01-01",
@@ -15,6 +16,7 @@
         },
         {
           "table": "demo/sg/t",
+          "table_name": "Tabell T",
           "column": "Kanslig",
           "period": {
             "start": "2020-01-01",
@@ -32,7 +34,8 @@
         "period",
         "role",
         "sensitive",
-        "table"
+        "table",
+        "table_name"
       ]
     }
   }

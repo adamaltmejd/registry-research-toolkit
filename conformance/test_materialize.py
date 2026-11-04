@@ -67,9 +67,20 @@ def test_order_file_or_located_finding(case: Path, steward) -> None:
             {key: value for key, value in finding.items() if value is not None}
             for finding in error["fields"]["findings"]
         ]
-        assert {"findings": findings} == json.loads(
-            (case / "expected.json").read_text()
-        )
+        expected = json.loads((case / "expected.json").read_text())
+        assert {"findings": findings} == expected
+        # Also fails if steward `validate` stops running the holdings stage and passes
+        # a project (an unheld variable, a contested cell) that materialize blocks
+        # with the same located findings (#2194).
+        validation = steward.post("/api/project/validate", json=request["project"])
+        assert validation.status_code == 200, validation.text
+        data = validation.json()["data"]
+        assert not data["ok"]
+        issues = [
+            {key: value for key, value in issue.items() if value is not None}
+            for issue in data["issues"]
+        ]
+        assert {"findings": issues} == expected
 
 
 def test_unnamed_project_is_a_logical_draft_but_no_order_file(steward) -> None:

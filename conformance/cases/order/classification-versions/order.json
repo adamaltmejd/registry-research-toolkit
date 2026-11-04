@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/pins",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "variable": "demo/pins/kod",
+      "variable_name": "Code",
       "display_name": null,
       "period": {
         "start": "2018-01-01",
@@ -36,7 +38,9 @@
       "provider": "demo",
       "register": "demo/pins",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "variable": "demo/pins/kod",
+      "variable_name": "Code",
       "display_name": null,
       "period": {
         "start": "2019-01-01",
@@ -56,6 +60,7 @@
     {
       "source": "s",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"
@@ -63,6 +68,7 @@
       "columns": [
         {
           "variable": "demo/pins/lopnr",
+          "variable_name": "Löpnummer",
           "spelling": "Lopnr"
         }
       ]
@@ -77,12 +83,15 @@
       "message": "demo/pins/kod carries more than one classification version over [2018-01-01, 2020-01-01); pin one with \"classification\".",
       "source": "s",
       "variable": "demo/pins/kod",
+      "variable_name": "Code",
       "table": "demo/pins",
+      "table_name": "Classification pins",
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"
       },
-      "successor_fqid": null
+      "successor_fqid": null,
+      "successor_name": null
     }
   ]
 }

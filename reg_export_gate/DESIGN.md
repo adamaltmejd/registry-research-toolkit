@@ -147,10 +147,11 @@ output. In order:
 
 1. **Inventory.** The staging directory holds exactly the schema's files: none missing,
    none extra, no links, folders or hidden files, and no `receipt.json`.
-2. **Structure.** Each file is at most 8 MiB and 100,000 rows (`too_large`; maintainer,
-   2026-11-04; the Rust gate has it, the R gate not yet), so a small compressed file
-   cannot become a large table, is readable Parquet, and its columns are the schema's
-   columns in the schema's order, each of an accepted type.
+2. **Structure.** Each file is at most 8 MiB and 100,000 rows, and so is its rewrite,
+   which is uncompressed (`too_large`; maintainer, 2026-11-04; the Rust gate has it, the
+   R gate not yet), so a small compressed file cannot become a large table, is readable
+   Parquet, and its columns are the schema's columns in the schema's order, each of an
+   accepted type.
 3. **Disclosure.** Each file passes the policy's rules: every non-null `count` and
    `person_count` is at least `min_cell_count`, and a `statistic` is null wherever its
    `support` is null. Null is the suppression marker, so a zero count is refused like
@@ -241,9 +242,10 @@ The code is the category; the rule locates the finding. Both are stable.
   `schema_invalid`, `schema_version`, `schema_reserved_name`, `policy_missing`,
   `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
   `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO or writer failure,
-  reported without its message). In the R gate only: `jsonlite_missing`,
-  `arrow_missing`, `arrow_too_old`, `sha256_missing`, `internal_warning`,
-  `internal_error:<R condition class>`.
+  reported without its message). In the Rust gate's server mode only: `config_missing`,
+  `config_invalid`, `config_writable` (`crates/reg-export-gate/DESIGN.md`, "Server
+  mode"). In the R gate only: `jsonlite_missing`, `arrow_missing`, `arrow_too_old`,
+  `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
@@ -251,6 +253,9 @@ The code is the category; the rule locates the finding. Both are stable.
 - `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`; in the R gate
   only, `na_not_null`.
 - `backstop`: `identifier_pattern`.
+- `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
+  `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
+  and delivery").
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
 `paths_overlap` means staging and output are the same folder or one is inside the other;
@@ -265,8 +270,9 @@ it, only files that receipt lists (no folders); the gate deletes exactly those f
 then the empty folder. An empty folder is removed too. Anything else is
 `output_not_gate_export`, with nothing deleted: the gate leaves it for the user.
 `export_not_writable` means the gate could not create its new folder beside the output
-folder; `move_failed` that it could not rename that folder to the output folder (on
-Windows, an Explorer window or another program holding the folder open blocks it).
+folder (or, in the Rust gate's `export`, in the destination); `move_failed` that it
+could not rename that folder to the output folder (on Windows, an Explorer window or
+another program holding the folder open blocks it).
 
 ### Receipt
 

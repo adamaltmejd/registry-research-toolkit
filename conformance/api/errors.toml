@@ -139,7 +139,7 @@ class = "order_blocked"
 surface = "operation"
 status = 422
 fields = ["findings"]
-note = "`findings` is every order finding at once, as [Issue]; the blocking ones have level `error`."
+note = "`findings` is every order finding at once, as [NamedIssue]; the blocking ones have level `error`."
 
 [[code]]
 code = "catalog_unavailable"

@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -614,7 +614,7 @@ export interface components {
             /** @description Per source, per requested variable in request order, then by period start. */
             entries: components["schemas"]["OrderEntry"][];
             /** @description The non-blocking findings (level `warning` or `info`). */
-            findings: components["schemas"]["Issue"][];
+            findings: components["schemas"]["NamedIssue"][];
             project: components["schemas"]["OrderProject"];
             /** @description Per source, then by period start. */
             row_keys: components["schemas"]["OrderRowKeys"][];
@@ -679,6 +679,30 @@ export interface components {
             generation: string;
             steward?: components["schemas"]["Steward"] | null;
         };
+        /** @description A located finding with the names of the catalog entities it is about. The MONA order file carries the bare `Issue`. */
+        NamedIssue: {
+            code: string;
+            level: components["schemas"]["IssueLevel"];
+            message: string;
+            /** @description An RFC 6901 pointer into the project; empty for the whole document. */
+            path: string;
+            period: components["schemas"]["Period"] | null;
+            /** @description The project source's name. */
+            source: string | null;
+            /**
+             * @description The successor a `variable_replaced` finding names, or the successor table of an
+             *     undated succession (`table_succession_undated`).
+             */
+            successor_fqid: string | null;
+            /** @description The name of `successor_fqid`; `null` when that is null. */
+            successor_name: string | null;
+            table: string | null;
+            /** @description The name of `table`; `null` when `table` is null or names no catalog table. */
+            table_name: string | null;
+            variable: string | null;
+            /** @description The name of `variable`, as `show` gives it; `null` when `variable` is null or names no catalog variable. */
+            variable_name: string | null;
+        };
         /** @description One delivery behind this row. */
         Occurrence: {
             label: string | null;
@@ -702,6 +726,8 @@ export interface components {
             requested: components["schemas"]["Period"][];
             source: string;
             variable: string;
+            /** @description The variable's name. */
+            variable_name: string;
         };
         /** @description One stretch of one requested variable in one table. */
         OrderEntry: {
@@ -723,9 +749,13 @@ export interface components {
             spelling: string;
             /** @description The table that serves the period. */
             table: string;
+            /** @description The table's name, as `show` gives it. */
+            table_name: string;
             type: string | null;
             value_set: components["schemas"]["OrderValueSet"] | null;
             variable: string;
+            /** @description The variable's name, as `show` gives it. */
+            variable_name: string;
         };
         /** @description The project an order was checked for. */
         OrderProject: {
@@ -741,6 +771,8 @@ export interface components {
             period: components["schemas"]["Period"];
             source: string;
             table: string;
+            /** @description The table's name. */
+            table_name: string;
         };
         /** @description An entry's value set by its content hash. */
         OrderValueSet: {
@@ -964,6 +996,8 @@ export interface components {
         RowKeyColumn: {
             spelling: string;
             variable: string;
+            /** @description The variable's name. */
+            variable_name: string;
         };
         /** @description One variable under one column name in one table. */
         SchemaLine: {
@@ -1074,6 +1108,8 @@ export interface components {
             state?: string;
             /** @description The table's fqid. */
             table: string;
+            /** @description The table's name, as `show` gives it. */
+            table_name: string;
             type?: string;
             value_set?: components["schemas"]["ValueSetRef"];
             /** @description The provider's definition over this period; a change of wording starts a row. */
@@ -1129,6 +1165,10 @@ export interface components {
             unit_type: string | null;
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
+            /**
+             * @description The curated description; without one, the description every member states
+             *     alike.
+             */
             description?: string;
             fqid: string;
             /** @enum {string} */
@@ -1187,26 +1227,20 @@ export interface components {
             id: string;
             label: string;
         };
-        /** @description A table and column name the member appears under. */
-        ShowSetColumn: {
-            /** @description The column's periods, in time order. */
-            periods: components["schemas"]["Period"][];
-            spelling: string;
-            /** @description The table's fqid. */
-            table: string;
-        };
         ShowSetFacet: {
             axis: string;
             label: string;
             value: string;
         };
         ShowSetMember: {
-            /** @description The member's columns, ordered by table then spelling. */
-            columns: components["schemas"]["ShowSetColumn"][];
+            /** @description The curated description, only where it differs from the set's. */
+            description?: string;
             /** @description The member's coordinates in the set's axis order. */
             facets: components["schemas"]["ShowSetFacet"][];
             fqid: string;
             name: string;
+            /** @description The member's whole per-period list, as `segments` serves it without evidence. */
+            segments: components["schemas"]["Segment"][];
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {
@@ -1299,6 +1333,8 @@ export interface components {
             fqid: string | null;
             /** @description `register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`. */
             kind: string;
+            /** @description The name of `fqid`, as `show` gives it. */
+            name: string | null;
             period: components["schemas"]["Period"] | null;
             /** @description A release's literal delivery name. */
             release: string | null;
@@ -1306,12 +1342,14 @@ export interface components {
             spelling: string | null;
             /** @description Its table. */
             table: string | null;
+            /** @description The name of `table`. */
+            table_name: string | null;
             /** @description A value set's hash. */
             value_set: string | null;
         };
         /** @description `validate`'s result: `ok` exactly when no issue is an `error`. */
         Validation: {
-            issues: components["schemas"]["Issue"][];
+            issues: components["schemas"]["NamedIssue"][];
             ok: boolean;
         };
         ValueItem: {
