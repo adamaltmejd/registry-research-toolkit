@@ -1059,12 +1059,6 @@ export interface components {
             /** @enum {string} */
             type: "variable";
         } | {
-            family: string;
-            fqid: string;
-            name: string;
-            /** @enum {string} */
-            type: "classification";
-        } | {
             code: string;
             label: string | null;
             /** @enum {string} */
@@ -1992,7 +1986,7 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
-                type?: "register" | "table" | "variable" | "classification" | "code" | "document";
+                type?: "register" | "table" | "variable" | "code" | "document";
                 register?: string;
                 period?: string;
                 tag?: string;

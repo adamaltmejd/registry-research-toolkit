@@ -1160,7 +1160,6 @@
                 "register",
                 "table",
                 "variable",
-                "classification",
                 "code",
                 "document"
               ]
@@ -4100,32 +4099,6 @@
                 "type": "string",
                 "enum": [
                   "variable"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "fqid",
-              "name",
-              "family",
-              "type"
-            ],
-            "properties": {
-              "family": {
-                "type": "string"
-              },
-              "fqid": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "classification"
                 ]
               }
             }

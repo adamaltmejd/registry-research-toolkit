@@ -1,5 +1,5 @@
 {
-  "note": "Step 0 fails if `type` keeps another kind; step 1 if `register` keeps code rows, which have no register; step 2 if `type=classification` is refused or answers rows before D curates classifications.",
+  "note": "Step 0 fails if `type` keeps another kind; step 1 if `register` keeps code rows, which have no register.",
   "fixture": "ranking",
   "requests": [
     {
@@ -17,14 +17,6 @@
         "q": "kust",
         "type": "code",
         "register": "demo/hc"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "kust",
-        "type": "classification"
       }
     }
   ]

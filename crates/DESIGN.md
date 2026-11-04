@@ -2414,20 +2414,18 @@ are curation (D). A call returns one ranked list.
    FTS5 scores a row by its weighted hit count against its whole token count, so a hit
    weighs most in an id or spelling and least in a definition or document text: a
    variable labelled `Vikt` ranks above a longer one whose definition says vikt.
-3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
-   `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
-   unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
-   equal token count.
-4. **Filters**, ANDed with the match. `type` keeps `kind = type`; `classification` is
-   empty until D. `register` resolves through `refs::resolve`; a ref of another kind is
-   `invalid_ref`; it keeps `search_item.register_id = id`, which drops code rows and
-   keeps a document linked to that register (its first linked subject's). `period` keeps
-   `start < e AND s < end` over the row's hull, which drops code and document rows (no
-   span). So `type=code` with `register` or `period` is empty. `tag` accepts a tag slug
-   or its `tag/<slug>` public id and keeps only variables belonging to that tag; an
-   unknown tag refuses with `not_found`, like an unknown register. It applies before
-   paging and paired-result counts, and belongs to the cursor context like every other
-   search filter.
+3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
+   `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
+   query hits the same weighted count in rows of equal token count.
+4. **Filters**, ANDed with the match. `type` keeps `kind = type`. `register` resolves
+   through `refs::resolve`; a ref of another kind is `invalid_ref`; it keeps
+   `search_item.register_id = id`, which drops code rows and keeps a document linked to
+   that register (its first linked subject's). `period` keeps `start < e AND s < end`
+   over the row's hull, which drops code and document rows (no span). So `type=code`
+   with `register` or `period` is empty. `tag` accepts a tag slug or its `tag/<slug>`
+   public id and keeps only variables belonging to that tag; an unknown tag refuses with
+   `not_found`, like an unknown register. It applies before paging and paired-result
+   counts, and belongs to the cursor context like every other search filter.
 5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
    cursor's context is every parameter but `cursor` and `limit`, its offset the hits
    returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page

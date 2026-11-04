@@ -32,7 +32,6 @@
             "register",
             "table",
             "variable",
-            "classification",
             "code",
             "document"
           ],
@@ -238,32 +237,6 @@
                 "definition",
                 "spellings",
                 "period",
-                "type"
-              ],
-              "type": "object"
-            },
-            {
-              "properties": {
-                "family": {
-                  "type": "string"
-                },
-                "fqid": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "enum": [
-                    "classification"
-                  ],
-                  "type": "string"
-                }
-              },
-              "required": [
-                "fqid",
-                "name",
-                "family",
                 "type"
               ],
               "type": "object"

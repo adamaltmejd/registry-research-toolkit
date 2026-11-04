@@ -12,14 +12,7 @@ use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cu
 use crate::{Code, Error, rows};
 
 /// The `type` values: a `search_item.kind` each.
-const TYPES: &[&str] = &[
-    "register",
-    "table",
-    "variable",
-    "classification",
-    "code",
-    "document",
-];
+const TYPES: &[&str] = &["register", "table", "variable", "code", "document"];
 
 /// How deep a ranked list pages (`operations.toml`).
 const DEPTH: usize = 1000;
@@ -130,11 +123,6 @@ pub enum SearchHit {
         /// Its column names, sorted.
         spellings: Vec<String>,
         period: Period,
-    },
-    Classification {
-        fqid: String,
-        name: String,
-        family: String,
     },
     /// One distinct (code, label) pair, not a value set; its value sets are
     /// `values?code=&label=`.
@@ -359,8 +347,7 @@ fn search_origin(
 /// Count and page share all filters. In steward mode a register, table or variable
 /// matches only when held (by public id, over the requested interval, which its
 /// placements answer alone: a year held through steward attestation can lie outside
-/// the reference interval); classifications, codes and documents are shared and
-/// always match.
+/// the reference interval); codes and documents are shared and always match.
 ///
 /// The held set is an uncorrelated `IN`, built once per query: a correlated `EXISTS`
 /// scanned `holding_mapping` once per FTS match, and a one-letter query has ~10^5.
@@ -474,8 +461,7 @@ fn hit(
         }
         "code" => code_hit(conn, id)?,
         "document" => document_hit(conn, expression, entity()?)?,
-        // simplify: the builder emits no classification or set search rows; such a row is
-        // a defect of the artifact. Add their hits when the index gains them.
+        // The schema admits no other kind; such a row is a defect of the artifact.
         other => return Err(internal(format!("search row {id} has kind {other:?}"))),
     })
 }
