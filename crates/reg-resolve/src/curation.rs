@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
 use reg_core::{Interval, fold_identity, intersect};
-use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
+use reg_frame::address::{Address, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement};
 use reg_frame::{Locator, Record, bounds};
 use serde::{Deserialize, Serialize};
@@ -367,10 +367,7 @@ fn select_from(
                         && guards.iter().all(|g| {
                             source
                                 .text(g.field.name())
-                                .is_some_and(|value| match g.comparison {
-                                    Comparison::Equal => value == g.value,
-                                    Comparison::Prefix => value.starts_with(&g.value),
-                                })
+                                .is_some_and(|value| value == g.value)
                         })
                 }
                 Address::Set(slug) => {
@@ -943,21 +940,9 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
             a_table == b_table
                 && a_spellings.iter().any(|s| b_spellings.contains(s))
                 && !a_guards.iter().any(|a| {
-                    b_guards.iter().any(|b| {
-                        a.field == b.field
-                            && match (a.comparison, b.comparison) {
-                                (Comparison::Equal, Comparison::Equal) => a.value != b.value,
-                                (Comparison::Equal, Comparison::Prefix) => {
-                                    !a.value.starts_with(&b.value)
-                                }
-                                (Comparison::Prefix, Comparison::Equal) => {
-                                    !b.value.starts_with(&a.value)
-                                }
-                                (Comparison::Prefix, Comparison::Prefix) => {
-                                    !a.value.starts_with(&b.value) && !b.value.starts_with(&a.value)
-                                }
-                            }
-                    })
+                    b_guards
+                        .iter()
+                        .any(|b| a.field == b.field && a.value != b.value)
                 })
                 && match (a_periods, b_periods) {
                     (Some(a), Some(b)) => a

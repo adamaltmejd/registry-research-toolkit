@@ -92,16 +92,9 @@ impl GuardField {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub enum Comparison {
-    Equal,
-    Prefix,
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Guard {
     pub field: GuardField,
-    pub comparison: Comparison,
     pub value: String,
 }
 
@@ -222,11 +215,8 @@ fn split_keyword<'a>(text: &'a str, keyword: &str) -> Option<(&'a str, &'a str)>
 fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
     let mut guards = Vec::new();
     while !text.is_empty() {
-        let (field, rest) = text.split_once('=').ok_or("a guard needs = or ^=")?;
-        let prefix = field.trim_end().ends_with('^');
-        let field = field.trim();
-        let field = field.strip_suffix('^').unwrap_or(field).trim();
-        let field = match field {
+        let (field, rest) = text.split_once('=').ok_or("a guard needs =")?;
+        let field = match field.trim() {
             "label" => GuardField::Label,
             "type" => GuardField::Type,
             "unit" => GuardField::Unit,
@@ -234,9 +224,6 @@ fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
             "release" => GuardField::Release,
             _ => return Err("guards allow only label, type, unit, key and release".to_owned()),
         };
-        if prefix && matches!(field, GuardField::Key | GuardField::Release) {
-            return Err("where key and where release allow exact equality only".to_owned());
-        }
         let quoted = rest
             .trim_start()
             .strip_prefix('\'')
@@ -247,11 +234,6 @@ fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
         }
         guards.push(Guard {
             field,
-            comparison: if prefix {
-                Comparison::Prefix
-            } else {
-                Comparison::Equal
-            },
             value: value.to_owned(),
         });
         let rest = rest.trim();
@@ -361,12 +343,7 @@ impl fmt::Display for Address {
                 }
                 for (i, guard) in guards.iter().enumerate() {
                     let join = if i == 0 { " where " } else { " and " };
-                    let op = if guard.comparison == Comparison::Equal {
-                        "="
-                    } else {
-                        "^="
-                    };
-                    write!(f, "{join}{} {op} '{}'", guard.field.name(), guard.value)?;
+                    write!(f, "{join}{} = '{}'", guard.field.name(), guard.value)?;
                 }
                 Ok(())
             }

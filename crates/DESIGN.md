@@ -474,7 +474,7 @@ Accepting one requires reviewed curation and a premise lock.
 The address grammar is:
 
 ```text
-<table>: <spelling> [@<period-set>] [where <field> (=|^=) '<value>' [and ...]]
+<table>: <spelling> [@<period-set>] [where <field> = '<value>' [and ...]]
 var:<id>
 table:<slug>
 release:<table-slug>/<handle>
@@ -486,17 +486,17 @@ leading zeroes. Comma-separated alternatives are literal; only an entire numeric
 `start..end` brace body is a range. `<none>` addresses a documented-without-column
 marker. Expansion is limited to 10,000 spellings. Period sets are comma-separated unions
 of `reg-core` periods, with open endpoints (`..2009`, `2019..`) parsed through that same
-grammar. Guards read only source `label`, `type`, `unit`, `key` or `release`, with exact
-or prefix comparison; `key` and `release` allow equality only.
-`where release = '<handle>'` compares the release's source handle exactly as recorded in
-the frame. Provider coordinates have slots only in `where key`, `where release`, and
-direct release addresses, all opaque strings. A direct release address names the release
-itself, for example to set its period or assert it. Its table is a catalog slug; the
-entire remainder after the first `/` is the source handle, preserved without folding or
-trimming, including `/`, `@` and `where`. It takes no additional scope or guards.
-Regular expressions are refused. Edition and qualifier remain release attributes;
-`:edition` and `/qualifier` address suffixes are unsupported syntax and are refused with
-a message pointing at `where release` (maintainer ruling, 2026-10-27).
+grammar. Guards read only source `label`, `type`, `unit`, `key` or `release`, by exact
+equality. `where release = '<handle>'` compares the release's source handle exactly as
+recorded in the frame. Provider coordinates have slots only in `where key`,
+`where release`, and direct release addresses, all opaque strings. A direct release
+address names the release itself, for example to set its period or assert it. Its table
+is a catalog slug; the entire remainder after the first `/` is the source handle,
+preserved without folding or trimming, including `/`, `@` and `where`. It takes no
+additional scope or guards. Regular expressions are refused. Edition and qualifier
+remain release attributes; `:edition` and `/qualifier` address suffixes are unsupported
+syntax and are refused with a message pointing at `where release` (maintainer ruling,
+2026-10-27).
 
 All three kinds deny unknown fields. `evidence` is nonblank text (including
 `doc:<hash>#page=12`). Evidence carried over in D from the retired Python builder cites

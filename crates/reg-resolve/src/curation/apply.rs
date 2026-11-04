@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::Interval;
-use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
+use reg_frame::address::{Address, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement, frame_field};
 use reg_frame::{Locator, Occurrence, Record, ValueSet, bounds};
 use serde_json::{Value, json};
@@ -719,11 +719,6 @@ pub fn apply(
                     )?;
                     let mut value = json!({"kind":"occurrence","provider":register.provider,"register":register.register,"table":table,"release":null,"column":if spellings[0] == "<none>" { "" } else { &spellings[0] },"source_key":format!("stmt:{}",statement.scoped_identity(&register.provider, &register.register)),"from":null,"to":null,"label":null,"definition":null,"operational_definition":null,"unit":null,"dtype":null,"length":null,"valueset":null,"population_valuesets":[],"coded":null,"code_system":null,"sensitive":null,"identifier":null,"locator":at,"also":[],"conflicts":[]});
                     for guard in guards {
-                        if guard.comparison != Comparison::Equal {
-                            return Err(
-                                "assert occurrence cannot invent a prefix-guard value".into()
-                            );
-                        }
                         let field = frame_guard_field(guard.field);
                         value[field] = json!(guard.value);
                     }
