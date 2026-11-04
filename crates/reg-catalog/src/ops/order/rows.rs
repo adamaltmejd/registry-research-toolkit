@@ -1,4 +1,4 @@
-//! Row keys and panels use the steward's declared physical entity/time components.
+//! Row keys use the steward's declared physical entity/time components.
 //! Reference-only orders use catalog segments with role `row_key`.
 
 use std::collections::BTreeSet;
@@ -9,7 +9,7 @@ use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
 use crate::ops::Server;
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
@@ -31,13 +31,13 @@ fn key_segments(
     serving: &Serving,
 ) -> Result<Vec<KeySegment>, Error> {
     if server.catalog.steward().is_none() {
-        return Ok(conn
-            .prepare(
-                "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
+        return Ok(rows(
+            conn,
+            "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
              WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
-            )?
-            .query_map([serving.table.id], |r| {
+            [serving.table.id],
+            |r| {
                 Ok(KeySegment {
                     variable: r.get(0)?,
                     spelling: r.get(1)?,
@@ -46,8 +46,8 @@ fn key_segments(
                     state: r.get(4)?,
                     entity: true,
                 })
-            })?
-            .collect::<rusqlite::Result<_>>()?);
+            },
+        )?);
     }
     let mut mappings = conn.prepare(
         "WITH semantics AS (
@@ -207,18 +207,19 @@ pub(super) fn row_keys(
                         period.end.as_deref().unwrap_or("open")
                     );
                     findings.push(Issue {
-                        level,
-                        code: code.to_owned(),
-                        path: format!("/sources/{index}"),
-                        message: format!(
-                            "Row key {variable} {verb} {} over {over}{tail}",
-                            s.table.pid
-                        ),
                         source: Some(source.name.clone()),
                         variable: Some(variable.clone()),
                         table: Some(s.table.pid.clone()),
                         period: Some(period),
-                        successor_fqid: None,
+                        ..Issue::new(
+                            level,
+                            code,
+                            format!("/sources/{index}"),
+                            format!(
+                                "Row key {variable} {verb} {} over {over}{tail}",
+                                s.table.pid
+                            ),
+                        )
                     });
                 }
                 pieces.push((lo, hi, (variable.clone(), spelling.clone())));

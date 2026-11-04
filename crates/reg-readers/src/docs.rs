@@ -18,9 +18,8 @@
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use reg_frame::{Doc, DocSection, DocSubject, Endpoint, Frame, Locator, Record, hex};
+use reg_frame::{Doc, DocSection, DocSubject, Endpoint, Frame, Locator, Record};
 use serde::Deserialize;
-use sha2::{Digest, Sha256};
 
 use crate::{ReadError, ReadOutput, config, error, name_key};
 
@@ -187,7 +186,7 @@ pub fn markdown(
             None => vec![endpoint("register", None)],
         };
         records.push(Record::Doc(Doc {
-            hash: hex(&Sha256::digest(&bytes)),
+            hash: reg_core::sha256_hex(&bytes),
             kind: "parsed".to_owned(),
             title: key(&config.frontmatter.title)
                 .cloned()
@@ -250,7 +249,7 @@ pub fn pdf_list(
                 }
                 Err(e) => return Err(error(&path, e.to_string())),
             };
-            let hash = hex(&Sha256::digest(&bytes));
+            let hash = reg_core::sha256_hex(&bytes);
             let size = bytes.len() as u64;
             if hash != entry.sha256 || size != entry.byte_size {
                 return Err(error(
@@ -271,7 +270,7 @@ pub fn pdf_list(
                 bytes: size,
                 url: Some(entry.source_url),
                 sections: Vec::new(),
-                content: Some(hex(&bytes)),
+                content: Some(reg_core::hex(&bytes)),
                 subjects: vec![DocSubject {
                     endpoint: Endpoint {
                         kind: "register".to_owned(),

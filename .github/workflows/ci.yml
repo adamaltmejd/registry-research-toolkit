@@ -35,7 +35,8 @@ jobs:
   rust:
     runs-on: ubuntu-latest
     # ARCHITECTURE.md "Tiers"; sized for a cold rust-cache plus its save (#1410).
-    timeout-minutes: 6
+    # 9 min since 2026-11-04: cold builds with reg-export-gate run 6-7 min.
+    timeout-minutes: 9
     steps:
       # The curation locks are most of the ~1 GB tree and alone push checkout
       # toward each job's budget. No job here reads them: Rust tests, the

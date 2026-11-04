@@ -22,6 +22,7 @@ pub const CATALOG_SCHEMA_VERSION: u32 = 8;
 pub const HOLDINGS_SCHEMA_VERSION: u32 = 5;
 
 mod case_folding;
+mod digest;
 mod grammar;
 mod interval;
 pub mod issue;
@@ -32,6 +33,7 @@ mod validation;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
+pub use digest::{hex, sha256_hex};
 pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, add_iso_months, is_slug, iso_day_number,
     next_iso_day, period_token_for_bounds, prev_iso_day,
@@ -165,18 +167,6 @@ pub fn fold_search(s: &str) -> String {
 #[must_use]
 pub fn normalized_search_query(s: &str) -> String {
     case_fold(&py_split(s).collect::<Vec<_>>().join(" "))
-}
-
-/// The FTS5 query builder: each whitespace token with an alphanumeric character becomes
-/// a quoted prefix term (`"tok"*`, embedded quotes doubled), space-joined. `None` when
-/// no token qualifies.
-#[must_use]
-pub fn fts_match_query(raw: &str) -> Option<String> {
-    let terms: Vec<String> = py_split(raw)
-        .filter(|t| t.chars().any(py_isalnum))
-        .map(|t| format!("\"{}\"*", t.replace('"', "\"\"")))
-        .collect();
-    (!terms.is_empty()).then(|| terms.join(" "))
 }
 
 /// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its

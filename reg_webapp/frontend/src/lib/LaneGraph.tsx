@@ -10,6 +10,7 @@ import {
   laneGeometry,
   type PlacedSpan,
   SPAN_HEIGHT,
+  spanLabel,
 } from "./lane_graph";
 import { coverageMarks } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
@@ -645,7 +646,8 @@ function Span({
   const showYears =
     at.label === "inside" &&
     at.segments.length === 1 &&
-    labelWidth(`${span.name} ${span.years}`) <= at.width;
+    labelWidth(`${at.table ? spanLabel(span) : span.name} ${span.years}`) <=
+      at.width;
   // An unnamed series (an interrupted delivery) carries its name once, on its
   // widest part, so a one-year first delivery does not clip it.
   const widest = at.segments.reduce(
@@ -663,6 +665,7 @@ function Span({
         // oxlint-disable-next-line react/no-array-index-key
         key={i}
         name={name}
+        table={name && at.table ? span.table : undefined}
         years={showYears ? span.years : undefined}
         state={span.state}
         className={styles.face}
@@ -694,6 +697,9 @@ function Span({
       {at.label !== "inside" && (
         <span className={styles.outside} data-side={at.label}>
           {span.name}
+          {at.table && (
+            <span className={styles.outsideTable}> {span.table}</span>
+          )}
         </span>
       )}
       {(span.changes ?? []).map((year) => (

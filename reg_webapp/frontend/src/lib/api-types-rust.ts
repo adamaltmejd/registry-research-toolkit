@@ -62,7 +62,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases; for a variable also the periods of each delivered column name. */
+        /** @description The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases. */
         get: operations["coverage"];
         put?: never;
         post?: never;
@@ -350,7 +350,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them. */
+        /** @description A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a row. On a steward catalog, the held columns and files over the years held. With `evidence`, each row's source occurrences and the rule overrides that changed them. */
         get: operations["segments"];
         put?: never;
         post?: never;
@@ -419,22 +419,11 @@ export interface components {
         };
         /** @description `shape.Coverage`. */
         Coverage: {
-            /**
-             * @description A variable's folded spellings with the periods each was delivered under;
-             *     `null` for a register or a table.
-             */
-            columns: components["schemas"]["CoverageColumn"][] | null;
             fqid: string;
-            /** @description Accepted physical placements, absent in reference-only mode. */
-            held?: components["schemas"]["HeldPlacement"][] | null;
             kind: string;
             /** @description The entity's hull. */
             period: components["schemas"]["Period"];
             tables: components["schemas"]["CoverageTable"][];
-        };
-        CoverageColumn: {
-            spans: components["schemas"]["Period"][];
-            spelling: string;
         };
         CoverageGap: {
             period: components["schemas"]["Period"];
@@ -442,16 +431,15 @@ export interface components {
         };
         CoverageTable: {
             fqid: string;
-            gaps: components["schemas"]["CoverageGap"][];
+            gaps?: components["schemas"]["CoverageGap"][];
             name: string;
-            /** @description Empty for a variable ref: releases belong to tables. */
-            releases: components["schemas"]["Release"][];
+            /** @description Absent for a variable ref (releases belong to tables) and in steward mode. */
+            releases?: components["schemas"]["Release"][];
             spans: components["schemas"]["Period"][];
         };
         /** @description An authored curation statement that contributed a field of this variable. */
         CurationStatement: {
             caveat: string | null;
-            evidence: string | null;
             field: string;
             statement: components["schemas"]["StatementLocation"];
             value: string | null;
@@ -593,17 +581,6 @@ export interface components {
             kind: string;
             /** @description A register's or table's name, a variable's or class version's label. */
             name: string;
-        };
-        /** @description A physical placement's public semantic coordinates and held interval. */
-        HeldPlacement: {
-            carried: boolean;
-            caveat: string | null;
-            column: string;
-            period: components["schemas"]["Period"];
-            physical_table: string;
-            role: string;
-            table: string;
-            variable: string;
         };
         HoldingsIdentity: {
             generation: string;
@@ -1087,26 +1064,38 @@ export interface components {
             /** Format: int64 */
             total?: number | null;
         };
-        /** @description `shape.Segment`. */
+        /**
+         * @description `shape.Segment`: one row of the variable's one per-period list, a column of one
+         *     table over one period with one form and one provider wording. A fact the catalog
+         *     does not state is absent, never `null`: no type, no value set, `coded`
+         *     unknown, and `state` clear (the default) are all left out.
+         */
         Segment: {
             /** @description A classification version's ref. */
-            classification: string | null;
-            coded: string;
+            classification?: string;
+            /** @description `yes` or `no`. */
+            coded?: string;
+            /** @description The column name it is delivered under; in steward mode, the held column's. */
+            column: string;
             /** @description Present only when `evidence` is asked for. */
             evidence?: components["schemas"]["Occurrence"][] | null;
-            format: string | null;
-            identifier: boolean | null;
+            /** @description In steward mode, the file the steward holds the column in. */
+            file?: string;
+            format?: string;
+            identifier?: boolean;
             /** Format: int64 */
-            length: number | null;
+            length?: number;
             period: components["schemas"]["Period"];
             role: string;
-            sensitive: boolean | null;
-            spelling: string;
-            state: string;
+            sensitive?: boolean;
+            /** @description Present only when the column is ambiguous; absent means clear. */
+            state?: string;
             /** @description The table's fqid. */
             table: string;
-            type: string | null;
-            value_set: components["schemas"]["ValueSetRef"] | null;
+            type?: string;
+            value_set?: components["schemas"]["ValueSetRef"];
+            /** @description The provider's definition over this period; a change of wording starts a row. */
+            wording?: string;
         };
         /** @description `Page<Segment>`. */
         SegmentPage: {
@@ -1153,7 +1142,8 @@ export interface components {
             name: string;
             /** @description The register's fqid. */
             register: string;
-            releases: components["schemas"]["Release"][];
+            /** @description Absent when none, and on a steward catalog. */
+            releases?: components["schemas"]["Release"][];
             role: string;
             row_keys: components["schemas"]["ShowRowKey"][];
             spans: components["schemas"]["Period"][];
@@ -1184,12 +1174,8 @@ export interface components {
             period: components["schemas"]["Period"];
             /** @description The register's fqid. */
             register: string;
-            sets: components["schemas"]["ShowMembership"][];
-            /** @description Provider text fallback only when no curated description is available. */
-            source_definition?: components["schemas"]["SourceDefinition"];
-            /** @description The fqids of the tables the variable has segments in. */
-            tables: string[];
-            tags: components["schemas"]["ShowMembership"][];
+            sets?: components["schemas"]["ShowMembership"][];
+            tags?: components["schemas"]["ShowMembership"][];
         };
         /** @description A curated set (group) or tag the variable belongs to. */
         ShowMembership: {
@@ -1198,14 +1184,10 @@ export interface components {
         };
         ShowProviderRef: {
             fqid: string;
-            /** @description In steward mode, whether the steward holds any of its registers. */
-            held?: boolean;
             name: string;
         };
         ShowRegisterRef: {
             fqid: string;
-            /** @description In steward mode, whether the steward holds any of its tables. */
-            held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
         };
@@ -1252,8 +1234,6 @@ export interface components {
         ShowTable: {
             cadence: string | null;
             fqid: string;
-            /** @description In steward mode, whether an accepted placement names the table. */
-            held?: boolean;
             implicit: boolean;
             name: string;
             period: components["schemas"]["Period"];
@@ -1263,8 +1243,6 @@ export interface components {
         };
         ShowVariableRef: {
             fqid: string;
-            /** @description In steward mode, whether an accepted placement names the variable. */
-            held?: boolean;
             name: string;
             period: components["schemas"]["Period"];
             /** @description The fqids of the register's tables the variable has segments in. */
@@ -1286,12 +1264,6 @@ export interface components {
             family?: string | null;
             index: string;
             kind: string;
-        };
-        /** @description Latest provider text, used only when no curated description exists. */
-        SourceDefinition: {
-            origin: string;
-            period: components["schemas"]["Period"];
-            text: string;
         };
         StatementLocation: {
             file: string;
@@ -2029,7 +2001,6 @@ export interface operations {
                 limit?: number;
                 cursor?: string;
                 steward_cursor?: string;
-                scope?: "reference" | "steward";
             };
             header?: never;
             path?: never;
@@ -2069,7 +2040,6 @@ export interface operations {
                 q: string;
                 register?: string;
                 limit?: number;
-                scope?: "reference" | "steward";
             };
             header?: never;
             path?: never;

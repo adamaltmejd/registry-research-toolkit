@@ -238,7 +238,7 @@ fn verified(input: &Input, pin: &str, path: &Path) -> Result<PathBuf, ReadError>
         }
         hasher.update(&buffer[..n]);
     }
-    let actual = reg_frame::hex(&hasher.finalize());
+    let actual = reg_core::hex(&hasher.finalize());
     if actual != pin {
         return Err(error(
             &input.name,

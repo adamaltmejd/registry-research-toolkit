@@ -14,7 +14,6 @@ fn every_scalar_folds_without_panic() {
             let _ = reg_core::fold_identity(&s);
             let _ = reg_core::fold_search(&s);
             let _ = reg_core::normalized_search_query(&s);
-            let _ = reg_core::fts_match_query(&s);
         }
         count += 1;
     }

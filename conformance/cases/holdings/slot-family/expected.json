@@ -3,33 +3,30 @@
   "held": [
     {
       "table": "steward/slots",
-      "variable": "steward/slots/slot2",
-      "physical_table": "Pool",
-      "column": "Slot2",
-      "period": {"start": "2017-01-01", "end": "2021-01-01"},
-      "role": "measure",
-      "carried": false,
-      "caveat": null
-    },
-    {
-      "table": "steward/slots",
-      "variable": "steward/slots/slot2",
-      "physical_table": "Pool",
-      "column": "Position10",
-      "period": {"start": "2017-01-01", "end": "2021-01-01"},
-      "role": "measure",
-      "carried": false,
-      "caveat": null
-    },
-    {
-      "table": "steward/slots",
-      "variable": "steward/slots/slot2",
-      "physical_table": "Pool",
       "column": "Position1",
-      "period": {"start": "2017-01-01", "end": "2021-01-01"},
-      "role": "measure",
-      "carried": false,
-      "caveat": null
+      "file": "Pool",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      }
+    },
+    {
+      "table": "steward/slots",
+      "column": "Position10",
+      "file": "Pool",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      }
+    },
+    {
+      "table": "steward/slots",
+      "column": "Slot2",
+      "file": "Pool",
+      "period": {
+        "start": "2017-01-01",
+        "end": "2021-01-01"
+      }
     }
   ],
   "verify_refusal": {

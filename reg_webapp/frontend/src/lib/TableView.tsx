@@ -4,13 +4,12 @@ import {
   DisclosurePanel,
   Heading,
 } from "react-aria-components";
-import type { Context, TableShow } from "./api";
+import type { TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { catalogWords } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
-import { HeldPanels } from "./HeldPanels";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { ColumnChip } from "./ui/ColumnChip";
@@ -21,7 +20,7 @@ import { Panel } from "./ui/Panel";
 import { TreeChevron } from "./ui/TreeChevron";
 import { useCatalogRead } from "./use_store_read";
 
-type Release = TableShow["releases"][number];
+type Release = NonNullable<TableShow["releases"]>[number];
 type Population = Release["populations"][number];
 type PopulationApplication = Pick<Release, "name"> &
   Pick<Population, "ref_day">;
@@ -48,20 +47,20 @@ function compareReleases(a: Release, b: Release): number {
   );
 }
 
+function stated(term: string, value: string | null) {
+  return value && value !== "unknown" && value !== "unstated"
+    ? [{ term, value: catalogWords(value) }]
+    : [];
+}
+
 function releaseCount(count: number): string {
   return count === 1 ? "1 release" : `${count} releases`;
 }
 
-export function TableView({
-  node,
-  context,
-}: {
-  node: TableShow;
-  context: Context | null;
-}) {
+export function TableView({ node }: { node: TableShow }) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
-  const releases = [...node.releases].sort(compareReleases);
+  const releases = [...(node.releases ?? [])].sort(compareReleases);
   // Most providers state no edition: the column shows only where one does.
   const editioned = releases.some((release) => release.edition !== "unstated");
   const populations = new Map<string, PopulationGroup>();
@@ -113,19 +112,21 @@ export function TableView({
           ...(node.description
             ? [{ term: "Description", value: node.description }]
             : []),
-          { term: "Role", value: catalogWords(node.role) },
-          { term: "Cadence", value: catalogWords(node.cadence) },
-          { term: "Unit type", value: node.unit_type ?? "Not stated" },
-          { term: "Timeless", value: node.timeless ? "Yes" : "No" },
-          { term: "Implicit", value: node.implicit ? "Yes" : "No" },
+          // A fact the catalog does not state is left out, not printed as
+          // "Not stated" (DESIGN.md → Detail pane).
+          ...stated("Role", node.role),
+          ...stated("Cadence", node.cadence),
+          ...(node.unit_type
+            ? [{ term: "Unit type", value: node.unit_type }]
+            : []),
+          ...(node.timeless ? [{ term: "Timeless", value: "Yes" }] : []),
+          ...(node.implicit ? [{ term: "Implicit", value: "Yes" }] : []),
         ]}
       />
-      {context?.steward_config != null && (
-        <HeldPanels fqid={node.fqid} kind="table" names={names} />
-      )}
-      <Panel title="Spans">
+      {/* On a steward deployment, the years held (crates/DESIGN.md). */}
+      <Panel title="Years">
         {node.spans.length === 0 ? (
-          <EmptyState title="This table has no dated spans." />
+          <EmptyState title="This table has no dated years." />
         ) : (
           <ul className={styles.plainList}>
             {node.spans.map((span) => (
@@ -136,10 +137,8 @@ export function TableView({
           </ul>
         )}
       </Panel>
-      <Panel title="Row keys" flush={node.row_keys.length > 0}>
-        {node.row_keys.length === 0 ? (
-          <EmptyState title="No row keys recorded." />
-        ) : (
+      {node.row_keys.length > 0 && (
+        <Panel title="Row keys" flush>
           <DataTable
             rowNavigation
             columns={[
@@ -158,12 +157,10 @@ export function TableView({
               )
             }
           />
-        )}
-      </Panel>
-      <Panel title="Populations" flush={populations.size > 0}>
-        {populations.size === 0 ? (
-          <EmptyState title="No populations recorded for this table’s releases." />
-        ) : (
+        </Panel>
+      )}
+      {populations.size > 0 && (
+        <Panel title="Populations" flush>
           <DataTable
             columns={[
               { key: "name", label: "Population" },
@@ -185,12 +182,10 @@ export function TableView({
               )
             }
           />
-        )}
-      </Panel>
-      <Panel title="Releases" flush={releases.length > 0}>
-        {releases.length === 0 ? (
-          <EmptyState title="No releases recorded for this table." />
-        ) : (
+        </Panel>
+      )}
+      {releases.length > 0 && (
+        <Panel title="Releases" flush>
           <DataTable
             columns={[
               { key: "name", label: "Release" },
@@ -219,8 +214,8 @@ export function TableView({
               }
             }}
           />
-        )}
-      </Panel>
+        </Panel>
+      )}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
     </article>

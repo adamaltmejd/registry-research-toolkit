@@ -2,14 +2,11 @@
   {
     "status": 200,
     "json": {
-      "/data/source_definition": {
-        "origin": "provider",
-        "period": {
-          "start": "2014-01-01",
-          "end": "2015-01-01"
-        },
-        "text": "Provider   MEANING; method…"
-      }
+      "/data/items/*/wording": [
+        "Provider meaning; method.",
+        "Provider meaning; method.",
+        "Provider   MEANING; method…"
+      ]
     }
   },
   {

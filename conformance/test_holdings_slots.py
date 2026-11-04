@@ -46,10 +46,14 @@ def test_documented_position_family_keeps_every_placement(
     expected = json.loads((SLOTS / "expected.json").read_text())
     with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
         answer = pool.client(artifact_env(output)).get(
-            "/api/coverage/steward/slots/slot2"
+            "/api/segments/steward/slots/slot2"
         )
         assert answer.status_code == 200, answer.text
-        assert answer.json()["data"]["held"] == expected["held"]
+        rows = answer.json()["data"]["items"]
+        assert [
+            {key: row[key] for key in ("table", "column", "file", "period")}
+            for row in rows
+        ] == expected["held"]
 
     # Changing every stored family preserves distinct indices and agreement
     # inside the artifact. Verify must still refuse invented family evidence

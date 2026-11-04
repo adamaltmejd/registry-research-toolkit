@@ -77,9 +77,18 @@ export function variableSpans({
           }
         : null;
     const years = eras.map(yearWindowLabel).join(", ");
-    const coding = [...column.segments].sort((a, b) =>
-      (a.period.start ?? "").localeCompare(b.period.start ?? ""),
-    );
+    // A segment that states no coding (an undocumented held year) is unknown, not
+    // a change: compare only segments that state some.
+    const coding = column.segments
+      .filter(
+        (segment) =>
+          segment.classification != null ||
+          segment.value_set != null ||
+          (segment.coded != null && segment.coded !== "unknown"),
+      )
+      .sort((a, b) =>
+        (a.period.start ?? "").localeCompare(b.period.start ?? ""),
+      );
     const changes = [
       ...new Set(
         coding.flatMap((segment, index) =>
@@ -99,6 +108,7 @@ export function variableSpans({
       id: `${idPrefix}${column.id}`,
       lane: `${idPrefix}${column.table}`,
       name: column.spelling,
+      table: column.file,
       from: first,
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
@@ -110,11 +120,16 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${column.spelling}, ${variable.name}, ${column.file ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly
-        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
+        ? readOnlySpan(
+            span,
+            !!source,
+            variable.name,
+            column.file ?? names.get(column.table),
+          )
         : span,
     ];
   });

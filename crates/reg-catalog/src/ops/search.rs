@@ -9,7 +9,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, fts, refs};
-use crate::{Code, Error};
+use crate::{Code, Error, rows};
 
 /// The `type` values: a `search_item.kind` each.
 const TYPES: &[&str] = &[
@@ -64,7 +64,6 @@ pub const OPERATIONS: &[Operation] = &[
             Param::optional("limit", Type::Limit),
             Param::optional("cursor", Type::Cursor),
             Param::optional("steward_cursor", Type::Cursor),
-            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search,
@@ -80,7 +79,6 @@ pub const OPERATIONS: &[Operation] = &[
             Param::required("q", Type::String),
             Param::optional("register", Type::Ref),
             Param::optional("limit", Type::Limit),
-            Param::optional("scope", Type::Enum(&["reference", "steward"])),
         ],
         cache: Cache::Minute,
         run: search_facets,
@@ -204,21 +202,17 @@ pub struct FacetVariable {
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
     let entity = refs::resolve(conn, value)?;
     if entity.kind != "register" {
-        return Err(Error::new(
-            Code::InvalidRef,
+        return Err(Error::invalid_ref(
+            value,
             format!("{value:?} is a {}, not a register.", entity.kind),
-            vec![value.into()],
         ));
     }
     Ok(entity.id)
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
-    let held = match params.get("scope").copied().unwrap_or("reference") {
-        "reference" => false,
-        "steward" if server.catalog.steward().is_some() => true,
-        _ => return Err(Error::invalid_parameter("scope")),
-    };
+    // Steward mode serves only what the steward holds (maintainer 2026-11-04).
+    let held = server.catalog.steward().is_some();
     let conn = server.catalog.connect()?;
     if let Some(tag) = params.get("tag") {
         require_tag(server, &conn, tag)?;
@@ -333,35 +327,28 @@ fn search_origin(
         params![expression, kind, register, start, end, tag], |r| r.get(0))).transpose()?;
     let take = limit.min(DEPTH - offset);
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
-    let mut rows: Vec<(i64, String, Option<i64>, String)> = conn
-        .prepare(&format!(
+    let mut rows: Vec<(i64, String, Option<i64>, String)> = rows(
+        conn,
+        &format!(
             "{MATCHES} SELECT i.id, i.kind, i.entity_id, i.sort_key
          FROM matched m JOIN search_item i ON i.id = m.id
          WHERE {filter} ORDER BY {ORDER} LIMIT ?7 OFFSET ?8"
-        ))?
-        .query_map(
-            params![
-                expression,
-                kind,
-                register,
-                start,
-                end,
-                tag,
-                sql_int(take + 1),
-                sql_int(offset)
-            ],
-            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
-        )?
-        .collect::<rusqlite::Result<_>>()?;
-    let more = rows.len() > take;
-    rows.truncate(take);
-    let next_cursor = (more && offset + take < DEPTH).then(|| {
-        cursor::encode(
-            generation,
-            &context,
-            offset + take,
-            &rows.last().expect("nonempty page").3,
-        )
+        ),
+        params![
+            expression,
+            kind,
+            register,
+            start,
+            end,
+            tag,
+            sql_int(take + 1),
+            sql_int(offset)
+        ],
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+    )?;
+    let next_cursor = cursor::next(&mut rows, take, |last| {
+        (offset + take < DEPTH)
+            .then(|| cursor::encode(generation, &context, offset + take, &last.3))
     });
     let items = rows
         .iter()
@@ -375,18 +362,20 @@ fn search_origin(
     })
 }
 
-/// Count and page share all filters. Possession is restricted by public id and
-/// requested interval; code/document presence grants no possession.
+/// Count and page share all filters. In steward mode a register, table or variable
+/// matches only when held (by public id, over the requested interval); classifications,
+/// codes and documents are shared and always match.
 fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<String, Error> {
     let scope = if held {
         server.catalog.attach_holdings(conn)?;
-        " AND EXISTS (SELECT 1 FROM held.holding_mapping hm
+        " AND (i.kind NOT IN ('register', 'table', 'variable')
+            OR EXISTS (SELECT 1 FROM held.holding_mapping hm
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))
               AND ((i.kind = 'variable' AND i.entity_id = hv.id)
                OR (i.kind = 'table' AND i.entity_id = ht.id)
-               OR (i.kind = 'register' AND i.entity_id = ht.register_id)))"
+               OR (i.kind = 'register' AND i.entity_id = ht.register_id))))"
     } else {
         ""
     };
@@ -419,11 +408,12 @@ fn hit(
              WHERE r.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Register {
-                    fqid: row.get(0)?,
+                    period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    fqid,
                     name: row.get(1)?,
                     description: row.get(2)?,
-                    period: server.period(row.get(3)?, row.get(4)?),
                 })
             },
         )?,
@@ -436,24 +426,25 @@ fn hit(
              WHERE t.id = ?",
             [entity()?],
             |row| {
+                let fqid: String = row.get(0)?;
                 Ok(SearchHit::Table {
-                    fqid: row.get(0)?,
+                    period: server.hull("table", &fqid, row.get(4)?, row.get(5)?),
+                    fqid,
                     name: row.get(1)?,
                     register_name: row.get(2)?,
                     role: row.get(3)?,
-                    period: server.period(row.get(4)?, row.get(5)?),
                 })
             },
         )?,
         "variable" => {
             let variable = entity()?;
-            let spellings = conn
-                .prepare(
-                    "SELECT n.folded FROM alias a JOIN name_fold n ON n.id = a.fold_id
+            let spellings = rows(
+                conn,
+                "SELECT n.folded FROM alias a JOIN name_fold n ON n.id = a.fold_id
                      WHERE a.variable_id = ? ORDER BY n.folded",
-                )?
-                .query_map([variable], |row| row.get(0))?
-                .collect::<rusqlite::Result<_>>()?;
+                [variable],
+                |row| row.get(0),
+            )?;
             conn.query_row(
                 "SELECT v.pid, l.body, rn.body, d.body, v.start, v.end
                  FROM variable v
@@ -464,13 +455,14 @@ fn hit(
                  WHERE v.id = ?",
                 [variable],
                 |row| {
+                    let fqid: String = row.get(0)?;
                     Ok(SearchHit::Variable {
-                        fqid: row.get(0)?,
+                        period: server.hull("variable", &fqid, row.get(4)?, row.get(5)?),
+                        fqid,
                         name: row.get(1)?,
                         register_name: row.get(2)?,
                         definition: row.get(3)?,
                         spellings,
-                        period: server.period(row.get(4)?, row.get(5)?),
                     })
                 },
             )?
@@ -546,11 +538,8 @@ fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
         .is_some()
         .then(|| super::limit(params))
         .transpose()?;
-    let held = match params.get("scope").copied().unwrap_or("reference") {
-        "reference" => false,
-        "steward" if server.catalog.steward().is_some() => true,
-        _ => return Err(Error::invalid_parameter("scope")),
-    };
+    // Steward mode serves only what the steward holds (maintainer 2026-11-04).
+    let held = server.catalog.steward().is_some();
     let run = |conn: &Connection| -> Result<Vec<RegisterFacet>, Error> {
         let register = match params
             .get("register")
@@ -600,8 +589,9 @@ fn facets(
     } else {
         ""
     };
-    let mut registers: Vec<(i64, RegisterFacet)> = conn
-        .prepare(&format!(
+    let mut registers: Vec<(i64, RegisterFacet)> = rows(
+        conn,
+        &format!(
             "{MATCHES}
              SELECT r.id, r.pid, n.body, m.matches
              FROM (SELECT i.register_id AS id, COUNT(*) AS matches
@@ -613,8 +603,9 @@ fn facets(
                JOIN register r ON r.id = m.id
                JOIN text n ON n.id = r.name_text
              ORDER BY r.pid"
-        ))?
-        .query_map(params![expression, register], |row| {
+        ),
+        params![expression, register],
+        |row| {
             Ok((
                 row.get(0)?,
                 RegisterFacet {
@@ -624,8 +615,8 @@ fn facets(
                     variables: None,
                 },
             ))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+        },
+    )?;
     // A named register lists every match; otherwise `limit` per register, or none.
     let listed = match (register, limit) {
         (Some(_), _) => Some(i64::MAX),
@@ -639,8 +630,9 @@ fn facets(
         return Ok(registers.into_iter().map(|(_, facet)| facet).collect());
     };
     let mut variables: BTreeMap<i64, Vec<FacetVariable>> = BTreeMap::new();
-    let rows = conn
-        .prepare(&format!(
+    let rows = rows(
+        conn,
+        &format!(
             "{MATCHES}
              SELECT register_id, pid, label FROM (
                SELECT i.register_id, v.pid, l.body AS label,
@@ -652,8 +644,9 @@ fn facets(
                  AND (?2 IS NULL OR i.register_id = ?2){scope})
              WHERE n <= ?3
              ORDER BY register_id, pid"
-        ))?
-        .query_map(params![expression, register, listed], |row| {
+        ),
+        params![expression, register, listed],
+        |row| {
             Ok((
                 row.get::<_, i64>(0)?,
                 FacetVariable {
@@ -661,8 +654,8 @@ fn facets(
                     name: row.get(2)?,
                 },
             ))
-        })?
-        .collect::<rusqlite::Result<Vec<_>>>()?;
+        },
+    )?;
     for (id, variable) in rows {
         variables.entry(id).or_default().push(variable);
     }

@@ -6,14 +6,12 @@ The oracle for the text folds of `crates/DESIGN.md` ("Text folds"), read by
 ## Files
 
 Each generated file holds one fold's cases, one JSON object per line, sorted by input:
-`{"in": <input>, "out": <expected>}`. `out` is `null` where the fold returns nothing
-(`fts_match_query` with no word token).
+`{"in": <input>, "out": <expected>}`.
 
 - `fold_identity.jsonl` — column identity: Unicode lowercase with `Final_Sigma`.
 - `fold_search.jsonl` — search-text fold: case fold, NFKD, drop combining marks until
   nothing changes, then one space between words.
 - `normalized_search_query.jsonl` — the query normalizer.
-- `fts_match_query.jsonl` — the FTS5 `MATCH` expression builder.
 
 `unicode17.jsonl` is hand-written: `{"op", "in", "out", "note"}`. It covers characters
 that Unicode 17.0 added or changed, which the generated files exclude. Each `note` names
@@ -34,9 +32,7 @@ source named in the commit.
 
 Selection per fold, as generated, over assigned scalars excluding private use:
 
-- every scalar the fold changes (for `fts_match_query`: every scalar it rejects among
-  marks, separators, controls, format characters and connector punctuation, the classes
-  where Rust's `char::is_alphanumeric` and Python's `[^\W_]` disagree);
+- every scalar the fold changes;
 - except precomposed Hangul syllables with a final consonant, whose decomposition is
   algorithmic; they are sampled;
 - a seeded sample of 1,000 other scalars;

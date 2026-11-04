@@ -5,41 +5,34 @@
       "/data/items": [
         {
           "table": "demo/sg/t",
-          "period": {"start": "2018-01-01", "end": "2020-01-01"},
-          "spelling": "Kanslig",
-          "type": null,
-          "length": null,
-          "format": null,
-          "value_set": null,
-          "classification": null,
-          "coded": "unknown",
-          "sensitive": false,
-          "identifier": null,
+          "column": "Kanslig",
+          "period": {
+            "start": "2018-01-01",
+            "end": "2020-01-01"
+          },
           "role": "measure",
-          "state": "clear"
+          "sensitive": false
         },
         {
           "table": "demo/sg/t",
-          "period": {"start": "2020-01-01", "end": "2022-01-01"},
-          "spelling": "Kanslig",
-          "type": null,
-          "length": null,
-          "format": null,
-          "value_set": null,
-          "classification": null,
-          "coded": "unknown",
-          "sensitive": true,
-          "identifier": null,
+          "column": "Kanslig",
+          "period": {
+            "start": "2020-01-01",
+            "end": "2022-01-01"
+          },
           "role": "measure",
-          "state": "clear"
+          "sensitive": true
         }
       ],
       "/data/next_cursor": null
     },
     "keys": {
       "/data/items/0": [
-        "classification", "coded", "format", "identifier", "length", "period",
-        "role", "sensitive", "spelling", "state", "table", "type", "value_set"
+        "column",
+        "period",
+        "role",
+        "sensitive",
+        "table"
       ]
     }
   }

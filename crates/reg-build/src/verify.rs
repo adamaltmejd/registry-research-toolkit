@@ -6,7 +6,6 @@ use std::path::Path;
 
 use reg_frame::Item;
 use rusqlite::{Connection, OpenFlags, OptionalExtension};
-use sha2::{Digest, Sha256};
 
 const CHECKS: &str = include_str!("checks.sql");
 
@@ -196,7 +195,7 @@ fn valuesets(db: &Connection) -> Result<(), String> {
                     .map(|p| p.0.clone()),
             })
             .collect();
-        let actual = reg_frame::hex(&Sha256::digest(reg_frame::canonical_line(&list)));
+        let actual = reg_core::sha256_hex(reg_frame::canonical_line(&list));
         if actual != hash {
             return Err(format!("valueset {hash}: content hashes to {actual}"));
         }
@@ -213,12 +212,12 @@ fn pdfs(db: &Connection) -> Result<(), String> {
     let mut rows = stmt.query([]).map_err(sql)?;
     while let Some(row) = rows.next().map_err(sql)? {
         let hash: String = row.get(0).map_err(sql)?;
-        let actual = reg_frame::hex(&Sha256::digest(
+        let actual = reg_core::sha256_hex(
             row.get_ref(1)
                 .map_err(sql)?
                 .as_blob()
                 .map_err(|e| e.to_string())?,
-        ));
+        );
         if actual != hash {
             return Err(format!("doc {hash}: content hashes to {actual}"));
         }

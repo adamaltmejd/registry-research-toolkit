@@ -85,6 +85,28 @@ pub struct Issue {
 }
 
 impl Issue {
+    /// An issue with no source, variable, table, period or successor; set those with
+    /// struct update (`Issue { source: .., ..Issue::new(..) }`).
+    #[must_use]
+    pub fn new(
+        level: IssueLevel,
+        code: &str,
+        path: impl Into<String>,
+        message: impl Into<String>,
+    ) -> Self {
+        Self {
+            level,
+            code: code.to_owned(),
+            path: path.into(),
+            message: message.into(),
+            source: None,
+            variable: None,
+            table: None,
+            period: None,
+            successor_fqid: None,
+        }
+    }
+
     /// Whether the issue blocks: an `error`.
     #[must_use]
     pub fn blocks(&self) -> bool {
@@ -106,15 +128,8 @@ impl Issue {
 impl From<ValidationIssue> for Issue {
     fn from(issue: ValidationIssue) -> Self {
         Self {
-            level: issue.level,
-            code: issue.code.to_owned(),
-            path: issue.path,
-            message: issue.message,
-            source: None,
-            variable: None,
-            table: None,
-            period: None,
             successor_fqid: issue.successor_fqid,
+            ..Self::new(issue.level, issue.code, issue.path, issue.message)
         }
     }
 }

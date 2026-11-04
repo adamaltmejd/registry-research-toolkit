@@ -1,7 +1,10 @@
 {
-  "note": "Fails if a segment loses or renames a shape.Segment field, if the flag-only boundary (`sensitive` false 2018-2019, true 2020-2021, same spelling and no value set) stops giving two segments, if a segment's period is clipped or rendered inclusive instead of half-open, if a segment without a value set stops answering `value_set: null`, or if `evidence` leaks into an item when it was not asked for. Oracle: the fixture's JSONL and the resolve rules (role `measure` with no value set, `coded` unknown, `temporality` unknown, state `clear`).",
+  "note": "Fails if a row loses or renames a shape.Segment field, if an unstated fact or a default (`coded` unknown, state clear) is served instead of left out, if the flag-only boundary (`sensitive` false 2018-2019, true 2020-2021, same column and no value set) stops giving two rows, if a period is clipped or rendered inclusive instead of half-open, or if `evidence` leaks into an item when it was not asked for. Oracle: the fixture's JSONL and the resolve rules (role `measure` with no value set, nothing else stated).",
   "fixture": "segments",
   "requests": [
-    {"operation": "segments", "path": "/api/segments/demo/sg/kanslig"}
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sg/kanslig"
+    }
   ]
 }

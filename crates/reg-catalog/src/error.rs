@@ -127,6 +127,12 @@ impl Error {
         }
     }
 
+    /// `invalid_ref` for `value`, a ref (or a table or tag ref) the operation cannot take.
+    #[must_use]
+    pub fn invalid_ref(value: &str, message: impl Into<String>) -> Self {
+        Self::new(Code::InvalidRef, message, vec![value.into()])
+    }
+
     #[must_use]
     pub fn invalid_parameter(name: &str) -> Self {
         Self::new(

@@ -1,7 +1,7 @@
 //! Pair admission and database-origin selection for steward metadata. Row ids never
 //! cross the two database boundaries; physical placements use public ids.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
@@ -11,11 +11,106 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
-use crate::{Catalog, Code, Error, connect, hex, read_meta};
+use reg_core::hex;
+
+use crate::{Catalog, Code, Error, connect, read_meta};
 
 pub(crate) struct Holdings {
     path: PathBuf,
     meta: BTreeMap<String, String>,
+    possession: Possession,
+}
+
+/// `[start, end)` day numbers.
+type Span = (i64, i64);
+
+/// What a steward deployment serves: the public ids an accepted placement names, and
+/// the registers and providers above them, each with the years held (placements
+/// merged, in order) (maintainer 2026-11-04: everything shown is held, everything held
+/// is shown). Read once at admission; the pair is immutable while served.
+#[derive(Default)]
+pub(crate) struct Possession {
+    variables: HashMap<String, Vec<Span>>,
+    tables: HashMap<String, Vec<Span>>,
+    registers: HashMap<String, Vec<Span>>,
+    providers: HashMap<String, Vec<Span>>,
+}
+
+impl Possession {
+    fn read(conn: &Connection) -> Result<Self, Error> {
+        // A placement names its table by public id, in either origin.
+        let mut above: HashMap<String, (String, String)> = HashMap::new();
+        for origin in ["main", "held"] {
+            let mut query = conn.prepare(&format!(
+                "SELECT DISTINCT t.pid, r.pid, p.pid FROM held.holding_mapping m
+                   JOIN {origin}.tbl t ON t.pid = m.table_pid
+                   JOIN {origin}.register r ON r.id = t.register_id
+                   JOIN {origin}.provider p ON p.id = r.provider_id"
+            ))?;
+            for row in query.query_map([], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?))))? {
+                let (table, parents) = row?;
+                above.insert(table, parents);
+            }
+        }
+        let mut possession = Self::default();
+        let mut query = conn.prepare(
+            "SELECT variable_pid, table_pid, start, end FROM held.holding_mapping
+             ORDER BY start, end",
+        )?;
+        let placements = query.query_map([], |r| {
+            Ok((
+                r.get::<_, String>(0)?,
+                r.get::<_, String>(1)?,
+                (r.get(2)?, r.get(3)?),
+            ))
+        })?;
+        for placement in placements {
+            let (variable, table, span) = placement?;
+            if let Some((register, provider)) = above.get(&table) {
+                possession
+                    .registers
+                    .entry(register.clone())
+                    .or_default()
+                    .push(span);
+                possession
+                    .providers
+                    .entry(provider.clone())
+                    .or_default()
+                    .push(span);
+            }
+            possession.variables.entry(variable).or_default().push(span);
+            possession.tables.entry(table).or_default().push(span);
+        }
+        for map in [
+            &mut possession.variables,
+            &mut possession.tables,
+            &mut possession.registers,
+            &mut possession.providers,
+        ] {
+            for spans in map.values_mut() {
+                spans.sort_unstable();
+                let mut merged: Vec<Span> = Vec::with_capacity(spans.len());
+                for &(start, end) in spans.iter() {
+                    match merged.last_mut() {
+                        Some(last) if start <= last.1 => last.1 = last.1.max(end),
+                        _ => merged.push((start, end)),
+                    }
+                }
+                *spans = merged;
+            }
+        }
+        Ok(possession)
+    }
+
+    fn of(&self, kind: &str) -> Option<&HashMap<String, Vec<Span>>> {
+        match kind {
+            "provider" => Some(&self.providers),
+            "register" => Some(&self.registers),
+            "table" => Some(&self.tables),
+            "variable" => Some(&self.variables),
+            _ => None,
+        }
+    }
 }
 
 /// The selected steward and the identities of its admitted catalog/holdings pair.
@@ -168,9 +263,26 @@ impl Catalog {
         pair.update(catalog.meta("generation_id").as_bytes());
         pair.update(generation.as_bytes());
         catalog.generation = hex(&pair.finalize());
-        catalog.holdings = Some(Holdings { path, meta });
+        catalog.holdings = Some(Holdings {
+            path,
+            meta,
+            possession: Possession::default(),
+        });
         catalog.admit_identities()?;
+        catalog
+            .admit_possession()
+            .map_err(|_| refuse("holdings placements are unreadable"))?;
         Ok(catalog)
+    }
+
+    fn admit_possession(&mut self) -> Result<(), Error> {
+        let conn = self.connect()?;
+        self.attach_holdings(&conn)?;
+        let possession = Possession::read(&conn)?;
+        if let Some(holdings) = self.holdings.as_mut() {
+            holdings.possession = possession;
+        }
+        Ok(())
     }
 
     fn admit_identities(&self) -> Result<(), Error> {
@@ -212,6 +324,32 @@ impl Catalog {
         Ok(())
     }
 
+    /// Whether this deployment serves the entity: always outside steward mode; in
+    /// steward mode only what the steward holds. A set is served with its register.
+    /// Value sets, classifications and documents are not possession claims
+    /// (crates/DESIGN.md, "Three questions, three scopes") and are always served.
+    #[must_use]
+    pub fn serves(&self, kind: &str, pid: &str) -> bool {
+        let Some(held) = self.holdings.as_ref().map(|h| &h.possession) else {
+            return true;
+        };
+        match kind {
+            "set" => pid
+                .strip_prefix("set/")
+                .and_then(|rest| rest.rsplit_once('/'))
+                .is_some_and(|(register, _)| held.registers.contains_key(register)),
+            kind => held.of(kind).is_none_or(|map| map.contains_key(pid)),
+        }
+    }
+
+    /// In steward mode, the years a served provider, register, table or variable is
+    /// held, merged and in order; `None` outside steward mode or for another kind.
+    #[must_use]
+    pub fn held_spans(&self, kind: &str, pid: &str) -> Option<&[Span]> {
+        let held = &self.holdings.as_ref()?.possession;
+        held.of(kind)?.get(pid).map(Vec::as_slice)
+    }
+
     /// The admitted steward's identity; absent in reference-only mode.
     #[must_use]
     pub fn steward(&self) -> Option<Steward> {
@@ -247,11 +385,27 @@ impl Catalog {
     }
 
     /// Resolve the database origin before using any local row id. Exact public ids
-    /// take precedence over names; a bare name in both origins stays ambiguous.
+    /// take precedence over names; a bare name in both origins stays ambiguous. In
+    /// steward mode an entity the steward does not hold is `not_found` (`serves`).
     ///
     /// # Errors
     /// The usual reference errors, or `catalog_unavailable` for an unreadable file.
     pub fn connect_for_ref(&self, value: &str) -> Result<Connection, Error> {
+        let conn = self.origin_for_ref(value)?;
+        if self.holdings.is_some() {
+            let entity = crate::ops::refs::resolve(&conn, value)?;
+            if !self.serves(&entity.kind, &entity.pid) {
+                return Err(Error::new(
+                    Code::NotFound,
+                    format!("Nothing is named {value:?}."),
+                    vec![value.into()],
+                ));
+            }
+        }
+        Ok(conn)
+    }
+
+    fn origin_for_ref(&self, value: &str) -> Result<Connection, Error> {
         let base = self.connect()?;
         let Some(extra) = self.connect_holdings()? else {
             return Ok(base);

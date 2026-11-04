@@ -303,19 +303,23 @@ is the previous release's steward pin recompiled with this release's binary agai
 release's base catalog, into a separate directory. Otherwise it is the previous paired
 release's `reg_meta_swecov.db`: download its `reg_meta_swecov.db.zst` to a separate
 directory, verify its compressed SHA-256 against GitHub's asset digest and decompress
-it. The `rebuilt` mode refuses a holdings schema mismatch (`PRAGMA user_version` or the
-`schema_version` meta key) and names it. It reports census placement per column (placed,
-held, unplaced and the changed placements by old to new `table_pid`), reader-visible
-text changes by kind (bodies, not ids) and finding deltas by code. Details go to
-`.local/` or the evidence directory only; stdout carries aggregate counts.
+it. `reg-build diff --holdings` refuses a holdings schema mismatch
+(`PRAGMA user_version` or the `schema_version` meta key) and names it. It reports census
+placement per column (placed, held, unplaced, and the changed placements by old to new
+`table_pid`, classed newly placed, folded or renamed, variable or interval changed, or
+unmapped), reader-visible text changes by kind (keys, never bodies), and finding and
+holdings-notice deltas by code. The JSON goes to the evidence directory only.
 
 ```sh
-uv run --no-project scripts/rebuild_compare.py rebuilt --old-db "$old/reg_meta_swecov.db" \
-  --new-db "$evidence/catalog/reg_meta_swecov.db" \
-  --out "$evidence/holdings-compare" > "$evidence/holdings-compare.txt"
+target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
+  "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings-compare.txt" || [ $? -eq 1 ]
+target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
+  "$evidence/catalog/reg_meta_swecov.db" --json > "$evidence/holdings-compare.json" || [ $? -eq 1 ]
 ```
 
-The maintainer reads that summary for go/no-go; its counts go in the release notes.
+Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
+exit 2 is an error and stops the release. The maintainer reads that summary for
+go/no-go; its counts go in the release notes.
 
 #### 8h. Scope check
 

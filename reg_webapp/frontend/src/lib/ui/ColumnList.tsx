@@ -260,11 +260,6 @@ export function ColumnList({
                           className={styles.register}
                           title={section.label}
                         >
-                          {section.groupLabel && (
-                            <span className={`micro-label ${styles.group}`}>
-                              {section.groupLabel}
-                            </span>
-                          )}
                           {section.label}
                         </Header>
                         <Collection
