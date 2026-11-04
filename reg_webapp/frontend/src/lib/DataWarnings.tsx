@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
-  Button,
+  Button as AriaButton,
   Disclosure,
   DisclosurePanel,
   Heading,
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
-import type { CatalogFinding } from "./api";
+import {
+  type CatalogFinding,
+  type CatalogFindingGroup,
+  getFindings,
+} from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import { Button } from "./ui/Button";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
@@ -27,47 +32,130 @@ function SubjectLink({ fqid, names }: { fqid: string; names?: Names }) {
   );
 }
 
-/** Catalog findings, grouped before any entries are mounted. */
+/** A group of findings and the ref whose `next_cursor` it carries (`null`: no
+ * further page). */
+export type WarningGroup = CatalogFindingGroup & { ref: string | null };
+
+const groupKey = (group: { severity: string; code: string }) =>
+  JSON.stringify([group.severity, group.code]);
+
+/** The server's group order: review before notice, then by code. */
+const byGroup = (a: WarningGroup, b: WarningGroup) =>
+  Number(a.severity !== "review") - Number(b.severity !== "review") ||
+  (a.code < b.code ? -1 : a.code > b.code ? 1 : 0);
+
+/** Group lists from several refs merged by severity and code. Items are
+ * de-duplicated. A group fully loaded from every ref counts its distinct items;
+ * otherwise counts add, which over-counts a finding two refs share. A group pages
+ * on only when a single ref has more, since one cursor continues one ref. */
+export function mergeFindingGroups(
+  sources: readonly {
+    ref: string;
+    groups: readonly CatalogFindingGroup[];
+  }[],
+): WarningGroup[] {
+  const merged = new Map<
+    string,
+    { group: WarningGroup; seen: Set<string>; paging: number }
+  >();
+  for (const { ref, groups } of sources) {
+    for (const group of groups) {
+      const key = groupKey(group);
+      const entry = merged.get(key) ?? {
+        group: { ...group, count: 0, items: [], next_cursor: null, ref: null },
+        seen: new Set<string>(),
+        paging: 0,
+      };
+      merged.set(key, entry);
+      for (const item of group.items) {
+        const id = JSON.stringify(item);
+        if (entry.seen.has(id)) continue;
+        entry.seen.add(id);
+        entry.group.items.push(item);
+      }
+      entry.group.count += group.count;
+      if (group.next_cursor !== null) {
+        entry.paging += 1;
+        entry.group.next_cursor = group.next_cursor;
+        entry.group.ref = ref;
+      }
+    }
+  }
+  return [...merged.values()]
+    .map(({ group, paging }) => {
+      if (paging === 0) return { ...group, count: group.items.length };
+      if (paging > 1) return { ...group, next_cursor: null, ref: null };
+      return group;
+    })
+    .sort(byGroup);
+}
+
+/** Catalog findings by group: each group's count, and its items once opened. */
 export function DataWarnings({
-  findings,
+  groups,
   names,
 }: {
-  findings: readonly CatalogFinding[];
+  groups: readonly WarningGroup[];
   names?: Names;
 }) {
-  if (findings.length === 0) return null;
-  const groups = new Map<string, CatalogFinding[]>();
-  for (const finding of findings) {
-    const key = JSON.stringify([finding.severity, finding.code]);
-    const group = groups.get(key);
-    if (group) group.push(finding);
-    else groups.set(key, [finding]);
-  }
+  if (groups.length === 0) return null;
   return (
     <Panel title="Notes on this data">
-      {[...groups]
-        .sort(
-          ([, a], [, b]) =>
-            Number(b[0].severity === "review") -
-              Number(a[0].severity === "review") ||
-            a[0].code.localeCompare(b[0].code),
-        )
-        .map(([key, entries]) => (
-          <FindingGroup key={key} entries={entries} names={names} />
-        ))}
+      {groups.map((group) => (
+        <FindingGroup
+          key={JSON.stringify([group.ref, group.severity, group.code])}
+          group={group}
+          names={names}
+        />
+      ))}
     </Panel>
   );
 }
 
 function FindingGroup({
-  entries,
+  group,
   names,
 }: {
-  entries: readonly CatalogFinding[];
+  group: WarningGroup;
   names?: Names;
 }) {
   const [copied, setCopied] = useState(false);
-  const { severity, code } = entries[0];
+  const [more, setMore] = useState<{
+    items: CatalogFinding[];
+    cursor: string | null;
+  }>({ items: [], cursor: group.next_cursor });
+  const [loading, setLoading] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const moreButton = useRef<HTMLButtonElement>(null);
+  const { severity, code, count, ref } = group;
+  const entries = [...group.items, ...more.items];
+  const showMore = () => {
+    const cursor = more.cursor;
+    if (loading || cursor === null || ref === null) return;
+    setLoading(true);
+    setFailure(null);
+    getFindings(ref, { code, cursor }).then(
+      (page) => {
+        const next = page.find((g) => g.severity === severity);
+        // The last page removes its button. Move focus only if the reader is still on it.
+        if (
+          !next?.next_cursor &&
+          document.activeElement === moreButton.current
+        )
+          list.current?.focus({ preventScroll: true });
+        setMore((m) => ({
+          items: [...m.items, ...(next?.items ?? [])],
+          cursor: next?.next_cursor ?? null,
+        }));
+        setLoading(false);
+      },
+      (error: unknown) => {
+        setFailure(error instanceof Error ? error.message : String(error));
+        setLoading(false);
+      },
+    );
+  };
   const label = code.includes(":")
     ? code.slice(code.indexOf(":") + 1).replaceAll("-", " ")
     : "catalog finding";
@@ -83,7 +171,7 @@ function FindingGroup({
                 if (!open) setCopied(false);
               }}
             >
-              <Button
+              <AriaButton
                 slot="trigger"
                 className={styles.disclosureButton}
                 onPress={() => {
@@ -96,9 +184,9 @@ function FindingGroup({
                 <TreeChevron />
                 <span>
                   {severity === "review" ? "Needs review" : "Notice"}: {label} (
-                  <code>{entries.length}</code>)
+                  <code>{count}</code>)
                 </span>
-              </Button>
+              </AriaButton>
               <Tooltip
                 className={({ isEntering, isExiting }) =>
                   `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
@@ -119,7 +207,12 @@ function FindingGroup({
           >
             <div>
               {isExpanded && (
-                <ul className={styles.findings}>
+                <ul
+                  ref={list}
+                  tabIndex={-1}
+                  aria-busy={loading || undefined}
+                  className={styles.findings}
+                >
                   {entries.map((finding) => (
                     <li key={JSON.stringify(finding)}>
                       <StatusRow tone={severity === "review" ? "warn" : "info"}>
@@ -162,6 +255,17 @@ function FindingGroup({
                     </li>
                   ))}
                 </ul>
+              )}
+              {isExpanded && failure && (
+                <StatusRow tone="error" live="alert">
+                  More notes did not load ({failure}). Press Show more to try
+                  again.
+                </StatusRow>
+              )}
+              {isExpanded && more.cursor !== null && ref !== null && (
+                <Button ref={moreButton} isBusy={loading} onPress={showMore}>
+                  Show more
+                </Button>
               )}
             </div>
           </DisclosurePanel>

@@ -1,5 +1,5 @@
 import { getFindings } from "./api";
-import { DataWarnings } from "./DataWarnings";
+import { DataWarnings, mergeFindingGroups } from "./DataWarnings";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
@@ -27,5 +27,10 @@ export function ScopedDataWarnings({
         try again.
       </StatusRow>
     );
-  return <DataWarnings findings={resource.data} names={names} />;
+  return (
+    <DataWarnings
+      groups={mergeFindingGroups([{ ref: fqid, groups: resource.data }])}
+      names={names}
+    />
+  );
 }

@@ -2,17 +2,18 @@
   {
     "status": 200,
     "json": {
-      "/data/*/code": [
+      "/data/groups/*/code": [
         "F1:domain-change"
       ],
-      "/data/*/subject/fqid": [
+      "/data/groups/0/count": 1,
+      "/data/groups/0/items/*/subject/fqid": [
         "demo/domains/local"
       ],
-      "/data/0/period": {
+      "/data/groups/0/items/0/period": {
         "start": "2019-01-01",
         "end": "2019-01-02"
       },
-      "/data/0/message": "2 codes → 1 codes: 0 added, 1 removed, 0 relabelled in Classification domains"
+      "/data/groups/0/items/0/message": "2 codes → 1 codes: 0 added, 1 removed, 0 relabelled in Classification domains"
     }
   }
 ]
