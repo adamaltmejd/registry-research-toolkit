@@ -168,8 +168,9 @@ The export gate is the toolkit's disclosure checker and transfer: the only path 
 results computed on microdata reach an agent. Its design (components, trust boundaries,
 schemas and policy, the check, the receipt, MONA mode and the shared case corpus) is in
 [`reg_export_gate/DESIGN.md`](reg_export_gate/DESIGN.md). The MONA check
-(`reg_export_gate/export_gate.R`) is built; the `reg-export-gate` Rust binary is being
-built (#1803).
+(`reg_export_gate/export_gate.R`) and the `reg-export-gate` Rust binary
+([`crates/reg-export-gate/DESIGN.md`](crates/reg-export-gate/DESIGN.md)) are built; the
+binary is the reference the R check imitates, and ships with each `reg_meta/v*` release.
 
 ## Repo-wide invariants
 

@@ -94,8 +94,9 @@ variables."""
 name = "context"
 http = ["GET /api/context"]
 result = "Context"
-note = """The catalog's identity and counts. No MCP tool: an agent's catalog identity \
-is in every response's `meta`, and the counts serve the SPA shell."""
+note = """What the SPA shell shows: the catalog's period span, the server version and, in \
+steward mode, the steward's presentation and logo. No MCP tool: an agent's catalog \
+identity is in every response's `meta`."""
 
 [[operation]]
 name = "show"
@@ -357,14 +358,9 @@ code = "code, label (string | null), value_set_count (integer; the value sets so
 document = "doc, title, heading, page"
 
 [shape.Context]
-steward = "paired mode only: selected steward identity; as Meta.steward"
-steward_config = "paired mode only: StewardConfig {presentation: {id, name, long_name?, description?, order_instructions?}, logo (SVG markup), scope (object)}; admission refuses a presentation without string id and name; runtime reads no steward TOML"
-steward_sizes = "paired mode only: supplemental {providers, registers, tables, variables}"
-catalog_version = "string"
-schema_version = "string"
-period_span = "Period; the hull of every register"
+period_span = "Period | null; the hull of the periods served (steward: the years held); timeless periods left out, null when none remains or the hull is open at both ends"
 reg_meta_version = "string; the server's version, which seeds a new project's reg_meta_version"
-sizes = "{providers, registers, tables, variables}"
+steward_config = "paired mode only: StewardConfig {presentation: {id, name, long_name?, description?, order_instructions?}, logo (SVG markup)}; admission refuses a presentation without string id and name; runtime reads no steward TOML"
 
 [shape.Show]
 note = """A `kind`-tagged summary: root (providers), provider (registers), register \

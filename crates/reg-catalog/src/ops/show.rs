@@ -334,12 +334,20 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 .filter(|t| !known.contains(&t.fqid)),
         );
         tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        let known: BTreeSet<_> = variables.iter().map(|v| v.fqid.clone()).collect();
-        variables.extend(
-            steward_variables
-                .into_iter()
-                .filter(|v| !known.contains(&v.fqid)),
-        );
+        // A shared variable keeps the reference row but gains the tables the steward
+        // attests it in (a membership the reference member list omits).
+        let mut steward_variables: BTreeMap<_, _> = steward_variables
+            .into_iter()
+            .map(|v| (v.fqid.clone(), v))
+            .collect();
+        for variable in &mut variables {
+            if let Some(steward) = steward_variables.remove(&variable.fqid) {
+                variable.tables.extend(steward.tables);
+                variable.tables.sort();
+                variable.tables.dedup();
+            }
+        }
+        variables.extend(steward_variables.into_values());
         variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
         let (steward_sets, steward_tags) = groupings(&extra, &entity.pid)?;
         let known: BTreeSet<_> = sets.iter().map(|s| s.fqid.clone()).collect();
@@ -361,20 +369,32 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     // keeps its held members and goes when none is held.
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
     variables.retain(|v| server.catalog.serves("variable", &v.fqid));
+    for variable in &mut variables {
+        let fqid = &variable.fqid;
+        variable
+            .tables
+            .retain(|table| server.catalog.serves_in(fqid, table));
+    }
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
     }
     sets.retain(|set| !set.members.is_empty());
-    let unplaced = rows(
-        conn,
-        "SELECT DISTINCT n.body
-             FROM release r JOIN tbl t ON t.id = r.table_id
-               JOIN text n ON n.id = r.name_text
-             WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
-        [entity.id],
-        |row| row.get(0),
-    )?;
+    // Unplaced names are the provider's releases, not the steward's files
+    // (maintainer 2026-11-04), so a steward deployment serves none.
+    let unplaced = if server.catalog.steward().is_some() {
+        vec![]
+    } else {
+        rows(
+            conn,
+            "SELECT DISTINCT n.body
+                 FROM release r JOIN tbl t ON t.id = r.table_id
+                   JOIN text n ON n.id = r.name_text
+                 WHERE t.register_id = ? AND r.parse_state = 'unparsed' ORDER BY n.body",
+            [entity.id],
+            |row| row.get(0),
+        )?
+    };
     Ok(Show::Register {
         fqid: entity.pid.clone(),
         name,
@@ -541,21 +561,43 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             |row| Ok(server.period(row.get(0)?, row.get(1)?)),
         )?,
     };
-    let row_keys = rows(
-        conn,
-        "SELECT v.pid, sp.exact, s.start, s.end
-             FROM segment s JOIN variable v ON v.id = s.variable_id
-               JOIN spelling sp ON sp.id = s.spelling_id
-             WHERE s.table_id = ? AND s.role = 'row_key' ORDER BY s.start, v.pid",
-        [entity.id],
-        |row| {
-            Ok(ShowRowKey {
-                fqid: row.get(0)?,
-                spelling: row.get(1)?,
-                period: server.period(row.get(2)?, row.get(3)?),
-            })
-        },
-    )?;
+    // By table pid: in steward mode the holdings origin adds the key memberships the
+    // steward attests on a reference table.
+    let keys = |conn: &Connection| {
+        rows(
+            conn,
+            "SELECT v.pid, sp.exact, s.start, s.end
+                 FROM segment s JOIN variable v ON v.id = s.variable_id
+                   JOIN spelling sp ON sp.id = s.spelling_id
+                   JOIN tbl t ON t.id = s.table_id
+                 WHERE t.pid = ? AND s.role = 'row_key'",
+            [&entity.pid],
+            |row| {
+                Ok((
+                    row.get(2)?,
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get(3)?,
+                ))
+            },
+        )
+    };
+    let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        found.extend(keys(&extra)?);
+    }
+    found.sort();
+    found.dedup();
+    // Steward mode: a key column whose variable is not held in this table is not shown.
+    let row_keys: Vec<ShowRowKey> = found
+        .into_iter()
+        .filter(|(_, fqid, _, _)| server.catalog.serves_in(fqid, &entity.pid))
+        .map(|(start, fqid, spelling, end)| ShowRowKey {
+            fqid,
+            spelling,
+            period: server.period(start, end),
+        })
+        .collect();
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,

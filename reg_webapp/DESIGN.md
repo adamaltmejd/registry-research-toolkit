@@ -132,11 +132,13 @@ Documentation lives in the same admitted catalog. The docs operations search doc
 sections, return a document by content hash, list linked documents and serve embedded
 PDF bytes. There is no separate docs database or schema gate.
 
-## Context and catalog sizes (the Rust server)
+## Context (the Rust server)
 
-`GET /api/context` returns catalog metadata and headline sizes as `{data, meta}`. The
-committed OpenAPI snapshot describes its response; a Rust snapshot test keeps it
-identical to the server's rendered document.
+`GET /api/context` returns what the SPA shell shows as `{data, meta}`: the period span,
+the server version and, in steward mode, the steward's presentation and logo
+(`steward_config`). Catalog identity is in `meta`. The committed OpenAPI snapshot
+describes its response; a Rust snapshot test keeps it identical to the server's rendered
+document.
 
 ## ETag / Cache-Control
 
@@ -183,10 +185,11 @@ schemas, and pinned catalog SHA-256 must match. Published catalog invariants bel
 `reg-build verify`. The paired holdings artifact supplies steward branding and delivery
 metadata; no runtime steward repository is loaded.
 
-The Rust server's `context` reports schema version, catalog version, server version and
-catalog sizes. Every JSON response's `meta` carries contract version, catalog version
-and generation. Context's optional `period_span` is the hull of the catalog's register
-periods; it is null when the catalog has no registers.
+Every JSON response's `meta` carries contract version, catalog version and generation
+(and the steward's identity in steward mode). Context's `period_span` bounds the
+study-years slider: in steward mode the hull of the years held, otherwise of the
+registers' periods, leaving out timeless periods (an ongoing register leaves the end
+open); it is null when every period served is timeless.
 
 ## OpenAPI snapshot (the drift gate)
 

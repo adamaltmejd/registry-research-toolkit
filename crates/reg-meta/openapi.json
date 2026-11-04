@@ -139,7 +139,7 @@
     },
     "/api/context": {
       "get": {
-        "description": "The catalog's identity and headline counts.",
+        "description": "The catalog's period span, the server version and the steward's presentation.",
         "operationId": "context",
         "responses": {
           "200": {
@@ -1654,22 +1654,17 @@
       },
       "Context": {
         "type": "object",
+        "description": "What the site shell shows. Catalog identity is in every response's `meta`.",
         "required": [
-          "catalog_version",
-          "schema_version",
           "period_span",
-          "reg_meta_version",
-          "sizes"
+          "reg_meta_version"
         ],
         "properties": {
-          "catalog_version": {
-            "type": "string"
-          },
           "period_span": {
             "oneOf": [
               {
                 "$ref": "#/components/schemas/Period",
-                "description": "The span of all registers; `null` for a catalog without registers."
+                "description": "The hull of the periods served: in steward mode the years held, else the\nregisters' periods. A timeless period does not count; an ongoing one leaves\n`end` null. `null` when every period served is timeless, or when the\nhull is open at both ends."
               },
               {
                 "type": "null"
@@ -1680,34 +1675,8 @@
             "type": "string",
             "description": "The server's version, which seeds a new project's `reg_meta_version`."
           },
-          "schema_version": {
-            "type": "string"
-          },
-          "sizes": {
-            "$ref": "#/components/schemas/Sizes"
-          },
-          "steward": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Steward"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "steward_config": {
             "$ref": "#/components/schemas/StewardConfig"
-          },
-          "steward_sizes": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Sizes"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         }
       },
@@ -4857,34 +4826,6 @@
           }
         }
       },
-      "Sizes": {
-        "type": "object",
-        "description": "Every provider, register, table (implicit ones included) and variable.",
-        "required": [
-          "providers",
-          "registers",
-          "tables",
-          "variables"
-        ],
-        "properties": {
-          "providers": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "registers": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "tables": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "variables": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
       "Slot": {
         "type": "object",
         "description": "How the column is laid out in the holder's files.",
@@ -4953,8 +4894,7 @@
         "description": "The data holder's name, logo and description.",
         "required": [
           "presentation",
-          "logo",
-          "scope"
+          "logo"
         ],
         "properties": {
           "logo": {
@@ -4963,9 +4903,6 @@
           },
           "presentation": {
             "$ref": "#/components/schemas/StewardPresentation"
-          },
-          "scope": {
-            "type": "object"
           }
         }
       },

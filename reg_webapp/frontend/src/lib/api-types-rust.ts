@@ -45,7 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The catalog's identity and headline counts. */
+        /** @description The catalog's period span, the server version and the steward's presentation. */
         get: operations["context"];
         put?: never;
         post?: never;
@@ -404,16 +404,12 @@ export interface components {
          * @enum {string}
          */
         ColumnRole: "ordered" | "row_key" | "carried";
+        /** @description What the site shell shows. Catalog identity is in every response's `meta`. */
         Context: {
-            catalog_version: string;
             period_span: components["schemas"]["Period"] | null;
             /** @description The server's version, which seeds a new project's `reg_meta_version`. */
             reg_meta_version: string;
-            schema_version: string;
-            sizes: components["schemas"]["Sizes"];
-            steward?: components["schemas"]["Steward"] | null;
             steward_config?: components["schemas"]["StewardConfig"];
-            steward_sizes?: components["schemas"]["Sizes"] | null;
         };
         Coverage: {
             fqid: string;
@@ -1260,17 +1256,6 @@ export interface components {
             /** @description The tables the variable appears in. */
             tables: string[];
         };
-        /** @description Every provider, register, table (implicit ones included) and variable. */
-        Sizes: {
-            /** Format: int64 */
-            providers: number;
-            /** Format: int64 */
-            registers: number;
-            /** Format: int64 */
-            tables: number;
-            /** Format: int64 */
-            variables: number;
-        };
         /** @description How the column is laid out in the holder's files. */
         Slot: {
             family?: string | null;
@@ -1294,7 +1279,6 @@ export interface components {
             /** @description The logo's SVG markup. */
             logo: string;
             presentation: components["schemas"]["StewardPresentation"];
-            scope: Record<string, never>;
         };
         StewardPresentation: {
             /** @description Inline markdown: emphasis and `[text](https://…)` links. */
