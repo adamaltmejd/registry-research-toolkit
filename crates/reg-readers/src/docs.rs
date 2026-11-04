@@ -5,8 +5,8 @@
 //!
 //! A document's subject is stated in source coordinates and resolved by the link stage:
 //! a markdown document whose frontmatter names a variable is about that variable of the
-//! input's register, with the key folded by [`name_key`] (the key the LISA reader gives
-//! its columns), unless the config translates that key to reviewed endpoints.
+//! input's register, with the key folded by [`name_key`] (the folded column name),
+//! unless the config translates that key to reviewed endpoints.
 //! One without is about the register. A listed PDF is about the register
 //! whose handle is its list key. A subject that matches nothing leaves the document
 //! searchable, and the link stage warns.
@@ -167,12 +167,8 @@ pub fn markdown(
             ));
         }
         let endpoint = |kind: &str, key: Option<String>| Endpoint {
-            kind: kind.to_owned(),
-            provider: provider.to_owned(),
-            register: Some(register.to_owned()),
-            register_name: None,
-            table: None,
             key,
+            ..Endpoint::new(kind, provider, Some(register))
         };
         let subjects = match key(&config.frontmatter.variable) {
             Some(variable) => {
@@ -272,14 +268,7 @@ pub fn pdf_list(
                 sections: Vec::new(),
                 content: Some(reg_core::hex(&bytes)),
                 subjects: vec![DocSubject {
-                    endpoint: Endpoint {
-                        kind: "register".to_owned(),
-                        provider: provider.to_owned(),
-                        register: Some(handle.clone()),
-                        register_name: None,
-                        table: None,
-                        key: None,
-                    },
+                    endpoint: Endpoint::new("register", provider, Some(&handle)),
                     page: 0,
                 }],
                 locator: Locator {
