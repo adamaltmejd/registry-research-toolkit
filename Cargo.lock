@@ -1146,6 +1146,7 @@ dependencies = [
  "reg-catalog",
  "reg-core",
  "rmcp",
+ "serde",
  "serde_json",
  "sha2",
  "tokio",

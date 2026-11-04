@@ -11,7 +11,7 @@ first failure. `all` runs g0, rust, flows and frontend;
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`, `frontend` and
 `flows`, and runs `scripts/tests` itself. `rust` also owns release admission on the synthetic
 artifact, so the Rust binaries are built once per job.
-`regen` also refreshes the plugin project schema. Stdlib only.
+`regen` also blesses the plugin project schema. Stdlib only.
 """
 
 from __future__ import annotations
@@ -94,7 +94,6 @@ def lint() -> None:
     run("uvx --from panache-cli==3.17.1 panache format --check .")
     run("uvx --from panache-cli==3.17.1 panache lint .")
     run("uvx --from ty==0.0.94 ty check")
-    run("uv run --no-project scripts/gen_project_schema.py --check")
 
 
 def g0() -> None:
@@ -155,20 +154,19 @@ def frontend() -> None:
         sys.exit(f"gate: {wasm.name} is over its gzipped budget; see WASM_GZ_BUDGET")
     for script in ("check", "lint", "test", "build", "gen:types"):
         run(["bun", "run", script], cwd=FRONTEND)
-    # A diff means the SPA's types, or the plugin's project_data.json schema, drifted
-    # from the committed API contract. `ls-files` fails on an untracked one, which
-    # `git diff` ignores.
-    generated = (
-        "src/lib/api-types-rust.ts"
-        " ../../plugins/microdata-tools-se/skills/register-project/project_data.schema.json"
-    )
+    # A diff means the SPA's types drifted from the committed API contract. `ls-files`
+    # fails on an untracked one, which `git diff` ignores.
+    generated = "src/lib/api-types-rust.ts"
     run(f"git ls-files --error-unmatch -- {generated}", cwd=FRONTEND)
     run(f"git diff --exit-code -- {generated}", cwd=FRONTEND)
 
 
 def regen() -> None:
     run("cargo build --workspace --locked")
-    run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
+    run(
+        "cargo test -p reg-meta --test openapi_snapshot --test project_schema_snapshot",
+        env={"REG_META_BLESS": "1"},
+    )
     # The MCP `tools/list` golden, as conformance/test_mcp.py's stdio session lists it.
     artifact = base_artifact()
     messages = [
@@ -197,7 +195,6 @@ def regen() -> None:
     )
     golden = ROOT / "conformance/cases/mcp/tools-list.json"
     golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
-    run("uv run --no-project scripts/gen_project_schema.py")
 
 
 STEPS = {
