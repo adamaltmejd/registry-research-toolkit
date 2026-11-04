@@ -75,6 +75,12 @@
         "column": "mean_value",
         "position": null,
         "rule": "nan_value"
+      },
+      {
+        "file": "summary_by_year.parquet",
+        "column": "mean_value",
+        "position": null,
+        "rule": "unsupported_statistic"
       }
     ]
   }

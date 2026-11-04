@@ -72,6 +72,9 @@ pub struct Schema {
     #[serde(default)]
     pub description: Option<String>,
     pub files: Vec<File>,
+    /// SHA-256 of the file as read, for the receipt.
+    #[serde(skip)]
+    pub sha256: String,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -92,6 +95,9 @@ pub struct Policy {
     pub description: Option<String>,
     pub schema: SchemaRef,
     pub min_cell_count: u64,
+    /// SHA-256 of the file as read, for the receipt.
+    #[serde(skip)]
+    pub sha256: String,
 }
 
 /// `^[a-z0-9][a-z0-9_-]*$`
@@ -104,7 +110,7 @@ fn is_slug(s: &str) -> bool {
 }
 
 /// A slug ending in `.parquet`, so `receipt.json` can never be a data file.
-fn is_file_name(s: &str) -> bool {
+pub(crate) fn is_file_name(s: &str) -> bool {
     s.strip_suffix(".parquet").is_some_and(is_slug)
 }
 
@@ -212,7 +218,8 @@ pub(crate) fn load_schema(path: Option<&Path>) -> Result<Schema, Refusal> {
         return Err(setup("schema_reserved_name", file));
     }
     let invalid = || setup("schema_invalid", file);
-    let schema: Schema = typed(&bytes).ok_or_else(invalid)?;
+    let mut schema: Schema = typed(&bytes).ok_or_else(invalid)?;
+    schema.sha256 = crate::sha256_hex(&bytes);
     let mut file_names = HashSet::new();
     let ok = is_slug(&schema.name)
         && schema.version >= 1
@@ -241,7 +248,8 @@ pub(crate) fn load_policy(path: Option<&Path>, schema: &Schema) -> Result<Policy
         file,
     )?;
     let invalid = || setup("policy_invalid", file);
-    let policy: Policy = typed(&bytes).ok_or_else(invalid)?;
+    let mut policy: Policy = typed(&bytes).ok_or_else(invalid)?;
+    policy.sha256 = crate::sha256_hex(&bytes);
     let ok = is_slug(&policy.name)
         && policy.version >= 1
         && policy.schema.version >= 1

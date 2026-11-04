@@ -1,5 +1,5 @@
 {
-  "description": "A double R reads as NA but Arrow holds as a value (a NaN with low word 1954 and a payload in the high word) beside a suppressed count refuses: taking null-ness from R would pass it as suppressed and the rewrite would export its payload bits.",
+  "description": "A NaN whose bit pattern R reads as NA (low word 1954, a payload in the high word) beside a suppressed count refuses as a NaN, and its statistic as unsupported: null-ness is Arrow's validity, so the cell is a value, not a suppression, and its payload bits would otherwise be exported.",
   "schema": "../../../schemas/trial.schema.json",
   "policy": "../../../schemas/trial.policy.json",
   "candidate": {
@@ -74,7 +74,13 @@
         "file": "summary_by_year.parquet",
         "column": "mean_value",
         "position": null,
-        "rule": "na_not_null"
+        "rule": "nan_value"
+      },
+      {
+        "file": "summary_by_year.parquet",
+        "column": "mean_value",
+        "position": null,
+        "rule": "unsupported_statistic"
       }
     ]
   }

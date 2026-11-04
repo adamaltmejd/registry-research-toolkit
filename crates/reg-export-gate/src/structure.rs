@@ -13,7 +13,7 @@ use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::Path;
 use std::sync::Once;
 
-use arrow_array::RecordBatch;
+use arrow_array::{ArrayRef, new_empty_array};
 use arrow_schema::{DataType, Schema as ArrowSchema};
 use bytes::Bytes;
 use parquet::arrow::arrow_reader::{ArrowReaderOptions, ParquetRecordBatchReaderBuilder};
@@ -31,18 +31,17 @@ pub const MAX_ROWS: usize = 100_000;
 /// 2 GiB a page) are not counted, and bounding them needs the decoder's help.
 pub const MAX_DECODED_BYTES: usize = 64 * 1024 * 1024;
 
-/// A schema file as decoded: its spec and its record batches, whose columns are
-/// exactly the spec's, in its order, once the check passes. The batches' Arrow
-/// schema is the decoder's and can carry the author's file metadata: the
-/// rewrite builds its own.
+/// A schema file as decoded: its spec and one array per spec column, in the
+/// spec's order. Only the arrays are kept, never the decoder's Arrow schema
+/// (which can carry the author's file metadata): the rewrite builds its own.
 #[derive(Debug)]
-pub struct Candidate {
+pub(crate) struct Candidate {
     pub spec: File,
-    pub batches: Vec<RecordBatch>,
+    pub columns: Vec<ArrayRef>,
 }
 
 /// What reading a staging file gave.
-enum Outcome<T> {
+pub(crate) enum Outcome<T> {
     Ok(T),
     TooLarge,
     Unreadable,
@@ -77,7 +76,7 @@ fn open(path: &Path) -> std::io::Result<std::fs::File> {
 
 /// The file's bytes, read once from one handle checked to be a regular file,
 /// and never more than the cap plus one byte.
-fn read(path: &Path) -> Outcome<Vec<u8>> {
+pub(crate) fn read(path: &Path) -> Outcome<Vec<u8>> {
     let Ok(file) = open(path) else {
         return Outcome::Unreadable;
     };
@@ -125,7 +124,7 @@ fn quiet_decoder_panics() {
 /// counted again and with their decoded size summed as they come. Anything that
 /// is not readable Parquet, a decoder panic included, is `unreadable`, with no
 /// error text kept.
-fn decode(spec: &File, bytes: Bytes) -> Result<Vec<RecordBatch>, Vec<Finding>> {
+fn decode(spec: &File, bytes: Bytes) -> Result<Vec<ArrayRef>, Vec<Finding>> {
     let file = spec.name.as_str();
     let refuse = |rule| Err(vec![Finding::file(rule, file)]);
     quiet_decoder_panics();
@@ -152,6 +151,7 @@ fn decode(spec: &File, bytes: Bytes) -> Result<Vec<RecordBatch>, Vec<Finding>> {
         if !findings.is_empty() {
             return Err(findings);
         }
+        let schema = builder.schema().clone();
         let Ok(reader) = builder.build() else {
             return refuse("unreadable");
         };
@@ -168,7 +168,19 @@ fn decode(spec: &File, bytes: Bytes) -> Result<Vec<RecordBatch>, Vec<Finding>> {
             }
             batches.push(batch);
         }
-        Ok(batches)
+        // One array per spec column, taken by index: the columns matched the
+        // spec's names in order above, so index i is spec column i.
+        (0..spec.columns.len())
+            .map(|i| {
+                let parts: Vec<_> = batches.iter().map(|b| b.column(i).as_ref()).collect();
+                if parts.is_empty() {
+                    Ok(new_empty_array(schema.field(i).data_type()))
+                } else {
+                    arrow_select::concat::concat(&parts)
+                }
+            })
+            .collect::<Result<_, _>>()
+            .or_else(|_| refuse("unreadable"))
     }));
     DECODING.with(|d| d.set(false));
     decoded.unwrap_or_else(|_| refuse("unreadable"))
@@ -212,9 +224,9 @@ pub(crate) fn check(staging: &Path, schema: &Schema) -> Result<Vec<Candidate>, R
             Outcome::Unreadable => Err(vec![Finding::file("unreadable", &spec.name)]),
         };
         match decoded {
-            Ok(batches) => candidates.push(Candidate {
+            Ok(columns) => candidates.push(Candidate {
                 spec: spec.clone(),
-                batches,
+                columns,
             }),
             Err(file_findings) => findings.extend(file_findings),
         }
