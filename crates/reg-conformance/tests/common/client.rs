@@ -84,3 +84,28 @@ pub fn request(
         .map_err(|_| format!("{method} {target}: no response in {timeout:?}"))?
         .map_err(|e: String| format!("{method} {target}: {e}"))
 }
+
+/// Send `body` (if any) as JSON with `headers` and read the answer as JSON: the status
+/// and the document.
+pub fn json(
+    port: u16,
+    method: &str,
+    target: &str,
+    headers: &[(&str, String)],
+    body: Option<&serde_json::Value>,
+) -> Result<(u16, serde_json::Value), String> {
+    let mut all = headers.to_vec();
+    let body = body.map(|b| {
+        all.push(("content-type", "application/json".to_owned()));
+        serde_json::to_vec(b).expect("a JSON value serializes")
+    });
+    let response = request(port, method, target, &all, body, Duration::from_secs(60))?;
+    let document = serde_json::from_slice(&response.content).map_err(|e| {
+        format!(
+            "{method} {target}: {} is not JSON ({e}): {}",
+            response.status,
+            String::from_utf8_lossy(&response.content)
+        )
+    })?;
+    Ok((response.status, document))
+}

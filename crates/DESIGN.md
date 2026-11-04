@@ -2238,19 +2238,19 @@ automatic attach machinery is built without a concrete E order; `LopNrByte` in
 particular stays deferred unless the real exit order needs explicit reviewed selection
 (maintainer 2026-10-29). Its pseudonym values never enter the catalog or leave MONA.
 
-Keep `conformance/cases/order` and `conformance/test_order.py` as the logical contract:
-availability clips, row keys, ambiguity, classification and `validate` agreement. Add a
-separate physical corpus driven by small readable census/storage/curation inputs through
-the real holdings stage. Author expected file plans from those inputs before
-implementation. Cover each behavior above at its hardest boundary, including a refusal
-beside an allowed placement, a changed spelling, a column window, a key-only projection,
-two disjoint partitions, pooled row filters and a storage mismatch. Refusals assert
-located codes; `reg-build verify` owns structural invariants. Adapt the existing
-`test_order.py` harness in E to distinguish logical and physical requests and load the
-new holdings fixtures, including a mismatched catalog/holdings pair and an actual-file
-spelling differing from the latest catalog spelling. Project-only cases are deferred.
-This restores the holdings/steward cases removed in C; it does not introduce another
-test suite or resolver oracle.
+Keep `conformance/cases/order` and its `order` runner (`crates/reg-conformance`) as the
+logical contract: availability clips, row keys, ambiguity, classification and `validate`
+agreement. Add a separate physical corpus driven by small readable
+census/storage/curation inputs through the real holdings stage. Author expected file
+plans from those inputs before implementation. Cover each behavior above at its hardest
+boundary, including a refusal beside an allowed placement, a changed spelling, a column
+window, a key-only projection, two disjoint partitions, pooled row filters and a storage
+mismatch. Refusals assert located codes; `reg-build verify` owns structural invariants.
+Adapt the existing `order` harness in E to distinguish logical and physical requests and
+load the new holdings fixtures, including a mismatched catalog/holdings pair and an
+actual-file spelling differing from the latest catalog spelling. Project-only cases are
+deferred. This restores the holdings/steward cases removed in C; it does not introduce
+another test suite or resolver oracle.
 
 `conformance/test_release_order.py` keeps its independent published-catalog SQL census,
 repeat-byte and HTTP/MCP checks. It has no steward mode. The holdings release proof is

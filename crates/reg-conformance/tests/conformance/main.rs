@@ -8,3 +8,6 @@ mod common;
 
 mod api;
 mod api_spec;
+mod materialize;
+mod mcp;
+mod order;

@@ -8,24 +8,26 @@ product imports or internal patches are allowed.
 
 ```sh
 cargo build --workspace
-cargo test -p reg-conformance --test conformance   # the Rust harness: api, api_spec
+cargo test -p reg-conformance --test conformance   # the Rust harness (surfaces below)
 uv run --no-project scripts/gate.py rust           # it, then the pytest surfaces
 ```
 
 The Rust harness (`crates/reg-conformance`) is replacing the pytest one surface by
-surface; `api` and `api_spec` have moved. It runs `$REG_META_BIN` (default `reg-meta`
-beside the test in its cargo target, so a per-worktree `CARGO_TARGET_DIR` works) as
-`serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS` split on
-whitespace. `REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases; libtest's own
-filter selects surfaces. A failing surface lists every failing case as
+surface; `api`, `api_spec`, `mcp`, `order` and `materialize` have moved. It runs
+`$REG_META_BIN` (default `reg-meta` beside the test in its cargo target, so a
+per-worktree `CARGO_TARGET_DIR` works) as `serve --db D --port 0 --write-limit 100000`,
+plus `$REG_META_SERVE_ARGS` split on whitespace. The sampled projects and MCP calls all
+come from one address, so the raised write limit keeps the suite inside its rate bucket;
+the burst case (`mcp::burst_is_rate_limited`) drops it and pins the default.
+`REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases; libtest's own filter
+selects surfaces. A failing surface lists every failing case as
 `<case>: <first mismatch>`. The `conformance` test target is `test = false`:
 `cargo test --workspace` would not rebuild the binaries it runs, so it runs only by name
 after `cargo build --workspace`.
 
 Every pytest run needs `--server-cmd`: the suite's boundary is the Rust server, and a
-run without it is refused at startup. The sampled projects all come from one address, so
-the template raises the server's write limit (`--write-limit`); the burst case in
-`test_mcp.py` drops the flag and pins the default. `scripts/gate.py` holds the commands.
+run without it is refused at startup. The template raises the server's write limit
+(`--write-limit`) for the same reason. `scripts/gate.py` holds the commands.
 
 The `rust` step runs the whole suite on the synthetic `base` artifact, then only the
 checks on exactly the selected artifact (`-m release --run-release --artifact-dir=…`),
@@ -38,18 +40,19 @@ space-separated external directory can select that directory's checkout configur
 Each case directory has `request.json` and, except for an order case that orders,
 `expected.json`. JSON pointer projections define the compared public result; errors also
 pin the status and located findings. In an order case `order`'s `data` compares with the
-case's committed `order.json` (authoring it is a content decision, see `test_order.py`),
-less its two volatile fields: `catalog.generation_id`, checked against the artifact's
-`meta`, and `project.project_hash`, checked as 64 hex digits. A blocked case's
-`order_blocked` findings compare with its `expected.json`, and `validate` must agree
-with `order` on both. An `api` step's body is `body` (JSON), a `content` string sent
-verbatim (encoded with its optional `encoding`) or `nested_arrays: N`, an object nesting
-N arrays deep. No other volatile fields are removed from the comparisons. Keys and lists
-retain their order. An HTTP response oracle may also pin raw bytes: `media_type` (the
-content type without parameters), `headers` (exact values by lower-case name) and
-`bytes` (a file in the case directory compared byte for byte). Where ties have no
-contract order, a step's `members` (`steps`, `pointer`, `equals`) joins `pointer` over
-those steps (this one or earlier) and requires no repeats and exactly the `equals` set.
+case's committed `order.json` (authoring it is a content decision, see the `order`
+module of `crates/reg-conformance`), less its two volatile fields:
+`catalog.generation_id`, checked against the artifact's `meta`, and
+`project.project_hash`, checked as 64 hex digits. A blocked case's `order_blocked`
+findings compare with its `expected.json`, and `validate` must agree with `order` on
+both. An `api` step's body is `body` (JSON), a `content` string sent verbatim (encoded
+with its optional `encoding`) or `nested_arrays: N`, an object nesting N arrays deep. No
+other volatile fields are removed from the comparisons. Keys and lists retain their
+order. An HTTP response oracle may also pin raw bytes: `media_type` (the content type
+without parameters), `headers` (exact values by lower-case name) and `bytes` (a file in
+the case directory compared byte for byte). Where ties have no contract order, a step's
+`members` (`steps`, `pointer`, `equals`) joins `pointer` over those steps (this one or
+earlier) and requires no repeats and exactly the `equals` set.
 
   | Surface directory | Boundary and request interpretation                               |
   | ----------------- | ----------------------------------------------------------------- |
@@ -80,17 +83,19 @@ Rust harness does the same, logging to `conformance-<pid>/server-N.log` under
 `<target>/tmp`, and starts each server under a watchdog `sh` that kills it when the test
 process exits, however it exits.
 
-`test_mcp.py` (MCP equivalence) sends raw JSON-RPC to `/mcp` on the `--server-cmd`
-server: each step of the `api` cases it names, as a tool call, returns the HTTP body as
-`structuredContent` (an error with `isError`), and those steps cover every error the
-operation lists in `operations.toml`. `tools/list`, over HTTP and stdio, equals the
-golden `cases/mcp/tools-list.json`, and its names are the `tool` of each served
-operation. The server builds each tool's schemas from its OpenAPI entry, so a schema
-change shows as a reviewed diff of that file. The body cap and the rate limit on `/mcp`
-answer with their error documents, and the drained bucket also refuses the address's
-project POSTs while its reads pass; the burst runs on a server of its own. `--mcp-cmd`
-is a command template (`{db}`) for one stdio session: initialize, list the tools and
-call `search`. Without `--mcp-cmd` the stdio session skips.
+The `mcp` module (MCP equivalence) sends raw JSON-RPC to `/mcp` on the case servers:
+each step of the `api` cases it names, as a tool call, returns the HTTP body as
+`structuredContent` (an error with `isError`) that validates against the tool's
+`outputSchema`, and those steps cover every error the operation lists in
+`operations.toml`. `tools/list`, over HTTP and stdio, equals the golden
+`cases/mcp/tools-list.json`, and its names are the `tool` of each served operation. The
+server builds each tool's schemas from its OpenAPI entry, so a schema change shows as a
+reviewed diff of that file; the stdio session (`reg-meta mcp`: initialize, list the
+tools and call `search`) writes it under
+`REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session`
+(`scripts/gate.py regen`). The body cap and the rate limit on `/mcp` answer with their
+error documents, and the drained bucket also refuses the address's project POSTs while
+its reads pass; the burst runs on a server of its own.
 
 ## Fixtures and the fixture cache
 
@@ -147,8 +152,8 @@ served by the Rust server. They use the HTTP case shape above, with these additi
   object whose values no oracle can spell (`meta`'s generation).
 - A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`, and one with
   `if_none_match` sends that literal header.
-- A download step names the operation whose metadata it downloads (`[[download]]`).
-  `test_mcp.py` replays each operation's listed cases as tool calls, the path's
+- A download step names the operation whose metadata it downloads (`[[download]]`). The
+  `mcp` module replays each operation's listed cases as tool calls, the path's
   parameters (by the operation's route) as arguments; download steps and a parameter
   sent in both the path and the query have no tool-call spelling and are skipped.
 

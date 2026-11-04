@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import filecmp
 import gzip
-import json
 import os
 import shlex
 import shutil
@@ -118,7 +117,7 @@ def rust() -> None:
         run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
     # The Rust harness (crates/reg-conformance), then the surfaces not yet ported.
     run("cargo test -p reg-conformance --test conformance --locked")
-    run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
+    run(f"{CONFORMANCE} {SERVER_CMD}")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
     # checks: the rest of the suite does not read `--artifact-dir` and already ran
@@ -172,34 +171,11 @@ def regen() -> None:
         "cargo test -p xtask --test project_schema_snapshot",
         env={"REG_META_BLESS": "1"},
     )
-    # The MCP `tools/list` golden, as conformance/test_mcp.py's stdio session lists it.
-    artifact = base_artifact()
-    messages = [
-        {
-            "id": 0,
-            "method": "initialize",
-            "params": {
-                "protocolVersion": "2025-11-25",
-                "capabilities": {},
-                "clientInfo": {"name": "gate", "version": "0"},
-            },
-        },
-        {"method": "notifications/initialized"},
-        {"id": 1, "method": "tools/list"},
-    ]
-    session = run(
-        ["target/debug/reg-meta", "mcp", "--db", artifact],
-        input="".join(json.dumps({"jsonrpc": "2.0"} | m) + "\n" for m in messages),
-        stdout=subprocess.PIPE,
-        text=True,
+    # The MCP `tools/list` golden, as the conformance `mcp` stdio session lists it.
+    run(
+        "cargo test -p reg-conformance --test conformance --locked stdio_session",
+        env={"REG_META_BLESS": "1"},
     )
-    (tools,) = (
-        reply["result"]["tools"]
-        for reply in map(json.loads, session.stdout.splitlines())
-        if reply.get("id") == 1
-    )
-    golden = ROOT / "conformance/cases/mcp/tools-list.json"
-    golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
 
 
 STEPS = {

@@ -54,35 +54,60 @@ pub struct Server {
 }
 
 type Slot = Arc<OnceLock<Result<Arc<Server>, String>>>;
+/// An artifact directory and the catalog it is served as (`None`: its own).
+type PoolKey = (PathBuf, Option<String>);
 
 /// The server of the artifact directory `db`, started on first use. A failed start
 /// is remembered, so later cases on the artifact fail at once instead of waiting out
 /// the readiness deadline again.
+///
+/// Every case shares it, `/mcp` included: `serve_argv`'s raised write limit keeps the
+/// one bucket of this address from refusing the suite's own requests.
 pub fn server(db: &Path) -> Result<Arc<Server>, String> {
-    static POOL: OnceLock<Mutex<HashMap<PathBuf, Slot>>> = OnceLock::new();
+    pooled(db, None)
+}
+
+/// The paired server of the steward directory `db` (`reg_meta.db` beside
+/// `reg_meta_<catalog>.db`), served as `--catalog catalog`; shared like [`server`].
+pub fn steward_server(db: &Path, catalog: &str) -> Result<Arc<Server>, String> {
+    pooled(db, Some(catalog))
+}
+
+fn pooled(db: &Path, catalog: Option<&str>) -> Result<Arc<Server>, String> {
+    static POOL: OnceLock<Mutex<HashMap<PoolKey, Slot>>> = OnceLock::new();
     let slot = POOL
         .get_or_init(Mutex::default)
         .lock()
         .expect("the server pool")
-        .entry(db.to_path_buf())
+        .entry((db.to_path_buf(), catalog.map(str::to_owned)))
         .or_default()
         .clone();
-    slot.get_or_init(|| start(db).map(Arc::new)).clone()
+    slot.get_or_init(|| {
+        let mut argv = serve_argv(db);
+        if let Some(catalog) = catalog {
+            argv.extend(["--catalog".to_owned(), catalog.to_owned()]);
+        }
+        start(db, &argv, &[]).map(Arc::new)
+    })
+    .clone()
 }
 
-fn log_dir() -> PathBuf {
+/// This run's directory in the cargo target's temp dir: server logs and the
+/// session-built steward pairs.
+pub fn log_dir() -> PathBuf {
     let dir =
         Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!("conformance-{}", std::process::id()));
     let _ = fs::create_dir_all(&dir);
     dir
 }
 
-fn start(db: &Path) -> Result<Server, String> {
+/// A server of its own on `db`, from the `serve` argv `argv` (see `serve_argv`) with
+/// `env` added; it stops when the returned value drops.
+pub fn start(db: &Path, argv: &[String], env: &[(&str, &str)]) -> Result<Server, String> {
     static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
     let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
     let log = log_dir().join(format!("server-{n}.log"));
     let output = fs::File::create(&log).map_err(|e| format!("{}: {e}", log.display()))?;
-    let argv = serve_argv(db);
     // fd 3 carries the pipe to the watchdog: an asynchronous list's stdin is
     // /dev/null. `wait $s` makes sh exit with the server's status, so an early exit
     // is still seen.
@@ -93,9 +118,10 @@ fn start(db: &Path) -> Result<Server, String> {
             "sh",
         ])
         .arg(reg_meta())
-        .args(&argv)
+        .args(argv)
         .current_dir(reg_conformance::repo())
         .env("REG_META_DB", db)
+        .envs(env.iter().copied())
         .stdin(Stdio::piped())
         .stdout(output.try_clone().map_err(|e| e.to_string())?)
         .stderr(output)

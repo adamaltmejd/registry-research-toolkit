@@ -1,7 +1,5 @@
-"""Readable request/expected cases at the HTTP boundary.
-
-Cases run with `--server-cmd` over a real socket against one server process per
-cached artifact (`ServerPool`).
+"""The `--server-cmd` server: one process per cached artifact (`ServerPool`), reached
+over a real socket by the pytest surfaces not yet ported to `crates/reg-conformance`.
 """
 
 from __future__ import annotations
@@ -23,23 +21,6 @@ LISTENING = re.compile(rb"^listening on \S+:(\d+)\n", re.MULTILINE)
 SERVER_READY_SECONDS = 120
 
 
-def select_json(value, path):
-    """JSON-pointer projection; '*' collects a list in response order."""
-    parts = path.strip("/").split("/") if path != "/" else []
-
-    def walk(current, remaining):
-        if not remaining:
-            return current
-        head, *tail = remaining
-        if head == "*":
-            return [walk(item, tail) for item in current]
-        return walk(
-            current[int(head)] if isinstance(current, list) else current[head], tail
-        )
-
-    return walk(value, parts)
-
-
 def artifact_env(path):
     """The environment the app needs to serve the artifact at `path`."""
     return {"REG_META_DB": str(path.parent)}
@@ -53,93 +34,6 @@ def fixture_source(request):
 def cached_case_artifact(request):
     """A case's cached, read-only artifact, built by `reg-build` from its fixture."""
     return cached_reader_artifact(fixture_source(request))
-
-
-def case_clients(request, servers):
-    """The `servers` clients of a case: its artifact's under `None`, each
-    `artifacts` entry's under its name. An entry may name its own `fixture`."""
-    clients = {
-        name: servers.client(artifact_env(cached_case_artifact({**request, **spec})))
-        for name, spec in request.get("artifacts", {}).items()
-    }
-    clients[None] = servers.client(artifact_env(cached_case_artifact(request)))
-    return clients
-
-
-def raw_body(step):
-    """A step's raw request bytes, or None when it sends `body` as JSON.
-
-    `content` is a string sent verbatim, encoded with the step's `encoding`
-    (default UTF-8), for documents a JSON value cannot spell: a duplicate key,
-    a byte-order mark, another encoding. `nested_arrays: N` is a root object
-    whose one value nests N arrays deep, too large to spell literally."""
-    if "nested_arrays" in step:
-        depth = step["nested_arrays"]
-        return b'{"nested": ' + b"[" * depth + b"]" * depth + b"}"
-    if "content" in step:
-        return step["content"].encode(step.get("encoding", "utf-8"))
-    return None
-
-
-def request_body(step):
-    """The `httpx2.Client.request` keyword arguments for a step's body."""
-    raw = raw_body(step)
-    if raw is not None:
-        return {"content": raw, "headers": {"content-type": "application/json"}}
-    return {"json": step.get("body")}
-
-
-def run_http_requests(steps, clients):
-    """Send the steps through `clients` (the case artifact's client under `None`,
-    each `artifacts` entry's under its name)."""
-    responses = []
-    for step in steps:
-        client = clients[step.get("artifact")]
-        params = dict(step.get("query", {}))
-        if "cursor_from" in step:
-            idx, pointer = step["cursor_from"]
-            params["cursor"] = select_json(responses[idx]["body"], pointer)
-            assert params["cursor"] is not None
-        # An identifier only an earlier response carries (a storage id).
-        for name, (idx, pointer) in step.get("query_from", {}).items():
-            params[name] = select_json(responses[idx]["body"], pointer)
-        body = request_body(step)
-        if "etag_from" in step:
-            # A conditional read that revalidates an earlier step's response.
-            body["headers"] = body.get("headers", {}) | {
-                "if-none-match": responses[step["etag_from"]]["headers"]["etag"]
-            }
-        if "if_none_match" in step:
-            # A conditional read with a literal validator: a stale or foreign tag.
-            body["headers"] = body.get("headers", {}) | {
-                "if-none-match": step["if_none_match"]
-            }
-        response = client.request(
-            step.get("method", "GET"),
-            step["path"],
-            params=params,
-            **body,
-            follow_redirects=False,
-        )
-        content_type = response.headers.get("content-type", "")
-        body = (
-            response.json()
-            if content_type.startswith("application/json")
-            else response.text
-            if response.content
-            else None
-        )
-        responses.append(
-            {
-                "status": response.status_code,
-                "location": response.headers.get("location"),
-                "media_type": content_type.split(";")[0].strip(),
-                "headers": dict(response.headers),  # names lower-cased
-                "content": response.content,
-                "body": body,
-            }
-        )
-    return responses
 
 
 class ServerPool:
