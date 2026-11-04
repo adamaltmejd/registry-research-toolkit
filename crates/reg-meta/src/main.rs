@@ -143,11 +143,7 @@ fn catalog_sha256() -> Result<Option<String>, Error> {
     let Ok(digest) = std::env::var(CATALOG_SHA256_ENV) else {
         return Ok(None);
     };
-    if digest.len() == 64
-        && digest
-            .bytes()
-            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
-    {
+    if reg_core::is_sha256_hex(&digest) {
         Ok(Some(digest))
     } else {
         Err(Error::invalid_parameter(CATALOG_SHA256_ENV))
