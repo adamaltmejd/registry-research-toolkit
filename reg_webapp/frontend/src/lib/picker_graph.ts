@@ -2,6 +2,7 @@
 import {
   columnInProject,
   columnWindowPeriod,
+  filesLabel,
   type VariableColumn,
 } from "./add_columns";
 import type { Graph, SetShow, VariableShow } from "./api";
@@ -108,7 +109,8 @@ export function variableSpans({
       id: `${idPrefix}${column.id}`,
       lane: `${idPrefix}${column.table}`,
       name: column.spelling,
-      table: column.file,
+      table: filesLabel(column.files),
+      where: filesLabel(column.files) ?? names.get(column.table),
       from: first,
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
@@ -120,7 +122,7 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${column.file ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${column.spelling}, ${variable.name}, ${filesLabel(column.files) ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the years to add")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly
@@ -128,7 +130,7 @@ export function variableSpans({
             span,
             !!source,
             variable.name,
-            column.file ?? names.get(column.table),
+            filesLabel(column.files) ?? names.get(column.table),
           )
         : span,
     ];

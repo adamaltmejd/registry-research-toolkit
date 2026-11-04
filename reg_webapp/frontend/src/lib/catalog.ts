@@ -218,28 +218,6 @@ export function sourceCardHeading(
   return register?.trim() || coordinate;
 }
 
-/** Display the storage `data_type` with its length parenthetical, DROPPING a
- * meaningless length. `data_length` arrives as a string (`str | None` on the
- * wire); many source rows carry `"0"` / `""` as a "no precision" sentinel
- * (rendered verbatim as the artifact "bigint(0)"), and 64 rows carry `"-1"` —
- * SQL Server's varchar(MAX) sentinel. A length is shown only when it parses to
- * a POSITIVE number (e.g. `char(25)`, `Decimaltal(4)`); zero/negative/empty/
- * non-numeric are suppressed. Returns "" when there is no data_type at all (the
- * caller already gates the "Data type" row on a present type). */
-export function formatDataType(
-  dataType: string | null | undefined,
-  dataLength: string | null | undefined,
-): string {
-  const type = (dataType ?? "").trim();
-  if (!type) {
-    return "";
-  }
-  const len = (dataLength ?? "").trim();
-  const n = Number(len);
-  // Show the parenthetical only for a positive numeric length; "0"/"-1"/""/garbage drop.
-  return len !== "" && Number.isFinite(n) && n > 0 ? `${type}(${len})` : type;
-}
-
 /** The DISTINCT delivery columns among `states` that genuinely CO-EXIST — a column
  * whose validity window overlaps ANOTHER (different) column's window at some instant.
  * The single overlap-detection leaf shared by `resolveBindingAt`'s ambiguity gate

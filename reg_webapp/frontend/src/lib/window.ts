@@ -21,8 +21,15 @@
  * is pristine).
  */
 
-import { type ProjectStudyWindow, safeStudyWindow } from "./project_data";
+import type { Context } from "./api";
+import { clampYearWindow } from "./period";
+import {
+  type ProjectStudyWindow,
+  regMetaReleaseTag,
+  safeStudyWindow,
+} from "./project_data";
 import { projectStore } from "./project_store";
+import { defaultStudyWindow, windowBounds } from "./window_bounds";
 
 /** The localStorage key for the no-draft fallback window. Namespaced so it
  * doesn't collide with any future SPA-local key. */
@@ -150,3 +157,17 @@ class WindowStore {
 }
 
 export const windowStore = new WindowStore();
+
+/** Start a new project over the catalog's current study window (the top bar's,
+ * the project page's and the variable page's "Create a project"). */
+export function createProject(context: Context): void {
+  const bounds = windowBounds(context);
+  projectStore.newProject({
+    reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
+    window: clampYearWindow(
+      windowStore.value ?? defaultStudyWindow(bounds),
+      bounds.min,
+      bounds.max,
+    ),
+  });
+}

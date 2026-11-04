@@ -1,6 +1,14 @@
-.registerRead:focus-visible {
+/* The timeline's region: the focus target after Retry. */
+.timeline:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
+}
+
+/* The Type row's pills, wrapping on a narrow pane. */
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
 }
 
 .valueSet {
