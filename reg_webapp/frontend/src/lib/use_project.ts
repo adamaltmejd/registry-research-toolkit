@@ -18,7 +18,7 @@ export function useStudyWindow(): ProjectStudyWindow | null {
 export interface ProjectCheck extends AsyncResource<OrderCheck> {
   /** Run the check again after a refused request; edits re-run it anyway. */
   retry: () => void;
-  /** While a check is in flight, the last one that settled, so /project keeps
+  /** While a check is in flight, the last answer, so /project keeps
    * its verdict, findings and delivery on screen instead of a skeleton on every
    * keystroke. Findings and the order are located by index
    * (`/sources/0/bindings/1`), so it is `null` once a table or column was added,
@@ -73,9 +73,11 @@ export function useProjectCheck(): ProjectCheck {
     (resource.data !== last?.data || resource.error !== last?.error)
   )
     setLast({ layout, data: resource.data, error: resource.error });
+  // Only an answer is kept: after a check that did not run, Retry shows the
+  // Skeleton, not the same error row as if nothing happened.
   const previous =
-    resource.loading && last && last.layout === layout
-      ? { data: last.data, error: last.error }
+    resource.loading && last?.data && last.layout === layout
+      ? { data: last.data, error: null }
       : null;
   return {
     ...resource,

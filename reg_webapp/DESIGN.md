@@ -28,16 +28,17 @@ manual trigger. `order` answers everything the page shows, so the SPA does not c
 `materialize_order`, so a column the steward does not hold blocks here too), an
 `order_blocked` refusal carries every finding that `validate` would list, and a success
 carries the non-blocking findings with the entries, row keys and clips the delivery
-summary draws. The SPA sends only drafts WASM
-accepted; a `project_invalid` refusal, should the server disagree, is read the same way.
-One verdict function names the result for both, in the words of `frontend/DESIGN.md` →
-Words. Issues sit under their table or column, with links from the verdict that focus
-them. The banner retains the project name, table and column counts, verdict and download
-save state across routes. A restored local draft is recovery, so it remains unsaved
-until downloaded. The study window is an inline window-band picker bounded by the
-catalog's half-open period span. A new project carries over the browsing window or
-starts at 2015 through the catalog's last year. Moving the study window never rewrites
-source periods.
+summary draws. Those clips are the logical order's: years the steward's tables lack
+(`coverage_gap`) are listed as a warning but not subtracted from the summary's years.
+The SPA sends only drafts WASM accepted; a `project_invalid` refusal, should the server
+disagree, is read the same way. One verdict function names the result for both, in the
+words of `frontend/DESIGN.md` → Words. Issues sit under their table or column, with
+links from the verdict that focus them. The banner retains the project name, table and
+column counts, verdict and download save state across routes. A restored local draft is
+recovery, so it remains unsaved until downloaded. The study window is an inline
+window-band picker bounded by the catalog's half-open period span. A new project carries
+over the browsing window or starts at 2015 through the catalog's last year. Moving the
+study window never rewrites source periods.
 
 Variable pages project their segments into a single coverage LaneGraph. A column is the
 exact table and spelling pair; selection and its availability-bounded add window are
