@@ -9,8 +9,6 @@ Each generated file holds one fold's cases, one JSON object per line, sorted by 
 `{"in": <input>, "out": <expected>}`.
 
 - `fold_identity.jsonl` — column identity: Unicode lowercase with `Final_Sigma`.
-- `fold_search.jsonl` — search-text fold: case fold, NFKD, drop combining marks until
-  nothing changes, then one space between words.
 - `normalized_search_query.jsonl` — the query normalizer.
 
 `unicode17.jsonl` is hand-written: `{"op", "in", "out", "note"}`. It covers characters
@@ -39,8 +37,7 @@ Selection per fold, as generated, over assigned scalars excluding private use:
 - a seeded sample of scalars in four contexts: after `ΑΣ` and between `Α` and `Σ`
   (`Final_Sigma`), before ` x` and padded with spaces (token boundaries, strip);
 - 300 seeded random strings and a fixed list of edge inputs, among them `straße`, `ﬁlm`
-  and `ＡＢＣ`, which `fold_search` matches to `strasse`, `film` and `abc` but FTS5
-  `unicode61` does not.
+  and `ＡＢＣ`.
 
 Python's UCD (16.0 in Python 3.14) is older than `reg-core`'s (17.0). Any input holding
 a character Python leaves unassigned, or U+0295 (Ll in 16.0, Lo in 17.0), is excluded.

@@ -6,7 +6,7 @@
 //! importer is `reg_webapp/frontend/src/lib/reg_core.ts`.
 
 use reg_core::project::{SCHEMA_VERSION, SourcePeriod, StudyWindow, check};
-use reg_core::{Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult};
+use reg_core::{Interval, IssueLevel, ValidationIssue, ValidationResult};
 use serde_json::{Value, json};
 use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -45,48 +45,6 @@ pub fn check_project(json: &str) -> String {
         },
     };
     serde_json::to_string(&result).expect("a validation result encodes")
-}
-
-/// `text` through the period grammar: `{canonical, kind, bounds: [lo, hi], years:
-/// [lo, hi]}`, the kind one of `conformance/cases/grammar/period.jsonl`'s, or
-/// `{error}` with the error catalog code. Not trimmed.
-#[wasm_bindgen]
-#[must_use]
-pub fn parse_period(text: &str) -> String {
-    let parsed = match text.parse::<Period>() {
-        Ok(period) => {
-            let kind = match period {
-                Period::Range { .. } => "range",
-                Period::Token(token) => match token {
-                    PeriodToken::Year(_) => "year",
-                    PeriodToken::Month { .. } => "month",
-                    PeriodToken::Day { .. } => "day",
-                    PeriodToken::Term { .. } => "term",
-                    PeriodToken::SchoolYear(_) => "school_year",
-                    PeriodToken::Quarter { .. } => "quarter",
-                    PeriodToken::Half { .. } => "half",
-                },
-            };
-            let (lo, hi) = period.iso_bounds();
-            let (first, last) = period.years();
-            json!({
-                "canonical": period.to_string(),
-                "kind": kind,
-                "bounds": [lo, hi],
-                "years": [first, last],
-            })
-        }
-        Err(e) => json!({"error": e.code()}),
-    };
-    parsed.to_string()
-}
-
-/// `reg_core::period_token_for_bounds`: the coarsest token whose bounds are exactly
-/// `lo..hi`, else the explicit `lo..hi`. Total over any two strings.
-#[wasm_bindgen]
-#[must_use]
-pub fn period_token_for_bounds(lo: &str, hi: &str) -> String {
-    reg_core::period_token_for_bounds(lo, hi)
 }
 
 /// The `Source.period` JSON a `?period` wire spells (`SourcePeriod::from_wire`),
@@ -178,17 +136,6 @@ pub fn overlap(a: &str, b: &str) -> String {
 #[must_use]
 pub fn render(json: &str) -> String {
     json!(intervals(json).map(|i| reg_core::render(&i))).to_string()
-}
-
-/// `reg_core::fold_search`: the server search's fold (case fold, NFKD, drop nonzero
-/// combining classes to a fixed point, single spaces), so the SPA's type-to-filter
-/// folds exactly as the server's search does. Total: its only panic is a missing fixed
-/// point, which `reg-core`'s every-scalar sweep rules out for every string (each pass
-/// maps characters independently).
-#[wasm_bindgen]
-#[must_use]
-pub fn fold_search(text: &str) -> String {
-    reg_core::fold_search(text)
 }
 
 /// The source period in JSON text once its structural check accepts it, so that

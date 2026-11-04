@@ -8,9 +8,8 @@
 //! implementation per contract".
 //!
 //! All Unicode data is on one version, [`UNICODE_VERSION`] (17.0.0): Rust std's
-//! `to_lowercase` and `White_Space`, `unicode-normalization` 0.1.25 (NFKD, canonical
-//! combining class), `unicode-properties` 0.1.4 (general category) and the generated
-//! case-folding table.
+//! `to_lowercase` and `White_Space`, `unicode-properties` 0.1.4 (general category) and
+//! the generated case-folding table.
 //!
 //! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and
 //! `crates/reg-core/tests/project/corpus/`.
@@ -41,8 +40,6 @@ pub use grammar::{
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
 pub use structural::{q as quote, validate_structural};
-use unicode_normalization::UnicodeNormalization;
-use unicode_normalization::char::canonical_combining_class;
 use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
 pub use validation::{IssueLevel, ValidationIssue, ValidationResult};
 
@@ -118,40 +115,6 @@ impl Form {
             valueset: valueset.map(str::to_owned),
         }
     }
-}
-
-/// Passes of [`fold_search`]: two change any string at most (NFKD can emit a capital
-/// the first case fold could not see: U+1D2C MODIFIER LETTER CAPITAL A -> "A" -> "a");
-/// the third confirms. Each pass maps characters independently, so the bound the
-/// every-scalar sweep checks holds for every string.
-const FOLD_SEARCH_MAX_PASSES: usize = 3;
-
-fn fold_search_pass(s: &str) -> String {
-    case_fold(s)
-        .nfkd()
-        .filter(|&c| canonical_combining_class(c) == 0)
-        .collect()
-}
-
-/// `fold_search`: full case folding, NFKD, drop characters with a nonzero canonical
-/// combining class, repeated until the text stops changing; then split on whitespace
-/// and join with single spaces. Idempotent.
-///
-/// # Panics
-///
-/// If the passes reach no fixed point within their cap, which is a bug in this crate's
-/// Unicode data, not an input error; the every-scalar test rules it out.
-#[must_use]
-pub fn fold_search(s: &str) -> String {
-    let mut text = fold_search_pass(s);
-    for _ in 1..FOLD_SEARCH_MAX_PASSES {
-        let next = fold_search_pass(&text);
-        if next == text {
-            return py_split(&text).collect::<Vec<_>>().join(" ");
-        }
-        text = next;
-    }
-    panic!("fold_search found no fixed point in {FOLD_SEARCH_MAX_PASSES} passes: {s:?}");
 }
 
 /// The search query normalizer: split on whitespace, join with one space, case fold.

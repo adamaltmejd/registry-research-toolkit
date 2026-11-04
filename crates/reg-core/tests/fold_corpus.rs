@@ -52,7 +52,6 @@ fn read_cases(file: &str, default_op: Option<&str>) -> Vec<Case> {
 fn apply(op: &str, input: &str) -> String {
     match op {
         "fold_identity" => reg_core::fold_identity(input),
-        "fold_search" => reg_core::fold_search(input),
         "normalized_search_query" => reg_core::normalized_search_query(input),
         other => panic!("unknown op {other}"),
     }
@@ -105,11 +104,6 @@ fn assert_generated(op: &str) {
 #[test]
 fn fold_identity_matches_corpus() {
     assert_generated("fold_identity");
-}
-
-#[test]
-fn fold_search_matches_corpus() {
-    assert_generated("fold_search");
 }
 
 #[test]
