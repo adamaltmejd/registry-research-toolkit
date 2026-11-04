@@ -3,11 +3,28 @@
     "status": 200,
     "json": {
       "/data/items/*/period": [
-        {"start": "2020-01-01", "end": "2021-01-01"},
-        {"start": "2021-01-01", "end": "2022-01-01"}
+        {
+          "start": "2020-01-01",
+          "end": "2021-01-01"
+        },
+        {
+          "start": "2021-01-01",
+          "end": "2022-01-01"
+        }
       ],
-      "/data/items/*/state": ["clear", "preliminary"],
-      "/data/items/*/table": ["demo/sg/r", "demo/sg/r"]
+      "/data/items/*/table": [
+        "demo/sg/r",
+        "demo/sg/r"
+      ],
+      "/data/items/1/state": "preliminary"
+    },
+    "keys": {
+      "/data/items/0": [
+        "column",
+        "period",
+        "role",
+        "table"
+      ]
     }
   }
 ]

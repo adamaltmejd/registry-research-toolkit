@@ -17,8 +17,7 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/coverage/{ref}"],
     tool: Some("coverage"),
     description: "The periods a register, a table or a variable is delivered over: per \
-        table its spans, gaps with their reasons and releases; for a variable also the \
-        periods of each delivered column name.",
+        table its spans, gaps with their reasons and releases.",
     params: &[Param::required("ref", Type::Ref)],
     cache: Cache::Minute,
     run: coverage,
@@ -33,27 +32,6 @@ pub struct Coverage {
     /// The entity's hull.
     period: Period,
     tables: Vec<CoverageTable>,
-    /// A variable's folded spellings with the periods each was delivered under;
-    /// `null` for a register or a table.
-    #[schema(required = true)]
-    columns: Option<Vec<CoverageColumn>>,
-    /// Accepted physical placements, absent in reference-only mode.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    held: Option<Vec<HeldPlacement>>,
-}
-
-/// A physical placement's public semantic coordinates and held interval.
-#[derive(Serialize, ToSchema)]
-pub struct HeldPlacement {
-    table: String,
-    variable: String,
-    physical_table: String,
-    column: String,
-    period: Period,
-    role: String,
-    carried: bool,
-    #[schema(required = true)]
-    caveat: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -61,8 +39,10 @@ pub struct CoverageTable {
     fqid: String,
     name: String,
     spans: Vec<Period>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     gaps: Vec<CoverageGap>,
-    /// Empty for a variable ref: releases belong to tables.
+    /// Absent for a variable ref (releases belong to tables) and in steward mode.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     releases: Vec<Release>,
 }
 
@@ -70,12 +50,6 @@ pub struct CoverageTable {
 pub struct CoverageGap {
     period: Period,
     reason: String,
-}
-
-#[derive(Serialize, ToSchema)]
-pub struct CoverageColumn {
-    spelling: String,
-    spans: Vec<Period>,
 }
 
 /// `[start, end)` day numbers.
@@ -122,6 +96,9 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     let value = params["ref"];
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let hit = refs::resolve(&conn, value)?;
+    if let Some(extra) = server.catalog.connect_holdings()? {
+        return held(server, &conn, &extra, hit);
+    }
     let (hull_sql, tables_sql) = match hit.kind.as_str() {
         "table" => (
             "SELECT start, end FROM tbl WHERE id = ?",
@@ -196,99 +173,84 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
             releases,
         });
     }
-    let columns = variable
-        .then(|| columns(server, &conn, hit.id))
-        .transpose()?;
-    let held = server
-        .catalog
-        .connect_holdings()?
-        .map(|extra| held(server, &extra, &hit.pid, &hit.kind, &tables))
-        .transpose()?;
     Ok(serde_json::to_value(Coverage {
         fqid: hit.pid,
         kind: hit.kind,
         period: server.period(hull.0, hull.1),
         tables,
-        columns,
-        held,
     })
     .expect("Coverage serializes"))
 }
 
-/// A variable's columns: per folded spelling, its segments in every table merged,
-/// ordered by first span start, then spelling.
-fn columns(
-    server: &Server,
-    conn: &Connection,
-    variable_id: i64,
-) -> Result<Vec<CoverageColumn>, Error> {
-    let mut by_spelling: BTreeMap<String, Vec<Span>> = BTreeMap::new();
-    let mut stmt = conn.prepare(
-        "SELECT f.folded, s.start, s.end
-         FROM segment s JOIN name_fold f ON f.id = s.fold_id
-         WHERE s.variable_id = ? ORDER BY s.start",
-    )?;
-    let rows = stmt.query_map([variable_id], |row| {
-        Ok((row.get::<_, String>(0)?, (row.get(1)?, row.get(2)?)))
-    })?;
-    for row in rows {
-        let (spelling, span) = row?;
-        by_spelling.entry(spelling).or_default().push(span);
-    }
-    let mut columns: Vec<(Vec<Span>, String)> = by_spelling
-        .into_iter()
-        .map(|(spelling, spans)| (merge(spans), spelling))
-        .collect();
-    columns.sort_by(|a, b| (a.0[0].0, &a.1).cmp(&(b.0[0].0, &b.1)));
-    Ok(columns
-        .into_iter()
-        .map(|(spans, spelling)| CoverageColumn {
-            spelling,
-            spans: periods(server, &spans),
-        })
-        .collect())
-}
-
-/// Query holdings by public ids, never by a row id from the semantic connection.
+/// Steward mode: the years the steward holds, per table, from its placements; the
+/// catalog's wider spans, gaps and releases are not the steward's (maintainer
+/// 2026-11-04). Placements are matched by public ids, never by a row id of `conn`.
 fn held(
     server: &Server,
     conn: &Connection,
-    pid: &str,
-    kind: &str,
-    tables: &[CoverageTable],
-) -> Result<Vec<HeldPlacement>, Error> {
-    let mut out = Vec::new();
-    let mut query = conn.prepare(
-        "SELECT m.table_pid, m.variable_pid, t.physical_name, c.name, m.start, m.end,
-                m.role, m.carried, m.caveat
-         FROM holding_mapping m
-           JOIN holding_column c ON c.id = m.column_id
-           JOIN holding_table t ON t.id = c.holding_id
-         WHERE (?1 IS NULL OR m.table_pid = ?1) AND (?2 IS NULL OR m.variable_pid = ?2)
-         ORDER BY m.table_pid, m.variable_pid, m.start, m.end, t.physical_name, c.ordinal",
-    )?;
-    // A steward occurrence can attest a canonical variable in a table whose
-    // reference metadata omits that membership; global coverage stays unchanged.
-    let routes: Vec<_> = if kind == "variable" {
-        vec![None]
-    } else {
-        tables.iter().map(|t| Some(t.fqid.as_str())).collect()
+    extra: &Connection,
+    hit: refs::Entity,
+) -> Result<Value, Error> {
+    let filter = match hit.kind.as_str() {
+        "variable" => "m.variable_pid = ?1",
+        "table" => "m.table_pid = ?1",
+        "register" => "(m.table_pid = ?1 OR substr(m.table_pid, 1, length(?1) + 1) = ?1 || '/')",
+        kind => {
+            return Err(Error::invalid_ref(
+                &hit.pid,
+                format!("{:?} is a {kind}, which coverage does not take.", hit.pid),
+            ));
+        }
     };
-    for table in routes {
-        let variable = (kind == "variable").then_some(pid);
-        let rows = query.query_map(rusqlite::params![table, variable], |r| {
-            Ok(HeldPlacement {
-                table: r.get(0)?,
-                variable: r.get(1)?,
-                physical_table: r.get(2)?,
-                column: r.get(3)?,
-                period: server.period(r.get(4)?, r.get(5)?),
-                role: r.get(6)?,
-                carried: r.get(7)?,
-                caveat: r.get(8)?,
-            })
-        })?;
-        out.extend(rows.collect::<rusqlite::Result<Vec<_>>>()?);
+    let placements: Vec<(String, Span)> = rows(
+        extra,
+        &format!(
+            "SELECT m.table_pid, m.start, m.end FROM holding_mapping m
+             WHERE {filter} ORDER BY m.table_pid, m.start, m.end"
+        ),
+        [&hit.pid],
+        |row| Ok((row.get(0)?, (row.get(1)?, row.get(2)?))),
+    )?;
+    let mut by_table: BTreeMap<String, Vec<Span>> = BTreeMap::new();
+    for (table, span) in placements {
+        by_table.entry(table).or_default().push(span);
     }
-    Ok(out)
+    let name = |pid: &str| -> Result<String, Error> {
+        let sql = "SELECT x.body FROM tbl t JOIN text x ON x.id = t.name_text WHERE t.pid = ?";
+        match conn.query_row(sql, [pid], |row| row.get(0)) {
+            Err(rusqlite::Error::QueryReturnedNoRows) => {
+                Ok(extra.query_row(sql, [pid], |row| row.get(0))?)
+            }
+            other => Ok(other?),
+        }
+    };
+    let mut hull: Option<Span> = None;
+    let mut tables = Vec::with_capacity(by_table.len());
+    for (fqid, spans) in by_table {
+        let spans = merge(spans);
+        for &(start, end) in &spans {
+            hull = Some(hull.map_or((start, end), |(s, e)| (s.min(start), e.max(end))));
+        }
+        tables.push(CoverageTable {
+            name: name(&fqid)?,
+            fqid,
+            spans: periods(server, &spans),
+            gaps: vec![],
+            releases: vec![],
+        });
+    }
+    let (start, end) = hull.ok_or_else(|| {
+        Error::new(
+            crate::Code::NotFound,
+            format!("Nothing is named {:?}.", hit.pid),
+            vec![hit.pid.clone().into()],
+        )
+    })?;
+    Ok(serde_json::to_value(Coverage {
+        fqid: hit.pid,
+        kind: hit.kind,
+        period: server.period(start, end),
+        tables,
+    })
+    .expect("Coverage serializes"))
 }

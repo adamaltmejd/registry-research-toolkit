@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a default variable summary leaks source evidence, drops its curated description/memberships, or uses the most recent corrected definition instead of the newest provider definition and operational definition together. Comparator has two provider text periods, a corrected 2020 definition, and a silent provider in 2022 with only a later source correction. Fallback must restore Recent scope from 2020 and pair it with Recent computation, never the newer correction. Expected values come from the descriptions fixture and var: setters.",
+  "note": "Fails if a default variable summary leaks source evidence, drops its curated description or memberships, lists an empty membership, or if the per-period wording shows a curated correction instead of the provider's own definition and operational definition together. Comparator has two provider text periods, a corrected 2020 definition, and a silent provider in 2022 with only a later source correction: 2020 must read Recent scope with Recent computation, never the correction, and 2022 has no wording. Expected values come from the descriptions fixture and var: setters.",
   "fixture": "descriptions",
   "requests": [
     {
@@ -9,6 +9,10 @@
     {
       "operation": "show",
       "path": "/api/catalog/demo/descriptions/comparator"
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/descriptions/comparator"
     }
   ]
 }

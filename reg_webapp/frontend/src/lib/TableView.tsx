@@ -4,29 +4,23 @@ import {
   DisclosurePanel,
   Heading,
 } from "react-aria-components";
-import { type Context, getCoverage, type TableShow } from "./api";
+import type { TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { catalogWords } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
-import { yearWindowLabel } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
-import { columnYearRuns } from "./study_window";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
-import { Skeleton } from "./ui/Skeleton";
-import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
-import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead } from "./use_store_read";
-import { windowBounds } from "./window_bounds";
 
-type Release = TableShow["releases"][number];
+type Release = NonNullable<TableShow["releases"]>[number];
 type Population = Release["populations"][number];
 type PopulationApplication = Pick<Release, "name"> &
   Pick<Population, "ref_day">;
@@ -63,27 +57,10 @@ function releaseCount(count: number): string {
   return count === 1 ? "1 release" : `${count} releases`;
 }
 
-export function TableView({
-  node,
-  context,
-}: {
-  node: TableShow;
-  context: Context | null;
-}) {
+export function TableView({ node }: { node: TableShow }) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
-  // A steward deployment shows the years it holds, not the reference spans.
-  const steward = context?.steward_config != null;
-  const held = useAsyncResource(steward ? node.fqid : null, (signal) =>
-    getCoverage(node.fqid, { signal }),
-  );
-  const bounds = windowBounds(context);
-  const years = steward
-    ? columnYearRuns(held.data?.held ?? [], [bounds.min, bounds.max]).map(
-        yearWindowLabel,
-      )
-    : node.spans.map(catalogPeriodLabel);
-  const releases = [...node.releases].sort(compareReleases);
+  const releases = [...(node.releases ?? [])].sort(compareReleases);
   // Most providers state no edition: the column shows only where one does.
   const editioned = releases.some((release) => release.edition !== "unstated");
   const populations = new Map<string, PopulationGroup>();
@@ -142,36 +119,26 @@ export function TableView({
           ...(node.unit_type
             ? [{ term: "Unit type", value: node.unit_type }]
             : []),
-          { term: "Timeless", value: node.timeless ? "Yes" : "No" },
-          { term: "Implicit", value: node.implicit ? "Yes" : "No" },
+          ...(node.timeless ? [{ term: "Timeless", value: "Yes" }] : []),
+          ...(node.implicit ? [{ term: "Implicit", value: "Yes" }] : []),
         ]}
       />
+      {/* On a steward deployment, the years held (crates/DESIGN.md). */}
       <Panel title="Years">
-        {held.loading ? (
-          <div aria-busy="true">
-            <Skeleton count={1} />
-          </div>
-        ) : held.error ? (
-          <StatusRow tone="error" live="alert">
-            The years held did not load ({held.error}). Reload the page to try
-            again.
-          </StatusRow>
-        ) : years.length === 0 ? (
+        {node.spans.length === 0 ? (
           <EmptyState title="This table has no dated years." />
         ) : (
           <ul className={styles.plainList}>
-            {years.map((label) => (
-              <li key={label}>
-                <code>{label}</code>
+            {node.spans.map((span) => (
+              <li key={JSON.stringify(span)}>
+                <code>{catalogPeriodLabel(span)}</code>
               </li>
             ))}
           </ul>
         )}
       </Panel>
-      <Panel title="Row keys" flush={node.row_keys.length > 0}>
-        {node.row_keys.length === 0 ? (
-          <EmptyState title="No row keys recorded." />
-        ) : (
+      {node.row_keys.length > 0 && (
+        <Panel title="Row keys" flush>
           <DataTable
             rowNavigation
             columns={[
@@ -190,12 +157,10 @@ export function TableView({
               )
             }
           />
-        )}
-      </Panel>
-      <Panel title="Populations" flush={populations.size > 0}>
-        {populations.size === 0 ? (
-          <EmptyState title="No populations recorded for this table’s releases." />
-        ) : (
+        </Panel>
+      )}
+      {populations.size > 0 && (
+        <Panel title="Populations" flush>
           <DataTable
             columns={[
               { key: "name", label: "Population" },
@@ -217,12 +182,10 @@ export function TableView({
               )
             }
           />
-        )}
-      </Panel>
-      <Panel title="Releases" flush={releases.length > 0}>
-        {releases.length === 0 ? (
-          <EmptyState title="No releases recorded for this table." />
-        ) : (
+        </Panel>
+      )}
+      {releases.length > 0 && (
+        <Panel title="Releases" flush>
           <DataTable
             columns={[
               { key: "name", label: "Release" },
@@ -251,8 +214,8 @@ export function TableView({
               }
             }}
           />
-        )}
-      </Panel>
+        </Panel>
+      )}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
     </article>

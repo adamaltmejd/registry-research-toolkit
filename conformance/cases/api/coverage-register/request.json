@@ -1,5 +1,10 @@
 {
-  "note": "A register's coverage: its hull, and per table its spans, gaps and releases. Table a has releases 2017, 2018 and 2020, so its spans are [2017, 2019) and [2020, 2021) with the missing 2019 as a no_release gap; table b is one 2020 release. A register has no columns. Fails if the hull or a span is not half-open, the 2019 gap is lost or given another reason, a release is missing or out of period order, or `columns` stops being null.",
+  "note": "A register's coverage: its hull, and per table its spans, gaps and releases. Table a has releases 2017, 2018 and 2020, so its spans are [2017, 2019) and [2020, 2021) with the missing 2019 as a no_release gap; table b is one 2020 release. Fails if the hull or a span is not half-open, the 2019 gap is lost or given another reason, a release is missing or out of period order or table b's empty gaps stop being left out.",
   "fixture": "spans",
-  "requests": [{"operation": "coverage", "path": "/api/coverage/demo/sp"}]
+  "requests": [
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/demo/sp"
+    }
+  ]
 }

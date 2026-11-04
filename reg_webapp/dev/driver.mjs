@@ -820,7 +820,7 @@ async function runCase(viewport, name, body, route) {
 
 mkdirSync(outDir, { recursive: true });
 // Paired catalog → browse/coverage/order UI boundary. Fails if pairing is ignored,
-// the held scope drops supplemental facets, filtering hides their variables, the
+// held-only search drops supplemental facets, filtering hides their variables, the
 // timeline stops drawing the held file, column and years, or received row keys
 // disappear. Names, spellings and periods are from
 // cases/holdings readable inputs and order-key-requirements.json; global cases

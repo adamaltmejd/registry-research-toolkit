@@ -10,7 +10,7 @@ use super::{Period, Server, iso_day};
 use crate::{Error, rows};
 
 /// `shape.ValueSetRef`: a value set by its hash, with the names sources gave it.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct ValueSetRef {
     hash: String,
     n_items: i64,
@@ -55,7 +55,7 @@ pub fn value_set_ref(conn: &Connection, valueset_id: i64) -> Result<ValueSetRef,
 }
 
 /// `shape.Release`: a delivery of a table.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct Release {
     name: String,
     /// `null` when the release is unparsed.
@@ -71,7 +71,7 @@ pub struct Release {
 }
 
 /// One population a release states (`shape.Release.populations`).
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct Population {
     name: String,
     #[schema(required = true)]

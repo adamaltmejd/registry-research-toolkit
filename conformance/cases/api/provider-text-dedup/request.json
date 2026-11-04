@@ -1,10 +1,10 @@
 {
-  "note": "Fails if provider fallback or evidence keeps duplicate/contained definition pairs, normalizes displayed originals, groups texts only by exact bytes, or fills the gaps when grouping repeated text. No existing show case has equivalent or contained pairs: three source occurrences exercise equality after whitespace/case/Unicode-punctuation normalization and both containment directions. The latest fallback preserves its original spacing/case/punctuation while evidence keeps the first original text and all three disjoint periods; source values and locations come from descriptions.jsonl lines 14–16.",
+  "note": "Fails if the per-period wording or evidence keeps duplicate/contained definition pairs, normalizes displayed originals, groups texts only by exact bytes, or fills the gaps when grouping repeated text. No existing show case has equivalent or contained pairs: three source occurrences exercise equality after whitespace/case/Unicode-punctuation normalization and both containment directions. Each period's wording preserves its original spacing/case/punctuation while evidence keeps the first original text and all three disjoint periods; source values and locations come from descriptions.jsonl lines 14–16.",
   "fixture": "descriptions",
   "requests": [
     {
-      "operation": "show",
-      "path": "/api/catalog/demo/descriptions/deduplicated"
+      "operation": "segments",
+      "path": "/api/segments/demo/descriptions/deduplicated"
     },
     {
       "operation": "show",

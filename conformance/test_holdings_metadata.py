@@ -18,7 +18,7 @@ from http_cases import ServerPool, artifact_env
 from reader_artifacts import REG_BUILD
 
 
-def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
+def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
     # Fails if paired browsing uses a foreign local row id, hides supplemental
     # semantics, mixes bm25 groups, or filters possession after search counts or
     # paging. The 2021 query is inside Late's reference coverage but outside its
@@ -44,27 +44,23 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
             "tables": 1,
             "variables": 2,
         }
-        # Fails if `held` resolves placements through one origin only: demo/*
+        # Fails if possession resolves placements through one origin only: demo/*
         # tables are reference tables, steward/slots a steward-only register.
         providers = client.get("/api/catalog").json()["data"]["providers"]
-        assert {p["fqid"]: p["held"] for p in providers} == {
-            "demo": True,
-            "steward": True,
-        }
-        for provider in ["demo", "steward"]:
-            shown = client.get(f"/api/catalog/{provider}").json()["data"]
-            assert all(r["held"] for r in shown["registers"]), shown
-        # Fails if a register's variables or tables are marked held without an
-        # accepted placement naming them: no census column carries RelativeId.
+        assert [p["fqid"] for p in providers] == ["demo", "steward"]
+        # Fails if a paired catalog lists or serves a variable no accepted placement
+        # names (maintainer 2026-11-04: everything shown is held): no census column
+        # carries RelativeId.
         shown = client.get("/api/catalog/demo/held").json()["data"]
-        assert {v["fqid"]: v["held"] for v in shown["variables"]} == {
-            "demo/held/id": True,
-            "demo/held/late": True,
-            "demo/held/relative-id": False,
-            "demo/held/value": True,
-            "demo/held/year": True,
-        }
-        assert all(t["held"] for t in shown["tables"]), shown
+        assert [v["fqid"] for v in shown["variables"]] == [
+            "demo/held/id",
+            "demo/held/late",
+            "demo/held/value",
+            "demo/held/year",
+        ]
+        unheld = client.get("/api/catalog/demo/held/relative-id")
+        assert unheld.status_code == 404
+        assert unheld.json()["error"]["code"] == "not_found"
         extra = client.get("/api/catalog/steward/slots/slot2")
         assert extra.status_code == 200
         assert extra.json()["data"]["name"] == "Second position"
@@ -76,19 +72,18 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
         retired = client.get("/api/catalog/steward/slots/removed")
         assert retired.status_code == 404
         assert retired.json()["error"]["code"] == "retired_ref"
+        # Fails if show, coverage or the per-period list serve the reference years
+        # (2017..2021) instead of the held ones, or lose the file the column is in.
         coverage = client.get("/api/coverage/demo/held/late")
         assert coverage.status_code == 200
-        assert coverage.json()["data"]["held"] == [
-            {
-                "table": "demo/held",
-                "variable": "demo/held/late",
-                "physical_table": "Pool",
-                "column": "Late",
-                "period": {"start": "2019-01-01", "end": "2021-01-01"},
-                "role": "measure",
-                "carried": False,
-                "caveat": None,
-            }
+        held_years = {"start": "2019-01-01", "end": "2021-01-01"}
+        assert coverage.json()["data"]["period"] == held_years
+        assert [t["spans"] for t in coverage.json()["data"]["tables"]] == [[held_years]]
+        late = client.get("/api/catalog/demo/held/late").json()["data"]
+        assert late["period"] == held_years
+        rows = client.get("/api/segments/demo/held/late").json()["data"]["items"]
+        assert [(r["table"], r["column"], r["file"], r["period"]) for r in rows] == [
+            ("demo/held", "Late", "Pool", held_years)
         ]
         search = client.get("/api/search", params={"q": "position", "type": "variable"})
         assert search.status_code == 200
@@ -100,22 +95,26 @@ def test_steward_metadata_and_held_scope(tmp_path, server_cmd):
         assert [row["fqid"] for row in data["steward"]["items"]] == [
             "steward/slots/slot2"
         ]
-        reference = client.get(
+        # Fails if search filters possession after counts or paging, or by the
+        # reference hull: 2021 is inside Late's reference coverage, outside its
+        # placement.
+        anytime = client.get("/api/search", params={"q": "Late", "type": "variable"})
+        outside = client.get(
             "/api/search", params={"q": "Late", "type": "variable", "period": "2021"}
         )
-        held = client.get(
-            "/api/search",
-            params={
-                "q": "Late",
-                "type": "variable",
-                "period": "2021",
-                "scope": "steward",
-            },
-        )
-        assert reference.status_code == held.status_code == 200
-        assert reference.json()["data"]["total"] == 1
-        assert held.json()["data"]["total"] == 0
-        assert held.json()["data"]["items"] == []
+        assert anytime.status_code == outside.status_code == 200
+        assert anytime.json()["data"]["total"] == 1
+        assert outside.json()["data"]["total"] == 0
+        assert outside.json()["data"]["items"] == []
+        # Fails if facets count a variable no placement names (RelativeId) or the
+        # held filter breaks the facet query.
+        for q, counts in [("Late", {"demo/held": 1}), ("relative", {})]:
+            facets = client.get("/api/search/facets", params={"q": q})
+            assert facets.status_code == 200, facets.text
+            data = facets.json()["data"]
+            assert {
+                r["fqid"]: r["variable_matches"] for r in data["registers"]
+            } == counts
     # A matching advertised generation cannot bypass the byte pin or allow malformed
     # compiled presentation data to panic during server startup. Restore the valid
     # manifest before each independently invalid mutation. The positional-array
@@ -247,20 +246,17 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         )
         assert key.status_code == 200, key.text
         assert key.json()["data"] == expected["attested_key_resolve"]
-        answer = pool.client(artifact_env(output)).get("/api/coverage/demo/held/value")
+        answer = pool.client(artifact_env(output)).get("/api/segments/demo/held/value")
         assert answer.status_code == 200, answer.text
-        data = answer.json()["data"]
-        assert data["period"] == {"start": "2017-01-01", "end": "2022-01-01"}
         assert any(
-            x["physical_table"] == "Attested"
+            x["file"] == "Attested"
             and x["period"] == {"start": "2015-01-01", "end": "2017-01-01"}
-            for x in data["held"]
+            for x in answer.json()["data"]["items"]
         )
-        member = pool.client(artifact_env(output)).get("/api/coverage/demo/owners/id")
+        member = pool.client(artifact_env(output)).get("/api/segments/demo/owners/id")
         assert member.status_code == 200
         assert any(
-            x["physical_table"] == "AttestedMember"
-            for x in member.json()["data"]["held"]
+            x["file"] == "AttestedMember" for x in member.json()["data"]["items"]
         )
         # Fails if steward-mode order reads only base segments: the base attests
         # demo/held/value from 2017, so 2015..2016 would be outside_availability.

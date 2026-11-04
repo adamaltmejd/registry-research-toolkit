@@ -3,7 +3,6 @@ import {
   addColumns,
   columnInProject,
   columnWindowPeriod,
-  heldColumns,
   type TablePeriodMetadata,
   type VariableColumn,
   variableColumns,
@@ -11,7 +10,6 @@ import {
 import {
   type CatalogSegment,
   type Context,
-  type Coverage,
   errMessage,
   type Graph,
   type ValidationResultModel,
@@ -42,8 +40,7 @@ import { windowBounds } from "./window_bounds";
 /** The focus columns and their read-only succession neighbours on one axis. */
 export function useVariableCoverage({
   node,
-  segments: catalogSegments,
-  held = null,
+  segments,
   names,
   context,
   tables,
@@ -55,9 +52,6 @@ export function useVariableCoverage({
 }: {
   node: VariableShow;
   segments: readonly CatalogSegment[];
-  /** On a steward deployment, what it holds: the columns are its files' and
-   * the years the held ones (`heldColumns`). */
-  held?: Coverage["held"];
   names: ReadonlyMap<string, string>;
   context: Context | null;
   tables: readonly TablePeriodMetadata[] | null;
@@ -77,10 +71,7 @@ export function useVariableCoverage({
   const heading = useRef<HTMLSpanElement>(null);
   const bounds = windowBounds(context);
   const study = studyWindow(draft);
-  const columns = held
-    ? heldColumns(catalogSegments, held)
-    : variableColumns(catalogSegments);
-  const segments = columns.flatMap((column) => column.segments);
+  const columns = variableColumns(segments);
   const runs = columnYearRuns(segments, [bounds.min, bounds.max]);
   const available = runs.length
     ? { from: runs[0].from, to: runs[runs.length - 1].to }

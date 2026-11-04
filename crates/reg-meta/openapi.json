@@ -191,7 +191,7 @@
     },
     "/api/coverage/{ref}": {
       "get": {
-        "description": "The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases; for a variable also the periods of each delivered column name.",
+        "description": "The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases.",
         "operationId": "coverage",
         "parameters": [
           {
@@ -1201,18 +1201,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "reference",
-                "steward"
-              ]
-            }
           }
         ],
         "responses": {
@@ -1293,18 +1281,6 @@
               "maximum": 200,
               "minimum": 1
             }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "reference",
-                "steward"
-              ]
-            }
           }
         ],
         "responses": {
@@ -1357,7 +1333,7 @@
     },
     "/api/segments/{ref}": {
       "get": {
-        "description": "A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them.",
+        "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a row. On a steward catalog, the held columns and files over the years held. With `evidence`, each row's source occurrences and the rule overrides that changed them.",
         "operationId": "segments",
         "parameters": [
           {
@@ -1743,32 +1719,11 @@
           "fqid",
           "kind",
           "period",
-          "tables",
-          "columns"
+          "tables"
         ],
         "properties": {
-          "columns": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/CoverageColumn"
-            },
-            "description": "A variable's folded spellings with the periods each was delivered under;\n`null` for a register or a table."
-          },
           "fqid": {
             "type": "string"
-          },
-          "held": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/HeldPlacement"
-            },
-            "description": "Accepted physical placements, absent in reference-only mode."
           },
           "kind": {
             "type": "string"
@@ -1782,24 +1737,6 @@
             "items": {
               "$ref": "#/components/schemas/CoverageTable"
             }
-          }
-        }
-      },
-      "CoverageColumn": {
-        "type": "object",
-        "required": [
-          "spelling",
-          "spans"
-        ],
-        "properties": {
-          "spans": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Period"
-            }
-          },
-          "spelling": {
-            "type": "string"
           }
         }
       },
@@ -1823,9 +1760,7 @@
         "required": [
           "fqid",
           "name",
-          "spans",
-          "gaps",
-          "releases"
+          "spans"
         ],
         "properties": {
           "fqid": {
@@ -1845,7 +1780,7 @@
             "items": {
               "$ref": "#/components/schemas/Release"
             },
-            "description": "Empty for a variable ref: releases belong to tables."
+            "description": "Absent for a variable ref (releases belong to tables) and in steward mode."
           },
           "spans": {
             "type": "array",
@@ -1862,17 +1797,10 @@
           "field",
           "value",
           "statement",
-          "evidence",
           "caveat"
         ],
         "properties": {
           "caveat": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "evidence": {
             "type": [
               "string",
               "null"
@@ -2393,49 +2321,6 @@
           "name": {
             "type": "string",
             "description": "A register's or table's name, a variable's or class version's label."
-          }
-        }
-      },
-      "HeldPlacement": {
-        "type": "object",
-        "description": "A physical placement's public semantic coordinates and held interval.",
-        "required": [
-          "table",
-          "variable",
-          "physical_table",
-          "column",
-          "period",
-          "role",
-          "carried",
-          "caveat"
-        ],
-        "properties": {
-          "carried": {
-            "type": "boolean"
-          },
-          "caveat": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "column": {
-            "type": "string"
-          },
-          "period": {
-            "$ref": "#/components/schemas/Period"
-          },
-          "physical_table": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string"
-          },
-          "table": {
-            "type": "string"
-          },
-          "variable": {
-            "type": "string"
           }
         }
       },
@@ -4218,34 +4103,25 @@
       },
       "Segment": {
         "type": "object",
-        "description": "`shape.Segment`.",
+        "description": "`shape.Segment`: one row of the variable's one per-period list, a column of one\ntable over one period with one form and one provider wording. A fact the catalog\ndoes not state is absent, never `null`: no type, no value set, `coded` or\n`temporality` unknown, and `state` clear (the default) are all left out.",
         "required": [
           "table",
+          "column",
           "period",
-          "spelling",
-          "type",
-          "length",
-          "format",
-          "value_set",
-          "classification",
-          "coded",
-          "sensitive",
-          "identifier",
-          "id_kind",
-          "role",
-          "temporality",
-          "state"
+          "role"
         ],
         "properties": {
           "classification": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "description": "A classification version's ref."
           },
           "coded": {
-            "type": "string"
+            "type": "string",
+            "description": "`yes` or `no`."
+          },
+          "column": {
+            "type": "string",
+            "description": "The column name it is delivered under; in steward mode, the held column's."
           },
           "evidence": {
             "type": [
@@ -4257,29 +4133,21 @@
             },
             "description": "Present only when `evidence` is asked for."
           },
+          "file": {
+            "type": "string",
+            "description": "In steward mode, the file the steward holds the column in."
+          },
           "format": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "id_kind": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "identifier": {
-            "type": [
-              "boolean",
-              "null"
-            ]
+            "type": "boolean"
           },
           "length": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int64"
           },
           "period": {
@@ -4289,16 +4157,11 @@
             "type": "string"
           },
           "sensitive": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "spelling": {
-            "type": "string"
+            "type": "boolean"
           },
           "state": {
-            "type": "string"
+            "type": "string",
+            "description": "Present only when the column is ambiguous; absent means clear."
           },
           "table": {
             "type": "string",
@@ -4308,21 +4171,14 @@
             "type": "string"
           },
           "type": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string"
           },
           "value_set": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ValueSetRef",
-                "description": "`null` when the segment has no value set."
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/ValueSetRef"
+          },
+          "wording": {
+            "type": "string",
+            "description": "The provider's definition over this period; a change of wording starts a row."
           }
         }
       },
@@ -4486,7 +4342,6 @@
               "unit_type",
               "cadence",
               "spans",
-              "releases",
               "row_keys",
               "kind"
             ],
@@ -4526,7 +4381,8 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/Release"
-                }
+                },
+                "description": "Absent when none, and on a steward catalog."
               },
               "role": {
                 "type": "string"
@@ -4613,9 +4469,6 @@
               "name",
               "register",
               "period",
-              "sets",
-              "tags",
-              "tables",
               "kind"
             ],
             "properties": {
@@ -4652,17 +4505,6 @@
                 "items": {
                   "$ref": "#/components/schemas/ShowMembership"
                 }
-              },
-              "source_definition": {
-                "$ref": "#/components/schemas/SourceDefinition",
-                "description": "Provider text fallback only when no curated description is available."
-              },
-              "tables": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "The fqids of the tables the variable has segments in."
               },
               "tags": {
                 "type": "array",
@@ -4701,10 +4543,6 @@
           "fqid": {
             "type": "string"
           },
-          "held": {
-            "type": "boolean",
-            "description": "In steward mode, whether the steward holds any of its registers."
-          },
           "name": {
             "type": "string"
           }
@@ -4720,10 +4558,6 @@
         "properties": {
           "fqid": {
             "type": "string"
-          },
-          "held": {
-            "type": "boolean",
-            "description": "In steward mode, whether the steward holds any of its tables."
           },
           "name": {
             "type": "string"
@@ -4891,10 +4725,6 @@
           "fqid": {
             "type": "string"
           },
-          "held": {
-            "type": "boolean",
-            "description": "In steward mode, whether an accepted placement names the table."
-          },
           "implicit": {
             "type": "boolean"
           },
@@ -4929,10 +4759,6 @@
         "properties": {
           "fqid": {
             "type": "string"
-          },
-          "held": {
-            "type": "boolean",
-            "description": "In steward mode, whether an accepted placement names the variable."
           },
           "name": {
             "type": "string"
@@ -4999,26 +4825,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "SourceDefinition": {
-        "type": "object",
-        "description": "Latest provider text, used only when no curated description exists.",
-        "required": [
-          "origin",
-          "period",
-          "text"
-        ],
-        "properties": {
-          "origin": {
-            "type": "string"
-          },
-          "period": {
-            "$ref": "#/components/schemas/Period"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
       },
       "StatementLocation": {
         "type": "object",

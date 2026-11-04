@@ -251,7 +251,6 @@
             "file": "registers/demo/descriptions/curation.toml",
             "line": 1
           },
-          "evidence": "One variable description covers the source wording change across periods and tables.",
           "caveat": null
         },
         {
@@ -261,7 +260,6 @@
             "file": "registers/demo/descriptions/curation.toml",
             "line": 13
           },
-          "evidence": "The curated name must not replace the provider label in evidence.",
           "caveat": null
         },
         {
@@ -271,7 +269,6 @@
             "file": "registers/demo/descriptions/curation.toml",
             "line": 19
           },
-          "evidence": "The explicit identity decision remains attributable to its statement.",
           "caveat": null
         },
         {
@@ -281,7 +278,6 @@
             "file": "registers/demo/descriptions/curation.toml",
             "line": 25
           },
-          "evidence": "Measure and Comparator form the analysis picking unit; Measure has the timing tag.",
           "caveat": null
         },
         {
@@ -291,7 +287,6 @@
             "file": "registers/demo/descriptions/curation.toml",
             "line": 50
           },
-          "evidence": "The timing tag is independent of the analysis picking unit.",
           "caveat": null
         }
       ],
@@ -319,7 +314,6 @@
         "period",
         "register",
         "sets",
-        "tables",
         "tags"
       ],
       "/data/evidence": [
@@ -374,10 +368,7 @@
         "kind",
         "name",
         "period",
-        "register",
-        "sets",
-        "tables",
-        "tags"
+        "register"
       ]
     }
   }
