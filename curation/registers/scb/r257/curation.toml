@@ -4155,6 +4155,18 @@ evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
+subject = "innovation-i-foretagssektorn: COOP_PRV_EU_EFTA where key = 'v39104' and release = 'r18898'"
+fields = { "spelling" = "COOP_PRV_CN_EU_EFTA" }
+evidence = "SCB's Registerinformation export lists two variables under one column name in release r18898 (2020 - 2022, the CIS2022 wave): COOP_PRV_EU_EFTA for both v39104 (konsulter, kommersiella labb eller privata forskningsinstitut) and v46519 (privata företag). One delivered file cannot hold two columns of one name. v39104 is spelled COOP_PRV_CN_EU_EFTA in every other release that lists it: r13272 (2016 - 2018), r17817 (2018 - 2020) and r20007 (2022 - 2024), and SWECOV's CIS2020 holdings (r17817) carry COOP_PRV_CN_EU_EFTA and no COOP_PRV_EU_EFTA. Label and definition of v39104 agree word for word across all four releases. So r18898's COOP_PRV_EU_EFTA for v39104 is a documentation misname; corrected to COOP_PRV_CN_EU_EFTA (#2074). The release spans are SCB's stated three-year reference periods and stay as stated: every CIS release overlaps its neighbour by one year.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=44478 (r18898)"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: COOP_PRV_NAT where key = 'v39101' and release = 'r18898'"
+fields = { "spelling" = "COOP_PRV_CN_NAT" }
+evidence = "SCB's Registerinformation export lists two variables under one column name in release r18898 (2020 - 2022, the CIS2022 wave): COOP_PRV_NAT for both v39101 (konsulter, kommersiella labb eller privata forskningsinstitut) and v46522 (privata företag). One delivered file cannot hold two columns of one name. v39101 is spelled COOP_PRV_CN_NAT in every other release that lists it: r13272 (2016 - 2018), r17817 (2018 - 2020) and r20007 (2022 - 2024), and SWECOV's CIS2020 holdings (r17817) carry COOP_PRV_CN_NAT and no COOP_PRV_NAT. Label and definition of v39101 agree word for word across all four releases. So r18898's COOP_PRV_NAT for v39101 is a documentation misname; corrected to COOP_PRV_CN_NAT (#2074). The release spans are SCB's stated three-year reference periods and stay as stated: every CIS release overlaps its neighbour by one year.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=44478 (r18898)"
+
+[[statement]]
+kind = "set"
 subject = "innovation-i-foretagssektorn: COOP_PRV_NEU_NEFTA where key = 'v46518' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
@@ -9603,30 +9615,6 @@ kind = "set"
 subject = "var:innovationssamarbete-konsulter-privata-coop-prv-cn-nat"
 fields = { "tags" = ["research"] }
 evidence = "Id innehåller ogenomskinliga källkoder och ingår i coop-familjen.\ncatalog:variable_text:28624:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
 
 [[statement]]
 kind = "set"
