@@ -13,12 +13,12 @@ the R check imitates. Trial steps for MONA are in [README.md](README.md).
 
 ## Components
 
-- **`reg-export-gate`.** One static Rust binary, in a crate of the same name in
-  `crates/`, released as an asset of each `reg_meta/v*` release. It runs the whole
-  disclosure check (`check`), and, when the human has reviewed the checked output,
-  re-derives it and delivers the approved bytes to the agent VM (`export`). An agent
-  calls it; it never reimplements it. The name says what it does: the check is
-  disclosure control on aggregates, not only PII detection, so "pii" is avoided.
+- **`reg-export-gate`.** One Rust binary, in a crate of the same name in `crates/`,
+  released as an asset of each `reg_meta/v*` release. It runs the whole disclosure check
+  (`check`), and, when the human has reviewed the checked output, re-derives it and
+  delivers the approved bytes to the agent VM (`export`). An agent calls it; it never
+  reimplements it. The name says what it does: the check is disclosure control on
+  aggregates, not only PII detection, so "pii" is avoided.
 - **Schemas and policy.** Fixed, versioned JSON files supplied by the toolkit, each with
   a policy file beside it, in `schemas/`. Choosing or adding a schema is a deliberate
   user configuration step. An agent never writes or edits a schema or a policy.
@@ -331,9 +331,10 @@ user reviews the folder, zips it and sends it out through MONA's export.
 
 The Rust binary and the R file are two implementations of one check, an exception to
 "one implementation per contract". One case corpus (schema and candidate folder →
-expected pass or refusal code) runs against both, so their agreement is the oracle. Each
-R file version will be pinned to a binary release once the binary ships; until then
-`EXPORT_GATE_VERSION` in the file is the pin, and it is in every receipt.
+expected pass or refusal code) runs against both, so their agreement is the oracle. The
+binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
+receipt, and the R follow-up that makes it imitate the binary names the binary version
+it matches (`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
 
 ### The R file
 

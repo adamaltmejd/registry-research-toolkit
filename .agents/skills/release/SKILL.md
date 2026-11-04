@@ -66,6 +66,14 @@ linked inline; append `(HT @username)` to a non-owner's bullet
 The `version` line in `crates/reg-meta/Cargo.toml`, then
 `cargo update -p reg-meta --offline` to refresh `Cargo.lock`.
 
+The export gate too: bump `version` in `crates/reg-export-gate/Cargo.toml` (then
+`cargo update -p reg-export-gate --offline`) when its sources or its `Cargo.lock`
+dependency closure changed since the previous `reg_meta/v*`
+(`cargo tree -p reg-export-gate` against that tag's lock). Its asset is named by that
+version, receipts record it and `export` relies on byte identity per version, so two
+different binaries must never ship under one version. Unchanged: leave it, and the
+release ships the same version again.
+
 **Schema version check.** Compare the DDL and the single version authority with the
 previous release:
 
