@@ -642,14 +642,14 @@ fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRow
             None => Some((start, end)),
         };
         if let Some(days) = days {
-            clipped.push((days, fqid, spelling));
+            clipped.push((days.0, fqid, spelling, days.1));
         }
     }
     clipped.sort();
     clipped.dedup();
     let row_keys = clipped
         .into_iter()
-        .map(|((start, end), fqid, spelling)| ShowRowKey {
+        .map(|(start, fqid, spelling, end)| ShowRowKey {
             fqid,
             spelling,
             period: server.period(start, end),
