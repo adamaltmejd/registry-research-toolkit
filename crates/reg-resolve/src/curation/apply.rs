@@ -306,9 +306,7 @@ fn span(
     context: &crate::OccurrenceContext<'_>,
 ) -> Result<Interval, String> {
     if let Record::Occurrence(row) = decode(value.clone())? {
-        return Ok(context
-            .period(&row)
-            .unwrap_or_else(|| bounds(None, None)));
+        return Ok(context.period(&row).unwrap_or_else(|| bounds(None, None)));
     }
     let register = records.iter().find_map(|r| match r {
         Record::Register(r)
@@ -441,12 +439,7 @@ pub(super) fn table_handle(
                     .or_else(|| register.map(|r| r.register.as_str()))
                     == Some(slug)
             } else {
-                ledger
-                    .tables
-                    .get(*handle)
-                    .cloned()
-                    .unwrap_or_else(|| crate::slugify(handle))
-                    == slug
+                ledger.table_slug(handle) == slug
             }
         })
         .map(str::to_owned)

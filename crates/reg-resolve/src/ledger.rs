@@ -27,6 +27,23 @@ pub struct Ledger {
     pub retired: BTreeSet<String>,
 }
 
+impl Ledger {
+    /// The register's public name: `public`, else its handle.
+    #[must_use]
+    pub fn public_name<'a>(&'a self, register: &'a str) -> &'a str {
+        self.public.as_deref().unwrap_or(register)
+    }
+
+    /// A named table's public slug: its `tables` entry, else its slugified handle.
+    #[must_use]
+    pub fn table_slug(&self, handle: &str) -> String {
+        self.tables
+            .get(handle)
+            .cloned()
+            .unwrap_or_else(|| slugify(handle))
+    }
+}
+
 /// A ledger anchor, parsed: table, folded spelling, source key and day.
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 struct Anchor<'a> {

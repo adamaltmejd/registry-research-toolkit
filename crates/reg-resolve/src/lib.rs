@@ -45,8 +45,8 @@ use reg_core::{
     Form, Interval, fold_identity, intersect, label_key, merge, next_iso_day, prev_iso_day,
 };
 use reg_frame::{
-    Locator, OPEN_END, Occurrence, Record, Register, Release, Table, ValueSet, bounds,
-    dtype_info, widest_dtype,
+    Locator, OPEN_END, Occurrence, Record, Register, Release, Table, ValueSet, bounds, dtype_info,
+    widest_dtype,
 };
 use serde::Serialize;
 
@@ -491,13 +491,7 @@ pub(crate) fn resolve_located(
                 handle.to_owned()
             }
         });
-        let slug = (!handle.is_empty()).then(|| {
-            ledger
-                .tables
-                .get(handle)
-                .cloned()
-                .unwrap_or_else(|| slugify(handle))
-        });
+        let slug = (!handle.is_empty()).then(|| ledger.table_slug(handle));
         table_index.insert(handle.to_owned(), tables.len());
         tables.push(ResolvedTable {
             table,
@@ -1470,8 +1464,7 @@ pub(crate) fn resolve_located(
         Some(public) if !reg_core::is_slug(public) => {
             return Err(format!("ledger public name {public:?} is not a slug"));
         }
-        Some(public) => public.clone(),
-        None => register.register.clone(),
+        _ => ledger.public_name(&register.register).to_owned(),
     };
     Ok(Resolved {
         public,

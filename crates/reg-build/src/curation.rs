@@ -331,10 +331,7 @@ fn ledger(
     } else {
         reg_resolve::Ledger::default()
     };
-    let prefix = format!(
-        "{provider}/{}/",
-        ledger.public.as_deref().unwrap_or(register)
-    );
+    let prefix = format!("{provider}/{}/", ledger.public_name(register));
     ledger.retired.extend(
         retired
             .iter()
@@ -430,7 +427,7 @@ fn references(
         }
         let mut matches = Vec::new();
         for (source, ledger) in &cache.ledgers[&provider] {
-            if ledger.public.as_deref().unwrap_or(source) != register {
+            if ledger.public_name(source) != register {
                 continue;
             }
             let own = || {
@@ -1490,7 +1487,7 @@ fn run_selected(
             if stage == Phase::Fields {
                 crate::sets::memberships(
                     provider,
-                    ledger.public.as_deref().unwrap_or(register),
+                    ledger.public_name(register),
                     &result.variables,
                     group.iter().flat_map(|statement| {
                         field_applications

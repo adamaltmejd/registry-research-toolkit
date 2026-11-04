@@ -170,11 +170,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                         .or_else(|| register.map(|r| r.register.clone()))
                         .unwrap_or_default()
                 } else {
-                    ledger
-                        .tables
-                        .get(handle)
-                        .cloned()
-                        .unwrap_or_else(|| crate::slugify(handle))
+                    ledger.table_slug(handle)
                 };
                 fields.insert("table_slug".into(), Value::String(slug));
             }
@@ -184,10 +180,13 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                     .as_ref()
                     .map_or(Value::Null, |p| serde_json::json!([p.0, p.1])),
             );
-            fields.insert("coverage".into(), serde_json::json!(bounds(
+            fields.insert(
+                "coverage".into(),
+                serde_json::json!(bounds(
                     fields.get("from").and_then(Value::as_str),
                     fields.get("to").and_then(Value::as_str),
-                )));
+                )),
+            );
             Some(Source {
                 fields: Arc::new(fields),
                 locators,
@@ -769,10 +768,7 @@ fn variable_membership_field(statement: &Statement) -> Option<&'static str> {
 }
 
 fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
-    let span = source
-        .period
-        .clone()
-        .unwrap_or_else(|| bounds(None, None));
+    let span = source.period.clone().unwrap_or_else(|| bounds(None, None));
     if variable_membership_field(statement).is_some() {
         return vec![span];
     }
@@ -780,7 +776,8 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         Address::Occurrence {
             periods: Some(scope),
             ..
-        } => scope.intervals()
+        } => scope
+            .intervals()
             .iter()
             .filter_map(|p| intersect(&span, p))
             .collect(),
@@ -898,12 +895,7 @@ pub fn applied_conflicts(
         };
         let claimed = Match {
             source: 0,
-            spans: vec![
-                claim
-                    .period
-                    .cloned()
-                    .unwrap_or_else(|| bounds(None, None)),
-            ],
+            spans: vec![claim.period.cloned().unwrap_or_else(|| bounds(None, None))],
         };
         let field = BTreeSet::from([claim.field.to_owned()]);
         for &(index, row) in by_locator.get(claim.locator).into_iter().flatten() {
@@ -987,7 +979,8 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
                     })
                 })
                 && match (a_periods, b_periods) {
-                    (Some(a), Some(b)) => a.intervals()
+                    (Some(a), Some(b)) => a
+                        .intervals()
                         .iter()
                         .any(|a| b.intervals().iter().any(|b| intersect(a, b).is_some())),
                     _ => true,
@@ -1130,11 +1123,7 @@ impl ReferenceView {
                 .filter(|(_, s)| s.text("kind") == Some("register"))
                 .map(|(source, s)| Match {
                     source,
-                    spans: vec![
-                        s.period
-                            .clone()
-                            .unwrap_or_else(|| bounds(None, None)),
-                    ],
+                    spans: vec![s.period.clone().unwrap_or_else(|| bounds(None, None))],
                 })
                 .collect()
         };
@@ -1620,7 +1609,8 @@ pub fn resolve(
                     .spans
                     .iter()
                     .flat_map(|span| {
-                        scope.intervals()
+                        scope
+                            .intervals()
                             .iter()
                             .filter_map(|s| intersect(span, s))
                             .collect::<Vec<_>>()
