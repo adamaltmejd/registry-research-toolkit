@@ -963,11 +963,12 @@ when stated.
 
 **Names next to ids.** A response that refers to a register, table or variable carries
 its name next to the FQID, as `show` gives it (a reference row's name over a steward
-overlay's), so a reader needs no `show` per id: `segments` rows have `table_name`,
-`findings` subjects `name` and `table_name`, and the `order` and `validate` rows and
-findings `table_name`, `variable_name` and `successor_name` (`NamedIssue`). One batched
-read per origin names a whole response (`refs::names`), never a read per row. The MONA
-order file carries ids only.
+overlay's), so a reader needs no `show` per id: `search` hits have `name` and
+`register_name`, `segments` rows `table_name`, `findings` subjects `name` and
+`table_name`, and the `order` and `validate` rows and findings `table_name`,
+`variable_name` and `successor_name` (`NamedIssue`). One batched read per origin names a
+whole response (`refs::names`), never a read per row. The MONA order file carries ids
+only.
 
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized

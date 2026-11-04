@@ -382,6 +382,12 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert [h["fqid"] for h in attested.json()["data"]["items"]] == [
             "demo/held/value"
         ]
+        # Fails if a steward hit names its register from the holdings overlay ("Held")
+        # instead of the reference register's name (#2252).
+        overlay = attested.json()["data"]["steward"]["items"]
+        assert [(h["fqid"], h["register_name"]) for h in overlay] == [
+            ("demo/held/value", "Held reference metadata")
+        ]
         member = pool.client(artifact_env(output)).get("/api/segments/demo/owners/id")
         assert member.status_code == 200
         assert any(
