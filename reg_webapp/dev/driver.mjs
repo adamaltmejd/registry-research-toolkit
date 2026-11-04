@@ -209,6 +209,9 @@ async function browseSearchCase(page, shoot) {
   // walks the page under a popover that still claims the field (#1871 review).
   await search.press("Enter");
   await page.getByRole("menu").waitFor();
+  // The register hit lands first: hits that mount after the Tab make RAC's
+  // Autocomplete refocus its input (its virtual focus on the new rows).
+  await page.getByRole("menuitem", { name: /^Andra registret/ }).waitFor();
   await page.keyboard.press("Tab");
   check(
     await menuGone(page),
