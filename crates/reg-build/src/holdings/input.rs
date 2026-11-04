@@ -20,7 +20,6 @@ pub(super) struct Pin {
 pub(super) struct Config {
     pub owner: String,
     pub scope: String,
-    pub series_root: String,
     pub curation_root: String,
     pub presentation: Presentation,
     pub inputs: Inputs,
@@ -42,12 +41,6 @@ pub(super) struct Inputs {
     pub storage_export: String,
     pub holdings: String,
     pub census_reader: String,
-    // Conversion provenance only. These legacy paths never become runtime inputs.
-    pub inventory: Option<String>,
-    pub providers: Option<String>,
-    pub slugs: Option<String>,
-    pub delivery_docs: Option<String>,
-    pub readers_root: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -206,7 +199,6 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
         .into_owned();
     let mut consumed = vec![
         &config.scope,
-        &config.series_root,
         &curation,
         &config.presentation.steward,
         &config.presentation.logo,
@@ -243,14 +235,6 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
             check(root, rel, &config.pins)?;
         }
     }
-    // Legacy migration paths are accepted as provenance, not implicit source authority.
-    let _ = (
-        &config.inputs.inventory,
-        &config.inputs.providers,
-        &config.inputs.slugs,
-        &config.inputs.delivery_docs,
-        &config.inputs.readers_root,
-    );
     Ok(config)
 }
 

@@ -1324,8 +1324,8 @@ public metadata definitions do not authorize publishing private source files.
 The toolkit contains only generic compilation/serving code and a steward pin registry,
 `stewards.toml`: each steward id selects `repo`, exact `commit` and relative `config`
 path. The dedicated repo's `steward.toml` declares owner id, scope, presentation paths,
-reader/input roles, semantic curation root and series root. Use `scope.toml`,
-`branding/` (`steward.json`, logo), `series/`, `curation/registers/` (normal ledgers and
+reader/input roles and semantic curation root. Use `scope.toml`,
+`branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers and
 statements, including slots), `curation/readers/`, and `inputs/` (census, storage
 export, provider source TOML/converted transcription CSV, inventory and legacy slug
 evidence). Pin selected delivery-document evidence there too, retaining originals
