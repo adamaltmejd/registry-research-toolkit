@@ -435,11 +435,16 @@ export async function getSegments(
   return items;
 }
 
-/** The variables a table read names at once: well under the server's 200, so the
- * request line (each repeated as `variable=`) stays a few KB at the edge. */
-const TABLE_READ_VARIABLES = 100;
+/** The variables a table read names at once. Requests and server work pull apart: the
+ * edge counts requests (at least rows / 200, the page size), while the server rebuilds
+ * a read's whole row set for each page it serves. On a 107-column LISA individer-16plus
+ * draft (1,543 rows) 10 gives 11 single-page reads, 25 gives 9 reads building 3,010
+ * rows, 100 gives 9 reads building 11,812 (measured for #2232). Chunks run in parallel.
+ * simplify: tuned on that one table; a read form without the page cap would serve each
+ * chunk once, so revisit if a page load of a larger draft passes the edge's budget. */
+const TABLE_READ_VARIABLES = 25;
 
-/** `variables`' rows in `table`, one read per hundred variables (#2232). */
+/** `variables`' rows in `table`, a read per 25 variables, in parallel (#2232). */
 export async function getTableSegments(
   table: string,
   variables: readonly string[],

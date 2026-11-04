@@ -827,25 +827,25 @@ grow new visual language meanwhile.
   ask first in a `Dialog`. Under them, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
   the verdict, "Tables" (one card per table) and "What will be delivered". A card's
-  column years come from one `segments` read per table for the columns not yet read
-  (#2232), never a read per column; a column added later reads only itself. There is one
-  check and no button for it: WASM on every edit, then `order` 350 ms after the last
-  edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
-  with the count, "Can't be ordered yet" with the count of problems, or "Has problems"
-  for a file that fails the structure check, whose problems are listed in full under it;
-  a check that did not run is an `err` row with Retry. While a newer check runs, the
-  verdict, its list and "What will be delivered" keep the previous check's answer (not a
-  check that did not run) with `aria-busy`; a `Skeleton` shows only when there is none,
-  or when a table or column was added, removed or moved since, so the earlier findings
-  would sit on the wrong card. "What will be delivered" is the order the catalog would
-  serve, shown only when the project can be ordered: per table its name and years, each
-  column as a `ColumnChip` (with its years only where they differ from the table's)
-  beside the variable's name, "Years not available" per column the period asks more of
-  than the table has, and the "Row identifier" columns. There is no order-file download:
-  the steward's instructions say how to order. With no project the page is one
-  `EmptyState`, "No project yet", with "Create a project" and "Open a project file…".
-  Below `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its
-  spans, then Type.
+  column years come from `segments` reads at the table for the columns not yet read, 25
+  columns a read, in parallel (#2232), never a read per column; a column added later
+  reads only itself. There is one check and no button for it: WASM on every edit, then
+  `order` 350 ms after the last edit WASM accepted. The verdict is one `StatusRow`:
+  "Ready to order", "Has warnings" with the count, "Can't be ordered yet" with the count
+  of problems, or "Has problems" for a file that fails the structure check, whose
+  problems are listed in full under it; a check that did not run is an `err` row with
+  Retry. While a newer check runs, the verdict, its list and "What will be delivered"
+  keep the previous check's answer (not a check that did not run) with `aria-busy`; a
+  `Skeleton` shows only when there is none, or when a table or column was added, removed
+  or moved since, so the earlier findings would sit on the wrong card. "What will be
+  delivered" is the order the catalog would serve, shown only when the project can be
+  ordered: per table its name and years, each column as a `ColumnChip` (with its years
+  only where they differ from the table's) beside the variable's name, "Years not
+  available" per column the period asks more of than the table has, and the "Row
+  identifier" columns. There is no order-file download: the steward's instructions say
+  how to order. With no project the page is one `EmptyState`, "No project yet", with
+  "Create a project" and "Open a project file…". Below `breakpoint-narrow` a column's
+  row on a card stacks: its name and Remove, its spans, then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

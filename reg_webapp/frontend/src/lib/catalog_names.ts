@@ -203,7 +203,8 @@ export function segmentsRead(ref: string): Read<CatalogSegment[]> {
 }
 
 /** Each of `variables`' rows in `table`, by variable. The columns not read yet are
- * read together, one request per table rather than one per column (#2232), and each
+ * read together, a read per 25 of a table's columns rather than one per column
+ * (#2232, `getTableSegments`), and each
  * keeps its own entry: a column added later reads only itself, and source edits
  * reload no other card. */
 export function tableSegmentsReads(
