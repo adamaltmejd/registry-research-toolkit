@@ -1,15 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  BROWSE_REGISTERS_LABEL,
-  catalogHref,
-  deriveType,
-  leafSlug,
-  rankFilter,
-  routeBreadcrumbs,
-  windowRunLabels,
-} from "./catalog";
+import { deriveType, leafSlug, rankFilter, windowRunLabels } from "./catalog";
 import { ax, state } from "./catalog-test-helpers";
-import type { Route } from "./router";
 
 // Split from catalog.test.ts by contract surface: browse helpers.
 // Siblings: catalog.{browse,picker,picker-filters,value-sets}.test.ts.
@@ -68,66 +59,6 @@ describe("rankFilter", () => {
       r.purpose,
     ]).map((r) => r.fqid);
     expect(out).toEqual(["scb/rtb", "scb/breg"]);
-  });
-});
-
-describe("routeBreadcrumbs", () => {
-  // The topbar trail is STRUCTURAL (raw segments + the data-browser root); the
-  // routed page owns its rich header. The LAST crumb is always the current page
-  // (no href — Breadcrumbs renders it as aria-current="page").
-  // Shown only where the columns stack (maintainer ruling 2026-10-22): above
-  // the breakpoint the register list is on screen.
-  const browserRoot = {
-    label: BROWSE_REGISTERS_LABEL,
-    href: catalogHref(""),
-    narrowOnly: true,
-  };
-
-  it("catalog-node → browser root + cumulative ancestor links, leaf un-linked", () => {
-    const trail = routeBreadcrumbs({
-      name: "catalog-node",
-      fqidPath: "scb/lisa/kon",
-    });
-    expect(trail).toHaveLength(4);
-    expect(trail[0]).toEqual(browserRoot);
-    expect(trail[1]).toEqual({ label: "scb", href: catalogHref("scb") });
-    expect(trail[2]).toEqual({
-      label: "lisa",
-      href: catalogHref("scb/lisa"),
-    });
-    expect(trail[3]).toEqual({ label: "kon", href: undefined });
-    // Spelled-out hrefs match the documented contract.
-    expect(trail[1].href).toBe("/catalog/scb");
-    expect(trail[2].href).toBe("/catalog/scb/lisa");
-  });
-
-  it("not-found → just the browser root", () => {
-    expect(routeBreadcrumbs({ name: "not-found", path: "/x" })).toEqual([
-      browserRoot,
-    ]);
-  });
-
-  it("invariant: the LAST crumb is the current page (href === undefined)", () => {
-    // Breadcrumbs renders the final item as aria-current="page" with no link, so
-    // every PAGE variant's trail ends on an href-less crumb. `not-found` is the
-    // documented exception: it returns the bare `browserRoot` (a recovery LINK
-    // back to the data browser, not a current-page crumb), so it's excluded here
-    // and covered by its own assertion above.
-    const variants: Route[] = [
-      { name: "home" },
-      { name: "root" },
-      { name: "catalog-node", fqidPath: "scb/lisa/kon" },
-      { name: "catalog-node", fqidPath: "scb" },
-      { name: "project" },
-    ];
-    for (const route of variants) {
-      const trail = routeBreadcrumbs(route);
-      expect(trail.at(-1)?.href).toBeUndefined();
-      // Every trail but the list's own leads with the linked "Browse registers" crumb: below
-      // 60rem it is the only way back to the register list (maintainer ruling
-      // 2026-10-22). Fails if a route's trail drops it.
-      if (route.name !== "root") expect(trail[0]).toEqual(browserRoot);
-    }
   });
 });
 

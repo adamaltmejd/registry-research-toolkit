@@ -98,22 +98,26 @@
 a.verdict {
   color: inherit;
 }
+/* A check that did not run says nothing about the project: plain, like
+   Checking, but a link to /project's Retry. */
 .status[data-status="checking"] > .verdict,
-.status[data-status="empty"] > .verdict {
+.status[data-status="empty"] > .verdict,
+.status[data-status="unchecked"] > .verdict {
   color: var(--text-muted);
   font-weight: var(--body-weight);
 }
 .status[data-status="checking"],
-.status[data-status="empty"] {
+.status[data-status="empty"],
+.status[data-status="unchecked"] {
   color: var(--text-muted);
 }
-.status[data-status="ok"] {
+.status[data-status="ready"] {
   color: var(--ok);
 }
 .status[data-status="warnings"] {
   color: var(--warn);
 }
-.status[data-status="errors"],
+.status[data-status="problems"],
 .status[data-status="blocked"] {
   color: var(--err);
 }

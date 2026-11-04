@@ -274,6 +274,7 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Check                                                            | draft check, catalog check             |
   | Years not available                                              | period adjustments, clips              |
   | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
+  | Check did not run                                                | check failed, error, unchecked         |
 
 **Type** is one list for every screen: Categorical, Numeric, Date, Date and time,
 Identifier, Other (uncoded text is Other). It is shown as a pill with a glyph, with
@@ -362,27 +363,27 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Top bar:** brand (the deployment's long name in `h3`, one link home, unadorned on
   hover; without a deployment it is "Registry Research Toolkit"), one search bar (a
   filter over the lists; `Meta/Ctrl+K`, shown as `⌘K` on macOS, opens the palette), and
-  the `ProjectBanner` at the right. The field reads "Search registers, variables,
-  codes…". While it holds text, focused or not, it takes an `accent` border with an
-  `accent-bg` halo, and its hint becomes the count of matching registers ("12
-  registers", naming its noun so it never reads as the palette's hits) in `accent-ink`
-  with an `Esc` key hint; the key hints are `text-muted` on `surface-sunken`. There are
-  no "Search" or "Project" nav items; the bar and the banner are those. The tab's title
-  is the deployment's long name too. Its content shares the shell's `shell-max` and
-  centring, so the banner sits over the detail pane rather than at the screen's edge.
-  Where the row is tight the brand wraps and the search bar shrinks before the banner
-  leaves the row. Below `breakpoint-narrow` the name would push the banner off the row,
-  or take a row of its own, so there the brand is the steward's logo, with the full name
-  as the link's accessible name (#1820, maintainer rulings 2026-10-23). Each steward
-  supplies a logo (`stewards/<id>/logo.svg`), used in the compact header and as the
-  favicon. The bar sticks to the top of the page above `breakpoint-narrow`; below it the
-  logo and a "Search" button share a row, the banner takes the next, and both scroll
-  away with the page. The button unfolds the field, which takes the row's whole width in
-  place of the logo and the button, with focus in it; it stays open while it holds text,
-  and folds back on a blur or an Escape while empty, focus returning to the button
-  (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem:
-  iOS Safari zooms the page into a focused field under 16px and leaves it zoomed, cut
-  off at the left.
+  the `ProjectBanner` at the right. The field reads "Search registers, variables…".
+  While it holds text, focused or not, it takes an `accent` border with an `accent-bg`
+  halo, and its hint becomes the count of matching registers ("12 registers", naming its
+  noun so it never reads as the palette's hits) in `accent-ink` with an `Esc` key hint;
+  the key hints are `text-muted` on `surface-sunken`. There are no "Search" or "Project"
+  nav items; the bar and the banner are those. The tab's title is the deployment's long
+  name too. Its content shares the shell's `shell-max` and centring, so the banner sits
+  over the detail pane rather than at the screen's edge. Where the row is tight the
+  brand wraps and the search bar shrinks before the banner leaves the row. Below
+  `breakpoint-narrow` the name would push the banner off the row, or take a row of its
+  own, so there the brand is the steward's logo, with the full name as the link's
+  accessible name (#1820, maintainer rulings 2026-10-23). Each steward supplies a logo
+  (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. The bar
+  sticks to the top of the page above `breakpoint-narrow`; below it the logo and a
+  "Search" button share a row, the banner takes the next, and both scroll away with the
+  page. The button unfolds the field, which takes the row's whole width in place of the
+  logo and the button, with focus in it; it stays open while it holds text, and folds
+  back on a blur or an Escape while empty, focus returning to the button (maintainer
+  ruling 2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari
+  zooms the page into a focused field under 16px and leaves it zoomed, cut off at the
+  left.
 - **Browse columns (`ColumnList`):** a steward deployment shows only what the steward
   holds, and never says so: everything shown is held, everything held is shown
   (maintainer 2026-11-04). The server does this, not the SPA: on a steward catalog it
@@ -441,43 +442,48 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   only other registers match, a line above them says the open one has none. Escape
   clears the filter and restores the collapse state from anywhere on the page, unless a
   dialog, popover, the palette or another text field has focus (#1827). The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for codes,
-  classifications and actions; its results are a mixed list and carry a `TypeTag`. It is
-  a list under the field with no field of its own: the top-bar field is its one input,
-  so focus stays there, the arrow keys move through the rows, and typing goes on
-  filtering the columns. A second field in the popover showed the same text twice
-  (maintainer report 2026-10-24). The 2026-10-22 ruling had the palette "seeded with the
-  field's text" (maintainer-decided 2026-10-22). It still opens with that text, but the
-  text no longer stays behind: choosing a row puts the browse filter back to its value
-  from just before the palette opened, and folds the narrow field if that value is
-  empty, so the brand comes back. This is a deliberate change from that ruling (Operator
-  2026-10-24). Focus leaving the field for anything outside the palette closes it. Below
-  the breakpoint it is as wide as the unfolded field. Escape closes the palette first,
-  then clears the text, then folds the narrow field; Tab or a press outside closes the
-  palette.
+  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for
+  classifications and the app's places ("Go to the project", "Browse the data", "Go to
+  the start page"); its results are a mixed list and carry a `TypeTag`. It is a list
+  under the field with no field of its own: the top-bar field is its one input, so focus
+  stays there, the arrow keys move through the rows, and typing goes on filtering the
+  columns. A second field in the popover showed the same text twice (maintainer report
+  2026-10-24). The 2026-10-22 ruling had the palette "seeded with the field's text"
+  (maintainer-decided 2026-10-22). It still opens with that text, but the text no longer
+  stays behind: choosing a row puts the browse filter back to its value from just before
+  the palette opened, and folds the narrow field if that value is empty, so the brand
+  comes back. This is a deliberate change from that ruling (Operator 2026-10-24). Focus
+  leaving the field for anything outside the palette closes it. Below the breakpoint it
+  is as wide as the unfolded field. Escape closes the palette first, then clears the
+  text, then folds the narrow field; Tab or a press outside closes the palette.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
   data) in `text-muted`, with inline emphasis and `http(s)` links. The browse columns
   are beside it and the project box is in the top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
-  then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
-  (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
-  actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns, "Notes on this data" (the findings, only when there are any; maintainer
-  2026-11-04), then source documents. A variable page has no source and provenance
-  section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A
-  variable group page carries the Group kind mark and a member-of line naming its
-  register, with constant facets shown once in the facets row. Members are read-only
-  `LaneGraph` lanes on the page's axis, in API order: a lane is titled by its varying
-  facets in curated axis order, with the member's name on the line under it, and by the
-  name alone when no axis varies. A variable page's facts are Type, Classification,
-  Sensitive (only when yes; an identifier is its Type pill), Topics and Group
-  (maintainer 2026-11-04); role, coding, state, temporality, storage and period are not
-  shown. Type is one `TypePill` per type its columns are written as, with the years
-  inside only where it changes over time. The other facts are what its columns state:
-  one value where every column states it alike, each value with its years where they
-  differ, and no row where none states it, never "Not stated" down the list. The
+  then the ancestors' names in the UI face, `text-muted`: the provider, then the
+  register, each a link, ending at the page's parent, since the `h1` names the page
+  itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
+  already make, so the trail fetches nothing of its own; an ancestor whose name has not
+  arrived is left out, never shown as its slug. A group page's trail skips the group
+  namespace, and a classification page has none. Then, on a register's or a variable's
+  page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line, facets as a
+  labelled row, the actions row, then definitions, then the `Timeline`, then the list of
+  variables or columns, "Notes on this data" (the findings, only when there are any;
+  maintainer 2026-11-04), then source documents. A variable page has no source and
+  provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
+  `spacing.5`. A variable group page carries the Group kind mark and a member-of line
+  naming its register, with constant facets shown once in the facets row. Members are
+  read-only `LaneGraph` lanes on the page's axis, in API order: a lane is titled by its
+  varying facets in curated axis order, with the member's name on the line under it, and
+  by the name alone when no axis varies. A variable page's facts are Type,
+  Classification, Sensitive (only when yes; an identifier is its Type pill), Topics and
+  Group (maintainer 2026-11-04); role, coding, state, temporality, storage and period
+  are not shown. Type is one `TypePill` per type its columns are written as, with the
+  years inside only where it changes over time. The other facts are what its columns
+  state: one value where every column states it alike, each value with its years where
+  they differ, and no row where none states it, never "Not stated" down the list. The
   `Timeline` states the years and carries the columns, their tables and years, so there
   is no Years row, no tables list and no table of columns under it; value sets have
   their own panel, so the facts name only the classification. Where there is no curated
@@ -515,26 +521,26 @@ Time is the axis every relation is drawn on.
   spelling (`1990..2023`) appears only where the page shows the project file's own value
   (maintainer 2026-11-03).
 
-- The **study window** is the project's period, set in the project banner (which is the
-  period picker). Most researchers pick one, from a start year to the latest data, and
-  it is bounded by the viewed catalog's first and last year (`/api/context`
-  `period_span`): the slider shows no data, so its track stays the catalog's span and
-  early years stay reachable. A new project starts at 2015 to the catalog's last year
-  (the whole span when the catalog ends before 2015); a window set while browsing
-  carries over instead. It shades every `Timeline` and `LaneGraph` as an `accent-bg`
-  band with `accent` bounds and `accent-ink` years on the axis, and it looks the same
-  everywhere, the banner included: the bounds and the light shade are always drawn, also
-  where an add window narrows inside it (#1910). With no project open there is no band.
-  That **window band** is the one drawing of a period control: where the period is set
-  (the banner's study window, a variable page's add window, a source's period on
-  `/project`) the band is dragged by slim `accent` thumbs on its bounds, so it is clear
-  what can be moved; all compose the same classes (`ui/WindowBand.module.css`), and a
-  new period selector does too (#1823). On a coverage row (the add window, a source
-  period) the two thumbs never sit closer than 16 px: a short window on a long axis
-  pushes their faces apart to that distance, all of it inward at an end of the axis so
-  both faces stay on the row, so a one-year window keeps both visible and grabbable,
-  while the window's years and its band stay where they are (maintainer ruling
-  2026-10-23).
+- The **study window** is the project's period, named "Study years" on screen
+  (maintainer Q4, 2026-11-04), set in the project banner (which is the period picker).
+  Most researchers pick one, from a start year to the latest data, and it is bounded by
+  the viewed catalog's first and last year (`/api/context` `period_span`): the slider
+  shows no data, so its track stays the catalog's span and early years stay reachable. A
+  new project starts at 2015 to the catalog's last year (the whole span when the catalog
+  ends before 2015); a window set while browsing carries over instead. It shades every
+  `Timeline` and `LaneGraph` as an `accent-bg` band with `accent` bounds and
+  `accent-ink` years on the axis, and it looks the same everywhere, the banner included:
+  the bounds and the light shade are always drawn, also where an add window narrows
+  inside it (#1910). With no project open there is no band. That **window band** is the
+  one drawing of a period control: where the period is set (the banner's study window, a
+  variable page's add window, a source's period on `/project`) the band is dragged by
+  slim `accent` thumbs on its bounds, so it is clear what can be moved; all compose the
+  same classes (`ui/WindowBand.module.css`), and a new period selector does too (#1823).
+  On a coverage row (the add window, a source period) the two thumbs never sit closer
+  than 16 px: a short window on a long axis pushes their faces apart to that distance,
+  all of it inward at an end of the axis so both faces stay on the row, so a one-year
+  window keeps both visible and grabbable, while the window's years and its band stay
+  where they are (maintainer ruling 2026-10-23).
 
 - The **add window** is a variable page's band, named "Years to add" on screen
   (maintainer 2026-11-04): the years the columns ticked there are added for (#1838). On
@@ -564,22 +570,25 @@ Time is the axis every relation is drawn on.
   the source's table, its period as the window band with the same thumbs, bounded by
   that table's coverage, and one lane per binding. Each delivered column is a span of
   the years that table delivers it. A column available for part of the period is a
-  shorter span, not a finding. The header states the period's years. A stored period
-  outside coverage widens the thumbs' bounds to their union; it is never clamped or
-  rewritten on load. A comma-list period rests the thumbs on its outer years and a line
-  under the drawing says a move makes it one span; a term period is shown as text with
-  plain `LaneList` rows. A timeless source says "Unbounded", with no thumbs. A dated
-  table with `_default` also says "Unbounded", but has thumbs seeded from table coverage
-  so its missing period can be repaired; it writes only when a thumb rests. Every source
-  card shares the page's one axis. The lanes are the card's columns: no list repeats
-  them under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a
-  quiet ghost "Remove", named "Remove <column> from <source>", that asks first in a
-  `Dialog` whose answer is the `danger` button and takes the column out of that one
-  source. Removing the last binding asks to remove the source. Source removal also
-  removes its panel memberships and any panels left without members; the dialog states
-  this when affected. A ghost "Remove source" in the card header also asks first. Focus
-  returns to the card heading after a column removal, or the Sources heading after a
-  source removal.
+  shorter span, not a finding. The card is headed by the table's register, by name, with
+  the table's name as a link and "Years:" with the period's years under it; every label
+  on the card names the table by its catalog name, as the page's findings do; the
+  source's `name` (the file's join key) stands in only where the catalog has no name for
+  the table. A stored period outside coverage widens the thumbs' bounds to their union;
+  it is never clamped or rewritten on load. A comma-list period rests the thumbs on its
+  outer years and a line under the drawing says a move makes it one span; a term period
+  is shown as text with plain `LaneList` rows. A timeless source says "Unbounded", with
+  no thumbs. A dated table with `_default` also says "Unbounded", but has thumbs seeded
+  from table coverage so its missing period can be repaired; it writes only when a thumb
+  rests. Every source card shares the page's one axis. The lanes are the card's columns:
+  no list repeats them under the drawing (maintainer ruling 2026-10-23). Each lane's
+  name carries a quiet ghost "Remove", named "Remove <column> from <table>", that asks
+  first in a `Dialog` whose answer is the `danger` button and takes the column out of
+  that one source. Removing the last binding asks to remove the source. Source removal
+  also removes its panel memberships and any panels left without members; the dialog
+  states this when affected. A ghost "Remove table" in the card header also asks first.
+  Focus returns to the card heading after a column removal, or the Tables heading after
+  a source removal.
 
   Each lane's below slot holds a labelled type `Select`, an optional classification pin,
   and its findings. Types use plain words: Identifier, Categorical, Numeric, Date, Date
@@ -731,9 +740,9 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `TypePill`, `FilterChip`, `VariableRow`,
 `Timeline`, `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`.
-The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `KeyValue`,
-…) are the stepping stones: they keep reading the same roles until each is replaced, and
-must not grow new visual language meanwhile.
+The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, …) are the
+stepping stones: they keep reading the same roles until each is replaced, and must not
+grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
@@ -751,31 +760,59 @@ must not grow new visual language meanwhile.
   nothing is selected.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
-  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono`. The
-  verdict leads with its glyph: "✓ Valid" in `ok`, "▲ Warnings" in `warn`, "✕ Errors" or
-  "✕ Order blocked" in `err`; unchecked or in flight it is a plain `text-muted`
-  "Checking" with no glyph; a draft with no sources yet is the same plain "Empty", never
-  an error, since nothing has gone wrong. Its slot is as wide as the widest verdict, so
-  the banner keeps one size while validation runs. A verdict with findings (Warnings,
-  Errors, Order blocked) is a link, in its status hue with the link's `accent` rule, to
-  /project, where the first non-empty findings group scrolls into view and takes focus;
-  Valid and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
-  "unsaved", never a status hue. The study window is the period picker: an inline
-  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
-  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
-  `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
-  `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
-  Clear keep one line. With no project open it is the same box, empty and untinted with
-  a `border` leading bar, holding a `default` "Create a project" Button, which starts a
-  project and opens it, and nothing in the catalog is tinted.
+  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono` ("1
+  table, 2 columns"). The verdict is the project page's, in the same words (see Project
+  page), and leads with its glyph: "✓ Ready to order" in `ok`, "▲ Has warnings" in
+  `warn`, "✕ Has problems" or "✕ Can't be ordered yet" in `err`; not yet checked or in
+  flight it is a plain `text-muted` "Checking" with no glyph; a draft with no tables yet
+  is the same plain "Empty", never an error, since nothing has gone wrong. A check that
+  did not run (a rate limit, the network) is the same plain "Check did not run", never
+  "Has problems": it says nothing about the project. Its slot is as wide as the widest
+  verdict, so the banner keeps one size while the check runs. A verdict /project
+  explains (Has warnings, Has problems, Can't be ordered yet with their findings, Check
+  did not run with Retry) is a link, in its status hue with the link's `accent` rule, to
+  the verdict on /project, which takes focus; Ready to order and Checking stay plain
+  text. Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status hue.
+  The study window, labelled "Study years", is the period picker: an inline two-thumb
+  RAC `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn
+  as the Timeline's study-window band (see Time: `accent-bg` between `accent` bounds,
+  the thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
+  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
+  With no project open it is the same box, empty and untinted with a `border` leading
+  bar, holding a `default` "Create a project" Button, which starts a project and opens
+  it, and nothing in the catalog is tinted.
 - **Findings** (titled "Notes on this data" wherever they are listed, maintainer
   2026-11-04) are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
-  `Tooltip` (`mono`, press to copy); no code chip on the page. The summary panel under
-  the sources keeps the verdict, the counts per level, the project's own findings in
-  full and a plain link to each located one, which scrolls to it, focuses it and flashes
-  it.
+  `Tooltip` (`mono`, press to copy); no code chip on the page. Under the project's
+  verdict, a finding no card holds (a file that fails the structure check, a finding
+  about the whole project) is listed in full, and each warning or problem a card holds
+  has a plain link that scrolls to it and focuses it; a card's notes (level info) change
+  no verdict and get no link.
+- **Project page** (`/project`, maintainer ruling Q1, 2026-11-04): the `h1` "Project"
+  with no breadcrumb repeating it, the name field, then "Download project_data.json",
+  "Open a project file…" and a ghost "Discard"; opening over a project and discarding
+  ask first in a `Dialog`. Under them, the steward's `order_instructions` from
+  `/api/context` as sent (its own line breaks, no markdown, never text from code), then
+  the verdict, "Tables" (one card per table) and "What will be delivered". There is one
+  check and no button for it: WASM on every edit, then `order` 350 ms after the last
+  edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
+  with the count, "Can't be ordered yet" with the count of problems, or "Has problems"
+  for a file that fails the structure check, whose problems are listed in full under it;
+  a check that did not run is an `err` row with Retry. While a newer check runs, the
+  verdict, its list and "What will be delivered" keep the previous check's answer (not a
+  check that did not run) with `aria-busy`; a `Skeleton` shows only when there is none,
+  or when a table or column was added, removed or moved since, so the earlier findings
+  would sit on the wrong card. "What will be delivered" is the order the catalog would
+  serve, shown only when the project can be ordered: per table its name and years, each
+  column as a `ColumnChip` (with its years only where they differ from the table's)
+  beside the variable's name, "Years not available" per column the period asks more of
+  than the table has, and the "Row identifier" columns. There is no order-file download:
+  the steward's instructions say how to order. With no project the page is one
+  `EmptyState`, "No project yet", with "Create a project" and "Open a project file…".
+  Below `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its
+  spans, then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items
@@ -801,8 +838,8 @@ must not grow new visual language meanwhile.
   for a register, one filled column of it for a variable). A group page's kind mark has
   no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
   Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
-  px, `sm` radius. A palette row sets the node's FQID in `mono` `text-muted` beside its
-  name.
+  px, `sm` radius. A palette row shows a name and its `TypeTag`, never an identifier
+  (maintainer Q5, 2026-11-04).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's
@@ -840,7 +877,7 @@ must not grow new visual language meanwhile.
   `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it in place.
   It exposes `aria-busy="true"`, and respects reduced motion. A loading region carries
   no "Loading…" line beside it. A source card's timeline region shows one info
-  `StatusRow`, "Loading coverage…", in place of the graph while it loads.
+  `StatusRow`, "Loading years…", in place of the graph while it loads.
 
 ## Do's and Don'ts
 
@@ -867,5 +904,5 @@ must not grow new visual language meanwhile.
   `prefers-reduced-motion`. Motion answers a user action at the three durations above;
   nothing animates on page load.
 - Do name things by what a researcher recognizes (registers, variables, columns, value
-  sets, projects, study window) and keep an action's name the same through its whole
+  sets, projects, study years) and keep an action's name the same through its whole
   flow. Don't apologize in errors or leave them vague.

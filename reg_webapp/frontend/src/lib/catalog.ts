@@ -124,98 +124,42 @@ export function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
 }
 
-/** Breadcrumb trail for an FQID path: each ancestor + the node itself, as
- * `{label, fqidPath}` pairs. `["scb","lisa","kon"]` →
- * `[{scb, "scb"}, {lisa, "scb/lisa"}, {kon, "scb/lisa/kon"}]`. The label is the
- * raw segment (the resolved `name` isn't known for ancestors without a fetch). */
-export function breadcrumbs(
-  fqidPath: string,
-): { label: string; fqidPath: string }[] {
-  const segs = fqidSegments(fqidPath);
-  return segs.map((label, i) => ({
-    label,
-    fqidPath: segs.slice(0, i + 1).join("/"),
-  }));
+/** The catalog pages above a route's page, provider then register: the
+ * ancestors its trail names. The group namespace (`set/`) and the
+ * classification axis have no pages of their own, so they add none. */
+export function trailAncestors(route: Route): string[] {
+  if (route.name !== "catalog-node") return [];
+  if (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
+    return [];
+  const segments = fqidSegments(unqualifiedCatalogPath(route.fqidPath));
+  return segments
+    .slice(0, Math.min(segments.length - 1, 2))
+    .map((_, i) => segments.slice(0, i + 1).join("/"));
 }
 
-/** The detail pane's breadcrumb trail for a route (#803), as `Breadcrumbs`
- * items (the last item is the current page — no `href`). STRUCTURAL only: labels
- * are the raw slug segments (the routed page owns its rich, display-name header)
- * and the data-browser root leads every trail, catalog or not, because below the
- * narrow breakpoint it is the way back to the register list. Catalog-node
- * ancestors link to their pages; the set namespace has no breadcrumb. */
-export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
+/** The detail pane's breadcrumb trail for a route (#803): the ancestors' names,
+ * ending at the page's parent, since the page's `h1` names the page itself
+ * (maintainer Q5, 2026-11-04). Every trail but the register list's own leads
+ * with "Browse registers", shown only below the narrow breakpoint, where it is
+ * the way back to that list. An ancestor whose name has not arrived is left
+ * out, never shown as its slug. */
+export function routeBreadcrumbs(
+  route: Route,
+  names: ReadonlyMap<string, string>,
+): BreadcrumbItem[] {
+  if (route.name === "root") return [];
   const browserRoot: BreadcrumbItem = {
     label: BROWSE_REGISTERS_LABEL,
     href: catalogHref(""),
     narrowOnly: true,
   };
-  switch (route.name) {
-    case "home":
-      // Above the breakpoint the home page needs no trail: nothing is above it.
-      return [browserRoot, { label: "Home", word: true, narrowOnly: true }];
-    case "root":
-      // The data browser IS the current page — a single un-linked crumb.
-      return [{ label: BROWSE_REGISTERS_LABEL, narrowOnly: true }];
-    case "catalog-node": {
-      // Each ancestor segment is a link to its cumulative `/catalog/...` path;
-      // the leaf segment is the current page (no href). Classification families
-      // and their root have no pages, so their ancestors stay plain text.
-      const trail = breadcrumbs(unqualifiedCatalogPath(route.fqidPath));
-      const classification =
-        route.fqidPath === "class" || route.fqidPath.startsWith("class/");
-      return [
-        browserRoot,
-        ...trail.map((c, i) => ({
-          label: c.label,
-          href:
-            !classification && i < trail.length - 1
-              ? catalogHref(c.fqidPath)
-              : undefined,
-        })),
-      ];
-    }
-    case "project":
-      return [browserRoot, { label: "Project", word: true }];
-    default:
-      // not-found
-      return [browserRoot];
-  }
-}
-
-// ── register_variant coordinate helpers ──────────────────────────────────────
-// A Source.register_variant is a 3-seg coordinate `provider/register/variant`
-// (see crates/reg-core/DESIGN.md → Scope). The binding
-// variable picker is SCOPED to the provider/register prefix
-// (enforcing the FQID-prefix coupling as UX); the resolve takes the variant.
-
-/** The 2-seg `provider/register` prefix of a register_variant, or "" when it has
- * fewer than 2 segments. */
-export function registerPrefixOf(registerVariant: string): string {
-  const segs = fqidSegments(registerVariant);
-  return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
-}
-
-/** The HEADING of a source card in the cart: the register the source delivers
- * from, in the CATALOG's own word — `"LISA"`, `"MiDAS"`, never the slug
- * uppercased, and never the source's `name`, which is a generated join key
- * (`LISA_2`) rather than the thing the researcher picked.
- *
- * The rest of the title — the variant that names the population, and the provider
- * where the deployment serves more than one — qualifies this heading as its own
- * element beside it. The card composes them in MARKUP, not into one joined string:
- * frontend/DESIGN.md rules out middle-dot meta strings, and separate lines survive
- * a 375px width and read as separate things to a screen reader.
- *
- * Falls back to `coordinate` (the raw `register_variant`) whenever the register has
- * no name: while the catalog read is in flight, when it failed, and for a
- * coordinate outside this deployment's catalog. A machine coordinate is honest
- * there; an invented word would not be. */
-export function sourceCardHeading(
-  register: string | null | undefined,
-  coordinate: string,
-): string {
-  return register?.trim() || coordinate;
+  return [
+    browserRoot,
+    ...trailAncestors(route).flatMap((fqid) => {
+      const label = names.get(fqid);
+      return label ? [{ label, href: catalogHref(fqid) }] : [];
+    }),
+  ];
 }
 
 /** The DISTINCT delivery columns among `states` that genuinely CO-EXIST — a column

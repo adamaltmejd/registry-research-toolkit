@@ -16,27 +16,44 @@ import { projectStore } from "./project_store";
 import { router } from "./router";
 import { Button } from "./ui/Button";
 import band from "./ui/WindowBand.module.css";
-import { type ProjectValidation, useProject } from "./use_project";
+import {
+  type ProjectCheck,
+  projectVerdict,
+  useProject,
+  VERDICT_WORDS,
+  type Verdict,
+} from "./use_project";
 import { createProject } from "./window";
 import { type WindowBounds, windowBounds } from "./window_bounds";
 
-const VERDICTS = {
-  checking: { label: "Checking", glyph: "", findings: false },
-  empty: { label: "Empty", glyph: "", findings: false },
-  ok: { label: "Valid", glyph: "✓", findings: false },
-  warnings: { label: "Warnings", glyph: "▲", findings: true },
-  errors: { label: "Errors", glyph: "✕", findings: true },
-  blocked: { label: "Order blocked", glyph: "✕", findings: true },
+const GLYPHS: Record<Verdict, string> = {
+  checking: "",
+  empty: "",
+  ready: "✓",
+  warnings: "▲",
+  problems: "✕",
+  blocked: "✕",
+  unchecked: "",
 };
+
+/** Verdicts that /project explains (with findings, or with Retry for a check
+ * that did not run): the banner links to them. */
+const EXPLAINED: ReadonlySet<Verdict> = new Set([
+  "warnings",
+  "problems",
+  "blocked",
+  "unchecked",
+]);
 
 export function ProjectBanner({
   context,
   validation,
 }: {
   context: Context | null;
-  validation: ProjectValidation;
+  validation: ProjectCheck;
 }) {
-  const { raw, draft, dirty, orderBlocked } = useProject();
+  const snapshot = useProject();
+  const { raw, draft, dirty } = snapshot;
   if (raw === null)
     return (
       <div className={styles.empty}>
@@ -52,20 +69,7 @@ export function ProjectBanner({
         </Button>
       </div>
     );
-  const status = !draft
-    ? "errors"
-    : draft.sources.length === 0
-      ? "empty"
-      : orderBlocked
-        ? "blocked"
-        : validation.loading
-          ? "checking"
-          : validation.error || !validation.data?.ok
-            ? "errors"
-            : validation.data.issues.some((issue) => issue.level === "warning")
-              ? "warnings"
-              : "ok";
-  const verdict = VERDICTS[status];
+  const status = projectVerdict(snapshot, validation);
   const sources = draft?.sources.length ?? 0;
   const columns =
     draft?.sources.reduce(
@@ -75,10 +79,10 @@ export function ProjectBanner({
   const words = (
     <>
       <span aria-hidden="true">
-        {verdict.glyph}
-        {verdict.glyph && " "}
+        {GLYPHS[status]}
+        {GLYPHS[status] && " "}
       </span>
-      {verdict.label}
+      {VERDICT_WORDS[status]}
     </>
   );
   return (
@@ -94,22 +98,18 @@ export function ProjectBanner({
           {draft && (
             <span>
               <span className={styles.counts}>{sources}</span>{" "}
-              {sources === 1 ? "source" : "sources"},{" "}
+              {sources === 1 ? "table" : "tables"},{" "}
               <span className={styles.counts}>{columns}</span>{" "}
               {columns === 1 ? "column" : "columns"}
             </span>
           )}
           <span className={styles.status} data-status={status}>
-            {Object.values(VERDICTS).map((value) => (
-              <span
-                key={value.label}
-                className={styles.sizer}
-                aria-hidden="true"
-              >
-                {value.glyph} {value.label}
+            {(Object.keys(GLYPHS) as Verdict[]).map((value) => (
+              <span key={value} className={styles.sizer} aria-hidden="true">
+                {GLYPHS[value]} {VERDICT_WORDS[value]}
               </span>
             ))}
-            {verdict.findings ? (
+            {EXPLAINED.has(status) ? (
               <Link
                 className={`link ${styles.verdict}`}
                 href="/project#project-checks"
@@ -171,7 +171,7 @@ function StudyWindow({
       }}
     >
       <div className={styles.windowHead}>
-        <Label className="micro-label">Study window</Label>
+        <Label className="micro-label">Study years</Label>
         <SliderOutput className={styles.readout}>
           {({ state }) =>
             active === null && dragging === null
