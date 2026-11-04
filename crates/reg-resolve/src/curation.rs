@@ -146,12 +146,10 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 unreachable!("record is an object")
             };
             let mut fields: BTreeMap<_, _> = value.into_iter().collect();
-            for (source, target) in [
-                ("dtype", "type"),
-                ("column", "spelling"),
-                ("source_key", "key"),
-                ("valueset", "value_set"),
-            ] {
+            for (target, source) in reg_frame::statement::RENAMED_FIELDS
+                .into_iter()
+                .chain([("key", "source_key")])
+            {
                 if let Some(value) = fields.remove(source) {
                     fields.insert(target.into(), value);
                 }

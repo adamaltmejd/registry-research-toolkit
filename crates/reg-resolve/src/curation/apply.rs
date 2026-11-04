@@ -4,7 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::Interval;
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
-use reg_frame::statement::{AssertFact, Statement};
+use reg_frame::statement::{AssertFact, Statement, frame_field};
 use reg_frame::{Locator, Occurrence, Record, ValueSet, bounds};
 use serde_json::{Value, json};
 
@@ -372,13 +372,7 @@ fn change(
         table: text(value, "table").map(str::to_owned),
         release: text(value, "release").map(str::to_owned),
         period: if kind == "value_set" { None } else { period },
-        field: match field {
-            "dtype" => "type",
-            "column" => "spelling",
-            "valueset" => "value_set",
-            f => f,
-        }
-        .into(),
+        field: reg_frame::statement::curation_field(field).into(),
         value: rendered(winning),
         source_value: rendered(losing),
     })
@@ -1036,15 +1030,6 @@ fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Opt
     }
 }
 
-fn target_field(field: &str) -> &str {
-    match field {
-        "type" => "dtype",
-        "spelling" => "column",
-        "value_set" => "valueset",
-        field => field,
-    }
-}
-
 #[allow(clippy::too_many_lines)]
 fn apply_fields(
     records: &[Record],
@@ -1223,7 +1208,7 @@ fn apply_fields(
                     }
                     after["valueset"] = winning.clone();
                 }
-                _ => after[target_field(field)] = winning.clone(),
+                _ => after[frame_field(field)] = winning.clone(),
             }
         }
         if fields.get("coded") == Some(&Value::Bool(true))
@@ -1261,13 +1246,13 @@ fn apply_fields(
                     source_period(record, context).map_or(Value::Null, |p| json!(p)),
                 )
             } else {
-                (winning.clone(), before[target_field(field)].clone())
+                (winning.clone(), before[frame_field(field)].clone())
             };
             let resolves_conflict = matches!(field.as_str(), "type" | "length")
                 && before["conflicts"].as_array().is_some_and(|conflicts| {
                     conflicts.iter().any(|conflict| {
                         conflict.as_str().is_some_and(|conflict| {
-                            conflict == field || conflict == target_field(field)
+                            conflict == field || conflict == frame_field(field)
                         })
                     })
                 });
@@ -1534,13 +1519,7 @@ fn fill_fields(value: &mut Value, fields: BTreeMap<String, Value>) -> Result<(),
             value["from"] = json!(p[0].0);
             value["to"] = json!(p[0].1);
         } else {
-            let target = match field.as_str() {
-                "type" => "dtype",
-                "spelling" => "column",
-                "value_set" => "valueset",
-                name => name,
-            };
-            value[target] = v;
+            value[frame_field(&field)] = v;
         }
     }
     Ok(())

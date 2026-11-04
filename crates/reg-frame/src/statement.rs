@@ -390,6 +390,32 @@ impl SetFields {
     }
 }
 
+/// The frame fields curation names differently, as (curation, frame); every other
+/// field has one name in both.
+pub const RENAMED_FIELDS: [(&str, &str); 3] = [
+    ("type", "dtype"),
+    ("spelling", "column"),
+    ("value_set", "valueset"),
+];
+
+/// The frame field a curation field name sets.
+#[must_use]
+pub fn frame_field(name: &str) -> &str {
+    RENAMED_FIELDS
+        .iter()
+        .find(|(curation, _)| *curation == name)
+        .map_or(name, |(_, frame)| frame)
+}
+
+/// The curation name of a frame field.
+#[must_use]
+pub fn curation_field(name: &str) -> &str {
+    RENAMED_FIELDS
+        .iter()
+        .find(|(_, frame)| *frame == name)
+        .map_or(name, |(curation, _)| curation)
+}
+
 fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
     let value = serde_json::to_value(fields).expect("field values serialize without floats");
     if value

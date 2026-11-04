@@ -107,12 +107,7 @@ fn field_values<'a>(
 ) -> Vec<FinalValue> {
     let mut winners = BTreeMap::<&str, (&Claim, Option<String>)>::new();
     for claim in claims {
-        let field = match claim.change.field.as_str() {
-            "type" => "dtype",
-            "spelling" => "column",
-            "value_set" => "valueset",
-            field => field,
-        };
+        let field = reg_frame::statement::frame_field(&claim.change.field);
         let final_value = if field == "period" {
             period.map(|p| serde_json::to_string(p).expect("period serializes"))
         } else if let Some(value) = current.get(field) {
