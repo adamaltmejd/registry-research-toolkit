@@ -9,8 +9,8 @@ Each named step runs its commands in order from the repository root and stops at
 first failure. `all` runs g0, rust, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`, `frontend` and
-`flows`, and runs `scripts/tests` itself. `rust` also owns release admission on the synthetic
-artifact, so the Rust binaries are built once per job.
+`flows`. `rust` also owns release admission on the synthetic artifact, so the Rust
+binaries are built once per job.
 `regen` also blesses the plugin project schema. Stdlib only.
 """
 
@@ -87,8 +87,7 @@ def crates() -> None:
 
 
 def lint() -> None:
-    # The home of the ty pin; the panache pin is repeated in scripts/parse_lisa_docs.py
-    # (bump both). Rust formatting is in `crates`.
+    # The home of the ty and panache pins. Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.17.1 panache format --check .")
@@ -99,7 +98,6 @@ def lint() -> None:
 def g0() -> None:
     lint()
     crates()
-    run("uv run python -m pytest scripts/tests -n auto -q")
 
 
 def rust() -> None:
