@@ -13,18 +13,18 @@ uv run --no-project scripts/gate.py rust           # it, then the pytest surface
 ```
 
 The Rust harness (`crates/reg-conformance`) is replacing the pytest one surface by
-surface; `api` and `api_spec` have moved. It runs `$REG_META_BIN` (default
-`reg-meta` beside the test in its cargo target, so a per-worktree `CARGO_TARGET_DIR`
-works) as `serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS`
-split on whitespace. `REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases;
-libtest's own filter selects surfaces. A failing surface lists every failing case as
-`<case>: <first mismatch>`. The `conformance` test target is `test = false`: `cargo
-test --workspace` would not rebuild the binaries it runs, so it runs only by name
+surface; `api` and `api_spec` have moved. It runs `$REG_META_BIN` (default `reg-meta`
+beside the test in its cargo target, so a per-worktree `CARGO_TARGET_DIR` works) as
+`serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS` split on
+whitespace. `REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases; libtest's own
+filter selects surfaces. A failing surface lists every failing case as
+`<case>: <first mismatch>`. The `conformance` test target is `test = false`:
+`cargo test --workspace` would not rebuild the binaries it runs, so it runs only by name
 after `cargo build --workspace`.
 
-Every pytest run needs `--server-cmd`: the suite's boundary is the Rust server, and a run
-without it is refused at startup. The sampled projects all come from one address, so the
-template raises the server's write limit (`--write-limit`); the burst case in
+Every pytest run needs `--server-cmd`: the suite's boundary is the Rust server, and a
+run without it is refused at startup. The sampled projects all come from one address, so
+the template raises the server's write limit (`--write-limit`); the burst case in
 `test_mcp.py` drops the flag and pins the default. `scripts/gate.py` holds the commands.
 
 The `rust` step runs the whole suite on the synthetic `base` artifact, then only the
@@ -77,8 +77,8 @@ for every case on that artifact and stops it at session end. A server that exits
 fails with its log tail, and a start that fails is not retried for later cases on that
 artifact. Its output goes to `servers*/server-N.log` under the pytest base temp. The
 Rust harness does the same, logging to `conformance-<pid>/server-N.log` under
-`<target>/tmp`, and starts each server under a watchdog `sh` that kills it when the
-test process exits, however it exits.
+`<target>/tmp`, and starts each server under a watchdog `sh` that kills it when the test
+process exits, however it exits.
 
 `test_mcp.py` (MCP equivalence) sends raw JSON-RPC to `/mcp` on the `--server-cmd`
 server: each step of the `api` cases it names, as a tool call, returns the HTTP body as
@@ -115,14 +115,13 @@ Every artifact is built once into a cache: `$REG_FIXTURE_CACHE`, else
 sandboxes, cleared on reboot). Worktrees and pytest-xdist workers share it. The key
 hashes the fixture tree's file paths and bytes and the `reg-build` binary's bytes, so
 any edit or rebuild is a new entry. Entries live under `generations/<binary digest>/`,
-are read-only, and a mutating case copies its own. A miss
-builds into a staging directory and renames it into place. Creating a generation prunes
-generations idle for 6 hours, and only those, so a returned path stays valid for 6 hours
-after its last lookup. Deleting the directory between runs is safe. CI sets no
-`REG_FIXTURE_CACHE`, so a fresh runner starts cold in its temp directory.
-`target/debug/reg-fixture base` builds one entry and prints its path for consumers
-outside the suite (`dev.sh`, the gate); `reg-fixture --paired <out>` builds the
-synthetic holdings pair.
+are read-only, and a mutating case copies its own. A miss builds into a staging
+directory and renames it into place. Creating a generation prunes generations idle for 6
+hours, and only those, so a returned path stays valid for 6 hours after its last lookup.
+Deleting the directory between runs is safe. CI sets no `REG_FIXTURE_CACHE`, so a fresh
+runner starts cold in its temp directory. `target/debug/reg-fixture base` builds one
+entry and prints its path for consumers outside the suite (`dev.sh`, the gate);
+`reg-fixture --paired <out>` builds the synthetic holdings pair.
 
 ## API cases
 
@@ -130,8 +129,8 @@ synthetic holdings pair.
 served by the Rust server. They use the HTTP case shape above, with these additions:
 
 - Every step names its `operation`, and its method and path are one of that operation's
-  routes. The `api_spec` module lints the corpus: cases parse, name existing
-  operations and use catalogued error codes.
+  routes. The `api_spec` module lints the corpus: cases parse, name existing operations
+  and use catalogued error codes.
 - Pointers address the new bodies: `{"data": ..., "meta": ...}` on success and
   `{"error": ..., "meta": ...}` on failure, for example `/data/items/*/fqid`,
   `/data/next_cursor` or `/error/fields/parameter`.
