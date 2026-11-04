@@ -69,17 +69,15 @@ def base_artifact() -> Path:
     """The `base` conformance fixture's artifact directory, from the fixture cache.
 
     Built by `target/debug/reg-build`: the caller has built the workspace."""
-    out = run(
-        "uv run python conformance/fixture_cache.py base",
-        stdout=subprocess.PIPE,
-        text=True,
-    )
+    out = run("target/debug/reg-fixture base", stdout=subprocess.PIPE, text=True)
     return Path(out.stdout.strip()).parent
 
 
 def crates() -> None:
     run("cargo fmt --all --check")
     run("cargo clippy --workspace --all-targets --locked -- -D warnings")
+    # `--all-targets` skips `test = false` targets: the conformance suite, by name.
+    run("cargo clippy -p reg-conformance --test conformance --locked -- -D warnings")
     run("cargo test --workspace --locked")
     # Unused crate dependencies; a false positive is ignored in that crate's
     # Cargo.toml (`[package.metadata.cargo-machete] ignored`) with a reason.
@@ -116,8 +114,10 @@ def rust() -> None:
     # Release step 8h's scope check on the synthetic pair, so an unlisted meta key or a
     # schema drift fails here rather than at the release.
     with tempfile.TemporaryDirectory(prefix="gate-paired-") as out:
-        run(f"uv run python conformance/paired_fixture.py {out}")
+        run(f"target/debug/reg-fixture --paired {out}")
         run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
+    # The Rust harness (crates/reg-conformance), then the surfaces not yet ported.
+    run("cargo test -p reg-conformance --test conformance --locked")
     run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact

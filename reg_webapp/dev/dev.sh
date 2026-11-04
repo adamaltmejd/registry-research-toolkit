@@ -42,13 +42,13 @@
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
 #                          REG_META_DB you name: the reg_meta.db `reg-build` makes
 #                          from conformance/cases/fixtures/webapp-dev, looked up in the
-#                          shared fixture cache (conformance/fixture_cache.py, built on
+#                          shared fixture cache (target/debug/reg-fixture, built on
 #                          a miss) and exported as REG_META_DB. Without the flag,
 #                          REG_META_DB (a directory holding reg_meta.db) is required;
 #                          REG_META_CATALOG=<name> also serves its holdings partner
 #                          reg_meta_<name>.db there (a steward site, e.g. swecov).
 #   --paired-fixture       build the synthetic holdings pair into a per-session
-#                          temp directory (conformance/paired_fixture.py), export
+#                          temp directory (target/debug/reg-fixture --paired), export
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
 #
 # smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
@@ -202,9 +202,9 @@ root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
 cd "$root" || exit 1
 
 # This checkout's OWN environment, never main's, installed on demand (near-instant
-# when already in sync). The venv runs freeport, the --fixture-db builder and the
-# default DB resolution; node_modules runs Vite, agent-browser and the driver. `env -u`: an
-# inherited UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
+# when already in sync). The venv runs freeport and the default DB resolution;
+# node_modules runs Vite, agent-browser and the driver. `env -u`: an inherited
+# UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
 if ! env -u UV_PROJECT_ENVIRONMENT uv sync --frozen --quiet; then
 	echo "dev: 'uv sync --frozen' failed — see output above." >&2
 	exit 1
@@ -311,15 +311,15 @@ trap 'exit 143' TERM
 catalog="${REG_META_CATALOG:-}"
 if [ -n "$paired_fixture" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
-	catalog=$(.venv/bin/python conformance/paired_fixture.py "$fixture_db_dir") || {
-		echo "dev: building the paired fixture failed — see 'conformance/paired_fixture.py'." >&2
+	catalog=$(target/debug/reg-fixture --paired "$fixture_db_dir") || {
+		echo "dev: building the paired fixture failed — see 'target/debug/reg-fixture --paired'." >&2
 		exit 1
 	}
 	export REG_META_DB="$fixture_db_dir"
 	export REG_WEBAPP_FIXTURE=paired
 elif [ -n "$fixture_db" ]; then
-	fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py webapp-dev) || {
-		echo "dev: building the webapp-dev fixture failed — see 'conformance/fixture_cache.py webapp-dev'." >&2
+	fixture_catalog=$(target/debug/reg-fixture webapp-dev) || {
+		echo "dev: building the webapp-dev fixture failed — see 'target/debug/reg-fixture webapp-dev'." >&2
 		exit 1
 	}
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
