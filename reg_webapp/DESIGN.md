@@ -291,18 +291,18 @@ hosted MCP through its own origin and worker.
   publishes; the check is not required on main. The maintainer runs the release after
   the merge; a few hours of disruption at the switch are accepted.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
-  stage (`regmeta-db`) that copies nothing from the build context, so its cache key is
-  the base image and its build args (tag, digest) — app-code edits reuse the cached DB
-  layer instead of re-downloading the catalog, and an asset re-uploaded under an
-  existing tag changes its digest and rebakes. PR builds neither `load` the image into
-  the runner's docker (nothing runs it; all gates execute during the build) nor write
-  GHA buildx cache (PR-scoped cache is unreadable from main and would only evict useful
-  entries from the repo's 10 GB pool); PRs still read main's cache. Every pushed tag is
-  an immutable rollback handle: `workflow_dispatch` rebuilds on an existing HEAD get a
-  `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy prune step keeps the
-  newest 10 tags and deletes older manifests via the registry v2 DELETE (supported by
-  Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age is read from the
-  image config's `.created`, and a digest shared with any kept tag is never deleted).
+  stage (`regmeta-db`) that copies nothing from the build context; its build args (tag,
+  digest) name the asset, so one re-uploaded under an existing tag changes its digest
+  and rebakes. CI builds use no layer cache: the GHA buildx cache cost about 2 min per
+  export, never hit the cargo layer (`COPY crates/` busts it on every change) and saved
+  only the apt layers and the DB download (about 10 s from cache). PR builds do not
+  `load` the image into the runner's docker (nothing runs it; all gates execute during
+  the build). Every pushed tag is an immutable rollback handle: `workflow_dispatch`
+  rebuilds on an existing HEAD get a `-<run_id>` suffix instead of overwriting `:sha`. A
+  prune job after each deploy keeps the newest 10 tags and deletes older manifests via
+  the registry v2 DELETE (supported by Fly — verified live 2026-06-11; buildx pushes OCI
+  indexes, so age is read from the image config's `.created`, and a digest shared with
+  any kept tag is never deleted).
 - **Cloudflare zones**: `reg-meta.vqv.uk` (zone vqv.uk, global catalog MCP) and
   `data.swecov.se` (zone swecov.se, SWECOV flavor), orange-cloud A/AAAA → each
   hostname's matching Fly app shared IPv4 + dedicated IPv6, plus `_fly-ownership` TXT
@@ -380,7 +380,7 @@ The first push after this restoration merges rebuilds and redeploys global: the
 
 Before Release A, the maintainer records the running SWECOV image tag and Workers
 version id, and confirms a surviving 0.64 image in `registry.fly.io/reg-webapp-swecov`.
-The image prune step's `KEEP=10` window retains only the newest ten tags; preserve the
+The image prune job's `KEEP=10` window retains only the newest ten tags; preserve the
 rollback image before it falls outside that window.
 
 Inspect origin history with `flyctl releases --app reg-webapp-swecov`, then restore:
