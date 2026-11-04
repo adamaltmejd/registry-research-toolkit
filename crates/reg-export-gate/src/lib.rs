@@ -3,17 +3,20 @@
 //! never a value or an author's name.
 
 mod backstop;
+mod config;
+mod deliver;
 mod disclosure;
 mod export;
 mod inventory;
 mod schema;
 mod structure;
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
 
 pub use backstop::identifier_shape;
+pub use config::CONFIG_DIR;
 pub use schema::{Column, ColumnType, File, Policy, Role, Schema, SchemaRef};
 pub use structure::{MAX_DECODED_BYTES, MAX_FILE_BYTES, MAX_ROWS};
 
@@ -30,6 +33,7 @@ pub enum Code {
     Structure,
     Disclosure,
     Backstop,
+    Delivery,
 }
 
 impl Code {
@@ -41,6 +45,20 @@ impl Code {
             Code::Structure => "structure",
             Code::Disclosure => "disclosure",
             Code::Backstop => "backstop",
+            Code::Delivery => "delivery",
+        }
+    }
+
+    /// The binary's exit status for a refusal of this category.
+    #[must_use]
+    pub fn exit_code(self) -> u8 {
+        match self {
+            Code::Setup => 10,
+            Code::Inventory => 11,
+            Code::Structure => 12,
+            Code::Disclosure => 13,
+            Code::Backstop => 14,
+            Code::Delivery => 15,
         }
     }
 }
@@ -120,8 +138,9 @@ fn run(
     output: &Path,
     schema: Option<&Path>,
     policy: Option<&Path>,
+    apart_from: &[&Path],
 ) -> Result<usize, Refusal> {
-    export::check_paths(staging, output)?;
+    export::check_paths(staging, output, apart_from)?;
     export::clear_output(output)?;
     let schema = schema::load_schema(schema)?;
     let policy = schema::load_policy(policy, &schema)?;
@@ -131,6 +150,32 @@ fn run(
     backstop::check(&candidates)?;
     export::export(output, &schema, &policy, &candidates)?;
     Ok(candidates.len())
+}
+
+/// A panic is `internal_error`, with no message kept.
+fn caught<T>(f: impl FnOnce() -> Result<T, Refusal>) -> Result<T, Refusal> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(f))
+        .unwrap_or_else(|_| Err(Refusal::setup(Finding::rule("internal_error"))))
+}
+
+fn gate(
+    staging: &Path,
+    output: &Path,
+    schema: Option<&Path>,
+    policy: Option<&Path>,
+    apart_from: &[&Path],
+) -> Result<usize, Refusal> {
+    // `out/` names the same folder as `out`, but a trailing separator makes
+    // the OS follow a link there; every step sees the plain spelling.
+    let output = &output
+        .file_name()
+        .map_or_else(|| output.to_path_buf(), |n| export::parent(output).join(n));
+    let result = caught(|| run(staging, output, schema, policy, apart_from));
+    let _ = caught(|| {
+        export::write_report(staging, output, apart_from, result.as_ref().err());
+        Ok(())
+    });
+    result
 }
 
 /// The whole gate over the complete candidate output in `staging`: the paths,
@@ -143,7 +188,7 @@ fn run(
 /// not the gate's to clear); a refusal of the paths themselves leaves `output`
 /// as it was. The report goes to `.diagnostics/` beside `output` wherever that
 /// touches neither it nor staging, and only if staging resolves. Staging is
-/// left as it was.
+/// left as it was. A panic is `internal_error`.
 ///
 /// # Errors
 ///
@@ -154,12 +199,45 @@ pub fn export_gate(
     schema: Option<&Path>,
     policy: Option<&Path>,
 ) -> Result<usize, Refusal> {
-    // `out/` names the same folder as `out`, but a trailing separator makes
-    // the OS follow a link there; every step sees the plain spelling.
-    let output = &output
-        .file_name()
-        .map_or_else(|| output.to_path_buf(), |n| export::parent(output).join(n));
-    let result = run(staging, output, schema, policy);
-    export::write_report(staging, output, result.as_ref().err());
-    result
+    gate(staging, output, schema, policy, &[])
+}
+
+/// The gate in server mode: the schema, policy and output come from the
+/// project's config in `config_dir` (the binary passes [`CONFIG_DIR`]), so
+/// the pipeline names only the project and its staging folder. The config is
+/// refused if it is missing, invalid or writable by anyone but its owner;
+/// staging and output may not be, or lie inside, the config folder or the
+/// destination. A config refusal writes no report: the output is not known
+/// to be the deployer's yet.
+///
+/// # Errors
+///
+/// The refusal, with its code and findings.
+pub fn check_project(config_dir: &Path, project: &str, staging: &Path) -> Result<usize, Refusal> {
+    let project = caught(|| config::load(config_dir, project))?;
+    gate(
+        staging,
+        &project.output,
+        Some(&project.schema),
+        Some(&project.policy),
+        &[config_dir, &project.destination],
+    )
+}
+
+/// The reviewer's export of a server-mode project: the output folder whose
+/// `receipt.json` has SHA-256 `receipt` (lowercase hex, the receipt the
+/// reviewer inspected) is read once and checked again under the config's
+/// schema and policy; its rewrite must reproduce it byte for byte. Then the
+/// gate writes its own bytes to `<destination>/<first 16 hex digits of
+/// receipt>/` and re-hashes them there; a second export of the same receipt
+/// re-verifies that folder and writes nothing. Gives that folder. A panic is
+/// `internal_error`.
+///
+/// # Errors
+///
+/// The refusal, with its code and findings: `delivery` (`receipt_mismatch`,
+/// `destination_writable`, `hash_mismatch`), a setup refusal of the config or
+/// paths, or the structure, disclosure or backstop refusal of the output.
+pub fn export_project(config_dir: &Path, project: &str, receipt: &str) -> Result<PathBuf, Refusal> {
+    caught(|| deliver::export(config_dir, project, receipt))
 }

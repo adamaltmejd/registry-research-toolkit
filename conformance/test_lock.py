@@ -137,6 +137,55 @@ def test_inherited_identity_uses_remaining_ledger_anchors(tmp_path):
         ] == expected
 
 
+def test_evidence_edit_moves_no_identity(tmp_path):
+    # Regression: statement identity hashes `evidence`, so rewording it moves the
+    # lock key, the asserted occurrence's `stmt:` source key and the ledger anchor
+    # that pins its id (maintainer ruling, 2026-11-04). The committed lock and the
+    # ledger's `# stmt:` anchor are the oracle; editing evidence must touch neither.
+    case = CASES / "lock/evidence-identity"
+    expected = json.loads((case / "expected.json").read_text())
+    curation = tmp_path / "curation"
+    shutil.copytree(case / "curation", curation)
+    statements = curation / "registers/demo/r/curation.toml"
+    lock = curation / "registers/demo/r/curation.lock"
+    statements.write_text(
+        statements.read_text().replace(
+            'evidence = "Delivery lists', 'evidence = "Reworded: delivery lists', 1
+        )
+    )
+    catalog = tmp_path / "catalog.db"
+    for command in ("lock", "build"):
+        result = subprocess.run(
+            [
+                REG_BUILD,
+                command,
+                "--inputs",
+                case / "inputs",
+                "--curation",
+                curation,
+                *(["--release", "--out", catalog] if command == "build" else []),
+            ],
+            cwd=REPO,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+    assert (
+        lock.read_bytes()
+        == (case / "curation/registers/demo/r/curation.lock").read_bytes()
+    )
+    with sqlite3.connect(catalog) as db:
+        assert [
+            list(row)
+            for row in db.execute(
+                "SELECT v.pid, s.exact, o.source_key FROM occurrence o "
+                "JOIN variable v ON v.id=o.variable_id "
+                "JOIN spelling s ON s.id=o.spelling_id ORDER BY v.pid"
+            )
+        ] == expected
+
+
 @pytest.mark.parametrize(
     "change", ["singleton", "unknown-tag", "retired-set", "multi-group"]
 )

@@ -234,8 +234,15 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
         .map_or_else(String::new, |n| n.to_string_lossy().into_owned());
     let scratch = out.with_file_name(format!(".{name}.scratch"));
     let staged = out.with_file_name(format!(".{name}.staged"));
+    let t = std::time::Instant::now();
     let result = stage(catalog, &scratch, &staged)
-        .and_then(|()| crate::verify::catalog(&staged, None))
+        .and_then(|()| {
+            crate::timing::done("write", t);
+            let t = std::time::Instant::now();
+            crate::verify::catalog(&staged, None)?;
+            crate::timing::done("verify", t);
+            Ok(())
+        })
         .and_then(|()| {
             std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))
         });

@@ -1,0 +1,4 @@
+{"kind":"register","provider":"demo","register":"r","name":"R"}
+{"kind":"table","provider":"demo","register":"r","table":"t","name":"T"}
+{"kind":"occurrence","provider":"demo","register":"r","table":"t","column":"X","source_key":"v1","label":"X","from":"2010-01-01","to":"2011-12-31"}
+{"kind":"occurrence","provider":"demo","register":"r","table":"t","column":"A","source_key":"v2","label":"A","from":"2012-01-01","to":"2013-12-31"}

@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/suc",
       "table": "demo/suc/gammal",
+      "table_name": "Gammal tabell",
       "variable": "demo/suc/ink",
+      "variable_name": "Inkomst",
       "display_name": null,
       "period": {
         "start": "2016-01-01",
@@ -33,7 +35,9 @@
       "provider": "demo",
       "register": "demo/suc",
       "table": "demo/suc/ny",
+      "table_name": "Ny tabell",
       "variable": "demo/suc/ink",
+      "variable_name": "Inkomst",
       "display_name": null,
       "period": {
         "start": "2018-01-01",

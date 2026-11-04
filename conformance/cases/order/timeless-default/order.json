@@ -15,7 +15,9 @@
       "provider": "demo",
       "register": "demo/tid",
       "table": "demo/tid",
+      "table_name": "Tidlösa registret",
       "variable": "demo/tid/kod",
+      "variable_name": "Kod",
       "display_name": null,
       "period": {
         "start": null,

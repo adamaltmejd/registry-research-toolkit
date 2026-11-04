@@ -2,6 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
+use std::time::Duration;
 
 use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
@@ -810,7 +811,7 @@ pub(super) fn sentinel_codes<'a>(
     sets
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Phase {
     Parents,
     Coverage,
@@ -1019,11 +1020,13 @@ fn run_selected(
     registers: &[String],
     base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
+    let t = std::time::Instant::now();
     let mut records = outputs
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
         .collect::<Vec<_>>();
     let mut result = inventory(root, &records)?;
+    crate::timing::done("curation inventory", t);
     let mut evaluated: Vec<(&LocatedStatement, Premise)> = Vec::new();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for statement in statements {
@@ -1071,6 +1074,8 @@ fn run_selected(
         if !conflicts.is_empty() {
             break;
         }
+        let stage_start = std::time::Instant::now();
+        let (mut in_references, mut in_resolve) = (Duration::ZERO, Duration::ZERO);
 
         let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
             reg_resolve::curation::SharedSources::new(&records)
@@ -1169,6 +1174,7 @@ fn run_selected(
                 })
             });
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
+            let t = std::time::Instant::now();
             let references = references(
                 root,
                 &records,
@@ -1179,6 +1185,8 @@ fn run_selected(
                 retired,
                 base,
             )?;
+            in_references += t.elapsed();
+            let t = std::time::Instant::now();
             let evaluations = reg_resolve::curation::resolve(
                 &source,
                 ledger,
@@ -1187,6 +1195,7 @@ fn run_selected(
                 &result.variables,
                 &shared,
             );
+            in_resolve += t.elapsed();
             for (statement, evaluation) in group.iter().zip(evaluations) {
                 let at = location(statement);
                 let mut resolved = match evaluation {
@@ -1617,7 +1626,16 @@ fn run_selected(
                 break;
             }
         }
+        crate::timing::done(
+            &format!(
+                "curation stage {stage:?} (references {:.1}s, statement resolve {:.1}s)",
+                in_references.as_secs_f64(),
+                in_resolve.as_secs_f64()
+            ),
+            stage_start,
+        );
     }
+    let t = std::time::Instant::now();
     if !result.links.is_empty() {
         let resolved = resolve_catalog(
             root,
@@ -1627,6 +1645,7 @@ fn run_selected(
             &result.metadata,
             &result.classifications,
         )?;
+        crate::timing::done("curation links: resolve catalog", t);
         let linked = crate::link::curate(root, &resolved, &records, &result.links, base)?;
         if !linked.refusals.is_empty() {
             let messages = linked
@@ -1733,7 +1752,12 @@ fn run_selected(
         register: None,
         message,
     }));
+    crate::timing::done("curation links and conflicts", t);
     if !conflicts.is_empty() {
+        eprintln!(
+            "reg-build: timing curation rerun after {} conflicts",
+            conflicts.len()
+        );
         let skipped = refusal_findings(&refusals, record)?;
         let retained = statements
             .iter()
@@ -1754,6 +1778,7 @@ fn run_selected(
             )
         })
     {
+        let t = std::time::Instant::now();
         let resolved = resolve_catalog(
             root,
             retired,
@@ -1763,6 +1788,7 @@ fn run_selected(
             &result.classifications,
         )?;
         let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        crate::timing::done("curation set presentation", t);
         if !invalid.is_empty() {
             let by_location = evaluated
                 .iter()
@@ -1782,6 +1808,10 @@ fn run_selected(
                     format!("{}:{}: {}", error.at.input, error.at.at, error.message),
                 ));
             }
+            eprintln!(
+                "reg-build: timing curation rerun after {} presentation refusals",
+                refused.len()
+            );
             let skipped = refusal_findings(&refusals, record)?;
             let retained = statements
                 .iter()
@@ -1877,6 +1907,7 @@ pub(super) fn complete_findings(
     applied: &Applied,
     base: Option<&crate::external::Context>,
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
+    let t = std::time::Instant::now();
     let mut resolved = resolve_catalog(
         root,
         retired,
@@ -1885,6 +1916,8 @@ pub(super) fn complete_findings(
         &applied.metadata,
         &applied.classifications,
     )?;
+    crate::timing::done("findings: resolve catalog", t);
+    let t = std::time::Instant::now();
     let mut sets = BTreeMap::new();
     for record in records {
         if let Record::ValueSet(set) = record {
@@ -1892,10 +1925,14 @@ pub(super) fn complete_findings(
         }
     }
     let mut linked = crate::link::resolve(&resolved, records, &[])?;
+    crate::timing::done("findings: link", t);
+    let t = std::time::Instant::now();
     if !applied.links.is_empty() {
         linked.relations =
             crate::link::curate(root, &resolved, records, &applied.links, base)?.relations;
     }
+    crate::timing::done("findings: curate links", t);
+    let t = std::time::Instant::now();
     crate::proposals::generate(
         &mut resolved,
         &applied.classifications,
@@ -1906,6 +1943,7 @@ pub(super) fn complete_findings(
         &sentinel_codes(applied.sentinels.iter().filter(|s| s.inventory.is_none())),
         &linked,
     )?;
+    crate::timing::done("findings: proposals", t);
     Ok(resolved)
 }
 

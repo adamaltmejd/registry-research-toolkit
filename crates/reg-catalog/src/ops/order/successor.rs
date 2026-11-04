@@ -183,6 +183,7 @@ fn finish(scope: &Scope, b: usize, binding: &Binding, out: &mut Outcome) {
         out.clip = Some(OrderClip {
             source: scope.source.name.clone(),
             variable: binding.variable.clone(),
+            variable_name: String::new(),
             requested: window::periods(scope.server, scope.requested),
             ordered: window::periods(scope.server, &ordered),
         });

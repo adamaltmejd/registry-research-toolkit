@@ -260,6 +260,9 @@ impl Statement {
     }
 
     /// SHA-256 of normalized typed content, independent of TOML order and layout.
+    /// `evidence` is left out: it is commentary on the statement, not a premise, so
+    /// editing it never moves a lock key, an asserted occurrence's `stmt:` source key or
+    /// an id anchor (maintainer ruling, 2026-11-04).
     ///
     /// # Panics
     /// Only if the typed model gains content that JSON cannot serialize.
@@ -284,7 +287,11 @@ impl Statement {
             }
             Self::Ack { .. } => {}
         }
-        reg_core::sha256_hex(crate::canonical_line(&normalized))
+        let mut tree = serde_json::to_value(&normalized).expect("statements serialize");
+        tree.as_object_mut()
+            .expect("a statement serializes as an object")
+            .remove("evidence");
+        reg_core::sha256_hex(crate::canonical_line(&tree))
     }
 }
 

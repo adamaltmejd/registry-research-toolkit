@@ -4,6 +4,7 @@ import {
   columnWindowPeriod,
   filesLabel,
   type VariableColumn,
+  variableColumns,
 } from "./add_columns";
 import type { Graph, SetShow, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
@@ -170,12 +171,8 @@ export function memberSpans({
   axis: [number, number];
   catalogBounds: [number, number];
 }): LaneSpanModel[] {
-  return member.columns.flatMap((column) => {
-    const eras = columnYearRuns(
-      column.periods.map((period) => ({ period })),
-      catalogBounds,
-      axis[0],
-    );
+  return variableColumns(member.segments).flatMap((column) => {
+    const eras = columnYearRuns(column.segments, catalogBounds, axis[0]);
     if (!eras.length) return [];
     return [
       readOnlySpan(
