@@ -2281,8 +2281,8 @@ evidence = "The individual categorical responses and business percentage measure
 [[statement]]
 kind = "set"
 subject = "it-anvandning-i-foretag: empmd1pct where key = 'v23393'"
-fields = { "variable" = "anvander-mobiltelefon-med-3g-4g-for-empmd1pct" }
-evidence = "The individual categorical responses and business percentage measure differ in unit and coding."
+fields = { "variable" = "none" }
+evidence = "In the company table SCB lists EMPMD1PCT in 2017 under both v28822 (the company share of employees with portable devices, a percentage) and v23393 (the persons' item DatC4A, a categorical response). A company file holds one EMPMD1PCT column, so the v23393 row is a stray listing; it is withheld so EMPMD1PCT places on v28822 alone (#2073, #2072)."
 
 [[statement]]
 kind = "set"
@@ -3273,18 +3273,6 @@ kind = "set"
 subject = "var:anvander-mobiltelefon-med-3g-4g-for-datc4a"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnerna har flera ägare med olika teknikavgränsningar. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Frågorna identifierar anslutningsenheter eller frånvaro av mobil anslutning. Mobiltelefonfrågan anger både enhet och teknik; annan mobil uppkoppling anger däremot ingen enhet. membership-0329: Etiketterna anger anslutningsenheter, inklusive bärbar dator utanför hemmet och arbetet. membership-0330: Bärbar dator utanför hemmet är ett enhetsmått. c3b2 anger anslutningsteknik och utesluts. membership-0331: data4c5 mäter bärbar dator som internetanslutningsenhet. membership-0332: Frågorna skiljer anslutningstekniker; enheter nämns som sammanhang och datc4c kombinerar mobiltelefon och bärbar dator. membership-0333: Mobilfrågorna mäter aktiviteter, inte enhetstyp för internetanslutning. membership-0334: DSL är anslutningsteknik; lokalt nätverk är en datoraktivitet utan uttrycklig internetanslutning. membership-0335: Mobilkod och smartphonefrågor mäter autentisering eller säkerhet, inte anslutningsenhet. membership-0336: Avstående från mobil internetanvändning och hantering av gammal utrustning mäter inte anslutningsenhet. membership-0337: Mobilmåtten mäter frekvens eller köp, inte enhetstyp för anslutning. membership-0338: Frågorna anger enhet för internetåtkomst eller internetanvändning. Även internet-pa-annat-satt avser enligt beskrivningen annan mobil utrustning. IoT-etiketterna för TV och spelkonsol ändrar inte frågornas enhetsinnehåll. membership-0339: Surfplattemåttet anger anslutningsenhet; mobiltelefonnät och wifi anger teknik. IUHD_OTH avser annan aktivitet, inte enhet. membership-0340: Utrustningsköpen anger inte enhet för internetanslutning. membership-0341: Dessa frågor skiljer anslutningsenheter åt. Frågor som uttryckligen skiljer nätverk eller mobilnätsteknik förs till teknikkandidaten. membership-0342: Arbetsutrustningsfrågorna anger inte enheter för internetanslutning. membership-0343: Smartphonebruk och datorinnehav mäter inte enhetstyp för internetanslutning. membership-0344: Tillhandahållande av bärbara arbetsenheter mäter inte enhetstyp för faktisk internetanslutning. membership-0345: Den enda möjliga enhetsvariabeln har en uttryckligen olöst motsättning mellan individbeskrivning och överlappande procentuppgift. Övriga anslutningsvariabler mäter teknik. membership-0346: IoT-tillämpningar och fast bredband mäter inte enhetstyp för internetanslutning. membership-0347: Inga valda variabler har fastställd betydelse som enhetstyp för internetanslutning. membership-0348: IoT-frågorna mäter smarta tillämpningar, inte enhetstyp som används för internetanslutning. membership-0349: PMD mäter arbetsgivarens tillhandahållande av utrustning, inte enhetstyp som faktiskt används för internetanslutning. membership-0350: Inga belagda anslutningsenheter i denna sektion. membership-0351: Inga valda variabler mäter enhetstyp för internetanslutning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Variablerna anger anslutningsteknik, bredbandstyp eller okänd eller saknad typ. Frågan om mobiltelefon med 3G/4G mäter även teknik; annan mobil uppkoppling saknar enhetsangivelse. membership-0329: De valda anslutningsmåtten anger enheter, inte anslutningsteknik eller bredbandstyp. membership-0330: Variablerna mäter trådlös anslutning till fastigheten respektive anslutning via trådlöst nätverk; r265 anger i stället enhet. membership-0331: data4c5 mäter anslutningsenhet och data5-frågorna skäl till saknad tillgång; båda utesluts från anslutningsteknik. membership-0332: Frågorna mäter WiFi/WiMax och annan uppkoppling än angivna tekniker; de stöds av den fasta teknikdefinitionen. membership-0333: Ingen vald variabel mäter anslutningsteknik. membership-0334: DSL-frågan mäter uttryckligen internetanslutningens teknik. membership-0335: De valda anslutningsrelaterade uppgifterna mäter skäl till saknad tillgång, som uttryckligen undantas. membership-0336: Befintligt fast bredband med okänd typ omfattas uttryckligen av den fasta definitionen. membership-0337: Installation av modem anger utrustningsinstallation, inte anslutningsteknik; frånvaroskäl är uttryckligen undantagna. membership-0338: Frågorna anger trådlöst nätverk, mobilt bredband, 3G/4G, fast kabel/fiber eller saknad mobil anslutning. Internet-pa-annat-satt avser i stället enhetstyp enligt beskrivningen. membership-0339: Mäter mobiltelefonnätet 3G/4G respektive trådlöst nätverk som anslutningsteknik. membership-0340: Utrustnings- och abonnemangsköp mäter inte anslutningsteknik. membership-0341: Frågorna specificerar WiFi, mobiltelefonnät, nätverksval, 3G/4G, 3G eller GPRS. Dessa är anslutningstekniker enligt den fasta definitionen. membership-0342: Inga valda variabler mäter internetanslutningsteknik. membership-0343: Valda tillgångs- och smartphonefrågor mäter inte internetanslutningsteknik. membership-0344: Tillhandahållna enheter med mobil anslutning mäter utrustning, inte anslutningsteknik eller bredbandstyp. membership-0345: Etiketterna anger annan fast bredbandsteknik, GSM samt modem/ISDN. empmd1pct hålls öppet eftersom underlaget uttryckligen lämnar dess betydelse olöst. membership-0346: Etikett och beskrivning anger fast bredbandsanslutning, exempelvis kabel-tv eller fiber, och stöder teknikgruppen. membership-0347: FIXBB mäter uttryckligen fast bredbandsanslutning. Leveransvariablernas betydelser är inte fastställda och EMPIACC3GPCT har endast kodetikett. membership-0348: Anslutningshastighet och dess tillräcklighet utesluts uttryckligen; ingen vald variabel belägger anslutningsteknik. membership-0349: PMD mäter dokumenterat tillhandahållande av utrustning. Leveransvariabelns alternativa bredbandsbetydelse är uttryckligen obekräftad och ger inte stöd för medlemskap. membership-0350: VPN är här en säker förbindelse för datautbyte, inte anslutningsteknik eller bredbandstyp. membership-0351: WLAN saknar dokumenterad betydelse och kan inte tilldelas gruppen från koden ensam.\ncatalog:occurrence:289151\ncatalog:occurrence:289534\ncatalog:occurrence:289536\ncatalog:occurrence:289712\ncatalog:occurrence:289714\ncatalog:occurrence:292038\ncatalog:occurrence:292095\ncatalog:occurrence:292427\ncatalog:occurrence:292428\ncatalog:variable_text:32255:16071:16436\ncatalog:variable_text:32257:15706:16071\ncatalog:variable_text:32258:15340:15706\ncatalog:variable_text:32259:15340:15706\ncatalog:variable_text:32325:17167:19358\ncatalog:variable_text:32339:16801:17167\ncatalog:variable_text:32341:20089:20454\ncatalog:variable_text:32342:17167:18262\ncatalog:variable_text:32343:20089:20454\ncatalog:variable_text:32344:16801:18993\ncatalog:variable_text:32345:13514:15706\ncatalog:variable_text:32346:16801:17167\ncatalog:variable_text:32347:16801:17167\ncatalog:variable_text:32368:13879:16071\ncatalog:variable_text:32369:15706:16436\ncatalog:variable_text:32374:16801:17167\ncatalog:variable_text:32376:14610:16436\ncatalog:variable_text:32377:15706:16071\ncatalog:variable_text:32378:17167:18993\ncatalog:variable_text:32379:14610:15340\ncatalog:variable_text:32380:17167:17532\ncatalog:variable_text:32384:13879:16071\ncatalog:variable_text:32385:15706:16071\ncatalog:variable_text:32389:15706:16436\ncatalog:variable_text:32456:20089:20454\ncatalog:variable_text:32457:17532:17897\ncatalog:variable_text:32458:20089:20454\ncatalog:variable_text:32459:17532:17897\ncatalog:variable_text:32462:20089:20454\ncatalog:variable_text:32489:17167:18262\ncatalog:variable_text:32495:15706:16071\ncatalog:variable_text:32540:17167:17532\ncatalog:variable_text:32647:19358:19723\ncatalog:variable_text:32648:13514:13879\ncatalog:variable_text:32649:13514:13879\ncatalog:variable_text:32650:13514:13879\ncatalog:variable_text:32651:13514:13879\ncatalog:variable_text:32652:13879:14245\ncatalog:variable_text:32671:14975:15340\ncatalog:variable_text:32672:14975:15340\ncatalog:variable_text:32673:14975:15340\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32761:13879:14245\ncatalog:variable_text:32776:13514:13879\ncatalog:variable_text:32837:13879:16436\ncatalog:variable_text:32883:18628:18993\ncatalog:variable_text:32884:18628:18993\ncatalog:variable_text:32885:18628:18993\ncatalog:variable_text:32886:18628:18993\ncatalog:variable_text:32887:18628:18993\ncatalog:variable_text:32888:18628:18993\ncatalog:variable_text:32889:18628:18993\ncatalog:variable_text:32890:17167:17532\ncatalog:variable_text:32899:18262:18628\ncatalog:variable_text:32904:18262:18628\ncatalog:variable_text:32923:17532:17897\ncatalog:variable_text:32945:16801:17167\ncatalog:variable_text:32946:14245:15706\ncatalog:variable_text:32947:17167:17532\ncatalog:variable_text:32950:17897:18262\ncatalog:variable_text:32951:17897:18262\ncatalog:variable_text:32952:17897:18262\ncatalog:variable_text:32953:17897:18262\ncatalog:variable_text:32954:17167:17532\ncatalog:variable_text:32956:17897:18262\ncatalog:variable_text:32958:17167:17532\ncatalog:variable_text:32971:16436:16801\ncatalog:variable_text:32976:13879:18628\ncatalog:variable_text:32978:16801:17167\ncatalog:variable_text:33017:16071:16436\ncatalog:variable_text:33022:17167:20454\ncatalog:variable_text:33023:16801:17167\ncatalog:variable_text:33047:19723:20089\ncatalog:variable_text:33055:19723:20089\ncatalog:variable_text:33091:15340:15706\ncatalog:variable_text:33094:15340:15706\ncatalog:variable_text:33095:15340:15706\ncatalog:variable_text:33146:13514:13879\ncatalog:variable_text:33148:14975:15706\ncatalog:variable_text:33150:16801:17167\ncatalog:variable_text:33152:17167:17532\ncatalog:variable_text:33153:15340:15706\ncatalog:variable_text:33154:14610:14975\ncatalog:variable_text:33160:15706:16071\ncatalog:variable_text:33164:16801:18993\ncatalog:variable_text:33165:13514:14610\ncatalog:variable_text:33167:16801:17167\ncatalog:variable_text:33169:16071:16436\ncatalog:variable_text:33170:13514:14975\ncatalog:variable_text:33171:13514:14975\ncatalog:variable_text:33172:17532:18262\ncatalog:variable_text:33173:16801:17167\ncatalog:variable_text:33174:16801:17167\ncatalog:variable_text:33175:16801:17167\ncatalog:variable_text:33176:13514:14975\ncatalog:variable_text:33177:14245:15706\ncatalog:variable_text:33178:15340:15706\ncatalog:variable_text:33179:14610:15340\ncatalog:variable_text:33180:16801:17897\ncatalog:variable_text:33181:14610:15340\ncatalog:variable_text:33214:18262:18628\ncatalog:variable_text:33221:19723:20089\ncatalog:variable_text:33222:19723:20089\ncatalog:variable_text:33239:18262:18628\ncatalog:variable_text:33240:18262:18628\ncatalog:variable_text:33241:18262:18628\ncatalog:variable_text:33242:18262:18628\ncatalog:variable_text:33243:18262:18628\ncatalog:variable_text:33244:19723:20089\ncatalog:variable_text:33279:15340:15706\ncatalog:variable_text:33281:15340:15706\ncatalog:variable_text:33284:15340:15706\ncatalog:variable_text:33285:15340:15706\ncatalog:variable_text:33342:13514:18262\ncatalog:variable_text:33343:18262:20089\ncatalog:variable_text:33388:17167:18262\ncatalog:variable_text:33416:17167:20454\ncatalog:variable_text:33424:17167:17532\ncatalog:variable_text:33425:15340:16436\ncatalog:variable_text:33426:17167:17532\ncatalog:variable_text:33427:17167:17532\ncatalog:variable_text:33428:17167:17532\ncatalog:variable_text:33434:15706:16071\ncatalog:variable_text:33436:17167:17532\ncatalog:variable_text:33437:16801:17167\ncatalog:variable_text:33438:13514:15340\ncatalog:variable_text:33481:15706:16071\ncatalog:variable_text:33485:15340:15706\ncatalog:variable_text:33506:17532:17897\ncatalog:variable_text:33508:17532:17897\ncatalog:variable_text:33511:17532:17897\ncatalog:variable_text:33621:19723:20089\ncatalog:variable_text:33679:18262:18628\ncatalog:variable_text:33735:16436:17532\ncatalog:variable_text:33736:19723:20454\ncatalog:variable_text:33809:13879:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:anvander-mobiltelefon-med-3g-4g-for-empmd1pct"
-fields = { "sets" = [] }
-evidence = "Källans individbeskrivning och procentenhet överlappar en annan variabel på samma kolumn.\ncatalog:occurrence:292427\ncatalog:occurrence:292428"
-
-[[statement]]
-kind = "set"
-subject = "var:anvander-mobiltelefon-med-3g-4g-for-empmd1pct"
-fields = { "tags" = ["digital"] }
-evidence = "Källans individbeskrivning och procentenhet överlappar en annan variabel på samma kolumn.\ncatalog:occurrence:292427\ncatalog:occurrence:292428"
 
 [[statement]]
 kind = "set"
@@ -9438,18 +9426,6 @@ evidence = "Återanvända källkolumner har andra betydelser.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:ej-internet-dyr-utrustning"
-fields = { "sets" = ["skal-till-saknad-internettillgang"] }
-evidence = "En återanvänd källkolumn har en annan betydelse.\ncatalog:occurrence:289302\ncatalog:occurrence:289308\ncatalog:occurrence:289688"
-
-[[statement]]
-kind = "set"
-subject = "var:ej-internet-dyr-utrustning"
-fields = { "tags" = ["digital"] }
-evidence = "En återanvänd källkolumn har en annan betydelse.\ncatalog:occurrence:289302\ncatalog:occurrence:289308\ncatalog:occurrence:289688"
-
-[[statement]]
-kind = "set"
 subject = "var:ej-internet-funktionshinder"
 fields = { "sets" = ["skal-till-saknad-internettillgang"] }
 evidence = "En källkolumn återanvänds för ett annat skäl.\ncatalog:occurrence:289126\ncatalog:occurrence:289307\ncatalog:occurrence:289509"
@@ -11412,18 +11388,6 @@ evidence = "Samma säkerhetsskäl är perioddelat med ej-internet-hemma-sakerhet
 
 [[statement]]
 kind = "set"
-subject = "var:inte-internet-saknar-kunskaper"
-fields = { "sets" = ["skal-till-saknad-internettillgang"] }
-evidence = "Källkolumnen återanvänds för en annan betydelse.\ncatalog:occurrence:289304\ncatalog:occurrence:289690"
-
-[[statement]]
-kind = "set"
-subject = "var:inte-internet-saknar-kunskaper"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen återanvänds för en annan betydelse.\ncatalog:occurrence:289304\ncatalog:occurrence:289690"
-
-[[statement]]
-kind = "set"
 subject = "var:inte-kontrollerat-andra-skal"
 fields = { "sets" = ["skal-till-utebliven-informationskontroll"] }
 evidence = "Källkolumnen har andra ägare under andra perioder.\ncatalog:occurrence:290287\ncatalog:occurrence:291169\ncatalog:occurrence:291443"
@@ -11583,12 +11547,6 @@ kind = "set"
 subject = "var:internet-via-smart-tv"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:290362\ncatalog:occurrence:290918"
-
-[[statement]]
-kind = "set"
-subject = "var:internet-via-smartphone-mobil-enhet"
-fields = { "tags" = ["digital"] }
-evidence = "Källkolumnen har olika ägare.\ncatalog:occurrence:290368\ncatalog:occurrence:290632"
 
 [[statement]]
 kind = "set"
@@ -18236,12 +18194,6 @@ evidence = "r104 asks about connecting through a mobile phone or smartphone outs
 
 [[statement]]
 kind = "set"
-subject = "var:internet-via-smartphone-mobil-enhet"
-fields = { "sets" = ["enheter-for-internetanslutning"] }
-evidence = "r105 explicitly asks about connecting through a mobile phone or smartphone outside home or work, a device-based measure. | r105 explicitly asks about connecting through a mobile phone or smartphone outside home or work, a device-based measure. | r105 explicitly asks about connecting through a mobile phone or smartphone outside home or work, a device-based measure. | r105 explicitly asks about connecting through a mobile phone or smartphone outside home or work, a device-based measure.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33040\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33173"
-
-[[statement]]
-kind = "set"
 subject = "var:internet-via-spelkonsol"
 fields = { "sets" = ["enheter-for-internetanslutning"] }
 evidence = "r106 explicitly measures home internet access through a game console, a device type. | r106 explicitly measures home internet access through a game console, a device type. | r106 explicitly measures home internet access through a game console, a device type. | r106 explicitly measures home internet access through a game console, a device type.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33041\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33174"
@@ -20030,12 +19982,6 @@ evidence = "#2102 same-label cluster 'Använder mobiltelefon med 3G,4G för inte
 
 [[statement]]
 kind = "set"
-subject = "var:anvander-mobiltelefon-med-3g-4g-for-empmd1pct"
-fields = { "label" = "Använder mobiltelefon med 3G,4G för internetuppkoppling (företag)" }
-evidence = "#2102 same-label cluster 'Använder mobiltelefon med 3G,4G för internetuppkoppling' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Person survey (befolkningens-it-anvandning, DatC4A) vs company survey (it-anvandning-i-foretag, EMPMD1PCT, unit Procent); same definition text."
-
-[[statement]]
-kind = "set"
 subject = "it-anvandning-i-foretag: DIALUP @2013-01-01..2013-12-31"
 fields = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet (företag)" }
 evidence = "#2102 same-label cluster 'Använder traditionellt modem eller ISDN för anslutning till Internet' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Different tables and respondent units: it-anvandning-i-foretag (DIALUP) vs befolkningens-it-anvandning (DIALUP1)."
@@ -20099,3 +20045,117 @@ kind = "set"
 subject = "var:sysselsattningstyp-skapad-h9txt"
 fields = { "label" = "Sysselsättningstyp skapad (H9txt)" }
 evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: FIXBB @2017-01-01..2018-12-31 where key = 'v15902'"
+fields = { "variable" = "none" }
+evidence = "In the company table SCB attaches column FIXBB to both v15902 and v30783 in the 2017 and 2018 releases (r11568, r12688). v15902 is the persons' survey item (DatA4C, BBWFX, A2_2 in the persons' table, 2007-2012 and 2016) with the persons' code list #11035; v30783 is FIXBB in the company table 2014-2025 with code list #7898. A company file holds one FIXBB column, so the v15902 row is a stray listing; it is withheld so FIXBB places on v30783 alone (#2073, #2072)."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: DatA5D where key = 'v21095'"
+fields = { "variable" = "ej-internet-hemma-dyr-utrustning" }
+evidence = "Both ask whether home internet is absent because the equipment is too expensive (A3c in 2008, 2016 and 2019; A4c in 2015 and 2017). Where both lists are present they use value set 11035, and their years never overlap: v18025 covers 2008, 2016 and 2019, v21095 covers 2009-2015 and 2017. Column DatA5D continues from 2008 (v18025) into 2009-2010 (v21095).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=229660 (r1715)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=70156 (r2757)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974379 (r12032)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=819624 (r12033)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: DatA4C where key = 'v21095'"
+fields = { "variable" = "ej-internet-hemma-dyr-utrustning" }
+evidence = "Same question and value set as v18025 (see DatA5D above); 2011 occurrence of v21095.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=924225 (r3994)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: XEQU where key = 'v21095'"
+fields = { "variable" = "ej-internet-hemma-dyr-utrustning" }
+evidence = "Same question and value set as v18025 (see DatA5D above); 2012-2014 occurrences of v21095.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=776164 (r12386)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: A4c where key = 'v21095'"
+fields = { "variable" = "ej-internet-hemma-dyr-utrustning" }
+evidence = "Same question and value set as v18025 (see DatA5D above); 2015 and 2017 occurrences of v21095, between v18025's 2016 and 2019.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=819624 (r12033)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=71214 (r11917)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: DatA5F where key = 'v23391'"
+fields = { "variable" = "ej-internet-hemma-saknar-kunskaper" }
+evidence = "Both ask whether home internet is absent because the person does not know how to use it (A3e in 2008, 2016 and 2019; A4e in 2015 and 2017). Where both lists are present they use value set 11035, and their years never overlap: v18027 covers 2008, 2016 and 2019, v23391 covers 2010-2015 and 2017. Column DatA5F continues from 2008 (v18027) into 2010 (v23391).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=229664 (r1715)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=924801 (r3238)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974382 (r12032)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: DatA4E where key = 'v23391'"
+fields = { "variable" = "ej-internet-hemma-saknar-kunskaper" }
+evidence = "Same question and value set as v18027 (see DatA5F above); 2011 occurrence of v23391.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=518137 (r3994)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: XSKL where key = 'v23391'"
+fields = { "variable" = "ej-internet-hemma-saknar-kunskaper" }
+evidence = "Same question and value set as v18027 (see DatA5F above); 2012-2014 occurrences of v23391.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=776162 (r12386)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: A4e where key = 'v23391'"
+fields = { "variable" = "ej-internet-hemma-saknar-kunskaper" }
+evidence = "Same question and value set as v18027 (see DatA5F above); 2015 and 2017 occurrences of v23391, between v18027's 2016 and 2019.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=819622 (r12033)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=71212 (r11917)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IUMP where key = 'v30696'"
+fields = { "variable" = "mobil-internet-via-mobiltelefon" }
+evidence = "Both ask whether the person connected to the internet with a mobile phone or smartphone outside home or work. The wording is identical except that v28897 adds the survey's three-month window. Both use value set 11035. Years never overlap and alternate: v28897 in 2012, 2015 and 2017; v30696 in 2013-2014 and 2016.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=524652 (r12386)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=627418 (r12316)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=974350 (r12033)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: B5a where key = 'v30696'"
+fields = { "variable" = "mobil-internet-via-mobiltelefon" }
+evidence = "Same question and value set as v28897 (see IUMP above); 2016 occurrence of v30696, between v28897's 2015 and 2017.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=627539 (r12032)"
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: GSOLOTH @2017 where key = 'v28818'"
+fields = { "variable" = "none" }
+evidence = "r11568 (2017) lists v28818 (use of other EU countries' public e-procurement systems) twice: under its own column IGOV2PREU (rows documented as IGOV2PREU in r11568 and r12688) and under GSOLOTH. GSOLOTH belongs to v38333 ('Använder företaget annan energibesparande it-lösning', value set 7898), which documents it in r11568 and every release 2013-2020 except 2015. The two keys ask different questions. v28818 keeps its IGOV2PREU rows, so withholding the duplicate GSOLOTH row loses no coverage. The 2015 row of v28818 under GSOLOTH (r7289) stands alone, does not overlap v38333 and is left as is.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=706491 (r11568, v28818 under GSOLOTH)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=706489 (r11568, v28818 under IGOV2PREU)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=596379 (r11568, v38333 GSOLOTH)"
+
+[[statement]]
+kind = "set"
+subject = "var:anstalld"
+fields = { "description" = "Personens sysselsättning (verksamhet) i åtta kategorier, inte enbart om personen är anställd." }
+evidence = "G8 2013: activity category in 8 categories, not only \"Anställd\"."
+
+[[statement]]
+kind = "set"
+subject = "var:civilstand"
+fields = { "description" = "Civilstånd. 2012-2018 enligt enkätens svarsalternativ (gift, sambo, ensamstående, registrerad partner); 2019 kodning G, OG, S, Ä; från 2020 OG, G, S, Ä, RP, SP, EP." }
+evidence = "2012-2018 survey categories; 2019 codes G/OG/S/Ä; from 2020 OG, G, S, Ä, RP, SP, EP."
+
+[[statement]]
+kind = "set"
+subject = "var:it-sakerhet-styrandedokument"
+fields = { "description" = "Anger om företaget har skriftliga styrande dokument om IT-säkerhet som skrivits eller uppdaterats under de senaste två åren." }
+evidence = "Definition in all releases: policy documents written or updated in the last 2 years."
+
+[[statement]]
+kind = "set"
+subject = "var:iumd-pbiss"
+fields = { "description" = "Skäl till att inte ansluta enheten till internet: den lilla skärmen är obekväm." }
+evidence = "Reason for not connecting is that the small screen is inconvenient; the definition tail \"för dyrt\" duplicates IUMDX_COST; label and ISS suffix agree."
+
+[[statement]]
+kind = "set"
+subject = "var:r1b"
+fields = { "description" = "Anger om personen under de senaste 12 månaderna gått IT-utbildning som hon eller han själv betalat (ja/nej)." }
+evidence = "Beskrivning: \"IT-utbildning som du själv betalat för\", ja/nej, last 12 months."
+
+[[statement]]
+kind = "set"
+subject = "var:vikt-hus"
+fields = { "description" = "Hushållsvikt: individvikten dividerad med antalet vuxna i hushållet." }
+evidence = "Household weight = individvikten divided by number of adults (r290); existing sets statement agrees."
+
+[[statement]]
+kind = "set"
+subject = "var:turn"
+fields = { "description" = "Omsättning exklusive moms, i tusen kronor, enligt uppgift till respektive års undersökning." }
+evidence = "Turnover excl. VAT in tkr; the \"2016\" in SCB text appears in 2013-2015 releases so it is not year-specific. Existing TURN asserts (r258 curation.toml:483, 2103-2133) keep the \"2016\" label."
