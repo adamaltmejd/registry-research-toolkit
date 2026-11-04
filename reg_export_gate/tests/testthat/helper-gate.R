@@ -78,6 +78,9 @@ splice_before_footer <- function(path, text) {
   writeBin(c(bytes[seq_len(at)], charToRaw(text), bytes[(at + 1L):n]), path)
 }
 
+# An entry's optional `repeat` count (base R's %||% needs R 4.4).
+repeats <- function(x) if (is.null(x$`repeat`)) 1L else x$`repeat`
+
 # Writes a case's folder description: per name, a Parquet file from typed
 # columns (with optional file and column key-value metadata and bytes spliced
 # before the footer), raw text, or a folder.
@@ -89,9 +92,14 @@ materialize <- function(dir, files) {
     if (isTRUE(spec$folder)) {
       dir.create(path)
     } else if (!is.null(spec$text)) {
-      writeBin(charToRaw(spec$text), path)
+      writeBin(charToRaw(strrep(spec$text, repeats(spec))), path)
     } else {
-      arrays <- lapply(spec$columns, column_array)
+      # A column's `repeat` is how many times its values follow one another.
+      columns <- lapply(spec$columns, function(col) {
+        col$values <- rep(col$values, repeats(col))
+        col
+      })
+      arrays <- lapply(columns, column_array)
       names(arrays) <- vapply(spec$columns, function(col) col$name, "")
       table <- do.call(arrow::Table$create, arrays)
       for (key in names(spec$metadata)) {
