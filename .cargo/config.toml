@@ -3,3 +3,7 @@
 # debug server per artifact: unoptimized SHA-256 pushed CI's rust job past its timeout.
 [profile.dev.package.sha2]
 opt-level = 3
+
+# Repository tooling (crates/xtask): `cargo xtask gh-issue view <n>`.
+[alias]
+xtask = "run -q -p xtask --"

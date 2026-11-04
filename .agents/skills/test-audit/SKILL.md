@@ -74,7 +74,7 @@ Deleting the only proof of a behavior is the maintainer's call: the behavior lea
 package's DESIGN.md, or the block is rewritten into a corpus. Everything else: delete
 the block and the helpers it orphans, one commit per test file or package. A kept block
 that fails on main is a product bug: reproduce it at the boundary and file it (search
-first; read through `scripts/gh_issue.py`), never delete it.
+first; read through `cargo xtask gh-issue`), never delete it.
 
 Before pushing, always `uv run python -m pytest <tree> -n auto -q`, where `<tree>` is
 `scripts/tests`, and conformance, which runs against the Rust server

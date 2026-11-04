@@ -1,0 +1,8 @@
+{
+  "why": "fails if a maintainer issue is refused, if `state` is not requested from gh, if the override stops winning over the repo owner, or if the stdout shape drifts from json.dumps(ensure_ascii=False)",
+  "args": ["view", "328"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 328, "title": "epic", "state": "OPEN", "body": "plan: åäö \"quoted\"\tline\n2", "author": {"login": "test-maintainer"}},
+  "exit": 0,
+  "stdout": "{\"number\": 328, \"title\": \"epic\", \"state\": \"OPEN\", \"body\": \"plan: åäö \\\"quoted\\\"\\tline\\n2\"}\n"
+}

@@ -1,0 +1,8 @@
+{
+  "why": "without the override the repo owner is the maintainer, matched case-insensitively; fails if the fallback or the casefold breaks",
+  "args": ["view", "5"],
+  "env": {"GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 5, "title": "t", "state": "CLOSED", "body": "b", "author": {"login": "TheOwner"}},
+  "exit": 0,
+  "stdout": "{\"number\": 5, \"title\": \"t\", \"state\": \"CLOSED\", \"body\": \"b\"}\n"
+}

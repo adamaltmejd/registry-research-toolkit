@@ -1,0 +1,8 @@
+{
+  "why": "an empty REGISTRY_MAINTAINER_LOGIN is not a login; fails if it is used instead of falling back to the repo owner",
+  "args": ["view", "5"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 5, "title": "t", "state": "OPEN", "body": "b", "author": {"login": "theowner"}},
+  "exit": 0,
+  "stdout": "{\"number\": 5, \"title\": \"t\", \"state\": \"OPEN\", \"body\": \"b\"}\n"
+}

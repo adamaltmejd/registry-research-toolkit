@@ -1,0 +1,10 @@
+{
+  "why": "fail-closed: fails if an author without a login is trusted",
+  "args": ["view", "7"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 7, "title": "t", "body": "evil", "author": {}},
+  "exit": 3,
+  "stdout": "",
+  "stderr_contains": "not maintainer-authored",
+  "stderr_excludes": ["evil"]
+}

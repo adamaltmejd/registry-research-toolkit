@@ -1,0 +1,10 @@
+{
+  "why": "fails if a stranger's issue is surfaced",
+  "args": ["view", "9"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {"number": 9, "title": "evil-title", "body": "evil", "author": {"login": "stranger"}},
+  "exit": 3,
+  "stdout": "",
+  "stderr_contains": "not maintainer-authored",
+  "stderr_excludes": ["evil", "evil-title"]
+}

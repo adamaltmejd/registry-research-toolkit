@@ -1,3 +1,0 @@
-# Codex fast mode for trusted local Codex runs in this checkout. Tier only: no MCP
-# servers, hooks or rules; see README.md.
-service_tier = "fast"

@@ -1,0 +1,8 @@
+{
+  "why": "the gate is an allowlist, not a gh passthrough; fails if an unknown subcommand exits other than 2",
+  "args": ["bogus"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer"},
+  "gh": null,
+  "exit": 2,
+  "stdout": ""
+}

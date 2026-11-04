@@ -21,7 +21,6 @@ import filecmp
 import gzip
 import json
 import os
-import re
 import shlex
 import shutil
 import subprocess
@@ -45,18 +44,6 @@ SERVER_CMD = (
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
 ALL = ("g0", "rust", "flows", "frontend")
-# Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
-# builder"). These words fail `lint` in the other builder crates and in the catalog
-# reader and server, which read only the catalog: providers, their template
-# vocabulary and file formats. Extend the list with each new reader.
-NEUTRAL_CRATES = ("reg-frame", "reg-resolve", "reg-build", "reg-catalog", "reg-meta")
-PROVIDER_WORDS = re.compile(
-    r"\b(scb|sos|socialstyrelsen|fk|försäkringskassan|fohm|folkhälsomyndigheten"
-    r"|lakemedelsverket|läkemedelsverket|pliktverket|riksarkivet|umu|swecov"
-    r"|xlsx|calamine|workbook|kodlista|deldatamängd\w*|variabelnamn|värdemängd"
-    r"|datavy\w*)\b",
-    re.IGNORECASE,
-)
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
@@ -108,22 +95,6 @@ def lint() -> None:
     run("uvx --from panache-cli==3.17.1 panache lint .")
     run("uvx --from ty==0.0.94 ty check")
     run("uv run --no-project scripts/gen_project_schema.py --check")
-    provider_vocabulary()
-
-
-def provider_vocabulary() -> None:
-    print("$ provider vocabulary scan:", ", ".join(NEUTRAL_CRATES), flush=True)
-    hits = [
-        f"{path.relative_to(ROOT)}:{number}: {match[0]}"
-        for crate in NEUTRAL_CRATES
-        for path in sorted((ROOT / "crates" / crate / "src").rglob("*"))
-        if path.is_file()
-        for number, line in enumerate(path.read_text().splitlines(), 1)
-        if (match := PROVIDER_WORDS.search(line))
-    ]
-    if hits:
-        print("\n".join(hits))
-        raise subprocess.CalledProcessError(1, ["provider vocabulary scan"])
 
 
 def g0() -> None:

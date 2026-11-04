@@ -78,6 +78,7 @@ registry-research-toolkit/
     reg-readers/    #   one reader per input format
     reg-resolve/    #   per-register resolution
     reg-build/      #   link, emit and the CLI (binary: reg-build)
+    xtask/          # repo tooling (`cargo xtask gh-issue`) and the repo-policy lints
   curation/         # the builder's inputs pin, reader config, curation and id ledgers
   reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
@@ -240,7 +241,7 @@ This is the complete list of boundaries a test may assert at.
   | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                           |
   | FQID / period grammars, interval algebra | input → expected cases and round-trip snapshots in `crates/reg-core/tests/`                                          |
   | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings                |
-  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                           |
+  | Repository tooling (`xtask`, `scripts`)  | the tool's own contract: the trust gate's output or refusal, a lint's verdict                                        |
 
 ### Tiers
 
@@ -255,13 +256,14 @@ This is the complete list of boundaries a test may assert at.
    conformance suite against the Rust server, then the `release`-marked admission checks
    on the synthetic catalog artifact), with room for a cold rust-cache and its save.
    Each binary is built once, in `rust`. The `lint` job runs `gate.py lint` (ruff,
-   panache, ty, plugin schema drift and provider vocabulary). The OpenAPI snapshot is a
-   `crates/reg-meta` test. The `reg-webapp-frontend` job runs install, WASM generation,
-   type checks, lint, unit tests, build and codegen drift; `reg-webapp-flows` runs the
-   production bootstrap and shell/search browser flows against a source-built synthetic
-   fixture, at the phone (375 px) and desktop viewports only; the four-width review is
-   the design-review skill's. Each frontend job has a 6-minute timeout. A job that
-   exceeds its budget fails.
+   panache, ty and plugin schema drift); the repo-policy lints are `crates/xtask` tests
+   in `cargo test --workspace`. The OpenAPI snapshot is a `crates/reg-meta` test. The
+   `reg-webapp-frontend` job runs install, WASM generation, type checks, lint, unit
+   tests, build and codegen drift; `reg-webapp-flows` runs the production bootstrap and
+   shell/search browser flows against a source-built synthetic fixture, at the phone
+   (375 px) and desktop viewports only; the four-width review is the design-review
+   skill's. Each frontend job has a 6-minute timeout. A job that exceeds its budget
+   fails.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -287,8 +289,8 @@ suites are run by hand, not by the gate or CI.
 
   | Suite                                | Local | CI job | Rationale                                                                                                                     |
   | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
-  | `scripts/tests`                      | 20 s  | 5 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate.                               |
-  | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust builder's and runtime's tests; G0 always runs them.                                                                  |
+  | `scripts/tests`                      | 20 s  | 5 min  | The remaining Python scripts' contracts.                                                                                      |
+  | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust builder's and runtime's tests and the `crates/xtask` repo-policy lints; G0 always runs them.                         |
   | conformance (`scripts/gate.py rust`) | 30 s  | 9 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job. |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.           |
   | flows (`scripts/gate.py flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.          |
@@ -339,8 +341,9 @@ Repeated search and successful order comparisons use raw bytes; no fields are re
 and key/list order remains observable. HTTP/MCP order agreement compares JSON documents.
 The existing `crates/reg-core/tests/project/corpus/` serves its Rust consumers.
 
-Oversized test modules are gated by a repo lint (`scripts/tests/test_test_size.py`) with
-no exemptions or file allowlists. The Rust reader runs against these oracles.
+Oversized integration test files are gated by a repo lint
+(`crates/xtask/tests/test_size.rs`) with no exemptions or file allowlists. The Rust
+reader runs against these oracles.
 
 Coverage is measured as boundaries with a corpus, not as line percentage; a boundary
 without a corpus is the gap.

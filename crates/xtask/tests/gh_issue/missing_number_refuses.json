@@ -1,0 +1,9 @@
+{
+  "why": "gh exits non-zero for a missing number; fails if that is surfaced or treated as a gate error (exit 2)",
+  "args": ["view", "1"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": null,
+  "exit": 3,
+  "stdout": "",
+  "stderr_contains": "not maintainer-authored"
+}

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Registry Build DB"
-  short_description: "Prepare pinned inputs and verify catalog builds"
-  default_prompt: "Use $build-db to select the correct input pins and verify a batched registry catalog build."
-policy:
-  allow_implicit_invocation: true

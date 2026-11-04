@@ -1,6 +1,0 @@
-interface:
-  display_name: "Registry Webapp Frontend Design"
-  short_description: "Design registry webapp React UI changes"
-  default_prompt: "Use $reg-webapp-frontend-design before authoring substantial registry webapp React UI."
-policy:
-  allow_implicit_invocation: true
