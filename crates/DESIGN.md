@@ -118,6 +118,8 @@ HTTP API             MCP over stdio (local catalog)
 - `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
   data side. It reads no catalog. Its design is
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
+- `xtask`: repository tooling, not shipped. `cargo xtask gh-issue` is the
+  maintainer-author trust gate for issue reads; its tests hold the repo-policy lints.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of
@@ -562,7 +564,7 @@ overlapping curated overrides are refused at both locations.
 
 **Agnosticism is enforced.**
 
-- Only `reg-readers` may name a provider or a format. A lint step in the gate scans the
+- Only `reg-readers` may name a provider or a format. A `crates/xtask` test scans the
   other builder crates for provider vocabulary and fails on any hit.
 - A new provider is a reader or a transcription, plus curation in the existing kinds.
 

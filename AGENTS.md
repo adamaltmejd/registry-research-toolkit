@@ -14,7 +14,8 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
   `reg-core-wasm` (`reg-core` for the SPA), and the catalog builder: `reg-frame`,
   `reg-readers`, `reg-resolve` and `reg-build`, with its reader config, curation and id
-  ledgers under `curation/`.
+  ledgers under `curation/`. `xtask` is repository tooling (`cargo xtask gh-issue`) and
+  the repo-policy lints; it is not released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's
@@ -186,8 +187,9 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
   `flows`, `frontend`). The R packages are not gated: their testthat suites run only by
   hand (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
-- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty, plugin
-  schema drift and provider vocabulary.
+- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty and plugin
+  schema drift. The repo-policy lints (provider vocabulary, skill reads and aliases,
+  test size) are `crates/xtask` tests, run by `crates`.
 - `uv run --no-project scripts/gate.py g0 rust` — lint, crates and `scripts/tests`, plus
   the conformance run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
@@ -219,11 +221,11 @@ builder, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`, `b
 `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
-**only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
+**only** through `cargo xtask gh-issue`, a fail-closed maintainer-author trust gate:
 issues/comments not authored by the maintainer are dropped rather than surfaced to a
 model. Raw `gh issue view` / `gh issue list` without `--search` (and
 `gh api .../issues`, `gh search issues`) model-reads in skill files are forbidden,
-enforced by `scripts/tests/test_skill_gh_reads.py`.
+enforced by `crates/xtask/tests/skill_gh_reads.rs`.
 
 # Git
 
