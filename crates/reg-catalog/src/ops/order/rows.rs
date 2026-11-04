@@ -29,9 +29,9 @@ struct KeySegment {
 /// segment of both databases (~350 ms per table), and its answer depends on the table
 /// alone: the catalog and holdings are opened immutable and replaced only by a
 /// redeploy, so an answer holds for the life of the process. Errors are not cached.
-// simplify: unbounded, one entry per held table asked about (~154 today), filled
-// lazily; move the computation into the holdings build if the held-table count grows
-// or the map shows in memory.
+// simplify: unbounded, one entry per table asked about (at most the catalog's tables;
+// ~154 held today), filled lazily; move the computation into the holdings build if
+// the table count grows or the map shows in memory.
 #[derive(Default)]
 pub(crate) struct StewardKeys(Mutex<HashMap<String, Arc<Vec<KeySegment>>>>);
 
