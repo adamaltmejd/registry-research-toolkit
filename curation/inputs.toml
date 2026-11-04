@@ -79,8 +79,9 @@ path = "current-scb-inputs.zip"
 sha256 = "a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff"
 provider = "scb"
 
-# The LISA workbook is attached to r34 through ordinary curation (D-8), generated
-# by scripts/rebuild_attach_lisa.py from the lisa reader's frames and section map.
+# The LISA workbook is attached to r34 through ordinary curation (D-8), generated in
+# D by scripts/rebuild_attach_lisa.py (since deleted) from the lisa reader's frames and
+# section map.
 # Its standalone register is retired; the reader remains available for inspection.
 
 [[input]]

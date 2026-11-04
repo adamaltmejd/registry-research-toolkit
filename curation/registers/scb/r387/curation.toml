@@ -3,7 +3,7 @@
 kind = "set"
 subject = "riksbankens-kreditdatabas-krita: legalform"
 fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
 [[statement]]
 kind = "set"

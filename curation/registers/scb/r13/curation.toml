@@ -3,211 +3,211 @@
 kind = "assert"
 subject = "momsdeklarationsregistret: DatumFDB @2015..2022"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Datum för FDB-uppgifter", "definition" = "Datum då uppgifterna från Företagsdatabasen (FDB) lades till.", "type" = "date" } }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:189\n\nSWECOV holds DatumFDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/moms.toml:189\n\nSWECOV holds DatumFDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
 
 [[statement]]
 kind = "assert"
 subject = "momsdeklarationsregistret: FDB @2015..2022"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Markering att PeOrgNr finns i FDB", "definition" = "Markering om uppgifter för PeOrgNr finns i Företagsdatabasen (FDB).", "type" = "text" } }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:200\n\nSWECOV holds FDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/moms.toml:200\n\nSWECOV holds FDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
 
 [[statement]]
 kind = "assert"
 subject = "momsdeklarationsregistret: IdPers_Typ @2015..2022"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av IdPers", "definition" = "Typ av sambandsnummer som IdPers avser (gruppmomsnummer, konkursnummer eller representant).", "type" = "text" } }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:167\n\nSWECOV holds IdPers_Typ in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/moms.toml:167\n\nSWECOV holds IdPers_Typ in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
 
 [[statement]]
 kind = "assert"
 subject = "momsdeklarationsregistret: IdPers @2015..2022"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Redovisande identitet (IdPers)", "definition" = "Identitet som momsredovisningen lämnas under. Avviker från PeOrgNr när redovisningen sker under ett sambandsnummer. Levereras löpnumrerad.", "type" = "integer", "identifier" = true, "sensitive" = false } }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:154\n\nSWECOV holds P1105_LopNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F2, maintainer round 5; the pseudonymised P1105_LopNr_IdPers matches by its stripped name)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/moms.toml:154\n\nSWECOV holds P1105_LopNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F2, maintainer round 5; the pseudonymised P1105_LopNr_IdPers matches by its stripped name)."
 
 [[statement]]
 kind = "assert"
 subject = "momsdeklarationsregistret: Samma_PeorgNr_IdPers @2015..2022"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Markering att PeOrgNr och IdPers är lika", "definition" = "Markering att redovisande identitet IdPers är densamma som PeOrgNr.", "type" = "text" } }
-evidence = "reg_meta_build/curation/registers/scb/moms.toml:178\n\nSWECOV holds Samma_PeorgNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/moms.toml:178\n\nSWECOV holds Samma_PeorgNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @1999"
 fields = { "classification" = "class/lkf/lkf1999" }
-evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2000"
 fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2001"
 fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2003"
 fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2004"
 fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2005"
 fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2002,2006"
 fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: ng0 @2007"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: ng0 where key = 'v19054'"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: ng1 @2007..2022"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: jform"
 fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: agkat @2003..2022"
 fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+evidence = "python-builder-pre-cutover:curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: sektor @2000..2006"
 fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+evidence = "python-builder-pre-cutover:curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
 
 [[statement]]
 kind = "set"
 subject = "momsdeklarationsregistret: sni92 @2003..2006"
 fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
@@ -1071,35 +1071,35 @@ evidence = "r46 explicitly measures service-export turnover outside the EU, with
 kind = "set"
 subject = "var:agarkontroll"
 fields = { "description" = "Ägarkategori enligt FDB" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
 kind = "set"
 subject = "var:aktuellt-antal-anstallda"
 fields = { "description" = "Antal anställda på företaget enligt FDB" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
 kind = "set"
 subject = "var:imputerad"
 fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
 kind = "set"
 subject = "var:institutionell-sektor"
 fields = { "description" = "Sektorkod enligt FDB" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
 kind = "set"
 subject = "var:juridisk-form"
 fields = { "description" = "Juridisk form enligt FDB" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
@@ -1120,14 +1120,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen 
 kind = "set"
 subject = "var:redovisningsgrupp-moms"
 fields = { "description" = "Redovisningsgrupp för moms" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 
 [[statement]]
 kind = "set"
 subject = "var:stkl"
 fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"

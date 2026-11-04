@@ -3,97 +3,97 @@
 kind = "assert"
 subject = "individuppgifter-agi: FARTYGETS_NAMN @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Fartygets namn", "definition" = "Fartygets namn; glest ifyllt. Levereras pseudonymiserat som löpnummer. SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = true } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:873\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:873\n\nSWECOV holds the column in its AGI tables (python-builder-pre-cutover:reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: FARTYGSSIGNAL @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Fartygssignal", "definition" = "Fartygets signal (anropssignal); glest ifyllt. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = true } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:886\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:886\n\nSWECOV holds the column in its AGI tables (python-builder-pre-cutover:reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: KONTROLLSTATUS @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Kontrollstatus", "definition" = "Status för SCB:s granskning av individuppgiften (koderna KONTROLLERAD, FARDIGBEARBETAD_MAN, FARDIGBEARBETAD_MASK, SKA_ATGARDAS). SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:860\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:860\n\nSWECOV holds the column in its AGI tables (python-builder-pre-cutover:reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: FORSTA_ANSTALLD @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "1:a anställd", "definition" = "1:a anställd" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:417\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:417\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: UTSAND_UNDER_TID @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Betalningsmottagaren utsänd under tid", "definition" = "Betalningsmottagaren utsänd under tid" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:538\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:538\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: DIST_HU_SAKNAS @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden.", "definition" = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden." } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:406\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:406\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: KONVENTION_MED @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Konvention med", "definition" = "Konvention med" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:428\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:428\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: LANDSKOD_TIN @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod TIN", "definition" = "Landskod TIN" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:472\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:472\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: LANDSKOD_ARBETSLAND @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod arbetsland", "definition" = "Landskod arbetsland" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:439\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:439\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: LANDSKOD_MEDBORGARE @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod medborgarskap ej svenskt", "definition" = "Landskod medborgarskap ej svenskt" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:450\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:450\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: LANDSKOD_POSTORT @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod postort (om ifylld)", "definition" = "Landskod postort (om ifylld)" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:461\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:461\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: LOKALANSTALLD @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Lokalanställd", "definition" = "Lokalanställd" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:483\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:483\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: NARFART_FJARRFART @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Närfart/Fjärrfart", "definition" = "Närfart/Fjärrfart" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:494\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:494\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: PERSONALOPTION @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel", "definition" = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:516\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:516\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: PERIOD @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Redovisningsperiod", "definition" = "Redovisningsperiod" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:505\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:505\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi: SKATTEBEFR_ENL_AVTAL @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Skattebefriad enligt skatteavtal", "definition" = "Skattebefriad enligt skatteavtal" } }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:527\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "python-builder-pre-cutover:curation/registers/scb/agi.toml:527\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 
 [[statement]]
 kind = "set"
@@ -693,79 +693,79 @@ evidence = "r16 defines an amount of cost reimbursements other than mileage or s
 kind = "set"
 subject = "var:andra-formaner-underlag-arbetsgivaravgift"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF. Bil- och drivmedelsförmån ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2183:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2183:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:andra-formaner-underlag-egenavgift"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter. Bilförmån och fritt drivmedel vid bilförmån ingår inte." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2184:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2184:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:avdr-skatt-sink"
 fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2145:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2145:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
 fields = { "description" = "Avdragen preliminär skatt" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:avrakning-avgiftsfri-ers"
 fields = { "description" = "Avräkning från avgiftsfri ersättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:bilersattning"
 fields = { "description" = "Bilersättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
 fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2180:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2180:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
 fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2181:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2181:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman-inte-smahus-underlag-egenavgift"
 fields = { "description" = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:bostadsforman-smahus-inte-underlag-socialavgift"
 fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:drivmedel-bilforman-underlag-arbetsgivaravgift"
 fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF. Förmånsvärdet är marknadsvärdet gånger 1,2 minus nettolöneavdrag, medan arbetsgivaravgiften beräknas på marknadsvärdet utan uppräkning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2156:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2156:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:drivmedel-bilforman-underlag-egenavgift"
 fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter. Förmånen värderas till marknadsvärdet gånger 1,2 och minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2157:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2157:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -777,13 +777,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 kind = "set"
 subject = "var:ersattning-egenavgifter-eller-sarskild-loneskatt"
 fields = { "description" = "Kontant ersättning som är underlag för egenavgifter. Uppgiften omfattar uppenbart anställda med F-skatt och andra mottagare som själva ska betala egenavgifter eller särskild löneskatt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2171:opdef_text. One variable, one description."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:2171:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
 subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "description" = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -795,19 +795,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 kind = "set"
 subject = "var:forman-som-pension"
 fields = { "description" = "Förmån som pension som inte är underlag för socialavgifter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:hyresersattning"
 fields = { "description" = "Hyresersättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
 subject = "var:skattepliktiga-ersattningar-ej-sociala"
 fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
@@ -819,7 +819,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 kind = "set"
 subject = "var:underlag-skattereduktion-rot-forman"
 fields = { "description" = "Underlag för skattereduktion för rotarbete" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"

@@ -3,7 +3,7 @@
 kind = "set"
 subject = "energistatistik-for-lokaler: lan"
 fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
