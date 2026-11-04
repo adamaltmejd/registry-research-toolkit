@@ -7,15 +7,8 @@ import {
   Tree,
   TreeItem,
   TreeItemContent,
-  TreeLoadMoreItem,
 } from "react-aria-components";
-import {
-  getShow,
-  type RegisterChild,
-  type RootChild,
-  SEARCH_MIN_QUERY_LENGTH,
-  searchFacets,
-} from "./api";
+import { type RootChild, SEARCH_MIN_QUERY_LENGTH, searchFacets } from "./api";
 import styles from "./BrowseTree.module.css";
 import {
   allRegisterFacets,
@@ -39,13 +32,12 @@ import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 import { useCatalogRead } from "./use_store_read";
 
-/** One row: a provider (or the classification root) at level 1, a register under
- * it. `children` is null while a provider's registers are still loading. */
+/** One row: a provider at level 1, a register under it. */
 interface BrowseNode {
   id: string;
   name: string;
   href: string;
-  children: BrowseNode[] | null;
+  children: BrowseNode[];
   /** Set on a register the filter keeps only through its variables: how many. */
   variableMatches?: number;
 }
@@ -115,9 +107,8 @@ function currentRow(route: Route): CurrentRow | null {
  * match by name or slug, then those that match only through their variables
  * (`facets`, per register FQID), each with its count; or all of them when its
  * own name matches. Those groups are `matched`. A group with no match is left
- * out until the filter clears (#1830), and so is a leaf row (the
- * classification root) whose own name does not match. A provider whose
- * registers are still loading stays, as its loader row. */
+ * out until the filter clears (#1830), and so is a leaf row whose own name does
+ * not match. */
 function filterNodes(
   nodes: BrowseNode[],
   needle: string,
@@ -127,7 +118,6 @@ function filterNodes(
   if (needle.trim() === "") return { nodes, matched };
   const named = (node: BrowseNode) => [node.name, leafSlug(node.id)];
   const filtered = nodes.flatMap((node) => {
-    if (node.children === null) return [node];
     if (rankFilter([node], needle, named).length > 0) {
       if (node.children.length > 0) matched.add(node.id);
       return [node];
@@ -144,23 +134,17 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-function browseNodes(
-  root: RootChild[],
-  registers: Record<string, RegisterChild[]> | null,
-): BrowseNode[] {
+function browseNodes(root: RootChild[]): BrowseNode[] {
   return root.map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
-    children:
-      registers === null
-        ? null
-        : (registers[child.fqid] ?? []).map((register) => ({
-            id: register.fqid,
-            name: register.name ?? register.fqid,
-            href: catalogHref(register.fqid),
-            children: [],
-          })),
+    children: child.registers.map((register) => ({
+      id: register.fqid,
+      name: register.name ?? register.fqid,
+      href: catalogHref(register.fqid),
+      children: [],
+    })),
   }));
 }
 
@@ -181,22 +165,6 @@ export function BrowseTree({ className }: { className?: string }) {
   const route = useRoute();
   const root = useCatalogRead(catalogRootChildren, undefined);
   const counts: Record<string, number> = {};
-  const providers = root.value ?? [];
-  // One request per provider, all at once: every group starts open.
-  const registers = useAsyncResource(
-    root.value === null ? null : providers.map((p) => p.fqid).join(" "),
-    async (signal) => {
-      const shown = await Promise.all(
-        providers.map((p) => getShow(p.fqid, { signal })),
-      );
-      return Object.fromEntries(
-        shown.map((node, i) => [
-          providers[i].fqid,
-          node.kind === "provider" ? node.registers : [],
-        ]),
-      );
-    },
-  );
   const needle = useBrowseFilter();
   const filtering = needle.trim() !== "";
   // The variable matches per register, asked once the text rests.
@@ -214,10 +182,7 @@ export function BrowseTree({ className }: { className?: string }) {
   );
   const current = currentRow(route);
   const currentKey = current?.key ?? null;
-  const allNodes = browseNodes(
-    root.value ?? [],
-    registers.loading ? null : (registers.data ?? {}),
-  );
+  const allNodes = browseNodes(root.value ?? []);
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.
   const facetError = facetResource.error;
@@ -227,7 +192,7 @@ export function BrowseTree({ className }: { className?: string }) {
     facets,
   );
   const expandable = nodes
-    .filter((node) => node.children === null || node.children.length > 0)
+    .filter((node) => node.children.length > 0)
     .map((node) => node.id);
   // The search field's "N matches": the registers the filter keeps. No count
   // until the variable matches for this needle have arrived: the debounce has
@@ -238,13 +203,12 @@ export function BrowseTree({ className }: { className?: string }) {
     (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
   const matchCount =
     filtering &&
-    !registers.loading &&
     root.value !== null &&
     !facetsPending &&
     !facetError
       ? nodes
           .filter((node) => matched.has(node.id))
-          .reduce((sum, node) => sum + (node.children?.length ?? 0), 0)
+          .reduce((sum, node) => sum + node.children.length, 0)
       : null;
   useEffect(() => {
     browseMatches.set(matchCount);
@@ -255,7 +219,7 @@ export function BrowseTree({ className }: { className?: string }) {
   const order =
     filtering && !facetError
       ? nodes
-          .flatMap((node) => (node.children ?? []).map((child) => child.id))
+          .flatMap((node) => node.children.map((child) => child.id))
           .join(" ")
       : "";
   useEffect(() => {
@@ -266,7 +230,7 @@ export function BrowseTree({ className }: { className?: string }) {
   const hrefs = new Map(
     allNodes.flatMap((node) => [
       [node.id, node.href] as const,
-      ...(node.children ?? []).map((c) => [c.id, c.href] as const),
+      ...node.children.map((c) => [c.id, c.href] as const),
     ]),
   );
 
@@ -297,7 +261,7 @@ export function BrowseTree({ className }: { className?: string }) {
   // spike's capture). TreeStateContext does not reach item components, which
   // RAC renders in a hidden collection pass first, so it cannot be used.
   const treeState = useRef<TreeState | null>(null);
-  const treeShown = root.value !== null && !registers.loading;
+  const treeShown = root.value !== null;
 
   // A page opened from elsewhere (a link, the search bar, history) moves the
   // tree's focus to its row, or to the collapsed group hiding it, so Tab into
@@ -420,12 +384,6 @@ export function BrowseTree({ className }: { className?: string }) {
           </StatusRow>
         ) : (
           <>
-            {registers.error && (
-              <StatusRow tone="error" live="alert" className={styles.error}>
-                Some registers did not load ({registers.error}). Reload the page
-                to try again.
-              </StatusRow>
-            )}
             {facetError && (
               <StatusRow tone="error" live="alert" className={styles.error}>
                 Variable search failed ({facetError}). Showing all loaded
@@ -563,26 +521,17 @@ function BrowseItem({
           </>
         )}
       </TreeItemContent>
-      {/* RAC 1.22.1 ignores `hasChildItems` on a parent with no child rows (no
-          aria-expanded, → does nothing), so a provider whose registers are
-          still loading keeps a loader row as its child. */}
-      {node.children === null ? (
-        <TreeLoadMoreItem isLoading className={styles.loading}>
-          <span aria-busy="true">Loading registers…</span>
-        </TreeLoadMoreItem>
-      ) : (
-        <Collection items={node.children}>
-          {(child) => (
-            <BrowseItem
-              node={child}
-              counts={counts}
-              current={current}
-              needle={needle}
-              onOpenCurrent={onOpenCurrent}
-            />
-          )}
-        </Collection>
-      )}
+      <Collection items={node.children}>
+        {(child) => (
+          <BrowseItem
+            node={child}
+            counts={counts}
+            current={current}
+            needle={needle}
+            onOpenCurrent={onOpenCurrent}
+          />
+        )}
+      </Collection>
     </TreeItem>
   );
 }

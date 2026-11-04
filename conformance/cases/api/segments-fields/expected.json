@@ -4,6 +4,7 @@
     "json": {
       "/data/items": [
         {
+          "variable": "demo/sg/kanslig",
           "table": "demo/sg/t",
           "table_name": "Tabell T",
           "column": "Kanslig",
@@ -15,6 +16,7 @@
           "sensitive": false
         },
         {
+          "variable": "demo/sg/kanslig",
           "table": "demo/sg/t",
           "table_name": "Tabell T",
           "column": "Kanslig",
@@ -35,7 +37,8 @@
         "role",
         "sensitive",
         "table",
-        "table_name"
+        "table_name",
+        "variable"
       ]
     }
   }

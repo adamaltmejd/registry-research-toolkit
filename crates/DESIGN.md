@@ -959,6 +959,16 @@ set, `coded` unknown, and `state` clear (the default) are all left out, which ke
 agent context small. Storage type stays in the catalog (orders use it) and is shown only
 when stated.
 
+**A page load is a few requests, not one per row (#2232).** The edge rate-limits every
+request, cache hits included, so a view never fans out a read per listed entity. The
+root `show` carries each provider's registers (the provider summary's list), so the
+browse column is one read. `segments` at a table ref with `variable` (up to 200
+variables) lists those variables' rows in that table as one list, each row naming its
+`variable`, so the project page reads a table's columns in one request. A table ref
+without `variable` is refused: a whole table's list runs to thousands of rows and is
+rebuilt per page. A cursor binds a SHA-256 of the request's parameters, not the
+parameters themselves, so naming 200 variables keeps it short.
+
 **Names next to ids.** A response that refers to a register, table or variable carries
 its name next to the FQID, as `show` gives it (a reference row's name over a steward
 overlay's), so a reader needs no `show` per id: `segments` rows have `table_name`,

@@ -4,6 +4,7 @@ import {
   getGraph,
   getSegments,
   getShow,
+  getTableSegments,
   type RegisterShow,
   type RootChild,
   type ShowNode,
@@ -55,11 +56,26 @@ export const UNASKED: Read<never> = { value: null, loading: false };
 let generation = 0;
 
 function settleRead(key: string, value: unknown, startedIn: number): void {
-  // A reset abandons old requests. An older failure cannot replace a success.
-  if (startedIn !== generation || (value === null && reads[key]?.value)) return;
-  const current = reads[key];
-  if (current && !current.loading && current.value === value) return;
-  reads = { ...reads, [key]: { value, loading: false } };
+  settleReads([[key, value]], startedIn);
+}
+
+/** Settle several reads that one request answered, with one notification. */
+function settleReads(
+  settled: readonly (readonly [string, unknown])[],
+  startedIn: number,
+): void {
+  // A reset abandons old requests.
+  if (startedIn !== generation) return;
+  const next: Record<string, Read<unknown>> = {};
+  for (const [key, value] of settled) {
+    const current = reads[key];
+    // An older failure cannot replace a success.
+    if (value === null && current?.value) continue;
+    if (current && !current.loading && current.value === value) continue;
+    next[key] = { value, loading: false };
+  }
+  if (Object.keys(next).length === 0) return;
+  reads = { ...reads, ...next };
   notify();
 }
 
@@ -166,9 +182,9 @@ export function sharedShow(
   });
 }
 
-/** The catalog root's children — the deployment's providers (plus the
- * classification root), for the shell's facet rail and for `sourceNames`'
- * provider word. */
+/** The catalog root's children — the deployment's providers, each with its
+ * registers: the whole browse column in one read (#2232), and the breadcrumb's
+ * provider names. */
 export function catalogRootChildren(): Read<RootChild[]> {
   return read("root", async () => {
     const root = await getShow();
@@ -181,9 +197,48 @@ export function registerRead(ref: string): Read<RegisterShow> {
   return read(`register:${ref}`, () => loadRegister(ref));
 }
 
-/** Source edits reuse each variable's segments without reloading other cards. */
+/** A variable's whole per-period list. */
 export function segmentsRead(ref: string): Read<CatalogSegment[]> {
   return read(`segments:${ref}`, () => getSegments(ref));
+}
+
+/** Each of `variables`' rows in `table`, by variable. The columns not read yet are
+ * read together, one request per table rather than one per column (#2232), and each
+ * keeps its own entry: a column added later reads only itself, and source edits
+ * reload no other card. */
+export function tableSegmentsReads(
+  table: string,
+  variables: readonly string[],
+): Record<string, Read<CatalogSegment[]>> {
+  const key = (variable: string) =>
+    `table-segments:${JSON.stringify([table, variable])}`;
+  const missing = variables.filter((variable) => !reads[key(variable)]);
+  if (missing.length > 0) {
+    for (const variable of missing) reads[key(variable)] = PENDING;
+    const startedIn = generation;
+    // A failed read is not an error surface — see the module comment.
+    getTableSegments(table, missing).then(
+      (rows) =>
+        settleReads(
+          missing.map((variable) => [
+            key(variable),
+            rows.filter((row) => row.variable === variable),
+          ]),
+          startedIn,
+        ),
+      () =>
+        settleReads(
+          missing.map((variable) => [key(variable), null]),
+          startedIn,
+        ),
+    );
+  }
+  return Object.fromEntries(
+    variables.map((variable) => [
+      variable,
+      reads[key(variable)] as Read<CatalogSegment[]>,
+    ]),
+  );
 }
 
 /** A variable's one-hop succession, shared by its variable or group page. */

@@ -1,7 +1,12 @@
 import { useRef, useState } from "react";
 import { FileTrigger, Input, Label, TextField } from "react-aria-components";
-import { type Context, errMessage, stewardConfig } from "./api";
-import { registerRead, segmentsRead } from "./catalog_names";
+import {
+  type CatalogSegment,
+  type Context,
+  errMessage,
+  stewardConfig,
+} from "./api";
+import { registerRead, tableSegmentsReads } from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
 import { IssueLink, LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
@@ -292,8 +297,23 @@ function Check({
 
 const readRegisters = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((ref) => [ref, registerRead(ref)]));
-const readSegments = (refs: readonly string[]) =>
-  Object.fromEntries(refs.map((ref) => [ref, segmentsRead(ref)]));
+const columnKey = (table: string, variable: string) =>
+  JSON.stringify([table, variable]);
+/** Every source's columns' rows in its table, keyed by `columnKey`. */
+const readSegments = (columns: readonly string[]) => {
+  const byTable = new Map<string, string[]>();
+  for (const column of columns) {
+    const [table, variable] = JSON.parse(column) as [string, string];
+    byTable.set(table, [...(byTable.get(table) ?? []), variable]);
+  }
+  return Object.fromEntries(
+    [...byTable].flatMap(([table, variables]) =>
+      Object.entries(tableSegmentsReads(table, variables)).map(
+        ([variable, read]) => [columnKey(table, variable), read],
+      ),
+    ),
+  );
+};
 
 function Sources({
   draft,
@@ -320,12 +340,25 @@ function Sources({
       source.bindings.map((binding) => binding.variable),
     ),
   );
-  const segmentReads = useCatalogRead(readSegments, variables);
-  const segments = new Map(
-    Object.entries(segmentReads).flatMap(([ref, read]) =>
-      read.value ? [[ref, read.value] as const] : [],
+  const segmentReads = useCatalogRead(
+    readSegments,
+    useDistinct(
+      draft.sources.flatMap((source) =>
+        source.bindings.map((binding) =>
+          columnKey(source.table, binding.variable),
+        ),
+      ),
     ),
   );
+  // By variable, over every table it is a column of: each card keeps its own
+  // table's rows.
+  const segments = new Map<string, CatalogSegment[]>();
+  for (const read of Object.values(segmentReads)) {
+    for (const row of read.value ?? [])
+      segments.set(row.variable, [...(segments.get(row.variable) ?? []), row]);
+  }
+  const columnRead = (table: string, variable: string) =>
+    segmentReads[columnKey(table, variable)];
   const names = useCatalogNames([
     ...draft.sources.map((source) => source.table),
     ...variables,
@@ -402,12 +435,13 @@ function Sources({
               loading={
                 !!register?.loading ||
                 source.bindings.some(
-                  (binding) => segmentReads[binding.variable]?.loading,
+                  (binding) =>
+                    columnRead(source.table, binding.variable)?.loading,
                 )
               }
               loadError={
                 (source.bindings.some((binding) => {
-                  const read = segmentReads[binding.variable];
+                  const read = columnRead(source.table, binding.variable);
                   return read && !read.loading && read.value === null;
                 })
                   ? "Column years are unavailable"

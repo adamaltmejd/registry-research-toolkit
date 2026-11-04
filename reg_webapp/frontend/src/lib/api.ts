@@ -411,15 +411,18 @@ export function getGraph(
   );
 }
 
-/** All structural segments, following the server's generation-bound cursor. */
+/** All structural segments, following the server's generation-bound cursor. With
+ * `variables`, `ref` is a table and the rows are those variables' in it. */
 export async function getSegments(
   ref: string,
-  options?: { signal?: AbortSignal },
+  options?: { signal?: AbortSignal; variables?: readonly string[] },
 ): Promise<CatalogSegment[]> {
   const items: CatalogSegment[] = [];
   let cursor: string | null = null;
   do {
     const query = new URLSearchParams({ limit: "200" });
+    for (const variable of options?.variables ?? [])
+      query.append("variable", variable);
     if (cursor !== null) query.set("cursor", cursor);
     const page = await rustGet<RustSchemas["SegmentPage"]>(
       `/segments/${encodeFqid(ref)}`,
@@ -430,6 +433,27 @@ export async function getSegments(
     cursor = page.next_cursor;
   } while (cursor !== null);
   return items;
+}
+
+/** The variables a table read names at once: well under the server's 200, so the
+ * request line (each repeated as `variable=`) stays a few KB at the edge. */
+const TABLE_READ_VARIABLES = 100;
+
+/** `variables`' rows in `table`, one read per hundred variables (#2232). */
+export async function getTableSegments(
+  table: string,
+  variables: readonly string[],
+  options?: { signal?: AbortSignal },
+): Promise<CatalogSegment[]> {
+  const chunks: string[][] = [];
+  for (let i = 0; i < variables.length; i += TABLE_READ_VARIABLES)
+    chunks.push(variables.slice(i, i + TABLE_READ_VARIABLES));
+  const pages = await Promise.all(
+    chunks.map((chunk) =>
+      getSegments(table, { ...options, variables: chunk }),
+    ),
+  );
+  return pages.flat();
 }
 
 /** Review items and notices for a catalog subject, including its descendants. */

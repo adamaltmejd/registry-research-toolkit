@@ -396,7 +396,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   from `col-browse` and `col-list` to `col-browse-max` and `col-list-max`, and the whole
   shell is capped at `shell-max` and centred, so a wide screen gets wider lists, not a
   stranded pane. The variables column is always there: before a register is chosen it
-  holds an empty state ("Choose a register to list its variables."). The two column
+  holds an empty state ("Choose a register to list its variables."). The register column
+  draws from the one catalog-root read, which lists each provider's registers, so it
+  shows whole or not at all, never a provider still loading (#2232). The two column
   headers share one height, so their rules line up. Every group is open by default; a
   header triangle collapses it, the column header offers one toggle that reads "Collapse
   all" while any group is open and "Expand all" once all are closed, and collapse state
@@ -824,7 +826,9 @@ grow new visual language meanwhile.
   "Open a project file…" and a ghost "Discard"; opening over a project and discarding
   ask first in a `Dialog`. Under them, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
-  the verdict, "Tables" (one card per table) and "What will be delivered". There is one
+  the verdict, "Tables" (one card per table) and "What will be delivered". A card's
+  column years come from one `segments` read per table for the columns not yet read
+  (#2232), never a read per column; a column added later reads only itself. There is one
   check and no button for it: WASM on every edit, then `order` 350 ms after the last
   edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
   with the count, "Can't be ordered yet" with the count of problems, or "Has problems"

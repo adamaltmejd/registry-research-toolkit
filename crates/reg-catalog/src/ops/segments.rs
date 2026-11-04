@@ -23,10 +23,13 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     description: "A variable's columns over time: per table, column name and period one row, in \
         time order, with the provider's wording and the form (type, value set, flags) where \
         stated. A change of form or wording starts a new row. On a data holder's catalog, also \
-        its columns and files over the years it holds. `evidence=true` adds the deliveries \
-        behind each row and the curated values that replaced the provider's.",
+        its columns and files over the years it holds. A table ref with `variable` (up to \
+        200 variables) lists those variables' rows in that table, in one list. \
+        `evidence=true` adds the deliveries behind each row and the curated values that \
+        replaced the provider's.",
     params: &[
         Param::required("ref", Type::Ref),
+        Param::optional("variable", Type::Strings),
         Param::optional("period", Type::Period),
         Param::optional("table", Type::Ref),
         Param::optional("value_set_name", Type::String),
@@ -52,6 +55,8 @@ pub struct SegmentPage {
 /// default).
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Segment {
+    /// The variable's fqid.
+    variable: String,
     /// The table's fqid.
     table: String,
     /// The table's name, as `show` gives it.
@@ -149,14 +154,34 @@ pub struct StatementLocation {
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let given = params["ref"];
-    let variable = refs::resolve(&conn, given)?;
-    if variable.kind != "variable" {
-        return Err(Error::invalid_ref(
-            given,
-            format!("{given:?} is a {}, not a variable.", variable.kind),
-        ));
-    }
-    let table = table_pid(&conn, params, &variable)?;
+    let hit = refs::resolve(&conn, given)?;
+    let named = params.list("variable");
+    // A variable ref is its own list; a table ref lists the named variables' rows in
+    // that table, so a project's table reads its columns in one request (#2232).
+    let (variables, table) = match (hit.kind.as_str(), named.is_empty()) {
+        ("variable", true) => {
+            let table = table_pid(&conn, params, &hit)?;
+            (vec![hit.pid], table)
+        }
+        // A variable ref names its variable; a second list would contradict it.
+        ("variable", false) => return Err(Error::invalid_parameter("variable")),
+        (_, false) => {
+            // The ref is the table: a `table` narrowing could only contradict it.
+            if params.get("table").is_some() {
+                return Err(Error::invalid_parameter("table"));
+            }
+            let id = refs::table(&conn, given)?;
+            let pid: String =
+                conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?;
+            (variable_pids(server, named)?, Some(pid))
+        }
+        (kind, true) => {
+            return Err(Error::invalid_ref(
+                given,
+                format!("{given:?} is a {kind}, not a variable."),
+            ));
+        }
+    };
     let evidence = flag(params, "evidence")?;
     let limit = limit(params)?;
     let offset = match params.get("cursor") {
@@ -171,11 +196,15 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         }
         None => 0,
     };
-    // simplify: the whole list is built, then paged; a variable has tens of rows.
-    // Page in SQL again if a variable's list reaches thousands.
+    // simplify: the whole list is built, then paged; a variable has tens of rows and
+    // a table read at most 200 variables' rows in one table. Page in SQL again if a
+    // list reaches thousands.
     let origins = origins(server, conn)?;
     let value_set_name = params.get("value_set_name").copied();
-    let rows = listed(&origins, &variable.pid, table.as_deref(), value_set_name)?;
+    let mut rows = Vec::new();
+    for variable in &variables {
+        rows.extend(listed(&origins, variable, table.as_deref(), value_set_name)?);
+    }
     let mut rows: Vec<Row> = match days(params, "period")? {
         Some((first, end)) => rows
             .into_iter()
@@ -218,7 +247,31 @@ pub(super) fn all(
     served(server, origins, rows, false)
 }
 
-/// The list's order: by start day, then table, column and file.
+/// The variables `values` names, each resolved in its own origin (as a ref is), in
+/// pid order without repeats.
+fn variable_pids(server: &Server, values: &[&str]) -> Result<Vec<String>, Error> {
+    // simplify: a connection per named variable (up to 200); resolve against the
+    // open origins if table reads show in timing.
+    let mut pids = values
+        .iter()
+        .map(|&value| {
+            let hit = refs::resolve(&server.catalog.connect_for_ref(value)?, value)?;
+            if hit.kind != "variable" {
+                return Err(Error::invalid_ref(
+                    value,
+                    format!("{value:?} is a {}, not a variable.", hit.kind),
+                ));
+            }
+            Ok(hit.pid)
+        })
+        .collect::<Result<Vec<_>, Error>>()?;
+    pids.sort_unstable();
+    pids.dedup();
+    Ok(pids)
+}
+
+/// The list's order: by start day, then table, column, file and variable (a table
+/// read's variables can share the rest).
 fn sort(rows: &mut [Row]) {
     rows.sort_by(|a, b| {
         (
@@ -226,12 +279,14 @@ fn sort(rows: &mut [Row]) {
             &a.segment.table,
             &a.segment.column,
             &a.segment.file,
+            &a.segment.variable,
         )
             .cmp(&(
                 b.start,
                 &b.segment.table,
                 &b.segment.column,
                 &b.segment.file,
+                &b.segment.variable,
             ))
     });
 }
@@ -312,6 +367,9 @@ fn listed(
             row.valueset_id
                 .is_some_and(|valueset| named.contains(&(row.origin, valueset)))
         });
+    }
+    for row in &mut rows {
+        variable.clone_into(&mut row.segment.variable);
     }
     Ok(with_wording(&runs, rows))
 }
@@ -395,6 +453,8 @@ fn segment_rows(
                 start: row.get(2)?,
                 end: row.get(3)?,
                 segment: Segment {
+                    // Set by `listed`, which has the pid.
+                    variable: String::new(),
                     table: row.get(1)?,
                     // Named per page in `segments`, after paging.
                     table_name: String::new(),
@@ -520,6 +580,7 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
         start,
         end,
         segment: Segment {
+            variable: String::new(),
             table: table.to_owned(),
             table_name: String::new(),
             column: column.to_owned(),

@@ -21,7 +21,7 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     description: "Describe a provider, register, table, variable or set by id or name (a set \
         only by `set/<provider>/<register>/<slug>`; it carries each member's whole \
         `segments` list, so no `segments` call per member is needed). No `ref` lists the \
-        providers. Variables show curated metadata, with the provider's text only as a \
+        providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
         fallback. `evidence=true` adds the provider's original texts, column names, curation \
         locators and linked documents.",
     params: &[
@@ -117,10 +117,13 @@ pub enum Show {
     },
 }
 
+/// A root provider, with its registers as its provider summary lists them, so the
+/// root alone draws the whole register list (#2232).
 #[derive(Serialize, ToSchema)]
 pub struct ShowProviderRef {
     fqid: String,
     name: String,
+    registers: Vec<ShowRegisterRef>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -214,17 +217,22 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
     let evidence = flag(params, "evidence")?;
     let shown = match params.get("ref") {
         None => {
+            let extra = server.catalog.connect_holdings()?;
             let mut providers = provider_refs(&conn)?;
-            if let Some(extra) = server.catalog.connect_holdings()? {
+            if let Some(extra) = &extra {
                 let known: BTreeSet<_> = providers.iter().map(|p| p.fqid.clone()).collect();
                 providers.extend(
-                    provider_refs(&extra)?
+                    provider_refs(extra)?
                         .into_iter()
                         .filter(|p| !known.contains(&p.fqid)),
                 );
                 providers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
             }
             providers.retain(|p| server.catalog.serves("provider", &p.fqid));
+            let mut registers = served_registers(server, &conn, extra.as_ref(), None)?;
+            for provider in &mut providers {
+                provider.registers = registers.remove(&provider.fqid).unwrap_or_default();
+            }
             Show::Root { providers }
         }
         Some(value) => {
@@ -280,31 +288,64 @@ fn provider_refs(conn: &Connection) -> Result<Vec<ShowProviderRef>, Error> {
             Ok(ShowProviderRef {
                 fqid: row.get(0)?,
                 name: row.get(1)?,
+                registers: vec![],
             })
         },
     )?)
 }
 
+/// One origin's registers, each with its provider's pid; one provider's when given.
 fn register_refs(
     server: &Server,
     conn: &Connection,
-    provider: &str,
-) -> Result<Vec<ShowRegisterRef>, Error> {
+    provider: Option<&str>,
+) -> Result<Vec<(String, ShowRegisterRef)>, Error> {
     Ok(rows(
         conn,
-        "SELECT r.pid, n.body, r.start, r.end FROM register r
+        "SELECT p.pid, r.pid, n.body, r.start, r.end FROM register r
              JOIN provider p ON p.id = r.provider_id JOIN text n ON n.id = r.name_text
-             WHERE p.pid = ? ORDER BY r.pid",
+             WHERE ?1 IS NULL OR p.pid = ?1 ORDER BY r.pid",
         [provider],
         |row| {
-            let fqid: String = row.get(0)?;
-            Ok(ShowRegisterRef {
-                period: server.hull("register", &fqid, row.get(2)?, row.get(3)?),
-                fqid,
-                name: row.get(1)?,
-            })
+            let fqid: String = row.get(1)?;
+            Ok((
+                row.get(0)?,
+                ShowRegisterRef {
+                    period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    fqid,
+                    name: row.get(2)?,
+                },
+            ))
         },
     )?)
+}
+
+/// The served registers by provider pid, each list in pid order; one provider's when
+/// given. A register in both origins is a steward overlay of the reference one: the
+/// reference row carries its official name (the overlay's is its slug).
+fn served_registers(
+    server: &Server,
+    conn: &Connection,
+    extra: Option<&Connection>,
+    provider: Option<&str>,
+) -> Result<BTreeMap<String, Vec<ShowRegisterRef>>, Error> {
+    let mut found = register_refs(server, conn, provider)?;
+    if let Some(extra) = extra {
+        let known: BTreeSet<_> = found.iter().map(|(_, r)| r.fqid.clone()).collect();
+        found.extend(
+            register_refs(server, extra, provider)?
+                .into_iter()
+                .filter(|(_, r)| !known.contains(&r.fqid)),
+        );
+        found.sort_by(|(_, a), (_, b)| a.fqid.cmp(&b.fqid));
+    }
+    let mut by_provider: BTreeMap<String, Vec<ShowRegisterRef>> = BTreeMap::new();
+    for (provider, register) in found {
+        if server.catalog.serves("register", &register.fqid) {
+            by_provider.entry(provider).or_default().push(register);
+        }
+    }
+    Ok(by_provider)
 }
 
 fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
@@ -313,19 +354,10 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         [entity.id],
         |row| row.get(0),
     )?;
-    let mut registers = register_refs(server, conn, &entity.pid)?;
-    if let Some(extra) = server.catalog.connect_holdings()? {
-        // A register in both origins is a steward overlay of the reference one: the
-        // reference row carries its official name (the overlay's is its slug).
-        let known: BTreeSet<_> = registers.iter().map(|r| r.fqid.clone()).collect();
-        registers.extend(
-            register_refs(server, &extra, &entity.pid)?
-                .into_iter()
-                .filter(|r| !known.contains(&r.fqid)),
-        );
-        registers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-    }
-    registers.retain(|r| server.catalog.serves("register", &r.fqid));
+    let extra = server.catalog.connect_holdings()?;
+    let registers = served_registers(server, conn, extra.as_ref(), Some(&entity.pid))?
+        .remove(&entity.pid)
+        .unwrap_or_default();
     Ok(Show::Provider {
         fqid: entity.pid.clone(),
         name,
