@@ -25,5 +25,15 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "bogus"}
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "retired_ref",
+      "/error/fields/ref": "demo/reg2/gone",
+      "/error/fields/kind": "variable",
+      "/error/fields/retired_in": "0.68.0",
+      "/error/fields/reason": "withdrawn"
+    }
   }
 ]
