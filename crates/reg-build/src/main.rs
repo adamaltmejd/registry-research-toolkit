@@ -523,6 +523,8 @@ fn build_with_provenance(
     sets::final_members(&resolved, &statements)?;
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
+    timing::done("refusals and docs", t);
+    let t = std::time::Instant::now();
     let mut linked = link::resolve(&resolved, &links, &docs)?;
     let mut external_relations = Vec::new();
     if let Some(curated) = applied.linked {
@@ -543,6 +545,8 @@ fn build_with_provenance(
         );
     }
 
+    timing::done("link", t);
+    let t = std::time::Instant::now();
     let mut curation = BTreeSet::new();
     tree(&args.curation, "", &mut curation)?;
     let (curation_digest, _) = digest(&args.curation, &curation)?;
@@ -602,7 +606,7 @@ fn build_with_provenance(
         &applied.classifications,
         &applied.overrides,
     );
-    timing::done("link and provenance", t);
+    timing::done("digest and provenance", t);
     let catalog = emit::Catalog {
         set_presentation: applied.sets,
         retired,
