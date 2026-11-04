@@ -2,9 +2,9 @@
 [[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: COOP_NO @2020..2020"
-fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "COOP_NO (enligt leverans)", "definition" = "I CIS2020 finns både COOP_NO och COOP_OTH. SCB:s dokumentation för 2020 knyter fråga 39102 till COOP_OTH, medan COOP_NO 2016–2018 användes för samma fråga. Kandidaterna är (1) SCB-variabel 39102, \"Samarbete inom övriga aktiviteter\" (samarbete med andra företag eller organisationer inom andra affärsrelaterade aktiviteter än innovation och FoU); (2) svarsalternativet om inget samarbete i 2020 års frågeblankett (saknar egen variabel i SCB:s export). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är float; SCB dokumenterar fråga 39102 som text, så variabeln anges här som decimal efter lagringen.", "sensitive" = false, "identifier" = false } }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:13305\n\nSWECOV holds COOP_NO in CIS2020. Previously unmapped because COOP_NO and COOP_OTH both exist in CIS2020; source question 39102 names COOP_OTH, and the questionnaire separately includes a no-cooperation option, so the meaning of the delivered COOP_NO is not established. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
-caveat = "Den levererade kolumnen COOP_NO kan avse samarbete inom övriga aktiviteter (39102) eller frågeblankettens alternativ om inget samarbete; vilken betydelse den har är inte fastställd."
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "COOP_NO (enligt leverans)", "definition" = "Den levererade kolumnen COOP_NO i CIS2020. SCB beskriver inte kolumnen. SCB:s fråga om samarbete inom övriga aktiviteter (39102) ligger i kolumnen COOP_OTH.", "sensitive" = false, "identifier" = false } }
+evidence = "SCB release r13272 (2016 - 2018) spells v39102 COOP_NO; r17817, r18898 and r20007 spell it COOP_OTH, and SWECOV CIS2018 and CIS2020 hold both COOP_NO and COOP_OTH beside per-partner *_NO columns. So v39102 is COOP_OTH (#2073) and COOP_NO is undocumented by SCB.\n\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:13305\n\nSWECOV holds COOP_NO in CIS2020. Previously unmapped because COOP_NO and COOP_OTH both exist in CIS2020; source question 39102 names COOP_OTH, and the questionnaire separately includes a no-cooperation option, so the meaning of the delivered COOP_NO is not established. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Kolumnnamnet och kolumnerna för enskilda samarbetspartner som slutar på _NO tyder på att kolumnen anger att företaget inte har samarbetat om innovation, men det är inte fastställt."
 
 [[statement]]
 kind = "assert"
@@ -12288,18 +12288,6 @@ evidence = "The delivered column's meaning is unresolved.\ncatalog:occurrence:24
 
 [[statement]]
 kind = "set"
-subject = "var:samarbete-inom-ovriga-aktiviteter-coop-no"
-fields = { "sets" = [] }
-evidence = "Den senare ägarens innebörd är inte fastställd. Denna variabel avser samarbete inom övriga aktiviteter.\ncatalog:occurrence:247949\ncatalog:occurrence:248299\ncatalog:variable_text:28999:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:samarbete-inom-ovriga-aktiviteter-coop-no"
-fields = { "tags" = ["business"] }
-evidence = "Den senare ägarens innebörd är inte fastställd. Denna variabel avser samarbete inom övriga aktiviteter.\ncatalog:occurrence:247949\ncatalog:occurrence:248299\ncatalog:variable_text:28999:16801:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:samarbete-inom-ovriga-aktiviteter-coop-oth"
 fields = { "sets" = [] }
 evidence = "Variabeln avser samarbete inom övriga affärsrelaterade aktiviteter.\ncatalog:variable_text:29000:17532:20089"
@@ -14818,3 +14806,39 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: INTOGD @2014-01-01..2016-12-31"
 fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: COOP_NO where key = 'v39102' and release = 'r13272'"
+fields = { "spelling" = "COOP_OTH" }
+evidence = "SCB's Registerinformation export names v39102 (Samarbete inom övriga aktiviteter) COOP_NO in r13272 (2016 - 2018) and COOP_OTH in r17817 (2018 - 2020), r18898 (2020 - 2022) and r20007 (2022 - 2024); label and definition are the same in all four. No other key is listed under COOP_NO or COOP_OTH in r13272. SWECOV's CIS2018 and CIS2020 deliveries hold both COOP_NO and COOP_OTH, together with per-partner columns ending _NO (COOP_EG_NO, COOP_UNIV_NO and so on) that SCB does not document; _NO therefore reads as 'no cooperation', not 'other activities'. So r13272's COOP_NO for v39102 is a documentation misname; corrected to COOP_OTH (#2073).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=381157 (r13272)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=848077 (r17817)"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: ENV_ENDEM where key = 'v44661'"
+fields = { "label" = "Rådande/förväntad efterfrågan på miljöinnovationer" }
+evidence = "SCB's label for v44661 in r17817 (2018 - 2020) stops mid-word at 'miljöinno'; v46476 in r18898 (2020 - 2022) carries the full label 'Rådande/förväntad efterfrågan på miljöinnovationer' with the same definition and code list. The truncation is a cut-off of the same text; completing it lets the folded occurrences agree with v46476 in the shared year 2020 (#2073)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: ENV_ENGRA where key = 'v44660'"
+fields = { "label" = "Statliga bidrag, subventioner eller andra incitament för miljöinnovationer" }
+evidence = "SCB's label for v44660 in r17817 (2018 - 2020) stops mid-word at 'miljöinno'; v46478 in r18898 (2020 - 2022) carries the full label 'Statliga bidrag, subventioner eller andra incitament för miljöinnovationer' with the same definition and code list. The truncation is a cut-off of the same text; completing it lets the folded occurrences agree with v46478 in the shared year 2020 (#2073)."
+
+[[statement]]
+kind = "set"
+subject = "var:ente-y"
+fields = { "description" = "Året då företaget startade (startår), inte åldern i antal år." }
+evidence = "Kolumnen anger startår 2022-2024; SCB:s etikett \"Ålder\" avviker.\n0.74.0 catalog, key v6267, releases r20007; reg_meta.db:occurrence:248758"
+
+[[statement]]
+kind = "set"
+subject = "var:ente-y"
+fields = { "label" = "Företagets startår" }
+evidence = "Kolumnen anger startår; etiketten \"Ålder\" motsägs av den operationella definitionen. 0.74.0 catalog, key v6267, releases r20007; reg_meta.db:occurrence:248758"
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-forvarv-av-existerande-kunskap-roekx"
+fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
+evidence = "Förslag från tidigare granskning enligt SCB:s definition.\n0.74.0 catalog, key v15613, releases r11529, r4114, r5168; reg_meta.db:occurrence:247795,247920,248154"
