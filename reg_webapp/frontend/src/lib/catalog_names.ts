@@ -1,5 +1,7 @@
 import {
   type CatalogSegment,
+  type Graph,
+  getGraph,
   getSegments,
   getShow,
   type RegisterShow,
@@ -182,6 +184,11 @@ export function registerRead(ref: string): Read<RegisterShow> {
 /** Source edits reuse each variable's segments without reloading other cards. */
 export function segmentsRead(ref: string): Read<CatalogSegment[]> {
   return read(`segments:${ref}`, () => getSegments(ref));
+}
+
+/** A variable's one-hop succession, shared by its variable or group page. */
+export function graphRead(ref: string): Read<Graph> {
+  return read(`graph:${ref}`, () => getGraph(ref, { kind: "continues" }));
 }
 
 /** A page owns its pending/error state; only a successful cached read is reusable. */

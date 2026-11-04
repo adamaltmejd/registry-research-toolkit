@@ -412,7 +412,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   selection: the detail pane keeps its page, and keyboard focus moves to the group row.
   For a register the second column is flat, a concept group folded to one item (#303),
   its identifier and panel-key variables first and the rest in Swedish collation; on a
-  group's page (or a member's, which redirects there) the same list stays and the
+  group's page (or a member's, which shows that page) the same list stays and the
   group's row is selected. The members are lanes on that page, not rows in the column. A
   browse column fills the viewport below the top bar and scrolls its own list. Every
   item and group carries its in-project mark on the right when it has one. Below the
@@ -473,34 +473,45 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   variables or columns, "Notes on this data" (the findings, only when there are any;
   maintainer 2026-11-04), then source documents. A variable page has no source and
   provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
-  `spacing.5`. A variable group page carries the Group kind mark and a member-of line
-  naming its register, with constant facets shown once in the facets row. Members are
-  read-only `LaneGraph` lanes on the page's axis, in API order: a lane is titled by its
-  varying facets in curated axis order, with the member's name on the line under it, and
-  by the name alone when no axis varies. A variable page's facts are Type,
-  Classification, Sensitive (only when yes; an identifier is its Type pill), Topics and
-  Group (maintainer 2026-11-04); role, coding, state, temporality, storage and period
-  are not shown. Type is one `TypePill` per type its columns are written as, with the
-  years inside only where it changes over time. The other facts are what its columns
-  state: one value where every column states it alike, each value with its years where
-  they differ, and no row where none states it, never "Not stated" down the list. The
-  `Timeline` states the years and carries the columns, their tables and years, so there
-  is no Years row, no tables list and no table of columns under it; value sets have
-  their own panel, so the facts name only the classification. Where there is no curated
-  description, the provider's wording is the Description: once when every period agrees,
-  otherwise each wording under its years. It sits under the facts, above the `Timeline`.
-  Timeline and facts read the one per-period list (`segments`): on a steward deployment
-  its rows are the files and columns the steward has, over the years it has them. A
-  table page leaves out a Row keys, Populations or Releases panel with nothing to list,
-  and Timeless or Implicit when "No". Placement caveats are steward working notes, not
-  shown until the steward curates them for readers. A register page has no tables table:
-  its tables are FilterChips over the variable list, each with its period, a lens with
-  OR within the selection, offered only when two or more tables deliver variables (the
-  archived variant chips, maintainer 2026-11-03). A Tables definition row links every
-  table's page by name. A register page has no "Unplaced releases" panel (maintainer
-  2026-11-04). In steward mode a supplemental-only variable is selectable for a project
-  like a reference variable: `order` and `validate` read the composed steward view
-  (crates/DESIGN.md, "Three questions, three scopes").
+  `spacing.5`. A grouped variable has no page of its own (maintainer 2026-11-04): its
+  address (from search, the palette, a project card or a note) renders its group's page,
+  one route and one page, not a redirect, with that member's lane `current` and its name
+  focused and scrolled into view. A variable is in at most one group. A group page
+  carries the Group kind mark, the `h1`, a member-of line naming its register, the
+  group's description as prose under them, and constant facets once in the facets row.
+  Every member is a lane of one `LaneGraph` on the page's axis, in API order, carrying
+  everything a variable page carries: a lane is titled by its varying facets in curated
+  axis order, with the member's name on the line under it, and by the name alone when no
+  axis varies; under it its Type pills, its other facts, and its description where it
+  differs from the group's (two lines, "More" opens the rest). The lane grows to hold
+  them, and its name and line wrap. Its columns are spans to tick, with one coverage
+  row, one "Years to add" and one add bar for the whole group. A succession neighbour
+  outside the group is a read-only lane with its arrows; a relation between two members
+  is an arrow between their lanes. The page's codes, notes and source documents cover
+  every member. A variable page's facts are Type, Classification, Sensitive (only when
+  yes; an identifier is its Type pill) and Topics (maintainer 2026-11-04); role, coding,
+  state, temporality, storage and period are not shown. Type is one `TypePill` per type
+  its columns are written as, with the years inside only where it changes over time. The
+  other facts are what its columns state: one value where every column states it alike,
+  each value with its years where they differ, and no row where none states it, never
+  "Not stated" down the list. The `Timeline` states the years and carries the columns,
+  their tables and years, so there is no Years row, no tables list and no table of
+  columns under it; value sets have their own panel, so the facts name only the
+  classification. Where there is no curated description, the provider's wording is the
+  Description: once when every period agrees, otherwise each wording under its years. It
+  sits under the facts, above the `Timeline`. Timeline and facts read the one per-period
+  list (`segments`): on a steward deployment its rows are the files and columns the
+  steward has, over the years it has them. A table page leaves out a Row keys,
+  Populations or Releases panel with nothing to list, and Timeless or Implicit when
+  "No". Placement caveats are steward working notes, not shown until the steward curates
+  them for readers. A register page has no tables table: its tables are FilterChips over
+  the variable list, each with its period, a lens with OR within the selection, offered
+  only when two or more tables deliver variables (the archived variant chips, maintainer
+  2026-11-03). A Tables definition row links every table's page by name. A register page
+  has no "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
+  supplemental-only variable is selectable for a project like a reference variable:
+  `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
+  questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -563,7 +574,8 @@ Time is the axis every relation is drawn on.
   and never narrows it, so the add window raises no warning; a column already in the
   project whose source years differ from the study window says so in its tooltip and
   accessible name, not in a line under the graph (#1833); one outside the window is
-  still named there at `err`. A register or group pane draws the `Timeline` read-only.
+  still named there at `err`. A register pane draws the `Timeline` read-only; a group
+  pane draws it as the variable page does, a lane per member.
 
 - A **source period** is set on `/project`, on the source's card, where the source is
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
@@ -571,24 +583,26 @@ Time is the axis every relation is drawn on.
   that table's coverage, and one lane per binding. Each delivered column is a span of
   the years that table delivers it. A column available for part of the period is a
   shorter span, not a finding. The card is headed by the table's register, by name, with
-  the table's name as a link and "Years:" with the period's years under it; every label
-  on the card names the table by its catalog name, as the page's findings do; the
-  source's `name` (the file's join key) stands in only where the catalog has no name for
-  the table. A stored period outside coverage widens the thumbs' bounds to their union;
-  it is never clamped or rewritten on load. A comma-list period rests the thumbs on its
-  outer years and a line under the drawing says a move makes it one span; a term period
-  is shown as text with plain `LaneList` rows. A timeless source says "Unbounded", with
-  no thumbs. A dated table with `_default` also says "Unbounded", but has thumbs seeded
-  from table coverage so its missing period can be repaired; it writes only when a thumb
-  rests. Every source card shares the page's one axis. The lanes are the card's columns:
-  no list repeats them under the drawing (maintainer ruling 2026-10-23). Each lane's
-  name carries a quiet ghost "Remove", named "Remove <column> from <table>", that asks
-  first in a `Dialog` whose answer is the `danger` button and takes the column out of
-  that one source. Removing the last binding asks to remove the source. Source removal
-  also removes its panel memberships and any panels left without members; the dialog
-  states this when affected. A ghost "Remove table" in the card header also asks first.
-  Focus returns to the card heading after a column removal, or the Tables heading after
-  a source removal.
+  the table's name as a link and "Years:" with the period's years under it. Where two
+  tables of one register would share that heading, the heading names its table on a
+  muted line under the register: the table's own name, never an invented label
+  (maintainer ruling, #2221). Every label on the card names the table by its catalog
+  name, as the page's findings do; the source's `name` (the file's join key) stands in
+  only where the catalog has no name for the table. A stored period outside coverage
+  widens the thumbs' bounds to their union; it is never clamped or rewritten on load. A
+  comma-list period rests the thumbs on its outer years and a line under the drawing
+  says a move makes it one span; a term period is shown as text with plain `LaneList`
+  rows. A timeless source says "Unbounded", with no thumbs. A dated table with
+  `_default` also says "Unbounded", but has thumbs seeded from table coverage so its
+  missing period can be repaired; it writes only when a thumb rests. Every source card
+  shares the page's one axis. The lanes are the card's columns: no list repeats them
+  under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a quiet
+  ghost "Remove", named "Remove <column> from <table>", that asks first in a `Dialog`
+  whose answer is the `danger` button and takes the column out of that one source.
+  Removing the last binding asks to remove the source. Source removal also removes its
+  panel memberships and any panels left without members; the dialog states this when
+  affected. A ghost "Remove table" in the card header also asks first. Focus returns to
+  the card heading after a column removal, or the Tables heading after a source removal.
 
   Each lane's below slot holds a labelled type `Select`, an optional classification pin,
   and its findings. Types use plain words: Identifier, Categorical, Numeric, Date, Date
@@ -666,10 +680,11 @@ Time is the axis every relation is drawn on.
   member order), columns as spans, and relations as arrows: solid for succession, dashed
   for rename. A succession arrow between overlapping spans drops at the edge's effective
   year. A group lane's title joins its varying facet values with a comma, falling back
-  to the variable's name, and its name opens the variable; its line under the name is
-  plain words, never a slug: the register when it differs from the page's, the
-  variable's name under a facet title, or what tells two lanes of one name apart (their
-  column names); it also describes the link. A read-only neighbour lane still shows its
+  to the variable's name; it is no link, since the member's page is the group's. Its
+  line under the name is plain words, never a slug: the variable's name under a facet
+  title, or what tells two lanes of one name apart (their column names). A neighbour
+  lane's name opens the variable, with the register on its line when it differs from the
+  page's; that line also describes the link. A read-only neighbour lane still shows its
   columns' "in project" state. A span is a checkbox for the add bar, and hovering it
   highlights its edges. On `/project` a column's findings sit across its lane, under its
   spans. It shares the page's axis with the `Timeline`. It draws the study window's band
@@ -679,6 +694,20 @@ Time is the axis every relation is drawn on.
   to a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
   free-form node graphs; the time axis is the information.
+
+- A group page's **codes** are a code timeline on the page's axis, at the page's width,
+  so its track is the lanes' track: one row per code and label, sorted by code
+  (numerically), a further label of the same code continuing its row without the code or
+  a rule. A box marks the years some column uses it; a light `surface-sunken` track the
+  years the block's columns have codes. A column that has codes in those years but not
+  this one is named under the label ("Not in" its `ColumnChip`, with years only where
+  that is part of its years), or the users are ("Only in"), whichever is shorter. Boxes
+  have no hover and no tab stop; each row tells a screen reader the years it is used.
+  Code lists one column codes, or that share 30% of their code and label pairs, are one
+  block; with several blocks each is headed by its columns, with one there is no
+  heading. A block whose lists all have at most 10 codes shows at once; a longer one
+  waits for "Show codes". A hierarchical list is browsed level by level (the value-set
+  browser), not drawn. There is no legend (maintainer 2026-11-04, PLAN §14).
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").

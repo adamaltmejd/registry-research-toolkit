@@ -27,6 +27,8 @@ interface Props {
    * the breadcrumb already ends in it. */
   fqid?: string;
   memberOf?: readonly MemberOf[];
+  /** Prose under the title block: a group's description. */
+  description?: string;
   /** The subject's facets as a labelled row. */
   facets?: readonly { label: string; value: string }[];
   definitions?: readonly Definition[];
@@ -43,6 +45,7 @@ export function Definitions({
   title,
   fqid,
   memberOf = [],
+  description,
   facets = [],
   definitions = [],
 }: Props) {
@@ -64,6 +67,7 @@ export function Definitions({
           ))}
         </ul>
       )}
+      {description && <p className={styles.description}>{description}</p>}
       {facets.length > 0 && (
         <dl className={styles.facets}>
           {facets.map((facet) => (

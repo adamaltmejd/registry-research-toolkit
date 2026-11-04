@@ -8,7 +8,14 @@
   min-width: 0;
 }
 .heading {
+  display: inline-flex;
+  flex-direction: column;
   overflow-wrap: anywhere;
+}
+/* The line that tells two tables of one register apart: the table's name. */
+.headingTable {
+  color: var(--text-muted);
+  font-weight: 400;
 }
 .heading:focus-visible {
   outline: none;

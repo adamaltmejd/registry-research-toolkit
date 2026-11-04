@@ -379,8 +379,9 @@ function Sources({
         />
       ) : (
         draft.sources.map((source, sourceIndex) => {
-          const register =
-            registers[source.table.split("/").slice(0, 2).join("/")];
+          const registerOf = (table: string) =>
+            table.split("/").slice(0, 2).join("/");
+          const register = registers[registerOf(source.table)];
           return (
             <SourceCard
               key={source.name}
@@ -391,6 +392,11 @@ function Sources({
               names={names}
               segments={segments}
               table={tables.find((table) => table.fqid === source.table)}
+              sharedHeading={draft.sources.some(
+                (other) =>
+                  other.table !== source.table &&
+                  registerOf(other.table) === registerOf(source.table),
+              )}
               axis={axis}
               bounds={bounds}
               loading={

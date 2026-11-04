@@ -1,0 +1,165 @@
+/* The group page's codes (DESIGN.md → Codes): on the page's axis, at the
+   page's full width, so its track is the timeline's track. */
+.section {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+}
+
+.frame {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.axis {
+  position: relative;
+  height: 20px;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.tick {
+  position: absolute;
+  bottom: 4px;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-axis);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.tick[data-anchor="start"] {
+  transform: none;
+}
+
+.tick[data-anchor="end"] {
+  transform: translateX(-100%);
+}
+
+.tick[data-window] {
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
+.block {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.block:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.ask {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The code and label in the timeline's name column, then its years on the
+   track. */
+.row {
+  display: grid;
+}
+
+.text {
+  display: flex;
+  box-sizing: border-box;
+  gap: var(--space-2);
+  min-width: 0;
+  /* The right padding is the gap the timeline keeps between names and track. */
+  padding: var(--space-1) var(--space-4) var(--space-1) 0;
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.code {
+  flex: none;
+  min-width: 3ch;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  line-height: 1.75;
+}
+
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
+
+.lack {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.track {
+  position: relative;
+  min-height: 22px;
+  border-top: 1px solid var(--border);
+}
+
+/* A code's further labels continue its row: no rule between them. */
+.row[data-continued] > .text,
+.row[data-continued] > .track {
+  border-top-color: transparent;
+}
+
+/* Stacked, a row's years sit under its code and label. */
+.rows[data-stacked] .track {
+  border-top: 0;
+  margin-bottom: var(--space-1);
+}
+
+/* Years the block's columns have codes. */
+.base {
+  position: absolute;
+  top: 9px;
+  height: 6px;
+  background: var(--surface-sunken);
+}
+
+/* Years a column uses this code. */
+.box {
+  position: absolute;
+  top: 7px;
+  height: 10px;
+  border-radius: 1px;
+  background: var(--text);
+}
