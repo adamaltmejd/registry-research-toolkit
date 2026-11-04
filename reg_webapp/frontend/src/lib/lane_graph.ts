@@ -180,6 +180,8 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const rowsOf = new Map<string, number>();
   const rowOf = new Map<string, number>();
   const trackEnd = trackX + trackWidth;
+  // Where each span's drawing ends, its name included when set to the right.
+  const ends = new Map<string, number>();
   for (const lane of input.lanes) {
     const spans = input.spans
       .filter((s) => s.lane === lane.id)
@@ -213,6 +215,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         rowEnds[row] = end;
       }
       rowOf.set(span.id, row);
+      ends.set(span.id, end);
       const segments = (
         span.segments ?? [{ name: null, from: span.from, to: span.to }]
       ).map((segment) => {
@@ -344,8 +347,13 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     return [
       {
         ...edge,
+        // A name set right of the bar: the arrow leaves after it, not
+        // through it, when there is room before the successor.
         d: curve(
-          from.x + from.width,
+          Math.max(
+            fromEnd,
+            Math.min(ends.get(edge.from) ?? fromEnd, to.x - LABEL_GAP),
+          ),
           from.y + SPAN_HEIGHT / 2,
           to.x,
           to.y + SPAN_HEIGHT / 2,

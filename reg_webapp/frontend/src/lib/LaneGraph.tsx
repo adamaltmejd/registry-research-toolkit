@@ -727,7 +727,13 @@ function Span({
     return (
       // The trigger props go unused: a read-only span is no tab stop, and its
       // name is the visually hidden line, so only hover opens its tooltip.
-      <TooltipTrigger isOpen={open} delay={0} closeDelay={0}>
+      // onOpenChange lets RAC close the tooltip on Escape.
+      <TooltipTrigger
+        isOpen={open}
+        onOpenChange={setOpen}
+        delay={0}
+        closeDelay={0}
+      >
         <span
           ref={face}
           className={styles.span}

@@ -45,7 +45,7 @@ const TYPES = [
   { id: "numeric", name: "Numeric" },
   { id: "date", name: "Date" },
   { id: "datetime", name: "Date and time" },
-  { id: "opaque", name: "Opaque" },
+  { id: "opaque", name: "Other" },
 ];
 
 export function SourceCard({

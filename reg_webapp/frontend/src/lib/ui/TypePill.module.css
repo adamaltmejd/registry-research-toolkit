@@ -3,13 +3,13 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 0 6px;
+  padding: 0 var(--space-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
   font-family: var(--font-ui);
-  font-size: 0.75rem;
+  font-size: var(--text-column);
   line-height: 1.4;
   white-space: nowrap;
 }

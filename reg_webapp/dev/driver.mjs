@@ -490,7 +490,7 @@ async function sourceCardsCase(page, shoot) {
   await settled(page);
 
   await main.getByRole("button", { name: /Type for Ålder in baseline/ }).click();
-  await page.getByRole("option", { name: "Opaque", exact: true }).click();
+  await page.getByRole("option", { name: "Other", exact: true }).click();
   const period = main.getByRole("group", { name: "Period for baseline (years)", exact: true });
   const toYear = period.getByRole("slider", { name: /^To year/ });
   await toYear.focus();

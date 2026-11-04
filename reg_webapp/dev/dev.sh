@@ -323,6 +323,7 @@ elif [ -n "$fixture_db" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
 	cp "$fixture_catalog" "$fixture_db_dir/reg_meta.db" || exit 1
 	export REG_META_DB="$fixture_db_dir"
+	catalog="" # the fixture has no holdings partner; ignore REG_META_CATALOG
 	export REG_WEBAPP_FIXTURE=webapp-dev
 fi
 
