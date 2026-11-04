@@ -8,6 +8,7 @@ import {
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, leafSlug, rankFilter, svCollator } from "./catalog";
 import { sharedShow } from "./catalog_names";
+import { catalogPeriodLabel } from "./catalog_period";
 import { Highlight } from "./Highlight";
 import {
   type ColumnItem,
@@ -94,9 +95,19 @@ export function VariableList({
         ),
       ]
     : ranked;
+  // Names only, except where two variables share a name: then the years tell
+  // them apart, on screen and in the accessible name.
+  const nameCounts = new Map<string, number>();
+  for (const variable of variables) {
+    nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
+  }
   const items = rows.map((row) => ({
     id: row.fqid,
     name: row.name,
+    label:
+      (nameCounts.get(row.name) ?? 0) > 1
+        ? `${row.name}, ${catalogPeriodLabel(row.period)}`
+        : undefined,
     href: catalogHref(row.fqid),
     inProject: 0,
   }));
@@ -109,7 +120,7 @@ export function VariableList({
         item.name
       ) : (
         <span className={styles.variableLabel}>
-          <Highlight text={item.name} needle={needle} />
+          <Highlight text={item.label ?? item.name} needle={needle} />
         </span>
       ),
     [needle],
