@@ -24,8 +24,6 @@ interface Row {
   label: string;
   /** An action's context, in the text face. */
   detail: string | null;
-  /** A catalog hit's identifier, in mono beside its name. */
-  fqid: string | null;
   href: string;
   type: NodeType | null;
 }
@@ -36,8 +34,7 @@ const ACTIONS: readonly Row[] = [
   {
     id: "action:project",
     label: "Go to the project",
-    detail: "Sources, columns and the order",
-    fqid: null,
+    detail: "Study years, tables and columns",
     href: "/project",
     type: null,
   },
@@ -45,7 +42,6 @@ const ACTIONS: readonly Row[] = [
     id: "action:browse",
     label: "Browse the data",
     detail: "Registers and their variables",
-    fqid: null,
     href: "/catalog",
     type: null,
   },
@@ -53,7 +49,6 @@ const ACTIONS: readonly Row[] = [
     id: "action:home",
     label: "Go to the start page",
     detail: null,
-    fqid: null,
     href: "/",
     type: null,
   },
@@ -73,7 +68,6 @@ function hitRow(hit: SearchHit): Omit<Row, "id"> | null {
         ? {
             label: hit.name,
             detail: null,
-            fqid: hit.fqid,
             href: catalogHref(hit.fqid),
             type: "classification",
           }
@@ -262,7 +256,6 @@ function PaletteItem({ row }: { row: Row }) {
     <MenuItem id={row.id} textValue={row.label} className={styles.item}>
       <span className={styles.label}>{row.label}</span>
       {row.detail && <span className={styles.detail}>{row.detail}</span>}
-      {row.fqid && <span className={styles.fqid}>{row.fqid}</span>}
       {row.type && (
         <span className={styles.type}>
           <TypeTag type={row.type} />

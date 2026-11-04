@@ -96,6 +96,7 @@ export function IssueLink({
   const refs = issueRefs(issue, raw);
   const names = useCatalogNames(refs);
   const variable = useCatalogName(place.variable);
+  const table = useCatalogName(place.table);
   return (
     <li>
       <Link
@@ -103,8 +104,15 @@ export function IssueLink({
         href={`#${encodeURIComponent(issueId(issue))}`}
         onPress={() => document.getElementById(issueId(issue))?.focus()}
       >
-        {place.source}
-        {place.variable && variable.value ? `: ${variable.value}` : ""}:{" "}
+        {/* The table's catalog name, as on its card; nothing while it loads,
+          rather than the join key flashing first. */}
+        {[
+          table.loading ? null : (table.value ?? place.source),
+          place.variable ? variable.value : null,
+        ]
+          .filter(Boolean)
+          .map((part) => `${part}: `)
+          .join("")}
         {plainIssueText(issueTitle(issue), refs, names, raw)}
       </Link>
     </li>
@@ -120,7 +128,7 @@ export function LocatedIssue({
 }: {
   issue: ValidationIssue;
   raw: string | null;
-  omitPlace?: readonly ("source" | "variable" | "table")[];
+  omitPlace?: readonly ("variable" | "table")[];
 }) {
   const place = issuePlace(issue, raw);
   const refs = issueRefs(issue, raw);
@@ -142,22 +150,14 @@ export function LocatedIssue({
             title={plainIssueText(issueTitle(issue), refs, names, raw)}
             code={issue.code}
           />
-          {/* A project table is named by the project; the catalog table it
-            reads follows in brackets, as one "Table" row. */}
-          {place.source && !omitPlace.includes("source") ? (
-            <span>
-              Table: {place.source}
-              {place.table && !omitPlace.includes("table") && !table.loading
-                ? ` (${table.value ?? "name unavailable"})`
-                : ""}
-            </span>
-          ) : (
-            place.table &&
-            !omitPlace.includes("table") &&
-            !table.loading && (
-              <span>Table: {table.value ?? "Name unavailable"}</span>
-            )
-          )}
+          {/* A project table is named by the catalog table it reads, as on
+            its card; the project's own name for it is the file's join key and
+            stands in only where the catalog has no name. */}
+          {!omitPlace.includes("table") &&
+            !table.loading &&
+            (table.value || place.source) && (
+              <span>Table: {table.value ?? place.source}</span>
+            )}
           {place.panel && <span>{place.panel}</span>}
           {place.variable &&
             !omitPlace.includes("variable") &&
@@ -172,7 +172,7 @@ export function LocatedIssue({
           )}
           {period && (
             <span>
-              Period: {period === "Unbounded" ? period : <code>{period}</code>}
+              Years: {period === "Unbounded" ? period : <code>{period}</code>}
             </span>
           )}
           <span className={styles.message}>

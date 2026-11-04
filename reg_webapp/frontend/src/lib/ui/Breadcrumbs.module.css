@@ -1,3 +1,4 @@
+/* Names in the UI face: a trail of pages, not of identifiers. */
 .list {
   display: flex;
   flex-wrap: wrap;
@@ -6,15 +7,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-family: var(--font-mono);
-  font-size: var(--text-column);
-}
-
-/* The first crumb, "Browse registers", and any `word` crumb ("Project") are words, not
-   slugs: the UI face. */
-.crumb:first-child,
-.word {
-  font-family: var(--font-ui);
+  font-size: var(--text-sm);
 }
 
 .crumb {
@@ -62,13 +55,10 @@
   overflow-wrap: anywhere;
   outline: none;
 }
-.link[href][data-hovered] {
+.link[data-hovered] {
   background: var(--surface-hover);
   color: var(--text);
 }
 .link[data-focus-visible] {
   box-shadow: var(--focus-ring);
-}
-.link[aria-current="page"] {
-  color: var(--text);
 }

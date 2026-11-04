@@ -1,54 +1,48 @@
-import {
-  Breadcrumbs as AriaBreadcrumbs,
-  Breadcrumb,
-  Link,
-} from "react-aria-components";
+import { Link } from "react-aria-components";
 import styles from "./Breadcrumbs.module.css";
-import { type BreadcrumbItem, isBackCrumb } from "./types";
+import type { BreadcrumbItem } from "./types";
 
 /**
- * The detail pane's path (DESIGN.md → Detail pane): `mono`, over the `h1`. The
- * last item is the current page (RAC marks it `aria-current="page"` and makes
- * it inert); an earlier item without an `href` is plain text. The separator is
- * generated content, so a screen reader reads only the labels. A `narrowOnly`
- * item with an `href` is the way back to the register list where the columns
- * stack, drawn as a default button on its own line (#1824).
+ * The detail pane's path (DESIGN.md → Detail pane): the ancestors' names over
+ * the `h1`, ending at the page's parent. Not RAC's `Breadcrumbs`: it makes the
+ * last item the current page, inert and `aria-current`, and this trail's last
+ * item is a link to the parent (the `h1` names the page itself). The separator
+ * is generated content, so a screen reader reads only the names. A `narrowOnly`
+ * item is the way back to the register list where the columns stack, drawn as
+ * a default button on its own line (#1824). `busy` while an ancestor's name is
+ * still loading.
  */
 export function Breadcrumbs({
   items,
+  busy = false,
   className,
 }: {
   items: readonly BreadcrumbItem[];
+  busy?: boolean;
   className?: string;
 }) {
+  if (items.length === 0) return null;
   return (
-    // RAC always names the list (its fallback is "Breadcrumbs"), so the name
-    // lives there alone; a second one on the nav was announced twice.
     <nav
+      aria-label="Breadcrumb"
+      aria-busy={busy || undefined}
       className={`${className ?? ""} ${items.every((item) => item.narrowOnly) ? styles.narrowOnly : ""}`}
     >
-      <AriaBreadcrumbs aria-label="Breadcrumb" className={styles.list}>
-        {items.map((item, i) => (
-          // A label can repeat along a path; its position cannot.
-          <Breadcrumb
-            // oxlint-disable-next-line react/no-array-index-key
-            key={i}
-            id={i}
-            className={`${styles.crumb} ${item.word ? styles.word : ""} ${item.narrowOnly ? styles.narrowOnly : ""} ${isBackCrumb(item) ? styles.back : ""}`}
+      <ol className={styles.list}>
+        {items.map((item) => (
+          <li
+            key={item.href}
+            className={`${styles.crumb} ${item.narrowOnly ? `${styles.narrowOnly} ${styles.back}` : ""}`}
           >
-            {item.href || i === items.length - 1 ? (
-              <Link
-                href={item.href}
-                className={isBackCrumb(item) ? styles.backLink : styles.link}
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span className={styles.link}>{item.label}</span>
-            )}
-          </Breadcrumb>
+            <Link
+              href={item.href}
+              className={item.narrowOnly ? styles.backLink : styles.link}
+            >
+              {item.label}
+            </Link>
+          </li>
         ))}
-      </AriaBreadcrumbs>
+      </ol>
     </nav>
   );
 }

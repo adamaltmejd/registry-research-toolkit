@@ -50,19 +50,12 @@ export interface Column<Row = object> {
   width?: string;
 }
 
-/** A `Breadcrumbs` item. The last item is the current page (no `href`). */
+/** A `Breadcrumbs` item: an ancestor page, by name. */
 export interface BreadcrumbItem {
   label: string;
-  href?: string;
-  /** A word, not a slug or identifier: the UI face, not mono. */
-  word?: boolean;
+  href: string;
   /** Shown only below the narrow breakpoint: the way back to the register
    * list where the columns stack ("Browse registers"). Above it the list is on
    * screen. */
   narrowOnly?: boolean;
-}
-
-/** The narrow-only crumb that links back to the register list. */
-export function isBackCrumb(item: BreadcrumbItem): boolean {
-  return Boolean(item.narrowOnly && item.href);
 }

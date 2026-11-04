@@ -257,6 +257,18 @@ export function catalogNameRead(ref: string | null): Read<string> {
   };
 }
 
+/** A breadcrumb ancestor's name: a provider's from the root read the browse
+ * column makes, a register's from the register read its variable list shares,
+ * so a trail issues no request of its own. */
+export function ancestorNameRead(ref: string | null): Read<string> {
+  if (ref === null || ref.includes("/")) return catalogNameRead(ref);
+  const root = catalogRootChildren();
+  return {
+    value: root.value?.find((provider) => provider.fqid === ref)?.name ?? null,
+    loading: root.loading,
+  };
+}
+
 /** Use the classification page's version title, not content-shared value-set aliases. */
 function classificationNameRead(ref: string): Read<string> {
   return {

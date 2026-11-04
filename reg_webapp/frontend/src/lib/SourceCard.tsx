@@ -76,6 +76,10 @@ export function SourceCard({
   onRemoved: () => void;
 }) {
   const source = draft.sources[sourceIndex];
+  // The card is headed by its register and names its table in every label,
+  // as the page's findings do: the source's own name is the file's join key.
+  const register = names.get(source.table.split("/").slice(0, 2).join("/"));
+  const tableName = names.get(source.table) ?? source.name;
   const heading = useRef<HTMLSpanElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [removing, setRemoving] = useState<{
@@ -190,7 +194,7 @@ export function SourceCard({
       action: (
         <Button
           variant="ghost"
-          aria-label={`Remove ${columns[0]?.spelling ?? name} from ${source.name}`}
+          aria-label={`Remove ${columns[0]?.spelling ?? name} from ${tableName}`}
           onPress={() =>
             setRemoving({
               binding: bindingIndex,
@@ -213,7 +217,7 @@ export function SourceCard({
           <div className={styles.controls}>
             <Select
               label="Type"
-              aria-label={`Type for ${name} in ${source.name}`}
+              aria-label={`Type for ${name} in ${tableName}`}
               value={binding.type}
               options={TYPES}
               onChange={(type) =>
@@ -233,7 +237,7 @@ export function SourceCard({
               )) && (
               <Select
                 label="Classification"
-                aria-label={`Classification for ${name} in ${source.name}`}
+                aria-label={`Classification for ${name} in ${tableName}`}
                 value={binding.classification ?? ""}
                 options={[
                   { id: "", name: "Not pinned" },
@@ -258,18 +262,13 @@ export function SourceCard({
               />
             )}
           </div>
-          {binding.display_name && (
-            <span>
-              Output name: <code>{binding.display_name}</code>
-            </span>
-          )}
           <ul className={styles.plainList}>
             {findings.map((issue) => (
               <LocatedIssue
                 key={issueId(issue)}
                 issue={issue}
                 raw={raw}
-                omitPlace={["source", "variable", "table"]}
+                omitPlace={["variable", "table"]}
               />
             ))}
           </ul>
@@ -284,14 +283,14 @@ export function SourceCard({
       headingLevel={3}
       title={
         <span ref={heading} tabIndex={-1} className={styles.heading}>
-          {source.name}
+          {register ?? tableName}
         </span>
       }
       action={
         <Button
           variant="ghost"
-          aria-label={`Remove table ${source.name}`}
-          onPress={() => setRemoving({ binding: null, label: source.name })}
+          aria-label={`Remove table ${tableName}`}
+          onPress={() => setRemoving({ binding: null, label: tableName })}
         >
           Remove table
         </Button>
@@ -304,17 +303,17 @@ export function SourceCard({
               key={issueId(issue)}
               issue={issue}
               raw={raw}
-              omitPlace={["source", "table"]}
+              omitPlace={["table"]}
             />
           ))}
         </ul>
       )}
       <p className={styles.meta}>
         <a className="link" href={catalogHref(source.table)}>
-          {names.get(source.table) ?? "Table name unavailable"}
+          {tableName}
         </a>
         <span>
-          Period:{" "}
+          Years:{" "}
           {unbounded ? (
             "Unbounded"
           ) : (
@@ -335,7 +334,7 @@ export function SourceCard({
       )}
       {graph ? (
         <LaneGraph
-          label={`Columns of ${source.name}`}
+          label={`Columns of ${tableName}`}
           lanes={lanes}
           spans={spans}
           edges={[]}
@@ -355,7 +354,7 @@ export function SourceCard({
                 axis={axis}
                 selection={selection}
                 bounds={thumbBounds}
-                label={`Period for ${source.name} (years)`}
+                label={`Years for ${tableName}`}
                 onMove={setDragging}
                 onRest={(next) => {
                   if (!hull || !sameYearWindow(next, hull))
@@ -367,7 +366,7 @@ export function SourceCard({
           }
         />
       ) : loading ? null : (
-        <LaneList label={`Columns of ${source.name}`} lanes={lanes} />
+        <LaneList label={`Columns of ${tableName}`} lanes={lanes} />
       )}
       {stored && Array.isArray(source.period) && (
         <p className={styles.note}>
@@ -392,8 +391,8 @@ export function SourceCard({
         }}
         title={
           removesSource
-            ? `Remove table ${source.name}?`
-            : `Remove ${removing?.label ?? "column"} from ${source.name}?`
+            ? `Remove table ${tableName}?`
+            : `Remove ${removing?.label ?? "column"} from ${tableName}?`
         }
         actions={
           <>
