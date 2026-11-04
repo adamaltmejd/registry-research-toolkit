@@ -34,8 +34,7 @@
   padding: 0;
   list-style: none;
 }
-.column,
-.chips {
+.column {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -731,9 +731,9 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `TypePill`, `FilterChip`, `VariableRow`,
 `Timeline`, `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`.
-The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`,
-…) are the stepping stones: they keep reading the same roles until each is replaced, and
-must not grow new visual language meanwhile.
+The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, …) are the
+stepping stones: they keep reading the same roles until each is replaced, and must not
+grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
   per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box,
@@ -760,10 +760,10 @@ must not grow new visual language meanwhile.
   as the widest verdict, so the banner keeps one size while the check runs. A verdict
   with findings (Has warnings, Has problems, Can't be ordered yet) is a link, in its
   status hue with the link's `accent` rule, to the verdict on /project, which takes
-  focus; Ready to order and Checking stay plain text. Unsaved changes are a quiet `mono` `text-muted`
-  "unsaved", never a status hue. The study window is the period picker: an inline
-  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
-  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  focus; Ready to order and Checking stay plain text. Unsaved changes are a quiet `mono`
+  `text-muted` "unsaved", never a status hue. The study window is the period picker: an
+  inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and
+  last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
   `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
   `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
   Clear keep one line. With no project open it is the same box, empty and untinted with
@@ -787,16 +787,16 @@ must not grow new visual language meanwhile.
   check and no button for it: WASM on every edit, then `order` 350 ms after the last
   edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
   with the count, "Can't be ordered yet" with the count of problems, or "Has problems"
-  for a file that fails the structure check, whose problems are listed in full under
-  it; a check that did not run is an `err` row with Retry. "What will be delivered" is
-  the order the catalog would serve, shown only when the project can be ordered: per
-  table its name and years, each column as a `ColumnChip` (with its years only where
-  they differ from the table's) beside the variable's name, "Years not available" per
-  column the period asks more of than the table has, and the "Row identifier" columns.
-  There is no order-file download: the steward's instructions say how to order. With
-  no project the page is one `EmptyState`, "No project yet", with "Create a project"
-  and "Open a project file…". Below `breakpoint-narrow` a column's row on a card stacks:
-  its name and Remove, its spans, then Type.
+  for a file that fails the structure check, whose problems are listed in full under it;
+  a check that did not run is an `err` row with Retry. "What will be delivered" is the
+  order the catalog would serve, shown only when the project can be ordered: per table
+  its name and years, each column as a `ColumnChip` (with its years only where they
+  differ from the table's) beside the variable's name, "Years not available" per column
+  the period asks more of than the table has, and the "Row identifier" columns. There is
+  no order-file download: the steward's instructions say how to order. With no project
+  the page is one `EmptyState`, "No project yet", with "Create a project" and "Open a
+  project file…". Below `breakpoint-narrow` a column's row on a card stacks: its name
+  and Remove, its spans, then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items
@@ -861,7 +861,7 @@ must not grow new visual language meanwhile.
   `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it in place.
   It exposes `aria-busy="true"`, and respects reduced motion. A loading region carries
   no "Loading…" line beside it. A source card's timeline region shows one info
-  `StatusRow`, "Loading coverage…", in place of the graph while it loads.
+  `StatusRow`, "Loading years…", in place of the graph while it loads.
 
 ## Do's and Don'ts
 

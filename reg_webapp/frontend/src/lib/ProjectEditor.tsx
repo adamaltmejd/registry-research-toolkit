@@ -153,9 +153,12 @@ export function ProjectEditor({
               raw={raw}
             />
           )}
-          {draft && draft.sources.length > 0 && validation.data?.order && (
-            <DeliverySummary order={validation.data.order} />
-          )}
+          {draft &&
+            validation.data?.order &&
+            // A check in flight keeps the last order: show none until it lands.
+            ["ready", "warnings"].includes(
+              projectVerdict(project, validation),
+            ) && <DeliverySummary order={validation.data.order} />}
         </>
       )}
       <ConfirmDialog
@@ -183,7 +186,8 @@ export function ProjectEditor({
           </>
         }
       >
-        Download project_data.json first if you want to keep the current draft.{" "}
+        Download project_data.json first if you want to keep the current
+        project.{" "}
         {pending?.discard
           ? "Discarding it removes the browser's saved working copy."
           : "Replacing it changes the browser's saved working copy."}
@@ -255,7 +259,9 @@ function Check({
               ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you order.`
               : structural
                 ? `${words}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
-                : `${words}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
+                : problems === 0
+                  ? `${words}.`
+                  : `${words}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
         </StatusRow>
       )}
       {listed.length > 0 && verdict !== "checking" && (
@@ -391,7 +397,7 @@ function Sources({
                   const read = segmentReads[binding.variable];
                   return read && !read.loading && read.value === null;
                 })
-                  ? "Column coverage is unavailable"
+                  ? "Column years are unavailable"
                   : null) ??
                 (register && !register.loading && !register.value
                   ? "Table availability is unavailable"

@@ -70,3 +70,30 @@ export function catalogPeriodRuns(periods: readonly CatalogPeriod[]): string {
   }
   return runs.map(catalogPeriodLabel).join(", ");
 }
+
+/** `requested` less `ordered`: the years a clip cannot deliver. Half-open ISO
+ * days compare as strings; a null end is open. */
+export function periodsLess(
+  requested: readonly CatalogPeriod[],
+  ordered: readonly CatalogPeriod[],
+): CatalogPeriod[] {
+  let rest = requested.map((period) => ({ ...period }));
+  for (const cut of ordered) {
+    rest = rest.flatMap((period) => {
+      const overlaps =
+        (cut.end === null || period.start === null || period.start < cut.end) &&
+        (cut.start === null || period.end === null || cut.start < period.end);
+      if (!overlaps) return [period];
+      const pieces: CatalogPeriod[] = [];
+      if (
+        cut.start !== null &&
+        (period.start === null || period.start < cut.start)
+      )
+        pieces.push({ start: period.start, end: cut.start });
+      if (cut.end !== null && (period.end === null || period.end > cut.end))
+        pieces.push({ start: cut.end, end: period.end });
+      return pieces;
+    });
+  }
+  return rest;
+}

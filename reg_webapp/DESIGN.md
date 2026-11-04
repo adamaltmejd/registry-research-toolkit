@@ -21,21 +21,21 @@ attempted, and its structural issues are listed in full under the verdict. Openi
 replacement or discarding the working copy asks first. Download remains available if
 browser persistence fails.
 
-The banner and project page share one catalog check (`useProjectCheck`): `order`, through
-the shared abortable resource hook, 350 ms after the last accepted edit, with no manual
-trigger. `order` answers everything the page shows, so the SPA does not call `validate`:
-both run the same check, an `order_blocked` refusal carries every finding that
-`validate` would list, and a success carries the non-blocking findings with the entries,
-row keys and clips the delivery summary draws. The SPA sends only drafts WASM accepted;
-a `project_invalid` refusal, should the server disagree, is read the same way. One
-verdict function names the result for both, in the words of `frontend/DESIGN.md` → Words.
-Issues sit under their table or column, with links from the verdict that focus them. The
-banner retains the project name, table and column counts, verdict and download save
-state across routes. A
-restored local draft is recovery, so it remains unsaved until downloaded. The study
-window is an inline window-band picker bounded by the catalog's half-open period span. A
-new project carries over the browsing window or starts at 2015 through the catalog's
-last year. Moving the study window never rewrites source periods.
+The banner and project page share one catalog check (`useProjectCheck`): `order`,
+through the shared abortable resource hook, 350 ms after the last accepted edit, with no
+manual trigger. `order` answers everything the page shows, so the SPA does not call
+`validate`: both run the same check, an `order_blocked` refusal carries every finding
+that `validate` would list, and a success carries the non-blocking findings with the
+entries, row keys and clips the delivery summary draws. The SPA sends only drafts WASM
+accepted; a `project_invalid` refusal, should the server disagree, is read the same way.
+One verdict function names the result for both, in the words of `frontend/DESIGN.md` →
+Words. Issues sit under their table or column, with links from the verdict that focus
+them. The banner retains the project name, table and column counts, verdict and download
+save state across routes. A restored local draft is recovery, so it remains unsaved
+until downloaded. The study window is an inline window-band picker bounded by the
+catalog's half-open period span. A new project carries over the browsing window or
+starts at 2015 through the catalog's last year. Moving the study window never rewrites
+source periods.
 
 Variable pages project their segments into a single coverage LaneGraph. A column is the
 exact table and spelling pair; selection and its availability-bounded add window are
@@ -51,8 +51,8 @@ pages. Adding starts from the variable page; register rows link there, and both 
 rows and already-bound columns show in-project state without a checkbox.
 
 The project page shows the logical order under the tables as "What will be delivered",
-grouped by project table and catalog table: columns and years, the years a column
-cannot deliver (clips) and the row identifier. There is no order page and no order-file
+grouped by project table and catalog table: columns and years, the years a column cannot
+deliver (clips) and the row identifier. There is no order page and no order-file
 download (maintainer ruling 2026-11-04): the steward's `order_instructions` say how to
 order. Register-name reads are shared with catalog browsing.
 

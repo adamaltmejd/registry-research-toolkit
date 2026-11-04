@@ -324,12 +324,12 @@ export function SourceCard({
       </p>
       {loading && (
         <div aria-busy="true">
-          <StatusRow tone="info">Loading coverage…</StatusRow>
+          <StatusRow tone="info">Loading years…</StatusRow>
         </div>
       )}
       {loadError && (
         <StatusRow tone="error">
-          Coverage did not load. Reload the page to try again, or check the
+          The years did not load. Reload the page to try again, or check the
           catalog for columns that are no longer available.
         </StatusRow>
       )}

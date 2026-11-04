@@ -344,7 +344,8 @@ async function projectPagesCase(page, shoot) {
   const verdict = main.getByRole("region", { name: "Check", exact: true });
   // No button runs the check: opening the file does.
   await verdict.getByText("Ready to order.", { exact: true }).waitFor();
-  await banner.getByText("Ready to order", { exact: true }).waitFor();
+  // The verdict sits beside invisible sizers holding every verdict word.
+  await banner.getByText(/Ready to order$/).filter({ visible: true }).waitFor();
   check(/1 table,\s*2 columns/.test(await banner.innerText()), "the banner lost the loaded project's table/column summary");
   await main.getByRole("textbox", { name: "Project name", exact: true }).fill("Baseline study revised");
   await banner.getByText("unsaved", { exact: true }).waitFor();
@@ -374,7 +375,7 @@ async function projectPagesCase(page, shoot) {
   }
   const deliveredTable = delivered.getByRole("region", { name: /^Basregistret/ });
   check((await deliveredTable.getByRole("heading").innerText()).includes("2020"), "the delivery summary lost the table's years");
-  await deliveredTable.getByRole("link", { name: /: Lopnr$/ }).waitFor();
+  await deliveredTable.getByText("Lopnr", { exact: true }).waitFor();
   await shoot("project-delivery");
 
   // Bransch occurs only in Hushållsregistret's Individer table in webapp-dev.
@@ -403,14 +404,14 @@ async function projectPagesCase(page, shoot) {
   const issues = main.getByRole("region", { name: "Check", exact: true });
   await issues.getByText(/^Has problems: /).waitFor();
   await banner.getByRole("link", { name: "Has problems", exact: true }).waitFor();
-  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
   await issues.getByText("Period: 2020", { exact: true }).waitFor();
   // Rejected documents survive reload and download byte-for-byte; accepting or
   // normalizing one during persistence would lose the original invalid input.
   await page.reload();
   await settled(page);
-  await issues.getByText("Source: baseline", { exact: true }).waitFor();
+  await issues.getByText("Table: baseline (Basregistret)", { exact: true }).waitFor();
   await issues.getByText("Variable: Kön", { exact: true }).waitFor();
   await issues.getByText("Period: 2020", { exact: true }).waitFor();
   const issueTitle = issues.getByRole("button").first();

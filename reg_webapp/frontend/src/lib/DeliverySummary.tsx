@@ -1,38 +1,11 @@
-import type { CatalogPeriod, LogicalOrder } from "./api";
+import type { LogicalOrder } from "./api";
 import { catalogHref } from "./catalog";
-import { catalogPeriodRuns } from "./catalog_period";
+import { catalogPeriodRuns, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
 import { useCatalogNames } from "./use_catalog_names";
 
 type Entry = LogicalOrder["entries"][number];
-
-/** `requested` less `ordered`: the years a clip cannot deliver. Half-open ISO
- * days compare as strings; a null end is open. */
-function missing(
-  requested: readonly CatalogPeriod[],
-  ordered: readonly CatalogPeriod[],
-): CatalogPeriod[] {
-  let rest = requested.map((period) => ({ ...period }));
-  for (const cut of ordered) {
-    rest = rest.flatMap((period) => {
-      const overlaps =
-        (cut.end === null || period.start === null || period.start < cut.end) &&
-        (cut.start === null || period.end === null || cut.start < period.end);
-      if (!overlaps) return [period];
-      const pieces: CatalogPeriod[] = [];
-      if (
-        cut.start !== null &&
-        (period.start === null || period.start < cut.start)
-      )
-        pieces.push({ start: period.start, end: cut.start });
-      if (cut.end !== null && (period.end === null || period.end > cut.end))
-        pieces.push({ start: cut.end, end: period.end });
-      return pieces;
-    });
-  }
-  return rest;
-}
 
 /** What the order would deliver (the logical order, maintainer ruling Q1,
  * 2026-11-04): per table its columns and years, the years a column does not
@@ -78,7 +51,7 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
           const clips = order.clips.filter(
             (clip) =>
               firstOfSource.get(clip.source) === key &&
-              missing(clip.requested, clip.ordered).length > 0,
+              periodsLess(clip.requested, clip.ordered).length > 0,
           );
           const rowKeys = [
             ...new Map(
@@ -140,7 +113,7 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
                           "Variable name unavailable"}{" "}
                         <span className={styles.years}>
                           {catalogPeriodRuns(
-                            missing(clip.requested, clip.ordered),
+                            periodsLess(clip.requested, clip.ordered),
                           )}
                         </span>
                       </li>
@@ -151,18 +124,17 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
               {rowKeys.length > 0 && (
                 <div className={styles.fact}>
                   <span className="micro-label">Row identifier</span>
-                  <span className={styles.chips}>
+                  <ul className={styles.plainList}>
                     {rowKeys.map((column) => (
-                      <a
-                        key={column.spelling}
-                        className="link"
-                        href={catalogHref(column.variable)}
-                        aria-label={`${names.get(column.variable) ?? "Row identifier"}: ${column.spelling}`}
-                      >
+                      <li key={column.spelling} className={styles.column}>
                         <ColumnChip name={column.spelling} />
-                      </a>
+                        <a className="link" href={catalogHref(column.variable)}>
+                          {names.get(column.variable) ??
+                            "Variable name unavailable"}
+                        </a>
+                      </li>
                     ))}
-                  </span>
+                  </ul>
                 </div>
               )}
             </section>

@@ -142,8 +142,21 @@ export function LocatedIssue({
             title={plainIssueText(issueTitle(issue), refs, names, raw)}
             code={issue.code}
           />
-          {place.source && !omitPlace.includes("source") && (
-            <span>Source: {place.source}</span>
+          {/* A project table is named by the project; the catalog table it
+            reads follows in brackets, as one "Table" row. */}
+          {place.source && !omitPlace.includes("source") ? (
+            <span>
+              Table: {place.source}
+              {place.table && !omitPlace.includes("table") && !table.loading
+                ? ` (${table.value ?? "name unavailable"})`
+                : ""}
+            </span>
+          ) : (
+            place.table &&
+            !omitPlace.includes("table") &&
+            !table.loading && (
+              <span>Table: {table.value ?? "Name unavailable"}</span>
+            )
           )}
           {place.panel && <span>{place.panel}</span>}
           {place.variable &&
@@ -151,9 +164,6 @@ export function LocatedIssue({
             !variable.loading && (
               <span>Variable: {variable.value ?? "Name unavailable"}</span>
             )}
-          {place.table && !omitPlace.includes("table") && !table.loading && (
-            <span>Table: {table.value ?? "Name unavailable"}</span>
-          )}
           {((variable.loading && !omitPlace.includes("variable")) ||
             (table.loading && !omitPlace.includes("table"))) && (
             <div aria-label="Catalog names" aria-busy="true">
