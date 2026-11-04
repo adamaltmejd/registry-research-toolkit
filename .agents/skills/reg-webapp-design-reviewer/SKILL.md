@@ -142,10 +142,12 @@ bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
 `--all` captures the four DESIGN.md widths for every rendered change; there is no
-desktop-only exception, and `smoke` (desktop only) does not stand in for them. The
-[run-reg-webapp skill](../run-reg-webapp/SKILL.md) owns the rest: prerequisites, what
-each capture writes and prints, and driving a state no route reaches (an open dialog, a
-filled form) in a named agent-browser session, captured at the four widths too.
+desktop-only exception, and `smoke` (desktop only) does not stand in for them. CI's
+flows job runs only phone (375 px) and desktop, so this review is the only check at 768
+px and 1920 px: do not rely on a green CI for those widths. The [run-reg-webapp
+skill](../run-reg-webapp/SKILL.md) owns the rest: prerequisites, what each capture
+writes and prints, and driving a state no route reaches (an open dialog, a filled form)
+in a named agent-browser session, captured at the four widths too.
 
 `dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
 directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. `/tmp` is
@@ -198,8 +200,9 @@ where the evidence in hand establishes a candidate defect with that impact.
 Fill every field of the rendered template and report the routes, states and viewports
 you actually inspected. Say whether captures are author iteration or retained gate
 evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`) covers only its driver
-scenarios (the `scenarios` table in `driver.mjs`); every case must pass, and a
-`check(...)` that was weakened is a finding. Approval needs evidence for every surface
+scenarios (the `scenarios` table in `driver.mjs`) and, in CI, only phone and desktop
+(`REG_WEBAPP_FLOW_VIEWPORTS`; local runs default to all four); every case must pass, and
+a `check(...)` that was weakened is a finding. Approval needs evidence for every surface
 changed.
 
 ## Severity, findings and fixes

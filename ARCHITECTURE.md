@@ -274,15 +274,18 @@ This is the complete list of boundaries a test may assert at.
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. Conformance is
    not one: it requires the Rust server (`--server-cmd`). The `rust` job's 9-minute
    timeout covers `crates/` and the gate's `rust` step (`scripts/gate.py`: the workspace
-   build and the whole conformance suite against the Rust server), with room for a cold
-   rust-cache and its save. The legacy builder's matrix leg runs `gate.py release`: its
-   full Python suite, then the `release`-marked admission checks on the synthetic
-   catalog artifact. The `lint` job runs `gate.py lint` (ruff, panache, ty, plugin
-   schema drift and provider vocabulary). The OpenAPI snapshot is a `crates/reg-meta`
-   test. The `reg-webapp-frontend` job runs install, WASM generation, type checks, lint,
-   unit tests, build and codegen drift; `reg-webapp-flows` runs the production bootstrap
-   and shell/search browser flows against a source-built synthetic fixture. Each
-   frontend job has a 6-minute timeout. A job that exceeds its budget fails.
+   build, the whole conformance suite against the Rust server, then the `release`-marked
+   admission checks on the synthetic catalog artifact), with room for a cold rust-cache
+   and its save. The legacy builder's matrix leg runs `gate.py builder`: its full Python
+   suite only, which needs no Rust binary (`uv sync` builds the `reg-core-py`
+   extension), so each binary is built once, in `rust`. The `lint` job runs
+   `gate.py lint` (ruff, panache, ty, plugin schema drift and provider vocabulary). The
+   OpenAPI snapshot is a `crates/reg-meta` test. The `reg-webapp-frontend` job runs
+   install, WASM generation, type checks, lint, unit tests, build and codegen drift;
+   `reg-webapp-flows` runs the production bootstrap and shell/search browser flows
+   against a source-built synthetic fixture, at the phone (375 px) and desktop viewports
+   only; the four-width review is the design-review skill's. Each frontend job has a
+   6-minute timeout. A job that exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -325,7 +328,7 @@ and each release is checked by `reg-build diff` against the previous one.
   | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and the touched packages) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change |
 
 Local G0 defaults to `scripts/tests`. Until cutover F, the legacy `reg_meta_build` suite
-runs in `gate.py release` and remains mandatory on every PR in its CI matrix leg. It is
+runs in `gate.py builder` and remains mandatory on every PR in its CI matrix leg. It is
 also available through `g0 --packages reg_meta_build` for release fixes; plain `pytest`
 still runs both Python suites. No legacy cases are removed by this tier split.
 

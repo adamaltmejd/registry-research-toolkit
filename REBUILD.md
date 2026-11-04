@@ -319,7 +319,8 @@ The full SCB read is a heavy run.
 **Exit:**
 
 - the conformance suite, without the holdings and steward cases, is green against the
-  new server on the synthetic artifacts and on the real one (the `release` step);
+  new server on the synthetic artifacts and on the real one (`gate.py rust`'s release
+  admission);
 - random full-register orders are compared with today's server, and the differences
   classified;
 - the maintainer approves the switch release.

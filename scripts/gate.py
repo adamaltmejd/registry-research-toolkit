@@ -6,11 +6,12 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows and frontend;
+first failure. `all` runs g0, rust, builder, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
-`release`, `frontend` and `flows`; the legacy Python builder suite runs in
-`release` until cutover F.
+`builder`, `frontend` and `flows`; the legacy Python builder suite runs in
+`builder` until cutover F. `rust` also owns release admission on the synthetic
+artifact, so the Rust binaries are built once per job.
 `regen` also refreshes the plugin project schema. Stdlib only.
 """
 
@@ -44,7 +45,7 @@ SERVER_CMD = (
     " --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
-ALL = ("g0", "rust", "release", "flows", "frontend")
+ALL = ("g0", "rust", "builder", "flows", "frontend")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
 # builder"). These words fail `lint` in the other builder crates and in the catalog
 # reader and server, which read only the catalog: providers, their template
@@ -81,8 +82,7 @@ def run(command, cwd=ROOT, env=None, **kwargs):
 def base_artifact() -> Path:
     """The `base` conformance fixture's artifact directory, from the fixture cache.
 
-    Built by `target/debug/reg-build`, so the workspace is built first."""
-    run("cargo build --workspace --locked")
+    Built by `target/debug/reg-build`: the caller has built the workspace."""
     out = run(
         "uv run python conformance/fixture_cache.py base",
         stdout=subprocess.PIPE,
@@ -130,7 +130,7 @@ def provider_vocabulary() -> None:
 def g0(packages: list[str] | None = None) -> None:
     lint()
     crates()
-    # The legacy builder stays mandatory in CI and `release` until cutover F;
+    # The legacy builder stays mandatory in CI and `builder` until cutover F;
     # its full compiler corpus costs more than the every-change local gate allows.
     # Explicit --packages still checks it here when working on a release fix.
     run(
@@ -162,18 +162,20 @@ def rust() -> None:
         if not filecmp.cmp(*builds, shallow=False):
             raise subprocess.CalledProcessError(1, ["cmp", *builds])
     run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
-
-
-def release() -> None:
-    run("uv run python -m pytest reg_meta_build -n auto -q")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
-    # checks: the rest of the suite does not read `--artifact-dir` and already ran in
-    # `rust`.
+    # checks: the rest of the suite does not read `--artifact-dir` and already ran
+    # above. Here, not in `builder`, because this step has the binaries built.
     artifact = base_artifact()
     run(
         f"{CONFORMANCE} -m release --run-release --artifact-dir={artifact} {SERVER_CMD}"
     )
+
+
+def builder() -> None:
+    # The legacy builder's Python suite; needs no Rust binary, only the `reg-core-py`
+    # extension that `uv sync` builds.
+    run("uv run python -m pytest reg_meta_build -n auto -q")
 
 
 def flows() -> None:
@@ -256,7 +258,7 @@ STEPS = {
         g0,
         crates,
         rust,
-        release,
+        builder,
         flows,
         frontend,
         regen,
@@ -270,7 +272,7 @@ def main() -> int:
     parser.add_argument(
         "--packages",
         nargs="+",
-        help="g0's pytest paths (default: scripts/tests; legacy builder runs in release)",
+        help="g0's pytest paths (default: scripts/tests; legacy builder runs in builder)",
     )
     args = parser.parse_args()
     names = [n for step in args.steps for n in (ALL if step == "all" else [step])]

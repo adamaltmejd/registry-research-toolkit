@@ -19,7 +19,18 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      # The curation locks are most of the ~1 GB tree and alone push checkout
+      # toward each job's budget (the full-tree checkout took 36 s here, 9 s
+      # without them). No job here reads them: Rust tests, the conformance run
+      # and the suites below use fixture curation only (conformance/cases/fixtures),
+      # never curation/; lint's tools read source, markdown and manifests, not
+      # `.lock` files.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: &no-locks |
+            /*
+            !curation/**/*.lock
+          sparse-checkout-cone-mode: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.13.6"
@@ -38,15 +49,10 @@ jobs:
     # 9 min since 2026-11-04: cold builds with reg-export-gate run 6-7 min.
     timeout-minutes: 9
     steps:
-      # The curation locks are most of the ~1 GB tree and alone push checkout
-      # toward each job's budget. No job here reads them: Rust tests, the
-      # conformance run and the suites below use fixture curation only
-      # (conformance/cases/fixtures), never curation/.
+      # Without the curation locks, as in `lint` (the pattern is defined there).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          sparse-checkout: &no-locks |
-            /*
-            !curation/**/*.lock
+          sparse-checkout: *no-locks
           sparse-checkout-cone-mode: false
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
@@ -62,12 +68,15 @@ jobs:
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
-      # process (its only run). The builder leg below owns `release`.
+      # process, then release admission on the synthetic artifact (`-m release`): the
+      # one job that builds the binaries, so the builder leg below does not.
       # Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust
 
   # The legacy builder moves out of local G0, but stays mandatory here until F.
-  # Its leg also owns synthetic release admission (not duplicated in `rust`).
+  # Its leg runs only the Python suite: it needs no Rust binary, just the
+  # `reg-core-py` extension that `uv sync` builds (so both legs build the same
+  # thing and can share one rust-cache key). Release admission is in `rust`.
   # `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
   # setup included: a leg over it is a test-audit finding, not a reason to
   # raise the number.
@@ -81,7 +90,7 @@ jobs:
         include:
           - suite: reg_meta_build
             budget: 6
-            command: uv run --no-project scripts/gate.py release
+            command: uv run --no-project scripts/gate.py builder
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
             sparse: *no-locks
@@ -246,5 +255,9 @@ jobs:
         with:
           version: "0.13.6"
       # Bootstrap plus shell/search against the source-built synthetic fixture.
+      # Phone and desktop only (about 80 s saved); the design-review skill's
+      # four-width review covers 768 px and the wide viewport.
       - run: uv run --no-project scripts/gate.py flows
         working-directory: .
+        env:
+          REG_WEBAPP_FLOW_VIEWPORTS: mobile,desktop
