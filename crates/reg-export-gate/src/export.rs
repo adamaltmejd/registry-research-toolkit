@@ -16,8 +16,8 @@ use parquet::file::properties::{EnabledStatistics, WriterProperties, WriterVersi
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::structure::Candidate;
-use crate::{ColumnType, Finding, Policy, RECEIPT, Refusal, Schema, VERSION, sha256_hex};
+use crate::structure::{Candidate, MAX_FILE_BYTES};
+use crate::{Code, ColumnType, Finding, Policy, RECEIPT, Refusal, Schema, VERSION, sha256_hex};
 
 const RECEIPT_FORMAT: &str = "reg-export-gate/receipt";
 const REPORT: &str = "export_gate_report.json";
@@ -326,7 +326,11 @@ fn json_bytes<T: Serialize>(value: &T) -> Vec<u8> {
 
 /// The export's files, as written: each checked table rewritten, in schema
 /// order, then `receipt.json`. The same candidates give the same bytes under
-/// one gate version, which `export` relies on to re-derive an output.
+/// one gate version, which `export` relies on to re-derive an output. A
+/// rewritten file over the staging byte cap is `too_large` (structure): the
+/// gate writes uncompressed, so a compressed staging file under the cap can
+/// grow past it, and `export`, which reads an output under that cap, must
+/// accept exactly what `check` can write.
 pub(crate) fn rewritten(
     schema: &Schema,
     policy: &Policy,
@@ -334,8 +338,12 @@ pub(crate) fn rewritten(
 ) -> Result<Vec<(String, Vec<u8>)>, Refusal> {
     let mut out = Vec::new();
     let mut files = Vec::new();
+    let mut too_large = Vec::new();
     for cand in candidates {
         let bytes = rewrite(cand).ok_or_else(|| setup("internal_error"))?;
+        if bytes.len() as u64 > MAX_FILE_BYTES {
+            too_large.push(Finding::file("too_large", &cand.spec.name));
+        }
         files.push(Written {
             name: cand.spec.name.clone(),
             sha256: sha256_hex(&bytes),
@@ -361,6 +369,12 @@ pub(crate) fn rewritten(
         },
         files,
     };
+    if !too_large.is_empty() {
+        return Err(Refusal {
+            code: Code::Structure,
+            findings: too_large,
+        });
+    }
     out.push((RECEIPT.to_owned(), json_bytes(&receipt)));
     Ok(out)
 }

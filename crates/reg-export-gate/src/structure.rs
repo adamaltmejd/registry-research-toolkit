@@ -77,11 +77,7 @@ fn open(path: &Path) -> std::io::Result<std::fs::File> {
 /// The file's bytes, read once from one handle checked to be a regular file,
 /// and never more than the cap plus one byte.
 pub(crate) fn read(path: &Path) -> Outcome<Vec<u8>> {
-    read_capped(path, MAX_FILE_BYTES)
-}
-
-/// `read` with another byte cap.
-pub(crate) fn read_capped(path: &Path, cap: u64) -> Outcome<Vec<u8>> {
+    let cap = MAX_FILE_BYTES;
     let Ok(file) = open(path) else {
         return Outcome::Unreadable;
     };

@@ -269,8 +269,9 @@ it, only files that receipt lists (no folders); the gate deletes exactly those f
 then the empty folder. An empty folder is removed too. Anything else is
 `output_not_gate_export`, with nothing deleted: the gate leaves it for the user.
 `export_not_writable` means the gate could not create its new folder beside the output
-folder; `move_failed` that it could not rename that folder to the output folder (on
-Windows, an Explorer window or another program holding the folder open blocks it).
+folder (or, in the Rust gate's `export`, in the destination); `move_failed` that it
+could not rename that folder to the output folder (on Windows, an Explorer window or
+another program holding the folder open blocks it).
 
 ### Receipt
 

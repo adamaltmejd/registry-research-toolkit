@@ -91,24 +91,17 @@ fn a_receipt_other_than_the_one_named_refuses() {
 }
 
 #[test]
-fn a_forged_output_with_a_consistent_receipt_refuses() {
-    // Regression: export trusted a receipt whose hashes matched the folder,
-    // so the author's own Parquet (metadata and all) could pose as an export.
-    let (d, _) = checked("forged");
+fn the_authors_files_under_the_genuine_receipt_refuse() {
+    // Regression: export compared only the receipt it re-derived with the one
+    // read, so the author's own Parquet (metadata and all), which decodes to
+    // the same values and so re-derives the same receipt, passed as the gate's.
+    let (d, receipt) = checked("forged");
     let output = d.root.join("output");
-    let mut receipt: Value =
-        serde_json::from_slice(&std::fs::read(output.join(RECEIPT)).expect("a receipt"))
-            .expect("JSON");
-    for file in receipt["files"].as_array_mut().expect("files") {
-        let name = file["name"].as_str().expect("a name").to_owned();
-        let author = std::fs::read(d.staging.join(&name)).expect("a staging file");
-        std::fs::write(output.join(&name), &author).expect("a write");
-        file["sha256"] = json!(sha256(&author));
+    for name in ["persons_by_year_group.parquet", "summary_by_year.parquet"] {
+        std::fs::copy(d.staging.join(name), output.join(name)).expect("a copy");
     }
-    let forged = serde_json::to_vec_pretty(&receipt).expect("JSON");
-    std::fs::write(output.join(RECEIPT), &forged).expect("a write");
     assert_eq!(
-        export(&d, &sha256(&forged)),
+        export(&d, &receipt),
         Err((Code::Delivery, "receipt_mismatch"))
     );
     assert_eq!(entries(&d.root.join("destination")), 0);

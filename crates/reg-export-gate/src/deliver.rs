@@ -9,17 +9,12 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::{self, owner};
 use crate::export::{apart_from_roots, place, rewritten};
-use crate::structure::{self, MAX_DECODED_BYTES, Outcome};
+use crate::structure::{self, Outcome};
 use crate::{Code, Finding, RECEIPT, Refusal, backstop, disclosure, schema, sha256_hex};
 
 /// Hex digits of the receipt's hash that name the export's folder at the
 /// destination.
 const FOLDER_DIGITS: usize = 16;
-/// The largest output file read back. The gate wrote it uncompressed from at
-/// most `MAX_DECODED_BYTES` of decoded data, so it can exceed the staging cap;
-/// twice the decoded bound leaves room for Parquet's length prefixes and levels.
-const MAX_OUTPUT_BYTES: u64 = 2 * MAX_DECODED_BYTES as u64;
-
 fn delivery(rule: &'static str) -> Refusal {
     Refusal {
         code: Code::Delivery,
@@ -41,6 +36,28 @@ fn owner_only(path: &Path) -> bool {
 /// Off Unix the mode bits are not there to read, so nothing passes.
 #[cfg(not(unix))]
 fn owner_only(_: &Path) -> bool {
+    false
+}
+
+/// Whether only `uid` could change what `dest` (resolved) names: it is owned by
+/// `uid`, and it and every folder above it have no group or other write bit
+/// (a sticky folder aside, which lets others add entries but not move ours)
+/// and are owned by `uid` or root. Otherwise someone else could move the
+/// destination aside and put their own folder or a link in its place.
+#[cfg(unix)]
+fn reviewer_only(dest: &Path, uid: u32) -> bool {
+    use std::os::unix::fs::MetadataExt;
+    dest.ancestors().enumerate().all(|(i, a)| {
+        std::fs::symlink_metadata(a).is_ok_and(|m| {
+            let sticky = m.mode() & 0o1000 != 0 && i > 0;
+            let owner = m.uid() == uid || (i > 0 && m.uid() == 0);
+            m.is_dir() && owner && (m.mode() & 0o022 == 0 || sticky)
+        })
+    })
+}
+
+#[cfg(not(unix))]
+fn reviewer_only(_: &Path, _: u32) -> bool {
     false
 }
 
@@ -71,7 +88,7 @@ fn read_output(output: &Path, names: &[&str]) -> Option<HashMap<String, Outcome<
         if !entry.file_type().ok()?.is_file() || !names.contains(&name.as_str()) {
             return None;
         }
-        let bytes = structure::read_capped(&output.join(&name), MAX_OUTPUT_BYTES);
+        let bytes = structure::read(&output.join(&name));
         files.insert(name, bytes);
     }
     (files.len() == names.len()).then_some(files)
@@ -151,7 +168,10 @@ pub(crate) fn export(config_dir: &Path, name: &str, receipt: &str) -> Result<Pat
     // Only the reviewer may own the destination and the config; then the
     // gate's own bytes, re-hashed where they landed.
     let uid = writer(destination)?;
-    if owner(destination) != Some(uid) {
+    let destination = &destination
+        .canonicalize()
+        .map_err(|_| delivery("destination_writable"))?;
+    if !reviewer_only(destination, uid) {
         return Err(delivery("destination_writable"));
     }
     if !matches!(owner(&project.dir), Some(o) if o == uid || o == 0) {

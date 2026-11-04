@@ -147,27 +147,44 @@ the config folder, a reviewed step.
 
 ## Export and delivery
 
-No review UI in v1 (maintainer, 2026-11-04). The reviewer inspects the project's output
-folder with any tool, hashes its `receipt.json` and runs `export` with that hash, under
-the same config as `check`. The output is the pipeline's to write between the two runs,
-so `export` trusts nothing in it:
+No review UI in v1 (maintainer, 2026-11-04). The output folder is the pipeline's to
+write at any time, so the reviewer binds what they inspect to the hash they name:
+
+1. Copy the output folder somewhere only the reviewer can write.
+2. Hash the copy's `receipt.json` and check every file in the copy against the hash the
+   receipt lists (`sha256sum`).
+3. Inspect the copy with any tool (DuckDB, R, Python).
+4. Run `export --project NAME --receipt <that hash>`.
+
+`export` then succeeds only if the live output folder is byte for byte what was
+inspected. Hashing the live folder instead leaves a window: the pipeline can show one
+passing set during the review and swap in another before the hash or the export.
+`export` runs under the same config as `check` and trusts nothing in the output:
 
 1. The config loads as for `check`. The destination must be a real folder with no group
-   or other write bit (`destination_writable`), and the output must be apart from it and
-   from the config folder (`paths_overlap`).
-2. The output is read once, each file as staging files are (no link, never blocking),
-   with a cap of twice the decoded bound: the gate wrote it uncompressed, so it can be
-   larger than the staging cap. It must be a real folder holding exactly the schema's
-   files and `receipt.json`, all regular files, and the receipt's SHA-256 must be the
-   one named (`receipt_mismatch`), so a set swapped in after the review is refused.
+   or other write bit (`destination_writable`); the output's folder must exist
+   (`output_parent_missing`) and be apart from the destination and the config folder
+   (`paths_overlap`).
+2. The output is read once, each file as staging files are: no link, never blocking,
+   under the 8 MiB cap. It must be a real folder holding exactly the schema's files and
+   `receipt.json`, all regular files, and the receipt's SHA-256 must be the one named
+   (`receipt_mismatch`).
 3. The files are checked again (structure, disclosure, backstop, under the configured
    schema and policy, with those codes) and rewritten. The fresh receipt must equal the
-   one read, byte for byte, and each file's hash the fresh one (`receipt_mismatch`). A
-   genuine export reproduces exactly (byte identity per gate version); a forged folder,
-   say the author's Parquet with a self-consistent receipt, does not.
-4. The destination must be owned by the user running `export`, and the config folder by
-   that user or root. `std` has no `geteuid` and the crate has no `unsafe`, so the user
-   is read as the owner of a probe folder created and removed in the destination.
+   one read, byte for byte, and each file read must hash to its rewrite
+   (`receipt_mismatch`). A genuine export reproduces exactly (byte identity per gate
+   version). The author's own Parquet does not, even under the genuine receipt (it
+   decodes to the same values). A rewritten file over 8 MiB is `too_large` in `check` as
+   well, so `export` accepts exactly the outputs `check` can write. The gate writes
+   uncompressed, so a compressed staging file under the cap can grow past it.
+4. The destination and every folder above it must be safe from everyone but the user
+   running `export`, or the pipeline could move the destination aside and put its own
+   folder or a link there (`destination_writable`). The destination is owned by that
+   user; each folder above it is owned by that user or root. None has a group or other
+   write bit, except that a folder above may be sticky (`/tmp`). The config folder must
+   be owned by that user or root (`config_writable`). `std` has no `geteuid` and the
+   crate has no `unsafe`, so the user is read as the owner of a probe folder the gate
+   creates and removes in the destination.
 5. The gate writes its own bytes, never the folder's, to
    `<destination>/<first 16 hex digits of the receipt hash>/`, through a new folder and
    a rename as for an export, then reads them back and compares hashes (`hash_mismatch`,
@@ -175,7 +192,12 @@ so `export` trusts nothing in it:
    it is re-verified the same way and nothing is written.
 
 Delivery rules, Rust only: `receipt_mismatch`, `destination_writable`, `hash_mismatch`.
-`export` writes no report: its reader is the reviewer, on stderr.
+`export` writes no report: its reader is the reviewer, on stderr. Ownership and mode
+bits are what the gate reads. An ACL that grants the pipeline's user write access
+passes, so the deployment must not set one on the config folder or the destination. The
+probe folder (`.export-gate-probe-*`) and the new folder (`.export-gate-*`) appear in
+the destination for a moment, and a killed export can leave the latter behind with
+verified gate bytes in it. The agent's side ignores dot-folders.
 
 ## Plan
 
