@@ -19,9 +19,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "docs_search",
         paths: &["/api/docs/search"],
         tool: Some("docs"),
-        description: "Search the documents the catalog holds, by the words of their sections; \
-                      without `q`, list them by title. `register` narrows to the documents \
-                      linked to a register, its tables or its variables.",
+        description: "Search the catalog's documents; without `q`, list them by title. \
+            `register` keeps that register's documents.",
         params: &[
             Param::optional("q", Type::String),
             Param::optional("register", Type::Ref),
@@ -36,8 +35,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "docs_get",
         paths: &["/api/docs/doc/{doc}"],
         tool: Some("docs"),
-        description: "A document by its content hash: its metadata, the entities it is about, \
-                      a 500-character excerpt and, for a parsed document, its full text.",
+        description: "A document by hash: what it covers, an excerpt and, when available, the \
+            full text.",
         params: &[Param::required("doc", Type::Hash)],
         cache: Cache::Day,
         run: get,
@@ -47,9 +46,8 @@ pub const OPERATIONS: &[Operation] = &[
         name: "docs_related",
         paths: &["/api/docs/related/{ref}"],
         tool: Some("docs"),
-        description: "The documents linked to a register, table, variable or classification \
-                      family, one row per link; a register also takes the documents of its \
-                      tables and variables.",
+        description: "The documents about a register (including its tables and variables), \
+            table, variable or classification.",
         params: &[Param::required("ref", Type::Ref)],
         cache: Cache::Day,
         run: related,
@@ -71,7 +69,6 @@ const EXCERPT_CHARS: usize = 500;
 /// `docs_search` is ranked, so it is offset-paged; the deepest page it reaches.
 const SEARCH_DEPTH: usize = 1000;
 
-/// `shape.DocHit`.
 #[derive(Serialize, ToSchema)]
 pub struct DocHit {
     doc: String,
@@ -88,7 +85,6 @@ pub struct DocHit {
     snippet: Option<String>,
 }
 
-/// `docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.
 #[derive(Serialize, ToSchema)]
 pub struct DocPage {
     items: Vec<DocHit>,
@@ -100,7 +96,7 @@ pub struct DocPage {
     register_ingested: Option<bool>,
 }
 
-/// One entity a document is about (`shape.DocDetail.subjects`).
+/// One thing a document is about.
 #[derive(Serialize, ToSchema)]
 pub struct DocSubject {
     kind: String,
@@ -108,7 +104,6 @@ pub struct DocSubject {
     page: i64,
 }
 
-/// `shape.DocDetail`.
 #[derive(Serialize, ToSchema)]
 pub struct DocDetail {
     doc: String,
@@ -128,7 +123,6 @@ pub struct DocDetail {
     body: Option<String>,
 }
 
-/// `shape.RelatedDocument`.
 #[derive(Serialize, ToSchema)]
 pub struct RelatedDocument {
     doc: String,

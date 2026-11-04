@@ -4,7 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# The v5 API reads catalog schema 7. The emitted DDL is crates/reg-build/src/schema.sql.
+# The v5 API reads catalog schema 8. The emitted DDL is crates/reg-build/src/schema.sql.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
@@ -61,7 +61,8 @@ every kind ranks together; with `type` that kind only. `register` filters by \
 is one distinct (code, label) pair, not a value set (schema §2.1, "Code search"): \
 `register` and `period` do not apply to it and exclude `code` rows from a \
 filtered search. Its value sets come from `values?code=&label=`. The tokenizer is \
-`unicode61 remove_diacritics 0`, so `lan` does not match `län`. `set` hits wait for D. \
+`unicode61 remove_diacritics 2`, so `lan` finds `län` (#2163); an exact match \
+(diacritics kept) ranks before a folded one of the same tier. `set` hits wait for D. \
 Classification hits are empty until D curates classifications. `q` is at \
 most 200 characters with no NUL; a query with no letter or digit returns no items, not \
 an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
@@ -393,7 +394,7 @@ parse_state = "\"parsed\" | \"unparsed\" | \"curated\""
 populations = "[{name, definition, ref_day}]"
 
 [shape.Segment]
-note = "A fact the catalog does not state is absent, never null: `coded` and `temporality` unknown and `state` clear are left out too."
+note = "A fact the catalog does not state is absent, never null: `coded` unknown and `state` clear are left out too."
 table = "string; the table's fqid"
 column = "string; the column name, the latest primary occurrence's spelling; on a paired catalog the held column's"
 period = "Period"
@@ -407,9 +408,7 @@ classification = "string?; a classification version's ref"
 coded = "\"yes\" | \"no\"?"
 sensitive = "boolean?"
 identifier = "boolean?"
-id_kind = "string?; an identifier kind slug"
 role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
-temporality = "\"fixed\" | \"status\" | \"accumulated\" | \"event\"?"
 state = "\"ambiguous\" | \"preliminary\"?"
 evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
 

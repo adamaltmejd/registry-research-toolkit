@@ -17,9 +17,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "graph",
     paths: &["/api/graph/{ref}"],
     tool: Some("graph"),
-    description: "The relations around a variable, a table or a register: what it \
-        continues or is continued by, what it is derived from, with the day a succession \
-        starts and the source's own words about it. `kind=derived_from` is the lineage.",
+    description: "What a variable, table or register replaces, is replaced by or is derived \
+        from, with the date and the source's own note. `kind=derived_from` is the lineage.",
     params: &[
         Param::required("ref", Type::Ref),
         Param::optional("kind", Type::Enum(KINDS)),
@@ -29,7 +28,7 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result: component::<Graph>,
 }];
 
-/// `shape.Graph`: the focus, its nodes and the relations between them.
+/// The focus, its nodes and the relations between them.
 #[derive(Serialize, ToSchema)]
 pub struct Graph {
     /// The ref's fqid.
