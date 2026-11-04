@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::Interval;
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, ValueSet};
+use reg_frame::{Locator, Occurrence, Record, ValueSet, bounds};
 use serde_json::{Value, json};
 
 use super::{Premise, stated_fields};
@@ -97,7 +97,7 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
         Address::Occurrence {
             periods: Some(p), ..
         } => p.intervals(),
-        _ => vec![(OPEN_START.into(), OPEN_END.into())],
+        _ => vec![bounds(None, None)],
     };
     if p.len() != 1 {
         return Err("assert classification version requires one contiguous period".into());
@@ -308,7 +308,7 @@ fn span(
     if let Record::Occurrence(row) = decode(value.clone())? {
         return Ok(context
             .period(&row)
-            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())));
+            .unwrap_or_else(|| bounds(None, None)));
     }
     let register = records.iter().find_map(|r| match r {
         Record::Register(r)
@@ -318,15 +318,9 @@ fn span(
         }
         _ => None,
     });
-    Ok((
-        text(value, "from")
-            .or_else(|| register.and_then(|r| r.from.as_deref()))
-            .unwrap_or(OPEN_START)
-            .into(),
-        text(value, "to")
-            .or_else(|| register.and_then(|r| r.to.as_deref()))
-            .unwrap_or(OPEN_END)
-            .into(),
+    Ok(bounds(
+        text(value, "from").or_else(|| register.and_then(|r| r.from.as_deref())),
+        text(value, "to").or_else(|| register.and_then(|r| r.to.as_deref())),
     ))
 }
 
@@ -1044,10 +1038,7 @@ fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Opt
     match record {
         Record::Occurrence(row) => context.period(row),
         Record::Release(row) => crate::placed(row),
-        Record::Table(row) => Some((
-            row.from.clone().unwrap_or_else(|| OPEN_START.into()),
-            row.to.clone().unwrap_or_else(|| OPEN_END.into()),
-        )),
+        Record::Table(row) => Some(bounds(row.from.as_deref(), row.to.as_deref())),
         _ => None,
     }
 }

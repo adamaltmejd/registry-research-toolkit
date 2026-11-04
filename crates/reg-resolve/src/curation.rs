@@ -11,7 +11,7 @@ use std::sync::Arc;
 use reg_core::{Interval, fold_identity, intersect};
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Record};
+use reg_frame::{Locator, Record, bounds};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -105,17 +105,6 @@ impl SharedSources {
     }
 }
 
-fn bounds(fields: &BTreeMap<String, Value>) -> Interval {
-    let bound = |name, default: &str| {
-        fields
-            .get(name)
-            .and_then(Value::as_str)
-            .unwrap_or(default)
-            .to_owned()
-    };
-    (bound("from", OPEN_START), bound("to", OPEN_END))
-}
-
 #[allow(clippy::too_many_lines)]
 fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
     let context = crate::OccurrenceContext::new(records);
@@ -127,17 +116,11 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             let (mut locators, period) = match record {
                 Record::Register(r) => (
                     vec![r.locator.clone()],
-                    Some((
-                        r.from.clone().unwrap_or_else(|| OPEN_START.into()),
-                        r.to.clone().unwrap_or_else(|| OPEN_END.into()),
-                    )),
+                    Some(bounds(r.from.as_deref(), r.to.as_deref())),
                 ),
                 Record::Table(t) => (
                     vec![t.locator.clone()],
-                    Some((
-                        t.from.clone().unwrap_or_else(|| OPEN_START.into()),
-                        t.to.clone().unwrap_or_else(|| OPEN_END.into()),
-                    )),
+                    Some(bounds(t.from.as_deref(), t.to.as_deref())),
                 ),
                 Record::Release(r) => (
                     vec![r.locator.clone()],
@@ -201,7 +184,10 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                     .as_ref()
                     .map_or(Value::Null, |p| serde_json::json!([p.0, p.1])),
             );
-            fields.insert("coverage".into(), serde_json::json!(bounds(&fields)));
+            fields.insert("coverage".into(), serde_json::json!(bounds(
+                    fields.get("from").and_then(Value::as_str),
+                    fields.get("to").and_then(Value::as_str),
+                )));
             Some(Source {
                 fields: Arc::new(fields),
                 locators,
@@ -432,7 +418,7 @@ fn select_from(
                     None,
                 ) => return None,
                 (_, Some(period)) => vec![period.clone()],
-                (_, None) => vec![(OPEN_START.into(), OPEN_END.into())],
+                (_, None) => vec![bounds(None, None)],
             };
             (!spans.is_empty()).then_some(Match {
                 source: index,
@@ -786,7 +772,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
     let span = source
         .period
         .clone()
-        .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
+        .unwrap_or_else(|| bounds(None, None));
     if variable_membership_field(statement).is_some() {
         return vec![span];
     }
@@ -916,7 +902,7 @@ pub fn applied_conflicts(
                 claim
                     .period
                     .cloned()
-                    .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
+                    .unwrap_or_else(|| bounds(None, None)),
             ],
         };
         let field = BTreeSet::from([claim.field.to_owned()]);
@@ -1147,7 +1133,7 @@ impl ReferenceView {
                     spans: vec![
                         s.period
                             .clone()
-                            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
+                            .unwrap_or_else(|| bounds(None, None)),
                     ],
                 })
                 .collect()
