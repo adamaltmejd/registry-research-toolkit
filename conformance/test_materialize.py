@@ -4,8 +4,9 @@
 Each case under `cases/materialize/` holds a `request.json` (the project and a note
 naming the regression it catches) and either `manifest.json`, the order file without
 its generation ids and project hash, or `expected.json`, the findings that block it.
-Every case runs on one steward artifact: the holdings fixture with the documented slot
-family, a long Part B header and a first-half Parent amount (`prepare_materialize`). Write the expectation from the
+Every case runs on one steward artifact (the `steward` fixture in conftest.py): the
+holdings fixture with the documented slot family, a long Part B header and a first-half
+Parent amount (`prepare_materialize`). Write the expectation from the
 project and the fixture source before serving it; a disagreement is a server bug or a
 wrong expectation, never a golden to save. The MONA runner's refusal suite reads some
 of these goldens as orders (`reg_mona_runner/tests`).
@@ -15,12 +16,11 @@ from __future__ import annotations
 
 import json
 import re
-from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
-from holdings_artifacts import HOLDINGS_CASE, prepare_materialize
-from http_cases import CASES, ServerPool, artifact_env
+from holdings_artifacts import HOLDINGS_CASE
+from http_cases import CASES, artifact_env
 from reader_artifacts import cached_reader_artifact
 
 if TYPE_CHECKING:
@@ -29,14 +29,6 @@ if TYPE_CHECKING:
 MATERIALIZE = CASES / "materialize"
 HASH = re.compile(r"[0-9a-f]{64}")
 ROUTE = "/api/project/materialize"
-
-
-@pytest.fixture(scope="module")
-def steward(tmp_path_factory, server_cmd):
-    directory = tmp_path_factory.mktemp("materialize")
-    _, output = prepare_materialize(directory)
-    with closing(ServerPool(server_cmd + " --catalog fixture", directory)) as pool:
-        yield pool.client(artifact_env(output))
 
 
 @pytest.mark.parametrize(

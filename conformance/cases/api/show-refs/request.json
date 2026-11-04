@@ -1,11 +1,12 @@
 {
-  "note": "Fails if a bare unique name stops resolving to its entity's fqid, a bare name two variables share stops being a 409 listing both (pid order), an unknown id stops being a 404, or an id outside the public-id grammar (four segments) stops being a 422, or an unknown parameter is ignored instead of refused.",
+  "note": "Fails if a bare unique name stops resolving to its entity's fqid, a bare name two variables share stops being a 409 listing both (pid order), an unknown id stops being a 404, or an id outside the public-id grammar (four segments) stops being a 422, or an unknown parameter is ignored instead of refused, or a retired id (`demo/reg2/gone`, retired.toml) stops being a 404 `retired_ref` naming its kind, the catalog version that retired it and the reason instead of `not_found`. The shared resolver raises it for every operation, so this one step is the cases' only retired_ref (test_mcp.py PINNED_ONCE).",
   "fixture": "entities",
   "requests": [
     {"operation": "show", "path": "/api/catalog/hus"},
     {"operation": "show", "path": "/api/catalog/kon"},
     {"operation": "show", "path": "/api/catalog/demo/nope"},
     {"operation": "show", "path": "/api/catalog/demo/reg2/ind/x"},
-    {"operation": "show", "path": "/api/catalog/hus", "query": {"bogus": "1"}}
+    {"operation": "show", "path": "/api/catalog/hus", "query": {"bogus": "1"}},
+    {"operation": "show", "path": "/api/catalog/demo/reg2/gone"}
   ]
 }

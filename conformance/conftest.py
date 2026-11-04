@@ -8,7 +8,8 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from http_cases import ServerPool
+from holdings_artifacts import prepare_materialize
+from http_cases import ServerPool, artifact_env
 from reader_artifacts import CASES, cached_reader_artifact
 
 
@@ -85,6 +86,15 @@ def http_servers(server_cmd, tmp_path_factory):
     Every server is stopped at session end, whether or not the cases passed."""
     with closing(ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))) as pool:
         yield pool
+
+
+@pytest.fixture(scope="session")
+def steward(tmp_path_factory, server_cmd):
+    """A client of the materialize cases' steward server (`prepare_materialize`)."""
+    directory = tmp_path_factory.mktemp("materialize")
+    _, output = prepare_materialize(directory)
+    with closing(ServerPool(server_cmd + " --catalog fixture", directory)) as pool:
+        yield pool.client(artifact_env(output))
 
 
 @pytest.fixture
