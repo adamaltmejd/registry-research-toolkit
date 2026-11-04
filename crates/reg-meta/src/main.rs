@@ -17,7 +17,8 @@
 //! memory-mapping). Once bound, `serve` prints `listening on ADDR:PORT` on stderr,
 //! the port the kernel chose under `--port 0`. `mcp` serves the MCP
 //! tools over stdio. A refusal prints the error document on stderr and exits with the
-//! code's status.
+//! code's status. `REG_META_CATALOG_SHA256`, when set, is the base catalog's digest
+//! that pair admission checks the partner's pin against instead of hashing the file.
 
 mod limit;
 mod mcp;
@@ -131,6 +132,28 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     })
 }
 
+/// The base catalog's SHA-256 the image computed when it was built
+/// (`reg_webapp/Dockerfile`); unset, pair admission hashes the catalog file at boot.
+const CATALOG_SHA256_ENV: &str = "REG_META_CATALOG_SHA256";
+
+/// [`CATALOG_SHA256_ENV`], refused unless 64 lowercase hex digits. Unlike the
+/// validator's `REG_META_CONTENT_DIGEST` check (an assert), this is admission, so it
+/// refuses with an error document and a stable exit code.
+fn catalog_sha256() -> Result<Option<String>, Error> {
+    let Ok(digest) = std::env::var(CATALOG_SHA256_ENV) else {
+        return Ok(None);
+    };
+    if digest.len() == 64
+        && digest
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    {
+        Ok(Some(digest))
+    } else {
+        Err(Error::invalid_parameter(CATALOG_SHA256_ENV))
+    }
+}
+
 /// Print the refusal's error document on stderr and exit with the code's status.
 fn refuse(err: &Error) -> ! {
     eprintln!("{}", serde_json::to_string(err).expect("Error serializes"));
@@ -140,8 +163,14 @@ fn refuse(err: &Error) -> ! {
 #[tokio::main]
 async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
-    let catalog = Catalog::open_selected(&args.db, &args.catalog, args.mmap_size)
-        .unwrap_or_else(|err| refuse(&err));
+    let catalog_sha256 = catalog_sha256().unwrap_or_else(|err| refuse(&err));
+    let catalog = Catalog::open_selected(
+        &args.db,
+        &args.catalog,
+        args.mmap_size,
+        catalog_sha256.as_deref(),
+    )
+    .unwrap_or_else(|err| refuse(&err));
     let server = Arc::new(Server::new(catalog, VERSION).unwrap_or_else(|err| refuse(&err)));
     match args.mode {
         Mode::Serve {

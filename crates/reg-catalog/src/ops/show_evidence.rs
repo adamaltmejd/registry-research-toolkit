@@ -224,7 +224,7 @@ pub(super) fn load(
             .collect::<rusqlite::Result<_>>()?;
     }
     let mut text_indices = BTreeMap::new();
-    let mut grouped: Vec<(ProviderText, Vec<reg_core::Interval>)> = Vec::new();
+    let mut grouped: Vec<(ProviderText, Vec<reg_core::days::Span>)> = Vec::new();
     let mut source_only = Vec::new();
     for row in rows {
         let texts = provider_texts(
@@ -253,22 +253,15 @@ pub(super) fn load(
             let mut source = row.source.clone();
             source.field = Some(field);
             group.sources.push(source);
-            // The shared interval algebra uses inclusive ISO endpoints; catalog
-            // periods are half-open, including the open-end sentinel.
-            spans.push((super::iso_day(row.start), super::iso_day(row.end - 1)));
+            spans.push((row.start, row.end));
         }
     }
     let texts = grouped
         .into_iter()
         .map(|(mut text, spans)| {
-            text.periods = reg_core::merge(spans)
+            text.periods = reg_core::days::merge(spans)
                 .into_iter()
-                .map(|(start, end)| {
-                    server.period(
-                        reg_core::iso_day_number(&start).expect("catalog ISO start"),
-                        reg_core::iso_day_number(&end).expect("catalog ISO end") + 1,
-                    )
-                })
+                .map(|(start, end)| server.period(start, end))
                 .collect();
             text
         })

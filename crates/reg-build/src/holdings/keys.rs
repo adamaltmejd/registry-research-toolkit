@@ -1,11 +1,10 @@
 //! Pinned entity/time key obligations. Identifier roles alone do not make keys.
 use std::collections::{BTreeMap, BTreeSet};
 
+use reg_core::days::{self, Span};
 use rusqlite::{Connection, params};
 
 use super::{compile, input};
-
-type Span = (i64, i64);
 
 type Declarations = BTreeMap<i64, Vec<input::RowKey>>;
 type Bindings = BTreeMap<(i64, String), Vec<(i64, Span)>>;
@@ -86,7 +85,7 @@ fn key_scope(key: &input::RowKey, span: Span) -> Result<Vec<Span>, String> {
         .as_deref()
         .map(compile::periods)
         .transpose()
-        .map(|scope| compile::overlap(&[span], &scope.unwrap_or_else(|| vec![span])))
+        .map(|scope| days::overlap(&[span], &scope.unwrap_or_else(|| vec![span])))
 }
 
 fn held_spans(held: &Bindings, holding: i64, pid: &str) -> Vec<Span> {
@@ -121,23 +120,19 @@ fn projected_copies(
         .map_err(|e| e.to_string())?
     {
         let (id, child, parent, variable, start, end) = row.map_err(|e| e.to_string())?;
-        let mut cuts = BTreeSet::from([start, end]);
+        let mut spans = vec![(start, end)];
         for holding in [child, parent] {
             for key in &declarations[&holding] {
-                for (lo, hi) in key_scope(key, (start, end))? {
-                    cuts.extend([lo, hi]);
-                }
+                spans.extend(key_scope(key, (start, end))?);
             }
         }
         let mut copied = true;
-        let cuts: Vec<_> = cuts.into_iter().collect();
-        for slice in cuts.windows(2) {
-            let span = (slice[0], slice[1]);
+        for span in days::slices(spans) {
             let mut active = Vec::new();
             for holding in [child, parent] {
                 let mut keys = Vec::new();
                 for key in &declarations[&holding] {
-                    if key.hold.is_none() && compile::covered(&[span], &key_scope(key, span)?) {
+                    if key.hold.is_none() && days::covered(&[span], &key_scope(key, span)?) {
                         keys.push(key);
                     }
                 }
@@ -157,7 +152,7 @@ fn projected_copies(
             }
             copied &= shared.contains(&variable);
             for pid in shared {
-                if !compile::covered(&[span], &held_spans(held, parent, pid)) {
+                if !days::covered(&[span], &held_spans(held, parent, pid)) {
                     copied = false;
                     failures.insert(format!("holdings:table={child}:parent={parent}:key={pid}:period={}..{}: holdings_projection_key_missing: parent does not hold shared component", span.0, span.1));
                 }
@@ -201,7 +196,7 @@ fn constant_period(db: &Connection, spans: &[Span], encoding: &str) -> Result<bo
         "month" => 7,
         "day" => 10,
         "period" => {
-            let merged = compile::merge(spans.to_vec());
+            let merged = days::merge(spans.to_vec());
             return Ok(matches!(merged.as_slice(), [(start, end)] if
                 *start > crate::emit::start(reg_frame::OPEN_START)
                     && *end < crate::emit::end(reg_frame::OPEN_END)
@@ -332,9 +327,9 @@ pub(super) fn verify(
                 .map(compile::periods)
                 .transpose()?
                 .unwrap_or_else(|| physical.clone());
-            let scope = compile::overlap(&scope, &physical);
+            let scope = days::overlap(&scope, &physical);
             for pid in key.entity.iter().chain(&key.time) {
-                if compile::overlap(&scope, &held_spans(&held, *holding, pid)).is_empty() {
+                if days::overlap(&scope, &held_spans(&held, *holding, pid)).is_empty() {
                     failures.insert(format!(
                         "holdings:table={holding}:key={pid}: {}: holdings_key_missing: declared component is not mapped on an authored route",
                         key.locator
@@ -364,7 +359,7 @@ pub(super) fn verify(
             row.map_err(|e| e.to_string())?;
         let keys = &declarations[&holding];
         let mut applicable = Vec::new();
-        let mut cuts = BTreeSet::from([start, end]);
+        let mut spans = vec![(start, end)];
         for key in keys {
             let scope = key
                 .period
@@ -372,18 +367,14 @@ pub(super) fn verify(
                 .map(compile::periods)
                 .transpose()?
                 .unwrap_or_else(|| vec![(start, end)]);
-            let scope = compile::overlap(&[(start, end)], &scope);
-            for (a, b) in &scope {
-                cuts.extend([*a, *b]);
-            }
+            let scope = days::overlap(&[(start, end)], &scope);
+            spans.extend(&scope);
             applicable.push((key, scope));
         }
-        let cuts: Vec<_> = cuts.into_iter().collect();
-        for slice in cuts.windows(2) {
-            let span = (slice[0], slice[1]);
+        for span in days::slices(spans) {
             let active: Vec<_> = applicable
                 .iter()
-                .filter(|(_, s)| compile::covered(&[span], s))
+                .filter(|(_, s)| days::covered(&[span], s))
                 .collect();
             let [entry] = active.as_slice() else {
                 failures.insert(format!("holdings:table={holding}: route={table}: period={}..{}: holdings_row_key_undeclared_or_ambiguous", span.0, span.1));
@@ -411,7 +402,7 @@ pub(super) fn verify(
                 let available = held.get(&(holding, pid.clone()));
                 let bindings = available.map_or(&[][..], Vec::as_slice);
                 let intervals: Vec<_> = bindings.iter().map(|(_, s)| *s).collect();
-                if !compile::covered(&[span], &intervals) {
+                if !days::covered(&[span], &intervals) {
                     failures.insert(format!(
                         "holdings:table={holding}: key={pid}: period={}..{}: holdings_key_missing",
                         span.0, span.1
@@ -421,11 +412,8 @@ pub(super) fn verify(
                 for (column, interval) in bindings {
                     if bindings.iter().any(|(other, reach)| {
                         other != column
-                            && !compile::overlap(
-                                &[span],
-                                &compile::overlap(&[*interval], &[*reach]),
-                            )
-                            .is_empty()
+                            && !days::overlap(&[span], &days::overlap(&[*interval], &[*reach]))
+                                .is_empty()
                     }) {
                         failures.insert(format!(
                             "holdings:table={holding}: key={pid}: holdings_key_ambiguous"

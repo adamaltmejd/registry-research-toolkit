@@ -486,17 +486,8 @@ fn held_rows(
         // Held years no catalog segment covers state only the role: another
         // period's form would be a guess.
         parts.sort_by_key(|part| part.start);
-        let mut gaps = Vec::new();
-        let mut covered = start;
-        for part in &parts {
-            if covered < part.start {
-                gaps.push((covered, part.start));
-            }
-            covered = covered.max(part.end);
-        }
-        if covered < end {
-            gaps.push((covered, end));
-        }
+        let covered: Vec<_> = parts.iter().map(|part| (part.start, part.end)).collect();
+        let gaps = reg_core::days::minus(&[(start, end)], &covered);
         parts.extend(
             gaps.into_iter()
                 .map(|(start, end)| bare(&table, &column, &role, start, end)),

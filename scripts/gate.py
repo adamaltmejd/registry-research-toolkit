@@ -9,8 +9,8 @@ Each named step runs its commands in order from the repository root and stops at
 first failure. `all` runs g0, rust, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`, `frontend` and
-`flows`, and runs `scripts/tests` itself. `rust` also owns release admission on the synthetic
-artifact, so the Rust binaries are built once per job.
+`flows`. `rust` also owns release admission on the synthetic artifact, so the Rust
+binaries are built once per job.
 `regen` also blesses the plugin project schema. Stdlib only.
 """
 
@@ -69,17 +69,15 @@ def base_artifact() -> Path:
     """The `base` conformance fixture's artifact directory, from the fixture cache.
 
     Built by `target/debug/reg-build`: the caller has built the workspace."""
-    out = run(
-        "uv run python conformance/fixture_cache.py base",
-        stdout=subprocess.PIPE,
-        text=True,
-    )
+    out = run("target/debug/reg-fixture base", stdout=subprocess.PIPE, text=True)
     return Path(out.stdout.strip()).parent
 
 
 def crates() -> None:
     run("cargo fmt --all --check")
     run("cargo clippy --workspace --all-targets --locked -- -D warnings")
+    # `--all-targets` skips `test = false` targets: the conformance suite, by name.
+    run("cargo clippy -p reg-conformance --test conformance --locked -- -D warnings")
     run("cargo test --workspace --locked")
     # Unused crate dependencies; a false positive is ignored in that crate's
     # Cargo.toml (`[package.metadata.cargo-machete] ignored`) with a reason.
@@ -87,8 +85,7 @@ def crates() -> None:
 
 
 def lint() -> None:
-    # The home of the ty pin; the panache pin is repeated in scripts/parse_lisa_docs.py
-    # (bump both). Rust formatting is in `crates`.
+    # The home of the ty and panache pins. Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.17.1 panache format --check .")
@@ -99,7 +96,6 @@ def lint() -> None:
 def g0() -> None:
     lint()
     crates()
-    run("uv run python -m pytest scripts/tests -n auto -q")
 
 
 def rust() -> None:
@@ -118,8 +114,10 @@ def rust() -> None:
     # Release step 8h's scope check on the synthetic pair, so an unlisted meta key or a
     # schema drift fails here rather than at the release.
     with tempfile.TemporaryDirectory(prefix="gate-paired-") as out:
-        run(f"uv run python conformance/paired_fixture.py {out}")
+        run(f"target/debug/reg-fixture --paired {out}")
         run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
+    # The Rust harness (crates/reg-conformance), then the surfaces not yet ported.
+    run("cargo test -p reg-conformance --test conformance --locked")
     run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact

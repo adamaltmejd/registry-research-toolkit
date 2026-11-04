@@ -247,24 +247,22 @@ This is the complete list of boundaries a test may assert at.
 ### Tiers
 
 1. **Package suite (budgeted, every change).** Contract tests over synthetic fixtures
-   built from readable source, golden corpora: the default `pytest`,
-   `cargo test --workspace` and `bun run test`. Run narrowed by package while iterating.
-   Each package stays inside its budget below.
-2. **Push / CI.** `ci.yml`'s `scripts` job runs `scripts/tests`, the root `testpaths`,
-   with `timeout-minutes` at its CI budget below. Conformance is not there: it requires
-   the Rust server (`--server-cmd`). The `rust` job's 9-minute timeout covers `crates/`
-   and the gate's `rust` step (`scripts/gate.py`: the workspace build, the whole
-   conformance suite against the Rust server, then the `release`-marked admission checks
-   on the synthetic catalog artifact), with room for a cold rust-cache and its save.
-   Each binary is built once, in `rust`. The `lint` job runs `gate.py lint` (ruff,
-   panache, ty and plugin schema drift); the repo-policy lints are `crates/xtask` tests
-   in `cargo test --workspace`. The OpenAPI snapshot is a `crates/reg-meta` test. The
-   `reg-webapp-frontend` job runs install, WASM generation, type checks, lint, unit
-   tests, build and codegen drift; `reg-webapp-flows` runs the production bootstrap and
-   shell/search browser flows against a source-built synthetic fixture, at the phone
-   (375 px) and desktop viewports only; the four-width review is the design-review
-   skill's. Each frontend job has a 6-minute timeout. A job that exceeds its budget
-   fails.
+   built from readable source, golden corpora: `cargo test --workspace` and
+   `bun run test`. Run narrowed by package while iterating. Each package stays inside
+   its budget below.
+2. **Push / CI.** Each job's `timeout-minutes` is its CI budget below. The `rust` job's
+   9-minute timeout covers `crates/` and the gate's `rust` step (`scripts/gate.py`: the
+   workspace build, the whole conformance suite against the Rust server, then the
+   `release`-marked admission checks on the synthetic catalog artifact), with room for a
+   cold rust-cache and its save. Each binary is built once, in `rust`. The `lint` job
+   runs `gate.py lint` (ruff, panache, ty and plugin schema drift); the repo-policy
+   lints are `crates/xtask` tests in `cargo test --workspace`. The OpenAPI snapshot is a
+   `crates/reg-meta` test. The `reg-webapp-frontend` job runs install, WASM generation,
+   type checks, lint, unit tests, build and codegen drift; `reg-webapp-flows` runs the
+   production bootstrap and shell/search browser flows against a source-built synthetic
+   fixture, at the phone (375 px) and desktop viewports only; the four-width review is
+   the design-review skill's. Each frontend job has a 6-minute timeout. A job that
+   exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -290,7 +288,6 @@ suites are run by hand, not by the gate or CI.
 
   | Suite                                | Local | CI job | Rationale                                                                                                                     |
   | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
-  | `scripts/tests`                      | 20 s  | 5 min  | The remaining Python scripts' contracts.                                                                                      |
   | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust builder's and runtime's tests and the `crates/xtask` repo-policy lints; G0 always runs them.                         |
   | conformance (`scripts/gate.py rust`) | 30 s  | 9 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job. |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.           |
@@ -301,9 +298,9 @@ the tiers. G1 and G2 (the byte-for-byte differential harness against the previou
 release) are retired: they could not compare across the rebuild's schema break, and each
 release is checked by `reg-build diff` against the previous one.
 
-  | Gate | What runs                                                                                                                             | Budget                           | When         |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | ------------ |
-  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace` and `scripts/tests`) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change |
+  | Gate | What runs                                                                                                            | Budget                           | When         |
+  | ---- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------- | ------------ |
+  | G0   | `scripts/gate.py g0` (lint and `cargo test --workspace`) and `scripts/gate.py rust` (conformance on the Rust server) | under 60 s, plus 30 s for `rust` | every change |
 
 `crates/` takes 10 s of G0's 60 s, so any change touching the runtime fits it;
 conformance runs in `rust`, with its own 30 s row. A slow gate is a defect to fix, not a

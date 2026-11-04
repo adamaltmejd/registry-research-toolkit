@@ -26,7 +26,6 @@ last=$(git describe --tags --abbrev=0 --match 'reg_meta/v*' 2>/dev/null ||
 git log --oneline "$last"..HEAD -- crates | wc -l
 git ls-files 'crates/*.rs' | xargs wc -l | tail -1
 git ls-files 'scripts/*.py' 'conformance/*.py' | xargs wc -l | tail -1
-uv run python -m pytest scripts/tests -n auto -q --durations=20
 ```
 
 Compare each suite's wall time with its budget in ARCHITECTURE.md → "Tiers". Rust:
@@ -46,8 +45,8 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   declared and not used, or used and not declared, is a finding.
 - **Dead code.** `cargo machete` and the compiler's warnings for Rust; `rg` each export
   of `reg_webapp/frontend/src` for a use;
-  `uvx --from vulture==2.16 vulture scripts conformance crates/reg-core/tools --min-confidence 80`.
-  Confirm each hit with `rg` across the workspace before calling it dead.
+  `uvx --from vulture==2.16 vulture scripts conformance --min-confidence 80`. Confirm
+  each hit with `rg` across the workspace before calling it dead.
 - **Trace tables**, kept in the scratchpad: every CLI flag and subcommand (the Rust
   `parse_args` of `reg-build`, `reg-meta` and `reg-export-gate`; argparse in
   `scripts/*.py`), to its README or DESIGN.md line, to a test; every `openapi.json`

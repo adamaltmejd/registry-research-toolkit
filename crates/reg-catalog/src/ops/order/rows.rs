@@ -1,7 +1,8 @@
 //! Row keys use the steward's declared physical entity/time components.
 //! Reference-only orders use catalog segments with role `row_key`.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::sync::{Arc, Mutex, PoisonError};
 
 use reg_core::IssueLevel;
 use reg_core::project::Source;
@@ -24,14 +25,24 @@ struct KeySegment {
     entity: bool,
 }
 
+/// The steward branch of [`key_segments`] per table pid. Its query scans every
+/// segment of both databases (~350 ms per table), and its answer depends on the table
+/// alone: the catalog and holdings are opened immutable and replaced only by a
+/// redeploy, so an answer holds for the life of the process. Errors are not cached.
+// simplify: unbounded, one entry per table asked about (at most the catalog's tables;
+// ~154 held today), filled lazily; move the computation into the holdings build if
+// the table count grows or the map shows in memory.
+#[derive(Default)]
+pub(crate) struct StewardKeys(Mutex<HashMap<String, Arc<Vec<KeySegment>>>>);
+
 /// Physical key declarations select the key set; metadata supplies state only.
 fn key_segments(
     server: &Server,
     conn: &Connection,
     serving: &Serving,
-) -> Result<Vec<KeySegment>, Error> {
+) -> Result<Arc<Vec<KeySegment>>, Error> {
     if server.catalog.steward().is_none() {
-        return Ok(rows(
+        return Ok(Arc::new(rows(
             conn,
             "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
@@ -47,8 +58,27 @@ fn key_segments(
                     entity: true,
                 })
             },
-        )?);
+        )?));
     }
+    let cache = &server.steward_keys.0;
+    let pid = &serving.table.pid;
+    if let Some(hit) = cache
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .get(pid)
+    {
+        return Ok(Arc::clone(hit));
+    }
+    // Computed outside the lock: two first requests for one table both compute it.
+    let keys = Arc::new(steward_key_segments(conn, pid)?);
+    cache
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .insert(pid.clone(), Arc::clone(&keys));
+    Ok(keys)
+}
+
+fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySegment>, Error> {
     let mut mappings = conn.prepare(
         "WITH semantics AS (
            SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state
@@ -75,7 +105,7 @@ fn key_segments(
          ORDER BY m.variable_pid,c.name,m.start",
     )?;
     let mut out = Vec::new();
-    for row in mappings.query_map([&serving.table.pid], |r| {
+    for row in mappings.query_map([table_pid], |r| {
         Ok((
             KeySegment {
                 variable: r.get(0)?,
@@ -124,31 +154,30 @@ fn key_segments(
     Ok(merge_key_segments(out))
 }
 
-fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
+fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
     // Several served columns can expose overlapping pieces of the same physical key.
-    out.sort_by(|a, b| {
-        (&a.variable, &a.spelling, &a.state, a.entity, a.start, a.end).cmp(&(
-            &b.variable,
-            &b.spelling,
-            &b.state,
-            b.entity,
-            b.start,
-            b.end,
-        ))
-    });
-    let mut merged: Vec<KeySegment> = Vec::new();
+    let mut groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
     for key in out {
-        if let Some(last) = merged.last_mut()
-            && (&last.variable, &last.spelling, &last.state, last.entity)
-                == (&key.variable, &key.spelling, &key.state, key.entity)
-            && key.start <= last.end
-        {
-            last.end = last.end.max(key.end);
-        } else {
-            merged.push(key);
-        }
+        groups
+            .entry((key.variable, key.spelling, key.state, key.entity))
+            .or_default()
+            .push((key.start, key.end));
     }
-    merged
+    groups
+        .into_iter()
+        .flat_map(|((variable, spelling, state, entity), spans)| {
+            reg_core::days::merge(spans)
+                .into_iter()
+                .map(move |(start, end)| KeySegment {
+                    variable: variable.clone(),
+                    spelling: spelling.clone(),
+                    start,
+                    end,
+                    state: state.clone(),
+                    entity,
+                })
+        })
+        .collect()
 }
 
 /// A source's row keys: per serving table, the requested days cut where its row-key
@@ -177,10 +206,10 @@ pub(super) fn row_keys(
             end,
             state,
             ..
-        } in rows
+        } in rows.iter()
         {
             for (lo, hi) in &s.requested {
-                let (lo, hi) = (start.max(day(lo)), end.min(day(hi) + 1));
+                let (lo, hi) = ((*start).max(day(lo)), (*end).min(day(hi) + 1));
                 if lo >= hi {
                     continue;
                 }
@@ -225,11 +254,8 @@ pub(super) fn row_keys(
                 pieces.push((lo, hi, (variable.clone(), spelling.clone())));
             }
         }
-        let cuts: BTreeSet<i64> = pieces.iter().flat_map(|(lo, hi, _)| [*lo, *hi]).collect();
-        let cuts: Vec<i64> = cuts.into_iter().collect();
         let mut keyed: Vec<(i64, i64, Columns)> = Vec::new();
-        for pair in cuts.windows(2) {
-            let (lo, hi) = (pair[0], pair[1]);
+        for (lo, hi) in reg_core::days::slices(pieces.iter().map(|(lo, hi, _)| (*lo, *hi))) {
             let columns: Columns = pieces
                 .iter()
                 .filter(|(a, b, _)| *a <= lo && hi <= *b)

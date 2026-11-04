@@ -77,6 +77,92 @@ pub fn overlap(a: &[Interval], b: &[Interval]) -> Vec<Interval> {
         .collect()
 }
 
+/// The smallest interval holding every one of `intervals`; `None` when there are none.
+#[must_use]
+pub fn hull<'a>(intervals: impl IntoIterator<Item = &'a Interval>) -> Option<Interval> {
+    let mut intervals = intervals.into_iter();
+    let (lo, hi) = intervals.next()?;
+    let (lo, hi) = intervals.fold((lo, hi), |(a, b), (lo, hi)| (a.min(lo), b.max(hi)));
+    Some((lo.clone(), hi.clone()))
+}
+
+/// The same algebra over half-open `[start, end)` day numbers, the form the catalog and
+/// holdings store: touching spans join without day arithmetic.
+pub mod days {
+    /// A half-open `[start, end)` span of day numbers.
+    pub type Span = (i64, i64);
+
+    /// `spans` sorted and coalesced: overlapping and touching spans join, empty ones drop.
+    #[must_use]
+    pub fn merge(mut spans: Vec<Span>) -> Vec<Span> {
+        spans.sort_unstable();
+        let mut out: Vec<Span> = Vec::new();
+        for (lo, hi) in spans {
+            if lo >= hi {
+                continue;
+            }
+            match out.last_mut() {
+                Some(last) if lo <= last.1 => last.1 = last.1.max(hi),
+                _ => out.push((lo, hi)),
+            }
+        }
+        out
+    }
+
+    /// The days two lists share, merged.
+    #[must_use]
+    pub fn overlap(a: &[Span], b: &[Span]) -> Vec<Span> {
+        merge(
+            a.iter()
+                .flat_map(|&(lo, hi)| b.iter().map(move |&(x, y)| (lo.max(x), hi.min(y))))
+                // Drop empty pairs before collecting: fragmented lists would otherwise
+                // allocate and sort every pair, not only the intersections.
+                .filter(|&(lo, hi)| lo < hi)
+                .collect(),
+        )
+    }
+
+    /// The days of `whole` that `covered` (ascending by start) leaves out.
+    #[must_use]
+    pub fn minus(whole: &[Span], covered: &[Span]) -> Vec<Span> {
+        let mut out = Vec::new();
+        for &(mut lo, hi) in whole {
+            for &(a, b) in covered {
+                if b <= lo || a >= hi {
+                    continue;
+                }
+                if a > lo {
+                    out.push((lo, a));
+                }
+                lo = lo.max(b);
+            }
+            if lo < hi {
+                out.push((lo, hi));
+            }
+        }
+        out
+    }
+
+    /// Whether every span of `wanted` lies inside one span of `by`, merged.
+    #[must_use]
+    pub fn covered(wanted: &[Span], by: &[Span]) -> bool {
+        let by = merge(by.to_vec());
+        wanted
+            .iter()
+            .all(|(a, b)| by.iter().any(|(c, d)| c <= a && b <= d))
+    }
+
+    /// The spans between consecutive distinct endpoints of `spans`, ascending,
+    /// including those no span covers.
+    #[must_use]
+    pub fn slices(spans: impl IntoIterator<Item = Span>) -> Vec<Span> {
+        let cuts: std::collections::BTreeSet<i64> =
+            spans.into_iter().flat_map(|(lo, hi)| [lo, hi]).collect();
+        let cuts: Vec<i64> = cuts.into_iter().collect();
+        cuts.windows(2).map(|pair| (pair[0], pair[1])).collect()
+    }
+}
+
 /// The period spelling of ascending, disjoint intervals, as a project period is
 /// written: each interval as its coarsest token (`2019`, `2019-Q3`), else as a range
 /// whose endpoints are a year when they fall on its first or last day

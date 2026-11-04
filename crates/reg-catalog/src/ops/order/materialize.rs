@@ -13,6 +13,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::IssueLevel;
+use reg_core::days::{merge, minus, overlap};
 use reg_core::manifest::{
     CatalogIdentity, Clip, Column, Encoding, File, HoldingsIdentity, MANIFEST_VERSION, Manifest,
     Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage, safe_file_name,
@@ -269,7 +270,7 @@ fn build(
             ));
         }
         for days in draft.days.values_mut() {
-            *days = merge_days(std::mem::take(days));
+            *days = merge(std::mem::take(days));
         }
         keys(
             server,
@@ -394,7 +395,7 @@ fn placements(
             continue;
         };
         // A remainder can lie wholly outside the request (a parent-covered request).
-        for days in intersect(&minus(&[p.days], &merge_days(parent.clone())), &[days]) {
+        for days in overlap(&minus(&[p.days], &merge(parent.clone())), &[days]) {
             out.push(Placement { days, ..p.clone() });
         }
     }
@@ -431,7 +432,7 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
         [id],
         |r| Ok((r.get(0)?, r.get(1)?)),
     )?;
-    holding.held = merge_days(std::mem::take(&mut holding.held));
+    holding.held = merge(std::mem::take(&mut holding.held));
     Ok(holding)
 }
 
@@ -464,57 +465,6 @@ fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
     )?)
 }
 
-// simplify: day-number twins of `reg_core::{merge, gaps, overlap}`, which work on
-// inclusive ISO strings; holdings store day numbers. Hoist generic versions into
-// `reg_core::interval` if a third caller needs day-number algebra.
-/// Merge overlapping and adjacent half-open day ranges.
-fn merge_days(mut days: Vec<Days>) -> Vec<Days> {
-    days.sort_unstable();
-    let mut out: Vec<Days> = Vec::new();
-    for (lo, hi) in days {
-        if lo >= hi {
-            continue;
-        }
-        match out.last_mut() {
-            Some(last) if lo <= last.1 => last.1 = last.1.max(hi),
-            _ => out.push((lo, hi)),
-        }
-    }
-    out
-}
-
-/// The days of `whole` that `covered` leaves out.
-fn minus(whole: &[Days], covered: &[Days]) -> Vec<Days> {
-    let mut out = Vec::new();
-    for &(mut lo, hi) in whole {
-        for &(a, b) in covered {
-            if b <= lo || a >= hi {
-                continue;
-            }
-            if a > lo {
-                out.push((lo, a));
-            }
-            lo = lo.max(b);
-        }
-        if lo < hi {
-            out.push((lo, hi));
-        }
-    }
-    out
-}
-
-fn intersect(a: &[Days], b: &[Days]) -> Vec<Days> {
-    let mut out = Vec::new();
-    for &(lo, hi) in a {
-        for &(x, y) in b {
-            if lo.max(x) < hi.min(y) {
-                out.push((lo.max(x), hi.min(y)));
-            }
-        }
-    }
-    merge_days(out)
-}
-
 fn span(server: &Server, (lo, hi): Days) -> String {
     let p = server.period(lo, hi);
     format!(
@@ -538,7 +488,7 @@ fn gaps(
     placements: &[Placement],
     findings: &mut Vec<Issue>,
 ) -> Result<(), Error> {
-    let covered: Vec<Days> = merge_days(
+    let covered: Vec<Days> = merge(
         placements
             .iter()
             .map(|p| (days.0.max(p.days.0), days.1.min(p.days.1)))
@@ -548,7 +498,7 @@ fn gaps(
     if missing.is_empty() {
         return Ok(());
     }
-    let contested: Vec<Days> = merge_days(rows(
+    let contested: Vec<Days> = merge(rows(
         held,
         "SELECT n.start, n.end FROM holding_notice n
              JOIN holding_notice_candidate c ON c.notice_id = n.id
@@ -557,7 +507,7 @@ fn gaps(
         [&entry.table, &entry.variable],
         |r| Ok((r.get(0)?, r.get(1)?)),
     )?);
-    let windowed: Vec<Days> = merge_days(
+    let windowed: Vec<Days> = merge(
         rows(
             held,
             "SELECT DISTINCT p.start, p.end FROM holding_period p
@@ -582,7 +532,7 @@ fn gaps(
             )
         });
     };
-    for piece in intersect(&missing, &contested) {
+    for piece in overlap(&missing, &contested) {
         issue(
             IssueLevel::Error,
             "mapping_missing",
@@ -598,7 +548,7 @@ fn gaps(
         );
     }
     let rest = minus(&missing, &contested);
-    for piece in intersect(&rest, &windowed) {
+    for piece in overlap(&rest, &windowed) {
         issue(
             IssueLevel::Warning,
             "column_window_unavailable",
@@ -643,7 +593,7 @@ fn clip(
     let mut clips = Vec::new();
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
-        let held = merge_days(std::mem::take(holds));
+        let held = merge(std::mem::take(holds));
         if held.is_empty() {
             for f in findings.iter_mut().filter(|f| f.path == path) {
                 f.level = IssueLevel::Error;
@@ -658,8 +608,8 @@ fn clip(
             .iter()
             .find(|c| &c.source == source && &c.variable == variable)
             .map_or_else(
-                || merge_days(std::mem::take(requested)),
-                |c| merge_days(c.requested.iter().map(|p| p.days(open)).collect()),
+                || merge(std::mem::take(requested)),
+                |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
             );
         if asked != held {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
@@ -734,7 +684,7 @@ fn keys(
             .filter_map(Value::as_str)
             .collect();
         for s in &per_source {
-            let days = intersect(&extracted, &scope);
+            let days = overlap(&extracted, &scope);
             if days.is_empty() {
                 continue;
             }
@@ -769,7 +719,7 @@ fn keys(
                     .collect::<rusqlite::Result<_>>()?;
                 let over: Vec<_> = found
                     .iter()
-                    .filter(|(_, _, d, ..)| !intersect(&days, &[*d]).is_empty())
+                    .filter(|(_, _, d, ..)| !overlap(&days, &[*d]).is_empty())
                     .collect();
                 // Two columns are ambiguous only over a day both place the key; a key
                 // in one column for some years and another for the rest is not.
@@ -778,11 +728,11 @@ fn keys(
                     .enumerate()
                     .flat_map(|(i, a)| over[i + 1..].iter().map(move |b| (a, b)))
                     .filter(|(a, b)| {
-                        a.0 != b.0 && !intersect(&intersect(&days, &[a.2]), &[b.2]).is_empty()
+                        a.0 != b.0 && !overlap(&overlap(&days, &[a.2]), &[b.2]).is_empty()
                     })
                     .flat_map(|(a, b)| [a.0, b.0])
                     .collect();
-                let covered = merge_days(over.iter().map(|(_, _, d, ..)| *d).collect());
+                let covered = merge(over.iter().map(|(_, _, d, ..)| *d).collect());
                 let uncovered = minus(&days, &covered);
                 if !distinct.is_empty() {
                     findings.push(block(
@@ -836,7 +786,7 @@ fn keys(
                         .find(|f| f.0 == *column)
                         .map(|f| f.4.clone())
                         .unwrap_or_default();
-                    for piece in intersect(&days, &[*d]) {
+                    for piece in overlap(&days, &[*d]) {
                         // A bound key reported its caveat at the binding (it stays
                         // `ordered` above); an added key reports it at the source.
                         if let Some(caveat) = caveat {
@@ -888,13 +838,13 @@ type KeyMapping = (i64, String, Days, bool, String, Option<String>);
 /// The held days a file extracts: its requested days widened to the period column's
 /// grain, or the whole delivery when it has no period column (the row filter's rule).
 fn extracted(holding: &Holding, draft: &Draft) -> Vec<Days> {
-    let union = merge_days(draft.days.values().flatten().copied().collect());
+    let union = merge(draft.days.values().flatten().copied().collect());
     match &holding.period_column {
         _ if holding.held.is_empty() => union,
         None => holding.held.clone(),
         Some((_, _, encoding)) => {
             let encoding = Encoding::parse(encoding).expect("an admitted encoding");
-            intersect(
+            overlap(
                 &union
                     .iter()
                     .map(|&d| widen(encoding, d))
@@ -944,7 +894,7 @@ fn row_filter(
     sources: &[reg_core::project::Source],
     findings: &mut Vec<Issue>,
 ) -> Option<RowFilter> {
-    let union = merge_days(draft.days.values().flatten().copied().collect());
+    let union = merge(draft.days.values().flatten().copied().collect());
     let info = |s: usize, code: &str, message: String| Issue {
         source: Some(sources[s].name.clone()),
         ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
@@ -967,11 +917,11 @@ fn row_filter(
         return None;
     };
     let encoding = Encoding::parse(encoding).expect("an admitted encoding");
-    let widened = merge_days(union.iter().map(|&d| widen(encoding, d)).collect());
+    let widened = merge(union.iter().map(|&d| widen(encoding, d)).collect());
     // A source is told when the grain adds days around its own request that no source
     // asked for; days another source asked for are `row_filter_union`'s.
     for (s, days) in &draft.days {
-        let around = merge_days(days.iter().map(|&d| widen(encoding, d)).collect());
+        let around = merge(days.iter().map(|&d| widen(encoding, d)).collect());
         if !minus(&around, &union).is_empty() {
             findings.push(info(
                 *s,
@@ -988,7 +938,7 @@ fn row_filter(
             ));
         }
     }
-    let ranges = intersect(&widened, &holding.held);
+    let ranges = overlap(&widened, &holding.held);
     // The union finding comes before the whole-delivery early return: sources that
     // jointly cover the delivery still each get every column over the union.
     if draft.days.len() > 1 {
