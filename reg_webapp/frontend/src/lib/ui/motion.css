@@ -106,13 +106,6 @@
   transition-timing-function: var(--ease-out);
 }
 
-/* The selection bar moving between column items, a count changing, a skeleton
-   giving way to content: a crossfade in place, --duration-base. Apply to the
-   element whose content was swapped. */
-.motion-swap {
-  animation: motion-fade-in var(--duration-base) var(--ease-out) both;
-}
-
 /* The in-place colour/position transitions a control makes on hover, toggle or
    selection, so the quick timing is declared once. */
 .motion-quick {
@@ -136,8 +129,7 @@
   .motion-fade-in,
   .motion-fade-out,
   .motion-slide-in,
-  .motion-slide-out,
-  .motion-swap {
+  .motion-slide-out {
     animation-name: motion-fade-in;
     animation-duration: var(--duration-quick);
   }

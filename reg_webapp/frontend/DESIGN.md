@@ -658,7 +658,7 @@ Motion explains where things come from; state changes are near-instant.
   `--duration-quick`, and the skeleton shimmer stops.
 - The transitions are named once in `src/lib/ui/motion.css` (`motion-rise-in`,
   `motion-dialog-in`, `motion-fade-in`, `motion-slide-in`, `motion-disclose`,
-  `motion-swap`, `motion-quick`, each with its `-out`); a component applies a class
+  `motion-quick`, each with its `-out`); a component applies a class
   rather than writing its own keyframes, and inherits the reduced-motion collapse.
 
 ## Components
@@ -668,7 +668,7 @@ dependency); visuals come from each component's CSS Module reading semantic role
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
 `ColumnList`, `ColumnChip`, `TypeTag`, `FilterChip`, `VariableRow`, `Timeline`,
 `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`. The current
-`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `KeyValue`, …) are
+`src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, `KeyValue`, …) are
 the stepping stones: they keep reading the same roles until each is replaced, and must
 not grow new visual language meanwhile.
 
@@ -767,8 +767,8 @@ not grow new visual language meanwhile.
   `h3` weight and size in `text`, a `body-sm` description, and an optional `default`
   Button that names the next action ("Browse registers"). The title states what is
   empty; the next step is the description and the button, never packed into the title.
-  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it with a
-  crossfade (`motion-swap`) at `--duration-base`. It exposes `aria-busy="true"`, and
+  `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it in
+  place. It exposes `aria-busy="true"`, and
   respects reduced motion. A loading region carries no "Loading…" line beside it. A
   region that would otherwise show only its legend (a source card's timelines) shows one
   info `StatusRow`, "Loading coverage…", in place of the legend and graph.
