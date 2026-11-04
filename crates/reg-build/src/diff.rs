@@ -1,4 +1,5 @@
-//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two catalogs
+//! `reg-build diff [--holdings] OLD NEW [--json] [-n N]`: what changed between two
+//! catalogs, or with `--holdings` two holdings catalogs (`holdings.rs`)
 //! (`crates/DESIGN.md`, "Release diff").
 //!
 //! Everything is compared by natural key (pid, table name, meta key), never by row id:
@@ -13,9 +14,11 @@ use reg_core::issue::iso_day;
 use rusqlite::{Connection, OpenFlags, Row};
 use serde_json::{Value, json};
 
+mod holdings;
+
 type Res<T> = Result<T, String>;
 
-const USAGE: &str = "usage: reg-build diff OLD NEW [--json] [-n N]";
+const USAGE: &str = "usage: reg-build diff [--holdings] OLD NEW [--json] [-n N]";
 /// Meta keys that differ on every release: shown, but never a difference.
 const VOLATILE_META: [&str; 4] = [
     "generation_id",
@@ -31,16 +34,18 @@ struct Args {
     old: String,
     new: String,
     json: bool,
+    holdings: bool,
     limit: usize,
 }
 
 fn parse(args: &[String]) -> Res<Args> {
     let mut paths = Vec::new();
-    let (mut json, mut limit) = (false, 20);
+    let (mut json, mut holdings, mut limit) = (false, false, 20);
     let mut it = args.iter();
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "--json" => json = true,
+            "--holdings" => holdings = true,
             "-n" => {
                 limit = it
                     .next()
@@ -56,6 +61,7 @@ fn parse(args: &[String]) -> Res<Args> {
         old,
         new,
         json,
+        holdings,
         limit,
     })
 }
@@ -908,12 +914,8 @@ fn findings(p: &Pair) -> Res<Section> {
     Ok(Section::flat("findings", "findings", items))
 }
 
-/// The report: text or JSON, and whether any counted difference exists.
-fn diff(args: &Args) -> Res<(String, bool)> {
-    let pair = Pair {
-        old: open(&args.old)?,
-        new: open(&args.new)?,
-    };
+/// The catalog sections, after the schema-version check.
+fn catalog(pair: &Pair, args: &Args) -> Res<Vec<Section>> {
     let expected = reg_core::CATALOG_SCHEMA_VERSION.to_string();
     for (conn, path) in [(&pair.old, &args.old), (&pair.new, &args.new)] {
         let version = schema_version(conn, path)?;
@@ -923,18 +925,31 @@ fn diff(args: &Args) -> Res<(String, bool)> {
             ));
         }
     }
-    let (variables, hash_changes) = variables(&pair)?;
-    let sections = [
-        schema(&pair)?,
-        meta(&pair)?,
-        rows(&pair)?,
-        ids(&pair)?,
-        registers(&pair)?,
-        tables(&pair)?,
+    let (variables, hash_changes) = variables(pair)?;
+    Ok(vec![
+        schema(pair)?,
+        meta(pair)?,
+        rows(pair)?,
+        ids(pair)?,
+        registers(pair)?,
+        tables(pair)?,
         variables,
-        valuesets(&pair, &hash_changes)?,
-        findings(&pair)?,
-    ];
+        valuesets(pair, &hash_changes)?,
+        findings(pair)?,
+    ])
+}
+
+/// The report: text or JSON, and whether any counted difference exists.
+fn diff(args: &Args) -> Res<(String, bool)> {
+    let pair = Pair {
+        old: open(&args.old)?,
+        new: open(&args.new)?,
+    };
+    let sections = if args.holdings {
+        holdings::sections(&pair, &args.old, &args.new)?
+    } else {
+        catalog(&pair, args)?
+    };
     let differs = sections.iter().any(Section::differs);
     let out = if args.json {
         let mut tree = Value::Object(
