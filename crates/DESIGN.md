@@ -1303,17 +1303,16 @@ shared and always served. Every `period` and a table's `spans` are the years hel
 `coverage` reports them per table; a table's releases are the provider's and are left
 out. `segments` rows are the accepted placements: the held column name, the `file` it is
 held in and the years held, with the form of the catalog segments they overlap in either
-origin (preferring the same column name among those); a placement no segment overlaps
-states only its role. The reference periods, gaps and releases are not the steward's and
-are not served. Cursors bind both generations. Neither an alias, a successor nor
-equivalence grants possession. Base-only `order`/`validate` use the published reference
-catalog (§9). In steward mode, those same functions read a composed semantic view
-including the steward provider definitions and slot variables (maintainer 2026-10-29):
-the answer may include steward-specific slot variables and pre-2018 delivery codings
-absent from the base. That is an explicit mode divergence, not a claim of identical
-base-only answers. The implementation of the logical check is shared; physical mapping
-then adds possession restrictions. Its provenance names both generations and the
-selected semantic mode.
+origin (preferring the same column name among those); held years no segment covers state
+only the role. The reference periods, gaps and releases are not the steward's and are
+not served. Cursors bind both generations. Neither an alias, a successor nor equivalence
+grants possession. Base-only `order`/`validate` use the published reference catalog
+(§9). In steward mode, those same functions read a composed semantic view including the
+steward provider definitions and slot variables (maintainer 2026-10-29): the answer may
+include steward-specific slot variables and pre-2018 delivery codings absent from the
+base. That is an explicit mode divergence, not a claim of identical base-only answers.
+The implementation of the logical check is shared; physical mapping then adds possession
+restrictions. Its provenance names both generations and the selected semantic mode.
 
 An open provider end stays open and keeps its `coverage_end_unstated` notice. A finite
 received-file inventory bounds possession independently; it does not close the

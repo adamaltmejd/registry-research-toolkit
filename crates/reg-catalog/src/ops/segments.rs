@@ -394,7 +394,7 @@ fn segment_rows(
 /// Steward mode: one row per held file and column over the years held, never the
 /// catalog's wider periods (maintainer 2026-11-04). A placement takes its facts from
 /// the catalog segments it overlaps in its table, preferring the same column name
-/// among those; a placement no segment overlaps states only its role.
+/// among those; held years no segment covers state only the role.
 fn held_rows(
     extra: &Connection,
     variable: &str,
@@ -442,38 +442,24 @@ fn held_rows(
                 ..(*r).clone()
             })
             .collect();
-        if parts.is_empty() {
-            parts.push(Row {
-                id: None,
-                origin: 0,
-                valueset_id: None,
-                start,
-                end,
-                segment: Segment {
-                    table: table.clone(),
-                    column: column.clone(),
-                    period: Period {
-                        start: None,
-                        end: None,
-                    },
-                    file: None,
-                    wording: None,
-                    dtype: None,
-                    length: None,
-                    format: None,
-                    value_set: None,
-                    classification: None,
-                    coded: None,
-                    sensitive: None,
-                    identifier: None,
-                    id_kind: None,
-                    role,
-                    temporality: None,
-                    state: None,
-                    evidence: None,
-                },
-            });
+        // Held years no catalog segment covers state only the role: another
+        // period's form would be a guess.
+        parts.sort_by_key(|part| part.start);
+        let mut gaps = Vec::new();
+        let mut covered = start;
+        for part in &parts {
+            if covered < part.start {
+                gaps.push((covered, part.start));
+            }
+            covered = covered.max(part.end);
         }
+        if covered < end {
+            gaps.push((covered, end));
+        }
+        parts.extend(
+            gaps.into_iter()
+                .map(|(start, end)| bare(&table, &column, &role, start, end)),
+        );
         for mut part in parts {
             part.segment.table.clone_from(&table);
             part.segment.column.clone_from(&column);
@@ -482,6 +468,40 @@ fn held_rows(
         }
     }
     Ok(out)
+}
+
+/// A held row that states only its column and role.
+fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
+    Row {
+        id: None,
+        origin: 0,
+        valueset_id: None,
+        start,
+        end,
+        segment: Segment {
+            table: table.to_owned(),
+            column: column.to_owned(),
+            period: Period {
+                start: None,
+                end: None,
+            },
+            file: None,
+            wording: None,
+            dtype: None,
+            length: None,
+            format: None,
+            value_set: None,
+            classification: None,
+            coded: None,
+            sensitive: None,
+            identifier: None,
+            id_kind: None,
+            role: role.to_owned(),
+            temporality: None,
+            state: None,
+            evidence: None,
+        },
+    }
 }
 
 /// The rows cut where the provider's wording changes, each carrying the wording in

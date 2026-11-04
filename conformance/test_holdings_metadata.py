@@ -61,6 +61,12 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         unheld = client.get("/api/catalog/demo/held/relative-id")
         assert unheld.status_code == 404
         assert unheld.json()["error"]["code"] == "not_found"
+        # Fails if resolve matches a variable the deployment refuses to serve.
+        resolved = client.get(
+            "/api/resolve", params={"columns": "RelativeId", "register": "demo/held"}
+        )
+        assert resolved.status_code == 200, resolved.text
+        assert resolved.json()["data"]["columns"][0]["status"] == "unmatched"
         extra = client.get("/api/catalog/steward/slots/slot2")
         assert extra.status_code == 200
         assert extra.json()["data"]["name"] == "Second position"
@@ -302,6 +308,13 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         data = register.json()["data"]
         assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
         assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
+        # Fails if schema reads the reference origin only: the steward-minted
+        # variables on the reference register are held in the holdings origin.
+        schema = pool.client(artifact_env(output)).get("/api/schema/demo/projected")
+        assert schema.status_code == 200, schema.text
+        assert {"demo/projected/received-key", "demo/projected/steward-slot"} <= {
+            line["variable"] for line in schema.json()["data"]["items"]
+        }
         files = pool.client(artifact_env(output)).post(
             "/api/project/materialize", json=minted["project"]
         )
