@@ -3,8 +3,8 @@
 
 Inputs and output live in a worktree `<inputs>` of the private inputs repo: the
 source PDFs are under `<inputs>/catalog/docs/lisa-pdf/`, and `--out` (required) is
-`<inputs>/catalog/docs/markdown/lisa`, the tree `reg-meta-build build-docs
---docs-dir <inputs>/catalog/docs/markdown` indexes. Output files carry YAML
+`<inputs>/catalog/docs/markdown/lisa`, the tree `reg-build`'s markdown reader
+(`curation/readers/markdown.toml`) indexes. Output files carry YAML
 frontmatter, standard markdown links ([X](X.md)), and hierarchical tags.
 
 Two-step workflow (marker's intermediate markdown goes to a scratch dir `<raw>`):
@@ -1208,66 +1208,26 @@ def extract_variabelforteckning(lines: list[str]) -> dict[str, tuple[str, int]]:
     return var_list
 
 
-def get_lisa_columns(md_text: str | None = None) -> set[str]:
-    """Get LISA column names.
+def get_lisa_columns(md_text: str) -> set[str]:
+    """LISA column names, from the Variabelförteckning table in the document.
 
-    Primary source: Variabelförteckning table extracted from the document.
-    Fallback: reg_meta database.
+    The table is the ground truth (module docstring). A document without one exits
+    non-zero: parsing it against a guessed column list would silently change the LISA
+    variable files, a pinned build input.
     """
-    if md_text:
-        cleaned = re.sub(
-            r"^(\s*)<sup>(\d+)</sup>\s*", r"\1[^\2]: ", md_text, flags=re.MULTILINE
+    cleaned = re.sub(
+        r"^(\s*)<sup>(\d+)</sup>\s*", r"\1[^\2]: ", md_text, flags=re.MULTILINE
+    )
+    cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", cleaned)
+    cleaned = re.sub(r"</?span[^>]*>", "", cleaned).replace("\\_", "_")
+    vf = extract_variabelforteckning(cleaned.split("\n"))
+    if not vf:
+        sys.exit(
+            "ERROR: no Variabelförteckning table found in --cached-md; check that marker"
+            " kept pages 12-24 (see the module docstring)"
         )
-        cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", cleaned)
-        cleaned = re.sub(r"</?span[^>]*>", "", cleaned).replace("\\_", "_")
-        vf = extract_variabelforteckning(cleaned.split("\n"))
-        if vf:
-            print(f"Extracted {len(vf)} columns from Variabelförteckning")
-            return set(vf.keys())
-
-    # Fallback to reg_meta. Reached only when the doc had no Variabelförteckning.
-    # Handling is split by failure class so real bugs can't hide again (they did
-    # for two schema stages across A2.6/A2.7):
-    #   - reg_meta not installed (ImportError): the one expected "not a bug" state
-    #     (this is primarily a doc parser) → warn and degrade to an empty set.
-    #   - DB missing / schema-incompatible (open_db → RegMetaError): reg_meta's
-    #     errors are user-facing — render its message + remediation and exit with
-    #     its stable code, not a raw traceback and not a silent [].
-    #   - query failure (sqlite3.Error, e.g. a renamed/dropped table): left to
-    #     raise. That's schema-drift — a traceback is the right "tell maintainers".
-    try:
-        from reg_meta_build.db import open_db
-        from reg_meta_build.errors import RegMetaError
-    except ImportError as e:
-        print(
-            f"Warning: reg_meta not installed; no fallback columns: {e}",
-            file=sys.stderr,
-        )
-        return set()
-
-    db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
-    try:
-        conn = open_db(db_path)
-    except RegMetaError as e:
-        print(f"ERROR: {e.message}", file=sys.stderr)
-        if e.remediation:
-            print(f"  {e.remediation}", file=sys.stderr)
-        sys.exit(e.exit_code)
-    # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed), and
-    # `variable_instance` / `register_version` are dropped before ship. Join
-    # straight to `variable` then `register` — the register-level join is
-    # enough for "all LISA columns".
-    cur = conn.execute("""
-        SELECT DISTINCT va.delivery_column_name
-        FROM variable_alias va
-        JOIN variable v ON va.variable_id = v.variable_id
-        JOIN register r ON v.register_id = r.register_id
-        WHERE r.name LIKE '%LISA%'
-    """)
-    cols = {row[0] for row in cur.fetchall()}
-    conn.close()
-    print(f"Loaded {len(cols)} columns from reg_meta database")
-    return cols
+    print(f"Extracted {len(vf)} columns from Variabelförteckning")
+    return set(vf.keys())
 
 
 def main() -> None:
@@ -1305,10 +1265,6 @@ def main() -> None:
 
     known_cols = get_lisa_columns(md_text)
 
-    if not known_cols:
-        print("ERROR: No column names found in document or reg_meta database.")
-        sys.exit(1)
-
     entries = parse_bakgrundsfakta(md_text, known_cols)
 
     var_entries = [e for e in entries if e.column_name]
@@ -1332,7 +1288,9 @@ def main() -> None:
                 f"  Missing from doc ({len(missing)}): {', '.join(sorted(missing)[:20])}..."
             )
         if extra:
-            print(f"  Extra (not in reg_meta): {', '.join(sorted(extra)[:20])}")
+            print(
+                f"  Extra (not in Variabelförteckning): {', '.join(sorted(extra)[:20])}"
+            )
     else:
         var_count, topic_count = write_entries(entries, known_cols, args.out)
         print(
