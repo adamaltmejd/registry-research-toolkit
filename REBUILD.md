@@ -716,13 +716,13 @@ MONA order file (#2121), contested columns and safe file names (#2139) and the v
 holdings rebuilt against rebuilt (#2143), and the weekly integration run checks the
 pair. e-order #2068 is done and e-runner #2069 is closed. Runner extraction is verified
 by hand on MONA, with no SQL Server suite (#2126). e-types' N1 reviews and mock-metadata
-audit shipped in #2152, which leaves #2071 nothing to do. 0.74.0 re-pinned the steward
-with the held and unmatched columns settled (#2072), and 0.75.0 (steward `0a6500cf`)
-serves holdings only (#2175) on data.swecov.se. The E audit ran on 2026-11-04: E is
-code-complete. Open: the maintainer's real MONA order on the v4 order file (the exit).
-#2070's representative-plan comparison was ruled unneeded (maintainer 2026-11-04) and
-#2070 is closed; the SPA follow-ups #2110 do not gate F. Retiring `build_catalog.py`,
-Python `extend-db` and `reg_webapp/stewards/swecov/` is F's work.
+audit shipped in #2152. 0.74.0 re-pinned the steward with the held and unmatched columns
+settled (#2072), and 0.75.0 (steward `0a6500cf`) serves holdings only (#2175) on
+data.swecov.se. The E audit ran on 2026-11-04: E is code-complete. Open: the
+maintainer's real MONA order on the v4 order file (the exit). #2070's
+representative-plan comparison was ruled unneeded (maintainer 2026-11-04) and #2070 is
+closed; the SPA follow-ups #2110 do not gate F. Retiring `build_catalog.py`, Python
+`extend-db` and `reg_webapp/stewards/swecov/` is F's work.
 
 - **Design first, for the maintainer's review.** The design covers:
   - steward and project holdings, and the three questions holdings answer: what is in my
