@@ -227,7 +227,7 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     let workers = std::thread::available_parallelism()
         .map_or(1, std::num::NonZero::get)
         .min(manifest.input.len());
-    let mut slots: Vec<Option<Result<reg_readers::ReadOutput, String>>> =
+    let mut slots: Vec<Option<std::thread::Result<Result<reg_readers::ReadOutput, String>>>> =
         (0..manifest.input.len()).map(|_| None).collect();
     std::thread::scope(|scope| {
         let handles = (0..workers)
@@ -239,7 +239,12 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
                         let Some(input) = manifest.input.get(i) else {
                             return done;
                         };
-                        done.push((i, read_one(input)));
+                        // A reader panic counts only if no earlier input failed, as when
+                        // the inputs were read one after another.
+                        let output = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                            read_one(input)
+                        }));
+                        done.push((i, output));
                     }
                 })
             })
@@ -252,7 +257,10 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     });
     slots
         .into_iter()
-        .map(|slot| slot.expect("every input read"))
+        .map(|slot| {
+            slot.expect("every input read")
+                .unwrap_or_else(|panic| std::panic::resume_unwind(panic))
+        })
         .collect()
 }
 

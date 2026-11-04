@@ -1037,26 +1037,20 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
 }
 
 fn previous(path: &Path, record: bool) -> Result<Lock, String> {
-    // The version alone first, so an old lock gets the re-lock hint, not a field error.
-    // Not a `serde_json::Value` of the whole lock: the largest are tens of MB.
-    #[derive(Deserialize)]
-    struct Version {
-        #[serde(default)]
-        version: serde_json::Value,
-    }
     if record || !path.try_exists().map_err(|e| e.to_string())? {
         return Ok(Lock::new(BTreeMap::new()));
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let Version { version } = serde_json::from_str(&text)
+    let value: serde_json::Value = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if version != 3 {
+    if value["version"] != 3 {
         return Err(format!(
-            "{}: unsupported premise lock version {version}; run reg-build lock to re-lock with version 3",
+            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
             path.display(),
+            value["version"]
         ));
     }
-    let lock: Lock = serde_json::from_str(&text)
+    let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
     lock.verify()
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
