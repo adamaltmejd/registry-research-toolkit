@@ -163,8 +163,10 @@ def frontend() -> None:
 
 def regen() -> None:
     run("cargo build --workspace --locked")
+    run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
+    # Cut from the committed openapi.json, so it runs after that file is blessed.
     run(
-        "cargo test -p reg-meta --test openapi_snapshot --test project_schema_snapshot",
+        "cargo test -p xtask --test project_schema_snapshot",
         env={"REG_META_BLESS": "1"},
     )
     # The MCP `tools/list` golden, as conformance/test_mcp.py's stdio session lists it.

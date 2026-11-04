@@ -10,8 +10,9 @@ A `project_data.json` lists the register columns a study orders: each source is 
 table over a period, and each binding is one variable delivered from it. The agent
 drafts and checks the file. The document's schema is
 [project_data.schema.json](project_data.schema.json), generated from the server's API
-contract. Regenerate it with `REG_META_BLESS=1 cargo test -p reg-meta --test
-project_schema_snapshot` from the repository root.
+contract. Regenerate it with
+`REG_META_BLESS=1 cargo test -p xtask --test project_schema_snapshot` from the
+repository root.
 
 The catalog server's `search`, `show`, `segments` and `coverage` tools are described in
 the `register-metadata-search` skill.
