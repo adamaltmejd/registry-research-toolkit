@@ -2921,3 +2921,34 @@ kind = "set"
 subject = "var:yrkesutbildning-undvika-inte-tillgodosedd-extern-rekrytering"
 fields = { "label" = "Grundläggande yrkesutbildning (anledning: undvika extern rekrytering)" }
 evidence = "#2102 same-label cluster 'Grundläggande yrkesutbildning' (5 variables): judged different meaning, high confidence; Opdefs: five different reasons (F2a-e) for providing initial vocational training."
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C3e where key = 'v39593'"
+fields = { "unit" = "Antal timmar" }
+evidence = "C3e/C3i/C3tot hold course hours (opdef: 'Antalet externa/interna/interna och externa kurstimmar företagets anställda fick'). SCB gives unit 'Antal personer' in both releases (Registerinformation.csv:row=522510 (r14841), row=522526 (r12008)), copied from the C1tot/C2f/C2m participant counts; the same table gives A4 (hours) 'Antal timmar'."
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C3i where key = 'v39593'"
+fields = { "unit" = "Antal timmar" }
+evidence = "See C3e: opdef counts internal course hours; unit 'Antal personer' is the participant-count unit copied from C1/C2 (row=522527 (r12008))."
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C3tot where key = 'v39593'"
+fields = { "unit" = "Antal timmar" }
+evidence = "See C3e: opdef counts internal and external course hours; unit 'Antal personer' is copied from C1/C2 (row=522528 (r12008))."
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: C4 where key = 'v39594'"
+fields = { "unit" = "Procent" }
+evidence = "C4 opdef: 'Anger hur kurstimmarna fördelades procentuellt mellan obligatoriska (lagstiftade) kurser och andra kurser' (Registerinformation.csv:row=522509 (r14841)). SCB gives unit 'Antal personer', copied from the C1/C2 participant counts."
+
+[[statement]]
+kind = "set"
+subject = "var:obligatorisk-kurs"
+fields = { "description" = "Andel av företagets kurstimmar under referensåret som avsåg obligatoriska (lagstiftade) kurser, till exempel kurser om hälsa och säkerhet, i procent. Värdet 998 betyder att företaget inte anordnade någon personalutbildning under referensåret." }
+evidence = "C4 opdef (row=522509 (r14841)) gives the percentage split of course hours and the code 998. The label is only 'Obligatorisk kurs'; the short definition 'Andel obligatoriska kurser' agrees."
+

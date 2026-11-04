@@ -2759,3 +2759,21 @@ kind = "set"
 subject = "var:utbild"
 fields = { "label" = "Gymnasieprogram (utbild)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Pgm opdefs say årskurs 3; Pgm_Ga says årskurs 2 läsåret 2002/03; Program's 2013 opdef instead describes year 3 or else the year-2 programme and its 2007 opdef cites 2005/06, so only the code holds for Program; utbild is a single 2011/12 occurrence."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: F33_02 where key = 'v45037'"
+fields = { "operational_definition" = "F33_02: Vilka ämnen/kurser tycker du har varit svårast att genomföra på distans? Historia" }
+evidence = "Registerinformation.csv:row=766458 (r18139): label and definition say Historia but the opdef ends 'Engelska', copied from F33_01 (row=766451). Items run alphabetically F33_01 Engelska, F33_02 Historia, F33_03 Idrott och hälsa, F33_04 Matematik ... (rows 766451-766457), so Historia is correct."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas eftergymnasiala utbildning enligt Svensk utbildningsnomenklatur (SUN): 1 = båda föräldrarna har eftergymnasial utbildning, 2 = en förälder har det, 3 = ingen förälder har det, 4 = uppgift saknas för båda föräldrarna." }
+evidence = "Value set #2349 has four codes counting parents with eftergymnasial utbildning. The short definition ('den förälders utbildning som har högsta nivå') does not match these codes."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk"
+fields = { "description" = "Yrkeskod enligt SSYK 2012, kodad utifrån svaret på vad personen önskar arbeta med eller som när hon eller han är cirka 30 år. Kodlistan har fyra nivåer, från ensiffriga yrkesområden till fyrsiffriga yrkeskoder." }
+evidence = "Short definition says 'SSYK 96' but value set #11747 (635 items) holds SSYK 2012 labels (0210 Specialistofficerare, 0310 Soldater m.fl.; SSYK 96 used 'Underofficerare'); the survey year is 2021. Opdef (Registerinformation.csv:row=752620 (r18139)) gives the 'ca 30 år' question."

@@ -4687,3 +4687,27 @@ kind = "set"
 subject = "kursdeltagare-vartermin: nyelev @2021-01-01..2024-12-31 where key = 'v32756'"
 fields = { "variable" = "nyinskriven-elev" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): NyInsk/Nyinsk in elever-vartermin; Nyelev in kursdeltagare-vartermin: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'determined from previous term's collection' text; one adds the source collection); folded into nyinskriven-elev."
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Den termin som uppgifterna hör till, och i tabellen med nationella prov den termin som provresultatet hänför sig till. Från 2021 anges terminen som VT (vårtermin) eller HT (hösttermin) följt av årtal." }
+evidence = "Opdef per table: kursdeltagare 'Avser den termin uppgifterna hör till', nationella prov 'den termin provresultatet är hänförligt till', 2021-2024 'Vårtermin (VT) alternativt hösttermin (HT) samt årtal'. The short definition ('ordningsnummer som aktuell termin har i elevens utbildning') is the generic key v1579 text and is contradicted by every opdef."
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen"
+fields = { "description" = "Anger vilken termin av kursens totala antal terminer som personen studerar. Tvåsiffrig kod där första siffran är terminens nummer och andra siffran det totala antalet terminer, till exempel 12 = termin 1 av 2. Kod 99 betyder termin 9 av 9 eller att uppgift saknas. Avser kursen som anges i variabeln 'Kurs i komvux'." }
+evidence = "Value sets #1268/#3498/#10595 list codes 11 = 'Personen studerar termin 1 av 1', 12 = 'termin 1 av 2' ...; #10595 has 45 items, i.e. every pair i<=j<=9. Column TermUtl 1988-1996."
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen-utl"
+fields = { "description" = "Anger vilken termin av kursens totala antal terminer som personen studerar. Tvåsiffrig kod där första siffran är terminens nummer och andra siffran det totala antalet terminer, till exempel 12 = termin 1 av 2. Kod 99 betyder termin 9 av 9 eller att uppgift saknas, och bland annat koderna 00, 1 och 10 betyder okänt värde. Avser kursen som anges i variabeln 'Kurs i komvux'." }
+evidence = "Column Utl 1979-1987; value sets #10319/#2881/#9363/#12952 add 00, 1 and 10 = 'Okänt värde' to the same 11..99 pair codes (#10595 in 1981-1983 has none)."
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-kursen-utlagg"
+fields = { "description" = "Anger vilken termin av kursens totala antal terminer som personen studerar. Tvåsiffrig kod där första siffran är terminens nummer och andra siffran det totala antalet terminer, till exempel 12 = termin 1 av 2. Kod 99 betyder termin 9 av 9 eller att uppgift saknas. Avser kursen som anges i variabeln 'Kurs i komvux'." }
+evidence = "Column Utlagg 1995-1997, value set #10595 (all 45 'termin i av j' pairs). The 1995 opdef 'Anger hur många terminer som kursen läses över' describes only the second digit; 1996-1997 opdef and the code labels give the full meaning."

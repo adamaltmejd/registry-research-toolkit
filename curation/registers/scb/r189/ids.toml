@@ -71,7 +71,6 @@ public = "grundskola-ak9"
 "medelbetyg" = ["Grundskolan: betyg åk 9: MedelBetyg"]
 "meritvarde" = ["Grundskolan: betyg åk 9: MeritVarde"]
 "meritvarde-m2" = ["Grundskolan: betyg åk 9: MeritVarde_M2"]
-"minst-ett-godkant-betyg" = ["Grundskolan: betyg åk 9: Antal_F @ 2012-07-01"]
 "minst-ett-godkant-betyg-2" = ["Grundskolan: betyg åk 9: Betyg"]
 "betyg-modersmal" = ["Grundskolan: betyg åk 9: Ml_betyg"]
 "sprak-modersmal" = ["Grundskolan: betyg åk 9: Ml_sprak"]
