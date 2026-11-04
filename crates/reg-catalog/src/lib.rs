@@ -85,11 +85,7 @@ impl Catalog {
             return Err(refuse(version, format!("meta has no {key:?}")));
         }
         let generation = &meta["generation_id"];
-        if generation.len() != 64
-            || !generation
-                .bytes()
-                .all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
-        {
+        if !reg_core::is_sha256_hex(generation) {
             return Err(refuse(
                 version,
                 format!("generation_id {generation:?} is not 64 lowercase hex digits"),
