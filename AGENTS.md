@@ -12,11 +12,9 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `project_data.json` contract and structural validator, the FQID and period grammars),
   `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
   `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
-  `reg-core-py` (`reg-core` for the Python builder), and the builder that replaces
-  `reg_meta_build` ([REBUILD.md](REBUILD.md)): `reg-frame`, `reg-readers`, `reg-resolve`
-  and `reg-build`, with its reader config and id ledgers under `curation/`.
-- `reg_meta_build` (CLI `reg-meta-build`) — build the catalog SQLite DBs from SCB
-  exports (maintainer-only, Python).
+  `reg-core-wasm` (`reg-core` for the SPA), and the catalog builder: `reg-frame`,
+  `reg-readers`, `reg-resolve` and `reg-build`, with its reader config, curation and id
+  ledgers under `curation/`.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's
@@ -45,13 +43,12 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. The current trackers are [REBUILD.md](REBUILD.md), the
-  rebuild that replaces `reg_meta_build` (gate: "Deleted when milestone F (cutover)
-  ships"), and [SPA-REDESIGN.md](SPA-REDESIGN.md), the plain-language SPA redesign
-  (gate: deleted in its last slice). Each tracker is **scoped and self-deleting**: it
-  ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets
-  deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md
-  notes for the same effort are still preferred where the scope is package-local.
+  for cross-PR coordination. The current tracker is [SPA-REDESIGN.md](SPA-REDESIGN.md),
+  the plain-language SPA redesign (gate: deleted in its last slice). Each tracker is
+  **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted
+  when stage X ships"), gets deleted at that gate, and never outlives the refactor it
+  tracks. Per-package DESIGN.md notes for the same effort are still preferred where the
+  scope is package-local.
 
 # Maturity and compatibility
 
@@ -76,14 +73,11 @@ minimal new code → new dep. Two repo-specific notes:
 - **The failure mode here is leaf-helper duplication, not new-module inflation.** A new
   adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
   it (a validator, a write loop, a clamp gate) gets re-pasted instead of hoisted. Before
-  writing a leaf, check whether an internal capability already does it
-  (`reg_meta_build`'s `_curation.py` and `db.py` are typical homes). Extend it; don't
-  re-type it.
+  writing a leaf, check whether an internal capability already does it (`reg-core` and
+  `reg-frame` are typical homes). Extend it; don't re-type it.
 - **The ladder cuts both ways.** This repo *under*-uses libraries as often as it
-  over-builds (e.g. `reg_meta_build` hand-rolls TOML validators though it already ships
-  Pydantic for its build-time IR). "Installed dep solves it → use it" binds as hard as
-  "don't add a dep for what a few lines do" — add one only when it removes more
-  complexity than it adds.
+  over-builds. "Installed dep solves it → use it" binds as hard as "don't add a dep for
+  what a few lines do" — add one only when it removes more complexity than it adds.
 
 **Never simplify away** the load-bearing guards: PII/MONA confinement, k-anonymity /
 disclosure control, determinism / byte-identity, JSON-contract validation, fail-fast. A
@@ -104,12 +98,14 @@ existing boundary case already catches that failure. Two kinds are defects on si
 **change-detector** tests (they break on a refactor that changes no boundary).
 
 Tests pin **contracts and behavior**, never implementation. The toolkit is a
-deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
+deterministic compiler (`reg-build`) that feeds an immutable artifact to stateless
 readers (the `crates/` runtime, `reg_webapp`), so nearly every behavior is observable at
 a boundary that outlives the code behind it. `ARCHITECTURE.md` → "Testing strategy"
-names the boundaries, the oracles, the tiers and each package's time budget; the rules
-below are what an agent must follow when writing, changing or deleting a test. The
-`test-audit` skill applies them to a change and to a sweep.
+names the boundaries, the oracles, the tiers and each package's time budget. The
+release's own check is `reg-build verify` and `reg-build diff` against the previous
+release (release skill, step 8). The rules below are what an agent must follow when
+writing, changing or deleting a test. The `test-audit` skill applies them to a change
+and to a sweep.
 
 - **End-to-end and integration first.** A test drives the real pipeline, reader or
   server from a boundary and observes its output. A unit test is the exception: allowed
@@ -140,11 +136,10 @@ below are what an agent must follow when writing, changing or deleting a test. T
 - **Delete with the code.** A test that pinned deleted behavior is deleted, not
   retargeted. A refactor that changes no boundary changes no test; if it does, the
   boundary moved and the design note says so.
-- **Determinism is a tested property**: byte-identical rebuilds and serializations;
-  Hypothesis for grammars and interval algebra.
+- **Determinism is a tested property**: byte-identical rebuilds and serializations.
 - **Structural validation has one authority.** `reg-build verify` owns the published
-  catalog's invariants (`validate_built_db` the old builder's, until F); tests run it on
-  the synthetic artifact, they do not re-derive its checks.
+  catalog's invariants; tests run it on the synthetic artifact, they do not re-derive
+  its checks.
 - **A bug fix adds a regression case to the owning corpus only when no existing case
   fails on the pre-fix code**: extend or strengthen that behavior's case rather than a
   helper test. The new or strengthened case must fail on the pre-fix code.
@@ -156,8 +151,8 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 # Python conventions
 
-- Runtime deps live in each package's `pyproject.toml`; dev deps only in the root
-  `pyproject.toml`. Add with `uv add` / `uv add --dev`; hand-edit only to bump an
+- The Python here is tooling and tests (`scripts/`, `conformance/`); their deps are dev
+  deps in the root `pyproject.toml`. Add with `uv add --dev`; hand-edit only to bump an
   existing constraint (then `uv lock`). CI uses `uv sync --frozen`.
 - No minimum release age: keep `exclude-newer = false` in the root `pyproject.toml`
   `[tool.uv]`; deleting it inherits the checkout's global waiting period.
@@ -166,15 +161,15 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 ## Stack
 
-- **Builder** (`reg_meta_build`, Python): Pydantic v2 `_IRBase` models for the IR core,
-  frozen dataclasses for local value types; stdlib `sqlite3` with raw SQL (DDL in
-  `db.py`, `SCHEMA_VERSION` gates compatibility, regenerate-not-migrate, no ORM);
-  argparse CLI.
+- **Builder** (`crates/`, Rust): `reg-build` reads the pinned inputs into source frames,
+  resolves each register with its curation and emits one SQLite file (DDL in
+  `crates/reg-build/src/schema.sql`, `reg_core::CATALOG_SCHEMA_VERSION` gates
+  compatibility, regenerate-not-migrate, no ORM).
 - **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
   materializer, HTTP API and MCP tools. There is no Python web backend.
-- **Tests**: pytest + pytest-xdist (builder, conformance), `cargo test` (crates),
-  `@pytest.mark.release` for real-artifact tests, Hypothesis for grammars. Build/parse
-  coverage is fully synthetic.
+- **Tests**: `cargo test` (crates), pytest + pytest-xdist (conformance,
+  `scripts/tests`), `@pytest.mark.release` for real-artifact tests. Build coverage is
+  fully synthetic.
 - **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
   and run with `uvx` (not a dev dep).
 
@@ -189,12 +184,12 @@ is archived on `archive/reg-webapp-spa` and returns in milestone E.
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `builder`). The R packages are not gated: their testthat suites run only by hand
-  (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
+  `flows`, `frontend`). The R packages are not gated: their testthat suites run only by
+  hand (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty, plugin
   schema drift and provider vocabulary.
-- `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — lint, crates and
-  the touched packages' tests, plus the conformance run against the Rust server.
+- `uv run --no-project scripts/gate.py g0 rust` — lint, crates and `scripts/tests`, plus
+  the conformance run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
   files; after a rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
@@ -217,11 +212,11 @@ Dogfooding sessions (log findings, file issues at the end) follow the
 [dogfood](.agents/skills/dogfood/SKILL.md) skill.
 
 **Title** — mirror the commit convention: `<type>(<package>): <imperative summary>`
-(e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
+(e.g. `feat(reg_meta): …`, `fix(reg_webapp): …`).
 
-**Labels** — exactly **one area label** — a package (`reg_meta` for the Rust runtime,
-`reg_meta_build`, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`,
-`bug`, or `documentation`.
+**Labels** — exactly **one area label** — a package (`reg_meta` for the Rust runtime and
+builder, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`, `bug`, or
+`documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:

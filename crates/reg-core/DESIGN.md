@@ -7,12 +7,12 @@ The runtime around it, including the semantic layer and the order manifest, is
 [../DESIGN.md](../DESIGN.md). The MONA side is remaining work (#707).
 
 `reg-core` also holds the FQID and period grammars, the text folds and the interval
-algebra. It does no IO, so the server, the MCP tools and the build (through
-`reg-core-py`) share one implementation of each. The FQID grammar includes
-`set/<provider>/<register>/<slug>` as a distinct presentation kind, disjoint from
-three-part table and variable refs. A set ref is valid for catalog discovery and `show`;
-it is not a valid project binding or source table. `class/` and `set/` lead with literal
-kind namespaces; malformed forms cannot resolve as another kind.
+algebra. It does no IO, so the server, the MCP tools and the builder (`reg-build`) share
+one implementation of each. The FQID grammar includes `set/<provider>/<register>/<slug>`
+as a distinct presentation kind, disjoint from three-part table and variable refs. A set
+ref is valid for catalog discovery and `show`; it is not a valid project binding or
+source table. `class/` and `set/` lead with literal kind namespaces; malformed forms
+cannot resolve as another kind.
 
 ## Scope
 
