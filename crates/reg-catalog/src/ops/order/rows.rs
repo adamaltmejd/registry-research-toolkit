@@ -127,37 +127,20 @@ fn key_segments(
 fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
     // Several served columns can expose overlapping pieces of the same physical key.
     out.sort_by(|a, b| {
-        (
-            &a.variable,
-            &a.spelling,
-            &a.state,
-                        a.entity,
-            a.start,
-            a.end,
-        )
-            .cmp(&(
-                &b.variable,
-                &b.spelling,
-                &b.state,
-                                b.entity,
-                b.start,
-                b.end,
-            ))
+        (&a.variable, &a.spelling, &a.state, a.entity, a.start, a.end).cmp(&(
+            &b.variable,
+            &b.spelling,
+            &b.state,
+            b.entity,
+            b.start,
+            b.end,
+        ))
     });
     let mut merged: Vec<KeySegment> = Vec::new();
     for key in out {
         if let Some(last) = merged.last_mut()
-            && (
-                &last.variable,
-                &last.spelling,
-                &last.state,
-                                last.entity,
-            ) == (
-                &key.variable,
-                &key.spelling,
-                &key.state,
-                                key.entity,
-            )
+            && (&last.variable, &last.spelling, &last.state, last.entity)
+                == (&key.variable, &key.spelling, &key.state, key.entity)
             && key.start <= last.end
         {
             last.end = last.end.max(key.end);
