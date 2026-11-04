@@ -56,7 +56,9 @@ impl Context {
             period_span: match hull {
                 // Mixed open bounds (one period open at the start, another at the
                 // end) give a both-open hull, which would read as timeless.
-                (Some(start), Some(end)) if (start, end) != open => Some(Period::new(open, start, end)),
+                (Some(start), Some(end)) if (start, end) != open => {
+                    Some(Period::new(open, start, end))
+                }
                 _ => None,
             },
             reg_meta_version: version.to_owned(),
