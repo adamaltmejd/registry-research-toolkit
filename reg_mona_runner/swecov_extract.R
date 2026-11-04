@@ -1,3 +1,5 @@
+options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-interactive only)
+
 # swecov_extract.R: the SWECOV order extract runner, run by hand inside MONA.
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
@@ -8,7 +10,8 @@
 # orders/archive/<nr>_<YYYY-MM-DD>.json; a failure leaves it in orders/ with
 # error_log.csv in its export folder. A rerun overwrites.
 #
-# Run: source("swecov_extract.R") in R on MONA, or `Rscript swecov_extract.R`.
+# Run: source("swecov_extract.R") in R on MONA, `Rscript swecov_extract.R`, or
+# `R CMD BATCH swecov_extract.R` on the batch server.
 # The contract it reads is crates/DESIGN.md, "MONA order file"; the rationale and
 # the exit codes are reg_mona_runner/DESIGN.md.
 #
