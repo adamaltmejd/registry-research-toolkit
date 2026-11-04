@@ -11,8 +11,7 @@ synthetic test fixtures don't carry catalog-scale content), so it is a `scripts/
 runner rather than a `tests/` module. Start the server first, for example
 ``reg-meta serve --db <dir> --port 8001``.
 
-`intended` grammar: an FQID (``scb/iot``, ``class/icd-10-se``) for a leaf result, or
-``group:<key>`` for a folded concept-group row.
+`intended` is an FQID (``scb/iot``, ``class/icd-10-se``).
 
 `expect`:
   - ``hit`` — the intended result should rank well TODAY (a regression guard).
@@ -54,18 +53,10 @@ def _page(url: str, query: str, group: str, limit: int) -> dict:
         return json.load(response)["data"]
 
 
-def _result_id(item: dict) -> str | None:
-    """The identifier a case's `intended` is matched against: ``group:<key>`` for a
-    folded concept-group row, else the leaf FQID."""
-    if item["type"] == "group":
-        return f"group:{item['key']}"
-    return item.get("fqid")
-
-
 def _rank_of(items: list[dict], intended: str) -> int | None:
     """1-based rank of `intended` among `items`, or None if absent."""
     for i, item in enumerate(items, start=1):
-        if _result_id(item) == intended:
+        if item.get("fqid") == intended:
             return i
     return None
 

@@ -20,8 +20,7 @@
 #   query     - the omnibox input.
 #   group     - which result group the intended result should land in
 #               (register | variable | classification).
-#   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se) or, for a
-#               folded concept group, "group:<group_key>".
+#   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se).
 #   expect    - "hit": should rank well today (regression guard).
 #               "gap": the steward-wanted answer does NOT surface today — a curation /
 #               concept-group target (e.g. golden-boost #311, or folding a classification
@@ -115,14 +114,6 @@ expect = "hit"
 confirmed = true
 note = "Marital status. Exact names lead (#1180, maintainer-accepted): ~60 variables named exactly Civilstånd fill the page, so the guard is LISA's plain Civilstånd, not RTB's civilgrel (Civilstånd tidigare relationsperson)."
 
-[[case]]
-query = "medborgarskap"
-group = "variable"
-intended = "group:medb"
-expect = "hit"
-confirmed = true
-note = "Citizenship folds into a concept group (group:medb)."
-
 # ── Code query -> the classification that CONTAINS it (#393 item 5, PR #504) ──
 [[case]]
 query = "C12"
@@ -164,35 +155,3 @@ intended = "class/sni2007"
 expect = "hit"
 confirmed = true
 note = "Classification name + vintage."
-
-[[case]]
-query = "SSYK"
-group = "classification"
-intended = "group:ssyk"
-expect = "hit"
-confirmed = true
-note = "Occupation classification folds across vintages into group:ssyk."
-
-[[case]]
-query = "yrke"
-group = "classification"
-intended = "group:ssyk"
-expect = "hit"
-confirmed = true
-note = "Occupation -> the SSYK classification group, rank 1."
-
-[[case]]
-query = "näringsgren"
-group = "classification"
-intended = "group:sni"
-expect = "hit"
-confirmed = true
-note = "Industry sector -> the SNI classification group, rank 1."
-
-[[case]]
-query = "SUN"
-group = "classification"
-intended = "group:sun"
-expect = "hit"
-confirmed = true
-note = "SUN folds into ONE umbrella group like group:ssyk — #516 added the group:sun concept group, so it now surfaces (rank 2 today). Residual standalone rows still appear alongside it: the by-design class/sun1996 predecessor edition and a couple of niva-* rows that aren't group:sun members — a build-side group-MEMBERSHIP matter (#516), not a search-surfacing gap, so this case guards the umbrella's presence, not the absence of residue."
