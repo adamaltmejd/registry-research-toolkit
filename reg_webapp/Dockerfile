@@ -73,7 +73,15 @@ RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
     && zstd -q -d --rm db.zst -o reg_meta.db \
     && if [ "$REG_META_CATALOG" != global ]; then \
         zstd -q -d --rm holdings.zst -o "reg_meta_${REG_META_CATALOG}.db"; \
-    fi
+    fi \
+    && mkdir -p /opt/reg_webapp \
+    && sha256sum reg_meta.db | cut -d' ' -f1 > /opt/reg_webapp/catalog.sha256
+
+# The last step hashes the unpacked base catalog, which came from the verified asset,
+# for pair admission (crates/reg-catalog/src/holdings.rs): hashing the 1.33 GB
+# catalog at boot on Fly's rootfs (~17 MB/s) kept SWECOV down ~80 s per restart. It
+# lives outside /opt/reg_meta, the served --db directory. The entrypoint passes it to
+# the server as REG_META_CATALOG_SHA256.
 
 # Read-only confinement of the baked WAL-mode DB relies on the server opening it
 # `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
@@ -106,6 +114,7 @@ RUN groupadd --system app && useradd --system --gid app --home /app app
 
 COPY --from=server /build/target/release/reg-meta /usr/local/bin/reg-meta
 COPY --from=regmeta-db /opt/reg_meta /opt/reg_meta
+COPY --from=regmeta-db /opt/reg_webapp/catalog.sha256 /opt/reg_webapp/catalog.sha256
 # chmod explicitly: don't rely on the source file's executable bit surviving the
 # CI checkout / build-context transfer.
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

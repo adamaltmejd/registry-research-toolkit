@@ -6,7 +6,7 @@
 # become MEASURABLE (the precondition #393 calls out; it gates the ranking items
 # 2/5/6/7). Run with:
 #
-#     uv run --no-project scripts/run_search_eval.py
+#     cargo xtask search-eval [--url URL] [--limit N]
 #
 # against a `reg-meta serve` over a real catalog — it reports, per case, whether
 # `intended` appears in its group and at what rank.
@@ -20,7 +20,7 @@
 #   query     - the omnibox input.
 #   group     - which result group the intended result should land in
 #               (register | variable | classification).
-#   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se).
+#   intended  - the navigable target: an FQID (scb/iot, class/icd).
 #   expect    - "hit": should rank well today (regression guard).
 #               "gap": the steward-wanted answer does NOT surface today — a curation /
 #               concept-group target (e.g. golden-boost #311, or folding a classification
@@ -118,7 +118,7 @@ note = "Marital status. Exact names lead (#1180, maintainer-accepted): ~60 varia
 [[case]]
 query = "C12"
 group = "classification"
-intended = "class/icd-10-se"
+intended = "class/icd"
 expect = "hit"
 confirmed = true
 note = "The #393 motivating case: C12 = malignant neoplasm in ICD-10-SE (also an SNI2007 code). Item 5 surfaces the owning classification."
@@ -126,7 +126,7 @@ note = "The #393 motivating case: C12 = malignant neoplasm in ICD-10-SE (also an
 [[case]]
 query = "F32"
 group = "classification"
-intended = "class/icd-10-se"
+intended = "class/icd"
 expect = "hit"
 confirmed = true
 note = "F32 = depressive episode (ICD-10-SE), via code-containment."
@@ -134,7 +134,7 @@ note = "F32 = depressive episode (ICD-10-SE), via code-containment."
 [[case]]
 query = "Z59.6"
 group = "classification"
-intended = "class/icd-10-se"
+intended = "class/icd"
 expect = "hit"
 confirmed = true
 note = "Dotted ICD code -> ICD-10-SE via code-containment."
@@ -143,7 +143,7 @@ note = "Dotted ICD code -> ICD-10-SE via code-containment."
 [[case]]
 query = "ICD-10"
 group = "classification"
-intended = "class/icd-10-se"
+intended = "class/icd"
 expect = "hit"
 confirmed = true
 note = "Classification acronym -> classification, rank 1."
@@ -151,7 +151,7 @@ note = "Classification acronym -> classification, rank 1."
 [[case]]
 query = "SNI 2007"
 group = "classification"
-intended = "class/sni2007"
+intended = "class/sni"
 expect = "hit"
 confirmed = true
 note = "Classification name + vintage."

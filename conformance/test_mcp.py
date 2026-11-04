@@ -4,7 +4,7 @@ the HTTP operations answer.
 Raw JSON-RPC over `httpx2` against `/mcp` on the `--server-cmd` server (stateless
 streamable HTTP, JSON responses), and one stdio session against `--mcp-cmd`. Both run
 only out of process, like the `api` cases; the oracles are the HTTP responses, which
-`test_http.py` pins, the operation table and the `tools/list` golden
+the `api` surface pins, the operation table and the `tools/list` golden
 (`cases/mcp/tools-list.json`).
 """
 
@@ -21,7 +21,6 @@ from urllib.parse import unquote
 import pytest
 from holdings_artifacts import HOLDINGS_CASE
 from http_cases import (
-    CASES,
     ServerPool,
     artifact_env,
     cached_case_artifact,
@@ -31,7 +30,7 @@ from http_cases import (
     select_json,
 )
 from jsonschema import Draft202012Validator
-from reader_artifacts import cached_reader_artifact
+from reader_artifacts import CASES, cached_reader_artifact
 
 PROTOCOL = "2025-11-25"
 HEADERS = {

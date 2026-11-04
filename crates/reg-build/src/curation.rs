@@ -1050,6 +1050,48 @@ fn field_delta(before: &Record, after: &Record) -> Result<FieldDelta, String> {
         .collect())
 }
 
+/// The subject fields that the checks after a field stage read: coordinate collisions,
+/// assignment validation (`affects`) and applied conflicts (`same_subject`, spans).
+/// Keep this list in step with those readers.
+const COORDINATE_FIELDS: [&str; 8] = [
+    "kind", "provider", "register", "table", "release", "spelling", "key", "period",
+];
+
+/// A premise reduced to its subjects' locators and coordinate fields. Absent fields stay
+/// absent, and subjects that shared one field map still share one.
+fn coordinate_premise(premise: Premise) -> Premise {
+    type Fields = std::sync::Arc<BTreeMap<String, serde_json::Value>>;
+    // Keyed by the source map's address; the entry holds the source `Arc`, so that
+    // address cannot be freed and reused while projecting.
+    let mut projected =
+        BTreeMap::<*const BTreeMap<String, serde_json::Value>, (Fields, Fields)>::new();
+    let subjects = premise
+        .subjects
+        .into_iter()
+        .map(|subject| {
+            let (_, fields) = projected
+                .entry(std::sync::Arc::as_ptr(&subject.fields))
+                .or_insert_with(|| {
+                    let fields = COORDINATE_FIELDS
+                        .iter()
+                        .filter_map(|&key| {
+                            subject.fields.get(key).map(|v| (key.to_owned(), v.clone()))
+                        })
+                        .collect::<BTreeMap<_, _>>();
+                    (subject.fields.clone(), std::sync::Arc::new(fields))
+                });
+            reg_resolve::curation::SourcePremise {
+                locator: subject.locator,
+                fields: fields.clone(),
+            }
+        })
+        .collect();
+    Premise {
+        subjects,
+        objects: Vec::new(),
+    }
+}
+
 /// Independent fields merge as patches, never as whole-record replacements.
 fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record, String> {
     let mut current = serde_json::to_value(current).map_err(|e| e.to_string())?;
@@ -1428,7 +1470,14 @@ fn run_selected(
                 if resolved.redundant {
                     findings.push(format!("{at}: redundant-set: set equals the source"));
                 }
-                accepted.push((*statement, resolved.premise, provider, register));
+                // A build applies field-stage statements from `field_applications`, so
+                // later readers need only each subject's coordinates (#2196).
+                let premise = if fields_stage && !record {
+                    coordinate_premise(resolved.premise)
+                } else {
+                    resolved.premise
+                };
+                accepted.push((*statement, premise, provider, register));
             }
             if stage == Phase::Fields {
                 crate::sets::memberships(

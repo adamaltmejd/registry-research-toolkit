@@ -6,28 +6,21 @@ cached artifact (`ServerPool`).
 
 from __future__ import annotations
 
-import json
 import os
 import re
 import shlex
 import signal
-import sqlite3
 import subprocess
 import time
-import tomllib
-from contextlib import closing, suppress
+from contextlib import suppress
 
 import httpx2
-from reader_artifacts import CASES, REPO, build_reader_artifact, cached_reader_artifact
+from reader_artifacts import REPO, cached_reader_artifact
 
 READY_PATH = "/openapi.json"
 # The line `reg-meta serve` prints on stderr once bound.
 LISTENING = re.compile(rb"^listening on \S+:(\d+)\n", re.MULTILINE)
 SERVER_READY_SECONDS = 120
-EXIT_STATUS = {
-    code["code"]: code.get("exit")
-    for code in tomllib.loads((CASES.parent / "api/errors.toml").read_text())["code"]
-}
 
 
 def select_json(value, path):
@@ -62,52 +55,6 @@ def cached_case_artifact(request):
     return cached_reader_artifact(fixture_source(request))
 
 
-def assert_http_case(case, tmp_path, servers):
-    """Run a case against `servers` (a `ServerPool`)."""
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
-    if "startup_error" in expected:
-        assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
-        return
-    responses = run_http_requests(request["requests"], case_clients(request, servers))
-    for response, oracle in zip(responses, expected, strict=True):
-        assert response["status"] == oracle["status"]
-        if "location" in oracle:
-            assert response["location"] == oracle["location"]
-        if "media_type" in oracle:
-            assert response["media_type"] == oracle["media_type"]
-        for name, value in oracle.get("headers", {}).items():
-            assert response["headers"].get(name) == value, name
-        if "bytes" in oracle:
-            assert response["content"] == (case / oracle["bytes"]).read_bytes()
-        projection = {
-            pointer: select_json(response["body"], pointer)
-            for pointer in oracle.get("json", {})
-        }
-        assert projection == oracle.get("json", {}), (
-            projection,
-            oracle.get("json", {}),
-        )
-        # An object's exact key set, for values no oracle can spell (a generation).
-        for pointer, keys in oracle.get("keys", {}).items():
-            assert sorted(select_json(response["body"], pointer)) == keys, pointer
-        if "members" in oracle:
-            assert_members(responses, oracle["members"])
-
-
-def assert_members(responses, members):
-    """A tie-order-free oracle across steps: `pointer` projected from each of
-    `steps` in turn and concatenated holds no repeats and exactly the `equals`
-    set."""
-    rows = [
-        row
-        for index in members["steps"]
-        for row in select_json(responses[index]["body"], members["pointer"])
-    ]
-    assert len(rows) == len(set(rows)), rows
-    assert set(rows) == set(members["equals"]), rows
-
-
 def case_clients(request, servers):
     """The `servers` clients of a case: its artifact's under `None`, each
     `artifacts` entry's under its name. An entry may name its own `fixture`."""
@@ -117,47 +64,6 @@ def case_clients(request, servers):
     }
     clients[None] = servers.client(artifact_env(cached_case_artifact(request)))
     return clients
-
-
-def assert_startup_refusal(request, refusal, servers, tmp_path):
-    """The server refuses the case's artifact: it prints the error document on
-    stderr and exits with the code's `exit` status in `api/errors.toml`, with the
-    oracle's `fields` when it gives them. The `manifest` overrides are written to the
-    private copy's `meta` table, a `null` deleting the key; `serve.db: "absent"`
-    serves an empty directory instead of an artifact."""
-    if request.get("serve", {}).get("db") == "absent":
-        (tmp_path / "absent").mkdir()
-        _assert_refused(servers, tmp_path / "absent", refusal)
-        return
-    path = build_reader_artifact(tmp_path / "catalog", fixture_source(request))
-    manifest = request.get("manifest", {})
-    with closing(sqlite3.connect(path)) as conn, conn:
-        conn.executemany(
-            "DELETE FROM meta WHERE key = ?",
-            [(key,) for key, value in manifest.items() if value is None],
-        )
-        conn.executemany(
-            "INSERT OR REPLACE INTO meta VALUES (?, ?)",
-            [(key, value) for key, value in manifest.items() if value is not None],
-        )
-    _assert_refused(servers, path.parent, refusal)
-
-
-def _assert_refused(servers, db, refusal):
-    completed = subprocess.run(
-        servers.argv(db, 0),
-        cwd=REPO,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
-    document = json.loads(completed.stderr.strip().splitlines()[-1])
-    assert document["code"] == refusal["code"], completed.stderr
-    if "fields" in refusal:
-        assert document["fields"] == refusal["fields"], completed.stderr
-    assert completed.returncode == EXIT_STATUS[refusal["code"]]
 
 
 def raw_body(step):

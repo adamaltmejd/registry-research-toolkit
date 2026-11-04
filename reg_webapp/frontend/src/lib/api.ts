@@ -396,6 +396,7 @@ export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
+export type CatalogFindingGroup = RustSchemas["FindingGroup"];
 export type CatalogSegment = RustSchemas["Segment"];
 export type Graph = RustSchemas["Graph"];
 
@@ -453,16 +454,22 @@ export async function getTableSegments(
   return pages.flat();
 }
 
-/** Review items and notices for a catalog subject, including its descendants. */
-export function getFindings(
+/** Review items and notices for a catalog subject, including its descendants: one
+ * group per severity and code, with its count and a first page of items. `code` with a
+ * group's `next_cursor` fetches that group's next page. */
+export async function getFindings(
   ref: string,
-  options?: { signal?: AbortSignal },
-): Promise<CatalogFinding[]> {
-  return rustGet<CatalogFinding[]>(
+  options?: { code?: string; cursor?: string; signal?: AbortSignal },
+): Promise<CatalogFindingGroup[]> {
+  const query = new URLSearchParams();
+  if (options?.code !== undefined) query.set("code", options.code);
+  if (options?.cursor !== undefined) query.set("cursor", options.cursor);
+  const data = await rustGet<RustSchemas["FindingGroups"]>(
     `/findings/${encodeFqid(ref)}`,
-    undefined,
+    query,
     options,
   );
+  return data.groups;
 }
 
 export type ValueSetRef = RustSchemas["ValueSetRef"];

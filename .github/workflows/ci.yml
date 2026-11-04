@@ -70,23 +70,6 @@ jobs:
       # Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust
 
-  # The Python tooling suite; it needs no Rust binary. `timeout-minutes` is the
-  # suite's CI-job budget in ARCHITECTURE.md "Tiers", setup included: a run over it
-  # is a test-audit finding, not a reason to raise the number.
-  scripts:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          sparse-checkout: *no-locks
-          sparse-checkout-cone-mode: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-        with:
-          version: "0.13.6"
-      - run: uv sync --frozen
-      - run: uv run python -m pytest scripts/tests -n auto
-
   changes:
     runs-on: ubuntu-latest
     outputs:

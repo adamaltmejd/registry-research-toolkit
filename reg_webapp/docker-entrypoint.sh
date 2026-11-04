@@ -15,7 +15,8 @@ PORT=8000
 BASE="http://127.0.0.1:${PORT}"
 # API probes carry the edge's cache-generation parameter, as proxied requests do.
 EDGE_V="__edge_v=smoke"
-# Pair admission hashes the base catalog before binding.
+# Paired boot keeps the longer deadline for the cold first search below, which
+# reuses it (reg_webapp/DESIGN.md → Deployment).
 if [ "$REG_META_CATALOG" = global ]; then
     READY_DEADLINE=${REG_META_READY_DEADLINE:-60}
 else
@@ -34,10 +35,12 @@ set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
 fi
-# The served files' digest, computed when the image was built (Dockerfile),
-# avoids a separate validator hash on the throttled rootfs.
+# The served files' digest and the base catalog's, computed when the image was built
+# (Dockerfile), avoid hashing the DBs at boot on the throttled rootfs: the validators'
+# token and pair admission's check of the holdings pin (~80 s for SWECOV otherwise).
 REG_META_CONTENT_DIGEST=$(cat /opt/reg_webapp/content.sha256)
-export REG_META_CONTENT_DIGEST
+REG_META_CATALOG_SHA256=$(cat /opt/reg_webapp/catalog.sha256)
+export REG_META_CONTENT_DIGEST REG_META_CATALOG_SHA256
 reg-meta "$@" &
 SERVER_PID=$!
 

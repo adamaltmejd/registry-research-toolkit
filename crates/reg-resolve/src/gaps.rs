@@ -2,7 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, next_iso_day};
+use reg_core::{Interval, hull, next_iso_day};
 
 use crate::{
     Gap, ResolvedOccurrence, ResolvedRelease, ResolvedTable, Variable, covers, pieces, placed, span,
@@ -64,13 +64,6 @@ fn stretch(step: Option<u32>, spans: Vec<Interval>) -> Vec<Interval> {
 
 fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 { a } else { gcd(b, a % b) }
-}
-
-/// The smallest interval holding every one of `spans`.
-fn hull(spans: &[Interval]) -> Option<Interval> {
-    let from = spans.iter().map(|s| &s.0).min()?;
-    let to = spans.iter().map(|s| &s.1).max()?;
-    Some((from.clone(), to.clone()))
 }
 
 /// T5 in the tables with placed releases: the days between a table's used columns and

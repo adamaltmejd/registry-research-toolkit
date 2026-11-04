@@ -24,7 +24,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 from holdings_artifacts import HOLDINGS_CASE, prepare_holdings, run
-from http_cases import CASES, ServerPool, artifact_env, cached_case_artifact
+from http_cases import ServerPool, artifact_env, cached_case_artifact
+from reader_artifacts import CASES
 
 if TYPE_CHECKING:
     from pathlib import Path

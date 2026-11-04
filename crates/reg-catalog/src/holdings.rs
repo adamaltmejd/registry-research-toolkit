@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
+use reg_core::days::Span;
 use reg_core::hex;
 
 use crate::{Catalog, Code, Error, connect, read_meta};
@@ -20,9 +21,6 @@ pub(crate) struct Holdings {
     meta: BTreeMap<String, String>,
     possession: Possession,
 }
-
-/// `[start, end)` day numbers.
-type Span = (i64, i64);
 
 /// What a steward deployment serves: the public ids an accepted placement names, and
 /// the registers and providers above them, each with the years held (placements
@@ -92,15 +90,7 @@ impl Possession {
             &mut possession.providers,
         ] {
             for spans in map.values_mut() {
-                spans.sort_unstable();
-                let mut merged: Vec<Span> = Vec::with_capacity(spans.len());
-                for &(start, end) in spans.iter() {
-                    match merged.last_mut() {
-                        Some(last) if start <= last.1 => last.1 = last.1.max(end),
-                        _ => merged.push((start, end)),
-                    }
-                }
-                *spans = merged;
+                *spans = reg_core::days::merge(std::mem::take(spans));
             }
         }
         Ok(possession)
@@ -167,10 +157,18 @@ fn file_digest(path: &Path) -> std::io::Result<String> {
 impl Catalog {
     /// Admit the reference catalog and, for a non-global selection, its pinned
     /// `reg_meta_<steward>.db` partner. The owner comes from startup configuration.
+    /// `catalog_sha256`, when given, is the base catalog's SHA-256 computed when the
+    /// image was built; the partner's pin is checked against it instead of hashing the
+    /// file at boot (`reg_webapp/DESIGN.md`, "Deployment").
     ///
     /// # Errors
     /// `invalid_parameter`, `db_not_found` or `schema_incompatible` before serving.
-    pub fn open_selected(dir: &Path, selected: &str, mmap_size: i64) -> Result<Self, Error> {
+    pub fn open_selected(
+        dir: &Path,
+        selected: &str,
+        mmap_size: i64,
+        catalog_sha256: Option<&str>,
+    ) -> Result<Self, Error> {
         let mut catalog = Self::open(dir, mmap_size)?;
         if selected == "global" {
             return Ok(catalog);
@@ -249,7 +247,10 @@ impl Catalog {
         if meta.get("logo").is_none_or(|value| value.trim().is_empty()) {
             return Err(refuse("missing logo"));
         }
-        let digest = file_digest(&catalog.path).map_err(|_| refuse("catalog cannot be hashed"))?;
+        let digest = match catalog_sha256 {
+            Some(digest) => digest.to_owned(),
+            None => file_digest(&catalog.path).map_err(|_| refuse("catalog cannot be hashed"))?,
+        };
         if meta.get("catalog_sha256") != Some(&digest) {
             return Err(refuse("catalog file digest does not match"));
         }

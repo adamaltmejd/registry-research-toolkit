@@ -20,8 +20,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 from holdings_artifacts import HOLDINGS_CASE
-from http_cases import CASES, artifact_env
-from reader_artifacts import cached_reader_artifact
+from http_cases import artifact_env
+from reader_artifacts import CASES, cached_reader_artifact
 
 if TYPE_CHECKING:
     from pathlib import Path

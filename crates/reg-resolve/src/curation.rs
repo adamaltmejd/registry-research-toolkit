@@ -84,10 +84,10 @@ impl Source {
     }
 }
 
-/// Shared value-set facts serialized once for an immutable application phase.
+/// Shared value-set facts serialized once for an immutable application phase. Only the
+/// serialized sources are kept: they carry each set's hash and items (#2196).
 #[derive(Default)]
 pub struct SharedSources {
-    records: Vec<Record>,
     sources: Vec<Source>,
 }
 
@@ -99,8 +99,9 @@ impl SharedSources {
             .filter(|record| matches!(record, Record::ValueSet(_)))
             .cloned()
             .collect::<Vec<_>>();
-        let sources = sources(&records, &Ledger::default());
-        Self { records, sources }
+        Self {
+            sources: sources(&records, &Ledger::default()),
+        }
     }
 }
 
@@ -724,17 +725,20 @@ fn states_value_set(
     );
     let mut expected = items.to_vec();
     expected.sort();
+    let states = |stated: &[reg_frame::Item]| {
+        let mut stated = stated.to_vec();
+        stated.sort();
+        stated == expected
+    };
     hashes.into_iter().any(|hash| {
-        records.iter().chain(&shared.records).any(|record| {
-            let Record::ValueSet(set) = record else {
-                return false;
-            };
-            if set.hash != hash {
-                return false;
-            }
-            let mut stated = set.items.clone();
-            stated.sort();
-            stated == expected
+        records.iter().any(|record| {
+            matches!(record, Record::ValueSet(set) if set.hash == hash && states(&set.items))
+        }) || shared.sources.iter().any(|source| {
+            source.text("hash") == Some(hash)
+                && states(
+                    &Vec::<reg_frame::Item>::deserialize(&source.fields["items"])
+                        .expect("a shared source is a serialized value set"),
+                )
         })
     })
 }
