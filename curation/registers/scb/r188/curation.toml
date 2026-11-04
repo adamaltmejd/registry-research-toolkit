@@ -478,3 +478,15 @@ kind = "set"
 subject = "landfordelad-extrastat: transaktionsslag @2011-01-01..2026-12-31 where key = 'v18378'"
 fields = { "variable" = "transaktionstyp-transtyp" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Transtyp in varu-landfordelat-intrastat; Transaktionsslag in landfordelad-extrastat: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only note is the 2-digit transaction code being mandatory for dispatch only; extrastat has no opdef); folded into transaktionstyp-transtyp."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: Varde where key = 'v19317'"
+fields = { "variable" = "none" }
+evidence = "Intrastat 2011-2026 lists two keys under the one delivered column Varde: v19318 (fakturerat värde) and v19317 (statistiskt värde); 1999-2010 list only v19318. No delivery document says which value the column holds. Maintainer ruling 2026-11-04 (#2073): withhold v19317 on Intrastat so Varde reads as the invoiced value; revisit if SCB or a SWECOV delivery note says otherwise. v19317 keeps the Extrastat Varde."
+
+[[statement]]
+kind = "set"
+subject = "var:fakturerat-varde"
+fields = { "description" = "Varornas fakturerade värde. Från 2019 anger SCB att det fakturerade värdet räknas om till statistiskt värde med särskilda omräkningsfaktorer." }
+evidence = "v19318 is listed under Intrastat Varde in every release 1999-2026; v19317's operational definition from the 2019 release on: 'Fakturerat värde är omräknat till statistiskt värde med hjälp av speciella omräkningsfaktorer' (2011-2018: statistical value from a separate survey every 5-7 years). Maintainer ruling 2026-11-04 (#2073)."

@@ -28484,30 +28484,6 @@ evidence = "Samma källkolumn har olika ägare i på varandra följande observer
 
 [[statement]]
 kind = "set"
-subject = "var:am0170"
-fields = { "sets" = [] }
-evidence = "The same source column has a later owner whose definition is not supplied.\ncatalog:occurrence:497282\ncatalog:occurrence:498417\ncatalog:variable_text:46025:8401:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:am0170"
-fields = { "tags" = ["employment"] }
-evidence = "The same source column has a later owner whose definition is not supplied.\ncatalog:occurrence:497282\ncatalog:occurrence:498417\ncatalog:variable_text:46025:8401:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:am0180"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i olika perioder; motpartens definition finns inte i packetet.\ncatalog:occurrence:497283\ncatalog:occurrence:498418"
-
-[[statement]]
-kind = "set"
-subject = "var:am0180"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika ägare i olika perioder; motpartens definition finns inte i packetet.\ncatalog:occurrence:497283\ncatalog:occurrence:498418"
-
-[[statement]]
-kind = "set"
 subject = "var:am0181"
 fields = { "sets" = [] }
 evidence = "The same source column has a subsequent owner, scb/ulf/buller-harledd; the supplied evidence does not establish whether the period split is conceptually correct.\ncatalog:occurrence:497284\ncatalog:occurrence:498419"
@@ -28628,18 +28604,6 @@ evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:46036:3652:5844
 
 [[statement]]
 kind = "set"
-subject = "var:am0290"
-fields = { "sets" = [] }
-evidence = "The same source column has a later owner whose definition is not supplied.\ncatalog:occurrence:497296\ncatalog:occurrence:498430\ncatalog:variable_text:46037:8401:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:am0290"
-fields = { "tags" = ["employment"] }
-evidence = "The same source column has a later owner whose definition is not supplied.\ncatalog:occurrence:497296\ncatalog:occurrence:498430\ncatalog:variable_text:46037:8401:12784"
-
-[[statement]]
-kind = "set"
 subject = "var:am0300"
 fields = { "sets" = [] }
 evidence = "The catalog records a period-split counterpart.\ncatalog:occurrence:497297\ncatalog:occurrence:498431"
@@ -28649,18 +28613,6 @@ kind = "set"
 subject = "var:am0300"
 fields = { "tags" = ["employment"] }
 evidence = "The catalog records a period-split counterpart.\ncatalog:occurrence:497297\ncatalog:occurrence:498431"
-
-[[statement]]
-kind = "set"
-subject = "var:am0301"
-fields = { "sets" = [] }
-evidence = "The catalog records a period-split counterpart.\ncatalog:occurrence:497298\ncatalog:occurrence:498432"
-
-[[statement]]
-kind = "set"
-subject = "var:am0301"
-fields = { "tags" = ["employment"] }
-evidence = "The catalog records a period-split counterpart.\ncatalog:occurrence:497298\ncatalog:occurrence:498432"
 
 [[statement]]
 kind = "set"
@@ -73526,18 +73478,6 @@ evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens defi
 
 [[statement]]
 kind = "set"
-subject = "var:kon-person-2-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497395\ncatalog:occurrence:498525"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-2-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497395\ncatalog:occurrence:498525"
-
-[[statement]]
-kind = "set"
 subject = "var:kon-person-3"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497396\ncatalog:occurrence:498526"
@@ -73547,18 +73487,6 @@ kind = "set"
 subject = "var:kon-person-3"
 fields = { "tags" = ["demographics"] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497396\ncatalog:occurrence:498526"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-3-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497396\ncatalog:occurrence:498526"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-3-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497396\ncatalog:occurrence:498526"
 
 [[statement]]
 kind = "set"
@@ -73574,18 +73502,6 @@ evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens defi
 
 [[statement]]
 kind = "set"
-subject = "var:kon-person-4-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497397\ncatalog:occurrence:498527"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-4-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497397\ncatalog:occurrence:498527"
-
-[[statement]]
-kind = "set"
 subject = "var:kon-person-5"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497398\ncatalog:occurrence:498528"
@@ -73595,18 +73511,6 @@ kind = "set"
 subject = "var:kon-person-5"
 fields = { "tags" = ["demographics"] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497398\ncatalog:occurrence:498528"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-5-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497398\ncatalog:occurrence:498528"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-5-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497398\ncatalog:occurrence:498528"
 
 [[statement]]
 kind = "set"
@@ -73622,18 +73526,6 @@ evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens defi
 
 [[statement]]
 kind = "set"
-subject = "var:kon-person-6-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497399\ncatalog:occurrence:498529"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-6-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497399\ncatalog:occurrence:498529"
-
-[[statement]]
-kind = "set"
 subject = "var:kon-person-7"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497400\ncatalog:occurrence:498530"
@@ -73643,18 +73535,6 @@ kind = "set"
 subject = "var:kon-person-7"
 fields = { "tags" = ["demographics"] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497400\ncatalog:occurrence:498530"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-7-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497400\ncatalog:occurrence:498530"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-7-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497400\ncatalog:occurrence:498530"
 
 [[statement]]
 kind = "set"
@@ -73670,18 +73550,6 @@ evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens defi
 
 [[statement]]
 kind = "set"
-subject = "var:kon-person-8-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497401\ncatalog:occurrence:498531"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-8-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497401\ncatalog:occurrence:498531"
-
-[[statement]]
-kind = "set"
 subject = "var:kon-person-9"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497450\ncatalog:occurrence:498567"
@@ -73691,18 +73559,6 @@ kind = "set"
 subject = "var:kon-person-9"
 fields = { "tags" = ["demographics"] }
 evidence = "Identitetsfaktum visar ett perioduppdelat ägarbyte; motpartens definition saknas i packet.\ncatalog:occurrence:497450\ncatalog:occurrence:498567"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-9-2"
-fields = { "sets" = [] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497450\ncatalog:occurrence:498567"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-person-9-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Motsvarighetens definition saknas i paketet.\ncatalog:occurrence:497450\ncatalog:occurrence:498567"
 
 [[statement]]
 kind = "set"
@@ -108856,12 +108712,6 @@ evidence = "r195 defines isolation through living alone and rarely meeting close
 
 [[statement]]
 kind = "set"
-subject = "var:hjalp-att-overklaga-1"
-fields = { "tags" = ["democracy"] }
-evidence = "r227 measures knowing someone who can help appeal an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48962\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49156\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
-
-[[statement]]
-kind = "set"
 subject = "var:hjalp-att-overklaga-2"
 fields = { "tags" = ["democracy"] }
 evidence = "r228 measures knowing where to obtain help appealing an authority decision, supporting the legal-proceedings theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:48963\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:49157\n\nMaintainer ruling 2026-11-02: the ULF appeal battery is democracy, not crime; appealing an authority decision is civic redress, not criminal-justice procedure."
@@ -111878,3 +111728,129 @@ kind = "set"
 subject = "individer-16plus-ulf: HA14ASTMAB where key = 'v31077'"
 fields = { "definition" = "Urvalspersonen har angett att han/hon har astma samt bedömt om besvären är svåra eller lätta." }
 evidence = "Label \"Hur svåra besvär med astma\"; text copied from HA14ALLERB (allergi); HA14ASTMAA says astma."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: AM0170 where key = 'v9928'"
+fields = { "variable" = "buller-pa-arbete-hela-tiden-ibland" }
+evidence = "survey-9: ULF AM0170, same question about noise at work. Codes 1=För jämnan / Hela tiden (i stort sett), 2=Ibland in both; v9928 adds 0=Ej aktuell and 9=Partiellt bortfall/Indirekt intervju, v47934 has 8=Vet ej, 9=Vill ej svara. Periods 1975-2004 (v9928) and 2006-2013 (v47934) do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: AM0170 @1980..2001 where key = 'v9928'"
+fields = { "variable" = "buller-pa-arbete-hela-tiden-ibland" }
+evidence = "survey-9: ULF AM0170, same question about noise at work. Codes 1=För jämnan / Hela tiden (i stort sett), 2=Ibland in both; v9928 adds 0=Ej aktuell and 9=Partiellt bortfall/Indirekt intervju, v47934 has 8=Vet ej, 9=Vill ej svara. Periods 1975-2004 (v9928) and 2006-2013 (v47934) do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: AM0170 @1989..2004 where key = 'v9928'"
+fields = { "variable" = "buller-pa-arbete-hela-tiden-ibland" }
+evidence = "survey-9: ULF AM0170, same question about noise at work. Codes 1=För jämnan / Hela tiden (i stort sett), 2=Ibland in both; v9928 adds 0=Ej aktuell and 9=Partiellt bortfall/Indirekt intervju, v47934 has 8=Vet ej, 9=Vill ej svara. Periods 1975-2004 (v9928) and 2006-2013 (v47934) do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: AM0180 where key = 'v14517'"
+fields = { "variable" = "buller-pa-arbetet-oronbedovande" }
+evidence = "survey-10: ULF AM0180, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v14517 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v47935 2006-2013; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: AM0180 @1980..2001 where key = 'v14517'"
+fields = { "variable" = "buller-pa-arbetet-oronbedovande" }
+evidence = "survey-10: ULF AM0180, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v14517 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v47935 2006-2013; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: AM0180 @1989..2004 where key = 'v14517'"
+fields = { "variable" = "buller-pa-arbetet-oronbedovande" }
+evidence = "survey-10: ULF AM0180, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v14517 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v47935 2006-2013; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: MA0211 where key = 'v49210'"
+fields = { "variable" = "hjalp-overklaga-1" }
+evidence = "survey-13: ULF MA0211, same question; v49210's operational definition says SCB judges it comparable across the 2006 method change. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v11043 (1976-2004) adds '.'/0=Värde saknas. No overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: AM0301 where key = 'v13755'"
+fields = { "variable" = "tunga-lyft-harledd" }
+evidence = "survey-27: ULF AM0301, same four-level question on heavy lifting (1=dagligen, 2=någon gång per vecka, 3=sällan, 4=ej). v13755 (1975-2004) has 9=Bortfallskod; v35863 (2006-2020) has 8=Vet ej, 9=Vill ej svara. No overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: AM0301 @1980..2001 where key = 'v13755'"
+fields = { "variable" = "tunga-lyft-harledd" }
+evidence = "survey-27: ULF AM0301, same four-level question on heavy lifting (1=dagligen, 2=någon gång per vecka, 3=sällan, 4=ej). v13755 (1975-2004) has 9=Bortfallskod; v35863 (2006-2020) has 8=Vet ej, 9=Vill ej svara. No overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: AM0301 @1989..2004 where key = 'v13755'"
+fields = { "variable" = "tunga-lyft-harledd" }
+evidence = "survey-27: ULF AM0301, same four-level question on heavy lifting (1=dagligen, 2=någon gång per vecka, 3=sällan, 4=ej). v13755 (1975-2004) has 9=Bortfallskod; v35863 (2006-2020) has 8=Vet ej, 9=Vill ej svara. No overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: AM0290 where key = 'v13754'"
+fields = { "variable" = "tunga-lyft-i-arbetet" }
+evidence = "survey-28: ULF AM0290, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v13754 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v35860 from 2006; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: AM0290 @1980..2001 where key = 'v13754'"
+fields = { "variable" = "tunga-lyft-i-arbetet" }
+evidence = "survey-28: ULF AM0290, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v13754 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v35860 from 2006; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: AM0290 @1989..2004 where key = 'v13754'"
+fields = { "variable" = "tunga-lyft-i-arbetet" }
+evidence = "survey-28: ULF AM0290, same question. Codes 1=Ja, 2=Nej, 8=Vet ej, 9=Vill ej svara in both; v13754 (1975-2004) adds '.'/0=Värde saknas and 3, 4, 6, 7=Okänt värde. v35860 from 2006; no overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0212 where key = 'v47847'"
+fields = { "variable" = "kon-person-2" }
+evidence = "survey-17: ULF kön for person 2 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0213 where key = 'v47848'"
+fields = { "variable" = "kon-person-3" }
+evidence = "survey-18: ULF kön for person 3 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0214 where key = 'v47849'"
+fields = { "variable" = "kon-person-4" }
+evidence = "survey-19: ULF kön for person 4 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0215 where key = 'v47850'"
+fields = { "variable" = "kon-person-5" }
+evidence = "survey-20: ULF kön for person 5 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0216 where key = 'v47851'"
+fields = { "variable" = "kon-person-6" }
+evidence = "survey-21: ULF kön for person 6 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0217 where key = 'v47852'"
+fields = { "variable" = "kon-person-7" }
+evidence = "survey-22: ULF kön for person 7 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA0218 where key = 'v47853'"
+fields = { "variable" = "kon-person-8" }
+evidence = "survey-23: ULF kön for person 8 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: BA3519 where key = 'v47896'"
+fields = { "variable" = "kon-person-9" }
+evidence = "survey-24: ULF kön for person 9 in the household, 1=Man, 2=Kvinna in both keys. The older key adds 0=Uppgift är ej aktuellt (no such person), Okänt värde and 9=Uppgift saknas in some years; the 2006 key adds 8/9=Vet ej/Vill ej svara. Periods do not overlap. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."

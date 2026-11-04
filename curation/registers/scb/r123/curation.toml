@@ -11300,8 +11300,8 @@ evidence = "Mäter känsla av otillräcklig arbetsinsats.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:overtid-enbart-med-ersattning"
-fields = { "sets" = [] }
-evidence = "Samma begrepp som motsvarande senare källkolumnsperiod är korrekt avgränsat; mäter övertid. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Drar-in-pa-luncher-arbetar-over mäter stor arbetsmängd med flera möjliga konsekvenser, inte ett avgränsat mått på övertid. membership-0027: Mäter övertidens frekvens, förekomst och timmar, inklusive ersatta och oersatta delar. Identitets- och tröskeloklarheter ändrar inte konceptet. Tidopeng gäller ersättning och undantas. membership-0028: Mäter förekomst av ersatt respektive total övertid; normal veckoarbetstid är utesluten. membership-0029: Den enda valda övertidsvariabeln kodar ersättningsform, som den fasta definitionen exkluderar, trots tidigare medlemsförslag.\ncatalog:occurrence:26419\ncatalog:variable_text:3448:19723:20089\ncatalog:variable_text:3513:18628:18993\ncatalog:variable_text:3585:18628:18993\ncatalog:variable_text:3586:18628:18993\ncatalog:variable_text:3718:18628:18993\ncatalog:variable_text:3719:12053:12418\ncatalog:variable_text:3720:17167:17532\ncatalog:variable_text:3721:17897:18262\ncatalog:variable_text:3722:18628:18993\ncatalog:variable_text:3723:18628:18993\ncatalog:variable_text:3724:17897:18262\ncatalog:variable_text:3725:18628:18993\ncatalog:variable_text:3726:18628:18993\ncatalog:variable_text:3859:12053:12418"
+fields = { "sets" = ["overtidsarbete"] }
+evidence = "Takes over the overtidsarbete membership of overtid-med-ersattning, folded in by survey-2 (#2073). Samma begrepp som motsvarande senare källkolumnsperiod är korrekt avgränsat; mäter övertid. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0026: Drar-in-pa-luncher-arbetar-over mäter stor arbetsmängd med flera möjliga konsekvenser, inte ett avgränsat mått på övertid. membership-0027: Mäter övertidens frekvens, förekomst och timmar, inklusive ersatta och oersatta delar. Identitets- och tröskeloklarheter ändrar inte konceptet. Tidopeng gäller ersättning och undantas. membership-0028: Mäter förekomst av ersatt respektive total övertid; normal veckoarbetstid är utesluten. membership-0029: Den enda valda övertidsvariabeln kodar ersättningsform, som den fasta definitionen exkluderar, trots tidigare medlemsförslag.\ncatalog:occurrence:26419\ncatalog:variable_text:3448:19723:20089\ncatalog:variable_text:3513:18628:18993\ncatalog:variable_text:3585:18628:18993\ncatalog:variable_text:3586:18628:18993\ncatalog:variable_text:3718:18628:18993\ncatalog:variable_text:3719:12053:12418\ncatalog:variable_text:3720:17167:17532\ncatalog:variable_text:3721:17897:18262\ncatalog:variable_text:3722:18628:18993\ncatalog:variable_text:3723:18628:18993\ncatalog:variable_text:3724:17897:18262\ncatalog:variable_text:3725:18628:18993\ncatalog:variable_text:3726:18628:18993\ncatalog:variable_text:3859:12053:12418"
 
 [[statement]]
 kind = "set"
@@ -11314,12 +11314,6 @@ kind = "set"
 subject = "var:overtid-frekvens"
 fields = { "tags" = ["employment"] }
 evidence = "Mäter övertidens frekvens.\ncatalog:variable_text:3719:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-med-ersattning"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har olika ägare och operationaliseringen skiljer enbart ersatt övertid från ersatt övertid.\ncatalog:occurrence:26187\ncatalog:occurrence:26419\ncatalog:variable_text:3720:17167:17532"
 
 [[statement]]
 kind = "set"
@@ -14181,12 +14175,6 @@ evidence = "r108 measures work time pressure leaving no time to discuss or think
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-med-ersattning"
-fields = { "sets" = ["overtidsarbete"] }
-evidence = "r131 asks whether compensated overtime occurred; r67 specifies exclusively compensated overtime. Both measure overtime occurrence, including compensated parts as allowed by r196.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:26187\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3718\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/overtidsarbete"
-
-[[statement]]
-kind = "set"
 subject = "var:rormask"
 fields = { "sets" = ["anvandning-av-arbetsutrustning"] }
 evidence = "r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193. | r141 measures operation of movable machinery for at least a quarter of working time, explicitly excluding buses and cars. This matches the specified machinery-use inclusion in r193.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:3749\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/arbetsmiljoundersokningen/anvandning-av-arbetsutrustning"
@@ -15105,12 +15093,6 @@ evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-med-ersattning"
-fields = { "label" = "Övertid med ersättning i huvudsysslan, anställda (arbetar enbart övertid)" }
-evidence = "#2102 same-label cluster 'Övertid med ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, medium confidence; enbers is 'arbetar enbart övertid som ger ersättning' while HUOTERS and hsoters (a rename) are 'arbetar övertid som ger ersättning'."
-
-[[statement]]
-kind = "set"
 subject = "var:overtid-med-ersattning-2"
 fields = { "label" = "Övertid med ersättning i huvudsysslan, anställda (arbetar övertid)" }
 evidence = "#2102 same-label cluster 'Övertid med ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, medium confidence; enbers is 'arbetar enbart övertid som ger ersättning' while HUOTERS and hsoters (a rename) are 'arbetar övertid som ger ersättning'."
@@ -15368,3 +15350,15 @@ kind = "set"
 subject = "var:vriderof"
 fields = { "description" = "Hur ofta den sysselsatte upprepat böjer eller vrider kroppen i arbetet (frekvensskala)." }
 evidence = "Frequency of repeated bending/twisting, scale #9747."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: enbers where key = 'v6771'"
+fields = { "variable" = "overtid-enbart-med-ersattning" }
+evidence = "survey-2: Arbetsmiljöundersökningen column enbers, key v6771 2005-2017 and v32699 2019-2021, same table, no overlap. The 2017 operational definition of v6771 ('Arbetar enbart övertid som ger ersättning', Registerinformation.csv:row=983470, r12574) equals v32699's definition (row=252123, r15136). Codes 1=Ja, 2=Nej in both; v6771 adds 8=Vet ej, 9=Partiellt bortfall. Only the enbers occurrences move; HUOTERS (AKU, Arbetsorsakade besvär) stays. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: enbers where key = 'v6771'"
+fields = { "variable" = "overtid-enbart-med-ersattning" }
+evidence = "survey-2: Arbetsmiljöundersökningen column enbers, key v6771 2005-2017 and v32699 2019-2021, same table, no overlap. The 2017 operational definition of v6771 ('Arbetar enbart övertid som ger ersättning', Registerinformation.csv:row=983470, r12574) equals v32699's definition (row=252123, r15136). Codes 1=Ja, 2=Nej in both; v6771 adds 8=Vet ej, 9=Partiellt bortfall. Only the enbers occurrences move; HUOTERS (AKU, Arbetsorsakade besvär) stays. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
