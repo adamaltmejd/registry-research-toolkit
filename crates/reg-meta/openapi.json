@@ -4410,7 +4410,8 @@
                 }
               },
               "description": {
-                "type": "string"
+                "type": "string",
+                "description": "The curated description; without one, the description every member states\nalike."
               },
               "fqid": {
                 "type": "string"
@@ -4608,31 +4609,6 @@
           }
         }
       },
-      "ShowSetColumn": {
-        "type": "object",
-        "description": "A table and column name the member appears under.",
-        "required": [
-          "table",
-          "spelling",
-          "periods"
-        ],
-        "properties": {
-          "periods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Period"
-            },
-            "description": "The column's periods, in time order."
-          },
-          "spelling": {
-            "type": "string"
-          },
-          "table": {
-            "type": "string",
-            "description": "The table's fqid."
-          }
-        }
-      },
       "ShowSetFacet": {
         "type": "object",
         "required": [
@@ -4657,16 +4633,13 @@
         "required": [
           "fqid",
           "name",
-          "columns",
+          "segments",
           "facets"
         ],
         "properties": {
-          "columns": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShowSetColumn"
-            },
-            "description": "The member's columns, ordered by table then spelling."
+          "description": {
+            "type": "string",
+            "description": "The curated description, only where it differs from the set's."
           },
           "facets": {
             "type": "array",
@@ -4680,6 +4653,13 @@
           },
           "name": {
             "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "description": "The member's whole per-period list, as `segments` serves it without evidence."
           }
         }
       },

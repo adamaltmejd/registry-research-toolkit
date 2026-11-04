@@ -1129,6 +1129,10 @@ export interface components {
             unit_type: string | null;
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
+            /**
+             * @description The curated description; without one, the description every member states
+             *     alike.
+             */
             description?: string;
             fqid: string;
             /** @enum {string} */
@@ -1187,26 +1191,20 @@ export interface components {
             id: string;
             label: string;
         };
-        /** @description A table and column name the member appears under. */
-        ShowSetColumn: {
-            /** @description The column's periods, in time order. */
-            periods: components["schemas"]["Period"][];
-            spelling: string;
-            /** @description The table's fqid. */
-            table: string;
-        };
         ShowSetFacet: {
             axis: string;
             label: string;
             value: string;
         };
         ShowSetMember: {
-            /** @description The member's columns, ordered by table then spelling. */
-            columns: components["schemas"]["ShowSetColumn"][];
+            /** @description The curated description, only where it differs from the set's. */
+            description?: string;
             /** @description The member's coordinates in the set's axis order. */
             facets: components["schemas"]["ShowSetFacet"][];
             fqid: string;
             name: string;
+            /** @description The member's whole per-period list, as `segments` serves it without evidence. */
+            segments: components["schemas"]["Segment"][];
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {

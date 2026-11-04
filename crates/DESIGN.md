@@ -2597,7 +2597,12 @@ located warnings, while release builds collect the refusals in their report.
 
 `show` at `set/<provider>/<register>/<slug>` returns `kind: "set"`, its `fqid`, `name`,
 optional `description`, register public id, ordered `axes`, and `members`. Each member
-supplies `fqid`, `name` and `facets` (`axis`, `value`, `label`) in axis order. Members
+supplies `fqid`, `name`, `segments` (its whole per-period list: every row `segments`
+serves for it, unpaged, in that order and shape, without evidence) and `facets` (`axis`,
+`value`, `label`) in axis order, so the group page needs one request. The set's
+`description` is its curated one; without one, a description every member states alike
+is sent once as the set's (maintainer 2026-11-04). A member carries its own
+`description` only where it differs from the set's. Members
 sort by facet value in axis order (missing coordinates first), then by name and public id.
 `tags` is the union of the members' tags in public-id order. The summary contains
 curated presentation data; source evidence remains on the individual variables.
