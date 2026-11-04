@@ -55,58 +55,23 @@ fn sources(
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
     let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
         .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
-    let required_keys: BTreeMap<_, _> = topology
-        .table
-        .iter()
-        .map(|t| (t.physical_name.clone(), t.key.clone()))
-        .collect();
-    let period_bindings: BTreeMap<_, _> = topology
-        .table
-        .iter()
-        .map(|t| {
-            (
-                t.physical_name.clone(),
-                (t.period_column.clone(), t.period_encoding.clone()),
-            )
-        })
-        .collect();
-    let placements: BTreeMap<_, _> = topology
+    // Each authored table with its delivery and coverage, parsed for every table before
+    // any is compared.
+    let authored: BTreeMap<&str, _> = topology
         .table
         .iter()
         .map(|table| {
-            (
-                table.physical_name.clone(),
-                (
-                    table.projection_of.clone(),
-                    table.projection_token.clone(),
-                    table.partition.clone(),
-                ),
-            )
-        })
-        .collect();
-    let table_periods: BTreeMap<_, _> = topology
-        .table
-        .iter()
-        .map(|table| {
+            let delivery = table
+                .delivery
+                .as_deref()
+                .map(compile::canonical_period)
+                .transpose()?;
             Ok((
-                table.physical_name.clone(),
-                (
-                    table.disposition.clone(),
-                    table
-                        .delivery
-                        .as_deref()
-                        .map(compile::canonical_period)
-                        .transpose()?,
-                    compile::table_periods(table)?,
-                ),
+                table.physical_name.as_str(),
+                (table, delivery, compile::table_periods(table)?),
             ))
         })
         .collect::<Result<_, String>>()?;
-    let schemas: BTreeMap<_, _> = topology
-        .table
-        .iter()
-        .map(|t| (t.physical_name.clone(), t.schema_name.clone()))
-        .collect();
     let authored_columns: BTreeMap<_, _> = topology
         .table
         .iter()
@@ -128,40 +93,50 @@ fn sources(
         let (id, schema, kind) = tables
             .remove(&table.name)
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
-        let placement: (Option<String>, Option<String>, Option<String>) = db
-            .query_row(
-                "SELECT p.physical_name,h.projection_token,h.partition FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of WHERE h.id=?",
-                [id],
-                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
-            )?;
-        if placements.get(&table.name) != Some(&placement) {
+        #[allow(clippy::type_complexity)]
+        let (placement, disposition, delivery, recorded, binding): (
+            (Option<String>, Option<String>, Option<String>),
+            String,
+            Option<String>,
+            String,
+            (Option<String>, Option<String>),
+        ) = db.query_row(
+            "SELECT p.physical_name,h.projection_token,h.partition,h.disposition,h.delivery,
+                h.key_requirements,c.name,h.period_encoding
+             FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of
+             LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?",
+            [id],
+            |r| {
+                Ok((
+                    (r.get(0)?, r.get(1)?, r.get(2)?),
+                    r.get(3)?,
+                    r.get(4)?,
+                    r.get(5)?,
+                    (r.get(6)?, r.get(7)?),
+                ))
+            },
+        )?;
+        let Some((spec, spec_delivery, spec_periods)) = authored.get(table.name.as_str()) else {
+            return Err(format!("{location}: holdings_topology_source_mismatch").into());
+        };
+        if (&spec.projection_of, &spec.projection_token, &spec.partition)
+            != (&placement.0, &placement.1, &placement.2)
+        {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         }
-        let disposition: (String, Option<String>) = db.query_row(
-            "SELECT disposition,delivery FROM holding_table WHERE id=?",
-            [id],
-            |r| Ok((r.get(0)?, r.get(1)?)),
-        )?;
-        let periods = keys::periods(db, id)?;
-        if table_periods.get(&table.name) != Some(&(disposition.0, disposition.1, periods)) {
+        if (&spec.disposition, spec_delivery, spec_periods)
+            != (&disposition, &delivery, &keys::periods(db, id)?)
+        {
             return Err(format!(
                 "{location}: holdings_period_source_mismatch: authored table disposition or delivery differs"
             ).into());
         }
-        let recorded: String = db.query_row(
-            "SELECT key_requirements FROM holding_table WHERE id=?",
-            [id],
-            |r| r.get(0),
-        )?;
         let recorded: Vec<input::RowKey> = serde_json::from_str(&recorded)
             .map_err(|_| format!("{location}: holdings_row_key_invalid"))?;
-        if required_keys.get(&table.name) != Some(&recorded) {
+        if spec.key != recorded {
             return Err(format!("{location}: holdings_row_key_source_mismatch").into());
         }
-        let binding: (Option<String>, Option<String>) = db.query_row(
-            "SELECT c.name,h.period_encoding FROM holding_table h LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?", [id], |r| Ok((r.get(0)?, r.get(1)?))
-        )?;
-        if period_bindings.get(&table.name) != Some(&binding) {
+        if (&spec.period_column, &spec.period_encoding) != (&binding.0, &binding.1) {
             return Err(format!("{location}: holdings_period_source_mismatch").into());
         }
         let period_keys: Vec<_> = recorded
@@ -233,7 +208,7 @@ fn sources(
                 return Err(format!("{location}: holdings_slot_source_mismatch").into());
             }
             if stored.offered {
-                let declared_schema = schemas.get(&table.name).and_then(Option::as_deref);
+                let declared_schema = spec.schema_name.as_deref();
                 let facts: Vec<_> = column
                     .storage
                     .iter()

@@ -34,12 +34,7 @@ pub(crate) fn semantic(db: &Connection) -> Result<()> {
     if integrity != "ok" {
         return Err(format!("integrity_check: {integrity}").into());
     }
-    let checks = CHECKS
-        .lines()
-        .filter(|line| !line.trim_start().starts_with("--"))
-        .collect::<Vec<_>>()
-        .join("\n");
-    for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
+    for statement in &statements(CHECKS) {
         if has_rows(db, statement)? {
             return Err(format!("post-write check failed:\n{statement}").into());
         }
@@ -133,12 +128,36 @@ fn schema_version(db: &Connection) -> Result<()> {
     Ok(())
 }
 
+/// The statements of a SQL file: `--` comments dropped to the end of their line and the
+/// text split at `;`, both outside string literals; trimmed, empty ones skipped.
+pub(crate) fn statements(sql: &str) -> Vec<String> {
+    let (mut out, mut statement, mut quoted) = (Vec::new(), String::new(), false);
+    let mut chars = sql.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '-' if !quoted && chars.peek() == Some(&'-') => {
+                while chars.next_if(|&c| c != '\n').is_some() {}
+            }
+            ';' if !quoted => out.push(std::mem::take(&mut statement)),
+            _ => {
+                quoted ^= c == '\'';
+                statement.push(c);
+            }
+        }
+    }
+    out.push(statement);
+    out.iter()
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect()
+}
+
 fn has_rows(db: &Connection, statement: &str) -> Result<bool> {
     let mut stmt = db
         .prepare(statement)
         .map_err(|e| format!("{statement}: {e}"))?;
-    let mut found = stmt.query([])?;
-    Ok(found.next()?.is_some())
+    Ok(stmt.exists([])?)
 }
 
 /// Each value set's items hash to its address, the way `reg_frame::ValueSet::new` does.

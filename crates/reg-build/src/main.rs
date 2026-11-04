@@ -767,13 +767,14 @@ fn main() -> ExitCode {
     }
     let result = if args.next_if_eq("holdings").is_some() {
         holdings::run(args)
-    } else if args.peek().is_some_and(|arg| arg == "verify")
-        && std::env::args().any(|arg| arg == "--catalog")
-    {
-        args.next();
-        holdings::verify_args(args)
     } else if args.next_if_eq("verify").is_some() {
-        parse_verify(args).and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
+        let args: Vec<String> = args.collect();
+        if args.iter().any(|arg| arg == "--catalog") {
+            holdings::verify_args(args.into_iter())
+        } else {
+            parse_verify(args.into_iter())
+                .and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
+        }
     } else {
         parse_args(args).and_then(|args| match args.command.as_str() {
             "read" => read(&args),

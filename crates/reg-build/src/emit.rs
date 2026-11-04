@@ -1427,16 +1427,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     } else {
         format!("{SCHEMA}\n{}", include_str!("holdings/relations.sql"))
     };
-    let statements: Vec<String> = schema
-        .lines()
-        .map(|line| line.split_once("--").map_or(line, |(code, _)| code))
-        .collect::<Vec<_>>()
-        .join("\n")
-        .split(';')
-        .map(str::trim)
-        .filter(|s| !s.is_empty())
-        .map(str::to_owned)
-        .collect();
+    let statements = crate::verify::statements(&schema);
     let (indexes, others): (Vec<&String>, Vec<&String>) = statements
         .iter()
         .partition(|s| s.starts_with("CREATE INDEX") || s.starts_with("CREATE UNIQUE INDEX"));
