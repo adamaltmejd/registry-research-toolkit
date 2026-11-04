@@ -561,8 +561,31 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             |row| Ok(server.period(row.get(0)?, row.get(1)?)),
         )?,
     };
-    // By table pid: in steward mode the holdings origin adds the key memberships the
-    // steward attests on a reference table.
+    let row_keys = row_keys(server, conn, &entity.pid)?;
+    Ok(Show::Table {
+        fqid: entity.pid.clone(),
+        name,
+        description,
+        register,
+        role,
+        implicit,
+        timeless,
+        unit_type,
+        cadence,
+        spans,
+        // The provider's releases are not the steward's files (maintainer 2026-11-04).
+        releases: if server.catalog.steward().is_some() {
+            vec![]
+        } else {
+            shape::releases(server, conn, entity.id)?
+        },
+        row_keys,
+    })
+}
+
+/// A table's row keys. By table pid: in steward mode the holdings origin adds the key
+/// memberships the steward attests on a reference table.
+fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRowKey>, Error> {
     let keys = |conn: &Connection| {
         rows(
             conn,
@@ -571,7 +594,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
                    JOIN spelling sp ON sp.id = s.spelling_id
                    JOIN tbl t ON t.id = s.table_id
                  WHERE t.pid = ? AND s.role = 'row_key'",
-            [&entity.pid],
+            [pid],
             |row| {
                 Ok((
                     row.get(2)?,
@@ -604,7 +627,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
     for (mut start, fqid, spelling, mut end) in found {
         if let Some(held) = held.as_mut() {
             let (first, last): (Option<i64>, Option<i64>) = held
-                .query_row(rusqlite::params![entity.pid, fqid, start, end], |row| {
+                .query_row(rusqlite::params![pid, fqid, start, end], |row| {
                     Ok((row.get(0)?, row.get(1)?))
                 })?;
             let (Some(first), Some(last)) = (first, last) else {
@@ -619,25 +642,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             period: server.period(start, end),
         });
     }
-    Ok(Show::Table {
-        fqid: entity.pid.clone(),
-        name,
-        description,
-        register,
-        role,
-        implicit,
-        timeless,
-        unit_type,
-        cadence,
-        spans,
-        // The provider's releases are not the steward's files (maintainer 2026-11-04).
-        releases: if server.catalog.steward().is_some() {
-            vec![]
-        } else {
-            shape::releases(server, conn, entity.id)?
-        },
-        row_keys,
-    })
+    Ok(row_keys)
 }
 
 fn variable(
