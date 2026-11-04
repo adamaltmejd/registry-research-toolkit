@@ -355,6 +355,16 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
             and x.get("classification") == "class/received/v1"
             for x in answer.json()["data"]["items"]
         )
+        # Fails if steward search also requires the reference interval (#2207 F8):
+        # demo/held/value is held in 2015 through the attested earlier delivery only,
+        # outside its 2017..2021 reference years.
+        attested = pool.client(artifact_env(output)).get(
+            "/api/search", params={"q": "Value", "type": "variable", "period": "2015"}
+        )
+        assert attested.status_code == 200, attested.text
+        assert [h["fqid"] for h in attested.json()["data"]["items"]] == [
+            "demo/held/value"
+        ]
         member = pool.client(artifact_env(output)).get("/api/segments/demo/owners/id")
         assert member.status_code == 200
         assert any(

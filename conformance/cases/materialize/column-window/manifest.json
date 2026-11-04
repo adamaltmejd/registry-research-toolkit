@@ -1,0 +1,119 @@
+{
+  "clips": [
+    {
+      "binding": 0,
+      "ordered": [
+        {
+          "end": "2018-01-01",
+          "start": "2017-01-01"
+        }
+      ],
+      "requested": [
+        {
+          "end": "2019-01-01",
+          "start": "2017-01-01"
+        }
+      ],
+      "source": "v",
+      "variable": "demo/keyed/score"
+    }
+  ],
+  "extract_format": "dta",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Score",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "v",
+              "spelling": "Score",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/score"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "v",
+              "spelling": "Id",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "visits",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Visits"
+    }
+  ],
+  "findings": [
+    {
+      "code": "column_window_unavailable",
+      "level": "warning",
+      "message": "The data holder's column for demo/keyed/score in demo/keyed/visits does not cover [2018-01-01, 2019-01-01), so those years cannot be delivered",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2019-01-01",
+        "start": "2018-01-01"
+      },
+      "source": "v",
+      "successor_fqid": null,
+      "table": "demo/keyed/visits",
+      "variable": "demo/keyed/score"
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "8"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Column window",
+      "schema_version": "5.2.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 4
+}

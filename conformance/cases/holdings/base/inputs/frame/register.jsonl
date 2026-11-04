@@ -20,3 +20,9 @@
 {"kind":"occurrence","provider":"demo","register":"owners","table":"spare","column":"Id","source_key":"id","label":"Observation identity","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"owners","table":"spare","column":"Tally","source_key":"tally","label":"Spare tally","dtype":"int"}
 {"kind":"release","provider":"demo","register":"owners","table":"","release":"draft","name":"Owners draft","edition":"unstated"}
+{"kind":"register","provider":"demo","register":"keyed","name":"Keyed visits"}
+{"kind":"table","provider":"demo","register":"keyed","table":"visits","name":"Visits"}
+{"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Id","source_key":"id","label":"Visitor identity","dtype":"int","identifier":true,"from":"2017-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Amount","source_key":"amount","label":"Visit amount","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Score","source_key":"score","label":"Visit score","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Year","source_key":"year","label":"Visit year","dtype":"int","from":"2017-01-01","to":"2022-12-31"}

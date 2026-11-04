@@ -10,7 +10,9 @@ use serde_json::{Value, json};
 use utoipa::ToSchema;
 
 use super::shape::{ValueSetRef, value_set_ref};
-use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cursor, refs};
+use super::{
+    Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, cursor, refs,
+};
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[
@@ -262,15 +264,7 @@ fn lines(
     (from, to): (i64, i64),
 ) -> Result<Vec<Line>, Error> {
     let extra = server.catalog.connect_holdings()?;
-    let mut held = extra
-        .as_ref()
-        .map(|extra| {
-            extra.prepare(
-                "SELECT min(start), max(end) FROM holding_mapping
-                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
-            )
-        })
-        .transpose()?;
+    let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
     let mut segments: Vec<Line> = Vec::new();
     for table in tables {
         for &(origin, id, variable) in &table.locals {
@@ -305,20 +299,16 @@ fn lines(
             for segment in found {
                 let mut segment = segment?;
                 if let Some(held) = held.as_mut() {
-                    let (first, last): (Option<i64>, Option<i64>) = held.query_row(
-                        rusqlite::params![
-                            segment.table,
-                            segment.variable,
-                            segment.start,
-                            segment.end
-                        ],
-                        |row| Ok((row.get(0)?, row.get(1)?)),
-                    )?;
-                    let (Some(first), Some(last)) = (first, last) else {
+                    let Some((start, end)) = held.clip(
+                        &segment.table,
+                        &segment.variable,
+                        (segment.start, segment.end),
+                    )?
+                    else {
                         continue;
                     };
-                    segment.start = segment.start.max(first);
-                    segment.end = segment.end.min(last);
+                    segment.start = start;
+                    segment.end = end;
                 }
                 segments.push(segment);
             }
