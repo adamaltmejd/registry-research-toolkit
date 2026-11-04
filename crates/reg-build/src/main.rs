@@ -37,6 +37,7 @@ mod proposals;
 mod retired;
 mod search;
 mod sets;
+mod timing;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -303,6 +304,7 @@ fn build_with_provenance(
     admitted_pin: Option<(&str, &str)>,
     base: Option<&external::Context>,
 ) -> Result<(), String> {
+    let t = std::time::Instant::now();
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let tags = sets::vocabulary(&args.curation)?;
@@ -312,7 +314,11 @@ fn build_with_provenance(
         repo.clone_into(&mut manifest.repo);
         commit.clone_into(&mut manifest.commit);
     }
+    timing::done("load curation", t);
+    let t = std::time::Instant::now();
     let outputs = read_all(args, &manifest)?;
+    timing::done("read inputs", t);
+    let t = std::time::Instant::now();
     let mut applied = curation::run(
         &args.curation,
         &retired,
@@ -322,6 +328,8 @@ fn build_with_provenance(
         &[],
         base,
     )?;
+    timing::done("apply curation", t);
+    let t = std::time::Instant::now();
     if !args.release {
         for finding in &applied.findings {
             eprintln!("reg-build: {finding}");
@@ -420,8 +428,12 @@ fn build_with_provenance(
         registers.entry(key).or_default().push(record.clone());
     }
 
+    timing::done("digest and group", t);
+    let t = std::time::Instant::now();
     let mut resolved =
         curation::complete_findings(&args.curation, &retired, &applied.records, &applied, base)?;
+    timing::done("resolve", t);
+    let t = std::time::Instant::now();
     let mut report = BTreeMap::new();
     let mut refusals = Vec::new();
     if args.release {
@@ -590,6 +602,7 @@ fn build_with_provenance(
         &applied.classifications,
         &applied.overrides,
     );
+    timing::done("link and provenance", t);
     let catalog = emit::Catalog {
         set_presentation: applied.sets,
         retired,
@@ -697,6 +710,7 @@ fn parse_verify(
 }
 
 fn main() -> ExitCode {
+    timing::start();
     let mut args = std::env::args().skip(1).peekable();
     // `diff` has its own exit codes (1 = the catalogs differ, 2 = error).
     if args.next_if_eq("diff").is_some() {

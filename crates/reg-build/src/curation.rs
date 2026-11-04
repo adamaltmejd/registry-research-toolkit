@@ -810,7 +810,7 @@ pub(super) fn sentinel_codes<'a>(
     sets
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Phase {
     Parents,
     Coverage,
@@ -1019,11 +1019,13 @@ fn run_selected(
     registers: &[String],
     base: Option<&crate::external::Context>,
 ) -> Result<Applied, String> {
+    let t = std::time::Instant::now();
     let mut records = outputs
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
         .collect::<Vec<_>>();
     let mut result = inventory(root, &records)?;
+    crate::timing::done("curation inventory", t);
     let mut evaluated: Vec<(&LocatedStatement, Premise)> = Vec::new();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for statement in statements {
@@ -1071,6 +1073,7 @@ fn run_selected(
         if !conflicts.is_empty() {
             break;
         }
+        let stage_start = std::time::Instant::now();
 
         let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
             reg_resolve::curation::SharedSources::new(&records)
@@ -1617,7 +1620,9 @@ fn run_selected(
                 break;
             }
         }
+        crate::timing::done(&format!("curation stage {stage:?}"), stage_start);
     }
+    let t = std::time::Instant::now();
     if !result.links.is_empty() {
         let resolved = resolve_catalog(
             root,
@@ -1733,7 +1738,12 @@ fn run_selected(
         register: None,
         message,
     }));
+    crate::timing::done("curation links and conflicts", t);
     if !conflicts.is_empty() {
+        eprintln!(
+            "reg-build: timing curation rerun after {} conflicts",
+            conflicts.len()
+        );
         let skipped = refusal_findings(&refusals, record)?;
         let retained = statements
             .iter()
@@ -1754,6 +1764,7 @@ fn run_selected(
             )
         })
     {
+        let t = std::time::Instant::now();
         let resolved = resolve_catalog(
             root,
             retired,
@@ -1763,6 +1774,7 @@ fn run_selected(
             &result.classifications,
         )?;
         let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
+        crate::timing::done("curation set presentation", t);
         if !invalid.is_empty() {
             let by_location = evaluated
                 .iter()
@@ -1782,6 +1794,10 @@ fn run_selected(
                     format!("{}:{}: {}", error.at.input, error.at.at, error.message),
                 ));
             }
+            eprintln!(
+                "reg-build: timing curation rerun after {} presentation refusals",
+                refused.len()
+            );
             let skipped = refusal_findings(&refusals, record)?;
             let retained = statements
                 .iter()
