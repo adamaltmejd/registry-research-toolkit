@@ -10,10 +10,11 @@ mod verify_mappings;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+use crate::error::Result;
 use rusqlite::{Connection, OpenFlags, params};
 use sha2::{Digest, Sha256};
 
-pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
+pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     let flags = flags(args)?;
     let need = |name: &str| {
         flags
@@ -88,7 +89,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
                 meta(&db, "storage_extra_columns")?
             )
         };
-        std::fs::rename(&staged, &out).map_err(|e| e.to_string())?;
+        std::fs::rename(&staged, &out)?;
         eprintln!("{summary}");
         Ok(())
     });
@@ -100,7 +101,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<(), String> {
     result
 }
 
-fn flags(mut args: impl Iterator<Item = String>) -> Result<BTreeMap<String, String>, String> {
+fn flags(mut args: impl Iterator<Item = String>) -> Result<BTreeMap<String, String>> {
     let mut out = BTreeMap::new();
     while let Some(flag) = args.next() {
         if !flag.starts_with("--") {
@@ -114,7 +115,7 @@ fn flags(mut args: impl Iterator<Item = String>) -> Result<BTreeMap<String, Stri
     Ok(out)
 }
 
-pub(crate) fn verify_args(mut args: impl Iterator<Item = String>) -> Result<(), String> {
+pub(crate) fn verify_args(mut args: impl Iterator<Item = String>) -> Result<()> {
     let file = PathBuf::from(
         args.next()
             .ok_or("usage: reg-build verify FILE --catalog FILE --steward-repo DIR")?,
@@ -133,13 +134,17 @@ pub(crate) fn verify_args(mut args: impl Iterator<Item = String>) -> Result<(), 
     verify::pair(&file, Path::new(base), Path::new(root))
 }
 
-pub(super) fn open(path: &Path) -> Result<Connection, String> {
-    Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY).map_err(|e| e.to_string())
+pub(super) fn open(path: &Path) -> Result<Connection> {
+    Ok(Connection::open_with_flags(
+        path,
+        OpenFlags::SQLITE_OPEN_READ_ONLY,
+    )?)
 }
 
-pub(super) fn meta(db: &Connection, key: &str) -> Result<String, String> {
-    db.query_row("SELECT value FROM meta WHERE key=?", [key], |r| r.get(0))
-        .map_err(|_| format!("holdings_meta_invalid: missing {key}"))
+pub(super) fn meta(db: &Connection, key: &str) -> Result<String> {
+    Ok(db
+        .query_row("SELECT value FROM meta WHERE key=?", [key], |r| r.get(0))
+        .map_err(|_| format!("holdings_meta_invalid: missing {key}"))?)
 }
 
 #[allow(clippy::too_many_arguments, clippy::too_many_lines)]
@@ -152,7 +157,7 @@ fn write(
     pin: &input::Pin,
     config: &input::Config,
     report: Option<&Path>,
-) -> Result<(), String> {
+) -> Result<()> {
     let curation = input::path(root, &config.curation_root)?
         .parent()
         .ok_or("holdings_input_path_invalid")?
@@ -178,15 +183,14 @@ fn write(
     if let Some(path) = report {
         let mut doc: serde_json::Value = serde_json::from_str(
             &std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?,
-        )
-        .map_err(|e| e.to_string())?;
+        )?;
         doc["steward"] = serde_json::json!({
             "repo": pin.repo,
             "commit": pin.commit,
             "config": pin.config,
             "input_pins": config.pins,
         });
-        let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
+        let text = serde_json::to_string_pretty(&doc)?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
     }
     let semantic = open(scratch)?;
@@ -195,7 +199,7 @@ fn write(
     let semantic_sha256 = crate::sha256_file(scratch)?.0;
     let declarations = references::read(root, config)?;
     drop(semantic);
-    let semantic = Connection::open(scratch).map_err(|e| e.to_string())?;
+    let semantic = Connection::open(scratch)?;
     references::write(&semantic, &declarations)?;
     verify::distinct(&semantic, &base_db, &declarations)?;
     let base_generation = meta(&base_db, "generation_id")?;
@@ -207,15 +211,11 @@ fn write(
         &input::path(root, &config.inputs.census)?,
         &input::path(root, &config.inputs.storage_export)?,
         &input::path(root, &config.inputs.census_reader)?,
-    )
-    .map_err(|e| e.to_string())?;
-    let mut db = Connection::open(scratch).map_err(|e| e.to_string())?;
-    db.execute_batch("PRAGMA foreign_keys=ON;")
-        .map_err(|e| e.to_string())?;
-    db.execute_batch(include_str!("schema.sql"))
-        .map_err(|e| e.to_string())?;
-    db.execute_batch(include_str!("relations.sql"))
-        .map_err(|e| e.to_string())?;
+    )?;
+    let mut db = Connection::open(scratch)?;
+    db.execute_batch("PRAGMA foreign_keys=ON;")?;
+    db.execute_batch(include_str!("schema.sql"))?;
+    db.execute_batch(include_str!("relations.sql"))?;
     let counts = compile::write(&mut db, &base_db, topology, census.tables)?;
     let mut hasher = Sha256::new();
     hasher.update(crate::sha256_file(&input::path(root, &pin.config)?)?.0);
@@ -236,9 +236,8 @@ fn write(
         hasher.update(format!("{path}\t{sha}\n"));
     }
     let generation = reg_core::hex(&hasher.finalize());
-    let config_json = |relative: &str, json: bool| -> Result<String, String> {
-        let text =
-            std::fs::read_to_string(input::path(root, relative)?).map_err(|e| e.to_string())?;
+    let config_json = |relative: &str, json: bool| -> Result<String> {
+        let text = std::fs::read_to_string(input::path(root, relative)?)?;
         let value = if json {
             serde_json::from_str::<serde_json::Value>(&text)
                 .map_err(|_| "holdings_presentation_invalid".to_owned())?
@@ -246,10 +245,9 @@ fn write(
             serde_json::to_value(
                 toml::from_str::<toml::Value>(&text)
                     .map_err(|_| "holdings_scope_invalid".to_owned())?,
-            )
-            .map_err(|e| e.to_string())?
+            )?
         };
-        serde_json::to_string(&value).map_err(|e| e.to_string())
+        Ok(serde_json::to_string(&value)?)
     };
     let metadata = BTreeMap::from([
         (
@@ -279,8 +277,7 @@ fn write(
         ("scope", config_json(&config.scope, false)?),
         (
             "logo",
-            std::fs::read_to_string(input::path(root, &config.presentation.logo)?)
-                .map_err(|e| e.to_string())?,
+            std::fs::read_to_string(input::path(root, &config.presentation.logo)?)?,
         ),
         ("census_tables", counts.0.to_string()),
         ("census_columns", counts.1.to_string()),
@@ -291,20 +288,17 @@ fn write(
             census.storage_extra_columns.to_string(),
         ),
     ]);
-    let tx = db.transaction().map_err(|e| e.to_string())?;
+    let tx = db.transaction()?;
     for (key, value) in metadata {
         tx.execute(
             "INSERT OR REPLACE INTO meta VALUES (?,?)",
             params![key, value],
-        )
-        .map_err(|e| e.to_string())?;
+        )?;
     }
-    tx.pragma_update(None, "user_version", reg_core::HOLDINGS_SCHEMA_VERSION)
-        .map_err(|e| e.to_string())?;
-    tx.commit().map_err(|e| e.to_string())?;
-    db.execute_batch("ANALYZE;").map_err(|e| e.to_string())?;
-    db.execute("VACUUM INTO ?", [staged.to_string_lossy().as_ref()])
-        .map_err(|e| e.to_string())?;
+    tx.pragma_update(None, "user_version", reg_core::HOLDINGS_SCHEMA_VERSION)?;
+    tx.commit()?;
+    db.execute_batch("ANALYZE;")?;
+    db.execute("VACUUM INTO ?", [staged.to_string_lossy().as_ref()])?;
     Ok(())
 }
 

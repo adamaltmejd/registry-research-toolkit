@@ -14,6 +14,7 @@ use reg_resolve::provenance::{FinalValue, Origin, Subject as ProvenanceSubject};
 use reg_resolve::{Resolved, Subject};
 
 use crate::docs::Document;
+use crate::error::Result;
 use crate::link::{self, Entity};
 use rusqlite::Connection;
 use rusqlite::types::{ToSqlOutput, ValueRef};
@@ -162,7 +163,7 @@ fn write_provenance(
     subject_id: i64,
     values: &BTreeMap<&ProvenanceSubject, Vec<&FinalValue>>,
     statements: &BTreeMap<&str, i64>,
-) -> Result<(), String> {
+) -> Result<()> {
     let kind = match subject {
         ProvenanceSubject::Register(_) => "register",
         ProvenanceSubject::Set(..) => "set",
@@ -209,7 +210,7 @@ fn write_provenance(
 ///
 /// # Errors
 /// A SQLite failure, or a post-write check that returns rows.
-pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
+pub fn write(catalog: &Catalog, out: &Path) -> Result<()> {
     let name = out
         .file_name()
         .map_or_else(String::new, |n| n.to_string_lossy().into_owned());
@@ -225,7 +226,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
             Ok(())
         })
         .and_then(|()| {
-            std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))
+            Ok(std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))?)
         });
     for path in [&scratch, &staged] {
         if path.exists() {
@@ -236,9 +237,8 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
 }
 
 #[allow(clippy::too_many_lines)]
-fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String> {
+fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     let mut rows = Rows::default();
-    let sql = |e: rusqlite::Error| e.to_string();
     let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
     let mut external = catalog.external_relations.clone();
     external.sort();
@@ -1236,7 +1236,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 .parse()
                 .map_err(|e: reg_core::GrammarError| e.to_string())?
             else {
-                return Err(format!("invalid classification predecessor {target}"));
+                return Err(format!("invalid classification predecessor {target}").into());
             };
             let subject = class_id[&(class.family.as_str(), class.version.as_str())];
             let object = class_id[&(family.as_str(), version.as_str())];
@@ -1278,7 +1278,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Text(doc.title.clone()),
                 opt_text(doc.document_title.as_ref()),
                 Cell::Str(doc.licence.clone()),
-                Cell::Int(i64::try_from(doc.bytes).map_err(|e| e.to_string())?),
+                Cell::Int(i64::try_from(doc.bytes)?),
                 opt_str(doc.url.as_ref()),
                 Cell::Int(id(input_of(&doc.locator)?)),
                 document.content.clone().map_or(Cell::Null, Cell::Blob),
@@ -1413,7 +1413,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             std::fs::remove_file(path).map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
-    let mut db = Connection::open(scratch).map_err(sql)?;
+    let mut db = Connection::open(scratch)?;
     db.execute_batch(&format!(
         // The cache and temp-store settings are connection state, not file content:
         // `VACUUM INTO` writes the same bytes; they spare index builds the disk (#2196).
@@ -1421,8 +1421,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
          PRAGMA cache_size = -1048576; PRAGMA temp_store = MEMORY;
          PRAGMA user_version = {};",
         reg_core::CATALOG_SCHEMA_VERSION
-    ))
-    .map_err(sql)?;
+    ))?;
     let schema = if external.is_empty() {
         SCHEMA.to_owned()
     } else {
@@ -1460,7 +1459,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         .collect();
     for retired in &catalog.retired {
         if live.contains(retired.pid.as_str()) {
-            return Err(retired.live_error());
+            return Err(retired.live_error().into());
         }
     }
     for retired in &catalog.retired {
@@ -1490,18 +1489,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         })
         .collect();
     if let Some(table) = rows.tables.keys().find(|t| !order.contains(t)) {
-        return Err(format!("{table}: not a table of schema.sql"));
+        return Err(format!("{table}: not a table of schema.sql").into());
     }
-    let tx = db.transaction().map_err(sql)?;
+    let tx = db.transaction()?;
     for table in order {
         let Some(table_rows) = rows.tables.get(table) else {
             continue;
         };
         let width = table_rows[0].len();
         let placeholders = vec!["?"; width].join(",");
-        let mut insert = tx
-            .prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))
-            .map_err(sql)?;
+        let mut insert = tx.prepare(&format!("INSERT INTO {table} VALUES ({placeholders})"))?;
         // One row's values at a time: a whole table of owned copies held the
         // largest tables twice (#2196).
         for row in table_rows {
@@ -1521,30 +1518,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 .map_err(|e| format!("{table}: {e}"))?;
         }
     }
-    tx.commit().map_err(sql)?;
+    tx.commit()?;
     for statement in indexes {
-        db.execute_batch(statement).map_err(sql)?;
+        db.execute_batch(statement)?;
     }
     // Contentless FTS5: the rows go in rowid order, then the index is merged.
-    let tx = db.transaction().map_err(sql)?;
+    let tx = db.transaction()?;
     {
-        let mut insert = tx
-            .prepare("INSERT INTO search(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")
-            .map_err(sql)?;
+        let mut insert =
+            tx.prepare("INSERT INTO search(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")?;
         for (i, item) in search.iter().enumerate() {
             insert
                 .execute((id(i), &item.name, &item.label, &item.body))
                 .map_err(|e| format!("search: {e}"))?;
         }
     }
-    tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])
-        .map_err(sql)?;
+    tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])?;
     {
-        let mut insert = tx
-            .prepare(
-                "INSERT INTO search_description(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
-            )
-            .map_err(sql)?;
+        let mut insert = tx.prepare(
+            "INSERT INTO search_description(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
+        )?;
         for (i, item) in search.iter().enumerate() {
             if !item.description.is_empty() {
                 let body = format!("{}\n{}", item.body, item.description);
@@ -1557,12 +1550,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     tx.execute(
         "INSERT INTO search_description(search_description) VALUES ('optimize')",
         [],
-    )
-    .map_err(sql)?;
+    )?;
     {
-        let mut insert = tx
-            .prepare("INSERT INTO search_exact(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")
-            .map_err(sql)?;
+        let mut insert = tx.prepare(
+            "INSERT INTO search_exact(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
+        )?;
         for (i, item) in search.iter().enumerate() {
             let body = if item.description.is_empty() {
                 item.body.clone()
@@ -1577,25 +1569,21 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     tx.execute(
         "INSERT INTO search_exact(search_exact) VALUES ('optimize')",
         [],
-    )
-    .map_err(sql)?;
+    )?;
     // External-content FTS5 over doc_section, in rowid order.
     {
-        let mut insert = tx
-            .prepare("INSERT INTO doc_fts(rowid, heading, body) VALUES (?1, ?2, ?3)")
-            .map_err(sql)?;
+        let mut insert =
+            tx.prepare("INSERT INTO doc_fts(rowid, heading, body) VALUES (?1, ?2, ?3)")?;
         for (i, section) in sections.iter().enumerate() {
             insert
                 .execute((id(i), &section.heading, &section.body))
                 .map_err(|e| format!("doc_fts: {e}"))?;
         }
     }
-    tx.execute("INSERT INTO doc_fts(doc_fts) VALUES ('optimize')", [])
-        .map_err(sql)?;
-    tx.commit().map_err(sql)?;
-    db.execute_batch("ANALYZE;").map_err(sql)?;
-    db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])
-        .map_err(sql)?;
+    tx.execute("INSERT INTO doc_fts(doc_fts) VALUES ('optimize')", [])?;
+    tx.commit()?;
+    db.execute_batch("ANALYZE;")?;
+    db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])?;
     Ok(())
 }
 
@@ -1613,10 +1601,10 @@ fn sorted_ids<K: Ord, I: IntoIterator<Item = K>>(keys: I) -> BTreeMap<K, i64> {
 fn index<K: Ord + std::fmt::Debug, E: Ord + Copy>(
     mut keys: Vec<(K, E)>,
     what: &str,
-) -> Result<BTreeMap<E, i64>, String> {
+) -> Result<BTreeMap<E, i64>> {
     keys.sort();
     if let Some(w) = keys.windows(2).find(|w| w[0].0 == w[1].0) {
-        return Err(format!("duplicate {what}: {:?}", w[0].0));
+        return Err(format!("duplicate {what}: {:?}", w[0].0).into());
     }
     Ok(keys
         .into_iter()

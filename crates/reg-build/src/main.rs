@@ -35,6 +35,7 @@ mod curation;
 mod diff;
 mod docs;
 mod emit;
+mod error;
 mod external;
 mod holdings;
 mod id_targets;
@@ -50,6 +51,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
+use crate::error::Result;
 use reg_frame::Record;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -93,7 +95,7 @@ struct BuildRefusal {
     details: Vec<String>,
 }
 
-fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
+fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args> {
     let command = args
         .next()
         .ok_or("usage: reg-build read|build --inputs DIR --curation DIR --out PATH")?;
@@ -119,7 +121,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
                 registers.push(other.to_owned());
                 continue;
             }
-            other => return Err(format!("unknown flag {other:?}")),
+            other => return Err(format!("unknown flag {other:?}").into()),
         };
         *slot = Some(args.next().ok_or(format!("{flag} needs a value"))?);
     }
@@ -144,8 +146,8 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
     })
 }
 
-fn toml_file<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, String> {
-    reg_readers::config(path).map_err(|e| e.to_string())
+fn toml_file<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
+    Ok(reg_readers::config(path)?)
 }
 
 /// Every input read, in manifest order.
@@ -158,7 +160,7 @@ fn ledger_path(curation: &Path, provider: &str, register: &str) -> PathBuf {
 }
 
 /// Locate a reported id using TOML spans, including quoted keys and multiline anchors.
-fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<String, String> {
+fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<String> {
     #[derive(Deserialize)]
     struct Locations {
         variables: BTreeMap<toml::Spanned<String>, Vec<String>>,
@@ -187,7 +189,7 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
     ))
 }
 
-fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>, String> {
+fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>> {
     let check_provider = |provider: &str, input: &str, at: &str| {
         if matches!(provider, "set" | "class" | "group") {
             Err(format!(
@@ -198,7 +200,7 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         }
     };
     let path = args.curation.join("inputs.toml");
-    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let text = std::fs::read_to_string(&path)?;
     for provider in &manifest.provider {
         let line = text[..provider.pid.span().start]
             .bytes()
@@ -213,8 +215,7 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     }
     let readers = args.curation.join("readers");
     let read_one = |input: &reg_readers::Input| {
-        let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)
-            .map_err(|e| e.to_string())?;
+        let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)?;
         for record in &output.frame.records {
             let (provider, at) = match record {
                 Record::Register(r) => (&r.provider, &r.locator),
@@ -233,7 +234,7 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     let workers = std::thread::available_parallelism()
         .map_or(1, std::num::NonZero::get)
         .min(manifest.input.len());
-    let mut slots: Vec<Option<std::thread::Result<Result<reg_readers::ReadOutput, String>>>> =
+    let mut slots: Vec<Option<std::thread::Result<Result<reg_readers::ReadOutput>>>> =
         (0..manifest.input.len()).map(|_| None).collect();
     std::thread::scope(|scope| {
         let handles = (0..workers)
@@ -270,9 +271,9 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         .collect()
 }
 
-fn read(args: &Args) -> Result<(), String> {
+fn read(args: &Args) -> Result<()> {
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
-    std::fs::create_dir_all(&args.out).map_err(|e| e.to_string())?;
+    std::fs::create_dir_all(&args.out)?;
     for (input, output) in manifest.input.iter().zip(read_all(args, &manifest)?) {
         let write = |ext: &str, text: String| {
             let path = args.out.join(format!("{}.{ext}", input.name));
@@ -290,15 +291,15 @@ fn read(args: &Args) -> Result<(), String> {
     Ok(())
 }
 
-fn sha256_file(path: &Path) -> Result<(String, i64), String> {
+fn sha256_file(path: &Path) -> Result<(String, i64)> {
     let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let len = i64::try_from(bytes.len()).map_err(|e| e.to_string())?;
+    let len = i64::try_from(bytes.len())?;
     Ok((reg_core::sha256_hex(&bytes), len))
 }
 
 /// The digest of a set of files: SHA-256 over `path\tsha256\n` lines in path order,
 /// and their total size. A single file is its own SHA-256.
-fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64), String> {
+fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64)> {
     if let [only] = files.iter().collect::<Vec<_>>()[..] {
         return sha256_file(&root.join(only));
     }
@@ -314,9 +315,9 @@ fn digest(root: &Path, files: &BTreeSet<String>) -> Result<(String, i64), String
 
 /// Every file under `dir`, relative to it, `/`-separated; symlinks are followed and
 /// dotfiles (host litter such as `.DS_Store`) skipped.
-fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), String> {
+fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<()> {
     for entry in std::fs::read_dir(dir).map_err(|e| format!("{}: {e}", dir.display()))? {
-        let entry = entry.map_err(|e| e.to_string())?;
+        let entry = entry?;
         let name = entry.file_name().to_string_lossy().into_owned();
         if name.starts_with('.') {
             continue;
@@ -342,10 +343,10 @@ fn build_with_provenance(
     args: &Args,
     admitted_pin: Option<(&str, &str)>,
     base: Option<&external::Context>,
-) -> Result<(), String> {
+) -> Result<()> {
     let t = std::time::Instant::now();
     let retired = retired::load(&args.curation)?;
-    let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let statements = reg_readers::curation::load(&args.curation)?;
     let tags = sets::vocabulary(&args.curation)?;
     sets::statements(&tags, &statements)?;
     let mut manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
@@ -383,13 +384,11 @@ fn build_with_provenance(
         // archive members, not files under the inputs root.
         let (sha256, bytes) = match (&input.release, &input.sha256) {
             (Some(_), Some(pin)) => {
-                let path = input
-                    .locate(&args.inputs, args.assets.as_deref())
-                    .map_err(|e| e.to_string())?;
+                let path = input.locate(&args.inputs, args.assets.as_deref())?;
                 let len = std::fs::metadata(&path)
                     .map_err(|e| format!("{}: {e}", path.display()))?
                     .len();
-                (pin.clone(), i64::try_from(len).map_err(|e| e.to_string())?)
+                (pin.clone(), i64::try_from(len)?)
             }
             _ => digest(&args.inputs, &output.files.iter().cloned().collect())?,
         };
@@ -589,7 +588,7 @@ fn build_with_provenance(
     for r in &resolved {
         report.insert(
             format!("{}/{}", r.register.provider, r.register.register),
-            serde_json::to_value(&r.report).map_err(|e| e.to_string())?,
+            serde_json::to_value(&r.report)?,
         );
     }
 
@@ -686,7 +685,7 @@ fn build_with_provenance(
             "doc_subject_unresolved": doc_subject_unresolved,
             "refusals": refusals,
         });
-        let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
+        let text = serde_json::to_string_pretty(&doc)?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
     }
     if !refusals.is_empty() {
@@ -706,21 +705,21 @@ fn build_with_provenance(
             }
         }
         return Err(match &args.report {
-            Some(path) => format!("build refused; report: {}", path.display()),
-            None => "build refused; use --report FILE for details".to_owned(),
+            Some(path) => format!("build refused; report: {}", path.display()).into(),
+            None => "build refused; use --report FILE for details".into(),
         });
     }
     emit::write(&catalog, &args.out)
 }
 
-fn lock(args: &Args) -> Result<(), String> {
+fn lock(args: &Args) -> Result<()> {
     let base = args
         .base
         .as_deref()
         .map(external::Context::open)
         .transpose()?;
     let retired = retired::load(&args.curation)?;
-    let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let statements = reg_readers::curation::load(&args.curation)?;
     let tags = sets::vocabulary(&args.curation)?;
     sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
@@ -741,9 +740,7 @@ fn lock(args: &Args) -> Result<(), String> {
 }
 
 /// `verify FILE [--previous FILE]`, after the command word.
-fn parse_verify(
-    mut args: impl Iterator<Item = String>,
-) -> Result<(PathBuf, Option<PathBuf>), String> {
+fn parse_verify(mut args: impl Iterator<Item = String>) -> Result<(PathBuf, Option<PathBuf>)> {
     let usage = "usage: reg-build verify FILE [--previous FILE]";
     let (mut file, mut previous) = (None, None);
     while let Some(arg) = args.next() {
@@ -752,10 +749,10 @@ fn parse_verify(
                 previous = Some(PathBuf::from(args.next().ok_or(usage)?));
             }
             flag if flag.starts_with("--") => {
-                return Err(format!("unknown flag {flag:?}; {usage}"));
+                return Err(format!("unknown flag {flag:?}; {usage}").into());
             }
             _ if file.is_none() => file = Some(PathBuf::from(arg)),
-            _ => return Err(usage.to_owned()),
+            _ => return Err(usage.into()),
         }
     }
     Ok((file.ok_or(usage)?, previous))
@@ -782,7 +779,7 @@ fn main() -> ExitCode {
             "read" => read(&args),
             "build" => build_with_provenance(&args, None, None),
             "lock" => lock(&args),
-            other => Err(format!("unknown command {other:?}")),
+            other => Err(format!("unknown command {other:?}").into()),
         })
     };
     match result {

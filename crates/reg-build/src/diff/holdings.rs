@@ -9,7 +9,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Value, json};
 
-use super::{Item, Pair, Res, Section, query};
+use super::{Item, Pair, Section, query};
+use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
 type Placement = (String, String, String, String);
@@ -115,10 +116,8 @@ fn statement_sql() -> String {
     )
 }
 
-fn schema(conn: &rusqlite::Connection) -> Res<(i64, Option<String>)> {
-    let user = conn
-        .query_row("PRAGMA user_version", [], |r| r.get(0))
-        .map_err(|e| e.to_string())?;
+fn schema(conn: &rusqlite::Connection) -> Result<(i64, Option<String>)> {
+    let user = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     let meta = query(
         conn,
         "SELECT value FROM meta WHERE key = 'schema_version'",
@@ -127,7 +126,9 @@ fn schema(conn: &rusqlite::Connection) -> Res<(i64, Option<String>)> {
     Ok((user, meta.into_iter().next()))
 }
 
-fn placements(conn: &rusqlite::Connection) -> Res<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
+fn placements(
+    conn: &rusqlite::Connection,
+) -> Result<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
     let mut out: BTreeMap<Column, (String, BTreeSet<Placement>)> = BTreeMap::new();
     for (table, column, disposition) in query(
         conn,
@@ -244,7 +245,7 @@ fn totals(old: &Census, new: &Census) -> Vec<Item> {
     counts
 }
 
-fn census(p: &Pair) -> Res<Vec<Section>> {
+fn census(p: &Pair) -> Result<Vec<Section>> {
     let (old, new) = (placements(&p.old)?, placements(&p.new)?);
     let mut counts = totals(&old, &new);
 
@@ -328,7 +329,7 @@ fn census(p: &Pair) -> Res<Vec<Section>> {
     ])
 }
 
-fn text_maps(conn: &rusqlite::Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<String>>> {
+fn text_maps(conn: &rusqlite::Connection, sql: &str) -> Result<BTreeMap<String, BTreeSet<String>>> {
     let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for (k, v) in query(conn, sql, |r| Ok((r.get(0)?, r.get(1)?)))? {
         out.entry(k).or_default().insert(v);
@@ -337,7 +338,7 @@ fn text_maps(conn: &rusqlite::Connection, sql: &str) -> Res<BTreeMap<String, BTr
 }
 
 /// Per kind: counts, and the keys (never the bodies) changed, added and removed.
-fn texts(p: &Pair) -> Res<Section> {
+fn texts(p: &Pair) -> Result<Section> {
     let statement = statement_sql();
     let kinds = TEXT
         .iter()
@@ -376,7 +377,7 @@ fn texts(p: &Pair) -> Res<Section> {
     Ok(Section::flat("text", "reader-visible text", items))
 }
 
-fn bag(conn: &rusqlite::Connection, sql: &str) -> Res<Bag> {
+fn bag(conn: &rusqlite::Connection, sql: &str) -> Result<Bag> {
     let mut out = Bag::new();
     for k in query(conn, sql, |r| {
         Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
@@ -387,7 +388,7 @@ fn bag(conn: &rusqlite::Connection, sql: &str) -> Res<Bag> {
 }
 
 /// Per-code counts and the (code, subject, period) multiset differences.
-fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Res<Section> {
+fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Result<Section> {
     let (old, new) = (bag(&pair.old, sql)?, bag(&pair.new, sql)?);
     let keys: BTreeSet<_> = old.keys().chain(new.keys()).collect();
     let mut by_code: BTreeMap<&str, [i64; 4]> = BTreeMap::new();
@@ -425,12 +426,12 @@ fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Res<
     Ok(Section::flat(key, title, items))
 }
 
-pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Res<Vec<Section>> {
+pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Result<Vec<Section>> {
     let (os, ns) = (schema(&p.old)?, schema(&p.new)?);
     if os != ns {
         return Err(format!(
             "holdings schema mismatch: (user_version, schema_version) {old_path} {os:?}, {new_path} {ns:?}"
-        ));
+        ).into());
     }
     let meta_sql = "SELECT key, value FROM meta WHERE key IN \
                     ('generation_id', 'steward_commit', 'compiler_digest') ORDER BY key";

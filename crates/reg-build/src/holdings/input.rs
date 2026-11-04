@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
+use crate::error::Result;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
@@ -138,7 +139,7 @@ pub(super) struct Mapping {
 }
 
 /// Relative paths only, including after symlink resolution.
-pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf, String> {
+pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf> {
     let rel = Path::new(relative);
     if rel.as_os_str().is_empty() || rel.components().any(|p| !matches!(p, Component::Normal(_))) {
         return Err("holdings_input_path_invalid: expected a relative input path".into());
@@ -147,14 +148,14 @@ pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf, String> {
         .join(rel)
         .canonicalize()
         .map_err(|_| "holdings_input_missing: declared input is absent".to_owned())?;
-    let root = root.canonicalize().map_err(|e| e.to_string())?;
+    let root = root.canonicalize()?;
     if !full.starts_with(root) {
         return Err("holdings_input_path_invalid: input escapes steward checkout".into());
     }
     Ok(full)
 }
 
-fn git(root: &Path, args: &[&str]) -> Result<String, String> {
+fn git(root: &Path, args: &[&str]) -> Result<String> {
     let output = Command::new("git")
         .arg("-C")
         .arg(root)
@@ -170,7 +171,7 @@ fn git(root: &Path, args: &[&str]) -> Result<String, String> {
 }
 
 #[allow(clippy::too_many_lines)]
-pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, String> {
+pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
     if pin.commit.len() != 40
         || !pin.commit.bytes().all(|b| b.is_ascii_hexdigit())
         || git(root, &["rev-parse", "HEAD"])? != pin.commit
@@ -263,7 +264,7 @@ pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
     reg_core::hex(&hasher.finalize())
 }
 
-fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), String> {
+fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<()> {
     let expected = pins
         .get(rel)
         .ok_or("holdings_input_unpinned: consumed input has no hash")?;
@@ -274,11 +275,7 @@ fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), 
 }
 
 /// Inputs cannot redirect directory traversal through a symlink, even if Git tracks it.
-fn tree(
-    dir: &Path,
-    prefix: &str,
-    out: &mut std::collections::BTreeSet<String>,
-) -> Result<(), String> {
+fn tree(dir: &Path, prefix: &str, out: &mut std::collections::BTreeSet<String>) -> Result<()> {
     for entry in std::fs::read_dir(dir).map_err(|_| "holdings_input_missing")? {
         let entry = entry.map_err(|_| "holdings_input_missing")?;
         let name = entry

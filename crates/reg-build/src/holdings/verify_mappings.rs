@@ -5,6 +5,7 @@ use reg_core::days::{self, Span};
 use rusqlite::Connection;
 
 use super::{compile, input};
+use crate::error::Result;
 
 type Mappings = BTreeMap<Attributes, Vec<Span>>;
 /// Blocked spans by (notice code, rival table, rival variable).
@@ -33,7 +34,7 @@ fn projection_copy(
     tables: &BTreeMap<&str, &input::Table>,
     variable: &str,
     span: Span,
-) -> Result<bool, String> {
+) -> Result<bool> {
     let Some(parent) = table.projection_of.as_deref().and_then(|p| tables.get(p)) else {
         return Ok(false);
     };
@@ -70,7 +71,7 @@ fn claims(
     table: &input::Table,
     column: &reg_readers::holdings::Column,
     index: &BTreeMap<String, Vec<compile::Segment>>,
-) -> Result<Vec<Claim>, String> {
+) -> Result<Vec<Claim>> {
     let decision = table.column.iter().find(|c| c.name == column.name);
     let spans = compile::column_periods(decision, &compile::table_periods(table)?)?;
     if spans.is_empty()
@@ -176,7 +177,7 @@ fn expected(
     claims: &[Claim],
     table: &input::Table,
     tables: &BTreeMap<&str, &input::Table>,
-) -> Result<(Mappings, Contested), String> {
+) -> Result<(Mappings, Contested)> {
     let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
     for claim in claims {
         routes
@@ -241,7 +242,7 @@ pub(super) fn verify(
     base: &Connection,
     topology: &input::Topology,
     census: &reg_readers::holdings::ReadOutput,
-) -> Result<(), String> {
+) -> Result<()> {
     // segment_index seeds from every tbl row, including segmentless tables.
     let index = compile::segment_index(base, db)?;
     let tables: BTreeMap<_, _> = topology
@@ -249,46 +250,40 @@ pub(super) fn verify(
         .iter()
         .map(|t| (t.physical_name.as_str(), t))
         .collect();
-    let mut query = db
-        .prepare(
-            "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.start,m.end
+    let mut query = db.prepare(
+        "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.start,m.end
          FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
          JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2",
-        )
-        .map_err(|e| e.to_string())?;
-    let mut rivals = db
-        .prepare(
-            "SELECT n.code,r.table_pid,r.variable_pid,n.start,n.end
+    )?;
+    let mut rivals = db.prepare(
+        "SELECT n.code,r.table_pid,r.variable_pid,n.start,n.end
          FROM holding_notice_candidate r JOIN holding_notice n ON n.id=r.notice_id
          JOIN holding_column c ON c.id=n.column_id JOIN holding_table h ON h.id=c.holding_id
          WHERE h.physical_name=?1 AND c.name=?2",
-        )
-        .map_err(|e| e.to_string())?;
+    )?;
     for table in &census.tables {
         let authored = tables[table.name.as_str()];
         for column in &table.columns {
             let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
-            let mut compare = || -> Result<Option<&str>, String> {
+            let mut compare = || -> Result<Option<&str>> {
                 let (mut expected, mut contested) =
                     expected(&claims(authored, column, &index)?, authored, &tables)?;
                 let mut stored = Mappings::new();
-                let rows = query
-                    .query_map(rusqlite::params![table.name, column.name], |r| {
-                        Ok((
-                            Attributes {
-                                table: r.get(0)?,
-                                variable: r.get(1)?,
-                                role: r.get(2)?,
-                                carried: r.get(3)?,
-                                caveat: r.get(4)?,
-                                window: r.get(5)?,
-                            },
-                            (r.get(6)?, r.get(7)?),
-                        ))
-                    })
-                    .map_err(|e| e.to_string())?;
+                let rows = query.query_map(rusqlite::params![table.name, column.name], |r| {
+                    Ok((
+                        Attributes {
+                            table: r.get(0)?,
+                            variable: r.get(1)?,
+                            role: r.get(2)?,
+                            carried: r.get(3)?,
+                            caveat: r.get(4)?,
+                            window: r.get(5)?,
+                        },
+                        (r.get(6)?, r.get(7)?),
+                    ))
+                })?;
                 for row in rows {
-                    let (attributes, span) = row.map_err(|e| e.to_string())?;
+                    let (attributes, span) = row?;
                     stored.entry(attributes).or_default().push(span);
                 }
                 for mappings in [&mut stored, &mut expected] {
@@ -302,13 +297,11 @@ pub(super) fn verify(
                     ));
                 }
                 let mut recorded = Contested::new();
-                let rows = rivals
-                    .query_map(rusqlite::params![table.name, column.name], |r| {
-                        Ok(((r.get(0)?, r.get(1)?, r.get(2)?), (r.get(3)?, r.get(4)?)))
-                    })
-                    .map_err(|e| e.to_string())?;
+                let rows = rivals.query_map(rusqlite::params![table.name, column.name], |r| {
+                    Ok(((r.get(0)?, r.get(1)?, r.get(2)?), (r.get(3)?, r.get(4)?)))
+                })?;
                 for row in rows {
-                    let (key, span) = row.map_err(|e| e.to_string())?;
+                    let (key, span) = row?;
                     recorded.entry(key).or_default().push(span);
                 }
                 for spans in recorded.values_mut().chain(contested.values_mut()) {
@@ -319,7 +312,7 @@ pub(super) fn verify(
                 ))
             };
             if let Some(code) = compare().map_err(|e| format!("{location}: {e}"))? {
-                return Err(format!("{location}: {code}"));
+                return Err(format!("{location}: {code}").into());
             }
         }
     }
