@@ -47,6 +47,34 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   crate installs a hook that is silent while a thread decodes and defers to the previous
   hook otherwise. It is installed on the first check; the binary must not set a panic
   hook after that, or it replaces this one.
+- **The rewrite** builds a fresh Arrow schema of the export types (`integer` as `int64`)
+  with no key-value metadata at all: arrow-rs's `ARROW:schema` entry is skipped, so the
+  exported files carry none, where R's arrow always writes one. Pinned options: data
+  page v1, no compression, no dictionary, no statistics, row groups of 1,048,576 rows,
+  `created_by` `reg-export-gate <version>`. Byte identity holds per gate version.
+- **The backstop** scans by hand over runs of ASCII digits (the `regex` crate has no
+  lookaround). `tests/backstop/shapes.json` pins it to the R pattern: inputs and the R
+  pattern's verdict, computed once by running it.
+- **Clearing a prior export** treats a link or any non-regular entry in the output
+  folder, and an output that is itself a link, as not the gate's
+  (`output_not_gate_export`), including `output/` naming a link: the gate drops a
+  trailing separator, which would make the OS follow it. The prior receipt is read as
+  staging files are. It checks, then deletes, by path: a pipeline that swaps the output
+  folder for a link between the two has the gate delete files of the listed names, if
+  regular, in whatever folder the link points to. That gives a same-user pipeline no
+  power it lacks already (it can delete those files itself), so it stays; closing it
+  needs deletion relative to an open folder handle (`unlinkat`), which `std` does not
+  offer without `unsafe`.
+- **Paths are compared by identity on disk** (device and inode), not by spelling, so a
+  case or Unicode variant on a case-insensitive volume is the same folder; the check
+  creates `.diagnostics` first, so an output name the volume folds to it is seen. That
+  output, one named `.diagnostics` in any ASCII case, or staging inside that folder, is
+  `paths_overlap`.
+- **The report** is written beside `output` only where it can touch neither staging nor
+  the export, checked again once its folder exists, and only when staging resolves (no
+  report on `staging_missing`). It goes into a real folder, as a new file (`O_NOFOLLOW`,
+  never over an existing one; a planted link or hard link named like the report is
+  unlinked first). The export's own files are written the same way.
 - **Setup loading is stricter than R** on toolkit files: `1.0` is not the integer 1, a
   non-string `description` is invalid, and a duplicate JSON key is `schema_invalid` or
   `policy_invalid`.
@@ -60,16 +88,15 @@ VM sees read-only; staging files over 8 MiB or 100,000 rows are refused (`too_la
 the binary ships as an extra asset in the `reg_meta/v*` release, versioned by this
 crate.
 
-1. **Library: loading, inventory, structure, the size caps** (this PR). The corpus
-   runner (`tests/corpus/`) runs every refusal these checks decide and lists the rest,
-   and every pass, as pending. Two corpus cases (`structure-too-many-*`) and the corpus
+1. **Library: loading, inventory, structure, the size caps** (#2176). The corpus runner
+   (`tests/corpus/`) runs every refusal these checks decide and lists the rest, and
+   every pass, as pending. Two corpus cases (`structure-too-many-*`) and the corpus
    format's `repeat` are new; the R runner materializes `repeat` and lists the two cases
    as pending until the R gate has the caps.
 2. **Library: disclosure, backstop, the rewrite, the receipt, the report, clearing a
-   prior export.** The rewrite builds its own Arrow schema (the decoded one can carry
-   the author's file metadata). `na_not_null` leaves the rule list (Rust reads Arrow
-   validity, so the values it caught are `nan_value` or `min_cell_count`), and the two
-   NaN cases gain `unsupported_statistic`. No case pending.
+   prior export** (this PR). `export_gate()` is the whole gate. `na_not_null` leaves the
+   rule list, and the two NaN cases gain `unsupported_statistic` (pending in the R
+   runner). The whole corpus runs; nothing is pending here.
 3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
    `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes.
 4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,

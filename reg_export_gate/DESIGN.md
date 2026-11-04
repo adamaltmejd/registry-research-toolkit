@@ -159,14 +159,17 @@ output. In order:
    a cell that looks suppressed could carry a value. A suppressed statistic is a true
    null. The rule covers every double rather than only statistics beside a suppressed
    count, because the channel is the same in a dimension or an unsuppressed row, and an
-   aggregate has no legitimate NaN to lose. Null-ness comes from Arrow's validity, which
-   is what the rewrite writes, not from R's conversion: R reads some valid Arrow values
-   as `NA` (a NaN whose low 32-bit word is 1954, which is R's `NA_real_` pattern with
-   room for 21 free payload bits; `int32` `INT_MIN`; the `int64` NA sentinel). A column
-   whose R `NA`s are not exactly its Arrow nulls is refused (`na_not_null`), so every
-   rule sees the same nulls the export holds, and a cell that passes as suppressed is
-   written as a true null. It is a disclosure rule, beside `nan_value`, because the harm
-   is the same: a value hidden in a cell that looks suppressed.
+   aggregate has no legitimate NaN to lose. Null-ness is Arrow's validity, which is what
+   the rewrite writes: a NaN beside a suppressed count is a value, so its statistic is
+   also `unsupported_statistic`. The Rust gate (the reference) reads validity directly.
+   R reads some valid Arrow values as `NA` (a NaN whose low 32-bit word is 1954, R's
+   `NA_real_` pattern with room for 21 free payload bits; `int32` `INT_MIN`; the `int64`
+   NA sentinel), so the R gate today refuses a column whose R `NA`s are not exactly its
+   Arrow nulls as `na_not_null`, an R-only rule. The reference has no such conversion:
+   that NaN is `nan_value`, a sentinel count is `min_cell_count`, and a sentinel in an
+   integer dimension is an ordinary value. Until `export_gate.R` imitates the binary,
+   the two NaN cases (`disclosure-na-bit-pattern`, `disclosure-nan-statistic`) are
+   pending in the R runner.
 4. **Backstop scan.** Every value is scanned for personnummer and samordningsnummer
    shapes (10 or 12 digits, optional `-` or `+`, a valid month and day or day + 60, not
    inside a longer digit run): strings as written, integers in full, dates as their day
@@ -234,17 +237,19 @@ are policy work for later versions; until then the human review covers them.
 The code is the category; the rule locates the finding. Both are stable.
 
 - `setup`: `staging_missing`, `output_parent_missing`, `paths_overlap`,
-  `jsonlite_missing`, `arrow_missing`, `arrow_too_old`, `sha256_missing`,
   `output_not_gate_export`, `output_not_removable`, `schema_unreadable`,
   `schema_invalid`, `schema_version`, `schema_reserved_name`, `policy_missing`,
   `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
-  `export_not_writable`, `move_failed`, `internal_warning`,
+  `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO or writer failure,
+  reported without its message). In the R gate only: `jsonlite_missing`,
+  `arrow_missing`, `arrow_too_old`, `sha256_missing`, `internal_warning`,
   `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
   `column_order`, `column_type`.
-- `disclosure`: `nan_value`, `na_not_null`, `min_cell_count`, `unsupported_statistic`.
+- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`; in the R gate
+  only, `na_not_null`.
 - `backstop`: `identifier_pattern`.
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
@@ -278,16 +283,18 @@ like a changed data file. Its format is fixed by the toolkit, not by the schema:
 {
   "format": "reg-export-gate/receipt",
   "format_version": 1,
-  "gate": { "implementation": "R", "version": "0.2.0" },
+  "gate": { "implementation": "rust", "version": "0.1.0" },
   "schema": { "name": "trial", "version": 1, "sha256": "…" },
   "policy": { "name": "trial-min5", "version": 1, "sha256": "…" },
   "files": [{ "name": "persons_by_year_group.parquet", "sha256": "…" }]
 }
 ```
 
-Files are listed in schema order; there is no timestamp, so a rerun over the same data
-under the same arrow release writes the same receipt. Hashes are of the file bytes the
-gate wrote; the schema and policy hashes are of the JSON files as read.
+`implementation` is `rust` for the binary and `R` for the MONA check, each with its own
+version. Files are listed in schema order; there is no timestamp, so a rerun over the
+same data under the same gate version (for R, the same arrow release) writes the same
+receipt. Hashes are of the file bytes the gate wrote; the schema and policy hashes are
+of the JSON files as read.
 
 Reports, logs and diagnostics go in a `.diagnostics/` folder beside the output folder
 and are never exported. The MONA check writes one,

@@ -10,10 +10,12 @@ workspace = true
 [dependencies]
 arrow-array = "60.1.0"
 arrow-schema = "60.1.0"
+arrow-select = "60.1.0"
 bytes = "1.12.1"
 parquet = { version = "60.1.0", default-features = false, features = ["arrow", "snap", "zstd", "flate2-zlib-rs", "lz4"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
+sha2 = "0.11.1"
 
 # O_NOFOLLOW and O_NONBLOCK: a staging file is opened once, never through a
 # link, and never blocks on a FIFO swapped in after the inventory.
