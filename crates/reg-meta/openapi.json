@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -4410,7 +4410,8 @@
                 }
               },
               "description": {
-                "type": "string"
+                "type": "string",
+                "description": "The curated description; without one, the description every member states\nalike."
               },
               "fqid": {
                 "type": "string"
@@ -4608,31 +4609,6 @@
           }
         }
       },
-      "ShowSetColumn": {
-        "type": "object",
-        "description": "A table and column name the member appears under.",
-        "required": [
-          "table",
-          "spelling",
-          "periods"
-        ],
-        "properties": {
-          "periods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Period"
-            },
-            "description": "The column's periods, in time order."
-          },
-          "spelling": {
-            "type": "string"
-          },
-          "table": {
-            "type": "string",
-            "description": "The table's fqid."
-          }
-        }
-      },
       "ShowSetFacet": {
         "type": "object",
         "required": [
@@ -4657,16 +4633,13 @@
         "required": [
           "fqid",
           "name",
-          "columns",
+          "segments",
           "facets"
         ],
         "properties": {
-          "columns": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShowSetColumn"
-            },
-            "description": "The member's columns, ordered by table then spelling."
+          "description": {
+            "type": "string",
+            "description": "The curated description, only where it differs from the set's."
           },
           "facets": {
             "type": "array",
@@ -4680,6 +4653,13 @@
           },
           "name": {
             "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "description": "The member's whole per-period list, as `segments` serves it without evidence."
           }
         }
       },

@@ -22,13 +22,16 @@
           {
             "fqid": "demo/bas/gross-household",
             "name": "Förvärvsinkomst, hushåll",
-            "columns": [
+            "segments": [
               {
                 "table": "demo/bas",
-                "spelling": "gross-household",
-                "periods": [
-                  {"start": "2022-01-01", "end": "2023-01-01"}
-                ]
+                "column": "gross-household",
+                "period": {
+                  "start": "2022-01-01",
+                  "end": "2023-01-01"
+                },
+                "type": "int",
+                "role": "measure"
               }
             ],
             "facets": [
@@ -47,13 +50,16 @@
           {
             "fqid": "demo/bas/net-household",
             "name": "Disponibel inkomst, hushåll",
-            "columns": [
+            "segments": [
               {
                 "table": "demo/bas",
-                "spelling": "net-household",
-                "periods": [
-                  {"start": "2022-01-01", "end": "2023-01-01"}
-                ]
+                "column": "net-household",
+                "period": {
+                  "start": "2022-01-01",
+                  "end": "2023-01-01"
+                },
+                "type": "int",
+                "role": "measure"
               }
             ],
             "facets": [
@@ -72,13 +78,16 @@
           {
             "fqid": "demo/bas/gross-person",
             "name": "Förvärvsinkomst, person",
-            "columns": [
+            "segments": [
               {
                 "table": "demo/bas",
-                "spelling": "gross-person",
-                "periods": [
-                  {"start": "2022-01-01", "end": "2023-01-01"}
-                ]
+                "column": "gross-person",
+                "period": {
+                  "start": "2022-01-01",
+                  "end": "2023-01-01"
+                },
+                "type": "int",
+                "role": "measure"
               }
             ],
             "facets": [
@@ -97,14 +106,40 @@
           {
             "fqid": "demo/bas/inkomst",
             "name": "Inkomst efter skatt",
-            "columns": [
+            "description": "Inkomst per person, före skatt till och med 2018.",
+            "segments": [
               {
                 "table": "demo/bas",
-                "spelling": "Inkomst",
-                "periods": [
-                  {"start": "2015-01-01", "end": "2017-01-01"},
-                  {"start": "2018-01-01", "end": "2023-01-01"}
-                ]
+                "column": "Inkomst",
+                "period": {
+                  "start": "2015-01-01",
+                  "end": "2017-01-01"
+                },
+                "wording": "Summan av förvärvsinkomster före skatt.",
+                "type": "int",
+                "role": "measure"
+              },
+              {
+                "table": "demo/bas",
+                "column": "Inkomst",
+                "period": {
+                  "start": "2018-01-01",
+                  "end": "2019-01-01"
+                },
+                "wording": "Summan av förvärvsinkomster före skatt.",
+                "type": "int",
+                "role": "measure"
+              },
+              {
+                "table": "demo/bas",
+                "column": "Inkomst",
+                "period": {
+                  "start": "2019-01-01",
+                  "end": "2023-01-01"
+                },
+                "wording": "Summan av förvärvsinkomster efter skatt.",
+                "type": "int",
+                "role": "measure"
               }
             ],
             "facets": [
@@ -128,6 +163,39 @@
           }
         ]
       }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "set/demo/bas/person",
+      "/data/description": "Uppgift om personen vid årets slut.",
+      "/data/members/0/fqid": "demo/bas/kommun",
+      "/data/members/1/fqid": "demo/bas/alder"
+    },
+    "keys": {
+      "/data": [
+        "axes",
+        "description",
+        "fqid",
+        "kind",
+        "members",
+        "name",
+        "register",
+        "tags"
+      ],
+      "/data/members/0": [
+        "facets",
+        "fqid",
+        "name",
+        "segments"
+      ],
+      "/data/members/1": [
+        "facets",
+        "fqid",
+        "name",
+        "segments"
+      ]
     }
   },
   {
