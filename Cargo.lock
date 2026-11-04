@@ -1117,7 +1117,7 @@ dependencies = [
 
 [[package]]
 name = "reg-export-gate"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "arrow-array",
  "arrow-schema",

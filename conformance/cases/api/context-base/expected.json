@@ -3,11 +3,9 @@
     "status": 200,
     "headers": {"cache-control": "no-cache"},
     "json": {
-      "/data/catalog_version": "dev",
-      "/data/schema_version": "8",
-      "/data/period_span": {"start": "2019-01-01", "end": "2021-01-01"},
-      "/data/sizes": {"providers": 1, "registers": 1, "tables": 1, "variables": 3}
-    }
+      "/data/period_span": {"start": "2019-01-01", "end": "2021-01-01"}
+    },
+    "keys": {"/data": ["period_span", "reg_meta_version"]}
   },
   {"status": 304}
 ]

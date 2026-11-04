@@ -124,7 +124,7 @@ HTTP API             MCP over stdio (local catalog)
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
 - `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
-  data side. It reads no catalog. Being built (#1803); its design is
+  data side. It reads no catalog. Its design is
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
@@ -135,15 +135,19 @@ dependency.
 **Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
 fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
 digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
-arm64 and Linux x86_64 with SHA-256 checksums, and two DB assets, `reg_meta.db.zst`
-(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
-holdings pin the base's `catalog_sha256`). There is no separate docs asset. The binaries
-serve local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no
-PyPI package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows
-binary is added only if it builds and runs without special effort. The
-`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
-the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
-instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
+arm64 and Linux x86_64 with SHA-256 checksums, the export gate's `reg-export-gate`
+binaries for the same targets (named by the gate crate's own version,
+`reg-export-gate-<version>-<target>`; the Linux build links the runner's glibc, so it
+needs an Ubuntu 24.04-era distribution or newer on the data VM), and two DB assets,
+`reg_meta.db.zst` (documents included) and the paired `reg_meta_swecov.db.zst`, built in
+the same run (the holdings pin the base's `catalog_sha256`). There is no separate docs
+asset. The `reg-meta` binaries serve local HTTP or MCP; the catalog is downloaded with
+`curl` and `zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use
+hosted MCP; a local Windows binary is added only if it builds and runs without special
+effort. The `microdata-tools-se` plugin declares one hosted MCP server whose URL is a
+user setting: the global catalog by default, a hosted steward catalog
+(`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the agent's
+MCP configuration by hand.
 
 ## The catalog builder
 
@@ -1381,7 +1385,14 @@ evidence). Pin selected delivery-document evidence there too, retaining original
 privately. Reuse the catalog input-pin discipline: verify the supplied checkout against
 the exact commit and declared paths/hashes; no implicit latest branch or neighbouring
 inputs. The compiled holdings file carries presentation/config data needed at runtime;
-serving never checks out that repo or parses its TOML.
+serving never checks out that repo or parses its TOML. `context` serves only what the
+site shows: the steward's presentation and logo, the server version and the period span.
+In steward mode the span is the hull of the placements, not of the reference registers
+(which cover years the steward does not hold); outside it, the hull of the registers. A
+timeless period (both bounds open) is left out, so one timeless table cannot take the
+study-years slider's bounds; an ongoing register still leaves the end open. Dropping
+whole periods, not single open bounds, keeps the hull ordered. A hull open at both ends
+(one period open at the start, another at the end) has no span either.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,

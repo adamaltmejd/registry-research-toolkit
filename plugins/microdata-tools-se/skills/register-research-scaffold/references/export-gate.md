@@ -124,7 +124,10 @@ shows integrity, not that the gate ran.
 
 ## Other servers
 
-The `reg-export-gate` binary (review UI, one-way delivery) is designed but not released.
-Until it is, a flexible server runs the same R file as the last step, the same way, and
-the human review of the export stays as described in
+A server that can run executables uses the `reg-export-gate` binary, released with each
+`reg_meta/v*` release: the pipeline's last step runs
+`reg-export-gate check --project NAME --staging DIR`, and the reviewer, after inspecting
+the checked output, runs `reg-export-gate export` to deliver it one way to the agent's
+side. There is no review UI. A server that cannot run it runs the same R file as the
+last step, the same way, and the human review of the export stays as described in
 [operator-review.md](operator-review.md).
