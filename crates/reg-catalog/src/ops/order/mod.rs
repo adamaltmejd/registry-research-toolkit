@@ -1,6 +1,7 @@
 //! `validate` and `order`: the order check of design v4 §9 over the v4 catalog
 //! (crates/DESIGN.md, "The logical order"). One function, [`check`], answers both
-//! operations, which is what makes their results identical.
+//! operations (through [`checked`], which adds the holdings stage on a steward
+//! server), which is what makes their results identical.
 //!
 //! The check, per source: resolve the table (`refs::table`) and the bindings' ids; check
 //! the period against the table (`_default` exactly on a timeless table); follow the
@@ -91,19 +92,9 @@ fn project(params: &Params) -> Result<Value, Error> {
 fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
     let issues: Vec<Issue> = match reg_core::project::check(&project(params)?) {
         Err(result) => result.issues.into_iter().map(Issue::from).collect(),
-        // A steward server also runs the holdings stage, so validate refuses what
-        // `materialize` would block (an unheld variable is `mapping_missing`).
-        Ok(project) => match (server.catalog.connect_holdings()?, server.catalog.steward()) {
-            (Some(held), Some(steward)) => {
-                match materialize::manifest(server, &held, steward, &project)? {
-                    Ok(manifest) => manifest.findings,
-                    Err(findings) => findings,
-                }
-            }
-            _ => match check(server, &project)? {
-                Ok(order) => order.findings,
-                Err(findings) => findings,
-            },
+        Ok(project) => match checked(server, &project)? {
+            Ok(order) => order.findings,
+            Err(findings) => findings,
         },
     };
     let ok = !issues.iter().any(Issue::blocks);
@@ -114,10 +105,33 @@ fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
 /// with every finding.
 fn order(server: &Server, params: &Params) -> Result<Value, Error> {
     let project = structural(&project(params)?)?;
-    match check(server, &project)? {
+    match checked(server, &project)? {
         Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
         Err(findings) => Err(blocked(findings)),
     }
+}
+
+/// The logical order with every non-blocking finding, or every finding that blocks it.
+/// A steward server also runs the holdings stage of `materialize_order`, so `validate`
+/// and `order` refuse exactly what it would block (an unheld variable is
+/// `mapping_missing`) and carry its warnings on success (#2194).
+fn checked(
+    server: &Server,
+    project: &ProjectData,
+) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
+    let mut order = match check(server, project)? {
+        Ok(order) => order,
+        Err(findings) => return Ok(Err(findings)),
+    };
+    if let (Some(held), Some(steward)) =
+        (server.catalog.connect_holdings()?, server.catalog.steward())
+    {
+        match materialize::manifest(server, &held, steward, project, &order)? {
+            Ok(manifest) => order.findings = manifest.findings,
+            Err(findings) => return Ok(Err(findings)),
+        }
+    }
+    Ok(Ok(order))
 }
 
 /// The structurally valid project, or `project_invalid` with its issues.
