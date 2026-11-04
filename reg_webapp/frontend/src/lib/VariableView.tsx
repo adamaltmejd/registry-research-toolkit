@@ -446,7 +446,7 @@ export function VariableView({
           page to try again.
         </StatusRow>
       )}
-      {segments.data && <ValueSetView segments={segments.data} names={names} />}
+      {segments.data && <ValueSetView segments={factSegments} names={names} />}
       <ScopedDataWarnings fqid={node.fqid} names={names} />
       <RelatedDocumentsPanel fqid={node.fqid} names={names} />
       <Disclosure

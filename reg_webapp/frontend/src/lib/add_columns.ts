@@ -69,12 +69,21 @@ export function heldColumns(
       const period = overlapPeriod(segment.period, placement.period);
       return period ? [{ ...segment, period }] : [];
     });
-    const spelled = overlapping.filter(
-      (s) => s.spelling.toLowerCase() === placement.column.toLowerCase(),
-    );
-    const chosen = (spelled.length ? spelled : overlapping).sort((a, b) =>
-      (a.period.start ?? "").localeCompare(b.period.start ?? ""),
-    );
+    // Prefer the held spelling per interval: a segment spelled otherwise stays
+    // where no same-spelled segment overlaps it (a rename the file did not take).
+    const sameSpelling = (s: CatalogSegment) =>
+      s.spelling.toLowerCase() === placement.column.toLowerCase();
+    const chosen = overlapping
+      .filter(
+        (s) =>
+          sameSpelling(s) ||
+          !overlapping.some(
+            (o) => sameSpelling(o) && overlapPeriod(o.period, s.period),
+          ),
+      )
+      .sort((a, b) =>
+        (a.period.start ?? "").localeCompare(b.period.start ?? ""),
+      );
     const bare = (period: CatalogSegment["period"]): CatalogSegment => ({
       classification: null,
       coded: "unknown",

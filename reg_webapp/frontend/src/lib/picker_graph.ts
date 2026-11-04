@@ -77,9 +77,18 @@ export function variableSpans({
           }
         : null;
     const years = eras.map(yearWindowLabel).join(", ");
-    const coding = [...column.segments].sort((a, b) =>
-      (a.period.start ?? "").localeCompare(b.period.start ?? ""),
-    );
+    // A segment that states no coding (an undocumented held year) is unknown, not
+    // a change: compare only segments that state some.
+    const coding = column.segments
+      .filter(
+        (segment) =>
+          segment.classification != null ||
+          segment.value_set != null ||
+          (segment.coded != null && segment.coded !== "unknown"),
+      )
+      .sort((a, b) =>
+        (a.period.start ?? "").localeCompare(b.period.start ?? ""),
+      );
     const changes = [
       ...new Set(
         coding.flatMap((segment, index) =>
