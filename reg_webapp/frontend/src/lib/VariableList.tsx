@@ -95,24 +95,22 @@ export function VariableList({
         ),
       ]
     : ranked;
+  // Names only, except where two variables share a name: then the years tell
+  // them apart, on screen and in the accessible name.
   const nameCounts = new Map<string, number>();
   for (const variable of variables) {
     nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
   }
-  const items = rows.map((row) => {
-    const period = catalogPeriodLabel(row.period);
-    return {
-      id: row.fqid,
-      name: row.name,
-      label:
-        (nameCounts.get(row.name) ?? 0) > 1
-          ? `${row.name}, ${period}`
-          : undefined,
-      href: catalogHref(row.fqid),
-      inProject: 0,
-      period,
-    };
-  });
+  const items = rows.map((row) => ({
+    id: row.fqid,
+    name: row.name,
+    label:
+      (nameCounts.get(row.name) ?? 0) > 1
+        ? `${row.name}, ${catalogPeriodLabel(row.period)}`
+        : undefined,
+    href: catalogHref(row.fqid),
+    inProject: 0,
+  }));
   // ColumnList passes this renderer into RAC's Collection dependencies. A fresh
   // function rebuilds every row, so keep it stable until the search text changes.
   const renderName = useCallback(
@@ -121,11 +119,8 @@ export function VariableList({
       item.id.startsWith(MORE) ? (
         item.name
       ) : (
-        <span className={styles.variableName}>
-          <span className={styles.variableLabel}>
-            <Highlight text={item.name} needle={needle} />
-          </span>
-          {item.period && <span className={styles.period}>{item.period}</span>}
+        <span className={styles.variableLabel}>
+          <Highlight text={item.label ?? item.name} needle={needle} />
         </span>
       ),
     [needle],

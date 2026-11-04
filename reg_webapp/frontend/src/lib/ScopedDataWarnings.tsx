@@ -16,14 +16,15 @@ export function ScopedDataWarnings({
   );
   if (resource.loading)
     return (
-      <section aria-label="Findings" aria-busy="true">
+      <section aria-label="Notes on this data" aria-busy="true">
         <Skeleton />
       </section>
     );
   if (resource.error || !resource.data)
     return (
       <StatusRow tone="error" live="alert">
-        Findings did not load ({resource.error}). Reload the page to try again.
+        Notes on this data did not load ({resource.error}). Reload the page to
+        try again.
       </StatusRow>
     );
   return <DataWarnings findings={resource.data} names={names} />;
