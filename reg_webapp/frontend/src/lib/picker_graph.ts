@@ -99,6 +99,7 @@ export function variableSpans({
       id: `${idPrefix}${column.id}`,
       lane: `${idPrefix}${column.table}`,
       name: column.spelling,
+      table: column.file,
       from: first,
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
@@ -110,11 +111,16 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${column.spelling}, ${variable.name}, ${column.file ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the add window")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly
-        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
+        ? readOnlySpan(
+            span,
+            !!source,
+            variable.name,
+            column.file ?? names.get(column.table),
+          )
         : span,
     ];
   });

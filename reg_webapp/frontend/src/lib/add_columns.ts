@@ -1,4 +1,4 @@
-import type { CatalogSegment, RegisterShow } from "./api";
+import type { CatalogSegment, Coverage, RegisterShow } from "./api";
 import { catalogLastDate } from "./catalog_period";
 import { periodCoverageUnion } from "./period";
 import type {
@@ -29,6 +29,98 @@ export interface VariableColumn {
   table: string;
   spelling: string;
   segments: CatalogSegment[];
+  /** The file the steward holds the column in; absent off a steward
+   * deployment, where the table's name stands for it. */
+  file?: string;
+}
+
+type Placement = NonNullable<Coverage["held"]>[number];
+
+/** Overlap of two periods (`end` exclusive, null unbounded), or null. */
+function overlapPeriod(
+  a: CatalogSegment["period"],
+  b: CatalogSegment["period"],
+): CatalogSegment["period"] | null {
+  const start =
+    a.start === null
+      ? b.start
+      : b.start === null || a.start > b.start
+        ? a.start
+        : b.start;
+  const end =
+    a.end === null ? b.end : b.end === null || a.end < b.end ? a.end : b.end;
+  return start !== null && end !== null && start >= end ? null : { start, end };
+}
+
+/** A steward deployment's columns: one per held file and column, over the
+ * years held, never the reference catalog's wider periods. Each placement
+ * borrows the facts (type, coding) of the catalog segments it overlaps in its
+ * table, preferring the same spelling; with none, the table's or the
+ * variable's first segment. */
+export function heldColumns(
+  segments: readonly CatalogSegment[],
+  held: readonly Placement[],
+): VariableColumn[] {
+  const columns = new Map<string, VariableColumn>();
+  for (const placement of held) {
+    const inTable = segments.filter((s) => s.table === placement.table);
+    const spelled = inTable.filter(
+      (s) => s.spelling.toLowerCase() === placement.column.toLowerCase(),
+    );
+    const candidates = spelled.length ? spelled : inTable;
+    const overlapping = candidates.flatMap((segment) => {
+      const period = overlapPeriod(segment.period, placement.period);
+      return period ? [{ ...segment, period }] : [];
+    });
+    const template = candidates[0] ?? segments[0];
+    const parts = overlapping.length
+      ? overlapping
+      : [
+          template
+            ? { ...template, period: placement.period }
+            : {
+                classification: null,
+                coded: "unknown",
+                format: null,
+                id_kind: null,
+                identifier: null,
+                length: null,
+                period: placement.period,
+                role: placement.role,
+                sensitive: null,
+                spelling: placement.column,
+                state: "clear",
+                table: placement.table,
+                temporality: "unknown",
+                type: null,
+                value_set: null,
+              },
+        ];
+    const id = JSON.stringify([
+      placement.table,
+      placement.column,
+      placement.physical_table,
+    ]);
+    let column = columns.get(id);
+    if (!column) {
+      column = {
+        id,
+        table: placement.table,
+        spelling: placement.column,
+        segments: [],
+        file: placement.physical_table,
+      };
+      columns.set(id, column);
+    }
+    column.segments.push(
+      ...parts.map((part) => ({
+        ...part,
+        table: placement.table,
+        spelling: placement.column,
+      })),
+    );
+  }
+  return [...columns.values()];
 }
 
 /** A delivery column's identity is its table and exact delivered spelling. */

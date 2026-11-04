@@ -4,22 +4,27 @@ import {
   DisclosurePanel,
   Heading,
 } from "react-aria-components";
-import type { Context, TableShow } from "./api";
+import { type Context, getCoverage, type TableShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { catalogWords } from "./catalog_labels";
 import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
-import { HeldPanels } from "./HeldPanels";
+import { yearWindowLabel } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
+import { columnYearRuns } from "./study_window";
 import { ColumnChip } from "./ui/ColumnChip";
 import { DataTable } from "./ui/DataTable";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
+import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { TreeChevron } from "./ui/TreeChevron";
+import { useAsyncResource } from "./use_async_resource";
 import { useCatalogRead } from "./use_store_read";
+import { windowBounds } from "./window_bounds";
 
 type Release = TableShow["releases"][number];
 type Population = Release["populations"][number];
@@ -48,6 +53,12 @@ function compareReleases(a: Release, b: Release): number {
   );
 }
 
+function stated(term: string, value: string | null) {
+  return value && value !== "unknown" && value !== "unstated"
+    ? [{ term, value: catalogWords(value) }]
+    : [];
+}
+
 function releaseCount(count: number): string {
   return count === 1 ? "1 release" : `${count} releases`;
 }
@@ -61,6 +72,17 @@ export function TableView({
 }) {
   const register = useCatalogRead(registerRead, node.register).value;
   const names = registerSubjectNames(register);
+  // A steward deployment shows the years it holds, not the reference spans.
+  const steward = context?.steward_config != null;
+  const held = useAsyncResource(steward ? node.fqid : null, (signal) =>
+    getCoverage(node.fqid, { signal }),
+  );
+  const bounds = windowBounds(context);
+  const years = steward
+    ? columnYearRuns(held.data?.held ?? [], [bounds.min, bounds.max]).map(
+        yearWindowLabel,
+      )
+    : node.spans.map(catalogPeriodLabel);
   const releases = [...node.releases].sort(compareReleases);
   // Most providers state no edition: the column shows only where one does.
   const editioned = releases.some((release) => release.edition !== "unstated");
@@ -113,24 +135,34 @@ export function TableView({
           ...(node.description
             ? [{ term: "Description", value: node.description }]
             : []),
-          { term: "Role", value: catalogWords(node.role) },
-          { term: "Cadence", value: catalogWords(node.cadence) },
-          { term: "Unit type", value: node.unit_type ?? "Not stated" },
+          // A fact the catalog does not state is left out, not printed as
+          // "Not stated" (DESIGN.md → Detail pane).
+          ...stated("Role", node.role),
+          ...stated("Cadence", node.cadence),
+          ...(node.unit_type
+            ? [{ term: "Unit type", value: node.unit_type }]
+            : []),
           { term: "Timeless", value: node.timeless ? "Yes" : "No" },
           { term: "Implicit", value: node.implicit ? "Yes" : "No" },
         ]}
       />
-      {context?.steward_config != null && (
-        <HeldPanels fqid={node.fqid} kind="table" names={names} />
-      )}
-      <Panel title="Spans">
-        {node.spans.length === 0 ? (
-          <EmptyState title="This table has no dated spans." />
+      <Panel title="Years">
+        {held.loading ? (
+          <div aria-busy="true">
+            <Skeleton count={1} />
+          </div>
+        ) : held.error ? (
+          <StatusRow tone="error" live="alert">
+            The years held did not load ({held.error}). Reload the page to try
+            again.
+          </StatusRow>
+        ) : years.length === 0 ? (
+          <EmptyState title="This table has no dated years." />
         ) : (
           <ul className={styles.plainList}>
-            {node.spans.map((span) => (
-              <li key={JSON.stringify(span)}>
-                <code>{catalogPeriodLabel(span)}</code>
+            {years.map((label) => (
+              <li key={label}>
+                <code>{label}</code>
               </li>
             ))}
           </ul>

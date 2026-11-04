@@ -33,10 +33,18 @@ export function RegisterView({
       ),
     [draft],
   );
+  // A steward deployment lists only the tables and variables it holds.
+  const steward = context?.steward_config != null;
+  const variables = steward
+    ? node.variables.filter((variable) => variable.held !== false)
+    : node.variables;
+  const listedTables = steward
+    ? node.tables.filter((table) => table.held !== false)
+    : node.tables;
   const study = studyWindow(draft);
   const catalogBounds = windowBounds(context);
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
-  const deliveries = columnYearRuns(node.tables, bounds);
+  const deliveries = columnYearRuns(listedTables, bounds);
   const axis = dataAxis(
     deliveries.flatMap((run) => [run.from, run.to]),
     study,
@@ -53,15 +61,15 @@ export function RegisterView({
   }>({ register: node.fqid, tables: new Set() });
   const selected: ReadonlySet<string> =
     filter.register === node.fqid ? filter.tables : new Set();
-  const tables = [...node.tables].sort((a, b) =>
+  const tables = [...listedTables].sort((a, b) =>
     svCollator.compare(a.name, b.name),
   );
-  const delivering = new Set(node.variables.flatMap((v) => v.tables));
+  const delivering = new Set(variables.flatMap((v) => v.tables));
   const chipTables = tables.filter((table) => delivering.has(table.fqid));
   const shown =
     selected.size === 0
-      ? node.variables
-      : node.variables.filter((v) => v.tables.some((t) => selected.has(t)));
+      ? variables
+      : variables.filter((v) => v.tables.some((t) => selected.has(t)));
   function toggleTable(fqid: string): void {
     const next = new Set(selected);
     if (!next.delete(fqid)) next.add(fqid);
@@ -76,12 +84,18 @@ export function RegisterView({
           ...(node.description
             ? [{ term: "Description", value: node.description }]
             : []),
-          {
-            term: "Period",
-            value: <code>{catalogPeriodLabel(node.period)}</code>,
-          },
-          // The route to each table's page (role, cadence, held placements),
-          // including tables no chip names.
+          // On a steward deployment the reference period would claim more than
+          // it holds.
+          ...(steward
+            ? []
+            : [
+                {
+                  term: "Period",
+                  value: <code>{catalogPeriodLabel(node.period)}</code>,
+                },
+              ]),
+          // The route to each table's page (role, cadence, years), including
+          // tables no chip names.
           ...(tables.length > 0
             ? [
                 {
@@ -99,8 +113,8 @@ export function RegisterView({
             : []),
         ]}
       />
-      <Panel title="Variables" flush={node.variables.length > 0}>
-        {node.variables.length === 0 ? (
+      <Panel title="Variables" flush={variables.length > 0}>
+        {variables.length === 0 ? (
           <EmptyState title="This register lists no variables." />
         ) : (
           <>
@@ -123,7 +137,7 @@ export function RegisterView({
                     is not announced. */}
                 <span className={styles.shown} aria-live="polite">
                   {selected.size > 0
-                    ? `${shown.length} of ${node.variables.length} shown`
+                    ? `${shown.length} of ${variables.length} shown`
                     : ""}
                 </span>
               </fieldset>

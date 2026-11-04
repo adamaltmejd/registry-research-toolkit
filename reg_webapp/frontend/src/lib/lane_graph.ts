@@ -23,6 +23,9 @@ export interface LaneSpanGeometryInput {
   lane: string;
   /** The column name, the text set on the span. */
   name: string;
+  /** The file the column is held in, set on the span after its name (a
+   * steward deployment's variable page). */
+  table?: string;
   /** Inclusive years on the axis. */
   from: number;
   to: number;
@@ -75,6 +78,9 @@ export interface PlacedSpan {
   segments: PlacedSegment[];
   /** Where the name sits: inside the span, or beside it. */
   label: "inside" | "right" | "left";
+  /** Whether the span's file is set after its name (cut short inside a
+   * narrow span); false beside a span where only the name fits. */
+  table: boolean;
 }
 
 export interface PlacedLane {
@@ -137,6 +143,11 @@ const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
 
+/** The text a span carries: its column name, then its file when it has one. */
+export function spanLabel(span: { name: string; table?: string }): string {
+  return span.table ? `${span.name} ${span.table}` : span.name;
+}
+
 export function labelWidth(name: string): number {
   return name.length * COLUMN_CHAR + LABEL_PAD;
 }
@@ -173,19 +184,25 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     for (const span of spans) {
       const left = x(span.from);
       const width = Math.max(x(span.to + 1) - left, MIN_SPAN);
-      const need = labelWidth(span.name);
-      let label: PlacedSpan["label"] = "inside";
-      let start = left;
-      let end = left + width;
-      if (need > width) {
-        if (end + LABEL_GAP + need <= trackEnd) {
-          label = "right";
-          end += LABEL_GAP + need;
-        } else if (start - LABEL_GAP - need >= trackX) {
-          label = "left";
-          start -= LABEL_GAP + need;
-        }
-      }
+      // The name and file inside, else beside. Where neither fits, the name
+      // alone decides, and the file is cut short inside the span or dropped
+      // beside it.
+      const fit = (need: number) =>
+        need <= width
+          ? ("inside" as const)
+          : left + width + LABEL_GAP + need <= trackEnd
+            ? ("right" as const)
+            : left - LABEL_GAP - need >= trackX
+              ? ("left" as const)
+              : null;
+      const full = labelWidth(spanLabel(span));
+      const fullFit = fit(full);
+      const need = fullFit ? full : labelWidth(span.name);
+      const label: PlacedSpan["label"] = fullFit ?? fit(need) ?? "inside";
+      const withTable =
+        !!span.table && (fullFit !== null || label === "inside");
+      const start = label === "left" ? left - LABEL_GAP - need : left;
+      const end = left + width + (label === "right" ? LABEL_GAP + need : 0);
       let row = rowEnds.findIndex((rowEnd) => rowEnd + PACK_GAP <= start);
       if (row < 0) {
         row = rowEnds.length;
@@ -211,6 +228,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         width,
         segments,
         label,
+        table: withTable,
       });
     }
     rowsOf.set(lane.id, Math.max(rowEnds.length, 1));

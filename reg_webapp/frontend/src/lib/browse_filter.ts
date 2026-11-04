@@ -32,25 +32,11 @@ export const browseFilter = {
 
 const read = () => value;
 
-export type BrowseScope = "steward" | "reference";
-let scope: BrowseScope = "steward";
-
-/** Paired variable searches start with held matches; global requests omit scope. */
-export const browseScope = {
-  set(next: string): void {
-    if ((next !== "steward" && next !== "reference") || next === scope) return;
-    scope = next;
-    for (const notify of listeners) notify();
-  },
-};
-
-const readScope = () => scope;
-
-export function useBrowseScope(
+/** A steward deployment searches its holdings only; global requests omit scope. */
+export function searchScope(
   config: StewardConfig | null,
-): BrowseScope | undefined {
-  const selected = useSyncExternalStore(browseFilter.subscribe, readScope);
-  return config === null ? undefined : selected;
+): "steward" | undefined {
+  return config === null ? undefined : "steward";
 }
 
 export function allRegisterFacets(
@@ -122,7 +108,7 @@ export function useRegisterMatches(
   config: StewardConfig | null,
 ): ReadonlySet<string> | null {
   const query = useSettledFilter();
-  const scope = useBrowseScope(config);
+  const scope = searchScope(config);
   const matches = useAsyncResource(
     query === null ? null : `${scope ?? ""}\u0000${registerFqid}\u0000${query}`,
     (signal) =>
@@ -169,7 +155,7 @@ export function useOtherRegisterMatches(
 ): { reference: RegisterFacet[]; steward: RegisterFacet[] } | null {
   const needle = useBrowseFilter().trim();
   const query = useSettledFilter();
-  const scope = useBrowseScope(config);
+  const scope = searchScope(config);
   const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
   const matches = useAsyncResource(
     query === null ? null : `${scope ?? ""}\u0000${query}`,
@@ -183,7 +169,7 @@ export function useOtherRegisterMatches(
   // The last answer stands while the next query settles and loads, so the
   // sections do not drop out and come back on every keystroke.
   const [last, setLast] = useState<{
-    scope: BrowseScope | undefined;
+    scope: "steward" | undefined;
     data: RegisterFacets;
   } | null>(null);
   if (matches.data !== null && matches.data !== last?.data)
