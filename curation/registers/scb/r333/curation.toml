@@ -3937,18 +3937,6 @@ evidence = "Variabeln mäter adoptivfaderns utbildningsnivå.\ncatalog:occurrenc
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-adfar-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-adfar.\ncatalog:occurrence:47786\ncatalog:occurrence:47892"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-adfar-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-adfar.\ncatalog:occurrence:47786\ncatalog:occurrence:47892"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-admor"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter adoptivmoderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6619"
@@ -3958,18 +3946,6 @@ kind = "set"
 subject = "var:utbildningsniva-grov-admor"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln mäter adoptivmoderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6619"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-admor-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-admor.\ncatalog:occurrence:47787\ncatalog:occurrence:47893"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-admor-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-admor.\ncatalog:occurrence:47787\ncatalog:occurrence:47893"
 
 [[statement]]
 kind = "set"
@@ -3985,18 +3961,6 @@ evidence = "Variabeln mäter bofaderns utbildningsnivå.\ncatalog:occurrence-loc
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-bofar-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-bofar.\ncatalog:occurrence:47788\ncatalog:occurrence:47894"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-bofar-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-bofar.\ncatalog:occurrence:47788\ncatalog:occurrence:47894"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-bomor"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter bomoderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6623"
@@ -4009,18 +3973,6 @@ evidence = "Variabeln mäter bomoderns utbildningsnivå.\ncatalog:occurrence-loc
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-bomor-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-bomor.\ncatalog:occurrence:47789\ncatalog:occurrence:47895"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-bomor-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-bomor.\ncatalog:occurrence:47789\ncatalog:occurrence:47895"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-far"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter biologiska faderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6625"
@@ -4030,18 +3982,6 @@ kind = "set"
 subject = "var:utbildningsniva-grov-far"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln mäter biologiska faderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6625"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-far-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-far.\ncatalog:occurrence:47790\ncatalog:occurrence:47896"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-far-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-far.\ncatalog:occurrence:47790\ncatalog:occurrence:47896"
 
 [[statement]]
 kind = "set"
@@ -4066,18 +4006,6 @@ kind = "set"
 subject = "var:utbildningsniva-grov-mor"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln mäter biologiska moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:6628"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-mor-2"
-fields = { "sets" = [] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-mor.\ncatalog:occurrence:47791\ncatalog:occurrence:47897"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-mor-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är en räknare som inte ingår i källkolumnen; samma mått är perioduppdelat med scb/breg/sun2020niva-grov-mor.\ncatalog:occurrence:47791\ncatalog:occurrence:47897"
 
 [[statement]]
 kind = "set"
@@ -5159,20 +5087,8 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 vari
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-adfar-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, adoptivfar)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-admor"
 fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, adoptivmor)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-admor-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, adoptivmor)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
 
 [[statement]]
@@ -5183,32 +5099,14 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 vari
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-bofar-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, bofader)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-bomor"
 fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, bomoder)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
 
 [[statement]]
 kind = "set"
-subject = "var:utbildningsniva-grov-bomor-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, bomoder)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsniva-grov-far"
 fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, biologisk far)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-far-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, biologisk far)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
 
 [[statement]]
@@ -5221,12 +5119,6 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 vari
 kind = "set"
 subject = "var:utbildningsniva-grov-mor"
 fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2000, biologisk mor)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsniva-grov-mor-2"
-fields = { "label" = "Utbildningsnivå (aggregat Grov, SUN 2020, biologisk mor)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå (aggregat Grov)' (13 variables): judged different meaning, high confidence; Coarse education level per person (adoptive, resident, biological parent, parents' variant); the 2019-12..2020-01 '-2' columns are SUN 2020 while the 2014-2019 columns are SUN 2000."
 
 [[statement]]
@@ -5246,3 +5138,57 @@ kind = "set"
 subject = "var:utlsvbakg-grupp"
 fields = { "label" = "Utländsk/svensk bakgrund (grupperad)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; UtlSvBakg has four categories; UtlSvBakg_grupp is the grouped two-category variable (opdef: Grupperad variabel)."
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_AdFar where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-adfar" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_AdFar the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (adoptivfar). SUN2000Niva_Grov_AdFar is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_AdMor where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-admor" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_AdMor the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (adoptivmor). SUN2000Niva_Grov_AdMor is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_BoFar where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-bofar" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_BoFar the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (bofader). SUN2000Niva_Grov_BoFar is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "familjer: SUN2020Niva_Grov_BoFar where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-bofar" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_BoFar the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (bofader). SUN2000Niva_Grov_BoFar is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_BoMor where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-bomor" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_BoMor the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (bomoder). SUN2000Niva_Grov_BoMor is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "familjer: SUN2020Niva_Grov_BoMor where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-bomor" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_BoMor the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (bomoder). SUN2000Niva_Grov_BoMor is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_Far where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-far" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_Far the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (biologisk far). SUN2000Niva_Grov_Far is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "barn: SUN2020Niva_Grov_Mor where key = 'v775'"
+fields = { "variable" = "sun2020niva-grov-mor" }
+evidence = "The 2019 Barn release (r14510) gives column SUN2020Niva_Grov_Mor the key v775, whose text still says SUN 2000. The same column carries key v66 in the 2019 Barn, uppföljning release (r16405) and from the 2020 Barn release (r16404). Same value set (F/G/KL/U), same person (biologisk mor). SUN2000Niva_Grov_Mor is a different column and stays separate.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=551095 (r14510)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=391372 (r16405)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=390617 (r16404)"
+
+[[statement]]
+kind = "set"
+subject = "var:vardnadshavare2-12-senare"
+fields = { "description" = "Anger vilken typ av vårdnadshavare 2 är, tolv månader efter ursprungsmätningen, för barn under 18 år med civilstånd ogift. Vårdnadshavare 2 är den yngste av barnets vårdnadshavare." }
+evidence = "SCB:s definition säger både att vårdnadshavare 2 är den äldste och den yngste. Syskonnycklarna v19544 (Vårdnadshavare2) och v19899 (Vårdnadshavare2, 15 månader senare) definierar vårdnadshavare 2 som den yngste, och v19543, v19862 och v29139 definierar vårdnadshavare 1 som den äldste; meningen om den äldste är kopierad från vårdnadshavare 1.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921588 (r14593)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921600 (r14586)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921714 (r14585)"

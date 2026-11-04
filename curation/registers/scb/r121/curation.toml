@@ -4285,18 +4285,6 @@ evidence = "Katalogen visar en angränsande ägare.\ncatalog:occurrence:154791\n
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetsstallen-vg72"
-fields = { "sets" = [] }
-evidence = "Katalogen visar en perioddelning och motstridiga enheter.\ncatalog:occurrence:161009\ncatalog:occurrence:161643\ncatalog:variable_text:14845:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetsstallen-vg72"
-fields = { "tags" = ["business"] }
-evidence = "Katalogen visar en perioddelning och motstridiga enheter.\ncatalog:occurrence:161009\ncatalog:occurrence:161643\ncatalog:variable_text:14845:19358:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-barn"
 fields = { "sets" = [] }
 evidence = "Katalogen visar en annan ägare och definitionen skiljer sig från den operativa avgränsningen.\ncatalog:occurrence:170686\ncatalog:occurrence:172653\ncatalog:variable_text:14846:10957:11323"
@@ -17365,13 +17353,13 @@ evidence = "Beslutade återbetalningsbelopp avser punktskatter.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:betald-kyrkoavgift"
+subject = "var:betald-begravningsavgift"
 fields = { "sets" = [] }
 evidence = "Källans definition och tidiga operationalisering motsäger varandra.\ncatalog:variable_text:15965:10957:11688\ncatalog:variable_text:15965:11688:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:betald-kyrkoavgift"
+subject = "var:betald-begravningsavgift"
 fields = { "tags" = ["taxation"] }
 evidence = "Källans definition och tidiga operationalisering motsäger varandra.\ncatalog:variable_text:15965:10957:11688\ncatalog:variable_text:15965:11688:13514"
 
@@ -21370,18 +21358,6 @@ kind = "set"
 subject = "var:designvikt"
 fields = { "tags" = ["methods"] }
 evidence = "Designvikt är ett urvalsmått.\ncatalog:variable_text:16352:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:det-samlade-anskaffningsvardet-av-pagaende-arbeten-v0889"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare och definitionerna anger olika mått.\ncatalog:occurrence:152000\ncatalog:occurrence:152001"
-
-[[statement]]
-kind = "set"
-subject = "var:det-samlade-anskaffningsvardet-av-pagaende-arbeten-v0889"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn har överlappande ägare och definitionerna anger olika mått.\ncatalog:occurrence:152000\ncatalog:occurrence:152001"
 
 [[statement]]
 kind = "set"
@@ -41305,13 +41281,13 @@ evidence = "Resultatet är en företagsredovisningspost.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:nettoformogenhet"
+subject = "var:summa-tillgangar-under-formogenhet"
 fields = { "sets" = [] }
 evidence = "Källans definition och operationella definition beskriver olika kvantiteter.\ncatalog:variable_text:18102:10957:13514"
 
 [[statement]]
 kind = "set"
-subject = "var:nettoformogenhet"
+subject = "var:summa-tillgangar-under-formogenhet"
 fields = { "tags" = ["wealth"] }
 evidence = "Källans definition och operationella definition beskriver olika kvantiteter.\ncatalog:variable_text:18102:10957:13514"
 
@@ -56317,13 +56293,13 @@ evidence = "Lön och ersättning.\ncatalog:variable_text:19448:16801:17167"
 
 [[statement]]
 kind = "set"
-subject = "var:tomter-smahus-mv"
+subject = "var:taxeringsvarde-tomter-fritidshus"
 fields = { "sets" = [] }
 evidence = "Definition och operationell definition beskriver olika fastigheter och värden.\ncatalog:variable_text:19449:10957:12784"
 
 [[statement]]
 kind = "set"
-subject = "var:tomter-smahus-mv"
+subject = "var:taxeringsvarde-tomter-fritidshus"
 fields = { "tags" = ["property"] }
 evidence = "Definition och operationell definition beskriver olika fastigheter och värden.\ncatalog:variable_text:19449:10957:12784"
 
@@ -80571,8 +80547,8 @@ evidence = "#2102 same-label cluster 'Negativt räntenetto' (9 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:betald-kyrkoavgift"
-fields = { "label" = "Betald kyrkoavgift (SBEGR)" }
+subject = "var:betald-begravningsavgift"
+fields = { "label" = "Betald begravningsavgift (SBEGR)" }
 evidence = "#2102 same-label cluster 'Betald kyrkoavgift exkl. begravningsavgift' (2 variables): judged different meaning, high confidence; Opdefs: SBEGR includes the burial fee, UKYRK excludes it, so the current label is wrong for SBEGR."
 
 [[statement]]
@@ -81114,12 +81090,6 @@ kind = "set"
 subject = "var:deklarerad-skattepliktig-formogenhet"
 fields = { "label" = "Skattepliktig förmögenhet (deklarerad)" }
 evidence = "#2102 same-label cluster 'Skattepliktig förmögenhet' (11 variables): judged different meaning, medium confidence; Concurrent wealth columns with different opdefs (deklarerad, restpost, sammanlagd, 2/3 år gamla, från IoF); FSP03, FSP04 and FFORST share one opdef and have adjacent disjoint periods, so treated as one variable; FSP02 has no text."
-
-[[statement]]
-kind = "set"
-subject = "var:det-samlade-anskaffningsvardet-av-pagaende-arbeten-v0889"
-fields = { "label" = "Det samlade anskaffningsvärdet av pågående arbeten (momspliktig omsättning)" }
-evidence = "#2102 same-label cluster 'Det samlade anskaffningsvärdet av pågående arbeten' (2 variables): judged different meaning, medium confidence; Opdef: V0889 is momspliktig omsättning; V0892 has no opdef and keeps the plain label."
 
 [[statement]]
 kind = "set"
@@ -93267,8 +93237,8 @@ evidence = "#2102 same-label cluster 'Summa tillgångar under förmögenhet minu
 
 [[statement]]
 kind = "set"
-subject = "var:nettoformogenhet"
-fields = { "label" = "Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet (summa tillgångar)" }
+subject = "var:summa-tillgangar-under-formogenhet"
+fields = { "label" = "Summa tillgångar under förmögenhet (FTILLG)" }
 evidence = "#2102 same-label cluster 'Summa tillgångar under förmögenhet minus Summa skuldbelopp under förmögenhet' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Proposal kept: opdef, definition, code list and table support the qualifiers for every occurrence."
 
 [[statement]]
@@ -93612,3 +93582,363 @@ kind = "set"
 subject = "aktiebolag: v7761 @2007-01-01..2023-12-31 where key = 'v16774'"
 fields = { "variable" = "skogsavdrag-substansminskningsavdrag" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V0781 in aktiebolag, deklarationsuppgifter, handelsbolag; V7706 in deklarationsuppgifter; V7761 in aktiebolag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Same 'Specifieras på blankett N8' where present; other occurrences have no opdef); folded into skogsavdrag-substansminskningsavdrag."
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG72 where key = 'v17484'"
+fields = { "variable" = "vg72" }
+evidence = "Column VG72 in finansbolag: key v27752 'Antalet arbetsställen' in 2020 (r18304), key v17484 'Antal arbetsställen' in 2022 (r19341). Same count, same column, no overlap.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=256039 (r18304)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=717756 (r19341)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG19 where key = 'v47743'"
+fields = { "variable" = "summan-omsattningstillgangar" }
+evidence = "Column VG19 is the sum row after VG13-VG18. In 2020 (r18304) VG13-VG18 are labelled '..., omsättningstillgångar' and VG19 is 'Summan omsättningstillgångar' (v27691); in 2022 (r19341) the same columns say 'Avser block G del 2' and VG19 is 'Summa Block G:2' (v47743).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=260545 (r18304)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=846877 (r19341)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=260560 (r18304)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=639045 (r19341)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VA21 where key = 'v38019'"
+fields = { "variable" = "va21" }
+evidence = "Column VA21 in finansbolag: key v27407 'Övriga skulder, block A' in 2020 (r18304), key v38019 'Övriga skulder' in 2022 (r19341). Key v38019 is also used for FSKURST in individtabeller 2000-2006, a different table and register; those occurrences stay on ovriga-skulder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=260900 (r18304)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=300816 (r19341)"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0346 where key = 'v17154' and release = 'r13726'"
+fields = { "variable" = "periodiseringsfond-v0346" }
+evidence = "In the 2000 release of Deklarationsuppgifter för enskilda näringsidkare (r13726), V0346 has key v17154 (label 'vid 2006 års taxering') but opdef 'Avser 1996'. The sibling columns V0347-V0349 in the same release use key v4222, and Aktiebolag and Bilaga N3A 2000 give V0346 key v4222 with opdef 'Avser ... 1996'. In 2005-2008 v17154 covers V0346 with the 2006 fund.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=195322 (r13726)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=863158 (r13726)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862679 (r12226)"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-for-skatt-pa-bransle-for-annan-varmeprod-utslappsratter-avser-v712-173"
+fields = { "description" = "Avdrag för skatt på bränsle (olja, gasol m.m., CO2-skatt) för annan värmeproduktion med utsläppsrätter, enligt punktskattedeklarationen." }
+evidence = "Samma nyckel (v39684) och samma etikett 2016 och 2017-2023; bara operationaliseringen ('Avser punktskattedeklaration för olja, gasol m.m., CO2-skatt') tillkommer från 2017. Enheten 2016 ('Bränsle i naturliga mått') är densamma för alla V712-V714-kolumner det året, medan enheterna 2017 skiljer sig per kolumn, så den säger inget om just denna uppgift.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=386688 (r13731)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=388643 (r13717)"
+
+[[statement]]
+kind = "set"
+subject = "var:avdr-for-skatt-pa-bransle-for-annan-varmeprod-utslappsratter-avser-v714-85"
+fields = { "description" = "Avdrag för skatt på bränsle (bensin, CO2-skatt) för annan värmeproduktion med utsläppsrätter, enligt punktskattedeklarationen." }
+evidence = "Som V712_173: samma nyckel (v39684) och etikett 2016 och 2017-2023, operationalisering 'Avser punktskattedeklaration för bensin, CO2-skatt' från 2017.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=386694 (r13731)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=388642 (r13717)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdelf"
+fields = { "description" = "Antal månader med halvt förtida uttag av pension." }
+evidence = "Nyckeln v16965 ('Antal månader som omfattas av företagets bokslut') delas av 19 månadskolumner i individtabeller; definitionen är nyckelns gemensamma text. Kolumnens etikett och operationalisering ('Avser halvt förtida uttag') anger vad som räknas.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862839 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbdelu"
+fields = { "description" = "Antal månader med halvt uppskjutet uttag av pension (0,6 %)." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'halvt uppskjutet uttag 0,6%'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862840 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbpmanb"
+fields = { "description" = "Antal månader med barnpension." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'antal månader med barnpension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862838 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbptmnb"
+fields = { "description" = "Antal månader med tilläggspension (ATP) för förälder 1." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'månader med ATP förälder 1'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862844 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bbptpfr"
+fields = { "description" = "Från och med-datum för tilläggspension i barnpension (BP) för förälder 1." }
+evidence = "Nyckeln v37928 ('Datum från vilket sjukfallet börjar') delas av alla pensionskolumner med från och med-datum i individtabeller (BAEFPFR, BBPFPFR, BBPTPFR1/2, BOPFPFR, BOPTP, BOPTPFR) och har ingenting med sjukfall att göra där; operationaliseringen ('Avser tilläggspension BP förälder 1') anger pensionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873838 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:fran-och-med-datum-bbptpfr2"
+fields = { "description" = "Från och med-datum för tilläggspension i barnpension (BP) för förälder 2." }
+evidence = "Som BBPTPFR1: nyckeln v37928 är gemensam för pensionskolumnerna; operationaliseringen anger 'tilläggspension BP förälder 2'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873839 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:fran-och-med-bbpfpfr"
+fields = { "description" = "Från och med-datum för folkpension till barn (barn folkpension)." }
+evidence = "Nyckeln v37928 är gemensam för pensionskolumnerna (se BBPTPFR1); operationaliseringen anger 'Avser barn folkpension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862605 (r15613)"
+
+[[statement]]
+kind = "set"
+subject = "var:fran-och-med-bopfpfr"
+fields = { "description" = "Från och med-datum för folkpension." }
+evidence = "Nyckeln v37928 är gemensam för pensionskolumnerna (se BBPTPFR1); operationaliseringen anger 'Avser folkpension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862606 (r15613)"
+
+[[statement]]
+kind = "set"
+subject = "var:fran-och-med-datum"
+fields = { "description" = "Från och med-datum för folkpension vid änkepension." }
+evidence = "Kolumnen BAEFPFR har nyckeln v37928 (gemensam för pensionskolumnerna); operationaliseringen anger änkepension 2000-2002 och folkpension 2003, och kolumnnamnet följer samma mönster som BBPFPFR (barn folkpension).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862788 (r15620)"
+
+[[statement]]
+kind = "set"
+subject = "var:bcdelu"
+fields = { "description" = "Antal månader med helt uppskjutet uttag av pension (0,7 %)." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'helt uppskjutet uttag 0,7%'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862842 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bddelu"
+fields = { "description" = "Antal månader med halvt uppskjutet uttag av pension (0,7 %)." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'halvt uppskjutet uttag 0,7%'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862841 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:bstper"
+fields = { "description" = "Antal studiemånader i SVUX00." }
+evidence = "Som BBDELF: nyckeln v16965 delas av månadskolumnerna; operationaliseringen anger 'Antal studiemånader i SVUX00'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862921 (r15628)"
+
+[[statement]]
+kind = "set"
+subject = "var:bopmp"
+fields = { "description" = "Medelpoäng för omställningspension, förlängd omställningspension eller särskild efterlevandepension." }
+evidence = "Operationaliseringen anger 'MEDELPOÄNG FÖR OP, FOP ELLER SEP' (omställningspension, förlängd omställningspension, särskild efterlevandepension) och kolumnen BOPMP börjar på BOP (omställningspension). Nyckelns definition säger änkepension, den äldre benämningen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873884 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:boptp"
+fields = { "description" = "Anger om personen har omställningspension: 1 = ja, 0 = nej." }
+evidence = "Kodlistan är 0 Nej / 1 Ja. Kolumnen saknar FR-ändelsen; datumkolumnen är BOPTPFR (row 873840). Etiketten 'Från och med datum' är nyckelns gemensamma text (v37928).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873837 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionsbelopp"
+fields = { "description" = "Summa pensionspoäng (kolumn BSA00)." }
+evidence = "Nyckeln v5651 ('Folkpensionsbelopp. För ASGA. Kontrolluppgift.') delas av kolumnen PFP, vars operationalisering är 'Kod för vanlig folkpension', och av BSA00-BSA02, vars operationalisering är 'Summa pensionspoäng'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=311286 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionsbelopp-bsa01"
+fields = { "description" = "Summa pensionspoäng (kolumn BSA01)." }
+evidence = "Som BSA00: operationaliseringen anger 'Summa pensionspoäng'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=311290 (r15778)"
+
+[[statement]]
+kind = "set"
+subject = "var:folkpensionsbelopp-bsa02"
+fields = { "description" = "Summa pensionspoäng (kolumn BSA02)." }
+evidence = "Som BSA00: operationaliseringen anger 'Summa pensionspoäng'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=311293 (r15628)"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-teckning-av-teckningsoptioner-btopttom"
+fields = { "description" = "Till och med-datum (sista dag) för teckning av teckningsoptioner. Från och med-datumet finns i en egen kolumn." }
+evidence = "Nyckeln v39625 delas av en från och med-kolumn och en till och med-kolumn; definitionen ('fr.o.m.') är nyckelns text. Kolumnnamnet BTOPTTOM, etiketten och operationaliseringen ('till och med datum') anger t.o.m.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=841623 (r13698)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=346790 (r14824)"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-utbyte-av-konvertibler-skuldebrev-datum-avseende-till-och-med-datum-for-utbyte-av-konvertibler"
+fields = { "description" = "Till och med-datum (sista dag) för utbyte av konvertibler/skuldebrev. Från och med-datumet finns i en egen kolumn." }
+evidence = "Som BTOPTTOM: nyckeln v39626 delas av en från och med-kolumn och en till och med-kolumn; kolumnnamnet BKONVTOM och operationaliseringen anger t.o.m.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=841625 (r13698)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=346793 (r14824)"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0889 where key = 'v17000'"
+fields = { "variable" = "none" }
+evidence = "Withheld: the table also delivers its own V0892 in the same releases, so the copied row cannot move there (D-11). Kolumn V0889 har i deklarationsuppgifter 2000-2006 två nycklar per utgåva: v17204 ('Moms ... 1. Momspliktig omsättning inom Sverige', som är kolumnens ägare) och v17000 ('Det samlade anskaffningsvärdet av pågående arbeten', operationalisering 'Momspliktig omsättning'). Nyckeln v17000 ägs av V0892 i samma tabell och i aktiebolag och handelsbolag (row 792073 r13726), och V0890 är 'Momsfri omsättning'. Raden för v17000 under V0889 är en kopia.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=259566 (r13726)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=287541 (r13726)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=792073 (r13726)"
+
+[[statement]]
+kind = "set"
+subject = "var:ftomtem"
+fields = { "description" = "Summan av marknadsvärdet på tomter för småhus (eget hem). Värdet på ägd andel." }
+evidence = "I serien FTOMT* betyder E eget hem och F fritidshus, och operationaliseringarna följer kolumnbokstaven (FTOMTE 'eget hem tax.värde', FTOMTEM 'eget hem marknadsvärde', FTOMTFM 'fritidshus marknadsvärde'). Nyckeln v15594 ('tomter för fritidshus') står på både FTOMTEM och FTOMTFM, och v15592 ('småhus (eget hem)') står på FTOMTF: nycklarna är ombytta.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=874004 (r15613)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=874005 (r15613)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873903 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:betald-begravningsavgift"
+fields = { "description" = "Betald begravningsavgift. Kyrkoavgift exklusive begravningsavgift finns i kolumnen UKYRK och kyrkoavgift inklusive begravningsavgift i SKYRK." }
+evidence = "I HEK, LINDA, FASIT och IOT har SBEGR nyckeln v5655 'Betald begravningsavgift', medan UKYRK (v1208) är kyrkoavgift exklusive begravningsavgift och SKYRK inklusive. I FRIDA bär SBEGR nyckeln v1208 bredvid UKYRK, men dess egen operationalisering 2000-2001 lyder 'Inkluderar begravningsavgift'. Gäller efter omdöpning från betald-kyrkoavgift.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=861210 (r15779)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=775754 (r15779)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=233507 (r472)"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-tomter-fritidshus"
+fields = { "description" = "Taxeringsvärde för tomter för fritidshus." }
+evidence = "Operationaliseringen av FTOMTF är 'Tomter fritidshus tax.värde' och bokstaven F är fritidshus; i serien är FTOMTE (eget hem, v3179) taxeringsvärdet för eget hem. Nyckeln v15592 (marknadsvärde, småhus) hör till FTOMTEM. Gäller efter omdöpning från tomter-smahus-mv.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873903 (r15779)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873900 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:helarshushall"
+fields = { "description" = "Anger om hushållet är ett helårshushåll: 1 om alla individer i hushållet fanns i hushållet både 1 januari och 31 december inkomståret (barn födda under året räknas in), 2 om inte, 0 om uppgift saknas." }
+evidence = "Kodlistan #11306 anger alla individer i hushållet. De nyare nycklarna för samma kolumn i FASIT (v37432, v37433) säger också alla individer; nyckeln v3198 har den äldre texten om vuxna.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=191170 (r12393)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=279064 (r11725)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=107416 (r13108)"
+
+[[statement]]
+kind = "set"
+subject = "var:kuthyrx"
+fields = { "description" = "Uthyrning av privatbostad, uppgift som är 3 år gammal. Kolumnen KUTHYRU innehåller motsvarande uppgift som är 2 år gammal." }
+evidence = "KUTHYRU och KUTHYRX har samma nyckel (v37457, definition '2 år gamla') i samma utgåva; operationaliseringen är '2 år gamla' för KUTHYRU och '3 år gamla' för KUTHYRX.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=359270 (r12398)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=359271 (r12398)"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-tillgangar-under-formogenhet"
+fields = { "description" = "Summa tillgångar under förmögenhet. Skulderna redovisas i en egen kolumn (FSKULD)." }
+evidence = "Nyckeln v14694 ('Summa tillgångar ... minus Summa skuldbelopp ...') står på både FTILLG och FSKULD; operationaliseringen är 'Summa tillgångar under förmögenhet' för FTILLG och 'Avser skulden' för FSKULD. Gäller efter omdöpning från nettoformogenhet.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=259263 (r15779)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=259262 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvfgensksats"
+fields = { "description" = "Skattesats för energiskatt på olja i kraftvärme, föregående år. Från 2023 gäller uppgiften återbetalningsansökan för industri med utsläppsrätter." }
+evidence = "Nyckeln v39788 ('Skattesats energiskatt innevarande år värmeleverans ... övrigt bränsle') delas av många skattesatskolumner; operationaliseringen 'Skattesats energiskatt kraftvärme föregående år, olja' och kolumnkoden OLJKVFG anger bränsle och år.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=406274 (r18795)"
+
+[[statement]]
+kind = "set"
+subject = "var:oljkvnvensksats"
+fields = { "description" = "Skattesats för energiskatt på olja i kraftvärme, innevarande år. Från 2023 gäller uppgiften återbetalningsansökan för industri med utsläppsrätter." }
+evidence = "Som OLJKVFGENSKSATS; operationaliseringen anger 'kraftvärme innevarande år, olja'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=406275 (r18795)"
+
+[[statement]]
+kind = "set"
+subject = "var:pavdbt"
+fields = { "description" = "TP-avdrag på årsbeloppet av tjänstepension." }
+evidence = "Nyckeln v596 ('Det belopp en person fått från utbetalaren i tjänstepension') är den allmänna texten för tjänstepension; kolumnnamnet PAVDBT (avdrag) och operationaliseringen 'TP-avdrag på årsbelopp' anger avdraget.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873902 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:pylaafp"
+fields = { "description" = "Reduceringstal för ålderspension." }
+evidence = "Nyckeln v15082 ('Reduceringstal') har en definition om hektarskörd som är kopierad från skördeuppgifterna (kolumnen bortred i Skörd av potatis, row 970337). I individtabeller anger operationaliseringen pensionen: 'Avser ålderspension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862732 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:pylaefp"
+fields = { "description" = "Reduceringstal för änkepension." }
+evidence = "Som PYLAAFP: definitionen om hektarskörd hör till skördeuppgifterna; operationaliseringen anger 'Avser änkepension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862733 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:pylbpfp"
+fields = { "description" = "Reduceringstal för barnpension." }
+evidence = "Som PYLAAFP: operationaliseringen anger 'Avser barnpension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862729 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:pylffp"
+fields = { "description" = "Reduceringstal för förtidspension." }
+evidence = "Som PYLAAFP: operationaliseringen anger 'Avser förtidspension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862730 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:pylopfp"
+fields = { "description" = "Reduceringstal för omställningspension." }
+evidence = "Som PYLAAFP: operationaliseringen anger 'Avser omställningspension'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=862731 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:ratensats"
+fields = { "description" = "Skattesats för energiskatt på råtallolja i industrin, avseende återbetalning." }
+evidence = "Nyckeln v39788 delas av många skattesatskolumner; operationaliseringen anger 'Avser återbetalningar i industrin, råtallolja'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=310671 (r12309)"
+
+[[statement]]
+kind = "set"
+subject = "var:stodomrade"
+fields = { "description" = "Anger om personen är bosatt inom stödområde A: 1 ja, 2 nej, 3 uppgift saknas, 0 okänt." }
+evidence = "Kodlistan #3121 har ja/nej-värden, vilket inte passar nyckelns text 'Geografisk indelning för jordbruksstöd' (v31996, lantbruksregistret). Kolumnen BRSTOD i FASIT (v30838) är 'Kod som anger om personen är bosatt inom stödområde A' med värdena 0 Nej / 1 Ja.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=791406 (r15613)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=107684 (r18232)"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms"
+fields = { "description" = "Summa utgående moms enligt skattedeklarationen. Gäller aktiebolag och handelsbolag." }
+evidence = "SMOMSUT i aktiebolag har operationaliseringen 'Moms från skattedeklaration' 2000 och 'Avser uppgifter från Skattedeklaration' 2001-2005; handelsbolag har samma nyckel (v16710) och kolumn. Texten efter ellipsen i nyckeln är avkortad och går inte att återskapa.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=258171 (r12226)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=378631 (r12283)"
+
+[[statement]]
+kind = "set"
+subject = "var:summa-utgaende-moms-2"
+fields = { "description" = "Summa utgående moms. För aktiebolag redovisas den i särskild självdeklaration, för enskilda näringsidkare i inkomstdeklarationen." }
+evidence = "V0954 i aktiebolag har operationaliseringen 'Moms från särskild självdeklaration' 2000 och 'Avser uppgifter från Särskild självdeklaration' 2001-2005. I deklarationsuppgifter för enskilda näringsidkare bär samma kolumn även v17203 ('Moms som redovisas i Inkomstdeklaration. Summa utgående moms').\ncurrent-scb-inputs.zip/Registerinformation.csv:row=196460 (r12226)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=287538 (r13726)"
+
+[[statement]]
+kind = "set"
+subject = "var:v0341"
+fields = { "description" = "Periodiseringsfond vid 2001 års taxering." }
+evidence = "Nyckelns namn (v16748) och operationaliseringen i aktiebolag 2001 anger 2001 års taxering. Definitionen säger 2000, vilket är texten för V0340 (v17563). Serien V0340-V0348 har en rad per taxeringsår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=196468 (r12225)"
+
+[[statement]]
+kind = "set"
+subject = "var:v0342"
+fields = { "description" = "Periodiseringsfond vid 2002 års taxering." }
+evidence = "Namn och definition för v16749 anger 2002 års taxering i alla tabeller och utgåvor 2001-2006. Bara operationaliseringarna 2001 ('Avser 1996') säger annat, en rest från radens tidigare användning.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=196469 (r12225)"
+
+[[statement]]
+kind = "set"
+subject = "var:v0933"
+fields = { "description" = "72 % av expansionsfonden vid föregående års taxering (blankettrad 933)." }
+evidence = "Nyckelns namn (v18110) är relativt, 'föregående års taxering', och gäller för alla utgåvor 2000-2006; definitionens '2004 års taxering' kan inte gälla 2000.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=287203 (r11620)"
+
+[[statement]]
+kind = "set"
+subject = "var:v2350"
+fields = { "description" = "Anger att svaret på frågan 'Har ni uppburit ersättning från handelsbolaget för upplåtelse av lokal eller annat utrymme?' är nej: 1 om nej-svaret är markerat, 0 annars." }
+evidence = "V0886 har operationaliseringen 'Avser jakande svar' och V2350 'Avser nekande svar' på samma fråga (v17896); kodlistan #10571 (0 Nej, 1 Ja) är den allmänna markeringslistan.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=258158 (r12258)"
+
+[[statement]]
+kind = "set"
+subject = "var:baldfr2"
+fields = { "description" = "Fastighetens ålder för fritidsfastighet 2, beräknad som undersökningsår minus fastighetens värdeår (som BALDFR1 för fritidsfastighet 1)." }
+evidence = "BALDFR1 och BALDFR2 hör till serien BALDBO/BALDEG1/BALDEG2/BALDEGJ/BALDFR1 med nyckeln v21364 ('Fastighetens ålder, värdeår', enhet År). BALDFR2 har nyckeln v42158 ('Fastighet andelsberäknad', enhet Andel) men operationaliseringen 'Avser ålder fritidshus'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=373456 (r15779)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=873834 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BALDFR2"
+fields = { "unit" = "År" }
+evidence = "Enheten Andel kommer från nyckeln v42158; kolumnen är en ålder (operationalisering 'Avser ålder fritidshus') och syskonkolumnerna BALDFR1 och BALDEG2 har enheten År.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=373456 (r15779)"
+
+[[statement]]
+kind = "set"
+subject = "var:mk1jaapco2sk"
+fields = { "description" = "Koldioxidskatt (återbetalningar och punktskatter) för MK1-bränsle i yrkesmässig luftfart, januari till april. Uppgiften kommer från återbetalningsansökan för yrkesmässig luftfart." }
+evidence = "Kolumnnamnet (MK1, JAAP = januari-april) och operationaliseringen 2023 ('återbetalningsansökan yrkesmässig luftfart, MK1 co2-skatt jan till apr') stämmer med etiketten. Operationaliseringen 2022 (värmeleverans, övrigt bränsle) är texten för en annan kolumn med samma nyckel v25871.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=98970 (r20075)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=118758 (r19349)"
+
+[[statement]]
+kind = "set"
+subject = "var:mk1maseco2sk"
+fields = { "description" = "Koldioxidskatt (återbetalningar och punktskatter) för MK1-bränsle i yrkesmässig luftfart, maj till september. Uppgiften kommer från återbetalningsansökan för yrkesmässig luftfart." }
+evidence = "Som MK1JAAPCO2SK: operationaliseringen 2023 anger 'MK1 co2-skatt maj till sep'; operationaliseringen 2022 (industri utsläppsrätter, kvartal 1) hör till en annan kolumn.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=98971 (r20075)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=118687 (r19349)"
+
+[[statement]]
+kind = "set"
+subject = "var:mk1okdeco2sk"
+fields = { "description" = "Koldioxidskatt (återbetalningar och punktskatter) för MK1-bränsle i yrkesmässig luftfart, oktober till december. Uppgiften kommer från återbetalningsansökan för yrkesmässig luftfart." }
+evidence = "Som MK1JAAPCO2SK: operationaliseringen 2023 anger 'MK1 co2-skatt okt till dec'; operationaliseringen 2022 (industri, naturgas) hör till en annan kolumn.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=98972 (r20075)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=118689 (r19349)"
+
+[[statement]]
+kind = "set"
+subject = "var:neuvexp"
+fields = { "description" = "Värde på varor som exporteras till länder inom EU." }
+evidence = "Kolumnnamnet NEUVEXP och etiketten anger export. Prepositionen växlar i operationaliseringen ('export till' 2005-2015, 'export på varor från' 2016-2023, samma ordalydelse som för NEUVIMP), men riktningen följer kolumnen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=122314 (r12375)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=195564 (r11640)"
+
+[[statement]]
+kind = "set"
+subject = "var:neuvimp"
+fields = { "description" = "Värde på varor som importeras från länder inom EU." }
+evidence = "Kolumnnamnet NEUVIMP och etiketten anger import; operationaliseringen 2005-2014 säger 'import till' och 2016-2023 'import på varor från'. Riktningen följer kolumnen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=122316 (r12375)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=195566 (r11640)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG73 where key = 'v27753' and release = 'r19341'"
+fields = { "unit" = "Antal" }
+evidence = "Etiketten är 'Antal arbetsställen i Sverige'; enheten är Antal 2008-2021 och 2023 och bara 1000-tal kronor i utgåvan 2022.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=717757 (r19341)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=717742 (r20066)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG74 where key = 'v27755' and release = 'r19341'"
+fields = { "unit" = "Antal" }
+evidence = "Etiketten är 'Antal arbetsställen i utlandet'; enheten är Antal 2008-2021 och 2023 och bara 1000-tal kronor i utgåvan 2022.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=717758 (r19341)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=717743 (r20066)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG77 where key = 'v27758' and release = 'r19341'"
+fields = { "unit" = "Antal" }
+evidence = "Etiketten är 'Innehav av egna aktier, Antal'; enheten är Antal 2008-2021. Ett antal aktier anges inte i kronor.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=718130 (r19341)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=256040 (r18304)"
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: VG77 where key = 'v27758' and release = 'r20066'"
+fields = { "unit" = "Antal" }
+evidence = "Som utgåvan 2022: etiketten anger antal aktier, enheten är Antal 2008-2021.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=718836 (r20066)"
+
+[[statement]]
+kind = "set"
+subject = "var:bsadel40"
+fields = { "description" = "Antal bosättningsår i Sverige för sjuk- och aktivitetsersättning, räknat i 40-delar. Värdet är antalet bosättningsår i Sverige delat med 40." }
+evidence = "SCB:s etikett och definition (v26989) är avkortade vid 'sjuk- och aktivitetsers'. Samma nyckel och kolumn BSADEL40 i FASIT har operationaliseringen 'Värdet motsvarar antal 40-delar, alltså antalet bosättningsår i Sverige/40', och registret skriver ut 'sjuk- och aktivitetsersättning' i närliggande nycklar.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=191653 (r15604)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=858898 (r11725)"

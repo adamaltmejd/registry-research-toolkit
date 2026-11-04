@@ -314,13 +314,13 @@ evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete acce
 [[statement]]
 kind = "set"
 subject = "individregister: knavm1"
-fields = { "label" = "Omkostnadsbelopp för näringsfastighet, förekomst1" }
+fields = { "label" = "Avgår från omkostnadsbelopp, näringsfastighet, förekomst 1" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5421\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "individregister: knavm2"
-fields = { "label" = "Omkostnadsbelopp för näringsfastighet, förekomst2" }
+fields = { "label" = "Avgår från omkostnadsbelopp, näringsfastighet, förekomst 2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5433\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
@@ -30978,3 +30978,165 @@ kind = "set"
 subject = "var:bnyarboz"
 fields = { "label" = "Boende - Fastighetens nybyggnadsår/färdigställandeår (BNYARBOZ)" }
 evidence = "#2102 same-label cluster 'Boende - Fastighetens nybyggnadsår/färdigställandeår' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; BBYGGAR and BHYRAR have different class boundaries in the code lists; BNYBARZ and BNYARBOZ share one opdef and have no code list."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-1"
+fields = { "description" = "Ålder i år för kosthushållets första (äldsta) barn (barn 1). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3200 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-2"
+fields = { "description" = "Ålder i år för kosthushållets andra barn (barn 2). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3201 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-3"
+fields = { "description" = "Ålder i år för kosthushållets tredje barn (barn 3). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3202 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-4"
+fields = { "description" = "Ålder i år för kosthushållets fjärde barn (barn 4). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3203 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-5"
+fields = { "description" = "Ålder i år för kosthushållets femte barn (barn 5). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3204 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-6"
+fields = { "description" = "Ålder i år för kosthushållets sjätte barn (barn 6). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3205 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-7"
+fields = { "description" = "Ålder i år för kosthushållets sjunde barn (barn 7). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3206 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-for-barn-8"
+fields = { "description" = "Ålder i år för kosthushållets åttonde barn (barn 8). Beräknas som referensåret minus barnets födelseår; SCB anger referensåret som undersökningsåret till och med 2008 och som inkomståret från 2009." }
+evidence = "Nyckeln v3207 har en värdemängd med åldrar (0 år till 125 år, #1416), så variabeln är en ålder. SCB:s operationella definition växlar mellan 'Undersökningsåret minus barnets ålder' (1996-2007), '2008 - barnets ålder' (2008) och 'Inkomståret - barnets födelseår' (2009-2013); det första och andra uttrycket är samma beräkning med referensår minus födelseår.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=133249 (r16243)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=438310 (r2804)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=440917 (r3702)"
+
+[[statement]]
+kind = "set"
+subject = "var:baavru"
+fields = { "description" = "Avtalstyp för avräkning av utländsk skatt: 1 om avräkning sker enligt lagen om avräkning av utländsk skatt (creditmetoden), 0 om inte. Creditmetoden innebär att bosättningslandet beskattar den utländska inkomsten men medger avräkning för skatt som betalats i utlandet." }
+evidence = "Värdemängden är Nej/Ja (#10571), så variabeln är en markering och inte en kod för flera avtalstyper. Operationaliseringen 2010 beskriver creditmetoden som den avtalstyp som avses.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=137271 (r3105)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=137222 (r3897)"
+
+[[statement]]
+kind = "set"
+subject = "var:bfackav"
+fields = { "description" = "Anger om personen under året betalat avgift till fackförening eller arbetslöshetskassa: 1 ja, 2 nej eller ej aktuellt, 8 vet ej, 9 vill ej svara, 0 har inte fått frågan." }
+evidence = "Nyckeln v3319 delas av BFACKAV och UFACKAV. Definitionen är 'Under året betald avgift till arbetstagarorganisation' och operationaliseringen 'Utgift för arbetslöshetskassa och fackförening', så avgiften omfattar båda. BFACKAV har kodlistan #1201 (ja/nej), UFACKAV är beloppet.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=656869 (r17528)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=639817 (r17528)"
+
+[[statement]]
+kind = "set"
+subject = "var:ufackav"
+fields = { "description" = "Belopp som personen under året betalat i avgift till fackförening (arbetstagarorganisation) och arbetslöshetskassa." }
+evidence = "Som BFACKAV: nyckeln v3319 har operationaliseringen 'Utgift för arbetslöshetskassa och fackförening', och etiketten anger belopp.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=639817 (r17528)"
+
+[[statement]]
+kind = "set"
+subject = "var:blinvut"
+fields = { "description" = "Det land varifrån personens senaste invandring till Sverige skett (utvandringsland), angivet som landnamn och avseende läget vid årets slut." }
+evidence = "Definitionen 'Land varifrån utvandring skett' och operationaliseringen 'Anger det land varifrån senaste invandring skett' beskriver samma land: det land personen utvandrat från före sin invandring till Sverige. Referenstiden för BLINVUT är den 31 december referensåret (2008-12-31 i utgåvan 2008, 2009-12-31 i utgåvan 2009); kodlistan är landnamn.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673676 (r3105)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673684 (r3742)"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland"
+fields = { "description" = "Det land varifrån personens senaste invandring till Sverige skett (utvandringsland), angivet som landnamn och avseende läget vid föregående årsskifte (31 december året före referensåret). Läget vid årets slut finns i kolumnen BLINVUT." }
+evidence = "BLINVIN och BLINVUT har samma nyckel (v350), definition och operationalisering men olika referenstid: BLINVIN anger 2007-12-31 i utgåvan 2008 (row 708431) och 2008-12-31 i utgåvan 2009 (row 673683), BLINVUT anger 2008-12-31 respektive 2009-12-31. Samma mönster gäller BINVARIN och BINVARUT (senaste invandringsdatum). Kolumnerna förekommer i samma tabell och utgåva och kan därför inte vara en variabel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=708431 (r3105)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673683 (r3742)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=627078 (r3105)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOTYP where key = 'v2768'"
+fields = { "unit" = "Typkod" }
+evidence = "Kodlistan #717 har bostadstyper (AND andelshus, BOR bostadsrätt, ENF eget småhus, ...), alltså en kod och inte en yta. Enheten Kvadratmeter är fel för en kodad variabel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=48558 (r3105)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: SK_FORM where key = 'v2758'"
+fields = { "unit" = "Typkod" }
+evidence = "Kodlistan #3831 har tre koder för F-skattestatus (0, 1, 9), alltså en kod och inte ett belopp. Enheten Kronor är fel för en kodad variabel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=97435 (r3105)"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-vid-avyttring-av-fastighet-kspris2"
+fields = { "description" = "Inkomst (försäljningspris) vid avyttring av fastighet enligt deklarationsbilaga från Skatteverket, andra förekomsten. Utgåvan 1999 anger avyttring av småhus; utgåvan 2003 anger bara förekomst 2 utan fastighetstyp." }
+evidence = "Nyckeln v40368 delas av KSPRIS1 och KSPRIS2; skillnaden mellan kolumnerna är bara förekomstnumret. Operationaliseringen 1999 är 'Försäljningspris vid avyttring av småhus. Förekomst 2', 2003 'Förekomst 2'. Underlaget nämner inte bostadsrätt.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=362330 (r14993)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=429394 (r12271)"
+
+[[statement]]
+kind = "set"
+subject = "var:kspris"
+fields = { "description" = "Inkomst (försäljningspris) vid avyttring av fastighet enligt deklarationsbilaga från Skatteverket, första förekomsten. Utgåvan 1999 anger avyttring av småhus; utgåvan 2003 anger bara förekomst 1 utan fastighetstyp." }
+evidence = "Som KSPRIS2: nyckeln v40368, operationaliseringen 1999 'Försäljningspris vid avyttring av småhus. Förekomst 1', 2003 'Förekomst 1'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=362329 (r14993)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=429085 (r12271)"
+
+[[statement]]
+kind = "set"
+subject = "var:agare-av-fritidshusfastighet"
+fields = { "description" = "Anger om personen under inkomståret ägt en fritidsfastighet i minst sex månader (förvärv senast i juni, överlåtelse tidigast i juli): 1 ja, 0 nej. Kodtexterna 'eget hem' i kodlistan är hämtade från variabeln om ägare av eget hem." }
+evidence = "Operationaliseringen av KEG726 avser fritidsfastighet, men dess 'Valida värden' ('ej ägare av eget hem', 'ägare av eget hem') är samma ord som i KEG725 (ägare av eget hus). Kodlistan #4069 delar texten.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=380551 (r16154)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=380550 (r16154)"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-fastighetsavgift-hyreshus"
+fields = { "description" = "Underlag (taxeringsvärdet) för statlig fastighetsskatt på hyreshusenheter med bostäder med värdeår 1985-1988, skattesats 0,85 %. SCB benämner uppgiften 'fastighetsavgift' i etiketten." }
+evidence = "Operationaliseringen (v19806, AHY085) beskriver den statliga fastighetsskatten och avslutar 'Underlaget utgörs av taxeringsvärdet'. Fastighetsskatt gällde 1996-1998; fastighetsavgift infördes först 2008 (SFAVG, v21814).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205348 (r17528)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205362 (r15459)"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-fastighetsavgift-avseende-hyreshus-ahy075"
+fields = { "description" = "Underlag (taxeringsvärdet) för statlig fastighetsskatt på hyreshus med bostäder med värdeår 1987-1990 samt nybyggnation med värdeår 1991-1992, skattesats 0,75 %. SCB benämner uppgiften 'fastighetsavgift' i etiketten." }
+evidence = "Som AHY085: operationaliseringen för AHY075 anger skattesatsen 0,75 % och 'Underlaget utgörs av taxeringsvärdet'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205360 (r15459)"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-fastighetsavgift-avseende-hyreshus-ahy15"
+fields = { "description" = "Underlag (taxeringsvärdet) för statlig fastighetsskatt på hyreshusenheter med byggnad som huvudsakligen innehåller bostäder med värdeår 1986 eller tidigare, skattesats 1,5 %. SCB benämner uppgiften 'fastighetsavgift' i etiketten." }
+evidence = "Som AHY085: operationaliseringen för AHY15 anger skattesatsen 1,5 % och 'Underlaget utgörs av taxeringsvärdet'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205361 (r15459)"
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-for-fastighetsavgift-avseende-hyreshus-ahy17"
+fields = { "description" = "Underlag (taxeringsvärdet) för statlig fastighetsskatt på hyreshusenheter med bostäder med värdeår före 1983, skattesats 1,7 %. SCB benämner uppgiften 'fastighetsavgift' i etiketten." }
+evidence = "Som AHY085: operationaliseringen för AHY17 anger skattesatsen 1,7 % och 'Underlaget utgörs av taxeringsvärdet'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205347 (r17528)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=205363 (r15459)"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildnings-inriktning-sun-siffra-1"
+fields = { "description" = "Personens högsta utbildning på ensiffernivå enligt den äldre SUN-indelningen (MiS 1996:1), kodad 1-7 efter utbildningsnivå: 1 förgymnasial kortare än 9 år till 7 forskarutbildning. SCB:s etikett och definition säger 'inriktning', men kodlistan anger nivåer." }
+evidence = "Kodlistan #4769 har sju nivåer (förgymnasial, gymnasial, eftergymnasial, forskarutbildning), inga inriktningar. Operationaliseringen anger 'högsta utbildnings ... ensiffernivå'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=328146 (r3742)"
+
+[[statement]]
+kind = "set"
+subject = "var:knavm"
+fields = { "description" = "Värdeminskningsavdrag vid försäljning av näringsfastighet, första förekomsten; beloppet avgår från omkostnadsbeloppet. Omkostnadsbeloppet i sin helhet finns i en annan variabel (KNAKOP)." }
+evidence = "Nyckeln v40365 heter 'Avgår från omkostnadsbelopp, näringsfastighet' och operationaliseringen 1999 (KNAVM) är 'Värdeminskningsavdrag vid försäljning av näringsfastighet. Avgår från omkostnadsbelopp'. Operationaliseringen 2003 (KNAVM1) är den avkortade 'Omkostnadsbelopp för näringsfastighet. Förekomst 1'. Hela omkostnadsbeloppet (förvärvspris med inköpskostnader) är KNAKOP, v40340.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=362099 (r14993)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=429065 (r12271)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=362349 (r14993)"
+
+[[statement]]
+kind = "set"
+subject = "var:avgar-fran-omkostnadsbelopp-naringsfastighet-knavm2"
+fields = { "description" = "Värdeminskningsavdrag vid försäljning av näringsfastighet, andra förekomsten; beloppet avgår från omkostnadsbeloppet. Omkostnadsbeloppet i sin helhet finns i en annan variabel (KNAKOP)." }
+evidence = "Som KNAVM1: nyckeln v40365, operationaliseringen 2003 'Förekomst 2'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=429066 (r12271)"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiebidrag"
+fields = { "description" = "Summa studiebidrag (bidragsdelen av studiemedel från CSN) för studier i Sverige och utomlands. Till och med 2007 ingår även tilläggsbidrag för utlandsstudier. SCB:s operationella definition 2008-2013 skriver 'studiebidrag lån'; namnet och definitionen anger studiebidrag." }
+evidence = "Operationaliseringen 1996-2007 summerar 'studiemedel, bidrag + studiemedel utland, bidrag + tilläggsbidrag utland, bidrag'; 2008-2013 'studiebidrag lån, studiebidrag i utlandet lån'. Nyckelns namn och definition är 'Studiemedel, studiebidrag' hela tiden.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=132541 (r17528)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=212796 (r3105)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BISMLANT where key = 'v21241' and release = 'r6129'"
+fields = { "unit" = "Veckor" }
+evidence = "Etiketten och definitionen är 'Tilläggsbidrag till studiemedel, antal veckor med bidrag', och enheten är Veckor 2007-2013. Ingen källtext anger kronor för kolumnen; beloppsvariabeln är en annan (ISMLANT, v21704).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=422972 (r6129)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=137261 (r3897)"

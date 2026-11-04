@@ -4045,3 +4045,21 @@ kind = "set"
 subject = "sokande-grund-avancerad: sun2020inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:b12c785749ccf052a785d1589b17815d32b0f738100ed3a48f861f2cee1fc921'"
 fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_amnegrupp in grundutbildning-poang; sun2020inr3_amnegrupp in grundutbildning-1993; sun2020inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-vid-terminsstart"
+fields = { "description" = "Ålder i år, beräknad som terminens år minus födelseår i personnumret, alltså åldern den 31 december samma år. SCB:s definition kallar den ålder vid terminsstarten." }
+evidence = "Operationaliseringen (Talder) lyder 'Ålder vid årets slut = Nuvarande år minus födelseår i personnumret' i alla utgåvor, medan definitionen säger 'vid terminsstarten'. En beräkning med årtal ger åldern vid årets slut, och i övriga HREG-tabeller heter samma beräkning 'Ålder 31/12'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=995477 (r5158)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=416282 (r3716)"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Termin (kalenderhalvår) då studiebidrag eller studielån för utlandsstudier betalats ut: 1 vårtermin, 2 hösttermin." }
+evidence = "Kodlistan #12635 har bara vårtermin och hösttermin, och operationaliseringen lyder 'Den termin (kalenderhalvår) som studiebidrag eller studielån för utlandsstudier har betalats ut'. Definitionen om ordningsnummer i elevens utbildning stämmer varken med kodlistan eller operationaliseringen. Nyckeln v1579 förekommer bara i denna tabell.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=792791 (r14946)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=792793 (r14958)"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningens-startar"
+fields = { "description" = "Året då forskarskolan startades. Doktorandens eget startår och starttermin i forskarskolan finns i en annan kolumn (StartArTermin)." }
+evidence = "Operationaliseringen av StartArTypFS är 'År när forskarskolan startades'. Doktorandens egen start är en separat kolumn, StartArTermin ('År och termin som forskarskolenybörjare'), i samma tabell.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=123007 (r18674)"

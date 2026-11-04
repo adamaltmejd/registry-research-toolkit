@@ -437,3 +437,9 @@ kind = "set"
 subject = "set:utlandska-leverantorsskulder"
 fields = { "label" = "Utländska leverantörsskulder" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: StallnRad201 where key = 'v3100'"
+fields = { "definition" = "Leverantörsskulder till övriga företag, utland, ställning aktuellt kvartal." }
+evidence = "Nyckeln v3100 heter 'Leverantörsskulder till övriga företag, utland, ställning aktuellt kvartal', och grannkolumnen StallnRad200 (v3099) har definitionen 'ställning aktuellt kvartal'. Definitionen för v3100 i alla 60 rader är i stället 'omvärdering under kvartalet', ordagrant texten för OmvRad201 (v3095). Kopieringsfel i definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=364591 (r3038)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33997 (r2091)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33996 (r2091)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33995 (r2091)"
