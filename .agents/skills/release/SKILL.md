@@ -89,32 +89,45 @@ subsequent main pushes are expected to be red at `schema-guard` (which compares 
 publishes; that check is not required on main. Merge first, then release when the
 maintainer runs it. A gap is allowed; the guard blocks deployment throughout it.
 
-### 4. Gate the committed bump
-
-Create step 5's bump commit locally, then run:
-
-```sh
-uv run --no-project scripts/gate.py all
-```
-
-Run on the **committed** tree so checks and release evidence name one revision; push
-only when green, and re-run after integrating source changes. `Operation not permitted`
-on `deps/*.d` means a shared `sccache` wrapper: run with
-`RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
-
-### 5. Commit and push
+### 4. Gate the committed bump in CI
 
 The bump commit, `Bump <package> version to X.Y.Z`, contains **only** the version files
-(and `Cargo.lock` / `uv.lock`). Push and **verify the bump is `origin/main`** before
-tagging:
+(and `Cargo.lock` / `uv.lock`). Commit it on `origin/main` and push it to a PR branch;
+CI is the gate, so there is no local `gate.py all`. `ci.yml` runs every step
+`gate.py all` runs (lint, the builder and scripts suites, `rust` with the synthetic
+release admission, and, because the `webapp` filter matches `Cargo.toml`, the frontend
+and flows jobs):
 
 ```sh
+git push origin HEAD:refs/heads/release/<package>-vX.Y.Z
+gh pr create --base main --head release/<package>-vX.Y.Z \
+  --title "Bump <package> version to X.Y.Z" --body "Release bump; CI gates it."
+```
+
+Do not wait: start the reg_meta base build (8a) at this commit while CI runs. CI and the
+build then name the same revision.
+
+### 5. Fast-forward main
+
+Once `ci.yml` is green on the bump (only `ci.yml`: a schema bump's PR is red at
+`container-build.yml`'s `schema-guard` until the release publishes, step 3),
+fast-forward `main` to the bump (GitHub then shows the PR as merged) and **verify the
+bump is `origin/main`** before tagging:
+
+```sh
+run=$(gh run list --workflow ci.yml --commit "$(git rev-parse HEAD)" --limit 1 \
+  --json databaseId -q '.[0].databaseId')
+gh run watch "$run" --exit-status || { echo "ci.yml is not green on the bump" >&2; exit 1; }
 git push origin HEAD:main
 git fetch origin main
 if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
   echo "bump is not origin/main; resolve before tagging" >&2; exit 1
 fi
 ```
+
+`git push` refuses a non-fast-forward. If `main` moved meanwhile, rebase the bump onto
+it, push the branch again and wait for CI on the new commit. The base build made at the
+old bump commit is then reused or rebuilt by the rule in 8a.
 
 ### 6. Create draft GitHub release
 
@@ -133,13 +146,15 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 
 ### 8. Build and upload release assets (reg_meta only)
 
-Every release builds a **pair**, fresh, in one run: `reg_meta.db.zst` (the reference
-catalog, documents inside) and `reg_meta_swecov.db.zst` (the SWECOV holdings: the
-catalog schema's supplemental part plus the `holding_*` tables). There is no separate
-docs asset and no copying an asset from an older release.
+Every release builds a **pair**: `reg_meta.db.zst` (the reference catalog, documents
+inside) and `reg_meta_swecov.db.zst` (the SWECOV holdings: the catalog schema's
+supplemental part plus the `holding_*` tables). There is no separate docs asset and no
+copying an asset from an older release. Both are built during this release, normally at
+the release commit; the one exception is reusing this release's own earlier evidence
+build when the builder's inputs have not changed (8a, "Reusing an earlier build").
 
-- Holdings pin the base's `catalog_sha256`, so **every reg_meta release rebuilds
-  holdings in the same run**, even when nothing in the steward repository changed. Any
+- Holdings pin the base's `catalog_sha256`, so **every reg_meta release builds holdings
+  against the base it ships**, even when nothing in the steward repository changed. Any
   rebuild of the base invalidates the holdings: repeat from 8d.
 - A holdings or pair failure stops the release. A global-only release (no
   `reg_meta_swecov.db.zst`) needs the maintainer's explicit choice, recorded in the
@@ -171,7 +186,8 @@ The reader verifies the manifest's SHA-256. Keep the source revision, inputs com
 manifest, build report and subsequent check outputs in the release evidence directory.
 Use the full manifest: no register subset or diagnostic artifact. Build optimized
 (`target/release`): the real build is long and the verifiers and conformance run the
-same binaries.
+same binaries. `Operation not permitted` on `deps/*.d` means a shared `sccache` wrapper:
+run with `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
 
 ```sh
 set -euo pipefail
@@ -179,18 +195,63 @@ inputs=/absolute/path/to/pinned-inputs-worktree
 assets=/absolute/path/to/pinned-release-assets
 evidence=/absolute/path/to/release-evidence
 version=X.Y.Z
-mkdir -p "$evidence/catalog"
+mkdir "$evidence"  # a new directory per build: refuses an existing one
+mkdir "$evidence/catalog"
+test -z "$(git status --porcelain)"
+git rev-parse HEAD > "$evidence/source-revision"
+rustc -vV > "$evidence/rustc.txt"
 cargo build --release --workspace --locked
-target/release/reg-build build --inputs "$inputs" --assets "$assets" \
+args=(build --inputs "$inputs" --assets "$assets" \
   --curation curation --out "$evidence/catalog/reg_meta.db" \
-  --catalog-version "$version" --report "$evidence/build-report.json" --release
-base_sha=$(shasum -a 256 "$evidence/catalog/reg_meta.db" | cut -d' ' -f1)
+  --catalog-version "$version" --report "$evidence/build-report.json" --release)
+printf '%s\n' "${args[@]}" > "$evidence/build-args.txt"
+target/release/reg-build "${args[@]}"
+shasum -a 256 "$evidence/catalog/reg_meta.db" > "$evidence/base.sha256"
+base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")
 ```
 
-`--out` is a database filename, not a directory. `--release` refuses unplaced or split
-ledger ids and variables without a ledger id. Read the report's warnings and confirm all
-expected providers and inputs are present. `base_sha` is the digest every later step
-re-checks: the holdings pin it, and the base uploaded in 8i must still equal it.
+`source-revision`, `rustc.txt`, `build-args.txt` and `base.sha256` are the records a
+later reuse is checked against (below). Every build gets a new evidence directory, so an
+interrupted build leaves no `base.sha256` and an older one's records and pass marks
+never describe a newer base. `--out` is a database filename, not a directory.
+`--release` refuses unplaced or split ledger ids and variables without a ledger id. Read
+the report's warnings and confirm all expected providers and inputs are present.
+`base_sha` is the digest every later step re-checks: the holdings pin it, and the base
+uploaded in 8i must still equal it.
+
+**Reusing an earlier build** (maintainer ruling 2026-11-04). When the release commit is
+not the commit an evidence build of this release ran at (`main` moved under the bump, a
+re-pin, a reader-only fix), do not rebuild by default. From a clean checkout at the
+release commit, run:
+
+```sh
+uv run --no-project scripts/release_base_reuse.py "$earlier_evidence"
+```
+
+It diffs the two commits over the builder's dependency closure, read from
+`cargo metadata` (the workspace crates `reg-build` depends on), every workspace member's
+`Cargo.toml` (a `--workspace` build unifies features), plus `curation/` (including the
+inputs pin), `Cargo.toml`, `Cargo.lock`, `.cargo/` and any `rust-toolchain*`. It also
+checks the recorded toolchain, `--release`, `--catalog-version` and that the base still
+hashes to `base.sha256`. A missing or inconsistent record fails closed (exit 2). Follow
+what it prints:
+
+- `base: rebuild` (exit 1 or 2): build again at the release commit, from 8a.
+- `base: reuse`: keep `$earlier_evidence` as `$evidence` and set
+  `base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")`.
+- A step carries over only when `$evidence/passed` lists it; otherwise the script says
+  `run it`. Each step below appends `<step> <base sha>` to `passed` once it passes, so a
+  build whose checks never finished carries nothing over, and a mark made against
+  another base does not count.
+- `holdings: rebuild` (`stewards.toml` changed, no pair that passed 8e, or a pair that
+  no longer matches `holdings.sha256`): redo 8d-8g.
+- `8f: rerun` (a reader-side crate, `conformance/` or the Python lock changed, or the
+  holdings were rebuilt): rerun 8f with binaries built at the release commit.
+- Always rerun 8h and the 8i `base_sha` check at the release commit.
+
+The release notes record both commits, the built one and the release one, and the
+script's output, including when the built commit is a squash-merged PR head that is not
+on `main`. Merging reader-only fixes before the bump avoids the question altogether.
 
 #### 8b. Verify the base
 
@@ -222,6 +283,9 @@ target/release/reg-build diff "$prev/reg_meta.db" "$evidence/catalog/reg_meta.db
 Exit 0 means no changes, 1 means differences to review, and 2 means an error that stops
 the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
 the diff, confirms only intended changes, and puts its summary in the release notes.
+After 8b passes, and again after the diff review, record each step:
+`echo "8b $base_sha" >> "$evidence/passed"`,
+`echo "8c $base_sha" >> "$evidence/passed"`.
 
 #### 8d. Compile the holdings
 
@@ -261,7 +325,13 @@ sqlite3 -readonly "$evidence/catalog/reg_meta_swecov.db" "SELECT value FROM meta
 ```
 
 The pair verifier takes `--catalog` and `--steward-repo` and no `--previous`. The `meta`
-value must equal `$base_sha`. A failure stops publication.
+value must equal `$base_sha`. A failure stops publication. On a pass, record the pair's
+digest and the step:
+
+```sh
+shasum -a 256 "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings.sha256"
+echo "8e $base_sha" >> "$evidence/passed"
+```
 
 #### 8f. Run conformance against the pair
 
@@ -281,7 +351,8 @@ uv run python -m pytest conformance -q -n auto -m release --run-release \
 
 `gate.py rust` itself selects a synthetic artifact and accepts no artifact override;
 that run does not validate the release DB. A red artifact run stops publication; a
-failure only in the pair run stops it too. Do not change tests to get a pass. If pair
+failure only in the pair run stops it too. When both pass,
+`echo "8f $base_sha" >> "$evidence/passed"`. Do not change tests to get a pass. If pair
 admission times out at server start, raise `SERVER_READY_SECONDS` (120) in
 `conformance/http_cases.py` through a reviewed PR, not in place.
 
@@ -319,7 +390,8 @@ target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
 
 Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
 exit 2 is an error and stops the release. The maintainer reads that summary for
-go/no-go; its counts go in the release notes.
+go/no-go; its counts go in the release notes. On a go,
+`echo "8g $base_sha" >> "$evidence/passed"`.
 
 #### 8h. Scope check
 
@@ -380,14 +452,15 @@ gh release edit reg_meta/vX.Y.Z --draft=false
 
 ### 10. Monitor the release workflow
 
-`publish_reg_meta.yml` runs CI on the tag, artifact conformance (`integration.yml`: the
+`publish_reg_meta.yml` checks that `ci.yml` is green on the tagged commit (the bump's CI
+from step 4, not a re-run), then runs artifact conformance (`integration.yml`: the
 global asset, and the paired SWECOV asset when the release has one), and dispatches
 `container-build.yml`, which bakes and deploys the catalog (and the pair, when
-`SWECOV_DEPLOY` is `on`). Integration and deployment dispatch both depend on CI, not on
-each other. The deploy guard passes only when the released `CATALOG_SCHEMA_VERSION` and
-`HOLDINGS_SCHEMA_VERSION` both equal main's; a missing constant or a mismatch blocks
-deployment. Scope the run lookup to this release; an unfiltered `--limit 1` can match a
-stale run:
+`SWECOV_DEPLOY` is `on`). Integration and deployment dispatch both depend on that check,
+not on each other. The deploy guard passes only when the released
+`CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION` both equal main's; a missing
+constant or a mismatch blocks deployment. Scope the run lookup to this release; an
+unfiltered `--limit 1` can match a stale run:
 
 ```sh
 git fetch --tags origin
@@ -459,8 +532,10 @@ predecessor and substitute evidence, and the SWECOV old-binary requirement.
   the checks at that revision.
 - Tag already exists for the target version: investigate before proceeding.
 - A `reg-build` build, verification or conformance failure stops the release: fix it,
-  rebuild with `reg-build`, and repeat steps 8b--8i (a base rebuild changes
-  `catalog_sha256`, so holdings are rebuilt too); never copy an older asset forward.
+  rebuild with `reg-build` (or reuse the earlier base when
+  `scripts/release_base_reuse.py` says the fix cannot move it), and repeat steps 8b--8i
+  (a base rebuild changes `catalog_sha256`, so holdings are rebuilt too); never copy an
+  asset from an older release forward.
 - **Once published, never delete, re-cut or re-upload a release's assets.** Deploys and
   release consumers reference the tag and digests. A pair that was published incomplete
   or wrong is recovered by a new patch release with both assets. Fix downstream failures
