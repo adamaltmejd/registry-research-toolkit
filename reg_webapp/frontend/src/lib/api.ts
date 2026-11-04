@@ -389,9 +389,8 @@ export async function searchFacets(
   ).data;
 }
 
-/** Provider and register entries of the current catalog summary. */
+/** A provider of the catalog root, with its registers. */
 export type RootChild = RootShow["providers"][number];
-export type RegisterChild = ProviderShow["registers"][number];
 
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
