@@ -167,10 +167,18 @@ fn file_digest(path: &Path) -> std::io::Result<String> {
 impl Catalog {
     /// Admit the reference catalog and, for a non-global selection, its pinned
     /// `reg_meta_<steward>.db` partner. The owner comes from startup configuration.
+    /// `catalog_sha256`, when given, is the base catalog's SHA-256 computed when the
+    /// image was built; the partner's pin is checked against it instead of hashing the
+    /// file at boot (`reg_webapp/DESIGN.md`, "Deployment").
     ///
     /// # Errors
     /// `invalid_parameter`, `db_not_found` or `schema_incompatible` before serving.
-    pub fn open_selected(dir: &Path, selected: &str, mmap_size: i64) -> Result<Self, Error> {
+    pub fn open_selected(
+        dir: &Path,
+        selected: &str,
+        mmap_size: i64,
+        catalog_sha256: Option<&str>,
+    ) -> Result<Self, Error> {
         let mut catalog = Self::open(dir, mmap_size)?;
         if selected == "global" {
             return Ok(catalog);
@@ -249,7 +257,10 @@ impl Catalog {
         if meta.get("logo").is_none_or(|value| value.trim().is_empty()) {
             return Err(refuse("missing logo"));
         }
-        let digest = file_digest(&catalog.path).map_err(|_| refuse("catalog cannot be hashed"))?;
+        let digest = match catalog_sha256 {
+            Some(digest) => digest.to_owned(),
+            None => file_digest(&catalog.path).map_err(|_| refuse("catalog cannot be hashed"))?,
+        };
         if meta.get("catalog_sha256") != Some(&digest) {
             return Err(refuse("catalog file digest does not match"));
         }

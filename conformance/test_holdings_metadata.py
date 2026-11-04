@@ -196,6 +196,23 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         refused = run(pool.argv(tmp_path, 0))
         assert refused.returncode == 10
         assert json.loads(refused.stderr)["code"] == "schema_incompatible"
+    # The image's build-time digest stands in for hashing the catalog file. The
+    # mismatch fails if admission ignores REG_META_CATALOG_SHA256 and hashes the
+    # (correctly pinned) file; the match fails if admission still hashes the file,
+    # whose digest is not the pinned one.
+    pinned = "0" * 64
+    with closing(sqlite3.connect(output)) as db, db:
+        db.executemany("INSERT OR REPLACE INTO meta VALUES (?,?)", original.items())
+    refused = run(pool.argv(tmp_path, 0), env={"REG_META_CATALOG_SHA256": pinned})
+    assert refused.returncode == 10
+    error = json.loads(refused.stderr)
+    assert error["code"] == "schema_incompatible"
+    assert "catalog file digest does not match" in error["message"]
+    with closing(sqlite3.connect(output)) as db, db:
+        db.execute("UPDATE meta SET value=? WHERE key='catalog_sha256'", [pinned])
+    with closing(ServerPool(server_cmd + " --catalog fixture", tmp_path)) as pool:
+        env = artifact_env(output) | {"REG_META_CATALOG_SHA256": pinned}
+        assert pool.client(env).get("/api/context").status_code == 200
 
 
 def test_steward_context_spans_the_years_held(tmp_path, server_cmd):

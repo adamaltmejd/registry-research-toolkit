@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -25,10 +26,11 @@ HOLDINGS_CASE = CASES / "holdings"
 SLOTS = HOLDINGS_CASE / "slot-family"
 
 
-def run(command, *, cwd=REPO):
+def run(command, *, cwd=REPO, env=None):
     return subprocess.run(
         command,
         cwd=cwd,
+        env=None if env is None else os.environ | env,
         capture_output=True,
         text=True,
         timeout=60,
