@@ -434,7 +434,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   `LaneGraph` lanes on the page's axis, in API order: a lane is titled by its varying
   facets in curated axis order, with the member's name on the line under it, and by the
   name alone when no axis varies. A variable page's facts are Type, Classification,
-  Identifier and Sensitive (each of the last two only when yes), Topics and Group
+  Sensitive (only when yes; an identifier is its Type pill), Topics and Group
   (maintainer 2026-11-04); role, coding, state, temporality, storage and period are not
   shown. Type is one `TypePill` per type its columns are written as, with the years
   inside only where it changes over time. The other facts are what its columns state:

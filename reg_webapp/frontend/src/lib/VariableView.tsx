@@ -11,7 +11,6 @@ import {
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, humanizeClassificationSlug } from "./catalog";
-import { catalogWords } from "./catalog_labels";
 import {
   loadRegister,
   registerRead,
@@ -50,16 +49,7 @@ const FACTS: readonly {
   term: string;
   of: (row: CatalogSegment) => SegmentFact;
 }[] = [
-  {
-    term: "Identifier",
-    of: (row) =>
-      row.identifier
-        ? {
-            key: row.id_kind ?? "yes",
-            value: row.id_kind ? catalogWords(row.id_kind) : "Yes",
-          }
-        : null,
-  },
+  // An identifier shows as the Identifier type pill, so it has no row here.
   {
     term: "Sensitive",
     of: (row) => (row.sensitive ? { key: "yes", value: "Yes" } : null),
