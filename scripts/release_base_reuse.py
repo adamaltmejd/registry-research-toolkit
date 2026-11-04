@@ -106,6 +106,36 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+BUILD_VALUES = {
+    "--inputs",
+    "--assets",
+    "--curation",
+    "--out",
+    "--catalog-version",
+    "--report",
+}
+
+
+def build_options(args: list[str]) -> dict[str, str]:
+    """Step 8a's `reg-build build` arguments, exactly: every value option once, plus
+    `--release`. Anything else (a subset, a diagnostic flag) is not a release build."""
+    if args[:1] != ["build"]:
+        raise Refused("build-args.txt is not a `reg-build build` command")
+    options: dict[str, str] = {}
+    rest = args[1:]
+    while rest:
+        flag = rest.pop(0)
+        if flag == "--release" and flag not in options:
+            options[flag] = ""
+        elif flag in BUILD_VALUES and flag not in options and rest:
+            options[flag] = rest.pop(0)
+        else:
+            raise Refused(f"build-args.txt has an unexpected argument {flag!r}")
+    if set(options) != BUILD_VALUES | {"--release"}:
+        raise Refused("build-args.txt is not step 8a's full release build")
+    return options
+
+
 def check_records(evidence: Path, repo: Path) -> tuple[str, str]:
     """The built commit and base digest, once every record supports reusing it."""
     built = record(evidence, "source-revision")
@@ -121,16 +151,19 @@ def check_records(evidence: Path, repo: Path) -> tuple[str, str]:
     version = tomllib.loads((repo / "crates/reg-meta/Cargo.toml").read_text())[
         "package"
     ]["version"]
-    if "--release" not in args:
-        raise Refused("the recorded build ran without --release")
-    if "--catalog-version" not in args or (
-        args[args.index("--catalog-version") + 1 :][:1] != [version]
-    ):
+    options = build_options(args)
+    if options.get("--catalog-version") != version:
         raise Refused(f"the recorded build's --catalog-version is not {version}")
+    if options["--curation"] != "curation":
+        raise Refused("the recorded build did not read this checkout's curation/")
+    # The catalog file itself is not resolved: only its directory names the evidence.
+    out = Path(options["--out"])
+    if out.parent.resolve() / out.name != evidence / "catalog/reg_meta.db":
+        raise Refused("the recorded build did not write this evidence's catalog")
     db = evidence / "catalog/reg_meta.db"
     if not db.is_file():
         raise Refused(f"{db} is missing")
-    with sqlite3.connect(f"file:{db}?mode=ro", uri=True) as conn:
+    with sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True) as conn:
         row = conn.execute(
             "SELECT value FROM meta WHERE key = 'catalog_version'"
         ).fetchone()
@@ -163,12 +196,26 @@ def holdings_reason(
     digest = evidence / "holdings.sha256"
     if not digest.is_file() or sha256(pair) != digest.read_text().split()[0]:
         return "the pair no longer matches holdings.sha256"
-    with sqlite3.connect(f"file:{pair}?mode=ro", uri=True) as conn:
+    with sqlite3.connect(f"{pair.as_uri()}?mode=ro", uri=True) as conn:
         row = conn.execute(
             "SELECT value FROM meta WHERE key = 'catalog_sha256'"
         ).fetchone()
+        pin = dict(
+            conn.execute(
+                "SELECT key, value FROM meta WHERE key IN "
+                "('steward_repo', 'steward_commit', 'steward_config')"
+            ).fetchall()
+        )
     if row is None or row[0] != base_sha:
         return "the pair does not pin this base's catalog_sha256"
+    registry = tomllib.loads(Path("stewards.toml").read_text())["swecov"]
+    wanted = {
+        "steward_repo": registry["repo"],
+        "steward_commit": registry["commit"],
+        "steward_config": registry["config"],
+    }
+    if pin != wanted:
+        return "the pair's steward pin is not this release's stewards.toml"
     return ""
 
 
