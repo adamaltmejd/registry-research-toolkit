@@ -3,12 +3,12 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::Interval;
-use reg_frame::address::{Address, Comparison, GuardField};
+use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, ValueSet};
 use serde_json::{Value, json};
 
-use super::{Premise, periods, stated_fields};
+use super::{Premise, stated_fields};
 use crate::Ledger;
 
 /// A curated winner, at the final frame coordinate, for the existing override table.
@@ -96,7 +96,7 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
     let p = match subject {
         Address::Occurrence {
             periods: Some(p), ..
-        } => periods(p),
+        } => p.intervals(),
         _ => vec![(OPEN_START.into(), OPEN_END.into())],
     };
     if p.len() != 1 {
@@ -702,7 +702,7 @@ pub fn apply(
                     table, periods: p, ..
                 } => (
                     table_handle(records, ledger, table)?,
-                    p.as_ref().map(periods),
+                    p.as_ref().map(PeriodSet::intervals),
                 ),
                 Address::Variable(_) | Address::Set(_) => {
                     return Err(
@@ -805,7 +805,7 @@ pub fn apply(
                         return Err("assert release requires a release address".into());
                     };
                     if records.iter().any(|r| matches!(r,Record::Release(r) if r.table == table && r.release == *handle)) { return Err("assert release cannot replace a source release; use set".into()); }
-                    let p = periods(period);
+                    let p = period.intervals();
                     if p.len() != 1 {
                         return Err("assert release requires one contiguous period".into());
                     }
@@ -1193,8 +1193,8 @@ fn apply_fields(
                     let period = winning
                         .as_str()
                         .expect("typed period")
-                        .parse::<reg_frame::address::PeriodSet>()?;
-                    let spans = periods(&period);
+                        .parse::<PeriodSet>()?;
+                    let spans = period.intervals();
                     let [span] = &spans[..] else {
                         return Err(format!("set {field} requires one contiguous period"));
                     };
@@ -1542,8 +1542,8 @@ fn fill_fields(value: &mut Value, fields: BTreeMap<String, Value>) -> Result<(),
             let set = v
                 .as_str()
                 .ok_or("period must be a string")?
-                .parse::<reg_frame::address::PeriodSet>()?;
-            let p = periods(&set);
+                .parse::<PeriodSet>()?;
+            let p = set.intervals();
             if p.len() != 1 {
                 return Err("assert fact fields require one contiguous period".into());
             }

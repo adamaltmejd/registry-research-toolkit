@@ -105,41 +105,6 @@ impl SharedSources {
     }
 }
 
-/// Convert a validated period set to inclusive ISO date intervals.
-///
-/// # Panics
-/// Panics if a `PeriodSet` contains a period that cannot be parsed.
-#[must_use]
-pub fn periods(set: &PeriodSet) -> Vec<Interval> {
-    set.to_string()
-        .split(',')
-        .map(|text| {
-            if let Some(end) = text.strip_prefix("..") {
-                (
-                    OPEN_START.to_owned(),
-                    end.parse::<reg_core::Period>()
-                        .expect("validated period")
-                        .iso_bounds()
-                        .1,
-                )
-            } else if let Some(start) = text.strip_suffix("..") {
-                (
-                    start
-                        .parse::<reg_core::Period>()
-                        .expect("validated period")
-                        .iso_bounds()
-                        .0,
-                    OPEN_END.to_owned(),
-                )
-            } else {
-                text.parse::<reg_core::Period>()
-                    .expect("validated period")
-                    .iso_bounds()
-            }
-        })
-        .collect()
-}
-
 fn bounds(fields: &BTreeMap<String, Value>) -> Interval {
     let bound = |name, default: &str| {
         fields
@@ -395,7 +360,7 @@ fn select_from(
         Address::Occurrence {
             periods: Some(scope),
             ..
-        } => Some(periods(scope)),
+        } => Some(scope.intervals()),
         _ => None,
     };
     candidates
@@ -611,7 +576,7 @@ fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
                 source
                     .period
                     .as_ref()
-                    .is_some_and(|span| reg_core::merge(periods(&p)) == vec![span.clone()])
+                    .is_some_and(|span| reg_core::merge(p.intervals()) == vec![span.clone()])
             })
     } else {
         source.fields.get(field).unwrap_or(&Value::Null) == expected
@@ -829,7 +794,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         Address::Occurrence {
             periods: Some(scope),
             ..
-        } => periods(scope)
+        } => scope.intervals()
             .iter()
             .filter_map(|p| intersect(&span, p))
             .collect(),
@@ -839,7 +804,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         at: Some(scope), ..
     } = statement
     {
-        selected = reg_core::overlap(&selected, &periods(scope));
+        selected = reg_core::overlap(&selected, &scope.intervals());
     }
     selected
 }
@@ -1036,9 +1001,9 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
                     })
                 })
                 && match (a_periods, b_periods) {
-                    (Some(a), Some(b)) => periods(a)
+                    (Some(a), Some(b)) => a.intervals()
                         .iter()
-                        .any(|a| periods(b).iter().any(|b| intersect(a, b).is_some())),
+                        .any(|a| b.intervals().iter().any(|b| intersect(a, b).is_some())),
                     _ => true,
                 }
         }
@@ -1669,7 +1634,7 @@ pub fn resolve(
                     .spans
                     .iter()
                     .flat_map(|span| {
-                        periods(scope)
+                        scope.intervals()
                             .iter()
                             .filter_map(|s| intersect(span, s))
                             .collect::<Vec<_>>()
