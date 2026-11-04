@@ -217,12 +217,8 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
     let read_one = |input: &reg_readers::Input| {
         let output = reg_readers::read(&args.inputs, args.assets.as_deref(), &readers, input)?;
         for record in &output.frame.records {
-            let (provider, at) = match record {
-                Record::Register(r) => (&r.provider, &r.locator),
-                Record::Table(r) => (&r.provider, &r.locator),
-                Record::Release(r) => (&r.provider, &r.locator),
-                Record::Occurrence(r) => (&r.provider, &r.locator),
-                _ => continue,
+            let Some((provider, _, at)) = curation::coordinates(record) else {
+                continue;
             };
             check_provider(provider, &at.input, &at.at)?;
         }
