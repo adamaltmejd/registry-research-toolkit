@@ -198,13 +198,9 @@ export function SourceCard({
       action: (
         <Button
           variant="ghost"
-          aria-label={`Remove ${columns[0]?.spelling ?? name} from ${tableName}`}
-          onPress={() =>
-            setRemoving({
-              binding: bindingIndex,
-              label: columns[0]?.spelling ?? name,
-            })
-          }
+          // Named by the variable, as the lane is.
+          aria-label={`Remove ${name} from ${tableName}`}
+          onPress={() => setRemoving({ binding: bindingIndex, label: name })}
         >
           Remove
         </Button>

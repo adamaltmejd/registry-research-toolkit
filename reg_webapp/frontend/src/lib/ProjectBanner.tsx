@@ -23,6 +23,7 @@ import {
   VERDICT_WORDS,
   type Verdict,
 } from "./use_project";
+import { useRoute } from "./use_router";
 import { createProject } from "./window";
 import { type WindowBounds, windowBounds } from "./window_bounds";
 
@@ -53,7 +54,10 @@ export function ProjectBanner({
   validation: ProjectCheck;
 }) {
   const snapshot = useProject();
+  const route = useRoute();
   const { raw, draft, dirty } = snapshot;
+  // /project offers its own "Create a project" with "Open a project file".
+  if (raw === null && route.name === "project") return null;
   if (raw === null)
     return (
       <div className={styles.empty}>
@@ -174,25 +178,31 @@ function StudyWindow({
         <Label className="micro-label">Study years</Label>
         <SliderOutput className={styles.readout}>
           {({ state }) =>
-            active === null && dragging === null
-              ? "Not set"
-              : `${state.getThumbValueLabel(0)}–${state.getThumbValueLabel(1)}`
+            active === null && dragging === null ? (
+              <span className={styles.unset}>Not set</span>
+            ) : (
+              `${state.getThumbValueLabel(0)}–${state.getThumbValueLabel(1)}`
+            )
           }
         </SliderOutput>
-        {active !== null && (
-          <span className={styles.clear}>
-            <Button
-              variant="ghost"
-              onPress={() => {
-                setDragging(null);
-                projectStore.updateField("window", undefined);
-                startThumb.current?.querySelector("input")?.focus();
-              }}
-            >
-              Clear
-            </Button>
-          </span>
-        )}
+        {/* Hidden, not removed, while there is nothing to clear: the banner
+            keeps the button's height and does not grow when it appears. */}
+        <span
+          className={styles.clear}
+          data-hidden={active === null || undefined}
+        >
+          <Button
+            variant="ghost"
+            isInert={active === null}
+            onPress={() => {
+              setDragging(null);
+              projectStore.updateField("window", undefined);
+              startThumb.current?.querySelector("input")?.focus();
+            }}
+          >
+            Clear
+          </Button>
+        </span>
       </div>
       <SliderTrack className={styles.track}>
         {(active !== null || dragging !== null) && (

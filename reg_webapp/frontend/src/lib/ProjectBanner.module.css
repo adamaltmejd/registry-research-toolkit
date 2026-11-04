@@ -157,6 +157,15 @@ a.verdict {
 .clear {
   margin-left: auto;
 }
+.clear[data-hidden] {
+  visibility: hidden;
+}
+/* The readout's years are mono and accent; the words for no years are
+   neither. */
+.unset {
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
 .track {
   position: relative;
   height: 20px;

@@ -77,7 +77,7 @@ export function RegisterView({
             ? [{ term: "Description", value: node.description }]
             : []),
           {
-            term: "Period",
+            term: "Years",
             value: <code>{catalogPeriodLabel(node.period)}</code>,
           },
           // The route to each table's page (role, cadence, placements),
