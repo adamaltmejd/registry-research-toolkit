@@ -116,17 +116,21 @@ arguments, which the pipeline controls; tests pass another folder through the li
 
 - `config_missing`: no config folder, a name that is not a slug (so it cannot leave
   `projects/`), or no such file.
-- `config_invalid`: not a closed format-1 project config; a schema or policy path that
-  is not relative with plain names, or that resolves (through a link) outside the config
-  folder, or does not exist; an output or destination that is not absolute.
+- `config_invalid`: the project file, or its schema or policy, is not a regular file
+  reached from the config folder by plain relative names with no link at any step (a
+  link in a folder someone else can write could be retargeted after the check; a FIFO
+  would block the read); or the config is not a closed format-1 project config; or its
+  output or destination is not absolute.
 - `config_writable`: the config, the schema, the policy or any folder from them up to
-  the config folder has a group or other write bit. Whoever can write those chooses the
-  check the pipeline is held to. Off Unix there are no mode bits to read, so server mode
-  always refuses there.
-- `paths_overlap` extends to the config folder and the destination: staging and the
-  output's folder may not be, or lie inside, either, and neither may lie inside staging
-  or the output. A destination that does not exist yet is apart. The check runs before
-  the diagnostics folder is created.
+  the config folder has a group or other write bit, or an owner other than the config
+  folder's (or root), who could set one. Whoever can write those chooses the check the
+  pipeline is held to. Off Unix there are no mode bits to read, so server mode always
+  refuses there.
+- `paths_overlap` extends to the config folder and the destination: staging, the output
+  and the output's folder may not be, or lie inside, either; neither may lie inside
+  staging or the output, or be the diagnostics folder beside the output. A destination
+  that does not exist yet is apart. The check runs before the diagnostics folder is
+  created.
 
 A config refusal writes no report (the output is not known to be the deployer's yet);
 stdout still says `refused: setup`. `check` in server mode is advisory: the pipeline

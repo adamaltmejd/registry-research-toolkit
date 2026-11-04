@@ -7,7 +7,6 @@ use std::path::{Component, Path, PathBuf};
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::export::inside;
 use crate::{Finding, Refusal};
 
 /// Where server mode reads project configs: fixed in the binary, never taken
@@ -42,36 +41,52 @@ fn setup(rule: &'static str) -> Refusal {
 }
 
 /// `rel` under the config folder `dir` (resolved): relative, plain names only,
-/// and still inside `dir` once links are resolved. `None` otherwise, or if it
-/// does not exist.
+/// no link at any step (a link in a folder someone else can write could be
+/// retargeted after the check), and a regular file (a FIFO would block the
+/// read). `None` otherwise, or if it does not exist.
 fn resolve(dir: &Path, rel: &str) -> Option<PathBuf> {
     let rel = Path::new(rel);
     let plain = rel.components().all(|c| matches!(c, Component::Normal(_)));
     if !plain || rel.as_os_str().is_empty() {
         return None;
     }
-    let path = dir.join(rel).canonicalize().ok()?;
-    inside(&path, dir).then_some(path)
+    let mut path = dir.to_path_buf();
+    for part in rel.components() {
+        path.push(part);
+        let meta = std::fs::symlink_metadata(&path).ok()?;
+        if meta.file_type().is_symlink() {
+            return None;
+        }
+    }
+    std::fs::symlink_metadata(&path)
+        .is_ok_and(|m| m.is_file())
+        .then_some(path)
 }
 
+/// Whether anyone but the owner of `dir` could write `path`: a group or other
+/// write bit, or another owner (root aside), who could set one.
 #[cfg(unix)]
-fn writable_by_others(path: &Path) -> bool {
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::metadata(path).map_or(true, |m| m.permissions().mode() & 0o022 != 0)
+fn writable_by_others(path: &Path, dir: &Path) -> bool {
+    use std::os::unix::fs::MetadataExt;
+    let (Ok(meta), Ok(top)) = (std::fs::metadata(path), std::fs::metadata(dir)) else {
+        return true;
+    };
+    meta.mode() & 0o022 != 0 || (meta.uid() != top.uid() && meta.uid() != 0)
 }
 
 /// Off Unix the mode bits are not there to read, so nothing passes.
 #[cfg(not(unix))]
-fn writable_by_others(_: &Path) -> bool {
+fn writable_by_others(_: &Path, _: &Path) -> bool {
     true
 }
 
-/// Whether anyone but its owner could write `file` (resolved, inside `dir`) or
-/// any folder from it up to `dir`: whoever can, can choose the config.
+/// Whether anyone but its owner could write `file` (inside `dir`, reached
+/// without links) or any folder from it up to `dir`: whoever can, can choose
+/// the config.
 fn writable(file: &Path, dir: &Path) -> bool {
     file.ancestors()
-        .take_while(|a| inside(a, dir))
-        .any(writable_by_others)
+        .take_while(|a| a.starts_with(dir))
+        .any(|a| writable_by_others(a, dir))
 }
 
 fn absolute(path: &Path) -> bool {
@@ -80,16 +95,17 @@ fn absolute(path: &Path) -> bool {
 
 /// Loads `<config_dir>/projects/<name>.json`. `config_missing` if the folder,
 /// the name (not a slug) or the file is not there; `config_invalid` if it is
-/// not a closed format-1 project config, its schema or policy is not a file
-/// inside the config folder, or its output or destination is not absolute;
-/// `config_writable` if anyone but the owner could write the config, the
-/// schema or the policy, or a folder they are in up to the config folder.
+/// a regular file reached without links, not a closed format-1 project config,
+/// its schema or policy is not such a file inside the config folder, or its output or destination is not absolute;
+/// `config_writable` if anyone but the config folder's owner (or root) could
+/// write the config, the schema or the policy, or a folder they are in up to
+/// the config folder.
 pub(crate) fn load(config_dir: &Path, name: &str) -> Result<Project, Refusal> {
     let dir = config_dir
         .canonicalize()
         .map_err(|_| setup("config_missing"))?;
     let rel = format!("projects/{name}.json");
-    if !crate::schema::is_slug(name) || !dir.join(&rel).exists() {
+    if !crate::schema::is_slug(name) || std::fs::symlink_metadata(dir.join(&rel)).is_err() {
         return Err(setup("config_missing"));
     }
     let invalid = || setup("config_invalid");

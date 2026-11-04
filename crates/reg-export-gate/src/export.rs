@@ -102,11 +102,18 @@ fn apart_from_roots(s: &Path, output: &Path, roots: &[&Path]) -> Option<bool> {
     let parent = parent(output).canonicalize().ok()?;
     let o = parent.join(output.file_name()?);
     let o = o.canonicalize().unwrap_or(o);
+    let d = parent.join(DIAGNOSTICS);
     Some(roots.iter().all(|root| {
         let r = root.canonicalize().unwrap_or_else(|_| root.to_path_buf());
-        // The output's folder, not the output: the diagnostics folder goes
-        // there too.
-        !(inside(s, &r) || inside(&r, s) || inside(&parent, &r) || inside(&r, &o))
+        // The output's folder covers the output and the diagnostics folder
+        // inside a root; a root can still be one of them, or the output a
+        // link into a root.
+        !(inside(s, &r)
+            || inside(&r, s)
+            || inside(&parent, &r)
+            || inside(&o, &r)
+            || inside(&r, &o)
+            || inside(&r, &d))
     }))
 }
 

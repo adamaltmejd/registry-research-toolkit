@@ -133,20 +133,31 @@ fn a_project_name_that_is_not_a_slug_is_missing() {
 }
 
 #[test]
-fn a_schema_linked_from_outside_the_config_folder_is_invalid() {
-    // Regression: the schema path was checked by spelling only, so a link
-    // inside the config folder let a file the pipeline can write be the schema.
+fn a_linked_schema_is_invalid() {
+    // Regression: links were resolved before the checks, so a link inside the
+    // config folder passed: one to a file outside that the pipeline can write,
+    // or one to another file inside, in a folder others can write, that could
+    // be retargeted to a looser schema or policy after the check.
     let d = Deployment::new("linked-schema");
     let elsewhere = d.root.join("loose.schema.json");
     std::fs::copy(d.config.join("schemas/trial.schema.json"), &elsewhere).expect("a copy");
-    std::os::unix::fs::symlink(&elsewhere, d.config.join("schemas/linked.json")).expect("a link");
-    let mut project = d.project();
-    project["schema"] = json!("schemas/linked.json");
-    d.write_project(&project);
-    assert_eq!(d.check("trial"), Err((Code::Setup, "config_invalid")));
-    project["schema"] = json!("../loose.schema.json");
-    d.write_project(&project);
-    assert_eq!(d.check("trial"), Err((Code::Setup, "config_invalid")));
+    std::os::unix::fs::symlink(&elsewhere, d.config.join("schemas/outside.json")).expect("a link");
+    std::os::unix::fs::symlink("trial.schema.json", d.config.join("schemas/inside.json"))
+        .expect("a link");
+    for schema in [
+        "schemas/outside.json",
+        "schemas/inside.json",
+        "../loose.schema.json",
+    ] {
+        let mut project = d.project();
+        project["schema"] = json!(schema);
+        d.write_project(&project);
+        assert_eq!(
+            d.check("trial"),
+            Err((Code::Setup, "config_invalid")),
+            "{schema}"
+        );
+    }
 }
 
 #[test]
@@ -164,15 +175,28 @@ fn an_output_inside_the_destination_overlaps() {
     // Regression: the output could sit in the agent VM's view, so a checked
     // but unreviewed export reached the agent without `export`. No diagnostics
     // folder is made there either.
+    // The destination may not be the diagnostics folder beside the output
+    // either: the report would land in it.
     let d = Deployment::new("overlap");
-    let destination = d.root.join("destination");
-    std::fs::create_dir(&destination).expect("a destination");
-    let mut project = d.project();
-    project["output"] = json!(destination.join("output"));
-    d.write_project(&project);
-    assert_eq!(d.check("trial"), Err((Code::Setup, "paths_overlap")));
-    assert_eq!(
-        std::fs::read_dir(&destination).expect("a folder").count(),
-        0
-    );
+    for (dest, output) in [
+        ("destination", "destination/output"),
+        (".diagnostics", "output"),
+    ] {
+        let destination = d.root.join(dest);
+        std::fs::create_dir_all(&destination).expect("a destination");
+        let mut project = d.project();
+        project["destination"] = json!(destination);
+        project["output"] = json!(d.root.join(output));
+        d.write_project(&project);
+        assert_eq!(
+            d.check("trial"),
+            Err((Code::Setup, "paths_overlap")),
+            "{dest}"
+        );
+        assert_eq!(
+            std::fs::read_dir(&destination).expect("a folder").count(),
+            0,
+            "{dest}"
+        );
+    }
 }
