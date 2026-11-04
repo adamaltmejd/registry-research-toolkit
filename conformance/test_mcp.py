@@ -19,6 +19,7 @@ from contextlib import closing
 from urllib.parse import unquote
 
 import pytest
+from holdings_artifacts import HOLDINGS_CASE
 from http_cases import (
     CASES,
     ServerPool,
@@ -30,6 +31,7 @@ from http_cases import (
     select_json,
 )
 from jsonschema import Draft202012Validator
+from reader_artifacts import cached_reader_artifact
 
 PROTOCOL = "2025-11-25"
 HEADERS = {
@@ -127,14 +129,10 @@ def path_arguments(op, path):
     return None
 
 
-# simplify: error codes the C builder never gives a fixture a path to (no retired ids,
-# no classification versions until D), exempt from the coverage check. Delete when D
-# writes their cases.
-NO_FIXTURE_PATH_UNTIL_D = {"retired_ref", "classification_version_ambiguous"}
-
-# raised only by the shared cursor helper; api/cursor-stale pins it once (triage); not
-# repeated per operation
-PINNED_ONCE = {"stale_cursor"}
+# raised only by a shared helper, pinned once and not repeated per operation:
+# `stale_cursor` by the cursor helper (api/cursor-stale), `retired_ref` by the ref
+# resolver (api/show-refs)
+PINNED_ONCE = {"stale_cursor", "retired_ref"}
 
 
 @pytest.mark.parametrize("operation", EQUIVALENCE)
@@ -196,8 +194,53 @@ def test_tool_matches_http(http_servers, operation):
                 codes.add(document["error"]["code"])
     # An exempt code may still be reached (a case can pin `stale_cursor` per operation);
     # it is only not required.
-    exempt = NO_FIXTURE_PATH_UNTIL_D | PINNED_ONCE
-    assert codes - exempt == {"invalid_parameter", *op.get("errors", [])} - exempt
+    assert (
+        codes - PINNED_ONCE
+        == {
+            "invalid_parameter",
+            *op.get("errors", []),
+        }
+        - PINNED_ONCE
+    )
+
+
+def test_materialize_tool_matches_http(http_servers, steward):
+    # Fails when the `materialize_order` call of the `order` tool drifts from
+    # `POST /api/project/materialize` (an order file, `order_blocked`, `project_invalid`,
+    # `project_unnamed`, or `holdings_unavailable` on a server without holdings), or
+    # a document fails the tool's `outputSchema`. Not in `EQUIVALENCE`: that runs on
+    # reader artifacts, where every call is `holdings_unavailable`; this needs the steward.
+    (tool,) = (t for t in TOOLS if t["name"] == "order")
+    project = json.loads((CASES / "materialize/key-only/request.json").read_text())[
+        "project"
+    ]
+    blocked = json.loads(
+        (CASES / "materialize/contested-column/request.json").read_text()
+    )["project"]
+    old = json.loads((CASES / "api/order-errors/request.json").read_text())["requests"][
+        0
+    ]["body"]
+    reference_only = http_servers.client(
+        artifact_env(cached_reader_artifact(HOLDINGS_CASE / "base"))
+    )
+    probes = [
+        (steward, project),
+        (steward, blocked),
+        (steward, old),
+        (steward, project | {"name": " \t "}),
+        (reference_only, project),
+    ]
+    codes = set()
+    for client, body in probes:
+        http = client.post("/api/project/materialize", json=body)
+        is_error, document = call(
+            client, "order", {"operation": "materialize_order", "project": body}
+        )
+        Draft202012Validator(tool["outputSchema"]).validate(document)
+        assert (is_error, document) == (http.status_code != 200, http.json())
+        if is_error:
+            codes.add(document["error"]["code"])
+    assert codes == set(OPERATIONS["materialize_order"]["errors"])
 
 
 def test_tool_of_several_needs_an_operation(http_servers):
