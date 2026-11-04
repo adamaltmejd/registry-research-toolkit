@@ -2,8 +2,8 @@
   "startup_error": {
     "code": "schema_incompatible",
     "fields": {
-      "schema_version": "7",
-      "supported": "7"
+      "schema_version": "8",
+      "supported": "8"
     }
   }
 }

@@ -311,7 +311,7 @@ fn materialize(
                 scope.table,
                 Some(&hull(scope.requested)),
                 format!(
-                    "{} has no curated window for {} over the requested period.",
+                    "{} has no codes from {} over the requested period.",
                     variable.pid,
                     binding.classification.as_deref().expect("resolved pin")
                 ),
@@ -511,7 +511,9 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         IssueLevel::Error,
         "ambiguous_window",
         &|t, p| {
-            format!("{pid} cannot be placed on one form in {t} over {p}; the window needs curation")
+            format!(
+                "{pid} has more than one form in {t} over {p} (name, type or codes differ); pick a shorter period or ask the maintainer"
+            )
         },
     );
     each(
@@ -530,13 +532,17 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         &|p| p.identifier,
         IssueLevel::Info,
         "identifier",
-        &|t, p| format!("{pid} identifies units in {t} over {p}"),
+        &|t, p| format!("{pid} is an identifier in {t} over {p}"),
     );
     each(
         &|p| p.open && !scope.serving[p.serving].table.timeless,
         IssueLevel::Info,
         "coverage_end_unstated",
-        &|t, p| format!("{pid} in {t} has no stated coverage end; data over {p} is not confirmed"),
+        &|t, p| {
+            format!(
+                "{pid} in {t}: the provider states no end year, so data over {p} is not confirmed"
+            )
+        },
     );
     found
 }
@@ -618,7 +624,7 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
                 &s.table.pid,
                 Some(&days),
                 format!(
-                    "editions of {} disagree on {} over {}",
+                    "the preliminary and final releases of {} differ on {} over {}",
                     s.table.pid,
                     at.variable.pid,
                     span(scope.server, &days)

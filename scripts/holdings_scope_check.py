@@ -80,6 +80,7 @@ BOUNDS = {
     "doc_fts_data.block": 16_384,
     "search_data.block": 16_384,
     "search_description_data.block": 16_384,
+    "search_exact_data.block": 16_384,  # exact-match ranking index (#2167)
 }
 PER_KEY = "meta.value"  # bounded per key, below
 
