@@ -3,7 +3,7 @@
 kind = "set"
 subject = "individ: blk"
 fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"

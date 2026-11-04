@@ -3,511 +3,511 @@
 kind = "set"
 subject = "industrins-energianvandning: anst where key = 'v1639'"
 fields = { "label" = "Anställda på arbetsstället — Anst" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1392\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1392\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: anställda where key = 'v1639'"
 fields = { "label" = "Anställda på arbetsstället — Anställda" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1404\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1404\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: anst where key = 'v16314'"
 fields = { "label" = "Antal anställda på arbetsstället — Anst" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1728\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1728\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: anställda where key = 'v16314'"
 fields = { "label" = "Antal anställda på arbetsstället — Anställda" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1740\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1740\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: aestat @2004"
 fields = { "label" = "Arbetsställestatus — AeStat" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1848\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1848\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: aestat @2006..2009"
 fields = { "label" = "Arbetsställestatus — AeStat" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1812\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1812\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: aestat @2010..2016"
 fields = { "label" = "Arbetsställestatus — AeStat" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1824\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1824\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: arbetsställestatus"
 fields = { "label" = "Arbetsställestatus — Arbetsställestatus" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1836\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1836\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ben where key = 'v16328'"
 fields = { "label" = "Benämning på arbetsstället — Ben" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1320\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1320\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: benämning where key = 'v16328'"
 fields = { "label" = "Benämning på arbetsstället — Benämning" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1332\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1332\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ben where key = 'v2622'"
 fields = { "label" = "Benämning på redovisningsenheten — Ben" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1884\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1884\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: benämning where key = 'v2622'"
 fields = { "label" = "Benämning på redovisningsenheten — Benämning" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1896\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1896\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: bränsleförbr_transp"
 fields = { "label" = "Bränsleanvändning för transporter — Bränsleförbr_transp" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1608\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1608\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: forbtrans"
 fields = { "label" = "Bränsleanvändning för transporter — ForbTrans" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1596\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1596\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: bränsleförbr_övrig where key = 'v16413'"
 fields = { "label" = "Bränsleanvändning för övrigt — Bränsleförbr_övrig" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1632\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1632\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: forbovr where key = 'v16413'"
 fields = { "label" = "Bränsleanvändning för övrigt — ForbOvr" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1620\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1620\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: bränsleförbr_övrig where key = 'v7845'"
 fields = { "label" = "Bränsleförbrukning övrigt — Bränsleförbr_övrig" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1932\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1932\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: forbovr where key = 'v7845'"
 fields = { "label" = "Bränsleförbrukning övrigt — ForbOvr" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1944\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1944\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: vv where key = 'v2598'"
 fields = { "label" = "Bränsleslagens värmevärden — Vv" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1908\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1908\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: värmevärde where key = 'v2598'"
 fields = { "label" = "Bränsleslagens värmevärden — Värmevärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1920\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1920\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: btext @2004..2009"
 fields = { "label" = "Bränsleslaget i klartext — BText" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1776\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1776\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: btext @2010..2011"
 fields = { "label" = "Bränsleslaget i klartext — BText" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1776\nreg_meta_build/curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1776\npython-builder-pre-cutover:curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: btext @2012..2018"
 fields = { "label" = "Bränsleslaget i klartext — BText" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: bränsleslag"
 fields = { "label" = "Bränsleslaget i klartext — Bränsleslag" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1800\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1800\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: vv @2006..2009,2016..2017"
 fields = { "label" = "Bränsleslagets värmevärden — Vv" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1656\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1656\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: vv @2010..2015,2018..2024"
 fields = { "label" = "Bränsleslagets värmevärden — Vv" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1644\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1644\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: värmevärde where key = 'v16414'"
 fields = { "label" = "Bränsleslagets värmevärden — Värmevärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1668\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1668\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: el_mwh"
 fields = { "label" = "Elanvändningen i kvantitet MWh — El_MWh" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1584\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1584\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: mwh"
 fields = { "label" = "Elanvändningen i kvantitet MWh — MWh" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1572\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1572\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: fnamn where key = 'v3575'"
 fields = { "label" = "Företagets namn — FNamn" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1752\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1752\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: företagsnamn"
 fields = { "label" = "Företagets namn — Företagsnamn" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1764\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1764\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: elvärde where key = 'v16432'"
 fields = { "label" = "Inköpsvärde av el — Elvärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1872\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1872\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: varde where key = 'v16432'"
 fields = { "label" = "Inköpsvärde av el — Varde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1860\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1860\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v16418'"
 fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Inköpsvärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1692\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1692\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: varde where key = 'v16418'"
 fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Varde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1680\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1680\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: inkopt"
 fields = { "label" = "Inköpt kvantitet — Inkopt" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1704\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1704\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: inköptkvantitet"
 fields = { "label" = "Inköpt kvantitet — InköptKvantitet" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1716\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1716\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v2607'"
 fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Inköpsvärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1968\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1968\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: varde where key = 'v2607'"
 fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Varde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1956\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1956\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kpers1 @2004"
 fields = { "label" = "Kontaktperson 1 — KPers1" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1524\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1524\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kpers1 @2005..2024"
 fields = { "label" = "Kontaktperson 1 — KPers1" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1512\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1512\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kontaktperson1"
 fields = { "label" = "Kontaktperson 1 — Kontaktperson1" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1536\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1536\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kpers2"
 fields = { "label" = "Kontaktperson 2 — KPers2" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1548\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1548\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kontaktperson2"
 fields = { "label" = "Kontaktperson 2 — Kontaktperson2" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1560\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1560\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ng2007 @2007"
 fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1464\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1464\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ng2007 @2008..2009"
 fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1500\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1500\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ng2007 @2010..2024"
 fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1488\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1488\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: näringsgren2002"
 fields = { "label" = "Näringsgren för arbetsställe — Äldre standard än Ng2002 (Näringsgren2002)" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1452\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1452\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: näringsgren2007"
 fields = { "label" = "Näringsgren för arbetsställe — Äldre standard än Ng2007." }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1476\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1476\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: peorgnr @2004"
 fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1416\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1416\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: peorgnr @2005"
 fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1428\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1428\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: peorgnrhe"
 fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeorgNrHe)" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1440\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1440\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ppostort"
 fields = { "label" = "Postort för arbetsstället — PPostort" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1380\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1380\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: poanst where key = 'v16428'"
 fields = { "label" = "Postort för arbetsstället — PoAnst" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1344\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1344\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: postnr where key = 'v16428'"
 fields = { "label" = "Postort för arbetsstället — PostNr" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1368\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1368\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: postort where key = 'v16428'"
 fields = { "label" = "Postort för arbetsstället — Postort" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1356\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1356\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: adress where key = 'v2620'"
 fields = { "label" = "Vilken adress har redovisningsenheten — Adress" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1272\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1272\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: anladr"
 fields = { "label" = "Vilken adress har redovisningsenheten — AnlAdr" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1284\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1284\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: poanst where key = 'v2634'"
 fields = { "label" = "Vilken postort har redovisningsenheten — PoAnst" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1296\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1296\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: postort where key = 'v2634'"
 fields = { "label" = "Vilken postort har redovisningsenheten — Postort" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1308\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1308\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: elvärde where key = 'v2606'"
 fields = { "label" = "Värdet av elförbrukningen och bränsleförbrukning för transporter — Elvärde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1992\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1992\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: varde where key = 'v2606'"
 fields = { "label" = "Värdet av elförbrukningen och bränsleförbrukning för transporter — Varde" }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:1980\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1980\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2021..2022"
 fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2004"
 fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2005"
 fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ng2007 @2013,2019..2024"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: ng2007 @2007..2012,2014..2018"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
 
 [[statement]]
 kind = "set"
 subject = "industrins-energianvandning: näringsgren2007"
 fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
 
 [[statement]]
 kind = "set"

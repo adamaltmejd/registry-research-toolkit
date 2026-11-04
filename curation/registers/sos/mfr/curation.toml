@@ -3,31 +3,31 @@
 kind = "set"
 subject = "mfr: ar"
 fields = { "label" = "Barnets födelseår" }
-evidence = "reg_meta_build/curation/registers/sos/mfr.toml:447\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:11 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "python-builder-pre-cutover:curation/registers/sos/mfr.toml:447\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:11 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 [[statement]]
 kind = "set"
 subject = "mfr-ivf: ar"
 fields = { "label" = "Barnets födelseår" }
-evidence = "reg_meta_build/curation/registers/sos/mfr.toml:459\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:272 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "python-builder-pre-cutover:curation/registers/sos/mfr.toml:459\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:272 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 [[statement]]
 kind = "set"
 subject = "mfr-lmed: ar"
 fields = { "label" = "Barnets födelseår" }
-evidence = "reg_meta_build/curation/registers/sos/mfr.toml:471\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:290 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "python-builder-pre-cutover:curation/registers/sos/mfr.toml:471\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:290 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 [[statement]]
 kind = "set"
 subject = "mfr-fok: grvbs"
 fields = { "label" = "Graviditetslängd, fullbordade veckor, bästa skattning" }
-evidence = "reg_meta_build/curation/registers/sos/mfr.toml:531\n\nBoth originals explicitly describe gestational length in completed weeks, best estimate. Expand only the abbreviated name using the supplied MFR name. Keep each original algorithm description, range (22–45 versus21–44), type, availability and source coding unchanged; this does not assert algorithm or distribution equivalence."
+evidence = "python-builder-pre-cutover:curation/registers/sos/mfr.toml:531\n\nBoth originals explicitly describe gestational length in completed weeks, best estimate. Expand only the abbreviated name using the supplied MFR name. Keep each original algorithm description, range (22–45 versus21–44), type, availability and source coding unchanged; this does not assert algorithm or distribution equivalence."
 
 [[statement]]
 kind = "set"
 subject = "mfr-fok: sjukhus_s"
 fields = { "label" = "Sjukhuskod, bearbetad" }
-evidence = "reg_meta_build/curation/registers/sos/mfr.toml:543\n\nBoth originals explicitly identify a processed hospital code. Add only the supplied punctuation in the MFR name; preserve each original processing description, representation, coding, type and availability. This does not equate processing rules or hospital-code histories."
+evidence = "python-builder-pre-cutover:curation/registers/sos/mfr.toml:543\n\nBoth originals explicitly identify a processed hospital code. Add only the supplied punctuation in the MFR name; preserve each original processing description, representation, coding, type and availability. This does not equate processing rules or hospital-code histories."
 
 [[statement]]
 kind = "set"
@@ -2715,133 +2715,133 @@ evidence = "Yrke vid inskrivning.\ncatalog:variable_text:57247:4383:2932897"
 kind = "set"
 subject = "var:barnets-fodelsevikt"
 fields = { "description" = "Barnets födelsevikt i gram." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:483\n\nTerminal punctuation only; retain differing original data types. Original rows row:56 and row:250 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:483\n\nTerminal punctuation only; retain differing original data types. Original rows row:56 and row:250 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-huvudomfang"
 fields = { "description" = "Barnets huvudomfång i cm" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:495\n\nBoth names explicitly state child head circumference in centimetres; retain differing original data types. Original rows row:103 and row:262 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:495\n\nBoth names explicitly state child head circumference in centimetres; retain differing original data types. Original rows row:103 and row:262 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-10"
 fields = { "description" = "Barnets diagnoskod 10 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:411\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:16 and row:222 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:411\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:16 and row:222 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-11"
 fields = { "description" = "Barnets diagnoskod 11 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:423\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:17 and row:223 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:423\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:17 and row:223 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-12"
 fields = { "description" = "Barnets diagnoskod 12 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:435\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:18 and row:224 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:435\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:18 and row:224 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-2"
 fields = { "description" = "Barnets diagnoskod 2 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:315\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:19 and row:232 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:315\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:19 and row:232 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-3"
 fields = { "description" = "Barnets diagnoskod 3 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:327\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:20 and row:234 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:327\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:20 and row:234 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-4"
 fields = { "description" = "Barnets diagnoskod 4 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:339\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:21 and row:235 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:339\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:21 and row:235 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-5"
 fields = { "description" = "Barnets diagnoskod 5 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:351\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:22 and row:236 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:351\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:22 and row:236 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-6"
 fields = { "description" = "Barnets diagnoskod 6 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:363\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:23 and row:237 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:363\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:23 and row:237 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-7"
 fields = { "description" = "Barnets diagnoskod 7 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:375\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:24 and row:238 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:375\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:24 and row:238 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-8"
 fields = { "description" = "Barnets diagnoskod 8 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:387\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:25 and row:239 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:387\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:25 and row:239 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-9"
 fields = { "description" = "Barnets diagnoskod 9 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:399\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:26 and row:240 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:399\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:26 and row:240 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:dodsalder-i-dagar-barnet"
 fields = { "description" = "Barnets dödsålder i dagar, endast om barnet har avlidit under nyföddhetsperioden" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:507\n\nBoth originals state child death age restricted to the neonatal period and supply the identical 0–27 day representation. Original rows row:252 and row:63 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:507\n\nBoth originals state child death age restricted to the neonatal period and supply the identical 0–27 day representation. Original rows row:252 and row:63 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
 kind = "set"
 subject = "var:graviditetslangd-dagar-basta-skattning"
 fields = { "description" = "Bästa skattning av graviditetslängd i dagar enligt GRMETOD, i första hand ultraljud och i andra hand sista mensdatum." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1869\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/graviditetslangd-dagar-basta-skattning"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:1869\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/graviditetslangd-dagar-basta-skattning"
 
 
 [[statement]]
 kind = "set"
 subject = "var:graviditetslangd-veckor-basta-skattning"
 fields = { "description" = "Bästa skattning av graviditetslängd i fullbordade veckor enligt GRMETOD, i första hand ultraljud och i andra hand sista mensdatum." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1878\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/graviditetslangd-veckor-basta-skattning"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:1878\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/graviditetslangd-veckor-basta-skattning"
 
 
 [[statement]]
 kind = "set"
 subject = "var:overlevnad-nyfoddhetsperioden"
 fields = { "description" = "Barnets överlevnad under nyföddhetsperioden, baserad på DODFOD och Dödsorsaksregistret/AVI. För dödfödda omfattas från 1 juli 2008 graviditetslängd minst 22+0 veckor, tidigare minst 28+0." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1851\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/overlevnad-nyfoddhetsperioden"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:1851\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/overlevnad-nyfoddhetsperioden"
 
 
 [[statement]]
 kind = "set"
 subject = "var:sjukhuskod-bearbetad"
 fields = { "description" = "Sjukhuskod bearbetad för statistik: inaktuella eller felaktiga koder blankas eller rättas, och uppgifter kan kompletteras eller särskiljas med Patientregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1887\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/sjukhuskod-bearbetad"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:1887\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/sjukhuskod-bearbetad"
 
 
 [[statement]]
 kind = "set"
 subject = "var:unikt-lopnummer"
 fields = { "description" = "Unikt löpnummer (FID) för varje fött barn; samma FID förekommer i MFR och i FOK-underlaget och används för koppling. Om femte positionen är 3 finns födseln inte i MFR." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/unikt-lopnummer"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/mfr/unikt-lopnummer"
 
 [[statement]]
 kind = "set"
@@ -2901,445 +2901,445 @@ evidence = "Docs description review 2026-11-02; one variable, one description. T
 kind = "set"
 subject = "set:barnets-diagnoskod-bk"
 fields = { "label" = "Barnets diagnoskod BK", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-1"
 fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-3"
 fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-4"
 fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-5"
 fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-6"
 fields = { "facets" = { "ordinal" = { "value" = "6", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-7"
 fields = { "facets" = { "ordinal" = { "value" = "7", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:barnets-diagnoskod-bk-8"
 fields = { "facets" = { "ordinal" = { "value" = "8", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:diagnoskod-barnet"
 fields = { "label" = "Diagnoskod, barnet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-1"
 fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-10"
 fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-11"
 fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-12"
 fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-13"
 fields = { "facets" = { "ordinal" = { "value" = "13", "label" = "13" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-14"
 fields = { "facets" = { "ordinal" = { "value" = "14", "label" = "14" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-15"
 fields = { "facets" = { "ordinal" = { "value" = "15", "label" = "15" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-16"
 fields = { "facets" = { "ordinal" = { "value" = "16", "label" = "16" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-17"
 fields = { "facets" = { "ordinal" = { "value" = "17", "label" = "17" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-18"
 fields = { "facets" = { "ordinal" = { "value" = "18", "label" = "18" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-19"
 fields = { "facets" = { "ordinal" = { "value" = "19", "label" = "19" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-2"
 fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-20"
 fields = { "facets" = { "ordinal" = { "value" = "20", "label" = "20" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-3"
 fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-4"
 fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-5"
 fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-6"
 fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-7"
 fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-8"
 fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-barnet-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:20; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:atgardskod-barnet"
 fields = { "label" = "Åtgärdskod, barnet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-1"
 fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-10"
 fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-11"
 fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-12"
 fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-2"
 fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-3"
 fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-4"
 fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-5"
 fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-6"
 fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-7"
 fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-8"
 fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-barnet-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:34; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:atgardskod-forlosta"
 fields = { "label" = "Åtgärdskod, den förlösta", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-1"
 fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-10"
 fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-11"
 fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-12"
 fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-2"
 fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-3"
 fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-4"
 fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-5"
 fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-6"
 fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-7"
 fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-8"
 fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:atgardskod-forlosta-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:48; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:diagnoskod-forlosta"
 fields = { "label" = "Diagnoskod, den förlösta", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-1"
 fields = { "facets" = { "ordinal" = { "value" = "01", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-10"
 fields = { "facets" = { "ordinal" = { "value" = "10", "label" = "10" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-11"
 fields = { "facets" = { "ordinal" = { "value" = "11", "label" = "11" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-12"
 fields = { "facets" = { "ordinal" = { "value" = "12", "label" = "12" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-2"
 fields = { "facets" = { "ordinal" = { "value" = "02", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-3"
 fields = { "facets" = { "ordinal" = { "value" = "03", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-4"
 fields = { "facets" = { "ordinal" = { "value" = "04", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-5"
 fields = { "facets" = { "ordinal" = { "value" = "05", "label" = "5" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-6"
 fields = { "facets" = { "ordinal" = { "value" = "06", "label" = "6" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-7"
 fields = { "facets" = { "ordinal" = { "value" = "07", "label" = "7" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-8"
 fields = { "facets" = { "ordinal" = { "value" = "08", "label" = "8" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-forlosta-9"
 fields = { "facets" = { "ordinal" = { "value" = "09", "label" = "9" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:55; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:diagnoskod-graviditet"
 fields = { "label" = "Diagnoskod under graviditet", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-1"
 fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-3"
 fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:diagnoskod-graviditet-4"
 fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/mfr.toml:62; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"

@@ -3,7 +3,7 @@
 kind = "set"
 subject = "sminet: diagnos"
 fields = { "classification" = "class/icd/icd-10-se" }
-evidence = "reg_meta_build/curation/providers/fohm.toml:76\n\nExplicit provider declaration: ICD-10-SE"
+evidence = "python-builder-pre-cutover:curation/providers/fohm.toml:76\n\nExplicit provider declaration: ICD-10-SE"
 
 [[statement]]
 kind = "set"

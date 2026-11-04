@@ -1276,13 +1276,13 @@ evidence = "r6 and r10 explicitly define the variable as the form in which a med
 kind = "set"
 subject = "var:varuid"
 fields = { "description" = "Expedierad varuidentitet enligt Apoteket AB:s ID-begrepp, som användes fram till oktober 2010." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/lmed/varuid"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/lmed/varuid"
 
 [[statement]]
 kind = "set"
 subject = "var:varutyp"
 fields = { "description" = "Artikelns varutyp." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nreg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/lmed/varutyp"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json.\n\nMaintainer description review 2026-11-02: sos/lmed/varutyp"
 
 [[statement]]
 kind = "set"
@@ -1294,49 +1294,49 @@ evidence = "HGRUPP classifies trade goods (r16). Related trade-goods description
 kind = "set"
 subject = "lmed-vara: varuid"
 fields = { "label" = "ID för varan" }
-evidence = "reg_meta_build/curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "lmed-vara: varutyp"
 fields = { "label" = "Artikelns varutyp" }
-evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "lmed: varuid"
 fields = { "label" = "Varuidentitet expedierad" }
-evidence = "reg_meta_build/curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "lmed: varutyp"
 fields = { "label" = "Varutyp" }
-evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+evidence = "python-builder-pre-cutover:curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "set:specialistutbildningskod"
 fields = { "label" = "Specialistutbildningskod", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:specialistutbildningskod-1"
 fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:specialistutbildningskod-2"
 fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "var:specialistutbildningskod-3"
 fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: reg_meta_build/curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
+evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/lmed.toml:10; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
