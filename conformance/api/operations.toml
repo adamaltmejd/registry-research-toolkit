@@ -394,7 +394,7 @@ parse_state = "\"parsed\" | \"unparsed\" | \"curated\""
 populations = "[{name, definition, ref_day}]"
 
 [shape.Segment]
-note = "A fact the catalog does not state is absent, never null: `coded` and `temporality` unknown and `state` clear are left out too."
+note = "A fact the catalog does not state is absent, never null: `coded` unknown and `state` clear are left out too."
 table = "string; the table's fqid"
 column = "string; the column name, the latest primary occurrence's spelling; on a paired catalog the held column's"
 period = "Period"
@@ -408,9 +408,7 @@ classification = "string?; a classification version's ref"
 coded = "\"yes\" | \"no\"?"
 sensitive = "boolean?"
 identifier = "boolean?"
-id_kind = "string?; an identifier kind slug"
 role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
-temporality = "\"fixed\" | \"status\" | \"accumulated\" | \"event\"?"
 state = "\"ambiguous\" | \"preliminary\"?"
 evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
 

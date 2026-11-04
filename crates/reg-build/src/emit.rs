@@ -592,7 +592,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     flag(release.primary),
                     Cell::Text(rel.name.clone()),
                     opt_text(rel.description.as_ref()),
-                    Cell::Null,
                     Cell::Str(rel.release.clone()),
                     if asserted {
                         Cell::Null
@@ -696,9 +695,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Str(segment.coded.into()),
                         flag(segment.sensitive),
                         flag(segment.identifier),
-                        Cell::Null,
                         Cell::Str(segment.role.into()),
-                        Cell::Str("unknown".into()),
                         Cell::Str(segment.state.into()),
                     ],
                 );
@@ -747,9 +744,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(reg_resolve::coded(x).into()),
                     flag(x.sensitive),
                     flag(x.identifier),
-                    Cell::Null,
                     Cell::Str(reg_resolve::role(x, x.identifier).into()),
-                    Cell::Str("unknown".into()),
                     opt_int(occ.variable.map(|v| variable_id[&(ri, v)])),
                     opt_int(
                         occ.variable

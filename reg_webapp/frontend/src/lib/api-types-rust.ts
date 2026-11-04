@@ -1067,8 +1067,8 @@ export interface components {
         /**
          * @description `shape.Segment`: one row of the variable's one per-period list, a column of one
          *     table over one period with one form and one provider wording. A fact the catalog
-         *     does not state is absent, never `null`: no type, no value set, `coded` or
-         *     `temporality` unknown, and `state` clear (the default) are all left out.
+         *     does not state is absent, never `null`: no type, no value set, `coded`
+         *     unknown, and `state` clear (the default) are all left out.
          */
         Segment: {
             /** @description A classification version's ref. */
@@ -1082,7 +1082,6 @@ export interface components {
             /** @description In steward mode, the file the steward holds the column in. */
             file?: string;
             format?: string;
-            id_kind?: string;
             identifier?: boolean;
             /** Format: int64 */
             length?: number;
@@ -1093,7 +1092,6 @@ export interface components {
             state?: string;
             /** @description The table's fqid. */
             table: string;
-            temporality?: string;
             type?: string;
             value_set?: components["schemas"]["ValueSetRef"];
             /** @description The provider's definition over this period; a change of wording starts a row. */

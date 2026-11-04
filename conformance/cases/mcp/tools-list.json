@@ -1848,7 +1848,7 @@
           "type": "object"
         },
         "Segment": {
-          "description": "`shape.Segment`: one row of the variable's one per-period list, a column of one\ntable over one period with one form and one provider wording. A fact the catalog\ndoes not state is absent, never `null`: no type, no value set, `coded` or\n`temporality` unknown, and `state` clear (the default) are all left out.",
+          "description": "`shape.Segment`: one row of the variable's one per-period list, a column of one\ntable over one period with one form and one provider wording. A fact the catalog\ndoes not state is absent, never `null`: no type, no value set, `coded`\nunknown, and `state` clear (the default) are all left out.",
           "properties": {
             "classification": {
               "description": "A classification version's ref.",
@@ -1879,9 +1879,6 @@
             "format": {
               "type": "string"
             },
-            "id_kind": {
-              "type": "string"
-            },
             "identifier": {
               "type": "boolean"
             },
@@ -1904,9 +1901,6 @@
             },
             "table": {
               "description": "The table's fqid.",
-              "type": "string"
-            },
-            "temporality": {
               "type": "string"
             },
             "type": {
