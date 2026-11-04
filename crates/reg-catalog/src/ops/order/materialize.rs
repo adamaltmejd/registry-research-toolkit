@@ -23,6 +23,7 @@ use rusqlite::Connection;
 use serde_json::Value;
 
 use super::{Issue, LogicalOrder, OrderEntry, check, project};
+use crate::holdings::Steward;
 use crate::ops::{Params, Server, iso_day};
 use crate::{Code, Error, rows};
 
@@ -48,6 +49,21 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
             vec![],
         ));
     }
+    match manifest(server, &held, steward, &project)? {
+        Ok(manifest) => Ok(serde_json::to_value(manifest).expect("Manifest serializes")),
+        Err(findings) => Err(super::blocked(server, findings)?),
+    }
+}
+
+/// The order file of a structurally valid project, or every finding that blocks it: the
+/// logical check's, then the holdings stage's. `validate` runs this on a steward server
+/// too, so it refuses exactly what `materialize` would.
+pub(super) fn manifest(
+    server: &Server,
+    held: &Connection,
+    steward: Steward,
+    project: &ProjectData,
+) -> Result<Result<Manifest, Vec<Issue>>, Error> {
     let provenance = Provenance {
         mode: Mode::StewardHoldings,
         steward: steward.owner.clone(),
@@ -63,19 +79,15 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
         base_generation: steward.catalog_generation,
         project: ProjectIdentity {
             schema_version: project.schema_version.clone(),
-            project_hash: reg_core::project::project_hash(&project),
+            project_hash: reg_core::project::project_hash(project),
             name: project.name.clone(),
         },
     };
-    let order = match check(server, &project)? {
+    let order = match check(server, project)? {
         Ok(order) => order,
-        Err(findings) => return Err(super::blocked(server, findings)?),
+        Err(findings) => return Ok(Err(findings)),
     };
-    let manifest = match build(server, &held, &project, order, provenance)? {
-        Ok(manifest) => manifest,
-        Err(findings) => return Err(super::blocked(server, findings)?),
-    };
-    Ok(serde_json::to_value(manifest).expect("Manifest serializes"))
+    build(server, held, project, order, provenance)
 }
 
 /// One accepted placement of a logical (table, variable) in a physical column.
