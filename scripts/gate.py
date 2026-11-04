@@ -60,8 +60,8 @@ PROVIDER_WORDS = re.compile(
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
-# it, the frontend step fails: raising the budget is a maintainer call. It includes the
-# search fold (about 145 KB gz measured with it).
+# it, the frontend step fails: raising the budget is a maintainer call. About 68 KB gz
+# measured after the search fold left (it was about 145 KB with it).
 WASM_GZ_BUDGET = 200_000
 
 

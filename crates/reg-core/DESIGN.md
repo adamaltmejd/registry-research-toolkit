@@ -4,7 +4,7 @@ Design rationale and constraints for `project_data.json`: its types, its structu
 validator and the validation result every layer shares. The code (`project.rs`,
 `structural.rs`, `validation.rs`) is the field-level reference; this file is the why.
 The runtime around it, including the semantic layer and the order manifest, is
-[../DESIGN.md](../DESIGN.md). The MONA side is remaining work (#707).
+[../DESIGN.md](../DESIGN.md).
 
 `reg-core` also holds the FQID and period grammars, the text folds and the interval
 algebra. It does no IO, so the server, the MCP tools, the builder (`reg-build`) and the

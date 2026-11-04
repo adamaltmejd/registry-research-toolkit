@@ -66,19 +66,13 @@ The builder crates link `reg-core` directly. A `reg-core` change, an interval or
 fix included, is therefore a builder change: `reg-build diff` against the previous
 release shows any artifact change it causes.
 
-**Text folds.** Two named folds, specified rather than inherited from a library:
+**Text folds.** Specified rather than inherited from a library:
 
 - `fold_identity`: Unicode lowercase with the Final_Sigma context rule, no normalization
   (`str::to_lowercase`; Python's `str.lower()` agrees). It is the column identity rule.
-- `fold_search`: full case folding, NFKD, drop characters with a nonzero canonical
-  combining class, repeated until the text stops changing; then split on whitespace and
-  join with single spaces. It is idempotent. Each pass maps characters independently, so
-  two passes change any text at most and a third confirms; reaching the cap is a bug. A
-  single pass is not idempotent: NFKD re-introduces capitals after the case fold (U+1D2C
-  → `A`), and a spacing mark decomposes to a space after the strip (U+00A8).
-- Helper classes follow Python, not Rust's std: whitespace is `White_Space` plus
-  U+001C..U+001F; "alphanumeric" is general category L\* or N\*, not Rust's `Alphabetic`
-  property (which admits marks and symbols Python's `[^\W_]` rejects).
+- `normalized_search_query`: split on whitespace, join with single spaces, then full
+  case folding (`ß` to `ss`). Evidence comparison uses it.
+- Whitespace follows Python, not Rust's std: `White_Space` plus U+001C..U+001F.
 
 `reg-build` fills folded columns with `reg-core`'s folds, the code the reader applies to
 the query string. All of `reg-core` uses one Unicode version
@@ -928,11 +922,10 @@ overlapping curated overrides are refused at both locations.
 - **Search ignores diacritics.** The new catalog's `search` indexes fold diacritics
   under `unicode61 remove_diacritics 2` (schema §3.2), so `lan` finds `län` and `lon`
   finds `Lön` (non-Swedish keyboards). The maintainer ruling in #2163 reversed plan
-  decision C-9, which kept them. `reg_core::fold_search` is not used for it. The reader
-  passes `q` to FTS unfolded, so the index tokenizer folds query and text alike;
-  pre-folding with `reg_core::normalized_search_query` (full case folding, `ß` to `ss`)
-  would miss an indexed `ß`. The `fold_search` paragraph under "Search" below describes
-  the old indexes.
+  decision C-9, which kept them. The reader passes `q` to FTS unfolded, so the index
+  tokenizer folds query and text alike; pre-folding with
+  `reg_core::normalized_search_query` (full case folding, `ß` to `ss`) would miss an
+  indexed `ß`.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
