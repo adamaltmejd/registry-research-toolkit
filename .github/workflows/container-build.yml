@@ -726,8 +726,7 @@ jobs:
     steps:
       # The worker, the SPA (`reg_webapp/frontend/`) and what its build reads outside
       # it: the Rust workspace for `gen:wasm` (`Cargo.toml`, `Cargo.lock`, `.cargo/`,
-      # `crates/`) and `crates/reg-meta/openapi.json` for `gen:types`. `gen:types` also
-      # writes under `plugins/`, which Bun creates on demand.
+      # `crates/`) and `crates/reg-meta/openapi.json` for `gen:types`.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: |

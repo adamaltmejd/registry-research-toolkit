@@ -14,8 +14,9 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
   `reg-core-wasm` (`reg-core` for the SPA), and the catalog builder: `reg-frame`,
   `reg-readers`, `reg-resolve` and `reg-build`, with its reader config, curation and id
-  ledgers under `curation/`. `xtask` is repository tooling (`cargo xtask gh-issue`) and
-  the repo-policy lints; it is not released.
+  ledgers under `curation/`. `xtask` is repository and release tooling (`cargo xtask
+  gh-issue`, `scope-check`, `release-base-reuse`) and the repo-policy lints; it is not
+  released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's

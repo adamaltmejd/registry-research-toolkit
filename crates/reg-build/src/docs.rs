@@ -46,7 +46,7 @@ pub fn merge(docs: Vec<Doc>) -> Result<(Vec<Document>, Vec<String>), String> {
         let located = |m: &str| format!("{}:{}: {m}", first.locator.input, first.locator.at);
         let content = match (first.kind.as_str(), &first.content) {
             ("pdf", Some(hex)) => {
-                Some(reg_frame::unhex(hex).ok_or_else(|| located("content is not lowercase hex"))?)
+                Some(reg_core::unhex(hex).ok_or_else(|| located("content is not lowercase hex"))?)
             }
             ("pdf", None) => return Err(located("a pdf document has no content")),
             (_, Some(_)) => return Err(located("only a pdf document has content")),

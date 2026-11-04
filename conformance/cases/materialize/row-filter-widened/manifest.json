@@ -1,0 +1,188 @@
+{
+  "clips": [],
+  "extract_format": "dta",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Amount",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-07-01",
+                "start": "2018-01-01"
+              },
+              "source": "a",
+              "spelling": "Amount",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/amount"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Score",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "b",
+              "spelling": "Score",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/score"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "a",
+              "spelling": "Id",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "b",
+              "spelling": "Id",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "IdAlt",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "a",
+              "spelling": "IdAlt",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "b",
+              "spelling": "IdAlt",
+              "table": "demo/keyed/visits",
+              "variable": "demo/keyed/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "visits",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2018-12-31"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Visits"
+    }
+  ],
+  "findings": [
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "Several sources share table \"Visits\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-07-01)",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_widened",
+      "level": "info",
+      "message": "Rows of table \"Visits\" are filtered on \"Year\" at its year precision, so the filter covers whole units around the request",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "Several sources share table \"Visits\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-07-01)",
+      "path": "/sources/1",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "8"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Row filter widened",
+      "schema_version": "5.2.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 4
+}

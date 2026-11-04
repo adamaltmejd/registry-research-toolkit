@@ -588,8 +588,9 @@ fn gaps(
             "mapping_missing",
             piece,
             format!(
-                "Distinct owners claim the physical column of {} in {} over {}; no placement \
-                 is accepted there, so the cell needs curation",
+                "{} in {} cannot be ordered for {}: the data holder's column for it is \
+                 also claimed by another variable. Leave out those years, or ask the data \
+                 holder",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -603,8 +604,8 @@ fn gaps(
             "column_window_unavailable",
             piece,
             format!(
-                "{} in {} is delivered but its column window leaves out {}; that part is not \
-                 extracted",
+                "The data holder's column for {} in {} does not cover {}, so those years \
+                 cannot be delivered",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -617,7 +618,8 @@ fn gaps(
             "coverage_gap",
             piece,
             format!(
-                "The data holder has no column of {} in {} over {}; that part is not extracted",
+                "The data holder has no data on {} in {} for {}, so those years cannot be \
+                 delivered",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -744,8 +746,9 @@ fn keys(
                 findings.push(block(
                     "held_key_missing",
                     format!(
-                        "The row key of table {:?} is on hold, so its file cannot be \
-                         keyed",
+                        "Table {:?} cannot be ordered yet: the data holder does not \
+                         supply its row identifier. Leave this table out, or ask the data \
+                         holder",
                         holding.physical_name
                     ),
                 ));
@@ -768,14 +771,26 @@ fn keys(
                     .iter()
                     .filter(|(_, _, d, ..)| !intersect(&days, &[*d]).is_empty())
                     .collect();
-                let distinct: BTreeSet<i64> = over.iter().map(|(c, ..)| *c).collect();
+                // Two columns are ambiguous only over a day both place the key; a key
+                // in one column for some years and another for the rest is not.
+                let distinct: BTreeSet<i64> = over
+                    .iter()
+                    .enumerate()
+                    .flat_map(|(i, a)| over[i + 1..].iter().map(move |b| (a, b)))
+                    .filter(|(a, b)| {
+                        a.0 != b.0 && !intersect(&intersect(&days, &[a.2]), &[b.2]).is_empty()
+                    })
+                    .flat_map(|(a, b)| [a.0, b.0])
+                    .collect();
                 let covered = merge_days(over.iter().map(|(_, _, d, ..)| *d).collect());
                 let uncovered = minus(&days, &covered);
-                if distinct.len() > 1 {
+                if !distinct.is_empty() {
                     findings.push(block(
                         "held_key_ambiguous",
                         format!(
-                            "Row key {variable} of table {:?} is in {} columns",
+                            "Table {:?} has {} columns that could be its row identifier \
+                             {variable}, so it cannot be ordered for the years requested. Ask \
+                             the data holder",
                             holding.physical_name,
                             distinct.len()
                         ),
@@ -786,7 +801,8 @@ fn keys(
                     let mut issue = block(
                         "held_key_missing",
                         format!(
-                            "Table {:?} has no column for its row key {variable} over {}",
+                            "Table {:?} has no column for its row identifier {variable} \
+                             for {}, so those years cannot be ordered. Leave them out",
                             holding.physical_name,
                             span(server, piece)
                         ),
@@ -952,8 +968,11 @@ fn row_filter(
     };
     let encoding = Encoding::parse(encoding).expect("an admitted encoding");
     let widened = merge_days(union.iter().map(|&d| widen(encoding, d)).collect());
-    if widened != union {
-        for s in draft.days.keys() {
+    // A source is told when the grain adds days around its own request that no source
+    // asked for; days another source asked for are `row_filter_union`'s.
+    for (s, days) in &draft.days {
+        let around = merge_days(days.iter().map(|&d| widen(encoding, d)).collect());
+        if !minus(&around, &union).is_empty() {
             findings.push(info(
                 *s,
                 "row_filter_widened",

@@ -4,15 +4,23 @@ import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 
+/** The notes on the page's subjects: one, or each of a group's members, whose
+ * notes name the member they are about. */
 export function ScopedDataWarnings({
-  fqid,
+  fqids,
   names,
 }: {
-  fqid: string;
+  fqids: readonly string[];
   names?: ReadonlyMap<string, string>;
 }) {
-  const resource = useAsyncResource(fqid, (signal) =>
-    getFindings(fqid, { signal }),
+  // simplify: one request per subject; the server has no group-level read.
+  const resource = useAsyncResource(fqids.join("\n"), (signal) =>
+    Promise.all(
+      fqids.map(async (fqid) => ({
+        ref: fqid,
+        groups: await getFindings(fqid, { signal }),
+      })),
+    ),
   );
   if (resource.loading)
     return (
@@ -27,10 +35,8 @@ export function ScopedDataWarnings({
         try again.
       </StatusRow>
     );
+  // Members of one table share its table-level findings: the merge shows each once.
   return (
-    <DataWarnings
-      groups={mergeFindingGroups([{ ref: fqid, groups: resource.data }])}
-      names={names}
-    />
+    <DataWarnings groups={mergeFindingGroups(resource.data)} names={names} />
   );
 }

@@ -216,8 +216,8 @@ export function TableView({ node }: { node: TableShow }) {
           />
         </Panel>
       )}
-      <ScopedDataWarnings fqid={node.fqid} names={names} />
-      <RelatedDocumentsPanel fqid={node.fqid} names={names} />
+      <ScopedDataWarnings fqids={[node.fqid]} names={names} />
+      <RelatedDocumentsPanel fqids={[node.fqid]} names={names} />
     </article>
   );
 }

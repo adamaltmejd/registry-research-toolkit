@@ -1,0 +1,5 @@
+dbo,Visits,BASE TABLE,Id,int,,10,0,1
+dbo,Visits,BASE TABLE,IdAlt,int,,10,0,2
+dbo,Visits,BASE TABLE,Amount,int,,10,0,3
+dbo,Visits,BASE TABLE,Score,int,,10,0,4
+dbo,Visits,BASE TABLE,Year,int,,10,0,5

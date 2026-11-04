@@ -60,6 +60,7 @@ export function SourceCard({
   bounds,
   loading,
   loadError,
+  sharedHeading = false,
   onRemoved,
 }: {
   draft: ProjectData;
@@ -73,6 +74,9 @@ export function SourceCard({
   bounds: [number, number];
   loading: boolean;
   loadError: string | null;
+  /** Another table of the project has the same register heading: the
+   * heading then names this table too (maintainer ruling, #2221). */
+  sharedHeading?: boolean;
   onRemoved: () => void;
 }) {
   const source = draft.sources[sourceIndex];
@@ -284,6 +288,9 @@ export function SourceCard({
       title={
         <span ref={heading} tabIndex={-1} className={styles.heading}>
           {register ?? tableName}
+          {register && sharedHeading && (
+            <span className={styles.headingTable}>{tableName}</span>
+          )}
         </span>
       }
       action={

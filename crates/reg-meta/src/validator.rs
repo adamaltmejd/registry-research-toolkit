@@ -50,10 +50,7 @@ impl Validators {
     pub fn new(server: &Server) -> Arc<Self> {
         let content = if let Ok(digest) = std::env::var(CONTENT_DIGEST_ENV) {
             assert!(
-                digest.len() == 64
-                    && digest
-                        .bytes()
-                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)),
+                reg_core::is_sha256_hex(&digest),
                 "{CONTENT_DIGEST_ENV} is not a SHA-256 hex digest"
             );
             digest.into_bytes()

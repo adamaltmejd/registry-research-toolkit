@@ -1,0 +1,8 @@
+{
+  "note": "Fails if show on a classification family or version answers internal_error (#2235) instead of a located 422 invalid_ref naming the ref: show summarizes providers, registers, tables, variables and sets, and values lists a version's codes. Oracle: the fixture's classification `kind` with versions `old` and `new`.",
+  "fixture": "classification-domains",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/class/kind"},
+    {"operation": "show", "path": "/api/catalog/class/kind/old"}
+  ]
+}

@@ -22,6 +22,15 @@ use serde::{Deserialize, Serialize};
 pub const OPEN_START: &str = "0001-01-01";
 pub const OPEN_END: &str = "9999-12-31";
 
+/// The interval of a stated `from`/`to`, open where a bound is unstated.
+#[must_use]
+pub fn bounds(from: Option<&str>, to: Option<&str>) -> reg_core::Interval {
+    (
+        from.unwrap_or(OPEN_START).to_owned(),
+        to.unwrap_or(OPEN_END).to_owned(),
+    )
+}
+
 /// Where a fact was stated: the input (a path relative to the inputs root) and a
 /// position inside it, both opaque to everything but the reader that wrote them.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -423,23 +432,4 @@ pub fn canonical_line<T: Serialize>(value: &T) -> String {
     let mut tree = serde_json::to_value(value).expect("frame records serialize");
     tree.sort_all_objects();
     tree.to_string()
-}
-
-/// The bytes of lowercase hex `text`, or `None` when it is not hex (odd length, a
-/// non-hex character, uppercase).
-#[must_use]
-pub fn unhex(text: &str) -> Option<Vec<u8>> {
-    let digit = |b: u8| match b {
-        b'0'..=b'9' => Some(b - b'0'),
-        b'a'..=b'f' => Some(b - b'a' + 10),
-        _ => None,
-    };
-    let bytes = text.as_bytes();
-    if !bytes.len().is_multiple_of(2) {
-        return None;
-    }
-    bytes
-        .chunks(2)
-        .map(|pair| Some((digit(pair[0])? << 4) | digit(pair[1])?))
-        .collect()
 }

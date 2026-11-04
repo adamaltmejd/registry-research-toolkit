@@ -405,10 +405,7 @@ fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
 
 fn value_set_reference(hash: Option<&str>) -> Result<(), String> {
     if let Some(hash) = hash
-        && (hash.len() != 64
-            || !hash
-                .bytes()
-                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)))
+        && !reg_core::is_sha256_hex(hash)
     {
         return Err("value_set must be a lowercase SHA-256 content hash".into());
     }

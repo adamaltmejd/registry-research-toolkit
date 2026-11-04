@@ -41,7 +41,5 @@ Refusals are `invalid_period`. `out` is a token or a range; years are 1900–209
 - `{"kind": "range", "from": <token>, "to": <token>}` — `2015..2019`; the first day of
   `from` is not after the last day of `to`
 
-Each accepted case also carries `years: [lo, hi]`, the calendar years the period
-touches: a month or day covers its year, and `LA2019` touches 2019 and 2020. Each
-accepted case also carries `bounds: [lo, hi]`, the first and last day the period covers
-as ISO dates: `2019-02` is `2019-02-01` to `2019-02-28`.
+Each accepted case also carries `bounds: [lo, hi]`, the first and last day the period
+covers as ISO dates: `2019-02` is `2019-02-01` to `2019-02-28`, and `LA2019` runs into 2020.

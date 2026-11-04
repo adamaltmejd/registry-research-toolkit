@@ -226,16 +226,7 @@ pub fn finalize(
         }
         for (ti, table) in resolved.tables.iter().enumerate() {
             let table = &table.table;
-            let period = (
-                table
-                    .from
-                    .clone()
-                    .unwrap_or_else(|| reg_frame::OPEN_START.into()),
-                table
-                    .to
-                    .clone()
-                    .unwrap_or_else(|| reg_frame::OPEN_END.into()),
-            );
+            let period = reg_frame::bounds(table.from.as_deref(), table.to.as_deref());
             let candidates = by_coordinates.get(&(
                 "table",
                 Some(table.provider.as_str()),

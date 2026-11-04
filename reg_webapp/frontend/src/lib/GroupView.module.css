@@ -1,0 +1,58 @@
+/* A member's facts in its lane's name column: the type pills, then any
+   other fact as its term beside its value. */
+.facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.fact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+}
+
+.fact dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.term {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}
+
+/* Two lines until "More" opens the rest. */
+.description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.description[data-open] {
+  display: block;
+}
+
+/* A button drawn as the shared `.link`: only the button's own chrome is reset. */
+.more {
+  align-self: flex-start;
+  padding: 0;
+  border-top: 0;
+  border-inline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-micro);
+  cursor: pointer;
+}
+
+.more[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring-inset);
+}

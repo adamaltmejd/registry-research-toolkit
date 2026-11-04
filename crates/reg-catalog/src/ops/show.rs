@@ -11,7 +11,7 @@ use super::refs::{self, Entity};
 use super::segments::{self, Segment};
 use super::shape::{self, Release};
 use super::show_evidence::{self, VariableEvidence};
-use super::{Cache, Operation, Param, Params, Period, Server, Type, component, flag};
+use super::{Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag};
 use crate::{Code, Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -235,11 +235,32 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "table" => table(server, &conn, &entity)?,
                 "variable" => variable(server, &conn, &entity, evidence)?,
                 "set" => set(server, &conn, &entity)?,
-                // simplify: classification summaries land with their data.
+                // simplify: a classification is refused, not summarized; give it a
+                // summary when a client needs one beyond `values` (#2235).
+                "class_family" => {
+                    return Err(Error::invalid_ref(
+                        &entity.pid,
+                        format!(
+                            "{:?} is a classification, which show does not take; values \
+                             lists the codes of one of its versions.",
+                            entity.pid
+                        ),
+                    ));
+                }
+                "class_version" => {
+                    return Err(Error::invalid_ref(
+                        &entity.pid,
+                        format!(
+                            "{:?} is a classification version, which show does not take; \
+                             values lists its codes.",
+                            entity.pid
+                        ),
+                    ));
+                }
                 kind => {
                     return Err(Error::new(
                         Code::InternalError,
-                        format!("show has no summary for a {kind} yet."),
+                        format!("show has no summary for a {kind}."),
                         vec![],
                     ));
                 }
@@ -561,43 +582,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             |row| Ok(server.period(row.get(0)?, row.get(1)?)),
         )?,
     };
-    // By table pid: in steward mode the holdings origin adds the key memberships the
-    // steward attests on a reference table.
-    let keys = |conn: &Connection| {
-        rows(
-            conn,
-            "SELECT v.pid, sp.exact, s.start, s.end
-                 FROM segment s JOIN variable v ON v.id = s.variable_id
-                   JOIN spelling sp ON sp.id = s.spelling_id
-                   JOIN tbl t ON t.id = s.table_id
-                 WHERE t.pid = ? AND s.role = 'row_key'",
-            [&entity.pid],
-            |row| {
-                Ok((
-                    row.get(2)?,
-                    row.get::<_, String>(0)?,
-                    row.get::<_, String>(1)?,
-                    row.get(3)?,
-                ))
-            },
-        )
-    };
-    let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
-    if let Some(extra) = server.catalog.connect_holdings()? {
-        found.extend(keys(&extra)?);
-    }
-    found.sort();
-    found.dedup();
-    // Steward mode: a key column whose variable is not held in this table is not shown.
-    let row_keys: Vec<ShowRowKey> = found
-        .into_iter()
-        .filter(|(_, fqid, _, _)| server.catalog.serves_in(fqid, &entity.pid))
-        .map(|(start, fqid, spelling, end)| ShowRowKey {
-            fqid,
-            spelling,
-            period: server.period(start, end),
-        })
-        .collect();
+    let row_keys = row_keys(server, conn, &entity.pid)?;
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,
@@ -617,6 +602,60 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         },
         row_keys,
     })
+}
+
+/// A table's row keys. By table pid: in steward mode the holdings origin adds the key
+/// memberships the steward attests on a reference table.
+fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRowKey>, Error> {
+    let keys = |conn: &Connection| {
+        rows(
+            conn,
+            "SELECT v.pid, sp.exact, s.start, s.end
+                 FROM segment s JOIN variable v ON v.id = s.variable_id
+                   JOIN spelling sp ON sp.id = s.spelling_id
+                   JOIN tbl t ON t.id = s.table_id
+                 WHERE t.pid = ? AND s.role = 'row_key'",
+            [pid],
+            |row| {
+                Ok((
+                    row.get(2)?,
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get(3)?,
+                ))
+            },
+        )
+    };
+    let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
+    let extra = server.catalog.connect_holdings()?;
+    if let Some(extra) = &extra {
+        found.extend(keys(extra)?);
+    }
+    // Steward mode: a key is shown over the years its placements in this table hold,
+    // as `schema` clips a line; a key no placement holds here is not shown. Duplicates
+    // go after the clip: two origins' segments of one key can clip to the same years.
+    let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
+    let mut clipped = Vec::with_capacity(found.len());
+    for (start, fqid, spelling, end) in found {
+        let days = match held.as_mut() {
+            Some(held) => held.clip(pid, &fqid, (start, end))?,
+            None => Some((start, end)),
+        };
+        if let Some(days) = days {
+            clipped.push((days.0, fqid, spelling, days.1));
+        }
+    }
+    clipped.sort();
+    clipped.dedup();
+    let row_keys = clipped
+        .into_iter()
+        .map(|(start, fqid, spelling, end)| ShowRowKey {
+            fqid,
+            spelling,
+            period: server.period(start, end),
+        })
+        .collect();
+    Ok(row_keys)
 }
 
 fn variable(

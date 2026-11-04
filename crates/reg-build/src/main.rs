@@ -434,7 +434,9 @@ fn build_with_provenance(
         }
     }
 
-    let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
+    // Register handles only: a name collision check reads them (#2196 dropped the
+    // per-register record copies nothing read).
+    let mut registers: BTreeSet<(String, String)> = BTreeSet::new();
     let mut valuesets = BTreeMap::new();
     // Links and notices cross registers: the link stage reads them, not resolve. So do
     // documents, which are merged by hash first.
@@ -464,7 +466,7 @@ fn build_with_provenance(
                 continue;
             }
         };
-        registers.entry(key).or_default().push(record.clone());
+        registers.insert(key);
     }
 
     timing::done("digest and group", t);
@@ -554,7 +556,7 @@ fn build_with_provenance(
     }
     for r in &resolved {
         let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
-        if r.public != handle && registers.contains_key(&(provider.to_owned(), r.public.clone())) {
+        if r.public != handle && registers.contains(&(provider.to_owned(), r.public.clone())) {
             refusals.push(BuildRefusal {
                 register: Some(format!("{provider}/{handle}")),
                 kind: "public-name-collision",

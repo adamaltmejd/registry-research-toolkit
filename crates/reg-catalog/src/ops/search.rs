@@ -357,32 +357,37 @@ fn search_origin(
 }
 
 /// Count and page share all filters. In steward mode a register, table or variable
-/// matches only when held (by public id, over the requested interval); classifications,
-/// codes and documents are shared and always match.
+/// matches only when held (by public id, over the requested interval, which its
+/// placements answer alone: a year held through steward attestation can lie outside
+/// the reference interval); classifications, codes and documents are shared and
+/// always match.
 ///
 /// The held set is an uncorrelated `IN`, built once per query: a correlated `EXISTS`
 /// scanned `holding_mapping` once per FTS match, and a one-letter query has ~10^5.
 fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<String, Error> {
-    let scope = if held {
+    let (scope, interval) = if held {
         server.catalog.attach_holdings(conn)?;
         let from = "FROM held.holding_mapping hm
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))";
-        format!(
-            " AND (i.kind NOT IN ('register', 'table', 'variable')
+        (
+            format!(
+                " AND (i.kind NOT IN ('register', 'table', 'variable')
             OR (i.kind, i.entity_id) IN (
                 SELECT 'variable', hv.id {from}
                 UNION ALL SELECT 'table', ht.id {from}
                 UNION ALL SELECT 'register', ht.register_id {from}))"
+            ),
+            "i.kind IN ('register', 'table', 'variable') OR ",
         )
     } else {
-        String::new()
+        (String::new(), "")
     };
     Ok(format!(
         "(?2 IS NULL OR i.kind = ?2)
         AND (?3 IS NULL OR i.register_id = ?3)
-        AND (?4 IS NULL OR (i.start < ?5 AND ?4 < i.end))
+        AND (?4 IS NULL OR {interval}(i.start < ?5 AND ?4 < i.end))
         AND (?6 IS NULL OR (i.kind = 'variable' AND EXISTS (
             SELECT 1 FROM var_set_member tm JOIN var_set t ON t.id = tm.set_id
             WHERE tm.variable_id = i.entity_id AND t.kind = 'tag' AND t.pid = ?6))){scope}"

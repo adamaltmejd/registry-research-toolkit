@@ -39,12 +39,12 @@ function DocumentBody({
   doc,
   title,
   names,
-  pageFqid,
+  pageFqids,
 }: {
   doc: string;
   title: string;
   names: Names;
-  pageFqid: string;
+  pageFqids: readonly string[];
 }) {
   const resource = useAsyncResource(doc, (signal) => getDoc(doc, { signal }));
   if (resource.data == null && !resource.error)
@@ -64,7 +64,7 @@ function DocumentBody({
     (resource.data?.subjects ?? []).flatMap((subject) => {
       const name =
         subject.kind !== "value_set" &&
-        subject.fqid !== pageFqid &&
+        !pageFqids.includes(subject.fqid) &&
         names.get(subject.fqid);
       return name ? [[subject.fqid, name] as const] : [];
     }),
@@ -103,12 +103,12 @@ function DocumentRow({
   document,
   names,
   sourceLink,
-  pageFqid,
+  pageFqids,
 }: {
   document: RelatedDocument;
   names: Names;
   sourceLink: boolean;
-  pageFqid: string;
+  pageFqids: readonly string[];
 }) {
   const [requested, setRequested] = useState(false);
   const meta = (
@@ -162,7 +162,7 @@ function DocumentRow({
                   doc={document.doc}
                   title={document.title}
                   names={names}
-                  pageFqid={pageFqid}
+                  pageFqids={pageFqids}
                 />
               )}
             </div>
@@ -177,14 +177,14 @@ function DocumentGroup({
   url,
   documents,
   names,
-  pageFqid,
+  pageFqids,
   filtering,
   licences,
 }: {
   url: string;
   documents: RelatedDocument[];
   names: Names;
-  pageFqid: string;
+  pageFqids: readonly string[];
   filtering: boolean;
   licences: string[];
 }) {
@@ -223,7 +223,7 @@ function DocumentGroup({
                     <DocumentRow
                       document={document}
                       names={names}
-                      pageFqid={pageFqid}
+                      pageFqids={pageFqids}
                       sourceLink={false}
                     />
                   </li>
@@ -237,17 +237,25 @@ function DocumentGroup({
   );
 }
 
+/** The documents about the page's subjects: one, or a group's members, whose
+ * shared documents are listed once. */
 export function RelatedDocumentsPanel({
-  fqid,
+  fqids,
   names,
   filterable = false,
 }: {
-  fqid: string;
+  fqids: readonly string[];
   names: Names;
   filterable?: boolean;
 }) {
-  const resource = useAsyncResource(fqid, (signal) =>
-    getRelatedDocuments(fqid, { signal }),
+  // simplify: one request per subject, since the server relates documents to
+  // a variable, not a group; a group-level read would make it one.
+  const resource = useAsyncResource(fqids.join("\n"), async (signal) =>
+    (
+      await Promise.all(
+        fqids.map((fqid) => getRelatedDocuments(fqid, { signal })),
+      )
+    ).flat(),
   );
   const [filter, setFilter] = useState("");
   const documents = [
@@ -312,7 +320,7 @@ export function RelatedDocumentsPanel({
                       url={document.url as string}
                       documents={matches}
                       names={names}
-                      pageFqid={fqid}
+                      pageFqids={fqids}
                       filtering={query.trim() !== ""}
                       licences={[
                         ...new Set(group.map((section) => section.licence)),
@@ -327,7 +335,7 @@ export function RelatedDocumentsPanel({
                     key={document.doc}
                     document={document}
                     names={names}
-                    pageFqid={fqid}
+                    pageFqids={fqids}
                     sourceLink
                   />
                 )

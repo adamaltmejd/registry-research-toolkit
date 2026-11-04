@@ -53,46 +53,69 @@ impl Lock {
             statements,
         }
     }
+}
 
-    fn verify(&self) -> Result<(), String> {
-        for (key, object) in &self.objects {
-            if object_key(object) != *key {
+/// A verified lock, held as canonical JSON text: parsed into `serde_json` maps, the
+/// real seed's locks take about ten times their file size for the whole curation run
+/// (#2196). A statement's premise is parsed back when that statement is checked.
+#[derive(Default)]
+struct Reviewed {
+    objects: BTreeMap<String, String>,
+    statements: BTreeMap<String, (String, Vec<String>)>,
+}
+
+impl Reviewed {
+    fn new(lock: Lock) -> Result<Self, String> {
+        let mut objects = BTreeMap::new();
+        for (key, object) in lock.objects {
+            let line = reg_frame::canonical_line(&object);
+            if reg_core::sha256_hex(&line) != key {
                 return Err(format!(
                     "object digest mismatch for {key}; run reg-build lock"
                 ));
             }
+            objects.insert(key, line);
         }
-        for (identity, premise) in &self.statements {
-            if let Some(key) = premise
-                .objects
-                .iter()
-                .find(|k| !self.objects.contains_key(*k))
-            {
+        let mut statements = BTreeMap::new();
+        for (identity, premise) in lock.statements {
+            if let Some(key) = premise.objects.iter().find(|k| !objects.contains_key(*k)) {
                 return Err(format!(
                     "statement {identity}: missing object {key}; run reg-build lock"
                 ));
             }
+            statements.insert(
+                identity,
+                (
+                    reg_frame::canonical_line(&premise.subjects),
+                    premise.objects,
+                ),
+            );
         }
-        Ok(())
+        Ok(Self {
+            objects,
+            statements,
+        })
     }
 
-    /// One statement's reviewed premise. Built on demand: expanding every statement's
-    /// shared objects up front held a copy per statement for the whole run (#2196).
+    /// One statement's reviewed premise, as the lock stored it.
     fn premise(&self, identity: &str) -> Option<LockedPremise> {
-        let premise = self.statements.get(identity)?;
-        let mut objects = premise
-            .objects
+        let (subjects, keys) = self.statements.get(identity)?;
+        let mut lines = keys
             .iter()
-            .map(|key| self.objects[key].clone())
+            .map(|key| &self.objects[key])
             .collect::<Vec<_>>();
         // Digest order is only a storage convention. Restore the resolver's
         // canonical object order for unchanged field-level diagnostics.
-        objects.sort_by_cached_key(reg_frame::canonical_line);
+        lines.sort();
         Some(LockedPremise {
-            subjects: premise.subjects.clone(),
-            objects,
+            subjects: parse_line(subjects),
+            objects: lines.into_iter().map(|line| parse_line(line)).collect(),
         })
     }
+}
+
+fn parse_line<T: serde::de::DeserializeOwned>(line: &str) -> T {
+    serde_json::from_str(line).expect("a canonical lock line")
 }
 
 fn object_key(object: &SourcePremise) -> String {
@@ -106,7 +129,7 @@ struct LockedPremise {
     objects: Vec<SourcePremise>,
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged, deny_unknown_fields)]
 enum LockedSubjects {
     Rows(Vec<SourcePremise>),
@@ -165,10 +188,15 @@ fn location(statement: &LocatedStatement) -> String {
 
 /// Locks live inside a register; published statements and cross-register processing
 /// need that same scope in their identity, independent of file paths and line numbers.
+/// `Statement::scoped_identity` from the identity the loader already computed: the
+/// statement is not re-serialized per call, which cost a large share of the Fields
+/// stage (#2196).
 fn publication_identity(statement: &LocatedStatement) -> String {
-    statement
-        .statement
-        .scoped_identity(&statement.provider, &statement.register)
+    reg_core::sha256_hex(reg_frame::canonical_line(&(
+        &statement.provider,
+        &statement.register,
+        &statement.identity,
+    )))
 }
 
 fn statement_locator(
@@ -962,12 +990,12 @@ fn field_application(
     statement: &LocatedStatement,
     ledger: &reg_resolve::Ledger,
     premise: &Premise,
-    locators: &BTreeMap<reg_frame::Locator, Vec<usize>>,
+    locators: &BTreeMap<&reg_frame::Locator, Vec<usize>>,
     root: &Path,
 ) -> Result<
     (
         Vec<usize>,
-        Vec<Record>,
+        Vec<FieldDelta>,
         reg_resolve::curation::apply::Applied,
     ),
     String,
@@ -989,10 +1017,10 @@ fn field_application(
     let mut applied =
         reg_resolve::curation::apply::apply(&source, ledger, &statement.statement, &at, premise)?;
     // Unchanged dependency records need no merge; retaining them repeats source text
-    // once per setter. Keep metadata and provenance even when no record changed.
+    // once per setter. Keep metadata and provenance even when no record changed. A
+    // changed record keeps only its changed fields, not both full copies (#2196).
     let mut changed_indices = Vec::new();
-    let mut before_records = Vec::new();
-    let mut after_records = Vec::new();
+    let mut deltas = Vec::new();
     for ((index, before), after) in indices
         .into_iter()
         .zip(source)
@@ -1000,45 +1028,55 @@ fn field_application(
     {
         if before != after {
             changed_indices.push(index);
-            before_records.push(before);
-            after_records.push(after);
+            deltas.push(field_delta(&before, &after)?);
         }
     }
-    applied.records = after_records;
-    Ok((changed_indices, before_records, applied))
+    Ok((changed_indices, deltas, applied))
+}
+
+/// The serialized fields of a set's output record that differ from its source record, in
+/// the output's field order.
+type FieldDelta = Vec<(String, serde_json::Value)>;
+
+fn field_delta(before: &Record, after: &Record) -> Result<FieldDelta, String> {
+    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
+    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
+    let serde_json::Value::Object(after) = after else {
+        unreachable!("frame records serialize as objects");
+    };
+    Ok(after
+        .into_iter()
+        .filter(|(field, value)| before.get(field) != Some(value))
+        .collect())
 }
 
 /// Independent fields merge as patches, never as whole-record replacements.
-fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Record, String> {
+fn merge_fields(current: &Record, delta: &FieldDelta) -> Result<Record, String> {
     let mut current = serde_json::to_value(current).map_err(|e| e.to_string())?;
-    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
-    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
-    for (field, value) in after.as_object().expect("frame object") {
-        if before.get(field) != Some(value) {
-            if field == "conflicts" {
-                // Independent corrections remove markers from the same source snapshot.
-                if let Some(conflicts) = current
-                    .get_mut(field)
-                    .and_then(serde_json::Value::as_array_mut)
-                {
-                    conflicts.retain(|field| {
-                        value
-                            .as_array()
-                            .expect("source conflict list")
-                            .contains(field)
-                    });
-                }
-            } else {
-                current[field] = value.clone();
+    for (field, value) in delta {
+        if field == "conflicts" {
+            // Independent corrections remove markers from the same source snapshot.
+            if let Some(conflicts) = current
+                .get_mut(field)
+                .and_then(serde_json::Value::as_array_mut)
+            {
+                conflicts.retain(|field| {
+                    value
+                        .as_array()
+                        .expect("source conflict list")
+                        .contains(field)
+                });
             }
+        } else {
+            current[field] = value.clone();
         }
     }
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<Lock, String> {
+fn previous(path: &Path, record: bool) -> Result<Reviewed, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
-        return Ok(Lock::new(BTreeMap::new()));
+        return Ok(Reviewed::default());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let value: serde_json::Value = serde_json::from_str(&text)
@@ -1052,15 +1090,13 @@ fn previous(path: &Path, record: bool) -> Result<Lock, String> {
     }
     let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    lock.verify()
-        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    Ok(lock)
+    Reviewed::new(lock).map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &Lock,
+    old: &Reviewed,
     path: &Path,
 ) -> Result<(), String> {
     let premise = LockedPremise::new(statement, premise);
@@ -1216,20 +1252,22 @@ fn run_selected(
                     && phase(&s.statement) == stage
             })
         {
-            field_snapshot = records
-                .iter()
-                .filter(|r| {
-                    matches!(
-                        r,
-                        Record::Register(_)
-                            | Record::Table(_)
-                            | Record::Release(_)
-                            | Record::Occurrence(_)
-                    )
-                })
-                .cloned()
-                .collect();
+            field_snapshot = reg_resolve::curation::apply::source_keys(
+                &records
+                    .iter()
+                    .filter(|r| {
+                        matches!(
+                            r,
+                            Record::Register(_)
+                                | Record::Table(_)
+                                | Record::Release(_)
+                                | Record::Occurrence(_)
+                        )
+                    })
+                    .collect::<Vec<_>>(),
+            );
         }
+        // Borrowed from `records`, which the group loop below only reads.
         let mut locators = BTreeMap::<_, Vec<_>>::new();
         if fields_stage {
             for (i, record) in records.iter().enumerate() {
@@ -1242,11 +1280,11 @@ fn run_selected(
                     _ => None,
                 };
                 if let Some(at) = at {
-                    locators.entry(at.clone()).or_default().push(i);
+                    locators.entry(at).or_default().push(i);
                 }
                 if let Record::Occurrence(r) = record {
                     for at in &r.also {
-                        locators.entry(at.clone()).or_default().push(i);
+                        locators.entry(at).or_default().push(i);
                     }
                 }
             }
@@ -1523,13 +1561,11 @@ fn run_selected(
                     Ok(reg_resolve::curation::apply::Applied::default())
                 }
                 Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
-                    if let Some((indices, before, applied)) =
+                    if let Some((indices, deltas, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
-                        for ((index, before), after) in
-                            indices.into_iter().zip(&before).zip(&applied.records)
-                        {
-                            records[index] = merge_fields(&records[index], before, after)?;
+                        for (index, delta) in indices.into_iter().zip(&deltas) {
+                            records[index] = merge_fields(&records[index], delta)?;
                         }
                         Ok(applied)
                     } else {
@@ -1547,8 +1583,10 @@ fn run_selected(
             let application = application.and_then(|applied| {
                 if stage == Phase::Moves {
                     reg_resolve::curation::apply::rekey(
-                        &source,
-                        &applied.records,
+                        &reg_resolve::curation::apply::source_keys(
+                            &source.iter().collect::<Vec<_>>(),
+                        ),
+                        &applied.records.iter().collect::<Vec<_>>(),
                         &mut result.variables,
                         &mut result.overrides,
                         &mut result.metadata,
@@ -1659,7 +1697,6 @@ fn run_selected(
                             | Record::Occurrence(_)
                     )
                 })
-                .cloned()
                 .collect::<Vec<_>>();
             if let Err(at) = reg_resolve::curation::apply::rekey(
                 &field_snapshot,
@@ -1682,11 +1719,9 @@ fn run_selected(
                         }
                         let text =
                             |key| subject.fields.get(key).and_then(serde_json::Value::as_str);
-                        field_snapshot.iter().any(|record| {
-                            let Record::Occurrence(row) = record else {
-                                return false;
-                            };
-                            (row.locator == at || row.also.contains(&at))
+                        field_snapshot.iter().flatten().any(|key| {
+                            let row = &key.identity;
+                            key.locators.contains(&at)
                                 && text("provider") == Some(row.provider.as_str())
                                 && text("register") == Some(row.register.as_str())
                                 && text("table") == Some(row.table.as_str())

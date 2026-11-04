@@ -7,37 +7,54 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 const RELEASE_SELECTOR: &str =
     "unsupported :edition or /qualifier address syntax; use where release = '<handle>'";
 
-/// A normalized union of reg-core periods, optionally open at either end.
+/// A normalized union of reg-core periods, optionally open at either end: each
+/// canonical period with its inclusive ISO interval, sorted and deduplicated by the
+/// canonical text (the text feeds statement digests).
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct PeriodSet(Vec<String>);
+pub struct PeriodSet(Vec<(String, reg_core::Interval)>);
+
+impl PeriodSet {
+    /// The periods as inclusive ISO date intervals, an open end at `OPEN_START` or
+    /// `OPEN_END`.
+    #[must_use]
+    pub fn intervals(&self) -> Vec<reg_core::Interval> {
+        self.0
+            .iter()
+            .map(|(_, interval)| interval.clone())
+            .collect()
+    }
+}
 
 impl FromStr for PeriodSet {
     type Err = String;
 
     fn from_str(text: &str) -> Result<Self, Self::Err> {
+        let endpoint = |text: &str| {
+            let period: reg_core::Period = text.parse().map_err(|e| format!("{e}"))?;
+            if !matches!(period, reg_core::Period::Token(_)) {
+                return Err("an open period needs one endpoint".to_owned());
+            }
+            Ok(period)
+        };
         let mut periods = Vec::new();
         for part in text.split(',').map(str::trim) {
             if part.contains([':', '/']) {
                 return Err(RELEASE_SELECTOR.to_owned());
             }
-            let canonical = if let Some(end) = part.strip_prefix("..") {
-                let period: reg_core::Period = end.parse().map_err(|e| format!("{e}"))?;
-                if !matches!(period, reg_core::Period::Token(_)) {
-                    return Err("an open period needs one endpoint".to_owned());
-                }
-                format!("..{period}")
+            periods.push(if let Some(end) = part.strip_prefix("..") {
+                let period = endpoint(end)?;
+                let to = period.iso_bounds().1;
+                (format!("..{period}"), (crate::OPEN_START.to_owned(), to))
             } else if let Some(start) = part.strip_suffix("..") {
-                let period: reg_core::Period = start.parse().map_err(|e| format!("{e}"))?;
-                if !matches!(period, reg_core::Period::Token(_)) {
-                    return Err("an open period needs one endpoint".to_owned());
-                }
-                format!("{period}..")
+                let period = endpoint(start)?;
+                let from = period.iso_bounds().0;
+                (format!("{period}.."), (from, crate::OPEN_END.to_owned()))
             } else {
-                part.parse::<reg_core::Period>()
-                    .map_err(|e| format!("{e}"))?
-                    .to_string()
-            };
-            periods.push(canonical);
+                let period = part
+                    .parse::<reg_core::Period>()
+                    .map_err(|e| format!("{e}"))?;
+                (period.to_string(), period.iso_bounds())
+            });
         }
         periods.sort();
         periods.dedup();
@@ -47,7 +64,8 @@ impl FromStr for PeriodSet {
 
 impl fmt::Display for PeriodSet {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.0.join(","))
+        let texts: Vec<&str> = self.0.iter().map(|(text, _)| text.as_str()).collect();
+        f.write_str(&texts.join(","))
     }
 }
 

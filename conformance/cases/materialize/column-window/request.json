@@ -1,0 +1,24 @@
+{
+  "note": "Fails if a year the steward's table delivers but its column for the variable does not cover is reported as anything but column_window_unavailable, or blocks: Visits delivers 2017..2020, its Score column covers 2017 only, so 2018 is a clip and a warning.",
+  "project": {
+    "schema_version": "5.2.0",
+    "reg_meta_version": "0.71.0",
+    "name": "Column window",
+    "sources": [
+      {
+        "name": "v",
+        "table": "demo/keyed/visits",
+        "period": {
+          "from": 2017,
+          "to": 2018
+        },
+        "bindings": [
+          {
+            "variable": "demo/keyed/score",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

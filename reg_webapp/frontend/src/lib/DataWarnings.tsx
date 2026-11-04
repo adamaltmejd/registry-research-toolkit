@@ -45,9 +45,10 @@ const byGroup = (a: WarningGroup, b: WarningGroup) =>
   (a.code < b.code ? -1 : a.code > b.code ? 1 : 0);
 
 /** Group lists from several refs merged by severity and code. Items are
- * de-duplicated. A group fully loaded from every ref counts its distinct items;
- * otherwise counts add, which over-counts a finding two refs share. A group pages
- * on only when a single ref has more, since one cursor continues one ref. */
+ * de-duplicated, and the count drops each duplicate seen: exact once every ref's group
+ * is fully loaded, otherwise an upper bound (a shared finding not yet loaded counts
+ * once per ref). A group pages on only when a single ref has more, since one cursor
+ * continues one ref. */
 export function mergeFindingGroups(
   sources: readonly {
     ref: string;
@@ -69,7 +70,10 @@ export function mergeFindingGroups(
       merged.set(key, entry);
       for (const item of group.items) {
         const id = JSON.stringify(item);
-        if (entry.seen.has(id)) continue;
+        if (entry.seen.has(id)) {
+          entry.group.count -= 1;
+          continue;
+        }
         entry.seen.add(id);
         entry.group.items.push(item);
       }
@@ -82,11 +86,9 @@ export function mergeFindingGroups(
     }
   }
   return [...merged.values()]
-    .map(({ group, paging }) => {
-      if (paging === 0) return { ...group, count: group.items.length };
-      if (paging > 1) return { ...group, next_cursor: null, ref: null };
-      return group;
-    })
+    .map(({ group, paging }) =>
+      paging > 1 ? { ...group, next_cursor: null, ref: null } : group,
+    )
     .sort(byGroup);
 }
 
@@ -123,13 +125,15 @@ function FindingGroup({
   const [more, setMore] = useState<{
     items: CatalogFinding[];
     cursor: string | null;
-  }>({ items: [], cursor: group.next_cursor });
+    dropped: number;
+  }>({ items: [], cursor: group.next_cursor, dropped: 0 });
   const [loading, setLoading] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
   const list = useRef<HTMLUListElement>(null);
   const moreButton = useRef<HTMLButtonElement>(null);
-  const { severity, code, count, ref } = group;
+  const { severity, code, ref } = group;
   const entries = [...group.items, ...more.items];
+  const count = group.count - more.dropped;
   const showMore = () => {
     const cursor = more.cursor;
     if (loading || cursor === null || ref === null) return;
@@ -144,10 +148,20 @@ function FindingGroup({
           document.activeElement === moreButton.current
         )
           list.current?.focus({ preventScroll: true });
-        setMore((m) => ({
-          items: [...m.items, ...(next?.items ?? [])],
-          cursor: next?.next_cursor ?? null,
-        }));
+        // A merged group's first page may hold another ref's copy of a finding.
+        setMore((m) => {
+          const shown = new Set(
+            [...group.items, ...m.items].map((f) => JSON.stringify(f)),
+          );
+          const fresh = (next?.items ?? []).filter(
+            (f) => !shown.has(JSON.stringify(f)),
+          );
+          return {
+            items: [...m.items, ...fresh],
+            cursor: next?.next_cursor ?? null,
+            dropped: m.dropped + (next?.items.length ?? 0) - fresh.length,
+          };
+        });
         setLoading(false);
       },
       (error: unknown) => {

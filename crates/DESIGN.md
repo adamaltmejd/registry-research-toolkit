@@ -114,6 +114,10 @@ HTTP API             MCP over stdio (local catalog)
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 - `xtask`: repository tooling, not shipped. `cargo xtask gh-issue` is the
   maintainer-author trust gate for issue reads; its tests hold the repo-policy lints.
+  The release skill runs `release-base-reuse` (step 8a) and `scope-check` (8h, the
+  holdings asset's content gate). The scope check sits here, not in `reg-build`, so the
+  gate on the public asset stays independent of the code that writes it; it reads the
+  builder's DDL source but keeps its own meta-key allowlist and size bounds.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of
@@ -2059,19 +2063,24 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   that binding's reference; every other source sharing the file still gets its
   `binding: null` key references. An active requirement with `period_key = "column"`
   adds the physical period column once as a `row_key` with no references. A requirement
-  on hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
-  both block the order.
+  on hold or uncovered is `held_key_missing`, a key two columns place over the same day
+  `held_key_ambiguous`; both block the order. A key placed in one column for some years
+  and another for the rest joins each over its own years. `reg-build holdings` already
+  refuses an uncovered or overlapping key (`holdings_key_missing`,
+  `holdings_key_ambiguous`), and a hold holds the whole table, so in an admitted pair
+  both guard a foreign artifact only.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is
   `physical_schema_missing`. Both block, located at the file's first binding.
   `reg-build holdings` already refuses such a name at publication
   (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
 - Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
-  than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
-  `row_filter_union` (a source whose days are narrower than its shared file's union).
-  Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
-  warning located at the binding over the selected days (the Operator's 2026-10-19
-  warn-not-hold call); an automatically added key's caveat is located at its source.
+  than the delivery), `row_filter_widened` (the encoding's grain adds days around the
+  source's own request that no source asked for), `row_filter_union` (a source whose
+  days are narrower than its shared file's union). Each is located at the source. A
+  selected mapping's `caveat` is a `mapping_caveat` warning located at the binding over
+  the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
+  added key's caveat is located at its source.
 
 ### Logical types (N1) and metadata for local mocks
 
