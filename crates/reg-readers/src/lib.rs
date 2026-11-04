@@ -318,10 +318,12 @@ pub(crate) fn month_end(year: u32, month: u32) -> Option<String> {
     if !(1..=12).contains(&month) {
         return None;
     }
-    let (y, m) = if month == 12 {
-        (year + 1, 1)
-    } else {
-        (year, month + 1)
-    };
-    Some(reg_core::prev_iso_day(&format!("{y:04}-{m:02}-01")))
+    // December ends on the 31st; stepping to January would print year 10000 for 9999.
+    if month == 12 {
+        return Some(format!("{year:04}-12-31"));
+    }
+    Some(reg_core::prev_iso_day(&format!(
+        "{year:04}-{:02}-01",
+        month + 1
+    )))
 }

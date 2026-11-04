@@ -471,8 +471,8 @@ fn hit(
         }
         "code" => code_hit(conn, id)?,
         "document" => document_hit(conn, expression, entity()?)?,
-        // simplify: classification and set hits land in D, with the curation that
-        // creates their rows; until then such a row is a defect of the artifact.
+        // simplify: the builder emits no classification or set search rows; such a row is
+        // a defect of the artifact. Add their hits when the index gains them.
         other => return Err(internal(format!("search row {id} has kind {other:?}"))),
     })
 }
