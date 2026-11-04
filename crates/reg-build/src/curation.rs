@@ -53,46 +53,69 @@ impl Lock {
             statements,
         }
     }
+}
 
-    fn verify(&self) -> Result<(), String> {
-        for (key, object) in &self.objects {
-            if object_key(object) != *key {
+/// A verified lock, held as canonical JSON text: parsed into `serde_json` maps, the
+/// real seed's locks take about ten times their file size for the whole curation run
+/// (#2196). A statement's premise is parsed back when that statement is checked.
+#[derive(Default)]
+struct Reviewed {
+    objects: BTreeMap<String, String>,
+    statements: BTreeMap<String, (String, Vec<String>)>,
+}
+
+impl Reviewed {
+    fn new(lock: Lock) -> Result<Self, String> {
+        let mut objects = BTreeMap::new();
+        for (key, object) in lock.objects {
+            let line = reg_frame::canonical_line(&object);
+            if reg_core::sha256_hex(&line) != key {
                 return Err(format!(
                     "object digest mismatch for {key}; run reg-build lock"
                 ));
             }
+            objects.insert(key, line);
         }
-        for (identity, premise) in &self.statements {
-            if let Some(key) = premise
-                .objects
-                .iter()
-                .find(|k| !self.objects.contains_key(*k))
-            {
+        let mut statements = BTreeMap::new();
+        for (identity, premise) in lock.statements {
+            if let Some(key) = premise.objects.iter().find(|k| !objects.contains_key(*k)) {
                 return Err(format!(
                     "statement {identity}: missing object {key}; run reg-build lock"
                 ));
             }
+            statements.insert(
+                identity,
+                (
+                    reg_frame::canonical_line(&premise.subjects),
+                    premise.objects,
+                ),
+            );
         }
-        Ok(())
+        Ok(Self {
+            objects,
+            statements,
+        })
     }
 
-    /// One statement's reviewed premise. Built on demand: expanding every statement's
-    /// shared objects up front held a copy per statement for the whole run (#2196).
+    /// One statement's reviewed premise, as the lock stored it.
     fn premise(&self, identity: &str) -> Option<LockedPremise> {
-        let premise = self.statements.get(identity)?;
-        let mut objects = premise
-            .objects
+        let (subjects, keys) = self.statements.get(identity)?;
+        let mut lines = keys
             .iter()
-            .map(|key| self.objects[key].clone())
+            .map(|key| &self.objects[key])
             .collect::<Vec<_>>();
         // Digest order is only a storage convention. Restore the resolver's
         // canonical object order for unchanged field-level diagnostics.
-        objects.sort_by_cached_key(reg_frame::canonical_line);
+        lines.sort();
         Some(LockedPremise {
-            subjects: premise.subjects.clone(),
-            objects,
+            subjects: parse_line(subjects),
+            objects: lines.into_iter().map(|line| parse_line(line)).collect(),
         })
     }
+}
+
+fn parse_line<T: serde::de::DeserializeOwned>(line: &str) -> T {
+    serde_json::from_str(line).expect("a canonical lock line")
 }
 
 fn object_key(object: &SourcePremise) -> String {
@@ -106,7 +129,7 @@ struct LockedPremise {
     objects: Vec<SourcePremise>,
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged, deny_unknown_fields)]
 enum LockedSubjects {
     Rows(Vec<SourcePremise>),
@@ -1036,9 +1059,9 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<Lock, String> {
+fn previous(path: &Path, record: bool) -> Result<Reviewed, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
-        return Ok(Lock::new(BTreeMap::new()));
+        return Ok(Reviewed::default());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let value: serde_json::Value = serde_json::from_str(&text)
@@ -1052,15 +1075,13 @@ fn previous(path: &Path, record: bool) -> Result<Lock, String> {
     }
     let lock: Lock = serde_json::from_value(value)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    lock.verify()
-        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    Ok(lock)
+    Reviewed::new(lock).map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &Lock,
+    old: &Reviewed,
     path: &Path,
 ) -> Result<(), String> {
     let premise = LockedPremise::new(statement, premise);
