@@ -83,8 +83,7 @@ A new dependency stops the work until it is justified against the repo ladder.
 **Never hand-roll a widget RAC covers:** Button, Link, Dialog/Modal, Popover, Tooltip,
 Menu, ListBox, ComboBox, Autocomplete, Select, Slider, Tabs, Disclosure, Tree, GridList,
 SearchField, Checkbox, ToggleButton. `DataTable` stays a plain `<table>` with explicit
-roles (`frontend/DESIGN.md` → "Components"). No Tailwind, shadcn or a second token
-system.
+roles. No Tailwind, shadcn or a second token system.
 
 - **Props, not DOM habits.** `onPress`, not `onClick`; `isDisabled`, `isOpen`,
   `isSelected`, not `disabled`/`open`. A `Popover` or `Modal` holds a `<Dialog>`.

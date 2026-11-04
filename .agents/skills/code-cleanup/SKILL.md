@@ -46,8 +46,8 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   declared and not used, or used and not declared, is a finding.
 - **Dead code.** `cargo machete` and the compiler's warnings for Rust; `rg` each export
   of `reg_webapp/frontend/src` for a use;
-  `uvx --from vulture==2.16 vulture scripts conformance --min-confidence 80`. Confirm
-  each hit with `rg` across the workspace before calling it dead.
+  `uvx --from vulture==2.16 vulture scripts conformance crates/reg-core/tools --min-confidence 80`.
+  Confirm each hit with `rg` across the workspace before calling it dead.
 - **Trace tables**, kept in the scratchpad: every CLI flag and subcommand (the Rust
   `parse_args` of `reg-build`, `reg-meta` and `reg-export-gate`; argparse in
   `scripts/*.py`), to its README or DESIGN.md line, to a test; every `openapi.json`
@@ -127,11 +127,10 @@ one of three piles.
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push, run the gate steps CI runs for the touched module
-(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0` for `scripts/`,
-`rust` for `conformance/` (it runs against the Rust server) and `crates/`, `crates` for
-`crates/` alone, and `frontend` plus `flows` for `reg_webapp/frontend` and
-`reg_webapp/dev`. The R packages are not gated: run their testthat suites by hand. For
-the edge worker, run
+(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0` for `scripts/` and
+`crates/` (it includes `crates`), `rust` for `conformance/` and the Rust server, and
+`frontend` plus `flows` for `reg_webapp/frontend` and `reg_webapp/dev`. The R packages
+are not gated: run their testthat suites by hand. For the edge worker, run
 `bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
 wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
 redesigns a module rather than deleting from it, or needs more than one sitting, becomes
