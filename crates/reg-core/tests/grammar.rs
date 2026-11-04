@@ -126,20 +126,18 @@ fn fqid_matches_corpus() {
     assert_corpus::<Fqid>("fqid.jsonl", fqid_json, |_, _| None);
 }
 
-// Fails if a token form, a bound (year, month, day, quarter, half), the range order rule,
-// the year span (`LA2019` touches 2020) or the days a period covers (`2019-02` ends on
-// the 28th) change.
+// Fails if a token form, a bound (year, month, day, quarter, half), the range order rule
+// or the days a period covers (`2019-02` ends on the 28th, `LA2019` runs into 2020)
+// change.
 #[test]
 fn period_matches_corpus() {
     assert_corpus::<Period>(
         "period.jsonl",
         |p| period_json(*p),
         |p, case| {
-            let (lo, hi) = p.years();
             let (first, last) = p.iso_bounds();
-            let got = json!({"years": [lo, hi], "bounds": [first, last]});
-            let expected = json!({"years": case["years"], "bounds": case["bounds"]});
-            (got != expected).then(|| format!("{got}"))
+            let got = json!([first, last]);
+            (got != case["bounds"]).then(|| format!("{got}"))
         },
     );
 }

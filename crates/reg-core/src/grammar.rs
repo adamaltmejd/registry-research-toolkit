@@ -317,17 +317,6 @@ impl PeriodToken {
 }
 
 impl Period {
-    /// The calendar years the period touches, inclusive: `LA2019` is `(2019, 2020)`, a
-    /// month or day covers its own year.
-    #[must_use]
-    pub fn years(self) -> (u16, u16) {
-        let (from, to) = match self {
-            Self::Token(t) => (t, t),
-            Self::Range { from, to } => (from, to),
-        };
-        (from.bounds().0.0, to.bounds().1.0)
-    }
-
     /// The first and last day the period covers, as ISO dates (`2019-02` is
     /// `2019-02-01` to `2019-02-28`).
     #[must_use]
