@@ -57,9 +57,14 @@ approve <- function(source, destination, expected_sha256, commit) {
   ) {
     stop("INVALID_REVIEW_REFERENCE")
   }
+  # R's file functions expand a leading `~`; expand once so the guard checks the
+  # paths the IO below actually touches.
+  source <- path.expand(source)
+  destination <- path.expand(destination)
   src <- canonical(source)
   dst <- canonical(destination)
-  if (src == dst || startsWith(src, paste0(dst, "/"))) {
+  prefix <- if (endsWith(dst, "/")) dst else paste0(dst, "/")
+  if (src == dst || startsWith(src, prefix)) {
     stop("REVIEW_AND_APPROVED_STORAGE_MUST_DIFFER")
   }
   # Read once, bounded, before creating anything model-readable. Hash mismatch
