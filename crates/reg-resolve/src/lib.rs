@@ -119,29 +119,28 @@ pub(crate) struct OccurrenceContext<'a> {
 }
 
 impl<'a> OccurrenceContext<'a> {
-    pub(crate) fn new(records: &'a [Record]) -> Self {
-        Self {
-            registers: records
-                .iter()
-                .filter_map(|r| match r {
-                    Record::Register(r) => Some(((r.provider.as_str(), r.register.as_str()), r)),
-                    _ => None,
-                })
-                .collect(),
-            tables: records
-                .iter()
-                .filter_map(|r| match r {
-                    Record::Table(t) => Some((
+    pub(crate) fn new(records: impl IntoIterator<Item = &'a Record>) -> Self {
+        let mut context = Self {
+            registers: BTreeMap::new(),
+            tables: BTreeMap::new(),
+            releases: BTreeMap::new(),
+        };
+        // Later records replace earlier ones under the same key, as `collect` did.
+        for record in records {
+            match record {
+                Record::Register(r) => {
+                    context
+                        .registers
+                        .insert((r.provider.as_str(), r.register.as_str()), r);
+                }
+                Record::Table(t) => {
+                    context.tables.insert(
                         (t.provider.as_str(), t.register.as_str(), t.table.as_str()),
                         t,
-                    )),
-                    _ => None,
-                })
-                .collect(),
-            releases: records
-                .iter()
-                .filter_map(|r| match r {
-                    Record::Release(r) => Some((
+                    );
+                }
+                Record::Release(r) => {
+                    context.releases.insert(
                         (
                             r.provider.as_str(),
                             r.register.as_str(),
@@ -149,11 +148,12 @@ impl<'a> OccurrenceContext<'a> {
                             r.release.as_str(),
                         ),
                         r,
-                    )),
-                    _ => None,
-                })
-                .collect(),
+                    );
+                }
+                _ => {}
+            }
         }
+        context
     }
 
     pub(crate) fn period(&self, row: &Occurrence) -> Option<Interval> {
