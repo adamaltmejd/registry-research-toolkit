@@ -315,6 +315,15 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         assert {"demo/projected/received-key", "demo/projected/steward-slot"} <= {
             line["variable"] for line in schema.json()["data"]["items"]
         }
+        # Fails if a `table` narrowing resolves in the reference origin only: the
+        # grid table is the steward's.
+        grid = pool.client(artifact_env(output)).get(
+            "/api/schema/demo/projected", params={"table": "demo/projected/grid"}
+        )
+        assert grid.status_code == 200, grid.text
+        assert {line["table"] for line in grid.json()["data"]["items"]} == {
+            "demo/projected/grid"
+        }
         files = pool.client(artifact_env(output)).post(
             "/api/project/materialize", json=minted["project"]
         )

@@ -182,14 +182,18 @@ fn scope(
         ),
         kind => return Err(invalid_ref(value, kind, operation)),
     };
+    // The narrowing table may be the steward's own: the first origin naming it wins,
+    // and the ref's origin's error stands when none does.
     let keep = table
         .map(|table| {
-            let id = refs::table(conn, table)?;
-            Ok::<_, Error>(
-                conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| {
-                    row.get::<_, String>(0)
-                })?,
-            )
+            let pid = |db: &Connection| -> Result<String, Error> {
+                let id = refs::table(db, table)?;
+                Ok(db.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?)
+            };
+            origins
+                .iter()
+                .find_map(|db| pid(db).ok())
+                .map_or_else(|| pid(conn), Ok)
         })
         .transpose()?;
     let mut tables: BTreeMap<String, Vec<(usize, i64, Option<i64>)>> = BTreeMap::new();
@@ -504,8 +508,8 @@ fn changes(origins: &[Connection], from: &Line, to: &Line) -> Result<Vec<DiffCha
             to: json!(to.length),
         });
     }
-    // A value set is content-addressed: compare the refs, since the two lines' ids may
-    // belong to different origins.
+    // A value set is content-addressed: compare hashes, since the two lines' ids may
+    // belong to different origins whose names for the same set differ.
     let set = |line: &Line| -> Result<Value, Error> {
         line.valueset_id.map_or(Ok(Value::Null), |id| {
             Ok(
@@ -515,7 +519,7 @@ fn changes(origins: &[Connection], from: &Line, to: &Line) -> Result<Vec<DiffCha
         })
     };
     let (before, after) = (set(from)?, set(to)?);
-    if before != after {
+    if before.get("hash") != after.get("hash") {
         out.push(DiffChange {
             field: "value_set",
             from: before,
