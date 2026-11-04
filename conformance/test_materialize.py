@@ -105,6 +105,20 @@ def test_order_file_or_located_finding(case: Path, steward) -> None:
         assert {"findings": findings} == expected
 
 
+def test_table_row_key_shows_the_years_held(steward) -> None:
+    # Fails if a steward table's row key keeps the reference years (#2217): the base
+    # documents demo/keyed/id in Visits over 2017..2022; Visits places it in Id over
+    # 2017 and IdAlt over 2018..2020 (materialize/fixture/keyed.toml).
+    shown = steward.get("/api/catalog/demo/keyed/visits")
+    assert shown.status_code == 200, shown.text
+    held_years = {"start": "2017-01-01", "end": "2021-01-01"}
+    data = shown.json()["data"]
+    assert data["spans"] == [held_years]
+    assert [(k["fqid"], k["period"]) for k in data["row_keys"]] == [
+        ("demo/keyed/id", held_years)
+    ]
+
+
 def test_unnamed_project_is_a_logical_draft_but_no_order_file(steward) -> None:
     # Fails if a whitespace-only name reaches the order file's provenance, or if
     # refusing it also refuses the logical order of the same draft.

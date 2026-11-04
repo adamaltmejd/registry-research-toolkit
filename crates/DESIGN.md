@@ -2106,19 +2106,24 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   that binding's reference; every other source sharing the file still gets its
   `binding: null` key references. An active requirement with `period_key = "column"`
   adds the physical period column once as a `row_key` with no references. A requirement
-  on hold or uncovered is `held_key_missing`, a key in two columns `held_key_ambiguous`;
-  both block the order.
+  on hold or uncovered is `held_key_missing`, a key two columns place over the same day
+  `held_key_ambiguous`; both block the order. A key placed in one column for some years
+  and another for the rest joins each over its own years. `reg-build holdings` already
+  refuses an uncovered or overlapping key (`holdings_key_missing`,
+  `holdings_key_ambiguous`), and a hold holds the whole table, so in an admitted pair
+  both guard a foreign artifact only.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when
   case is ignored is `file_name_unsafe`; a NULL `schema_name` is
   `physical_schema_missing`. Both block, located at the file's first binding.
   `reg-build holdings` already refuses such a name at publication
   (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
 - Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
-  than the delivery), `row_filter_widened` (a bound widened to the encoding's grain),
-  `row_filter_union` (a source whose days are narrower than its shared file's union).
-  Each is located at the source. A selected mapping's `caveat` is a `mapping_caveat`
-  warning located at the binding over the selected days (the Operator's 2026-10-19
-  warn-not-hold call); an automatically added key's caveat is located at its source.
+  than the delivery), `row_filter_widened` (the encoding's grain adds days around the
+  source's own request that no source asked for), `row_filter_union` (a source whose
+  days are narrower than its shared file's union). Each is located at the source. A
+  selected mapping's `caveat` is a `mapping_caveat` warning located at the binding over
+  the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
+  added key's caveat is located at its source.
 
 ### Logical types (N1) and metadata for local mocks
 

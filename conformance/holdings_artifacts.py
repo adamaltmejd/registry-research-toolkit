@@ -195,7 +195,8 @@ def splice_slot_family(root: Path) -> None:
 
 def prepare_materialize(directory: Path) -> tuple[Path, Path]:
     """The materialize cases' steward: the slot family, a long header on Part B, a
-    first-half Parent amount and a wholly contested Owners column."""
+    first-half Parent amount, a wholly contested Owners column and Visits, whose row
+    identifier moves between columns."""
     base, root, command = prepare_holdings(directory)
     splice_slot_family(root)
     extension = CASES / "materialize/fixture"
@@ -216,7 +217,10 @@ def prepare_materialize(directory: Path) -> tuple[Path, Path]:
         storage.read_text()
         + (extension / "long-column-storage.csv").read_text()
         + (extension / "contested-column-storage.csv").read_text()
+        + (extension / "keyed-storage.csv").read_text()
     )
+    with census.open("a") as f:
+        f.write((extension / "keyed-census.csv").read_text())
     holdings = root / "holdings.toml"
     anchor = 'locator = "fixture:partition-b"\n'
     holdings.write_text(
@@ -236,6 +240,8 @@ def prepare_materialize(directory: Path) -> tuple[Path, Path]:
             anchor, anchor + "\n" + (extension / "partial-parent.toml").read_text(), 1
         )
     )
+    with holdings.open("a") as f:
+        f.write("\n" + (extension / "keyed.toml").read_text())
     pin_steward(root, directory / "stewards.toml")
     output = directory / "reg_meta_fixture.db"
     built = run([*command, "--out", output])

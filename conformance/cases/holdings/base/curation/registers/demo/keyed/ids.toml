@@ -1,0 +1,8 @@
+[tables]
+visits = "visits"
+
+[variables]
+id = ["visits: Id"]
+amount = ["visits: Amount"]
+score = ["visits: Score"]
+year = ["visits: Year"]

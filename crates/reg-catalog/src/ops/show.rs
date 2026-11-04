@@ -583,21 +583,42 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         )
     };
     let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
-    if let Some(extra) = server.catalog.connect_holdings()? {
-        found.extend(keys(&extra)?);
+    let extra = server.catalog.connect_holdings()?;
+    if let Some(extra) = &extra {
+        found.extend(keys(extra)?);
     }
     found.sort();
     found.dedup();
-    // Steward mode: a key column whose variable is not held in this table is not shown.
-    let row_keys: Vec<ShowRowKey> = found
-        .into_iter()
-        .filter(|(_, fqid, _, _)| server.catalog.serves_in(fqid, &entity.pid))
-        .map(|(start, fqid, spelling, end)| ShowRowKey {
+    // Steward mode: a key is shown over the years its placements in this table hold,
+    // as `schema` clips a line; a key no placement holds here is not shown.
+    let mut held = extra
+        .as_ref()
+        .map(|extra| {
+            extra.prepare(
+                "SELECT min(start), max(end) FROM holding_mapping
+                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
+            )
+        })
+        .transpose()?;
+    let mut row_keys: Vec<ShowRowKey> = Vec::with_capacity(found.len());
+    for (mut start, fqid, spelling, mut end) in found {
+        if let Some(held) = held.as_mut() {
+            let (first, last): (Option<i64>, Option<i64>) = held
+                .query_row(rusqlite::params![entity.pid, fqid, start, end], |row| {
+                    Ok((row.get(0)?, row.get(1)?))
+                })?;
+            let (Some(first), Some(last)) = (first, last) else {
+                continue;
+            };
+            start = start.max(first);
+            end = end.min(last);
+        }
+        row_keys.push(ShowRowKey {
             fqid,
             spelling,
             period: server.period(start, end),
-        })
-        .collect();
+        });
+    }
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,

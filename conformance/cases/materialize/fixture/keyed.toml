@@ -1,0 +1,43 @@
+# Synthetic: Visits places its row identifier in Id over 2017 and in IdAlt over
+# 2018..2020, and Score over 2017 only. The reference documents all three over
+# 2017..2022. Appended to holdings.toml.
+[[table]]
+physical_name = "Visits"
+disposition = "dated"
+delivery = "2017..2020"
+table_pids = ["demo/keyed/visits"]
+period_column = "Year"
+period_encoding = "year"
+locator = "fixture:keyed-visits"
+
+[[table.column]]
+name = "Id"
+locator = "fixture:keyed-id-2017"
+[[table.column.mapping]]
+table_pid = "demo/keyed/visits"
+variable_pid = "demo/keyed/id"
+delivery = "2017"
+locator = "fixture:keyed-id-2017"
+
+[[table.column]]
+name = "IdAlt"
+locator = "fixture:keyed-id-later"
+[[table.column.mapping]]
+table_pid = "demo/keyed/visits"
+variable_pid = "demo/keyed/id"
+delivery = "2018..2020"
+locator = "fixture:keyed-id-later"
+
+[[table.column]]
+name = "Score"
+locator = "fixture:keyed-score-2017"
+[[table.column.mapping]]
+table_pid = "demo/keyed/visits"
+variable_pid = "demo/keyed/score"
+delivery = "2017"
+locator = "fixture:keyed-score-2017"
+
+[[table.key]]
+entity = ["demo/keyed/id"]
+time = []
+locator = "fixture:keyed-key"

@@ -11,7 +11,7 @@
       "level": "error",
       "code": "mapping_missing",
       "path": "/sources/0/bindings/0",
-      "message": "Distinct owners claim the physical column of demo/owners/third in demo/owners over [2018-01-01, 2020-01-01); no placement is accepted there, so the cell needs curation",
+      "message": "demo/owners/third in demo/owners cannot be ordered for [2018-01-01, 2020-01-01): the data holder's column for it is also claimed by another variable. Leave out those years, or ask the data holder",
       "source": "a",
       "variable": "demo/owners/third",
       "variable_name": "Third owner",
