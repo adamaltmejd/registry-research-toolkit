@@ -59,3 +59,51 @@ kind = "set"
 subject = "var:inkomst"
 fields.tags = ["income"]
 evidence = "One tagged member supplies the set tag union and narrows search."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-household"
+fields.description = "Inkomst före och efter skatt för personer och hushåll."
+evidence = "Three members repeat the set's description, so the set summary sends it once."
+
+[[statement]]
+kind = "set"
+subject = "var:gross-person"
+fields.description = "Inkomst före och efter skatt för personer och hushåll."
+evidence = "Three members repeat the set's description, so the set summary sends it once."
+
+[[statement]]
+kind = "set"
+subject = "var:net-household"
+fields.description = "Inkomst före och efter skatt för personer och hushåll."
+evidence = "Three members repeat the set's description, so the set summary sends it once."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst"
+fields.description = "Inkomst per person, före skatt till och med 2018."
+evidence = "One member's own description differs from the set's and stays on the member."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields.sets = ["person"]
+evidence = "Ålder and Kommun form a set with no curated description."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields.sets = ["person"]
+evidence = "Ålder and Kommun form a set with no curated description."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields.description = "Uppgift om personen vid årets slut."
+evidence = "Both members state one description, so the set summary sends it as the set's."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields.description = "Uppgift om personen vid årets slut."
+evidence = "Both members state one description, so the set summary sends it as the set's."

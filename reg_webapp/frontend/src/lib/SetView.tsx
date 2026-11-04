@@ -42,12 +42,10 @@ export function SetView({
   const bounds: [number, number] = [catalogBounds.min, catalogBounds.max];
   const axis = dataAxis(
     node.members.flatMap((member) =>
-      member.columns.flatMap((column) =>
-        columnYearRuns(
-          column.periods.map((period) => ({ period })),
-          bounds,
-        ).flatMap((run) => [run.from, run.to]),
-      ),
+      columnYearRuns(member.segments, bounds).flatMap((run) => [
+        run.from,
+        run.to,
+      ]),
     ),
     study,
     bounds,
@@ -75,7 +73,7 @@ export function SetView({
   const lanes = titled.map(({ member, title, name }) => {
     const repeated = (seen.get(JSON.stringify([title, name])) ?? 0) > 1;
     const spellings = [
-      ...new Set(member.columns.map((column) => column.spelling)),
+      ...new Set(member.segments.map((segment) => segment.column)),
     ].join(", ");
     return {
       id: member.fqid,

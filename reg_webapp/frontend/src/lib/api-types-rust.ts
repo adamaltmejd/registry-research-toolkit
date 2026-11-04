@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -1165,6 +1165,10 @@ export interface components {
             unit_type: string | null;
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
+            /**
+             * @description The curated description; without one, the description every member states
+             *     alike.
+             */
             description?: string;
             fqid: string;
             /** @enum {string} */
@@ -1223,26 +1227,20 @@ export interface components {
             id: string;
             label: string;
         };
-        /** @description A table and column name the member appears under. */
-        ShowSetColumn: {
-            /** @description The column's periods, in time order. */
-            periods: components["schemas"]["Period"][];
-            spelling: string;
-            /** @description The table's fqid. */
-            table: string;
-        };
         ShowSetFacet: {
             axis: string;
             label: string;
             value: string;
         };
         ShowSetMember: {
-            /** @description The member's columns, ordered by table then spelling. */
-            columns: components["schemas"]["ShowSetColumn"][];
+            /** @description The curated description, only where it differs from the set's. */
+            description?: string;
             /** @description The member's coordinates in the set's axis order. */
             facets: components["schemas"]["ShowSetFacet"][];
             fqid: string;
             name: string;
+            /** @description The member's whole per-period list, as `segments` serves it without evidence. */
+            segments: components["schemas"]["Segment"][];
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {

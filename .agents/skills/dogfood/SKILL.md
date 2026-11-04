@@ -54,8 +54,8 @@ For each post:
 2. **Locate the cause** as `path:line`, and note the commit. Say whether it is a bug,
    intended behavior that reads wrong, or a missing feature.
 3. **Classify**: type (`bug`, `enhancement`, `documentation`) and one area (`reg_meta`
-   for the Rust runtime and MCP, `reg_meta_build`, `reg_webapp`, or `cross-package`,
-   which also covers the R packages `reg_mona_runner` and `reg_export_gate`).
+   for the Rust runtime, the builder and MCP, `reg_webapp`, or `cross-package`, which
+   also covers the R packages `reg_mona_runner` and `reg_export_gate`).
 4. **Ask only when the answer changes the issue** (bug vs intended; which of two fixes):
    one short question with the question tool. Record the pick as a decision. Otherwise
    write the options under "Open question" and keep going.
