@@ -15,8 +15,8 @@ uv sync --group dev
 
 ```bash
 uv run --no-project scripts/gate.py all   # the full gate before a PR
-uv run python -m pytest                   # the Python suites (builder, tooling)
-uv run --no-project scripts/gate.py rust  # the crates and conformance against the Rust server
+uv run python -m pytest                   # the tooling suite (scripts/tests)
+uv run --no-project scripts/gate.py rust  # the workspace build and conformance against the Rust server
 cargo test --workspace                    # the crates
 ```
 

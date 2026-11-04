@@ -263,13 +263,13 @@ export function humanizeClassificationSlug(slug: string): string {
 
 // ── State-window display (#309 + #321) ──────────────────────────────────────
 
-/** The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
- * default) — never shown to the user (#309). */
+/** The open-ended `valid_to` sentinel (`reg_frame::OPEN_END`, the
+ * builder's unstated upper bound) — never shown to the user (#309). */
 export const OPEN_ENDED_VALID_TO = "9999-12-31";
 
-/** The yearless-fallback `variable_state.valid_from` sentinel — the floor
- * reg_meta_build writes when a state's start year is unknown (`_VALID_FROM_UNKNOWN`
- * in `reg_meta_build/db.py`; the `0001` twin of the `9999` ceiling). Like the ceiling it must NOT read as a literal year:
+/** The yearless-fallback `valid_from` sentinel — the floor the
+ * builder writes when a state's start is unknown (`reg_frame::OPEN_START`; the
+ * `0001` twin of the `9999` ceiling). Like the ceiling it must NOT read as a literal year:
  * coverage `from` is unbounded/unknown for it, never year 1 (which would let the
  * slider emit out-of-grammar wires like `1..2026`). */
 export const YEARLESS_VALID_FROM = "0001-01-01";

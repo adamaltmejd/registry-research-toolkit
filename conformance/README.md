@@ -46,8 +46,12 @@ those steps (this one or earlier) and requires no repeats and exactly the `equal
   | api               | HTTP request sequence and status/pointer oracle, startup refusals |
   | mcp               | The `tools/list` golden                                           |
   | folds, grammar    | Corpora for the fold and the identifier grammars                  |
+  | build-report      | `reg-build build`: one complete refusal report before publication |
+  | lock              | `reg-build lock`: located refusals, statement identity            |
+  | release-ids       | Published ids across catalog releases                             |
+  | holdings          | Holdings compilation, verification, pinned source admission       |
+  | materialize       | The MONA order file over HTTP                                     |
   | fixtures          | Readable sources, not independently executed cases                |
-  | reader            | Old-builder sources the builder's tests still build (see below)   |
 
 ## Out-of-process runner
 

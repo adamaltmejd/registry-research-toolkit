@@ -61,7 +61,8 @@ order. Register-name reads are shared with catalog browsing.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
-SQL reader. Holdings, scope and steward branding return in milestone E.
+SQL reader. A steward deployment also admits that steward's holdings DB, which carries
+its scope and its `steward_config` branding (`/api/context`).
 
 ## Catalog pages
 
@@ -113,13 +114,15 @@ reg_webapp/
   Dockerfile              # catalog bake and Rust server image
   docker-entrypoint.sh    # server startup and readiness probes
   fly.toml                # global origin deployment
+  fly.swecov.toml         # SWECOV steward deployment
   edge/                   # global hosted MCP edge worker
-  stewards/               # only swecov/: old builder inventory retained until E
+  frontend/               # the SPA
+  dev/                    # local dev servers and browser driver
   DESIGN.md
 ```
 
-`stewards/swecov/` remains input to the old builder until milestone E. The current
-server and container load no steward configuration or logos.
+Steward configuration and logos are not files here: `reg-build holdings` writes them
+into the holdings DB as `steward_config`, and the server serves them at `/api/context`.
 
 ## Boot seam (artifact admission)
 
@@ -132,15 +135,14 @@ corpus pins the refusals. The webapp ships no DDL or schema-version authority;
 ## Catalog operations (the Rust server)
 
 `reg-build` writes the immutable catalog; `reg-meta serve` reads it through
-`reg-catalog`. The Python builder remains for its existing release and steward paths
-until milestone F. It does not write the catalog served by the current global server.
+`reg-catalog`.
 
 `conformance/api/operations.toml` defines the complete operation surface, parameters,
 response shapes and error codes. `crates/reg-meta/openapi.json` is its server snapshot.
 Catalog operations expose nodes, segments, findings, coverage, schemas, relationships
 and content-addressed value sets. Search ranks FTS hits across registers, tables,
-variables, classifications, codes and documents. Pins and synonyms arrive with curation
-in milestone D. Holdings and physical orders arrive in milestone E.
+variables, classifications, codes and documents. A steward deployment adds holdings and
+physical orders (the MONA order file).
 
 Documentation lives in the same admitted catalog. The docs operations search document
 sections, return a document by content hash, list linked documents and serve embedded
@@ -431,8 +433,8 @@ Validation returns `200` with `{ok, issues}`, including for an invalid project. 
 returns a logical order or a located `422`: `project_invalid` for structural errors,
 `order_blocked` for blocking findings. A blocked order returns every finding, never a
 partial order. The logical order check and semantic findings live in `reg-catalog`;
-`crates/DESIGN.md` documents their rules. Physical files and the manifest download
-return with holdings in milestone E.
+`crates/DESIGN.md` documents their rules. Physical files and the manifest come from the
+steward's holdings (`ops/order/materialize.rs`).
 
 ## Cost protection (`crates/reg-meta/src/limit.rs`)
 
