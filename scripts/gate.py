@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import filecmp
 import gzip
-import json
 import os
 import shlex
 import shutil
@@ -37,12 +36,11 @@ FRONTEND = ROOT / "reg_webapp/frontend"
 os.environ["UV_EXCLUDE_NEWER"] = "false"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
 # A raised write limit: the suite and release admission replay many projects from one
-# address (conformance/test_mcp.py's burst case drops it to pin the default).
+# address (the Rust suite's MCP burst case drops it to pin the default).
 SERVER_CMD = (
     "--server-cmd='target/debug/reg-meta serve --db {db} --port {port}"
     " --write-limit 100000'"
 )
-MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
 ALL = ("g0", "rust", "flows", "frontend")
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
@@ -118,7 +116,7 @@ def rust() -> None:
         run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
     # The Rust harness (crates/reg-conformance), then the surfaces not yet ported.
     run("cargo test -p reg-conformance --test conformance --locked")
-    run(f"{CONFORMANCE} {SERVER_CMD} {MCP_CMD}")
+    run(f"{CONFORMANCE} {SERVER_CMD}")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
     # checks: the rest of the suite does not read `--artifact-dir` and already ran
@@ -172,34 +170,11 @@ def regen() -> None:
         "cargo test -p xtask --test project_schema_snapshot",
         env={"REG_META_BLESS": "1"},
     )
-    # The MCP `tools/list` golden, as conformance/test_mcp.py's stdio session lists it.
-    artifact = base_artifact()
-    messages = [
-        {
-            "id": 0,
-            "method": "initialize",
-            "params": {
-                "protocolVersion": "2025-11-25",
-                "capabilities": {},
-                "clientInfo": {"name": "gate", "version": "0"},
-            },
-        },
-        {"method": "notifications/initialized"},
-        {"id": 1, "method": "tools/list"},
-    ]
-    session = run(
-        ["target/debug/reg-meta", "mcp", "--db", artifact],
-        input="".join(json.dumps({"jsonrpc": "2.0"} | m) + "\n" for m in messages),
-        stdout=subprocess.PIPE,
-        text=True,
+    # The MCP `tools/list` golden, as the conformance `mcp` stdio session lists it.
+    run(
+        "cargo test -p reg-conformance --test conformance --locked stdio_session",
+        env={"REG_META_BLESS": "1"},
     )
-    (tools,) = (
-        reply["result"]["tools"]
-        for reply in map(json.loads, session.stdout.splitlines())
-        if reply.get("id") == 1
-    )
-    golden = ROOT / "conformance/cases/mcp/tools-list.json"
-    golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
 
 
 STEPS = {

@@ -4,6 +4,7 @@
 pub mod client;
 pub mod http_case;
 pub mod server;
+pub mod steward;
 
 use std::fs;
 use std::panic::{AssertUnwindSafe, catch_unwind};
@@ -23,6 +24,36 @@ pub fn read_json(path: &Path) -> Result<Value, String> {
 pub fn read_toml(path: &Path) -> Result<toml::Table, String> {
     let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     text.parse().map_err(|e| format!("{}: {e}", path.display()))
+}
+
+/// Each finding of the list `findings` without its null members: the oracles spell an
+/// absent coordinate by omission.
+pub fn without_nulls(findings: &Value) -> Vec<Value> {
+    findings
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|finding| match finding {
+            Value::Object(map) => Value::Object(
+                map.iter()
+                    .filter(|(_, v)| !v.is_null())
+                    .map(|(k, v)| (k.clone(), v.clone()))
+                    .collect(),
+            ),
+            other => other.clone(),
+        })
+        .collect()
+}
+
+/// The `level: "error"` entries of the list `findings`.
+pub fn error_level(findings: &Value) -> Vec<Value> {
+    findings
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|finding| finding["level"] == "error")
+        .cloned()
+        .collect()
 }
 
 /// The case directories of a surface, sorted, narrowed by `REG_CONFORMANCE_CASE` (a
