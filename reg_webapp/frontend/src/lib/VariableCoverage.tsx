@@ -177,7 +177,16 @@ export function useVariableCoverage({
         throw new Error(
           "Table availability is not loaded. Reload the page and try again.",
         );
-      const candidate = addColumns(current, node.fqid, picked, active, tables);
+      // A project binds a variable once per table, so ticking one file's lane adds
+      // the column's years in every file of that table inside the add window.
+      const adding = columns.filter(
+        (column) =>
+          picked.some(
+            (pick) =>
+              pick.table === column.table && pick.spelling === column.spelling,
+          ) && columnWindowPeriod(column, active) !== null,
+      );
+      const candidate = addColumns(current, node.fqid, adding, active, tables);
       projectStore.updateField("sources", candidate.sources);
       setSelected(new Set());
       setError(null);

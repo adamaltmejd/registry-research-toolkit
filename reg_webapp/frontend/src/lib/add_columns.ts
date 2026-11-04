@@ -55,46 +55,45 @@ function overlapPeriod(
 /** A steward deployment's columns: one per held file and column, over the
  * years held, never the reference catalog's wider periods. Each placement
  * borrows the facts (type, coding) of the catalog segments it overlaps in its
- * table, preferring the same spelling; with none, the table's or the
- * variable's first segment. */
+ * table, preferring the same spelling among those; a placement no segment
+ * overlaps states only its role, since another period's facts would be a
+ * guess. */
 export function heldColumns(
   segments: readonly CatalogSegment[],
   held: readonly Placement[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
   for (const placement of held) {
-    const inTable = segments.filter((s) => s.table === placement.table);
-    const spelled = inTable.filter(
-      (s) => s.spelling.toLowerCase() === placement.column.toLowerCase(),
-    );
-    const candidates = spelled.length ? spelled : inTable;
-    const overlapping = candidates.flatMap((segment) => {
+    const overlapping = segments.flatMap((segment) => {
+      if (segment.table !== placement.table) return [];
       const period = overlapPeriod(segment.period, placement.period);
       return period ? [{ ...segment, period }] : [];
     });
-    const template = candidates[0] ?? segments[0];
+    const spelled = overlapping.filter(
+      (s) => s.spelling.toLowerCase() === placement.column.toLowerCase(),
+    );
     const parts = overlapping.length
-      ? overlapping
+      ? spelled.length
+        ? spelled
+        : overlapping
       : [
-          template
-            ? { ...template, period: placement.period }
-            : {
-                classification: null,
-                coded: "unknown",
-                format: null,
-                id_kind: null,
-                identifier: null,
-                length: null,
-                period: placement.period,
-                role: placement.role,
-                sensitive: null,
-                spelling: placement.column,
-                state: "clear",
-                table: placement.table,
-                temporality: "unknown",
-                type: null,
-                value_set: null,
-              },
+          {
+            classification: null,
+            coded: "unknown",
+            format: null,
+            id_kind: null,
+            identifier: null,
+            length: null,
+            period: placement.period,
+            role: placement.role,
+            sensitive: null,
+            spelling: placement.column,
+            state: "clear",
+            table: placement.table,
+            temporality: "unknown",
+            type: null,
+            value_set: null,
+          },
         ];
     const id = JSON.stringify([
       placement.table,
