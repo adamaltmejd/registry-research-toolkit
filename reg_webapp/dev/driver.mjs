@@ -284,7 +284,7 @@ async function browsePagesCase(page, shoot) {
   // Match the value at the end while retaining the table-cell boundary.
   // One "Releases" heading: the panel's own, with the entries always shown.
   check((await main.getByRole("heading", { name: "Releases", exact: true }).count()) === 1, "Releases heading is duplicated");
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
   await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
@@ -381,7 +381,7 @@ async function projectPagesCase(page, shoot) {
   await openProjectFile({ name: "blocked-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(blockedProject)) }, true);
   await main.getByRole("link", { name: "Order", exact: true }).click();
   await main.getByText("The order is blocked. Review the findings and update the project.", { exact: true }).waitFor();
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   const group = findings.getByRole("button", { name: /Needs review: catalog finding/ }).first();
   await group.hover();
   await page.getByRole("tooltip").getByText("variable_not_in_table", { exact: true }).waitFor();
@@ -652,7 +652,7 @@ async function browseVariableCase(page, shoot) {
   const sourcePanel = main.locator(`[id="${await source.getAttribute("aria-controls")}"]`);
   await sourcePanel.getByRole("button", { name: /^Definition for/ }).first().click();
   await sourcePanel.getByText("Antal personer i hushållet vid årets slut.", { exact: true }).waitFor();
-  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Findings", exact: true }) });
+  const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
   await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
   await shoot("browse-variable-evidence");

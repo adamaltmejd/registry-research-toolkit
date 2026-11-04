@@ -352,8 +352,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (maintainer 2026-11-04). The server does this, not the SPA: on a steward catalog it
   lists, searches and serves only what the steward holds, and every period it returns is
   the years held (crates/DESIGN.md). There is no scope control and no held or unheld
-  wording anywhere on the site. Registers grouped under sticky provider headers, then
-  the selected register's or group's variables, then the detail pane capped at
+  wording anywhere in the SPA: it filters nothing by that, and reads no such field.
+  Registers grouped under sticky provider headers, then
+  the selected register's or group's variables, one name per row with no period under
+  it (maintainer 2026-11-04), then the detail pane capped at
   `content-max`. The two columns grow with the viewport from `col-browse` and `col-list`
   to `col-browse-max` and `col-list-max`, and the whole shell is capped at `shell-max`
   and centred, so a wide screen gets wider lists, not a stranded pane. The variables
@@ -427,7 +429,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   then `mono` slugs in `text-muted`), on a register's or a variable's page the kind mark
   (its `TypeTag` with the glyph), `h1`, member-of line, facets as a labelled row, the
   actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns, findings, then source documents. On a variable page, source and provenance
+  columns, "Notes on this data" (the findings, only when there are any; maintainer
+  2026-11-04), then source documents. On a variable page, source and provenance
   follows the documents. Padding `spacing.5`. A variable group page carries the Group
   kind mark and a member-of line naming its register, with constant facets shown once in
   the facets row. Members are read-only `LaneGraph` lanes on the page's axis, in API
@@ -440,14 +443,15 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   their own panel, so the facts name only the classification. Where there is no curated
   description, the provider's wording is the Description: once when every period agrees,
   otherwise each wording under its years. Timeline and facts read the one per-period
-  list (`segments`): on a steward deployment its rows are the held files and columns
-  over the years held. A table page leaves out a Row keys, Populations or Releases panel
+  list (`segments`): on a steward deployment its rows are the files and columns
+  the steward has, over the years it has them. A table page leaves out a Row keys, Populations or Releases panel
   with nothing to list, and Timeless or Implicit when "No". Placement caveats are
   steward working notes, not shown until the steward curates them for readers. A
   register page has no tables table: its tables are FilterChips over the variable list,
   each with its period, a lens with OR within the selection, offered only when two or
   more tables deliver variables (the archived variant chips, maintainer 2026-11-03). A
-  Tables definition row links every table's page by name. In steward mode a
+  Tables definition row links every table's page by name. A register page has no
+  "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
   supplemental-only variable is selectable for a project like a reference variable:
   `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
   questions, three scopes").
@@ -712,7 +716,8 @@ grow new visual language meanwhile.
   Clear keep one line. With no project open it is the same box, empty and untinted with
   a `border` leading bar, holding a `default` "Create a project" Button, which starts a
   project and opens it, and nothing in the catalog is tinted.
-- **Findings** are `StatusRow`s in their level's tone, set under what they concern: a
+- **Findings** (titled "Notes on this data" wherever they are listed, maintainer
+  2026-11-04) are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
   the catalog's words, never an FQID. Its title holds the stable code in a delayed
   `Tooltip` (`mono`, press to copy); no code chip on the page. The summary panel under

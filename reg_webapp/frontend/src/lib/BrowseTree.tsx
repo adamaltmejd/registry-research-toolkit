@@ -14,7 +14,6 @@ import {
   type RegisterChild,
   type RootChild,
   SEARCH_MIN_QUERY_LENGTH,
-  type StewardConfig,
   searchFacets,
 } from "./api";
 import styles from "./BrowseTree.module.css";
@@ -145,30 +144,18 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-/** On a steward deployment (`heldOnly`), only the providers and registers the
- * steward holds anything in, plus the current page's register and provider
- * (`current`), so a page opened by a link keeps its row. */
 function browseNodes(
   root: RootChild[],
   registers: Record<string, RegisterChild[]> | null,
-  heldOnly: boolean,
-  current: string | null,
 ): BrowseNode[] {
-  const pinned = new Set(
-    current === null ? [] : [current, current.split("/")[0]],
-  );
-  const kept = <T extends { fqid: string; held?: boolean }>(items: T[]) =>
-    heldOnly
-      ? items.filter((item) => item.held !== false || pinned.has(item.fqid))
-      : items;
-  return kept(root).map((child) => ({
+  return root.map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
     children:
       registers === null
         ? null
-        : kept(registers[child.fqid] ?? []).map((register) => ({
+        : (registers[child.fqid] ?? []).map((register) => ({
             id: register.fqid,
             name: register.name ?? register.fqid,
             href: catalogHref(register.fqid),
@@ -187,13 +174,7 @@ function browseNodes(
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
-export function BrowseTree({
-  className,
-  config = null,
-}: {
-  className?: string;
-  config?: StewardConfig | null;
-}) {
+export function BrowseTree({ className }: { className?: string }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -236,8 +217,6 @@ export function BrowseTree({
   const allNodes = browseNodes(
     root.value ?? [],
     registers.loading ? null : (registers.data ?? {}),
-    config !== null,
-    currentKey,
   );
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.

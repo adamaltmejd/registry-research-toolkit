@@ -79,11 +79,6 @@
   align-self: flex-start;
   max-width: 100%;
 }
-.variableName {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
 .variableLabel {
   overflow: hidden;
   text-overflow: ellipsis;

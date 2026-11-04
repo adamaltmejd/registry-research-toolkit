@@ -85,7 +85,7 @@ export function App() {
             className={styles.body}
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
-            <BrowseTree className={styles.browse} config={config} />
+            <BrowseTree className={styles.browse} />
             {registerFqid && route.name === "catalog-node" ? (
               <VariableList
                 registerFqid={registerFqid}
