@@ -279,7 +279,7 @@ uv run python -m pytest conformance -q -n auto -m release --run-release \
   --server-cmd='target/release/reg-meta serve --db {db} --port {port} --write-limit 100000 --catalog swecov'
 ```
 
-`gate.py release` itself selects a synthetic artifact and accepts no artifact override;
+`gate.py rust` itself selects a synthetic artifact and accepts no artifact override;
 that run does not validate the release DB. A red artifact run stops publication; a
 failure only in the pair run stops it too. Do not change tests to get a pass. If pair
 admission times out at server start, raise `SERVER_READY_SECONDS` (120) in

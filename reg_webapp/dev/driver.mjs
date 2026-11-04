@@ -1,4 +1,4 @@
-// Shell and browse-search flows × four viewports, against the source-built
+// Shell and browse-search flows × the flow viewports (four by default), against the source-built
 // webapp-dev fixture. Run from reg_webapp/frontend via dev.sh flows; screenshots
 // land in the required <out-dir>.
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
@@ -134,12 +134,20 @@ async function capture(page, name) {
   console.log(`flows: shot ${file}`);
 }
 
-const FLOW_VIEWPORTS = [
-  VIEWPORTS.mobile,
-  VIEWPORTS.tablet,
-  VIEWPORTS.desktop,
-  VIEWPORTS.wide,
-];
+// All four by default; CI sets REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop to halve
+// the run. A layout regression only at tablet or wide is then caught by the
+// design-review skill's four-width review, not by CI.
+const FLOW_VIEWPORTS = (process.env.REG_WEBAPP_FLOW_VIEWPORTS ?? "mobile,tablet,desktop,wide")
+  .split(",")
+  .map((name) => {
+    const viewport = VIEWPORTS[name];
+    if (!viewport) {
+      throw new Error(
+        `driver: unknown viewport "${name}" in REG_WEBAPP_FLOW_VIEWPORTS (use ${Object.keys(VIEWPORTS)})`,
+      );
+    }
+    return viewport;
+  });
 
 // The retained shell boundary case fails if filtering leaves an unrelated provider,
 // palette focus/closing breaks, or a chosen action leaks its query into the filter.

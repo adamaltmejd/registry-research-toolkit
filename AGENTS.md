@@ -189,7 +189,7 @@ is archived on `archive/reg-webapp-spa` and returns in milestone E.
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `release`). The R packages are not gated: their testthat suites run only by hand
+  `builder`). The R packages are not gated: their testthat suites run only by hand
   (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
 - `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty, plugin
   schema drift and provider vocabulary.
@@ -200,7 +200,7 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
   Operator schedules them with the maintainer.
 - Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
-- Real-artifact conformance: the `release` step in `scripts/gate.py` shows the flags
+- Real-artifact conformance: the `rust` step in `scripts/gate.py` shows the flags
   (`--run-release --artifact-dir=… --server-cmd=…`).
 - Local prerequisite: `cargo install cargo-machete --locked`.
 - A new worktree needs no setup step: Python syncs on the first `uv run`.

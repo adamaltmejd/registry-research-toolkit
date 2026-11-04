@@ -17,7 +17,9 @@
 #                          a server.
 #   dev.sh flows <out-dir> [scenario...]
 #                          ONE-SHOT — start, run the Playwright driver (driver.mjs)
-#                          (the shell/search case at four viewports), tear down,
+#                          (the flow cases at four viewports; the env var
+#                          REG_WEBAPP_FLOW_VIEWPORTS, e.g. mobile,desktop, narrows
+#                          them), tear down,
 #                          exit with the driver's status. The PNGs land in
 #                          <out-dir>. Named scenarios run only those cases;
 #                          no names runs cases matching the selected fixture.
