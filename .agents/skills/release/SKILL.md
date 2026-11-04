@@ -24,7 +24,8 @@ draft or tag already exists, follow Error recovery first.
   | reg_meta | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`) | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
-`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` binaries (step 10).
+`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` and `reg-export-gate` binaries
+(step 10; the gate's is named by its own crate version).
 
 ## Validation
 

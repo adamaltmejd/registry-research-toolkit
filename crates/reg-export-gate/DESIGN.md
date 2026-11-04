@@ -201,31 +201,11 @@ probe folder (`.export-gate-probe-*`) and the new folder (`.export-gate-*`) appe
 the destination for a moment, and a killed export can leave the latter behind with
 verified gate bytes in it. The agent's side ignores dot-folders.
 
-## Plan
+## The R gate follows
 
-Tracks the build of #1803; deleted when the binary ships. Decisions (maintainer,
-2026-11-04): no review UI in v1 (the reviewer runs
-`export --project X --receipt <sha256>`); approved files go to a shared folder the agent
-VM sees read-only; staging files over 8 MiB or 100,000 rows are refused (`too_large`);
-the binary ships as an extra asset in the `reg_meta/v*` release, versioned by this
-crate.
-
-1. **Library: loading, inventory, structure, the size caps** (#2176). The corpus runner
-   (`tests/corpus/`) runs every refusal these checks decide and lists the rest, and
-   every pass, as pending. Two corpus cases (`structure-too-many-*`) and the corpus
-   format's `repeat` are new; the R runner materializes `repeat` and lists the two cases
-   as pending until the R gate has the caps.
-2. **Library: disclosure, backstop, the rewrite, the receipt, the report, clearing a
-   prior export** (#2177). `export_gate()` is the whole gate. `na_not_null` leaves the
-   rule list, and the two NaN cases gain `unsupported_statistic` (pending in the R
-   runner). The whole corpus runs; nothing is pending here.
-3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
-   `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes
-   (#2212). The corpus runs through the binary too.
-4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,
-   copy to the destination, re-hash there (this PR).
-5. **Ship**: the release asset; this section goes.
-
-After 5, one R PR makes `export_gate.R` imitate the binary: the size caps, the
-`na_not_null` change, and a duplicate column refused as `column_order` (today R ends in
-`internal_error` there, since `GetFieldByName` gives NULL).
+`export_gate.R` stays the MONA implementation (MONA runs no executables) and imitates
+this one in its own PR, naming the gate version it matches: the size caps (the rewrite's
+too), the `na_not_null` change (a NaN beside a null count is `unsupported_statistic`),
+and a duplicate column refused as `column_order` (today R ends in `internal_error`
+there, since `GetFieldByName` gives NULL). From then on a corpus change lands with the
+Rust change, and R follows.
