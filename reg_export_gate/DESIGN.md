@@ -252,6 +252,9 @@ The code is the category; the rule locates the finding. Both are stable.
 - `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`; in the R gate
   only, `na_not_null`.
 - `backstop`: `identifier_pattern`.
+- `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
+  `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
+  and delivery").
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
 `paths_overlap` means staging and output are the same folder or one is inside the other;

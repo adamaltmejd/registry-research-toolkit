@@ -34,6 +34,20 @@ pub(crate) struct Project {
     pub policy: PathBuf,
     pub output: PathBuf,
     pub destination: PathBuf,
+    /// The config folder, resolved.
+    pub dir: PathBuf,
+}
+
+/// The user that owns `path`; `None` off Unix or if it cannot be read.
+#[cfg(unix)]
+pub(crate) fn owner(path: &Path) -> Option<u32> {
+    use std::os::unix::fs::MetadataExt;
+    std::fs::symlink_metadata(path).ok().map(|m| m.uid())
+}
+
+#[cfg(not(unix))]
+pub(crate) fn owner(_: &Path) -> Option<u32> {
+    None
 }
 
 fn setup(rule: &'static str) -> Refusal {
@@ -132,5 +146,6 @@ pub(crate) fn load(config_dir: &Path, name: &str) -> Result<Project, Refusal> {
         policy,
         output: raw.output,
         destination: raw.destination,
+        dir,
     })
 }

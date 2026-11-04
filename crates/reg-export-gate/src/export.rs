@@ -94,11 +94,12 @@ fn apart_settled(staging: &Path, output: &Path) -> Option<bool> {
     }
 }
 
-/// Whether staging `s` (resolved) and the output's folder are each apart from
-/// every folder in `roots` (server mode's config folder and destination):
-/// neither is one of them or inside one, and none is inside staging or the
-/// output. A root that does not exist is apart. `None` as for `apart`.
-fn apart_from_roots(s: &Path, output: &Path, roots: &[&Path]) -> Option<bool> {
+/// Whether staging `s` (resolved; `export` has none) and the output's folder
+/// are each apart from every folder in `roots` (server mode's config folder
+/// and destination): neither is one of them or inside one, and none is inside
+/// staging or the output. A root that does not exist is apart. `None` as for
+/// `apart`.
+pub(crate) fn apart_from_roots(s: Option<&Path>, output: &Path, roots: &[&Path]) -> Option<bool> {
     let parent = parent(output).canonicalize().ok()?;
     let o = parent.join(output.file_name()?);
     let o = o.canonicalize().unwrap_or(o);
@@ -108,8 +109,7 @@ fn apart_from_roots(s: &Path, output: &Path, roots: &[&Path]) -> Option<bool> {
         // The output's folder covers the output and the diagnostics folder
         // inside a root; a root can still be one of them, or the output a
         // link into a root.
-        !(inside(s, &r)
-            || inside(&r, s)
+        !(s.is_some_and(|s| inside(s, &r) || inside(&r, s))
             || inside(&parent, &r)
             || inside(&o, &r)
             || inside(&r, &o)
@@ -132,7 +132,7 @@ pub(crate) fn check_paths(staging: &Path, output: &Path, roots: &[&Path]) -> Res
         .canonicalize()
         .map_err(|_| setup("internal_error"))?;
     // Before `apart_settled`, which creates the diagnostics folder.
-    match apart_from_roots(&s, output, roots) {
+    match apart_from_roots(Some(&s), output, roots) {
         Some(true) => {}
         Some(false) => return Err(setup("paths_overlap")),
         None => return Err(setup("internal_error")),
@@ -324,58 +324,76 @@ fn json_bytes<T: Serialize>(value: &T) -> Vec<u8> {
     bytes
 }
 
-/// Writes the checked tables and the receipt into a new folder beside
-/// `output`, then renames it to `output`: the files and the receipt appear
-/// together or not at all. On any failure the new folder is removed whole.
+/// The export's files, as written: each checked table rewritten, in schema
+/// order, then `receipt.json`. The same candidates give the same bytes under
+/// one gate version, which `export` relies on to re-derive an output.
+pub(crate) fn rewritten(
+    schema: &Schema,
+    policy: &Policy,
+    candidates: &[Candidate],
+) -> Result<Vec<(String, Vec<u8>)>, Refusal> {
+    let mut out = Vec::new();
+    let mut files = Vec::new();
+    for cand in candidates {
+        let bytes = rewrite(cand).ok_or_else(|| setup("internal_error"))?;
+        files.push(Written {
+            name: cand.spec.name.clone(),
+            sha256: sha256_hex(&bytes),
+        });
+        out.push((cand.spec.name.clone(), bytes));
+    }
+    let receipt = Receipt {
+        format: RECEIPT_FORMAT,
+        format_version: 1,
+        gate: Gate {
+            implementation: "rust",
+            version: VERSION,
+        },
+        schema: Pinned {
+            name: &schema.name,
+            version: schema.version,
+            sha256: &schema.sha256,
+        },
+        policy: Pinned {
+            name: &policy.name,
+            version: policy.version,
+            sha256: &policy.sha256,
+        },
+        files,
+    };
+    out.push((RECEIPT.to_owned(), json_bytes(&receipt)));
+    Ok(out)
+}
+
+/// Writes `files` into a new folder beside `target`, then renames it to
+/// `target`: the files appear together or not at all. On any failure the new
+/// folder is removed whole.
+pub(crate) fn place(target: &Path, files: &[(String, Vec<u8>)]) -> Result<(), Refusal> {
+    let nanos = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_or(0, |d| d.as_nanos());
+    let fresh = parent(target).join(format!(".export-gate-{}-{nanos}", std::process::id()));
+    std::fs::create_dir(&fresh).map_err(|_| setup("export_not_writable"))?;
+    let written = (|| {
+        for (name, bytes) in files {
+            write_new(&fresh.join(name), bytes).map_err(|_| setup("export_not_writable"))?;
+        }
+        std::fs::rename(&fresh, target).map_err(|_| setup("move_failed"))
+    })();
+    if written.is_err() {
+        let _ = std::fs::remove_dir_all(&fresh);
+    }
+    written
+}
+
+/// Writes the checked tables and the receipt as `output`.
 pub(crate) fn export(
     output: &Path,
     schema: &Schema,
     policy: &Policy,
     candidates: &[Candidate],
 ) -> Result<(), Refusal> {
-    let nanos = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map_or(0, |d| d.as_nanos());
-    let fresh = parent(output).join(format!(".export-gate-{}-{nanos}", std::process::id()));
-    std::fs::create_dir(&fresh).map_err(|_| setup("export_not_writable"))?;
-    let written = (|| {
-        let mut files = Vec::new();
-        for cand in candidates {
-            let bytes = rewrite(cand).ok_or_else(|| setup("internal_error"))?;
-            write_new(&fresh.join(&cand.spec.name), &bytes)
-                .map_err(|_| setup("export_not_writable"))?;
-            files.push(Written {
-                name: cand.spec.name.clone(),
-                sha256: sha256_hex(&bytes),
-            });
-        }
-        let receipt = Receipt {
-            format: RECEIPT_FORMAT,
-            format_version: 1,
-            gate: Gate {
-                implementation: "rust",
-                version: VERSION,
-            },
-            schema: Pinned {
-                name: &schema.name,
-                version: schema.version,
-                sha256: &schema.sha256,
-            },
-            policy: Pinned {
-                name: &policy.name,
-                version: policy.version,
-                sha256: &policy.sha256,
-            },
-            files,
-        };
-        write_new(&fresh.join(RECEIPT), &json_bytes(&receipt))
-            .map_err(|_| setup("export_not_writable"))?;
-        std::fs::rename(&fresh, output).map_err(|_| setup("move_failed"))
-    })();
-    if written.is_err() {
-        let _ = std::fs::remove_dir_all(&fresh);
-    }
-    written
+    place(output, &rewritten(schema, policy, candidates)?)
 }
 
 #[derive(Serialize)]
@@ -415,7 +433,7 @@ pub(crate) fn write_report(
     let Ok(dir) = parent(output).canonicalize().map(|p| p.join(DIAGNOSTICS)) else {
         return;
     };
-    if apart_from_roots(&staging, output, roots) != Some(true)
+    if apart_from_roots(Some(&staging), output, roots) != Some(true)
         || apart_settled(&staging, output) != Some(true)
     {
         return;

@@ -77,6 +77,11 @@ fn open(path: &Path) -> std::io::Result<std::fs::File> {
 /// The file's bytes, read once from one handle checked to be a regular file,
 /// and never more than the cap plus one byte.
 pub(crate) fn read(path: &Path) -> Outcome<Vec<u8>> {
+    read_capped(path, MAX_FILE_BYTES)
+}
+
+/// `read` with another byte cap.
+pub(crate) fn read_capped(path: &Path, cap: u64) -> Outcome<Vec<u8>> {
     let Ok(file) = open(path) else {
         return Outcome::Unreadable;
     };
@@ -84,14 +89,10 @@ pub(crate) fn read(path: &Path) -> Outcome<Vec<u8>> {
         return Outcome::Unreadable;
     }
     let mut bytes = Vec::new();
-    if file
-        .take(MAX_FILE_BYTES + 1)
-        .read_to_end(&mut bytes)
-        .is_err()
-    {
+    if file.take(cap + 1).read_to_end(&mut bytes).is_err() {
         return Outcome::Unreadable;
     }
-    if bytes.len() as u64 > MAX_FILE_BYTES {
+    if bytes.len() as u64 > cap {
         Outcome::TooLarge
     } else {
         Outcome::Ok(bytes)
@@ -215,10 +216,18 @@ fn check_file(spec: &File, schema: &ArrowSchema, findings: &mut Vec<Finding>) {
 }
 
 pub(crate) fn check(staging: &Path, schema: &Schema) -> Result<Vec<Candidate>, Refusal> {
+    check_read(schema, |name| read(&staging.join(name)))
+}
+
+/// Structure over each schema file's bytes as `read` gives them by name.
+pub(crate) fn check_read(
+    schema: &Schema,
+    mut read: impl FnMut(&str) -> Outcome<Vec<u8>>,
+) -> Result<Vec<Candidate>, Refusal> {
     let mut findings = Vec::new();
     let mut candidates = Vec::new();
     for spec in &schema.files {
-        let decoded = match read(&staging.join(&spec.name)) {
+        let decoded = match read(&spec.name) {
             Outcome::Ok(bytes) => decode(spec, Bytes::from(bytes)),
             Outcome::TooLarge => Err(vec![Finding::file("too_large", &spec.name)]),
             Outcome::Unreadable => Err(vec![Finding::file("unreadable", &spec.name)]),

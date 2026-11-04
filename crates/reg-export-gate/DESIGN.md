@@ -87,12 +87,16 @@ specific to the Rust implementation, which is the reference: the R gate imitates
   the gate as the R gate's `export_gate()` runs it, for the corpus and for a researcher
   running it by hand.
 - `reg-export-gate check --project NAME --staging DIR`: server mode (below).
+- `reg-export-gate export --project NAME --receipt SHA256`: the reviewer's export of a
+  server-mode output (below). `SHA256` is 64 lowercase hex digits, as `sha256sum` prints
+  them.
 
-stdout gets one line, `pass` or `refused: <code>`; nothing else is printed, so the
-pipeline learns only the category. Findings go to the report. Arguments are parsed by
-hand, as `reg-meta` does, and a usage error prints fixed text, never an argument. Exit
-status: 0 pass, 2 usage, 10 setup, 11 inventory, 12 structure, 13 disclosure, 14
-backstop.
+stdout gets one line, `pass` or `refused: <code>`. `check` prints nothing else, so the
+pipeline learns only the category; findings go to the report. `export`, which only the
+reviewer runs, also prints a refusal's findings on stderr, one per line (rule, then
+file, column, position: never a value). Arguments are parsed by hand, as `reg-meta`
+does, and a usage error prints fixed text, never an argument. Exit status: 0 pass, 2
+usage, 10 setup, 11 inventory, 12 structure, 13 disclosure, 14 backstop, 15 delivery.
 
 ## Server mode
 
@@ -141,6 +145,38 @@ reviewer's user; the destination is the agent VM's read-only view of a shared fo
 the deployer copies the chosen schema and policy from `reg_export_gate/schemas/` into
 the config folder, a reviewed step.
 
+## Export and delivery
+
+No review UI in v1 (maintainer, 2026-11-04). The reviewer inspects the project's output
+folder with any tool, hashes its `receipt.json` and runs `export` with that hash, under
+the same config as `check`. The output is the pipeline's to write between the two runs,
+so `export` trusts nothing in it:
+
+1. The config loads as for `check`. The destination must be a real folder with no group
+   or other write bit (`destination_writable`), and the output must be apart from it and
+   from the config folder (`paths_overlap`).
+2. The output is read once, each file as staging files are (no link, never blocking),
+   with a cap of twice the decoded bound: the gate wrote it uncompressed, so it can be
+   larger than the staging cap. It must be a real folder holding exactly the schema's
+   files and `receipt.json`, all regular files, and the receipt's SHA-256 must be the
+   one named (`receipt_mismatch`), so a set swapped in after the review is refused.
+3. The files are checked again (structure, disclosure, backstop, under the configured
+   schema and policy, with those codes) and rewritten. The fresh receipt must equal the
+   one read, byte for byte, and each file's hash the fresh one (`receipt_mismatch`). A
+   genuine export reproduces exactly (byte identity per gate version); a forged folder,
+   say the author's Parquet with a self-consistent receipt, does not.
+4. The destination must be owned by the user running `export`, and the config folder by
+   that user or root. `std` has no `geteuid` and the crate has no `unsafe`, so the user
+   is read as the owner of a probe folder created and removed in the destination.
+5. The gate writes its own bytes, never the folder's, to
+   `<destination>/<first 16 hex digits of the receipt hash>/`, through a new folder and
+   a rename as for an export, then reads them back and compares hashes (`hash_mismatch`,
+   and the folder is removed). If that folder exists, the receipt was exported before:
+   it is re-verified the same way and nothing is written.
+
+Delivery rules, Rust only: `receipt_mismatch`, `destination_writable`, `hash_mismatch`.
+`export` writes no report: its reader is the reviewer, on stderr.
+
 ## Plan
 
 Tracks the build of #1803; deleted when the binary ships. Decisions (maintainer,
@@ -161,9 +197,9 @@ crate.
    runner). The whole corpus runs; nothing is pending here.
 3. **Binary: `check`**, with `--schema/--policy` or `--project` (config in
    `/etc/reg-export-gate/`), stdout `pass` or `refused: <code>` only, stable exit codes
-   (this PR). The corpus runs through the binary too.
+   (#2212). The corpus runs through the binary too.
 4. **`export` and delivery**: re-derive the bytes, match the receipt the reviewer named,
-   copy to the destination, re-hash there.
+   copy to the destination, re-hash there (this PR).
 5. **Ship**: the release asset; this section goes.
 
 After 5, one R PR makes `export_gate.R` imitate the binary: the size caps, the
