@@ -103,12 +103,10 @@ reg_webapp/
   docker-entrypoint.sh    # server startup and readiness probes
   fly.toml                # global origin deployment
   edge/                   # global hosted MCP edge worker
-  stewards/               # only swecov/: old builder inventory retained until E
   DESIGN.md
 ```
 
-`stewards/swecov/` remains input to the old builder until milestone E. The current
-server and container load no steward configuration or logos.
+The server and container load no steward configuration or logos.
 
 ## Boot seam (artifact admission)
 

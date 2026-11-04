@@ -43,10 +43,10 @@ its `order` returns the logical order of a project, and nothing receives it.
 ## What the toolkit is
 
 A Rust server and MCP tools that let researchers browse a catalog, validate a
-per-project variable list, and export it as a logical data order. The physical manifest
-and the runner's input return with milestone E. HTTP and MCP are equal surfaces over the
-same `reg-catalog` operations. The SPA is archived on `archive/reg-webapp-spa` and
-returns in milestone E.
+per-project variable list, and export it as a logical data order. A steward deployment
+adds its holdings (`--catalog <steward>`), from which an order's physical manifest is
+built. HTTP and MCP are equal surfaces over the same `reg-catalog` operations. The SPA
+is archived on `archive/reg-webapp-spa` and returns in milestone E.
 
 The unifying research-intent artifact is **`project_data.json`** — authored by
 researchers or agents and checked against the catalog by the order check. Its schema and
@@ -133,8 +133,8 @@ release's assets.
 `reg-resolve`, links registers and emits the SQLite catalog, including search and
 documents. There is no prepared stage. `curation/inputs.toml` pins the input repository
 and commit; its manifest pins input hashes and release assets. Reader config and id
-ledgers live under `curation/`; curation statements arrive in milestone D. The builder
-design is in [`crates/DESIGN.md`](crates/DESIGN.md).
+ledgers live under `curation/`, beside the curation statements. The builder design is in
+[`crates/DESIGN.md`](crates/DESIGN.md).
 
 The runtime and `reg_webapp` consume only the published SQLite generation. They never
 read the input repository or combine its current state with an older artifact. A failed
@@ -142,9 +142,10 @@ build leaves the published artifact unchanged. Publication verifies the artifact
 checksum before deployment.
 
 Documents and catalog metadata share the artifact, but indexing a document does not make
-it a source of variable availability or executable transformations. Holdings arrive as a
-separate layer in E. None of these inputs change the MONA constraint: PII stays inside
-MONA and only aggregate, disclosure-controlled results leave it.
+it a source of variable availability or executable transformations. Holdings are a
+separate layer, compiled against a released catalog. None of these inputs change the
+MONA constraint: PII stays inside MONA and only aggregate, disclosure-controlled results
+leave it.
 
 ### Catalog artifact identity
 

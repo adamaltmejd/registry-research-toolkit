@@ -84,10 +84,9 @@ One line per finding, no hedging:
 - `yagni:` a protocol with one implementation, a helper with one caller, a layer that
   only delegates. Inline it.
 - `stdlib:` a hand-rolled thing the standard library ships. Name it.
-- `dep:` a hand-rolled thing an installed dependency (Pydantic) already does. Name the
-  feature.
+- `dep:` a hand-rolled thing an installed dependency already does. Name the feature.
 - `dup:` the same leaf in two modules, the failure mode AGENTS.md names. Name the home
-  it belongs in (`_curation.py`, `db.py`, …).
+  it belongs in (`reg-core`, `reg-frame`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the
   mechanism removes. Show the form.
 - `guard:` a cut that touches a load-bearing guard (PII/MONA confinement, disclosure
