@@ -274,6 +274,7 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Check                                                            | draft check, catalog check             |
   | Years not available                                              | period adjustments, clips              |
   | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
+  | Check did not run                                                | check failed, error, unchecked         |
 
 **Type** is one list for every screen: Categorical, Numeric, Date, Date and time,
 Identifier, Other (uncoded text is Other). It is shown as a pill with a glyph, with
@@ -756,11 +757,14 @@ grow new visual language meanwhile.
   page), and leads with its glyph: "✓ Ready to order" in `ok`, "▲ Has warnings" in
   `warn`, "✕ Has problems" or "✕ Can't be ordered yet" in `err`; unchecked or in flight
   it is a plain `text-muted` "Checking" with no glyph; a draft with no tables yet is the
-  same plain "Empty", never an error, since nothing has gone wrong. Its slot is as wide
-  as the widest verdict, so the banner keeps one size while the check runs. A verdict
-  with findings (Has warnings, Has problems, Can't be ordered yet) is a link, in its
-  status hue with the link's `accent` rule, to the verdict on /project, which takes
-  focus; Ready to order and Checking stay plain text. Unsaved changes are a quiet `mono`
+  same plain "Empty", never an error, since nothing has gone wrong. A check that did not
+  run (a rate limit, the network) is the same plain "Check did not run", never "Has
+  problems": it says nothing about the project. Its slot is as wide as the widest
+  verdict, so the banner keeps one size while the check runs. A verdict /project
+  explains (Has warnings, Has problems, Can't be ordered yet with their findings, Check
+  did not run with Retry) is a link, in its status hue with the link's `accent` rule, to
+  the verdict on /project, which takes focus; Ready to order and Checking stay plain
+  text. Unsaved changes are a quiet `mono`
   `text-muted` "unsaved", never a status hue. The study window is the period picker: an
   inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and
   last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
@@ -788,7 +792,11 @@ grow new visual language meanwhile.
   edit WASM accepted. The verdict is one `StatusRow`: "Ready to order", "Has warnings"
   with the count, "Can't be ordered yet" with the count of problems, or "Has problems"
   for a file that fails the structure check, whose problems are listed in full under it;
-  a check that did not run is an `err` row with Retry. "What will be delivered" is the
+  a check that did not run is an `err` row with Retry. While a newer check runs, the
+  verdict, its list and "What will be delivered" keep the previous check's answer with
+  `aria-busy`; a `Skeleton` shows only when there is none, or when a table or column was
+  added, removed or moved since, so the earlier findings would sit on the wrong card.
+  "What will be delivered" is the
   order the catalog would serve, shown only when the project can be ordered: per table
   its name and years, each column as a `ColumnChip` (with its years only where they
   differ from the table's) beside the variable's name, "Years not available" per column

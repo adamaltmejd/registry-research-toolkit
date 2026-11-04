@@ -11,7 +11,14 @@ type Entry = LogicalOrder["entries"][number];
  * 2026-11-04): per table its columns and years, the years a column does not
  * have, and the row identifier. No order file: the steward's instructions say
  * how to order. */
-export function DeliverySummary({ order }: { order: LogicalOrder }) {
+export function DeliverySummary({
+  order,
+  busy,
+}: {
+  order: LogicalOrder;
+  /** A newer check is in flight: this order is the previous one. */
+  busy: boolean;
+}) {
   const names = useCatalogNames([
     ...order.entries.flatMap((entry) => [entry.table, entry.variable]),
     ...order.clips.map((clip) => clip.variable),
@@ -40,7 +47,11 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
   for (const [key, group] of groups)
     if (!firstOfSource.has(group.source)) firstOfSource.set(group.source, key);
   return (
-    <section aria-labelledby="delivery-heading" className={styles.summary}>
+    <section
+      aria-labelledby="delivery-heading"
+      aria-busy={busy || undefined}
+      className={styles.summary}
+    >
       <h2 id="delivery-heading" className={styles.heading}>
         What will be delivered
       </h2>
@@ -72,6 +83,28 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
           const years = catalogPeriodRuns(
             group.entries.map((entry) => entry.period),
           );
+          // A table can serve one column over several stretches: one row per
+          // column, with all its years. A column whose name changes between
+          // stretches keeps a row per name.
+          const columns = new Map<
+            string,
+            { spelling: string; variable: string; periods: CatalogPeriod[] }
+          >();
+          for (const entry of group.entries) {
+            const id = JSON.stringify([
+              entry.binding,
+              entry.variable,
+              entry.spelling,
+            ]);
+            const seen = columns.get(id);
+            if (seen) seen.periods.push(entry.period);
+            else
+              columns.set(id, {
+                spelling: entry.spelling,
+                variable: entry.variable,
+                periods: [entry.period],
+              });
+          }
           return (
             <section
               key={key}
@@ -88,21 +121,19 @@ export function DeliverySummary({ order }: { order: LogicalOrder }) {
                 <span className={styles.years}>{years}</span>
               </h3>
               <ul className={styles.columns} aria-label="Columns">
-                {group.entries.map((entry) => (
-                  <li
-                    key={`${entry.binding}:${entry.period.start}`}
-                    className={styles.column}
-                  >
+                {[...columns].map(([id, column]) => (
+                  <li key={id} className={styles.column}>
                     <ColumnChip
-                      name={entry.spelling}
+                      name={column.spelling}
                       years={
-                        catalogPeriodRuns([entry.period]) === years
+                        catalogPeriodRuns(column.periods) === years
                           ? undefined
-                          : catalogPeriodRuns([entry.period])
+                          : catalogPeriodRuns(column.periods)
                       }
                     />
-                    <a className="link" href={catalogHref(entry.variable)}>
-                      {names.get(entry.variable) ?? "Variable name unavailable"}
+                    <a className="link" href={catalogHref(column.variable)}>
+                      {names.get(column.variable) ??
+                        "Variable name unavailable"}
                     </a>
                   </li>
                 ))}

@@ -24,9 +24,11 @@ browser persistence fails.
 The banner and project page share one catalog check (`useProjectCheck`): `order`,
 through the shared abortable resource hook, 350 ms after the last accepted edit, with no
 manual trigger. `order` answers everything the page shows, so the SPA does not call
-`validate`: both run the same check, an `order_blocked` refusal carries every finding
-that `validate` would list, and a success carries the non-blocking findings with the
-entries, row keys and clips the delivery summary draws. The SPA sends only drafts WASM
+`validate`: both run the same check (on a steward server including the holdings stage of
+`materialize_order`, so a column the steward does not hold blocks here too), an
+`order_blocked` refusal carries every finding that `validate` would list, and a success
+carries the non-blocking findings with the entries, row keys and clips the delivery
+summary draws. The SPA sends only drafts WASM
 accepted; a `project_invalid` refusal, should the server disagree, is read the same way.
 One verdict function names the result for both, in the words of `frontend/DESIGN.md` →
 Words. Issues sit under their table or column, with links from the verdict that focus

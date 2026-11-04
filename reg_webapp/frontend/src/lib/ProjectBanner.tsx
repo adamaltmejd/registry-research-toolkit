@@ -33,13 +33,16 @@ const GLYPHS: Record<Verdict, string> = {
   warnings: "▲",
   problems: "✕",
   blocked: "✕",
+  unchecked: "",
 };
 
-/** Verdicts that /project explains with findings: the banner links to them. */
+/** Verdicts that /project explains (with findings, or with Retry for a check
+ * that did not run): the banner links to them. */
 const EXPLAINED: ReadonlySet<Verdict> = new Set([
   "warnings",
   "problems",
   "blocked",
+  "unchecked",
 ]);
 
 export function ProjectBanner({

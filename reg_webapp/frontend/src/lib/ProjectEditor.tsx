@@ -44,6 +44,11 @@ export function ProjectEditor({
   } | null>(null);
   const raw = project.raw;
   const draft = project.draft;
+  // While a check is in flight the page keeps the previous one, marked busy.
+  const busy = validation.loading && validation.previous !== null;
+  const shown: ProjectCheck = busy
+    ? { ...validation, ...validation.previous, loading: false }
+    : validation;
   const instructions =
     stewardConfig(context)?.presentation.order_instructions ?? null;
   // A saved window outside this deployment's catalog span is clamped into it at
@@ -144,21 +149,20 @@ export function ProjectEditor({
           {instructions && (
             <p className={styles.instructions}>{instructions}</p>
           )}
-          <Check project={project} validation={validation} />
+          <Check project={project} validation={shown} busy={busy} />
           {draft && (
             <Sources
               context={context}
               draft={draft}
-              issues={validation.data?.issues ?? []}
+              issues={shown.data?.issues ?? []}
               raw={raw}
             />
           )}
           {draft &&
-            validation.data?.order &&
-            // A check in flight keeps the last order: show none until it lands.
-            ["ready", "warnings"].includes(
-              projectVerdict(project, validation),
-            ) && <DeliverySummary order={validation.data.order} />}
+            shown.data?.order &&
+            ["ready", "warnings"].includes(projectVerdict(project, shown)) && (
+              <DeliverySummary order={shown.data.order} busy={busy} />
+            )}
         </>
       )}
       <ConfirmDialog
@@ -204,9 +208,11 @@ const count = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 function Check({
   project,
   validation,
+  busy,
 }: {
   project: ProjectSnapshot;
   validation: ProjectCheck;
+  busy: boolean;
 }) {
   const verdict = projectVerdict(project, validation);
   const words = VERDICT_WORDS[verdict];
@@ -228,6 +234,7 @@ function Check({
       id="project-checks"
       tabIndex={-1}
       aria-label="Check"
+      aria-busy={busy || undefined}
       className={styles.check}
     >
       {verdict === "checking" ? (
@@ -265,7 +272,7 @@ function Check({
         </StatusRow>
       )}
       {listed.length > 0 && verdict !== "checking" && (
-        <ul className={styles.issues} aria-label="Check findings">
+        <ul className={styles.issues} aria-label="Problems and warnings">
           {listed.map((issue) =>
             onCard(issue) ? (
               <IssueLink key={issueId(issue)} issue={issue} raw={project.raw} />
