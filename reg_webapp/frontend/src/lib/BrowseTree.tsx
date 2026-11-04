@@ -202,10 +202,7 @@ export function BrowseTree({ className }: { className?: string }) {
     facetResource.loading ||
     (facetKey === null && needle.trim().length >= SEARCH_MIN_QUERY_LENGTH);
   const matchCount =
-    filtering &&
-    root.value !== null &&
-    !facetsPending &&
-    !facetError
+    filtering && root.value !== null && !facetsPending && !facetError
       ? nodes
           .filter((node) => matched.has(node.id))
           .reduce((sum, node) => sum + node.children.length, 0)

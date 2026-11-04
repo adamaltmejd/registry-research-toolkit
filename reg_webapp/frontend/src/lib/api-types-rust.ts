@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -350,7 +350,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's. */
+        /** @description A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. A table ref with `variable` (up to 200 variables) lists those variables' rows in that table, in one list. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's. */
         get: operations["segments"];
         put?: never;
         post?: never;
@@ -1108,6 +1108,8 @@ export interface components {
             table_name: string;
             type?: string;
             value_set?: components["schemas"]["ValueSetRef"];
+            /** @description The variable's fqid. */
+            variable: string;
             /** @description The provider's definition over this period; a change of wording starts a row. */
             wording?: string;
         };
@@ -1196,9 +1198,14 @@ export interface components {
             fqid: string;
             name: string;
         };
+        /**
+         * @description A root provider, with its registers as its provider summary lists them, so the
+         *     root alone draws the whole register list (#2232).
+         */
         ShowProviderRef: {
             fqid: string;
             name: string;
+            registers: components["schemas"]["ShowRegisterRef"][];
         };
         ShowRegisterRef: {
             fqid: string;
@@ -2058,6 +2065,7 @@ export interface operations {
     segments: {
         parameters: {
             query?: {
+                variable?: string[];
                 period?: string;
                 table?: string;
                 value_set_name?: string;

@@ -448,9 +448,7 @@ export async function getTableSegments(
   for (let i = 0; i < variables.length; i += TABLE_READ_VARIABLES)
     chunks.push(variables.slice(i, i + TABLE_READ_VARIABLES));
   const pages = await Promise.all(
-    chunks.map((chunk) =>
-      getSegments(table, { ...options, variables: chunk }),
-    ),
+    chunks.map((chunk) => getSegments(table, { ...options, variables: chunk })),
   );
   return pages.flat();
 }

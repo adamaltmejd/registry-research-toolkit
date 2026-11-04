@@ -203,7 +203,12 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let value_set_name = params.get("value_set_name").copied();
     let mut rows = Vec::new();
     for variable in &variables {
-        rows.extend(listed(&origins, variable, table.as_deref(), value_set_name)?);
+        rows.extend(listed(
+            &origins,
+            variable,
+            table.as_deref(),
+            value_set_name,
+        )?);
     }
     let mut rows: Vec<Row> = match days(params, "period")? {
         Some((first, end)) => rows

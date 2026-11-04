@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -1333,7 +1333,7 @@
     },
     "/api/segments/{ref}": {
       "get": {
-        "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's.",
+        "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. A table ref with `variable` (up to 200 variables) lists those variables' rows in that table, in one list. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's.",
         "operationId": "segments",
         "parameters": [
           {
@@ -1342,6 +1342,18 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "variable",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 200
             }
           },
           {
@@ -4178,6 +4190,7 @@
         "type": "object",
         "description": "One row of the variable's per-period list: a column of one table over one period\nwith one form and one provider wording. A fact the catalog does not state is left\nout, never `null`: no type, no value set, `coded` unknown, and `state` clear (the\ndefault).",
         "required": [
+          "variable",
           "table",
           "table_name",
           "column",
@@ -4247,6 +4260,10 @@
           },
           "value_set": {
             "$ref": "#/components/schemas/ValueSetRef"
+          },
+          "variable": {
+            "type": "string",
+            "description": "The variable's fqid."
           },
           "wording": {
             "type": "string",
@@ -4607,9 +4624,11 @@
       },
       "ShowProviderRef": {
         "type": "object",
+        "description": "A root provider, with its registers as its provider summary lists them, so the\nroot alone draws the whole register list (#2232).",
         "required": [
           "fqid",
-          "name"
+          "name",
+          "registers"
         ],
         "properties": {
           "fqid": {
@@ -4617,6 +4636,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "registers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowRegisterRef"
+            }
           }
         }
       },
