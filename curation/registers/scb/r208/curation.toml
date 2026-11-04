@@ -8758,3 +8758,21 @@ kind = "set"
 subject = "var:troskad-areal-majs"
 fields = { "label" = "Tröskad areal majs (varav ekologisk, KarnfroObargadAreal_Dar_9)" }
 evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderhektarskord-dar-40"
+fields = { "description" = "Ekologisk skörd av grönfoder av oljelin per hektar, i kg per hektar. Uppgiften är en delmängd av totalskörden." }
+evidence = "Etiketten anger skörd per hektar; syskonkolumnerna Hektarskord har enheten kg/hektar. Kolumnerna med _Dar är den ekologiska delmängden.\n0.74.0 catalog, key v44440, releases r17533, r18588, r18589, r18590...; reg_meta.db:occurrence:438869,439376,439877"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: GronfoderHektarskord_Dar_40 where key = 'v44440'"
+fields = { "unit" = "kg/hektar" }
+evidence = "Etiketten anger skörd per hektar; övriga Hektarskord-kolumner har enheten kg/hektar.\nold unit: 'kg'; Registerinformation.csv:row=453593 (r18590); Registerinformation.csv:row=452472 (r18589); Registerinformation.csv:row=452483 (r18588)"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-dar-80"
+fields = { "description" = "Ekologisk obärgad areal stråsäd till grönfoder, i hektar. Arealen är en delmängd av den totala obärgade arealen till grönfoder." }
+evidence = "Definitionen är \"Obärgad areal stråsäd till grönfoder\"; frasen \"för tröskning\" i den operationella definitionen är en kopierad formulering, enligt samma bedömning som för karnfroobargadareal-dar-23. Nyckel v45787, kolumn GronfoderObargadAreal_Dar_80.\n0.74.0 catalog, key v45787, releases r17533, r18588, r18589, r18590...; reg_meta.db:occurrence:438913,439419,439921"

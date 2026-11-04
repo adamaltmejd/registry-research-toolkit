@@ -628,3 +628,9 @@ kind = "set"
 subject = "var:utbnamn"
 fields = { "label" = "Utbildningsgrupp (namn)" }
 evidence = "#2102 same-label cluster 'Utbildningsgrupp' (2 variables): judged different meaning, high confidence; Opdefs: coded group (UtbGrp) versus group name in plain text (UtbNamn)."
+
+[[statement]]
+kind = "set"
+subject = "var:proand"
+fields = { "description" = "Procentandel av arbetsställets anställda som har en utbildning som ingår i en viss utbildningsgrupp (en av grupperna i undersökningen). Beräknas som ANTUTBR i procent av antalet sysselsatta (ANTSYS)." }
+evidence = "Definition (andel av de anställda) and operational definition (ANTUTBR i procent av ANTSYS) in all releases r14627-r14632 and r1670-r9887 agree; unit Procent. Registerinformation.csv:row=340901 (r1670).\n0.74.0 catalog, key v6414, releases r11618, r12768, r14536, r14627...; reg_meta.db:occurrence:23496,23526,23556"

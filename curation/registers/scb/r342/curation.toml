@@ -1247,3 +1247,9 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "label" = "Utländsk/svensk bakgrund (4 kategorier)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, high confidence; Opdefs: UTL_BAKG/UtlBakGr assume Swedish birth when the student's birth country is missing; UtlBakGr2 leaves it blank; UtlSvBakg has four categories."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-sv-far"
+fields = { "description" = "Faderns utbildningsnivå enligt SUN 2000, i tre grupper." }
+evidence = "Etikett, definition och kolumnnamn anger fadern; den operationella definitionen för 2013-2014 nämner modern och är en kopierad formulering.\n0.74.0 catalog, key v8074, releases r5572, r5606, r5607, r5610...; reg_meta.db:occurrence:215059,215110,215155"

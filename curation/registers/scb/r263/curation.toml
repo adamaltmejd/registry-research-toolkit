@@ -148,3 +148,9 @@ kind = "set"
 subject = "var:prodkod"
 fields = { "label" = "Produkttyp (kod)" }
 evidence = "#2102 same-label cluster 'Produkttyp' (2 variables): judged different meaning, medium confidence; ProdKod is a code set by SCB with a value set; LokalVariant describes the product measured at the company and has no value set."
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivnsv"
+fields = { "description" = "Delkostnadsslag för respektive hustyp i byggkostnadsindex. Enligt SCB hade BeskrivnSV och NamnSV samma innehåll 2023-2024; från 2025 anger BeskrivnSV en numrering 1-6 och NamnSV kostnadsslagets namn." }
+evidence = "Operationell definition i r18613 och r19032 respektive r19740 och r20280.\n0.74.0 catalog, key v46007, releases r18613, r19032, r19740, r20280; reg_meta.db:occurrence:42855,42868,42881"

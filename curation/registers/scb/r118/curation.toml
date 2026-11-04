@@ -3304,3 +3304,9 @@ kind = "set"
 subject = "set:underlag-for-statlig-fastighetsskatt"
 fields = { "label" = "Underlag för statlig fastighetsskatt" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "taxeringsutfallet: AntBeskInkEqu where key = 'v32811'"
+fields = { "unit" = "Antal" }
+evidence = "Etiketten och definitionen anger antal fysiska personer; syskonkolumnerna AntBeskInk* har enheten Antal.\nold unit: 'Kronor (SEK)'; Registerinformation.csv:row=520174 (r7326); Registerinformation.csv:row=520180 (r9980); Registerinformation.csv:row=520195 (r11606)"

@@ -598,3 +598,9 @@ kind = "set"
 subject = "set:utvalda-arbetsstallen"
 fields = { "label" = "Utvalda arbetsställen" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:fastovrm"
+fields = { "description" = "Antal tillsvidareanställda män enligt övrigt avtal." }
+evidence = "Etikett och definition anger tillsvidareanställda; den operationella definitionen är samma text som för TillOvrM (visstidsanställda) och är en kopia.\n0.74.0 catalog, key v5051, releases r11834, r11996, r11998, r11999...; reg_meta.db:occurrence:317089,317128,317167"

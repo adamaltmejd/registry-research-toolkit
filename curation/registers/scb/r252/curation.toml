@@ -1916,3 +1916,27 @@ kind = "set"
 subject = "var:stratum-starkelsepotatis"
 fields = { "label" = "Stratum (stärkelsepotatis)" }
 evidence = "#2102 same-label cluster 'Stratum' (3 variables): judged different meaning, high confidence; Opdefs and value sets differ: separate strata for ekologisk matpotatis, matpotatis and stärkelsepotatis."
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-hektarskordkg"
+fields = { "description" = "Färskpotatisskörd per skördad hektar, totalt, i kg per hektar." }
+evidence = "Definition, etikett och enhet är desamma 2016-2023; den operationella definitionen i r19820 (2024) beskriver en annan post (\"Totala mängden ...\", höst-/vinterpotatis respektive total areal) och är en kopierad formulering.\n0.74.0 catalog, key v15072, releases r16385, r16464, r17552, r17555...; reg_meta.db:occurrence:437634,437735,437836"
+
+[[statement]]
+kind = "set"
+subject = "var:fkpot-obargadareal"
+fields = { "description" = "Obärgad areal färskpotatis, totalt, i hektar." }
+evidence = "Definition, etikett och enhet är desamma 2016-2023; den operationella definitionen i r19820 (2024) beskriver en annan post (\"Totala mängden ...\", höst-/vinterpotatis respektive total areal) och är en kopierad formulering.\n0.74.0 catalog, key v15075, releases r16385, r16464, r17552, r17555...; reg_meta.db:occurrence:437635,437736,437837"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-hektarskordkg"
+fields = { "description" = "Höst-/vinterpotatisskörd per skördad hektar, totalt, i kg per hektar." }
+evidence = "Definition, etikett och enhet är desamma 2016-2023; den operationella definitionen i r19820 (2024) beskriver en annan post (\"Totala mängden ...\", höst-/vinterpotatis respektive total areal) och är en kopierad formulering.\n0.74.0 catalog, key v15073, releases r16385, r16464, r17552, r17555...; reg_meta.db:occurrence:437645,437746,437847"
+
+[[statement]]
+kind = "set"
+subject = "var:mpot-obargadareal"
+fields = { "description" = "Obärgad areal höst-/vinterpotatis, totalt, i hektar." }
+evidence = "Definition, etikett och enhet är desamma 2016-2023; den operationella definitionen i r19820 (2024) beskriver en annan post (\"Totala mängden ...\", höst-/vinterpotatis respektive total areal) och är en kopierad formulering.\n0.74.0 catalog, key v15074, releases r16385, r16464, r17552, r17555...; reg_meta.db:occurrence:437647,437748,437849"

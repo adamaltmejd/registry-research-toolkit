@@ -137,3 +137,9 @@ kind = "set"
 subject = "var:taggbranschgr"
 fields = { "label" = "Näringsgren (aggregerad branschgrupp)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (3 variables): judged different meaning, medium confidence; Opdefs differ: Kortnamn shows which SNI codes belong to a delindex, TAggBranschgrN lists the SNI ranges per delindex, TAggBranschgr is the shorter aggregated branch name with a value set."
+
+[[statement]]
+kind = "set"
+subject = "produktionsindex-over-naringslivet: TUtvIxFast where key = 'v28762' and release = 'r4322'"
+fields = { "spelling" = "TixUtvFastKal" }
+evidence = "SCB's Registerinformation export lists two variables under column TUtvIxFast in release r4322 (2012): v28761 (Årsmånadslänk i fasta priser) and v28762 (Årsmånadslänk i fasta och kalenderkorrigerade priser). One delivered file cannot hold two columns of one name. v28762 is spelled TixUtvFastKal in the next two releases, r4692 (2013) and r5374 (2014), and v28761 is spelled TUtvIxFast in all three. The same release also carries TixFastKal and TixFast for the sibling index keys, so TixUtvFastKal follows the table's naming. Label and definition of v28762 agree word for word across the three releases. So TUtvIxFast for v28762 in r4322 is a documentation misname; corrected to TixUtvFastKal.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=359562 (r4322)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=359564 (r4692, TixUtvFastKal)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=940806 (r5374, TixUtvFastKal)"
