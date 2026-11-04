@@ -12243,12 +12243,6 @@ evidence = "BKU är en källkod utan igenkännbar motsvarighet i etiketten; fami
 
 [[statement]]
 kind = "set"
-subject = "var:bkuinst"
-fields = { "tags" = ["business"] }
-evidence = "Den intilliggande källkolumnen har en annan ägare och beskrivning; den utelämnade kodlistan behövs för att bedöma begreppens överensstämmelse.\ncatalog:occurrence:66967\ncatalog:occurrence:67788\ncatalog:valueset:6802\ncatalog:variable_text:8628:16071:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:naringsgren-individ-kontrolluppgiftsregistret"
 fields = { "sets" = ["naringsgren"] }
 evidence = "Id:t är en opak källförkortning för individens näringsgren.\ncatalog:variable_text:8629:13149:17897"
@@ -26583,18 +26577,6 @@ evidence = "Källan anger utbetalning för obligationer.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:utbildnings-inriktning-sun-siffra-1"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktum och värdeset pekar på utbildningsnivå trots etikettens inriktning.\ncatalog:occurrence:63593\ncatalog:occurrence:64463\ncatalog:valueset:4769"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildnings-inriktning-sun-siffra-1"
-fields = { "tags" = ["education"] }
-evidence = "Identitetsfaktum och värdeset pekar på utbildningsnivå trots etikettens inriktning.\ncatalog:occurrence:63593\ncatalog:occurrence:64463\ncatalog:valueset:4769"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningsbidrag-doktorander"
 fields = { "sets" = [] }
 evidence = "Källan anger utbildningsbidrag.\ncatalog:variable_text:9924:13149:19723"
@@ -27990,12 +27972,6 @@ kind = "set"
 subject = "var:bilforman-utom-drivmedel"
 fields = { "sets" = ["skattepliktiga-formaner"] }
 evidence = "r706 defines an employer-reported taxable car benefit excluding fuel, a non-cash benefit amount covered by r754.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8432\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8456\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fasit/skattepliktiga-formaner"
-
-[[statement]]
-kind = "set"
-subject = "var:bkuinst"
-fields = { "sets" = ["institutionell-sektor"] }
-evidence = "r791 identifies the main-employment firm's institutional-sector code, jointly encoding ownership and legal form; r855 includes KU sector codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8442\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8482\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fasit/institutionell-sektor"
 
 [[statement]]
 kind = "set"
@@ -30909,12 +30885,6 @@ evidence = "#2102 same-label cluster 'Regionindelning enl. Tillväxtverket, grup
 
 [[statement]]
 kind = "set"
-subject = "var:bkuinst"
-fields = { "label" = "Institutionell sektorkod (enbart FDB, juridiska enheter)" }
-evidence = "#2102 same-label cluster 'Institutionell sektorkod' (2 variables): judged different meaning, medium confidence; Opdefs: BINST is derived from FDB and the kontrolluppgiftsregister, BKUINST only from FDB legal units; different code lists."
-
-[[statement]]
-kind = "set"
 subject = "var:blk"
 fields = { "label" = "Kommun (BLK, kommunkod)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, medium confidence; BLK is the municipality code in four registers; BKOMMUN (individual register 2011-2013) has opdef 'folkbokförd vid urvalstillfället' and a different code list."
@@ -31770,3 +31740,135 @@ kind = "set"
 subject = "individregister: bbrnvx @2018-01-01..2023-12-31 where key = 'v42258'"
 fields = { "variable" = "vaxelvist-boende-barn" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): BBAVX in barnregister; BBRNVX in individregister: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only one member has an opdef (regression by BV/BEV with own adjustments); the other has none, so no conflict); folded into vaxelvist-boende-barn."
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUINST where key = 'v2692'"
+fields = { "variable" = "institutionell-sektor" }
+evidence = "Column BKUINST changes key v33 -> v2692 (2014) -> v33 under the new name BINSTA (2019). The 10-digit value set is identical in 2018 (v2692) and 2019 (v33); the v33 text names the standard 'institutionell sektor, ägarkategori och juridisk form', the same merged code v2692 describes.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=967412 (r15736)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=779983 (r16503)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSUNOLD where key = 'v7465'"
+fields = { "variable" = "utbildningsniva-aggregat-old" }
+evidence = "Column BSUNOLD (2009) and BSUNold (2010 onward; the spelling differs only in letter case) hold the same 7 codes with the same labels (1 = förgymnasial kortare än 9 år ... 7 = forskarutbildning). The label 'utbildningens inriktning' does not fit the codes, which are levels; opdef refers to the old one-digit SUN (MiS 1996:1). No release holds both spellings.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=437354 (r13331)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=808029 (r13085)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: IBOSTBVXHB where key = 'v47217' and release = 'r18957'"
+fields = { "spelling" = "IBTPVXHB" }
+evidence = "In the 2022 release (r18957) SCB lists key v47217 (bostadstillägg för pensionärer) under IBOSTBVXHB, the column of v47215 (bostadsbidrag för barnfamiljer). In the 2023 release (r19844) v47217 is under IBTPVXHB and v47215 under IBOSTBVXHB.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=904185 (r18957)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=904184 (r18957)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=904218 (r19844)"
+
+[[statement]]
+kind = "set"
+subject = "var:auppsk09"
+fields = { "description" = "Summa uppskovsavdrag, brutto, till och med den 31 december 2009." }
+evidence = "Etiketten, kolumnnamnet AUPPSK09 och utgåvorna 2009 och 2010 anger 2009; definitionen i v38735 anger 2019, ett skrivfel (grannnyckeln v38710, AUPPSK10, anger 2010).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=911508 (r13085)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=911517 (r13331)"
+
+[[statement]]
+kind = "set"
+subject = "var:auppsk11"
+fields = { "description" = "Summa uppskovsavdrag, brutto, till och med den 31 december 2011." }
+evidence = "Etikett, definition och kolumnnamn AUPPSK11 anger 2011 i båda utgåvorna (v38618). Bara operationaliseringen i r13052 hänvisar till 2012 års variabel (v38472, AUPPSK12).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=895638 (r13072)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=895645 (r13052)"
+
+[[statement]]
+kind = "set"
+subject = "var:auppsk12prel"
+fields = { "description" = "Nytillkomna preliminära uppskovsavdrag under 2012, brutto." }
+evidence = "Etikett, definition och kolumnnamn AUPPSK12PREL anger 2012 (v38616). Operationaliseringen hänvisar till 2013 års variabel (v38473, AUPPSK13PREL, row 911536 r12997), ett fel i den enda utgåvan.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=895644 (r13052)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALDIS1"
+fields = { "unit" = "Ålder" }
+evidence = "Etiketten anger ålder för barn 1. Systerkolumnerna BALDIS2, BALDIS5-8 och BALDUS2, BALDUS4-8 i samma serie (samma etikettlydelse, opdef 'Skapas i FASIT') har enheten Ålder; Kronor är ett fel i just denna nyckel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=25006 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALDIS3"
+fields = { "unit" = "Ålder" }
+evidence = "Som BALDIS1: etiketten anger ålder för barn 3, systerkolumnerna i serien har enheten Ålder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=25185 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALDIS4"
+fields = { "unit" = "Ålder" }
+evidence = "Som BALDIS1: etiketten anger ålder för barn 4, systerkolumnerna i serien har enheten Ålder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=25187 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALDUS1"
+fields = { "unit" = "Ålder" }
+evidence = "Som BALDIS1: etiketten anger ålder för barn 1 (betalar underhållsstöd), systerkolumnerna i serien har enheten Ålder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=25005 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALDUS3"
+fields = { "unit" = "Ålder" }
+evidence = "Som BALDIS1: etiketten anger ålder för barn 3 (betalar underhållsstöd), systerkolumnerna i serien har enheten Ålder.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=25184 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFANGK"
+fields = { "unit" = "Typkod" }
+evidence = "Etiketten är Fångeskod köpare och definitionen säger 'Kod som anger hur en fastighet har förvärvats'; en kod har inte enheten kronor. Enheten Typkod används för andra koder i katalogen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=295739 (r18232)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFANGS"
+fields = { "unit" = "Typkod" }
+evidence = "Som BFANGK: Fångeskod säljare, kod som anger hur en fastighet har förvärvats.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=295740 (r18232)"
+
+[[statement]]
+kind = "set"
+subject = "var:biptkvot"
+fields = { "description" = "Beräkningsunderlagskvot för inkomstpensionstillägg. Garantipensionen beräknas utifrån den pension personen skulle ha haft om hon eller han gått i pension vid 65 års ålder, och variabeln är avsedd att spegla den kvoten. Variabeln är inte garantipensionens belopp." }
+evidence = "Etikett och enhet (Kvot) anger en kvot. Definitionen och operationaliseringen är samma mening om beräkningen av garantipension och säger att variabeln speglar 'denna kvot'. Beloppet för garantipension är en annan nyckel (v1508, PGARP).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=894146 (r18957)"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BBOYTAZ"
+fields = { "unit" = "Kvadratmeter" }
+evidence = "Etikett och definition i v4555 säger 'Bostadsyta i kvadratmeter'; enheten Kvadratkilometer i katalogen är fel.\ncurrent-scb-inputs.zip/Registerinformation.csv (v4555, BBOYTAZ 2008-2013)"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bosattningsar-i-sverige-40-delar-sjuk"
+fields = { "description" = "Antal bosättningsår i Sverige för sjuk- och aktivitetsersättning, räknat i 40-delar. Värdet är antalet bosättningsår i Sverige delat med 40." }
+evidence = "SCB:s etikett och definition är avkortade vid 'sjuk- och aktivitetsers'; samma register skriver ut 'sjuk- och aktivitetsersättning' i närliggande nycklar (BSATDAT, BIBTPSA). Operationaliseringen anger 'antal 40-delar, alltså antalet bosättningsår i Sverige/40'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=858898 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTAXARU"
+fields = { "unit" = "Årtal" }
+evidence = "Etiketten är 'Taxeringsår som uppskovsavdraget avser'; ett taxeringsår är ett årtal, inte ett belopp i kronor.\ncurrent-scb-inputs.zip/Registerinformation.csv (v45546, BTAXARU 2006-2007)"
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-merkostnadsersattning"
+fields = { "description" = "Anger om hushållet har merkostnadsersättning: 1 om hushållet har det, 0 om hushållet inte har det." }
+evidence = "Etikett och definition i v49504 anger merkostnadsersättning; kodlistan #9617, som delas med personvariabeln BFUNKMEK, kallar samma 0/1-markering 'merkostnads- och handikappersättning'. Ingen källa anger handikappersättning som en separat del.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=903772 (r19833)"
+
+[[statement]]
+kind = "set"
+subject = "individregister: FKUOTC"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "Deklarationsvärdet på en persons noterade aktier är ett belopp i kronor. Alla andra FKU*-kolumner i FASIT (FKUAKTI, FKUOP, FKUOTCT med flera) har enheten Kronor (SEK).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=795897 (r18232)"
+
+[[statement]]
+kind = "set"
+subject = "var:pkuen426"
+fields = { "description" = "Summerat belopp, skattefritt och skattepliktigt, enligt ersättningskod 426 på den sociala kontrolluppgiften, för 2006 och 2007. Innehåller livränta som är helt skattepliktig." }
+evidence = "Definitionen av v45447 (2006-2007) anger livränta som är helt skattepliktig. Texten om engångsbelopp till följd av personskada hör till nyckeln v21785 (2008-2011), som katalogen redan håller som egen variabel (summa-skattefritt-skattepliktigt, curation.toml:27660).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=280822 (r18232)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=904141 (r18509)"
+
+[[statement]]
+kind = "set"
+subject = "var:bfoptyp"
+fields = { "description" = "Typ av efterlevandepension: 1 omställningspension, 2 förlängd omställningspension, 3 särskiljd efterlevandepension, 0 okänd." }
+evidence = "Etiketten ('Har förlängd omställningspension') och definitionen ('= 1') beskriver en ja/nej-markering, men kodlistan (#9530, #5278, #220) har tre värden och kolumnnamnet BFOPTYP anger typ.\ncurrent-scb-inputs.zip/Registerinformation.csv (v27027)"
+
+[[statement]]
+kind = "set"
+subject = "var:btpet"
+fields = { "description" = "Antal intjänade år för tilläggspension (TP)." }
+evidence = "I samma serie anger BTPEN 'antal år man måste jobbat för att få full tilläggspension' (v27006), BJUSTTP 'uppskjutet uttag av tilläggspension' (v27030) och BTPEMP 'medelpoäng och medelintjänande år' (v37548). Bara operationaliseringen i 2013 års utgåva av BTPET säger 'Tjänstepensionsår'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=476430 (r12997)"

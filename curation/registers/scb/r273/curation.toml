@@ -4147,12 +4147,6 @@ evidence = "Beloppet kombinerar ekonomiskt bistånd och introduktionsersättning
 
 [[statement]]
 kind = "set"
-subject = "var:utbetalt-ekonomiskt-bistand"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har en annan ägare i föregående period.\ncatalog:occurrence:460505\ncatalog:occurrence:460736"
-
-[[statement]]
-kind = "set"
 subject = "var:utbildningens-niva-och-inriktning"
 fields = { "sets" = [] }
 evidence = "Utbildningens nivå och inriktning.\ncatalog:variable_text:44527:9862:10957"
@@ -4560,12 +4554,6 @@ kind = "set"
 subject = "var:sun2020niva-oldmor"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The mother's measure uses a SUN education-level definition and seven explicit education-level categories (r361, r333).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44366\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7922\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44508"
-
-[[statement]]
-kind = "set"
-subject = "var:utbetalt-ekonomiskt-bistand"
-fields = { "sets" = ["ekonomiskt-bistand"] }
-evidence = "The definition sums maintenance support and other financial assistance, recorded as an annual individual amount in hundreds of kronor (r363).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:44380\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:44524"
 
 [[statement]]
 kind = "set"
@@ -5440,3 +5428,33 @@ kind = "set"
 subject = "var:sun2020niva-oldadbiomor"
 fields = { "label" = "Utbildningsnivå, mor (SUN2020Niva_oldAdBioMor)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå, mor' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SUN2020Niva_oldAdBioMor (2022-2023) has the same definition and opdef as SUN2020Niva_oldMor; nothing says what AdBio adds, so the label uses the column code."
+
+[[statement]]
+kind = "set"
+subject = "stativ: SocBidrForStod where key = 'v46883'"
+fields = { "variable" = "forsorjningsstod-delat" }
+evidence = "Column SocBidrForStod: key v2722 1997-2021, key v46883 2022-2023. The v46883 opdef describes the same split of the total paid amount between sökande and medsökande, including the change at 2013 (18 -> 16 years) that the v2722 opdefs show, and refers to 'tidigare årgångar'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=204776 (r18699)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=956245 (r18746)"
+
+[[statement]]
+kind = "set"
+subject = "stativ: AFUtanArb24Man where key = 'v47660'"
+fields = { "definition" = "Personer som är öppet arbetslösa eller arbetslösa som deltar i program och varit sammanhängande utan arbete i mer än 24 månader. (Senaste inskrivningsperioden)" }
+evidence = "Etikett ('Utan arbete i mer än 24 månader') och kolumnnamn AFUtanArb24Man anger 24 månader; definitionen säger 12 månader och är ordagrant texten för grannkolumnen AFUtanArb12Man (v47657), medan AFUtanArb6Man (v47659) har '6 månader' i sin definition. Kopieringsfel i definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=597624 (r13318)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=597623 (r13318)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=597625 (r13318)"
+
+[[statement]]
+kind = "set"
+subject = "var:familjepost"
+fields = { "description" = "Anger om personen är den vars personnummer utgör familjeidentiteten i RTB, alltså den äldste personen i RTB-familjen: 1 ja, 0 övriga." }
+evidence = "Definitionen (v2682) pekar ut personen vars personnummer är familjeidentiteten, och familjeidentiteten (FamId, v372) är enligt SCB personnumret för den äldste personen i en RTB-familj, vilket är kodlistans betydelse för 1 (#9400). Anmärkningen 'kopplad till fel värdemängd 1997-2022, korrigerat 2024-10-17' avser tidigare kodlistor; den nuvarande kodlistan gäller alla år.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=253518 (r4954)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=578191 (r5294)"
+
+[[statement]]
+kind = "set"
+subject = "var:hutbsunnivafar"
+fields = { "description" = "Faderns genomförda utbildning, härledd från Utbildningsregistret, kodad efter SUN-nivå 1-7 (1 förgymnasial utbildning kortare än 9 år till 7 forskarutbildning); * anger att uppgift saknas. Avser biologisk far, eller adoptivfar om det finns en (adoptivfar väljs i första hand). Trots etiketten 'nivå och inriktning' innehåller kolumnen enligt kodlistan bara nivå." }
+evidence = "Kodlistan #9143 har sju utbildningsnivåer och '*' uppgift saknas, inga inriktningar; kolumnnamnet är HUtbSunNiva. Operationaliseringen anger biologisk far eller adoptivfar vid adoption.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673985 (r4954)"
+
+[[statement]]
+kind = "set"
+subject = "var:hutbsunnivamor"
+fields = { "description" = "Moderns genomförda utbildning, härledd från Utbildningsregistret, kodad efter SUN-nivå 1-7 (1 förgymnasial utbildning kortare än 9 år till 7 forskarutbildning); * anger att uppgift saknas. Avser biologisk mor, eller adoptivmor om det finns en (adoptivmor väljs i första hand). Trots etiketten 'nivå och inriktning' innehåller kolumnen enligt kodlistan bara nivå." }
+evidence = "Som HUtbSunNivaFar: kodlistan #9143 har bara nivåer; operationaliseringen anger biologisk mor eller adoptivmor.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673986 (r4954)"

@@ -357,7 +357,6 @@ public = "stativ"
 "beslutsar-uppehallstillstand-kommunmottagning" = ["STATIV: UTAr"]
 "beslutsar-uppehallstillstand-kommunmottagning-felaktiga" = ["STATIV: UtAr_Fel"]
 "utbetalt-belopp-till-hushallet" = ["STATIV: SocBidrTot"]
-"utbetalt-ekonomiskt-bistand" = ["STATIV: SocBidrForStod @ 2022-01-01"]
 "utbildningens-niva-och-inriktning" = ["STATIV: HUtbSun"]
 "utbildningsgrupp" = ["STATIV: Sun2000Grp @ 2016-01-01"]
 "utbildningsgrupp-enl-sun-2000" = ["STATIV: Sun2000Grp @ 1997-01-01"]
