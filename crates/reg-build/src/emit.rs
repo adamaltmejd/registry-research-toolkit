@@ -6,6 +6,7 @@
 //! value-set, relation, finding, document and search tables (`search.rs`);
 //! including curated winners and their statement evidence.
 
+use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -155,6 +156,21 @@ impl Rows {
     fn push(&mut self, table: &'static str, row: Vec<Cell>) {
         self.tables.entry(table).or_default().push(row);
     }
+
+    /// The `ident` row of a public id: its kind's row `id`, its register, and its
+    /// folded `name`.
+    fn ident(&mut self, pid: String, kind: &str, id: i64, register: Cell, name: &str) {
+        self.push(
+            "ident",
+            vec![
+                Cell::Str(pid),
+                Cell::Str(kind.into()),
+                Cell::Int(id),
+                register,
+                Cell::Str(reg_core::fold_identity(name)),
+            ],
+        );
+    }
 }
 
 fn write_provenance(
@@ -216,19 +232,28 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<()> {
         .map_or_else(String::new, |n| n.to_string_lossy().into_owned());
     let scratch = out.with_file_name(format!(".{name}.scratch"));
     let staged = out.with_file_name(format!(".{name}.staged"));
-    let t = std::time::Instant::now();
-    let result = stage(catalog, &scratch, &staged)
-        .and_then(|()| {
-            crate::timing::done("write", t);
-            let t = std::time::Instant::now();
-            crate::verify::catalog(&staged, None)?;
-            crate::timing::done("verify", t);
-            Ok(())
-        })
-        .and_then(|()| {
-            Ok(std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))?)
-        });
-    for path in [&scratch, &staged] {
+    staged_into(&scratch, &staged, || {
+        let t = std::time::Instant::now();
+        stage(catalog, &scratch, &staged)?;
+        crate::timing::done("write", t);
+        let t = std::time::Instant::now();
+        crate::verify::catalog(&staged, None)?;
+        crate::timing::done("verify", t);
+        std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))?;
+        Ok(())
+    })
+}
+
+/// Run `build`, which writes `staged` through `scratch`, checks it and moves it into
+/// place; then remove whichever of the two is left, so a failure leaves the output as it
+/// was.
+pub(crate) fn staged_into(
+    scratch: &Path,
+    staged: &Path,
+    build: impl FnOnce() -> Result<()>,
+) -> Result<()> {
+    let result = build();
+    for path in [scratch, staged] {
         if path.exists() {
             let _ = std::fs::remove_file(path);
         }
@@ -417,16 +442,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 opt_str(p.url.as_ref()),
             ],
         );
-        rows.push(
-            "ident",
-            vec![
-                Cell::Str(p.pid.clone()),
-                Cell::Str("provider".into()),
-                Cell::Int(pid),
-                Cell::Null,
-                Cell::Str(reg_core::fold_identity(&p.pid)),
-            ],
-        );
+        rows.ident(p.pid.clone(), "provider", pid, Cell::Null, &p.pid);
     }
 
     let input_of = |locator: &reg_frame::Locator| {
@@ -463,15 +479,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Int(end(&r.coverage.1)),
             ],
         );
-        rows.push(
-            "ident",
-            vec![
-                Cell::Str(reg_pid.clone()),
-                Cell::Str("register".into()),
-                Cell::Int(register_row),
-                Cell::Null,
-                Cell::Str(reg_core::fold_identity(&r.public)),
-            ],
+        rows.ident(
+            reg_pid.clone(),
+            "register",
+            register_row,
+            Cell::Null,
+            &r.public,
         );
 
         for (t, table) in r.tables.iter().enumerate() {
@@ -523,15 +536,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             }
             // The implicit table shares the register's id, which `ident` already holds.
             if let Some(slug) = &table.slug {
-                rows.push(
-                    "ident",
-                    vec![
-                        Cell::Str(pid_of_table(r, t)),
-                        Cell::Str("table".into()),
-                        Cell::Int(tid),
-                        Cell::Int(register_row),
-                        Cell::Str(reg_core::fold_identity(slug)),
-                    ],
+                rows.ident(
+                    pid_of_table(r, t),
+                    "table",
+                    tid,
+                    Cell::Int(register_row),
+                    slug,
                 );
             }
         }
@@ -622,15 +632,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     Cell::Int(end(&variable.hull.1)),
                 ],
             );
-            rows.push(
-                "ident",
-                vec![
-                    Cell::Str(pid_of_variable(r, v)),
-                    Cell::Str("variable".into()),
-                    Cell::Int(vid),
-                    Cell::Int(register_row),
-                    Cell::Str(reg_core::fold_identity(&variable.slug)),
-                ],
+            rows.ident(
+                pid_of_variable(r, v),
+                "variable",
+                vid,
+                Cell::Int(register_row),
+                &variable.slug,
             );
             write_provenance(
                 &mut rows,
@@ -814,20 +821,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
         Entity::Release(ri, x) => release_id[&(ri, x)],
         Entity::Variable(ri, v) => variable_id[&(ri, v)],
     };
-    let pid_of = |e: Entity| match e {
-        Entity::Register(ri) => pid_of_register(&catalog.registers[ri]),
-        Entity::Table(ri, t) => pid_of_table(&catalog.registers[ri], t),
-        Entity::Release(ri, x) => {
-            let r = &catalog.registers[ri];
-            let release = &r.releases[x];
-            format!(
-                "{}/{}",
-                pid_of_table(r, release.table),
-                release.release.release
-            )
-        }
-        Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
-    };
+    let pid_of = |e: Entity| e.pid(&catalog.registers);
     let mut memberships = BTreeMap::<(Option<usize>, String), BTreeSet<(usize, usize)>>::new();
     for (ri, register) in catalog.registers.iter().enumerate() {
         for (variable, resolved) in register.variables.iter().enumerate() {
@@ -886,16 +880,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             ],
         );
         if let Some(ri) = scope {
-            rows.push(
-                "ident",
-                vec![
-                    Cell::Str(pid),
-                    Cell::Str("set".into()),
-                    Cell::Int(set_id),
-                    register,
-                    Cell::Str(reg_core::fold_identity(&name)),
-                ],
-            );
+            rows.ident(pid, "set", set_id, register, &name);
             write_provenance(
                 &mut rows,
                 &ProvenanceSubject::Set(ri, name.clone()),
@@ -1168,15 +1153,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             &catalog.classifications,
             family,
         );
-        rows.push(
-            "ident",
-            vec![
-                Cell::Str(format!("class/{family}")),
-                Cell::Str("class_family".into()),
-                Cell::Int(*family_row),
-                Cell::Null,
-                Cell::Str(reg_core::fold_identity(family)),
-            ],
+        rows.ident(
+            format!("class/{family}"),
+            "class_family",
+            *family_row,
+            Cell::Null,
+            family,
         );
         rows.push(
             "class_family",
@@ -1192,15 +1174,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     }
     for class in &catalog.classifications {
         let cid = class_id[&(class.family.as_str(), class.version.as_str())];
-        rows.push(
-            "ident",
-            vec![
-                Cell::Str(format!("class/{}/{}", class.family, class.version)),
-                Cell::Str("class_version".into()),
-                Cell::Int(cid),
-                Cell::Null,
-                Cell::Str(reg_core::fold_identity(&class.version)),
-            ],
+        rows.ident(
+            format!("class/{}/{}", class.family, class.version),
+            "class_version",
+            cid,
+            Cell::Null,
+            &class.version,
         );
         let vid = valueset_id.get(class.valueset.as_str()).ok_or_else(|| {
             format!(
@@ -1513,54 +1492,28 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     for statement in indexes {
         db.execute_batch(statement)?;
     }
-    // Contentless FTS5: the rows go in rowid order, then the index is merged.
+    // Contentless FTS5: the rows go in rowid order, then each index is merged. The
+    // description index holds only described items, with the description after the body.
     let tx = db.transaction()?;
-    {
-        let mut insert =
-            tx.prepare("INSERT INTO search(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")?;
+    for table in ["search", "search_description", "search_exact"] {
+        let mut insert = tx.prepare(&format!(
+            "INSERT INTO {table}(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)"
+        ))?;
         for (i, item) in search.iter().enumerate() {
-            insert
-                .execute((id(i), &item.name, &item.label, &item.body))
-                .map_err(|e| format!("search: {e}"))?;
-        }
-    }
-    tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])?;
-    {
-        let mut insert = tx.prepare(
-            "INSERT INTO search_description(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
-        )?;
-        for (i, item) in search.iter().enumerate() {
-            if !item.description.is_empty() {
-                let body = format!("{}\n{}", item.body, item.description);
-                insert
-                    .execute((id(i), &item.name, &item.label, &body))
-                    .map_err(|e| format!("search_description: {e}"))?;
-            }
-        }
-    }
-    tx.execute(
-        "INSERT INTO search_description(search_description) VALUES ('optimize')",
-        [],
-    )?;
-    {
-        let mut insert = tx.prepare(
-            "INSERT INTO search_exact(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)",
-        )?;
-        for (i, item) in search.iter().enumerate() {
-            let body = if item.description.is_empty() {
-                item.body.clone()
-            } else {
-                format!("{}\n{}", item.body, item.description)
+            let body: Cow<'_, str> = match (table, item.description.is_empty()) {
+                ("search", _) | ("search_exact", true) => item.body.as_str().into(),
+                ("search_description", true) => continue,
+                _ => format!("{}\n{}", item.body, item.description).into(),
             };
             insert
                 .execute((id(i), &item.name, &item.label, &body))
-                .map_err(|e| format!("search_exact: {e}"))?;
+                .map_err(|e| format!("{table}: {e}"))?;
         }
+        tx.execute(
+            &format!("INSERT INTO {table}({table}) VALUES ('optimize')"),
+            [],
+        )?;
     }
-    tx.execute(
-        "INSERT INTO search_exact(search_exact) VALUES ('optimize')",
-        [],
-    )?;
     // External-content FTS5 over doc_section, in rowid order.
     {
         let mut insert =

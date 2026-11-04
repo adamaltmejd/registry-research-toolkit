@@ -66,18 +66,18 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     if scratch.exists() || staged.exists() {
         return Err("holdings_output_invalid: scratch output already exists".into());
     }
-    let result = write(
-        &base,
-        &root,
-        &scratch,
-        &staged,
-        &owner,
-        pin,
-        &config,
-        report.as_deref(),
-    )
-    .and_then(|()| verify::pair(&staged, &base, &root))
-    .and_then(|()| {
+    crate::emit::staged_into(&scratch, &staged, || {
+        write(
+            &base,
+            &root,
+            &scratch,
+            &staged,
+            &owner,
+            pin,
+            &config,
+            report.as_deref(),
+        )?;
+        verify::pair(&staged, &base, &root)?;
         let summary = {
             let db = open(&staged)?;
             format!(
@@ -92,13 +92,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
         std::fs::rename(&staged, &out)?;
         eprintln!("{summary}");
         Ok(())
-    });
-    for file in [&scratch, &staged] {
-        if file.exists() {
-            let _ = std::fs::remove_file(file);
-        }
-    }
-    result
+    })
 }
 
 fn flags(mut args: impl Iterator<Item = String>) -> Result<BTreeMap<String, String>> {

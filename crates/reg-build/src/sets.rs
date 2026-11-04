@@ -7,21 +7,6 @@ use reg_frame::statement::Statement;
 use reg_readers::curation::LocatedStatement;
 use serde::Deserialize;
 
-/// Stable build-side membership refusal codes (the runtime API has its own registry).
-enum MembershipCode {
-    MultipleGroups,
-    TooSmall,
-}
-
-impl MembershipCode {
-    const fn as_str(&self) -> &'static str {
-        match self {
-            Self::MultipleGroups => "variable-multiple-groups",
-            Self::TooSmall => "set-too-small",
-        }
-    }
-}
-
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Tag {
@@ -118,16 +103,15 @@ pub fn final_members(
                 let statement = statements.iter().find(|s| {
                     s.provider == register.register.provider && s.register == register.register.register
                         && matches!(&s.statement, Statement::Set { fields, .. } if fields.sets.as_ref().is_some_and(|sets| sets.iter().any(|s| s == name)))
-                }).ok_or_else(|| format!("{}: set {name:?} has no curation location", MembershipCode::TooSmall.as_str()))?;
+                }).ok_or_else(|| format!("set-too-small: set {name:?} has no curation location"))?;
                 let pid = format!(
                     "set/{}/{}/{name}",
                     register.register.provider, register.public
                 );
                 return Err(format!(
-                    "{}:{}: {}: set {pid:?} needs at least 2 distinct final members",
+                    "{}:{}: set-too-small: set {pid:?} needs at least 2 distinct final members",
                     statement.path.display(),
                     statement.line,
-                    MembershipCode::TooSmall.as_str()
                 ));
             }
         }
@@ -185,8 +169,7 @@ pub fn memberships<'a>(
                 .collect::<Vec<_>>()
                 .join("; ");
             refusals.push(format!(
-                "{location}: {}: variable {provider}/{register}/{variable} belongs to multiple groups: {groups}",
-                MembershipCode::MultipleGroups.as_str()
+                "{location}: variable-multiple-groups: variable {provider}/{register}/{variable} belongs to multiple groups: {groups}"
             ));
         }
     }
