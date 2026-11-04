@@ -601,7 +601,7 @@
     },
     "/api/findings/{ref}": {
       "get": {
-        "description": "The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code.",
+        "description": "The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code, as one group per severity and code: its count and its first `limit` items. A group's `next_cursor`, sent with `code` set to the group's code, pages its items.",
         "operationId": "findings",
         "parameters": [
           {
@@ -635,6 +635,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -650,10 +668,7 @@
                   ],
                   "properties": {
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Finding"
-                      }
+                      "$ref": "#/components/schemas/FindingGroups"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -2189,6 +2204,60 @@
           },
           "subject": {
             "$ref": "#/components/schemas/Subject"
+          }
+        }
+      },
+      "FindingGroup": {
+        "type": "object",
+        "description": "The findings of one severity and code.",
+        "required": [
+          "code",
+          "severity",
+          "count",
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "description": "How many findings the group holds under the request's filters.",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Finding"
+            },
+            "description": "One page of them, in subject order."
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The next page, for a request with `code` set to this group's code."
+          },
+          "severity": {
+            "type": "string",
+            "description": "`review` or `notice`."
+          }
+        }
+      },
+      "FindingGroups": {
+        "type": "object",
+        "required": [
+          "groups"
+        ],
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FindingGroup"
+            },
+            "description": "Review groups first, then notices; by code within each."
           }
         }
       },

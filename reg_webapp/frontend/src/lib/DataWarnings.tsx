@@ -7,15 +7,12 @@ import {
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
-import {
-  type CatalogFinding,
-  type CatalogFindingGroup,
-  getFindings,
-} from "./api";
+import { type CatalogFinding, getFindings } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { catalogPeriodLabel } from "./catalog_period";
 import findingStyles from "./Finding.module.css";
+import type { WarningGroup } from "./finding_groups";
 import { Button } from "./ui/Button";
 import { Panel } from "./ui/Panel";
 import { StatusRow } from "./ui/StatusRow";
@@ -30,66 +27,6 @@ function SubjectLink({ fqid, names }: { fqid: string; names?: Names }) {
       {names?.get(fqid) ?? <code>{fqid}</code>}
     </a>
   );
-}
-
-/** A group of findings and the ref whose `next_cursor` it carries (`null`: no
- * further page). */
-export type WarningGroup = CatalogFindingGroup & { ref: string | null };
-
-const groupKey = (group: { severity: string; code: string }) =>
-  JSON.stringify([group.severity, group.code]);
-
-/** The server's group order: review before notice, then by code. */
-const byGroup = (a: WarningGroup, b: WarningGroup) =>
-  Number(a.severity !== "review") - Number(b.severity !== "review") ||
-  (a.code < b.code ? -1 : a.code > b.code ? 1 : 0);
-
-/** Group lists from several refs merged by severity and code. Items are
- * de-duplicated, and the count drops each duplicate seen: exact once every ref's group
- * is fully loaded, otherwise an upper bound (a shared finding not yet loaded counts
- * once per ref). A group pages on only when a single ref has more, since one cursor
- * continues one ref. */
-export function mergeFindingGroups(
-  sources: readonly {
-    ref: string;
-    groups: readonly CatalogFindingGroup[];
-  }[],
-): WarningGroup[] {
-  const merged = new Map<
-    string,
-    { group: WarningGroup; seen: Set<string>; paging: number }
-  >();
-  for (const { ref, groups } of sources) {
-    for (const group of groups) {
-      const key = groupKey(group);
-      const entry = merged.get(key) ?? {
-        group: { ...group, count: 0, items: [], next_cursor: null, ref: null },
-        seen: new Set<string>(),
-        paging: 0,
-      };
-      merged.set(key, entry);
-      for (const item of group.items) {
-        const id = JSON.stringify(item);
-        if (entry.seen.has(id)) {
-          entry.group.count -= 1;
-          continue;
-        }
-        entry.seen.add(id);
-        entry.group.items.push(item);
-      }
-      entry.group.count += group.count;
-      if (group.next_cursor !== null) {
-        entry.paging += 1;
-        entry.group.next_cursor = group.next_cursor;
-        entry.group.ref = ref;
-      }
-    }
-  }
-  return [...merged.values()]
-    .map(({ group, paging }) =>
-      paging > 1 ? { ...group, next_cursor: null, ref: null } : group,
-    )
-    .sort(byGroup);
 }
 
 /** Catalog findings by group: each group's count, and its items once opened. */
@@ -143,10 +80,7 @@ function FindingGroup({
       (page) => {
         const next = page.find((g) => g.severity === severity);
         // The last page removes its button. Move focus only if the reader is still on it.
-        if (
-          !next?.next_cursor &&
-          document.activeElement === moreButton.current
-        )
+        if (!next?.next_cursor && document.activeElement === moreButton.current)
           list.current?.focus({ preventScroll: true });
         // A merged group's first page may hold another ref's copy of a finding.
         setMore((m) => {

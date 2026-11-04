@@ -197,7 +197,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code. */
+        /** @description The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code, as one group per severity and code: its count and its first `limit` items. A group's `next_cursor`, sent with `code` set to the group's code, pages its items. */
         get: operations["findings"];
         put?: never;
         post?: never;
@@ -547,6 +547,22 @@ export interface components {
             /** @description `review` or `notice`. */
             severity: string;
             subject: components["schemas"]["Subject"];
+        };
+        /** @description The findings of one severity and code. */
+        FindingGroup: {
+            code: string;
+            /** @description How many findings the group holds under the request's filters. */
+            count: number;
+            /** @description One page of them, in subject order. */
+            items: components["schemas"]["Finding"][];
+            /** @description The next page, for a request with `code` set to this group's code. */
+            next_cursor: string | null;
+            /** @description `review` or `notice`. */
+            severity: string;
+        };
+        FindingGroups: {
+            /** @description Review groups first, then notices; by code within each. */
+            groups: components["schemas"]["FindingGroup"][];
         };
         /** @description The focus, its nodes and the relations between them. */
         Graph: {
@@ -1701,6 +1717,8 @@ export interface operations {
                 period?: string;
                 table?: string;
                 code?: string;
+                limit?: number;
+                cursor?: string;
             };
             header?: never;
             path: {
@@ -1717,7 +1735,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Finding"][];
+                        data: components["schemas"]["FindingGroups"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

@@ -1,5 +1,6 @@
 import { getFindings } from "./api";
-import { DataWarnings, mergeFindingGroups } from "./DataWarnings";
+import { DataWarnings } from "./DataWarnings";
+import { mergeFindingGroups } from "./finding_groups";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";

@@ -113,6 +113,7 @@ const SCOPE_VARIABLE: &str = "(f.subject_kind = 'variable' AND f.subject_id = :i
     OR (f.subject_kind = 'occurrence'
         AND f.subject_id IN (SELECT id FROM occurrence WHERE variable_id = :id))";
 
+#[allow(clippy::too_many_lines)]
 fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
@@ -145,12 +146,16 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 token,
                 server.catalog.generation(),
                 &cursor::context(params),
-                usize::MAX,
+                // Cursors are plain hex, so a forged one may carry any offset; keep it
+                // within what SQLite binds.
+                usize::try_from(i64::MAX).unwrap_or(usize::MAX),
             )?
             .0
         }
         None => 0,
     };
+    let end = offset.saturating_add(take);
+    let bind = |n: usize| i64::try_from(n).unwrap_or(i64::MAX);
 
     let found = rows(
         &conn,
@@ -161,8 +166,8 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
             ":lo": window.map(|w| w.0),
             ":hi": window.map(|w| w.1),
             ":code": code,
-            ":offset": offset,
-            ":end": offset + take,
+            ":offset": bind(offset),
+            ":end": bind(end),
         },
         |row| {
             let placed = |start: Option<i64>, end: Option<i64>| {
@@ -186,7 +191,8 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 message: row.get(12)?,
                 caveat: row.get(13)?,
             };
-            Ok((finding, row.get::<_, usize>(14)?))
+            let count = usize::try_from(row.get::<_, i64>(14)?).unwrap_or(0);
+            Ok((finding, count))
         },
     )?;
     let names = refs::names(
@@ -215,7 +221,7 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                 group.items.push(finding);
             }
             _ => {
-                let next_cursor = (offset + take < count).then(|| {
+                let next_cursor = (end < count).then(|| {
                     let mut next = Params {
                         values: params.values.clone(),
                     };
@@ -223,7 +229,7 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
                     cursor::encode(
                         server.catalog.generation(),
                         &cursor::context(&next),
-                        offset + take,
+                        end,
                         "",
                     )
                 });
