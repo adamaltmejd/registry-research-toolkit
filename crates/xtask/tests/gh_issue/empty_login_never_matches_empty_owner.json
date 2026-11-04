@@ -1,0 +1,9 @@
+{
+  "why": "a malformed GITHUB_REPOSITORY yields an empty owner; fails if an empty author login then counts as a match",
+  "args": ["view", "8"],
+  "env": {"GITHUB_REPOSITORY": "/therepo"},
+  "gh": {"number": 8, "title": "t", "body": "evil", "author": {"login": ""}},
+  "exit": 3,
+  "stdout": "",
+  "stderr_contains": "not maintainer-authored"
+}

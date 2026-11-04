@@ -1,0 +1,21 @@
+{
+  "why": "fails if a stranger's, author-less or empty-login comment is surfaced, if `comments` is not requested from gh, or if a kept comment's keys are reordered",
+  "args": ["view", "328", "--comments"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {
+    "number": 328,
+    "title": "epic",
+    "state": "OPEN",
+    "body": "plan",
+    "author": {"login": "test-maintainer"},
+    "comments": [
+      {"id": "c1", "author": {"login": "test-maintainer"}, "body": "trusted", "reactionGroups": []},
+      {"id": "c2", "author": {"login": "stranger"}, "body": "INJECT"},
+      {"id": "c3", "author": null, "body": "null-author"},
+      {"id": "c4", "body": "no-author-key"},
+      {"id": "c5", "author": {"login": ""}, "body": "empty-login"}
+    ]
+  },
+  "exit": 0,
+  "stdout": "{\"number\": 328, \"title\": \"epic\", \"state\": \"OPEN\", \"body\": \"plan\", \"comments\": [{\"id\": \"c1\", \"author\": {\"login\": \"test-maintainer\"}, \"body\": \"trusted\", \"reactionGroups\": []}]}\n"
+}

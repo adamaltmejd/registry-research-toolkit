@@ -1,0 +1,8 @@
+{
+  "why": "fails if a missing subcommand exits other than 2 or reaches gh",
+  "args": [],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer"},
+  "gh": null,
+  "exit": 2,
+  "stdout": ""
+}
