@@ -101,7 +101,7 @@ pub struct Policy {
 }
 
 /// `^[a-z0-9][a-z0-9_-]*$`
-fn is_slug(s: &str) -> bool {
+pub(crate) fn is_slug(s: &str) -> bool {
     let mut bytes = s.bytes();
     bytes
         .next()
