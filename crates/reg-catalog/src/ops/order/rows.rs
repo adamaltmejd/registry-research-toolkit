@@ -4,7 +4,7 @@
 use std::collections::BTreeSet;
 
 use reg_core::IssueLevel;
-use reg_core::project::{Panel, Source};
+use reg_core::project::Source;
 use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
@@ -21,11 +21,10 @@ struct KeySegment {
     start: i64,
     end: i64,
     state: String,
-    kind: Option<String>,
     entity: bool,
 }
 
-/// Physical key declarations select the key set; metadata supplies state/kind only.
+/// Physical key declarations select the key set; metadata supplies state only.
 fn key_segments(
     server: &Server,
     conn: &Connection,
@@ -34,9 +33,8 @@ fn key_segments(
     if server.catalog.steward().is_none() {
         return Ok(conn
             .prepare(
-                "SELECT v.pid,sp.exact,s.start,s.end,s.state,k.slug FROM segment s
+                "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
-             LEFT JOIN id_kind k ON k.id=s.id_kind_id
              WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
             )?
             .query_map([serving.table.id], |r| {
@@ -46,7 +44,6 @@ fn key_segments(
                     start: r.get(2)?,
                     end: r.get(3)?,
                     state: r.get(4)?,
-                    kind: r.get(5)?,
                     entity: true,
                 })
             })?
@@ -54,16 +51,16 @@ fn key_segments(
     }
     let mut mappings = conn.prepare(
         "WITH semantics AS (
-           SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state,k.slug
+           SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state
            FROM main.segment s JOIN main.tbl t ON t.id=s.table_id
-           JOIN main.variable v ON v.id=s.variable_id LEFT JOIN main.id_kind k ON k.id=s.id_kind_id
+           JOIN main.variable v ON v.id=s.variable_id
            UNION ALL
-           SELECT t.pid,v.pid,s.start,s.end,s.state,k.slug
+           SELECT t.pid,v.pid,s.start,s.end,s.state
            FROM held.segment s JOIN held.tbl t ON t.id=s.table_id
-           JOIN held.variable v ON v.id=s.variable_id LEFT JOIN held.id_kind k ON k.id=s.id_kind_id
+           JOIN held.variable v ON v.id=s.variable_id
          )
          SELECT DISTINCT m.variable_pid,c.name,max(m.start,served.start,s.start),
-                min(m.end,served.end,s.end),s.state,s.slug,json_extract(k.value,'$.period'),
+                min(m.end,served.end,s.end),s.state,json_extract(k.value,'$.period'),
                 EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
          FROM held.holding_table h JOIN held.holding_column c ON c.holding_id=h.id
          JOIN held.holding_mapping m ON m.column_id=c.id JOIN json_each(h.key_requirements) k
@@ -86,10 +83,9 @@ fn key_segments(
                 start: r.get(2)?,
                 end: r.get(3)?,
                 state: r.get(4)?,
-                kind: r.get(5)?,
-                entity: r.get(7)?,
+                entity: r.get(6)?,
             },
-            r.get::<_, Option<String>>(6)?,
+            r.get::<_, Option<String>>(5)?,
         ))
     })? {
         let (key, period) = row?;
@@ -135,8 +131,7 @@ fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
             &a.variable,
             &a.spelling,
             &a.state,
-            &a.kind,
-            a.entity,
+                        a.entity,
             a.start,
             a.end,
         )
@@ -144,8 +139,7 @@ fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
                 &b.variable,
                 &b.spelling,
                 &b.state,
-                &b.kind,
-                b.entity,
+                                b.entity,
                 b.start,
                 b.end,
             ))
@@ -157,14 +151,12 @@ fn merge_key_segments(mut out: Vec<KeySegment>) -> Vec<KeySegment> {
                 &last.variable,
                 &last.spelling,
                 &last.state,
-                &last.kind,
-                last.entity,
+                                last.entity,
             ) == (
                 &key.variable,
                 &key.spelling,
                 &key.state,
-                &key.kind,
-                key.entity,
+                                key.entity,
             )
             && key.start <= last.end
         {
@@ -280,68 +272,6 @@ pub(super) fn row_keys(
         }));
     }
     Ok((out, findings))
-}
-
-/// `panel_row_keys_differ`: every member's entity keys over its requested days
-/// carry a known identifier kind (the full kind, pseudonymised form included) and the
-/// members' kinds differ. A member with an unknown kind, or whose source did not
-/// resolve, gives no finding.
-pub(super) fn panel(
-    server: &Server,
-    conn: &Connection,
-    index: usize,
-    panel: &Panel,
-    members: &[(&str, Option<Vec<Serving>>)],
-) -> Result<Vec<Issue>, Error> {
-    let mut kinds: Vec<(&str, BTreeSet<String>)> = Vec::new();
-    for member in &panel.members {
-        let Some((_, Some(serving))) = members.iter().find(|(name, _)| name == member) else {
-            return Ok(vec![]);
-        };
-        let mut found: BTreeSet<Option<String>> = BTreeSet::new();
-        for s in serving {
-            for key in key_segments(server, conn, s)? {
-                if key.entity
-                    && s.requested
-                        .iter()
-                        .any(|(lo, hi)| key.start <= day(hi) && key.end > day(lo))
-                {
-                    found.insert(key.kind);
-                }
-            }
-        }
-        if found.is_empty() || found.contains(&None) {
-            return Ok(vec![]);
-        }
-        kinds.push((member, found.into_iter().flatten().collect()));
-    }
-    if kinds.windows(2).all(|pair| pair[0].1 == pair[1].1) {
-        return Ok(vec![]);
-    }
-    let listed: Vec<String> = kinds
-        .iter()
-        .map(|(member, k)| {
-            format!(
-                "{member} ({})",
-                k.iter().cloned().collect::<Vec<_>>().join(", ")
-            )
-        })
-        .collect();
-    Ok(vec![Issue {
-        level: IssueLevel::Warning,
-        code: "panel_row_keys_differ".to_owned(),
-        path: format!("/panels/{index}"),
-        message: format!(
-            "The members of panel {} key their rows on different identifier kinds: {}.",
-            panel.panel_id,
-            listed.join("; ")
-        ),
-        source: None,
-        variable: None,
-        table: None,
-        period: None,
-        successor_fqid: None,
-    }])
 }
 
 /// Suppress duplicate window findings already reported by an explicit binding.

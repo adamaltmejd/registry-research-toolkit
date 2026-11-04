@@ -15,9 +15,7 @@
           "coded": "unknown",
           "sensitive": false,
           "identifier": null,
-          "id_kind": null,
           "role": "measure",
-          "temporality": "unknown",
           "state": "clear"
         },
         {
@@ -32,9 +30,7 @@
           "coded": "unknown",
           "sensitive": true,
           "identifier": null,
-          "id_kind": null,
           "role": "measure",
-          "temporality": "unknown",
           "state": "clear"
         }
       ],
@@ -42,8 +38,8 @@
     },
     "keys": {
       "/data/items/0": [
-        "classification", "coded", "format", "id_kind", "identifier", "length", "period",
-        "role", "sensitive", "spelling", "state", "table", "temporality", "type", "value_set"
+        "classification", "coded", "format", "identifier", "length", "period",
+        "role", "sensitive", "spelling", "state", "table", "type", "value_set"
       ]
     }
   }

@@ -7,15 +7,14 @@
 //! table's dated `continues` successors, each day going to the table whose `at_start`
 //! window holds it, and report an undated one (`table_succession_undated`, S5) instead
 //! of following it; then per binding clip the request to the variable's segments
-//! (`window.rs`), split it by form and collect the window findings. Panels compare their
-//! members' row-key kinds last.
+//! (`window.rs`), split it by form and collect the window findings.
 //!
 //! Findings are ordered per source, then per binding (the source's own findings first),
-//! then by code and period start; panel findings come last. A finding's `path` is the
+//! then by code and period start. A finding's `path` is the
 //! field it is about (`/sources/0/table`, `/sources/0/period`,
 //! `/sources/0/bindings/1/variable`, `/sources/0/bindings/1/classification`), the
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
-//! succession and the panel for a panel finding.
+//! succession.
 
 mod materialize;
 mod rows;
@@ -270,8 +269,6 @@ struct Checked {
     entries: Vec<OrderEntry>,
     row_keys: Vec<OrderRowKeys>,
     clips: Vec<OrderClip>,
-    /// The serving tables, when the table and period resolved (for the panels).
-    served: Option<Vec<Serving>>,
 }
 
 /// The order check of a structurally valid project: the logical order with its
@@ -297,7 +294,6 @@ pub fn check(
     let mut entries = Vec::new();
     let mut row_keys = Vec::new();
     let mut clips = Vec::new();
-    let mut members = Vec::new();
     for (index, source) in project.sources.iter().enumerate() {
         let (origin, composed) = match &held {
             Some(held)
@@ -313,10 +309,6 @@ pub fn check(
         entries.extend(checked.entries);
         row_keys.extend(checked.row_keys);
         clips.extend(checked.clips);
-        members.push((source.name.as_str(), checked.served));
-    }
-    for (index, panel) in project.panels.iter().enumerate() {
-        findings.extend(rows::panel(server, &conn, index, panel, &members)?);
     }
     // Editing the study window never rewrites a source's period; a source left wholly
     // outside it blocks (reg-core DESIGN.md, "Logical selection").
@@ -501,14 +493,13 @@ fn check_source(
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
     checked.row_keys = row_keys;
-    checked.served = Some(serving);
     Ok(checked)
 }
 
-/// Coalesce followed table windows once for row keys and panel comparisons.
+/// Coalesce followed table windows once for row keys.
 fn combine_serving(mut serving: Vec<Serving>, followed: Vec<Serving>) -> Vec<Serving> {
     serving.extend(followed);
-    // Several bindings can follow into the same table; row keys and panels see its
+    // Several bindings can follow into the same table; row keys see its
     // requested days once.
     serving.sort_by_key(|s| s.table.id);
     let mut combined: Vec<Serving> = Vec::new();

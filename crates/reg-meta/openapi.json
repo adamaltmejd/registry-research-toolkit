@@ -4231,9 +4231,7 @@
           "coded",
           "sensitive",
           "identifier",
-          "id_kind",
           "role",
-          "temporality",
           "state"
         ],
         "properties": {
@@ -4258,12 +4256,6 @@
             "description": "Present only when `evidence` is asked for."
           },
           "format": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "id_kind": {
             "type": [
               "string",
               "null"
@@ -4303,9 +4295,6 @@
           "table": {
             "type": "string",
             "description": "The table's fqid."
-          },
-          "temporality": {
-            "type": "string"
           },
           "type": {
             "type": [

@@ -61,12 +61,8 @@ function segmentFacts(row: CatalogSegment) {
     { term: "Role", value: catalogWords(row.role) },
     { term: "Coded", value: yesNo(row.coded) },
     { term: "State", value: catalogWords(row.state) },
-    {
-      term: "Identifier",
-      value: `${yesNo(row.identifier)}${row.identifier && row.id_kind ? ` (${catalogWords(row.id_kind)})` : ""}`,
-    },
+    { term: "Identifier", value: yesNo(row.identifier) },
     { term: "Sensitive", value: yesNo(row.sensitive) },
-    { term: "Temporality", value: catalogWords(row.temporality) },
   ];
 }
 

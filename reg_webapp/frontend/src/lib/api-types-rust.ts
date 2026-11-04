@@ -1095,7 +1095,6 @@ export interface components {
             /** @description Present only when `evidence` is asked for. */
             evidence?: components["schemas"]["Occurrence"][] | null;
             format: string | null;
-            id_kind: string | null;
             identifier: boolean | null;
             /** Format: int64 */
             length: number | null;
@@ -1106,7 +1105,6 @@ export interface components {
             state: string;
             /** @description The table's fqid. */
             table: string;
-            temporality: string;
             type: string | null;
             value_set: components["schemas"]["ValueSetRef"] | null;
         };

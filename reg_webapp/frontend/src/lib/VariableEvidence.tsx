@@ -186,7 +186,6 @@ function statementValue(
     "state",
     "identifier",
     "sensitive",
-    "temporality",
   ].includes(statement.field)
     ? catalogWords(value)
     : visibleText(value);

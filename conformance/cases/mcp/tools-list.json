@@ -1940,12 +1940,6 @@
                 "null"
               ]
             },
-            "id_kind": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
             "identifier": {
               "type": [
                 "boolean",
@@ -1981,9 +1975,6 @@
               "description": "The table's fqid.",
               "type": "string"
             },
-            "temporality": {
-              "type": "string"
-            },
             "type": {
               "type": [
                 "string",
@@ -2014,9 +2005,7 @@
             "coded",
             "sensitive",
             "identifier",
-            "id_kind",
             "role",
-            "temporality",
             "state"
           ],
           "type": "object"

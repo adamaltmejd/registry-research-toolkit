@@ -68,10 +68,7 @@ pub struct Segment {
     sensitive: Option<bool>,
     #[schema(required = true)]
     identifier: Option<bool>,
-    #[schema(required = true)]
-    id_kind: Option<String>,
     role: String,
-    temporality: String,
     state: String,
     /// Present only when `evidence` is asked for.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -234,13 +231,12 @@ fn segment_rows(
 ) -> Result<Vec<Row>, Error> {
     let sql = format!(
         "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
-                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier, ik.slug,
-                s.role, s.temporality, s.state
+                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier,
+                s.role, s.state
          FROM segment s
            JOIN tbl t ON t.id = s.table_id
            JOIN spelling sp ON sp.id = s.spelling_id
            LEFT JOIN class_version cv ON cv.id = s.class_version_id
-           LEFT JOIN id_kind ik ON ik.id = s.id_kind_id
          WHERE {}
          ORDER BY s.start, t.pid
          LIMIT ?",
@@ -264,10 +260,8 @@ fn segment_rows(
                     coded: row.get(10)?,
                     sensitive: row.get(11)?,
                     identifier: row.get(12)?,
-                    id_kind: row.get(13)?,
-                    role: row.get(14)?,
-                    temporality: row.get(15)?,
-                    state: row.get(16)?,
+                    role: row.get(13)?,
+                    state: row.get(14)?,
                     evidence: None,
                 },
                 // The keyset position: the start day and the table pid.
