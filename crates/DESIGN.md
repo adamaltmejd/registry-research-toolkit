@@ -123,6 +123,9 @@ HTTP API             MCP over stdio (local catalog)
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
+- `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
+  data side. It reads no catalog. Being built (#1803); its design is
+  [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of

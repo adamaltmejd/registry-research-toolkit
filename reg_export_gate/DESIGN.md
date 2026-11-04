@@ -7,8 +7,9 @@ executable it consumes. The domain invariant holds throughout: PII never leaves 
 side, only aggregate statistics do, and disclosure control is a load-bearing guard.
 
 The MONA check (`export_gate.R`), its schemas and policies and the case corpus are
-built. The Rust binary is not (#1803). Trial steps for MONA are in
-[README.md](README.md).
+built. The Rust binary is being built in
+[`crates/reg-export-gate`](../crates/reg-export-gate/DESIGN.md) (#1803). Trial steps for
+MONA are in [README.md](README.md).
 
 ## Components
 
@@ -17,7 +18,7 @@ built. The Rust binary is not (#1803). Trial steps for MONA are in
   stages the checked bytes for human review, serves the review UI and pushes approved
   bytes to the agent VM. An agent calls it; it never reimplements it. The name says what
   it does: the check is disclosure control on aggregates, not only PII detection, so
-  "pii" is avoided. Not built yet.
+  "pii" is avoided. Being built.
 - **Schemas and policy.** Fixed, versioned JSON files supplied by the toolkit, each with
   a policy file beside it, in `schemas/`. Choosing or adding a schema is a deliberate
   user configuration step. An agent never writes or edits a schema or a policy.
@@ -146,7 +147,9 @@ output. In order:
 
 1. **Inventory.** The staging directory holds exactly the schema's files: none missing,
    none extra, no links, folders or hidden files, and no `receipt.json`.
-2. **Structure.** Each file is readable Parquet, and its columns are the schema's
+2. **Structure.** Each file is at most 8 MiB and 100,000 rows (`too_large`; maintainer,
+   2026-11-04; the Rust gate has it, the R gate not yet), so a small compressed file
+   cannot become a large table, is readable Parquet, and its columns are the schema's
    columns in the schema's order, each of an accepted type.
 3. **Disclosure.** Each file passes the policy's rules: every non-null `count` and
    `person_count` is at least `min_cell_count`, and a `statistic` is null wherever its
@@ -239,8 +242,8 @@ The code is the category; the rule locates the finding. Both are stable.
   `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
-- `structure`: `unreadable`, `missing_column`, `extra_column`, `column_order`,
-  `column_type`.
+- `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
+  `column_order`, `column_type`.
 - `disclosure`: `nan_value`, `na_not_null`, `min_cell_count`, `unsupported_statistic`.
 - `backstop`: `identifier_pattern`.
 
@@ -382,8 +385,9 @@ tests. It is data: every expectation is in the JSON.
   digits is the value with exactly those IEEE 754 bits (high byte first), except
   `0x8000000000000000` (-0), which is int64's NA and becomes a null. The optional
   `metadata` are the column's and the file's key-value metadata; `inner_bytes` is text
-  spliced in just before the footer, where readers skip it. Other entries are
-  `{"text": "..."}` (raw bytes) or `{"folder": true}`.
+  spliced in just before the footer, where readers skip it. A column's optional `repeat`
+  is how many times its `values` follow one another. Other entries are
+  `{"text": "...", "repeat": n}` (raw bytes, `repeat` optional) or `{"folder": true}`.
 - `output_before`: the output folder before the run, in the same form (optional).
 - `expect`: `{"result": "pass"}`, or
   `{"result": "refused", "code", "findings": [{"file", "column", "position", "rule"}]}`
