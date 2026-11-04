@@ -12,19 +12,18 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "context",
     paths: &["/api/context"],
     tool: None,
-    description: "The catalog's identity and headline counts, for the SPA.",
+    description: "The catalog's identity and headline counts.",
     params: &[],
     cache: Cache::Revalidate,
     run: context,
     result: component::<Context>,
 }];
 
-/// `shape.Context`.
 #[derive(Serialize, ToSchema)]
 pub struct Context {
     catalog_version: String,
     schema_version: String,
-    /// The hull of every register; `null` for a catalog without registers.
+    /// The span of all registers; `null` for a catalog without registers.
     #[schema(required = true)]
     period_span: Option<Period>,
     /// The server's version, which seeds a new project's `reg_meta_version`.

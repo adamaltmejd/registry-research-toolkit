@@ -13,9 +13,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "findings",
     paths: &["/api/findings/{ref}"],
     tool: None,
-    description: "The review items and notices on a register, a table or a variable \
-        (its segments and occurrences included), optionally narrowed to a period, a \
-        table or a rule code.",
+    description: "The review items and notices on a register, table or variable (including its \
+        column histories), optionally for one period, table or rule code.",
     params: &[
         Param::required("ref", Type::Ref),
         Param::optional("period", Type::Period),
@@ -33,7 +32,6 @@ fn result(components: &mut Components) -> RefOr<Schema> {
         .into()
 }
 
-/// `shape.Finding`.
 #[derive(Serialize, ToSchema)]
 pub struct Finding {
     /// A rule code and its sub-kind, `F7:edition-disagreement`.
@@ -44,30 +42,29 @@ pub struct Finding {
     #[schema(required = true)]
     period: Option<Period>,
     message: String,
-    /// An acked statement's caveat.
+    /// A curator's caveat.
     #[schema(required = true)]
     caveat: Option<String>,
 }
 
-/// `shape.Subject`: what a finding is about, by natural key.
+/// What a finding is about.
 #[derive(Serialize, ToSchema)]
 pub struct Subject {
-    /// `register`, `table`, `release`, `variable`, `segment`, `occurrence` or
-    /// `valueset`.
+    /// `register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`.
     kind: String,
-    /// The register, table or variable; for a segment or an occurrence, its variable.
+    /// The register, table or variable it is about.
     #[schema(required = true)]
     fqid: Option<String>,
-    /// The table of a release, segment or occurrence.
+    /// Its table.
     #[schema(required = true)]
     table: Option<String>,
-    /// The release's, segment's or occurrence's period; `null` when unplaced.
+    /// Its period; `null` when not known.
     #[schema(required = true)]
     period: Option<Period>,
     /// A release's literal delivery name.
     #[schema(required = true)]
     release: Option<String>,
-    /// An occurrence's exact spelling.
+    /// The exact column name in that delivery.
     #[schema(required = true)]
     spelling: Option<String>,
     /// A value set's hash.

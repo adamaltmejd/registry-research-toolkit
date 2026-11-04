@@ -20,11 +20,11 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "segments",
     paths: &["/api/segments/{ref}"],
     tool: Some("segments"),
-    description: "A variable's columns over time: per table, column name and period one \
-        row, in time order, with the provider's wording and the form (type, value set, \
-        flags) where stated. A change of form or wording starts a row. On a steward \
-        catalog, the held columns and files over the years held. With `evidence`, each \
-        row's source occurrences and the rule overrides that changed them.",
+    description: "A variable's columns over time: per table, column name and period one row, in \
+        time order, with the provider's wording and the form (type, value set, flags) where \
+        stated. A change of form or wording starts a new row. On a data holder's catalog, also \
+        its columns and files over the years it holds. `evidence=true` adds the deliveries \
+        behind each row and the curated values that replaced the provider's.",
     params: &[
         Param::required("ref", Type::Ref),
         Param::optional("period", Type::Period),
@@ -39,7 +39,6 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result: component::<SegmentPage>,
 }];
 
-/// `Page<Segment>`.
 #[derive(Serialize, ToSchema)]
 pub struct SegmentPage {
     items: Vec<Segment>,
@@ -47,18 +46,18 @@ pub struct SegmentPage {
     next_cursor: Option<String>,
 }
 
-/// `shape.Segment`: one row of the variable's one per-period list, a column of one
-/// table over one period with one form and one provider wording. A fact the catalog
-/// does not state is absent, never `null`: no type, no value set, `coded` or
-/// `temporality` unknown, and `state` clear (the default) are all left out.
+/// One row of the variable's per-period list: a column of one table over one period
+/// with one form and one provider wording. A fact the catalog does not state is left
+/// out, never `null`: no type, no value set, `coded` unknown, and `state` clear (the
+/// default).
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Segment {
     /// The table's fqid.
     table: String,
-    /// The column name it is delivered under; in steward mode, the held column's.
+    /// The column name it is delivered under; on a data holder's catalog, the holder's column.
     column: String,
     period: Period,
-    /// In steward mode, the file the steward holds the column in.
+    /// On a data holder's catalog, the file the holder has the column in.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
     file: Option<String>,
@@ -92,13 +91,7 @@ pub struct Segment {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
     identifier: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    id_kind: Option<String>,
     role: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    temporality: Option<String>,
     /// Present only when the column is ambiguous; absent means clear.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
@@ -108,7 +101,7 @@ pub struct Segment {
     evidence: Option<Vec<Occurrence>>,
 }
 
-/// One occurrence behind a segment (`shape.Segment.evidence`).
+/// One delivery behind this row.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Occurrence {
     #[schema(required = true)]
@@ -129,14 +122,14 @@ pub struct Locator {
     pub(super) locator: String,
 }
 
-/// A non-source winner over one field of an occurrence.
+/// A curated value that replaced the provider's.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Override {
     field: String,
     #[schema(required = true)]
     value: Option<String>,
     prov: String,
-    /// Authoring location of the curated statement.
+    /// Where the curated value is written.
     #[schema(required = true)]
     statement: Option<StatementLocation>,
     #[schema(required = true)]
@@ -343,13 +336,12 @@ fn segment_rows(
     table: Option<&str>,
 ) -> Result<Vec<Row>, Error> {
     let sql = "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
-                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier, ik.slug,
-                s.role, s.temporality, s.state
+                s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier,
+                s.role, s.state
          FROM segment s
            JOIN tbl t ON t.id = s.table_id
            JOIN spelling sp ON sp.id = s.spelling_id
            LEFT JOIN class_version cv ON cv.id = s.class_version_id
-           LEFT JOIN id_kind ik ON ik.id = s.id_kind_id
          WHERE s.variable_id = ?1 AND (?2 IS NULL OR t.pid = ?2)";
     let stated = |value: String, unstated: &str| (value != unstated).then_some(value);
     Ok(rows(
@@ -380,10 +372,8 @@ fn segment_rows(
                     coded: stated(row.get(10)?, "unknown"),
                     sensitive: row.get(11)?,
                     identifier: row.get(12)?,
-                    id_kind: row.get(13)?,
-                    role: row.get(14)?,
-                    temporality: stated(row.get(15)?, "unknown"),
-                    state: stated(row.get(16)?, "clear"),
+                    role: row.get(13)?,
+                    state: stated(row.get(14)?, "clear"),
                     evidence: None,
                 },
             })
@@ -505,9 +495,7 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
             coded: None,
             sensitive: None,
             identifier: None,
-            id_kind: None,
             role: role.to_owned(),
-            temporality: None,
             state: None,
             evidence: None,
         },

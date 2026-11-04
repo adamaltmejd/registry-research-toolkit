@@ -12,7 +12,7 @@ use super::segments::{Locator, StatementLocation};
 use super::{Period, Server};
 use crate::{Error, rows};
 
-/// Provider text and curation provenance, returned only when evidence is requested.
+/// The provider's texts and the curated values behind them.
 #[derive(Serialize, ToSchema)]
 pub struct VariableEvidence {
     texts: Vec<ProviderText>,
@@ -22,7 +22,7 @@ pub struct VariableEvidence {
     documents: Vec<RelatedDocument>,
 }
 
-/// One provider text, with its coverage and every contributing source occurrence.
+/// One provider text, the years it covers and the deliveries it comes from.
 #[derive(Serialize, ToSchema)]
 pub struct ProviderText {
     text: String,
@@ -30,7 +30,6 @@ pub struct ProviderText {
     sources: Vec<ProviderTextSource>,
 }
 
-/// Source values remain distinct from curated winners, including silent sources.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct ProviderTextSource {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -48,14 +47,14 @@ pub struct ProviderTextSource {
     locators: Vec<Locator>,
 }
 
-/// A delivered or curated folded alias; source occurrences retain exact spellings.
+/// A column name the variable is known by (case ignored).
 #[derive(Serialize, ToSchema)]
 pub struct EvidenceSpelling {
     spelling: String,
     kind: String,
 }
 
-/// An authored curation statement that contributed a field of this variable.
+/// A curated statement that supplied a field of this variable.
 #[derive(Serialize, ToSchema)]
 pub struct CurationStatement {
     field: String,
