@@ -1361,7 +1361,8 @@ In steward mode the span is the hull of the placements, not of the reference reg
 (which cover years the steward does not hold); outside it, the hull of the registers. A
 timeless period (both bounds open) is left out, so one timeless table cannot take the
 study-years slider's bounds; an ongoing register still leaves the end open. Dropping
-whole periods, not single open bounds, keeps the hull ordered.
+whole periods, not single open bounds, keeps the hull ordered. A hull open at both ends
+(one period open at the start, another at the end) has no span either.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,

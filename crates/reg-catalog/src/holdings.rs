@@ -1,7 +1,7 @@
 //! Pair admission and database-origin selection for steward metadata. Row ids never
 //! cross the two database boundaries; physical placements use public ids.
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
@@ -34,6 +34,9 @@ pub(crate) struct Possession {
     tables: HashMap<String, Vec<Span>>,
     registers: HashMap<String, Vec<Span>>,
     providers: HashMap<String, Vec<Span>>,
+    /// (variable, table) pairs a placement names: a variable held in one table is
+    /// not held in another table the steward holds through other columns.
+    pairs: HashSet<(String, String)>,
 }
 
 impl Possession {
@@ -78,6 +81,7 @@ impl Possession {
                     .or_default()
                     .push(span);
             }
+            possession.pairs.insert((variable.clone(), table.clone()));
             possession.variables.entry(variable).or_default().push(span);
             possession.tables.entry(table).or_default().push(span);
         }
@@ -334,6 +338,17 @@ impl Catalog {
                 .is_some_and(|(register, _)| held.registers.contains_key(register)),
             kind => held.of(kind).is_none_or(|map| map.contains_key(pid)),
         }
+    }
+
+    /// Whether this deployment serves `variable` in `table`: always outside steward
+    /// mode; in steward mode only when a placement names that pair.
+    #[must_use]
+    pub fn serves_in(&self, variable: &str, table: &str) -> bool {
+        self.holdings.as_ref().is_none_or(|h| {
+            h.possession
+                .pairs
+                .contains(&(variable.to_owned(), table.to_owned()))
+        })
     }
 
     /// In steward mode, the years a served provider, register, table or variable is

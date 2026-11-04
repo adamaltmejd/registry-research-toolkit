@@ -23,7 +23,23 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
     # semantics, mixes bm25 groups, or filters possession after search counts or
     # paging. The 2021 query is inside Late's reference coverage but outside its
     # physical reach; no existing reference-only case can catch that distinction.
-    base, _, command = prepare_holdings(tmp_path)
+    base, root, command = prepare_holdings(tmp_path)
+    # Spare holds the timeless demo/owners/spare through Tally only; Id is a column
+    # of that table too, held in demo/owners alone.
+    for name, line in [
+        ("census.csv", "Synthetic,Spare,Spare,Tally,,,,,,,,\n"),
+        ("storage.csv", "dbo,Spare,BASE TABLE,Tally,int,,10,0,1\n"),
+        (
+            "holdings.toml",
+            '\n[[table]]\nphysical_name = "Spare"\ndisposition = "timeless"\n'
+            'table_pids = ["demo/owners/spare"]\nlocator = "fixture:spare"\n'
+            '[[table.key]]\nentity = ["demo/owners/tally"]\ntime = []\n'
+            'locator = "fixture:spare-key"\n',
+        ),
+    ]:
+        with (root / name).open("a") as f:
+            f.write(line)
+    pin_steward(root, tmp_path / "stewards.toml")
     (tmp_path / "reg_meta.db").symlink_to(base)
     output = tmp_path / "reg_meta_fixture.db"
     built = run([*command, "--out", output])
@@ -33,6 +49,12 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
         context = client.get("/api/context")
         assert context.status_code == 200
         context = context.json()
+        # Fails if the span counts the timeless Spare placement (its open bounds
+        # would take the start) instead of the years held, 2017..2021.
+        assert context["data"]["period_span"] == {
+            "start": "2017-01-01",
+            "end": "2022-01-01",
+        }
         assert context["meta"]["steward"]["owner"] == "fixture"
         context = context["data"]
         assert context["steward_config"]["presentation"] == {
@@ -55,16 +77,22 @@ def test_steward_metadata_and_holdings_only(tmp_path, server_cmd):
             "demo/held/value",
             "demo/held/year",
         ]
-        # Fails if a held variable lists a table no placement names (Id is also a
-        # column of the unheld demo/owners/spare), or the register serves the
-        # provider's unparsed release names (demo/owners' draft) as `unplaced`.
+        # Fails if a held variable lists a table no placement names it in (Id is
+        # also a column of demo/owners/spare, which Spare holds through Tally only),
+        # or the register serves the provider's unparsed release names (demo/owners'
+        # draft) as `unplaced`.
         owners = client.get("/api/catalog/demo/owners").json()["data"]
         assert {v["fqid"]: v["tables"] for v in owners["variables"]} == {
             "demo/owners/first": ["demo/owners"],
             "demo/owners/id": ["demo/owners"],
             "demo/owners/second": ["demo/owners"],
+            "demo/owners/tally": ["demo/owners/spare"],
         }
         assert owners["unplaced"] == []
+        # Fails if a held table lists a row key held elsewhere but not in it: Id is
+        # spare's reference key and held in demo/owners only.
+        spare = client.get("/api/catalog/demo/owners/spare").json()["data"]
+        assert spare["row_keys"] == []
         unheld = client.get("/api/catalog/demo/held/relative-id")
         assert unheld.status_code == 404
         assert unheld.json()["error"]["code"] == "not_found"

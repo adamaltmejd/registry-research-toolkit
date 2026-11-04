@@ -24,7 +24,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
 pub struct Context {
     /// The hull of the periods served: in steward mode the years held, else the
     /// registers' periods. A timeless period does not count; an ongoing one leaves
-    /// `end` null. `null` when every period served is timeless.
+    /// `end` null. `null` when every period served is timeless, or when the
+    /// hull is open at both ends.
     #[schema(required = true)]
     period_span: Option<Period>,
     /// The server's version, which seeds a new project's `reg_meta_version`.
@@ -53,7 +54,9 @@ impl Context {
         )?;
         Ok(Self {
             period_span: match hull {
-                (Some(start), Some(end)) => Some(Period::new(open, start, end)),
+                // Mixed open bounds (one period open at the start, another at the
+                // end) give a both-open hull, which would read as timeless.
+                (Some(start), Some(end)) if (start, end) != open => Some(Period::new(open, start, end)),
                 _ => None,
             },
             reg_meta_version: version.to_owned(),

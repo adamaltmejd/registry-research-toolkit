@@ -364,9 +364,10 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
     variables.retain(|v| server.catalog.serves("variable", &v.fqid));
     for variable in &mut variables {
+        let fqid = &variable.fqid;
         variable
             .tables
-            .retain(|table| server.catalog.serves("table", table));
+            .retain(|table| server.catalog.serves_in(fqid, table));
     }
     for set in &mut sets {
         set.members
@@ -569,8 +570,8 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             })
         },
     )?;
-    // Steward mode: a key column whose variable is held nowhere is not shown.
-    row_keys.retain(|key| server.catalog.serves("variable", &key.fqid));
+    // Steward mode: a key column whose variable is not held in this table is not shown.
+    row_keys.retain(|key| server.catalog.serves_in(&key.fqid, &entity.pid));
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,

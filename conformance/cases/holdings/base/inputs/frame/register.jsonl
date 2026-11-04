@@ -17,5 +17,6 @@
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Amount","source_key":"amount","label":"Amount","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
 {"kind":"occurrence","provider":"demo","register":"projected","table":"","column":"Status","source_key":"status","label":"Status","dtype":"int","from":"2018-01-01","to":"2018-12-31"}
 {"kind":"table","provider":"demo","register":"owners","table":"empty","name":"Segmentless routed table"}
-{"kind":"occurrence","provider":"demo","register":"owners","table":"spare","column":"Id","source_key":"id","label":"Observation identity","dtype":"int","identifier":true,"from":"2017-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"spare","column":"Id","source_key":"id","label":"Observation identity","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"owners","table":"spare","column":"Tally","source_key":"tally","label":"Spare tally","dtype":"int"}
 {"kind":"release","provider":"demo","register":"owners","table":"","release":"draft","name":"Owners draft","edition":"unstated"}
