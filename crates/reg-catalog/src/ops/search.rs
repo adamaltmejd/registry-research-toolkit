@@ -25,17 +25,23 @@ const TYPES: &[&str] = &[
 const DEPTH: usize = 1000;
 
 /// The rank (rule 2) and its ties (rule 3).
-const ORDER: &str = "m.tier, m.rank, i.kind, i.sort_key";
+// simplify: exact match (diacritics kept) is one sort key ahead of bm25; revisit with
+// smarter ranking.
+const ORDER: &str = "m.tier, m.exact DESC, m.rank, i.kind, i.sort_key";
 
 // Keep the original corpus and its scores unchanged. Only description matches that
 // miss the primary index follow it, with base text retained for cross-field ANDs.
-const MATCHES: &str = "WITH matched AS (
+// `exact`: the row also matches with diacritics kept (`search_exact`).
+const MATCHES: &str = "WITH folded AS (
     SELECT rowid AS id, 0 AS tier, bm25(search, 10.0, 5.0, 1.0) AS rank
     FROM search WHERE search MATCH ?1
     UNION ALL
     SELECT rowid, 1, bm25(search_description, 10.0, 5.0, 1.0)
     FROM search_description WHERE search_description MATCH ?1
       AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
+), matched AS (
+    SELECT f.*, f.id IN (SELECT rowid FROM search_exact WHERE search_exact MATCH ?1) AS exact
+    FROM folded f
 )";
 
 pub const OPERATIONS: &[Operation] = &[

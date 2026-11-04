@@ -1576,6 +1576,26 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         [],
     )
     .map_err(sql)?;
+    {
+        let mut insert = tx
+            .prepare("INSERT INTO search_exact(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")
+            .map_err(sql)?;
+        for (i, item) in search.iter().enumerate() {
+            let body = if item.description.is_empty() {
+                item.body.clone()
+            } else {
+                format!("{}\n{}", item.body, item.description)
+            };
+            insert
+                .execute((id(i), &item.name, &item.label, &body))
+                .map_err(|e| format!("search_exact: {e}"))?;
+        }
+    }
+    tx.execute(
+        "INSERT INTO search_exact(search_exact) VALUES ('optimize')",
+        [],
+    )
+    .map_err(sql)?;
     // External-content FTS5 over doc_section, in rowid order.
     {
         let mut insert = tx
