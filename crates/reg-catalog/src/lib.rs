@@ -7,7 +7,6 @@ mod holdings;
 pub mod ops;
 
 use std::collections::BTreeMap;
-use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
 use rusqlite::{Connection, OpenFlags, Params, Row};
@@ -140,16 +139,6 @@ fn unavailable(path: &Path, err: &rusqlite::Error) -> Error {
         format!("{} cannot be read: {err}", path.display()),
         vec![],
     )
-}
-
-/// Lowercase hex of `bytes`: cursors and `ETag` digests.
-#[must_use]
-pub fn hex(bytes: &[u8]) -> String {
-    let mut out = String::with_capacity(2 * bytes.len());
-    for byte in bytes {
-        write!(out, "{byte:02x}").expect("write to String");
-    }
-    out
 }
 
 /// The default `PRAGMA mmap_size` (`serve --mmap-size`): memory-map the file (SQLite

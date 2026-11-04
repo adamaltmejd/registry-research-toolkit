@@ -11,7 +11,9 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
-use crate::{Catalog, Code, Error, connect, hex, read_meta};
+use reg_core::hex;
+
+use crate::{Catalog, Code, Error, connect, read_meta};
 
 pub(crate) struct Holdings {
     path: PathBuf,

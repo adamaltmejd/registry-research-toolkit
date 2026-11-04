@@ -9,12 +9,11 @@
 //! every shape the types would misread (serde reads a struct from a JSON array by
 //! position), and deserializes only an accepted document.
 
-use std::fmt::{self, Write as _};
+use std::fmt;
 
 use serde::de::{Deserializer, Error as _};
 use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
-use sha2::{Digest, Sha256};
 
 use crate::structural::validate_source_period;
 use crate::{
@@ -607,10 +606,5 @@ fn tree<T: Serialize>(value: &T) -> Value {
 #[must_use]
 pub fn project_hash(project: &ProjectData) -> String {
     let canonical = tree(project).to_string();
-    Sha256::digest(canonical.as_bytes())
-        .iter()
-        .fold(String::new(), |mut hex, b| {
-            let _ = write!(hex, "{b:02x}");
-            hex
-        })
+    crate::sha256_hex(canonical)
 }

@@ -17,7 +17,6 @@ pub mod statement;
 use std::collections::BTreeSet;
 
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
 
 /// The first and last day of open time: an unstated bound, once a stage must name one.
 pub const OPEN_START: &str = "0001-01-01";
@@ -256,7 +255,7 @@ impl ValueSet {
                 dropped += 1;
             }
         }
-        let hash = hex(&Sha256::digest(canonical_line(&items)));
+        let hash = reg_core::sha256_hex(canonical_line(&items));
         let set = Self {
             hash,
             items,
@@ -350,7 +349,7 @@ pub struct Doc {
     /// `parsed` only, in order. Empty for `pdf`.
     #[serde(default)]
     pub sections: Vec<DocSection>,
-    /// `pdf` only: the bytes as lowercase hex ([`hex`]), so the frame stays JSONL.
+    /// `pdf` only: the bytes as lowercase hex ([`reg_core::hex`]), so the frame stays JSONL.
     pub content: Option<String>,
     #[serde(default)]
     pub subjects: Vec<DocSubject>,
@@ -427,14 +426,4 @@ pub fn unhex(text: &str) -> Option<Vec<u8>> {
         .chunks(2)
         .map(|pair| Some((digit(pair[0])? << 4) | digit(pair[1])?))
         .collect()
-}
-
-/// Lowercase hex of `bytes`.
-#[must_use]
-pub fn hex(bytes: &[u8]) -> String {
-    use std::fmt::Write;
-    bytes.iter().fold(String::new(), |mut s, b| {
-        let _ = write!(s, "{b:02x}");
-        s
-    })
 }

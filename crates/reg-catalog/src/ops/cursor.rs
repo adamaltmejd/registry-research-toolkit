@@ -2,7 +2,9 @@
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
 use super::Params;
-use crate::{Code, Error, hex};
+use reg_core::hex;
+
+use crate::{Code, Error};
 
 /// The cursor context of a request: every parameter but `cursor` and `limit`, sorted
 /// by name, as `name=<hex of the value>` joined by `&`. Hex, because a free-text

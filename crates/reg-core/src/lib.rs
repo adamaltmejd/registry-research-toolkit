@@ -22,6 +22,7 @@ pub const CATALOG_SCHEMA_VERSION: u32 = 7;
 pub const HOLDINGS_SCHEMA_VERSION: u32 = 5;
 
 mod case_folding;
+mod digest;
 mod grammar;
 mod interval;
 pub mod issue;
@@ -32,6 +33,7 @@ mod validation;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
+pub use digest::{hex, sha256_hex};
 pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, add_iso_months, is_slug, iso_day_number,
     next_iso_day, period_token_for_bounds, prev_iso_day,

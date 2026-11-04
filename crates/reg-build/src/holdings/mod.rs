@@ -235,7 +235,7 @@ fn write(
     for (path, sha) in &config.pins {
         hasher.update(format!("{path}\t{sha}\n"));
     }
-    let generation = reg_frame::hex(&hasher.finalize());
+    let generation = reg_core::hex(&hasher.finalize());
     let config_json = |relative: &str, json: bool| -> Result<String, String> {
         let text =
             std::fs::read_to_string(input::path(root, relative)?).map_err(|e| e.to_string())?;
@@ -337,5 +337,5 @@ fn compiler_digest() -> String {
     for source in sources {
         hasher.update(source);
     }
-    reg_frame::hex(&hasher.finalize())
+    reg_core::hex(&hasher.finalize())
 }
