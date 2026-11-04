@@ -1,9 +1,0 @@
-{
-  "total": 1,
-  "per_register_counts": {
-    "$exact": {
-      "scb/foretag": 1
-    }
-  },
-  "output_toml": "{work}/succession.toml"
-}

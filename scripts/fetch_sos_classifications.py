@@ -8,8 +8,8 @@ eHälsomyndigheten), ICD-11-SE (WHO's Swedish ICD-11 MMS release), and ATC
 (from Läkemedelsverket / the MPA NSL register).
 
 This is the SOS analog of `scripts/extract_lkf.py`: it is run on demand by a
-maintainer to refresh local snapshots, NOT fetched during `reg-meta-build
-build-db`. Builds stay deterministic and offline — they read the committed
+maintainer to refresh local snapshots, NOT fetched during `reg-build
+build`. Builds stay deterministic and offline — they read the committed
 normalized CSVs, never the network. Re-run this when you want to pull newer
 upstream code lists. (The reg_meta wiring of these CSVs is a separate,
 later step — this script only acquires + normalizes the data.)

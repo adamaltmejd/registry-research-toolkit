@@ -1,9 +1,0 @@
-id = "immigranter"
-register = "scb/rtb"
-variants = ["scb/rtb/invandringar"]
-
-# route note: stem:immigranter_: mirror of utvandringar
-
-[[table]]
-table = "immigranter_20241231"
-edition = { from = 1990, to = 2024 }

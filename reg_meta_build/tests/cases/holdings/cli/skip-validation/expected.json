@@ -1,4 +1,0 @@
-{
-  "returncode": 2,
-  "stderr_contains": "unrecognized arguments: --no-validate"
-}

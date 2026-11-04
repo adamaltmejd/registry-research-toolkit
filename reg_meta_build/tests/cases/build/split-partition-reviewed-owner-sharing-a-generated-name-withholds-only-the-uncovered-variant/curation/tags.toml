@@ -1,5 +1,0 @@
-[[tag]]
-slug = "topic"
-label = "Topic"
-[[tag.member]]
-variable = "scb/sample/answer"

@@ -8,17 +8,18 @@ the harness never runs cargo. `reg-build build` verifies what it writes.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
-import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-# The digest and staging helpers are shared with the tooling caches.
-sys.path.append(str(Path(__file__).resolve().parents[1] / "scripts"))
-from keyed_cache import staged, tree_digest
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 CASES = Path(__file__).resolve().parent / "cases"
 REPO = CASES.parents[1]
@@ -32,6 +33,49 @@ FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # marks its generation as used, so a returned path stays valid this long after
 # its last lookup.
 FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
+
+
+def tree_digest(root: Path) -> str:
+    """Content digest of a file or directory, independent of where it lives: every
+    file's relative path and bytes, byte-code excluded."""
+    files = (
+        [root]
+        if root.is_file()
+        else (
+            path
+            for path in root.rglob("*")
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
+        )
+    )
+    digest = hashlib.sha256()
+    for path in sorted(files):
+        digest.update(path.relative_to(root).as_posix().encode() + b"\0")
+        with path.open("rb") as handle:
+            digest.update(hashlib.file_digest(handle, "sha256").digest())
+    return digest.hexdigest()
+
+
+@contextmanager
+def staged(entry: Path) -> Generator[Path]:
+    """Yield a private staging directory beside `entry`; rename it to `entry` when
+    the block completes, so a reader never sees a partial entry.
+
+    If the block raises, nothing is published. If another builder of the same key
+    renamed first, its entry is kept and this copy is discarded.
+    """
+    entry.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=entry.parent))
+    try:
+        yield staging
+        try:
+            staging.rename(entry)
+        except OSError:
+            if not entry.is_dir():
+                raise
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
 
 
 def fixture_source(fixture: str | Path) -> Path:

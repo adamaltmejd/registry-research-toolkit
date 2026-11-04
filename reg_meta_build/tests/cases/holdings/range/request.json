@@ -1,6 +1,0 @@
-{
-  "catalog": "catalog.json",
-  "inventory": "inventory.toml",
-  "census": "census.csv",
-  "scope": "scope.toml"
-}

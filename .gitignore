@@ -15,7 +15,6 @@ dist/
 # Tools
 .ruff_cache/
 .pytest_cache/
-.hypothesis/
 # Cargo workspace build output (root Cargo.toml)
 /target/
 
@@ -31,12 +30,6 @@ Thumbs.db
 # Project
 .tmp/
 
-# Input data lives in the private registry-catalog-inputs repository. Old local
-# worktrees still carry stale copies (incl. confidential SWECOV extracts); this line
-# keeps them out of `git add`. Delete it once no local worktree carries
-# reg_meta_build/input_data/.
-reg_meta_build/input_data/
-
 # Personal exploration scripts (not part of the toolkit's curated scripts/)
 scripts/sample_*.py
 
@@ -47,8 +40,9 @@ scripts/sample_*.py
 *.pdf
 !crates/reg-build/fixture/**/*.pdf
 
-# Marker raw output (regenerable from PDFs + parser)
-reg_meta_build/docs/_raw/
+# Marker raw output (regenerable from PDFs + parser); the old builder's docs/_raw
+# copies are still on disk in local checkouts.
+**/docs/_raw/
 
 # Archive (concluded investigations, ad-hoc scripts, internal notes)
 archive/

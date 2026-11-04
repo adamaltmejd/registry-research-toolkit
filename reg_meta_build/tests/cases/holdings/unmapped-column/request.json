@@ -1,8 +1,0 @@
-{
-  "catalog": "catalog.json",
-  "inventory": "inventory.toml",
-  "census": "census.csv",
-  "replaces": "reg_meta/tests/test_inventory.py::test_unmapped_reason_refuses_blank_text (allowed twin)",
-  "fails_if": "the inventory refuses a nonblank unmapped_reason on a mapping-less column, or the compile drops the column or its authored reason",
-  "scope": "scope.toml"
-}

@@ -49,14 +49,12 @@
       "rangeStrategy": "bump"
     },
     {
-      "description": "Weekly: what the builder loads. reg_meta_build's and reg-core-py's declared deps and every Cargo manifest (reg-core-py is built from crates/).",
+      "description": "Weekly: what the builder loads, every Cargo manifest.",
       "matchFileNames": [
-        "reg_meta_build/pyproject.toml",
-        "crates/reg-core-py/pyproject.toml",
         "Cargo.toml",
         "crates/*/Cargo.toml"
       ],
-      "groupName": "builder runtime and Rust (weekly)",
+      "groupName": "Rust (weekly)",
       "schedule": [
         "before 6am on monday"
       ],
@@ -66,7 +64,7 @@
       ]
     },
     {
-      "description": "Its own weekly PR refreshing uv.lock and Cargo.lock (uv.lock carries the builder's closure). The group name only keeps all lockfiles in that one branch.",
+      "description": "Its own weekly PR refreshing uv.lock and Cargo.lock. The group name only keeps all lockfiles in that one branch.",
       "matchUpdateTypes": [
         "lockFileMaintenance"
       ],

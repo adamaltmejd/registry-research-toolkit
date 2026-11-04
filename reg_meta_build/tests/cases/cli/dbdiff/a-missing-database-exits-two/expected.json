@@ -1,9 +1,0 @@
-{
-  "exit_code": 2,
-  "stderr": {
-    "contains": [
-      "dbdiff: error",
-      "nope.db"
-    ]
-  }
-}

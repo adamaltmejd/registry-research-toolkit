@@ -18,7 +18,7 @@
 # binary installs no catalog); no_match (`resolve` reports a status per
 # column); unknown_search_row_type, state_variant_unresolved,
 # corrupt_concept_group_source (artifact invariants, so internal_error);
-# inventory_* codes (build-side, stay in reg_meta_build).
+# inventory_* codes (build-side).
 # Order finding codes and project issue codes are data inside `order_blocked` and
 # `validate` results, owned by the project validator (`reg-core`) and the order check,
 # not error codes.

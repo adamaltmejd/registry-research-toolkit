@@ -34,9 +34,6 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.13.6"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
       - run: uv sync --frozen
       # ruff, panache and ty; commands and tool pins: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py lint
@@ -73,46 +70,22 @@ jobs:
       # Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust
 
-  # The legacy builder moves out of local G0, but stays mandatory here until F.
-  # Its leg runs only the Python suite: it needs no Rust binary, just the
-  # `reg-core-py` extension that `uv sync` builds (so both legs build the same
-  # thing and can share one rust-cache key). Release admission is in `rust`.
-  # `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
-  # setup included: a leg over it is a test-audit finding, not a reason to
-  # raise the number.
-  test:
-    name: test (${{ matrix.suite }})
+  # The Python tooling suite; it needs no Rust binary. `timeout-minutes` is the
+  # suite's CI-job budget in ARCHITECTURE.md "Tiers", setup included: a run over it
+  # is a test-audit finding, not a reason to raise the number.
+  scripts:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ matrix.budget }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - suite: reg_meta_build
-            budget: 6
-            command: uv run --no-project scripts/gate.py builder
-            # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
-            hypothesis_profile: thorough
-            sparse: *no-locks
-          - suite: scripts/tests
-            budget: 5
-            command: uv run python -m pytest scripts/tests -n auto
-            sparse: *no-locks
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          sparse-checkout: ${{ matrix.sparse }}
+          sparse-checkout: *no-locks
           sparse-checkout-cone-mode: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.13.6"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
       - run: uv sync --frozen
-      - run: ${{ matrix.command }}
-        env:
-          HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
+      - run: uv run python -m pytest scripts/tests -n auto
 
   changes:
     runs-on: ubuntu-latest
