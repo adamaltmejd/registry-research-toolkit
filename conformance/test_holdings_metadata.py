@@ -383,15 +383,20 @@ def test_same_variable_attestation_extends_holdings_without_global_validity(
         data = register.json()["data"]
         assert [t["fqid"] for t in data["tables"]] == minted["register_tables"]
         assert [v["fqid"] for v in data["variables"]] == minted["register_variables"]
-        # Fails if a held table lists a row key no placement names: AttestedMember
-        # holds demo/owners/received, whose reference key Other is held nowhere.
+        # Fails if show reads the reference origin only: AttestedMember holds Id in
+        # demo/owners/received, a key membership the reference table omits, so the
+        # register must list received under Id and the table must list Id as a key.
+        owners = pool.client(artifact_env(output)).get("/api/catalog/demo/owners")
+        assert owners.status_code == 200, owners.text
+        tables = {v["fqid"]: v["tables"] for v in owners.json()["data"]["variables"]}
+        assert tables["demo/owners/id"] == ["demo/owners", "demo/owners/received"]
         received = pool.client(artifact_env(output)).get(
             "/api/catalog/demo/owners/received"
         )
         assert received.status_code == 200, received.text
-        assert "demo/owners/other" not in {
-            k["fqid"] for k in received.json()["data"]["row_keys"]
-        }
+        assert [k["fqid"] for k in received.json()["data"]["row_keys"]] == [
+            "demo/owners/id"
+        ]
         # Fails if schema reads the reference origin only: the steward-minted
         # variables on the reference register are held in the holdings origin.
         schema = pool.client(artifact_env(output)).get("/api/schema/demo/projected")
