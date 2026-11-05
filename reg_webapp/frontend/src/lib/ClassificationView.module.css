@@ -32,8 +32,12 @@
   margin: 0;
   font: inherit;
 }
+/* A version address focuses the heading; its ring is painted on the trigger,
+   whose fill would otherwise cover it. */
 .versionHeading:focus-visible {
   outline: none;
+}
+.versionHeading:focus-visible > .versionTrigger {
   box-shadow: var(--focus-ring-inset);
 }
 
