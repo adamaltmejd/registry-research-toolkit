@@ -213,7 +213,6 @@ function FindingGroup({
                           {finding.subject.release && (
                             <span>Release: {finding.subject.release}</span>
                           )}
-                          {finding.caveat && <span>{finding.caveat}</span>}
                         </div>
                       </StatusRow>
                     </li>
