@@ -33,6 +33,51 @@ the SPA's WebAssembly build, which has no use for them. The saved API answers ar
 another contract's documents (conformance/api/operations.toml): `input.rs` reads only
 the fields it uses and ignores the rest.
 
+## Invariants
+
+What `compile` and `generate` hold to; each rule names its one place in the code.
+
+1. **Answers are whole and current** (`load_answers`, `compile`): one catalog
+   generation, the order answer's `project_hash` equal to the project's, every page of
+   every answer (numbered `-0001`, ..., the last with `next_cursor: null`), each value
+   set's codes once and `n_items` of them, ISO periods. Anything else is refused.
+2. **A physical column is resolved once** (`Context::resolve`). Its references (the
+   variables it delivers, and row keys) are gathered first: in the delivery layout the
+   order file's column, in the standard layout one name in one table-year file. Then:
+   - *type*: the project's `type` for any of its variables, matched by variable, so a
+     row key or a carried copy without a binding takes it too; two different `type`s are
+     refused (`column_types_disagree`). Else the held storage's type, else the catalog's
+     (#2071, G8/G10, `resolve_type`).
+   - *segments*: per reference, those overlapping the column's period, from the held
+     placement's rows (delivery), else the reference's table, else, for a reference
+     without a binding only, any table (a person id carried from another register). None
+     for a reference is `segment_missing`.
+   - *codes*: every code of every value set of those segments, once.
+   - *identifier and length*: the earliest segment's.
+3. **Years** (`delivery_files`, `standard_files`): a delivery file holds the union of
+   its references' years, and every column is read over all of them, as the runner does;
+   a column is missing only in years its placement holds no segment. A standard file is
+   one table-year, and its columns' period is that year within the order. simplify: one
+   code list per column, not per year; give codes years if a pipeline checks codes by
+   year.
+4. **Rules** (`apply_rules`): a file's sources agree on unit, population and rows; a
+   column's sources agree on its column rule; a rule naming no column is refused.
+5. **Generate refuses before it writes** (`generate`): it runs compile's checks on the
+   spec (`check_spec`, so a hand-edited spec gets compile's refusals) and refuses a type
+   or storage the runner does not write in the spec's format (`Kind::of`) before any row
+   is drawn. simplify: whether a unit attribute fits its column's type is found at the
+   first row, as `code_invalid`; check it up front if that refusal comes too late.
+6. **No value changes silently** (`cell`, `from_int`, `from_text`, `write`): a supplied
+   code, mapped value or attribute is written exactly or refused (`code_invalid`): a
+   number that is not one, a day the calendar lacks, a boolean other than 0/1 or a
+   yes/no code, more decimals than the scale, text wider than the storage. A drawn value
+   stays within its storage. A value the format cannot hold is refused, as the runner
+   refuses it. `real` is float32 in Parquet, as the runner writes it.
+7. **Units are one population** (`population.rs`, `attribute_cell`): every unit
+   attribute comes from the unit, or from the unit's own stream, never a column's, so
+   files join and agree.
+8. **Same inputs, same bytes** (`rng.rs`, `write.rs`).
+
 ## Compile
 
 `reg-meta mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one

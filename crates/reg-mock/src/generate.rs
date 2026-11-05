@@ -188,6 +188,7 @@ fn rows(
         .iter()
         .map(|c| Rng::new(seed, &format!("column/{}/{}", file.name, c.name)))
         .collect();
+    let pools: Vec<Pool<'_>> = file.columns.iter().map(Pool::of).collect();
     let years = if file.years.is_empty() {
         vec![last]
     } else {
@@ -228,9 +229,11 @@ fn rows(
             };
             for _ in 0..n {
                 let mut row = Vec::with_capacity(kinds.len());
-                for ((column, kind), crng) in file.columns.iter().zip(kinds).zip(&mut columns) {
+                for (((column, kind), pool), crng) in
+                    file.columns.iter().zip(kinds).zip(&pools).zip(&mut columns)
+                {
                     let rate = column.null_rate.unwrap_or(spec.null_rate);
-                    let value = cell(file, column, *kind, unit, rate, crng)?;
+                    let value = cell(file, column, *kind, pool, unit, rate, crng)?;
                     // A supplied code or mapped value no wider than the held storage.
                     let width = column.storage.as_ref().and_then(|s| s.length);
                     if let (Cell::Text(text), Some(width)) = (&value, width)
@@ -273,10 +276,38 @@ fn firm_of(person_key: i64, firms: usize) -> usize {
     usize::try_from(person_key.unsigned_abs() % firms as u64).expect("below firms")
 }
 
+/// A column's codes, split once per file: the codes drawn as values and the
+/// sentinels drawn as missing.
+struct Pool<'a> {
+    codes: Vec<&'a str>,
+    sentinels: Vec<&'a str>,
+}
+
+impl<'a> Pool<'a> {
+    fn of(column: &'a SpecColumn) -> Self {
+        let all_sentinel = column.codes.iter().all(|c| c.sentinel);
+        // A value set of sentinels only documents no value: draw from it, invent none.
+        let codes = column
+            .codes
+            .iter()
+            .filter(|c| !c.sentinel || all_sentinel)
+            .map(|c| c.code.as_str())
+            .collect();
+        let sentinels = column
+            .codes
+            .iter()
+            .filter(|c| c.sentinel)
+            .map(|c| c.code.as_str())
+            .collect();
+        Self { codes, sentinels }
+    }
+}
+
 fn cell(
     file: &SpecFile,
     column: &SpecColumn,
     kind: Kind,
+    pool: &Pool<'_>,
     unit: &Unit_<'_>,
     null_rate: f64,
     rng: &mut Rng,
@@ -291,30 +322,18 @@ fn cell(
             Some(Attribute::PersonKey | Attribute::FirmKey | Attribute::Year)
         );
     if !keyed && rng.chance(null_rate) {
-        let sentinels: Vec<&str> = column
-            .codes
-            .iter()
-            .filter(|c| c.sentinel)
-            .map(|c| c.code.as_str())
-            .collect();
-        if sentinels.is_empty() {
+        if pool.sentinels.is_empty() {
             return Ok(Cell::Null);
         }
-        let code = sentinels[pick(rng, sentinels.len())];
+        let code = pool.sentinels[pick(rng, pool.sentinels.len())];
         return from_text(code, kind).ok_or_else(|| not_numeric(at()));
     }
     if let Some(attribute) = column.attribute {
-        return attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()));
+        return attribute_cell(column, kind, &pool.codes, attribute, unit, rng)
+            .ok_or_else(|| not_numeric(at()));
     }
-    // A value set of sentinels only documents no value: draw from it, invent none.
-    let codes: Vec<&str> = column
-        .codes
-        .iter()
-        .filter(|c| !c.sentinel || column.codes.iter().all(|c| c.sentinel))
-        .map(|c| c.code.as_str())
-        .collect();
-    if !codes.is_empty() {
-        let code = codes[pick(rng, codes.len())];
+    if !pool.codes.is_empty() {
+        let code = pool.codes[pick(rng, pool.codes.len())];
         return from_text(code, kind).ok_or_else(|| not_numeric(at()));
     }
     if column.identifier {
@@ -354,6 +373,7 @@ fn pick(rng: &mut Rng, n: usize) -> usize {
 fn attribute_cell(
     column: &SpecColumn,
     kind: Kind,
+    codes: &[&str],
     attribute: Attribute,
     unit: &Unit_<'_>,
     rng: &mut Rng,
@@ -401,20 +421,18 @@ fn attribute_cell(
                 || unit.firm.map(|f| f.county.as_str()),
                 |p| Some(p.county.as_str()),
             )?;
-            // A code of the person's county (its first two digits), else any code; a
-            // value set of sentinels only is drawn as such.
-            let codes: Vec<&str> = column
-                .codes
-                .iter()
-                .filter(|c| !c.sentinel || column.codes.iter().all(|c| c.sentinel))
-                .map(|c| c.code.as_str())
-                .collect();
+            // A code of the person's county (its first two digits), else any code.
+            // simplify: filtered per row; key the pool by county if 1M-person runs slow.
             let local: Vec<&str> = codes
                 .iter()
                 .copied()
                 .filter(|c| c.len() == 4 && c.starts_with(county))
                 .collect();
-            let pool = if local.is_empty() { codes } else { local };
+            let pool = if local.is_empty() {
+                codes.to_vec()
+            } else {
+                local
+            };
             if pool.is_empty() {
                 // simplify: without a value set, the county seat (`<county>80` in every
                 // county); embed SCB's municipality list if analyses need the spread.
@@ -456,7 +474,8 @@ fn year_cell(
     }
 }
 
-/// An integer in the column's kind, or `None` when its decimal storage cannot hold it.
+/// An integer in the column's kind, or `None` when the kind cannot hold it: a decimal
+/// storage too narrow, a boolean other than 0 or 1, a date.
 fn from_int(n: i64, kind: Kind) -> Option<Cell> {
     Some(match kind {
         Kind::Text => Cell::Text(n.to_string()),
@@ -467,8 +486,13 @@ fn from_int(n: i64, kind: Kind) -> Option<Cell> {
                 .checked_mul(10i128.checked_pow(u32::from(scale))?)
                 .filter(|v| v.unsigned_abs() < 10u128.pow(u32::from(precision)))?,
         ),
-        Kind::Bool => Cell::Bool(n != 0),
-        _ => Cell::Int(n),
+        Kind::Bool => match n {
+            0 => Cell::Bool(false),
+            1 => Cell::Bool(true),
+            _ => return None,
+        },
+        Kind::Int32 | Kind::Int64 => Cell::Int(n),
+        Kind::Date | Kind::DateTime => return None,
     })
 }
 
