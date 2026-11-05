@@ -9,12 +9,46 @@
         {
           "fqid": "demo/reg2",
           "name": "Andra registret",
-          "period": {"start": "2019-01-01", "end": "2021-01-01"}
+          "period": {"start": "2019-01-01", "end": "2021-01-01"},
+          "variables": [
+            {
+              "fqid": "demo/reg2/inkomstbrutto",
+              "name": "Inkomst efter skatt",
+              "period": {"start": "2019-01-01", "end": "2021-01-01"},
+              "tables": ["demo/reg2/ind"]
+            },
+            {
+              "fqid": "demo/reg2/kon",
+              "name": "Kön",
+              "period": {"start": "2019-01-01", "end": "2021-01-01"},
+              "tables": ["demo/reg2/ind"]
+            },
+            {
+              "fqid": "demo/reg2/lopnr",
+              "name": "Löpnummer",
+              "period": {"start": "2019-01-01", "end": "2021-01-01"},
+              "tables": ["demo/reg2/hus", "demo/reg2/ind"]
+            },
+            {
+              "fqid": "demo/reg2/storlek",
+              "name": "Storlek",
+              "period": {"start": "2020-01-01", "end": "2021-01-01"},
+              "tables": ["demo/reg2/hus"]
+            }
+          ]
         },
         {
           "fqid": "demo/reg3",
           "name": "Tredje registret",
-          "period": {"start": "2018-01-01", "end": "2021-01-01"}
+          "period": {"start": "2018-01-01", "end": "2021-01-01"},
+          "variables": [
+            {
+              "fqid": "demo/reg3/kon",
+              "name": "Kön",
+              "period": {"start": "2018-01-01", "end": "2021-01-01"},
+              "tables": ["demo/reg3"]
+            }
+          ]
         }
       ]
     },
