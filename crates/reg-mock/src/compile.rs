@@ -678,12 +678,20 @@ impl Context<'_> {
         }
         segments.sort_by_key(|s| s.period.days((i64::MIN, i64::MAX)));
         let primary = segments[0];
-        let (dtype, held) = match resolve_type(
-            overrides.first().copied(),
-            storage,
-            primary.dtype.as_deref(),
-        ) {
-            Ok(resolved) => resolved,
+        // The catalog's type decides only without an override or held storage; then
+        // every segment's must resolve, and to the same type.
+        let resolved = segments
+            .iter()
+            .map(|s| resolve_type(overrides.first().copied(), storage, s.dtype.as_deref()))
+            .try_fold(None, |seen: Option<(ColumnType, bool)>, r| {
+                let r = r?;
+                match seen {
+                    Some(seen) if seen != r => Err("column_types_disagree"),
+                    _ => Ok(Some(r)),
+                }
+            });
+        let (dtype, held) = match resolved {
+            Ok(resolved) => resolved.expect("a segment per reference"),
             Err(code) => {
                 refusals.push(Refusal::new(
                     code,
