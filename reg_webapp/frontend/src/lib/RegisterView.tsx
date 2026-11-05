@@ -129,7 +129,7 @@ export function RegisterView({
               </fieldset>
             )}
             {/* Never empty: every chip's table delivers a variable. */}
-            <VariableRowList label="Variables">
+            <VariableRowList label="Variables" axis={axis}>
               {[...shown]
                 .sort((a, b) => svCollator.compare(a.name, b.name))
                 .map((variable) => {

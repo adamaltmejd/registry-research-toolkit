@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { RegisterFacet } from "./api";
+import type { RegisterFacet, RegisterShow } from "./api";
 import {
   useBrowseFilter,
   useOtherRegisterMatches,
@@ -7,7 +7,7 @@ import {
 } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, leafSlug, rankFilter, svCollator } from "./catalog";
-import { sharedShow } from "./catalog_names";
+import { catalogRootChildren, sharedShow } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { Highlight } from "./Highlight";
 import {
@@ -16,6 +16,7 @@ import {
   type ColumnSection,
 } from "./ui/ColumnList";
 import { useAsyncResource } from "./use_async_resource";
+import { useCatalogRead } from "./use_store_read";
 
 const MORE = "more:";
 
@@ -64,6 +65,57 @@ function otherRegisterSections(
   });
 }
 
+type VariableRef = RegisterShow["variables"][number];
+
+function sortedVariables(node: RegisterShow | null): VariableRef[] {
+  return [...(node?.variables ?? [])].sort((a, b) =>
+    svCollator.compare(a.name, b.name),
+  );
+}
+
+function rankVariables(variables: VariableRef[], needle: string) {
+  return rankFilter(variables, needle, (row) => [row.name, leafSlug(row.fqid)]);
+}
+
+/** Names only, except where two variables of one register share a name: then
+ * the years tell them apart, on screen and in the accessible name. */
+function variableItems(
+  variables: readonly VariableRef[],
+  rows: readonly VariableRef[],
+): ColumnItem[] {
+  const nameCounts = new Map<string, number>();
+  for (const variable of variables) {
+    nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
+  }
+  return rows.map((row) => ({
+    id: row.fqid,
+    name: row.name,
+    label:
+      (nameCounts.get(row.name) ?? 0) > 1
+        ? `${row.name}, ${catalogPeriodLabel(row.period)}`
+        : undefined,
+    href: catalogHref(row.fqid),
+    inProject: 0,
+  }));
+}
+
+/** ColumnList passes this renderer into RAC's Collection dependencies. A fresh
+ * function rebuilds every row, so keep it stable until the search text changes. */
+function useRenderName(needle: string) {
+  return useCallback(
+    // A "N more in <register>" row names a register, not a match: unmarked.
+    (item: ColumnItem) =>
+      item.id.startsWith(MORE) ? (
+        item.name
+      ) : (
+        <span className={styles.variableLabel}>
+          <Highlight text={item.label ?? item.name} needle={needle} />
+        </span>
+      ),
+    [needle],
+  );
+}
+
 export function VariableList({
   registerFqid,
   selectedFqid,
@@ -80,13 +132,8 @@ export function VariableList({
   const matches = useRegisterMatches(registerFqid);
   const otherMatches = useOtherRegisterMatches(registerFqid);
   const node = resource.data?.kind === "register" ? resource.data : null;
-  const variables = [...(node?.variables ?? [])].sort((a, b) =>
-    svCollator.compare(a.name, b.name),
-  );
-  const ranked = rankFilter(variables, needle, (row) => [
-    row.name,
-    leafSlug(row.fqid),
-  ]);
+  const variables = sortedVariables(node);
+  const ranked = rankVariables(variables, needle);
   const rows = matches
     ? [
         ...ranked.filter((row) => matches.has(row.fqid)),
@@ -95,36 +142,8 @@ export function VariableList({
         ),
       ]
     : ranked;
-  // Names only, except where two variables share a name: then the years tell
-  // them apart, on screen and in the accessible name.
-  const nameCounts = new Map<string, number>();
-  for (const variable of variables) {
-    nameCounts.set(variable.name, (nameCounts.get(variable.name) ?? 0) + 1);
-  }
-  const items = rows.map((row) => ({
-    id: row.fqid,
-    name: row.name,
-    label:
-      (nameCounts.get(row.name) ?? 0) > 1
-        ? `${row.name}, ${catalogPeriodLabel(row.period)}`
-        : undefined,
-    href: catalogHref(row.fqid),
-    inProject: 0,
-  }));
-  // ColumnList passes this renderer into RAC's Collection dependencies. A fresh
-  // function rebuilds every row, so keep it stable until the search text changes.
-  const renderName = useCallback(
-    // A "N more in <register>" row names a register, not a match: unmarked.
-    (item: ColumnItem) =>
-      item.id.startsWith(MORE) ? (
-        item.name
-      ) : (
-        <span className={styles.variableLabel}>
-          <Highlight text={item.label ?? item.name} needle={needle} />
-        </span>
-      ),
-    [needle],
-  );
+  const items = variableItems(variables, rows);
+  const renderName = useRenderName(needle);
   const seen = new Set(items.map((item) => item.id));
   const others = [
     ...otherRegisterSections(
@@ -165,6 +184,66 @@ export function VariableList({
       }
       error={
         resource.error || (!resource.loading && !node)
+          ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
+          : null
+      }
+    />
+  );
+}
+
+/**
+ * The variables column on a provider's page: every variable of its registers,
+ * one section per register under the register's name, in the register
+ * column's order. The search filters each section by name, as in a register's
+ * list, and a register with no match drops out.
+ */
+export function ProviderVariableList({
+  providerFqid,
+  className,
+}: {
+  providerFqid: string;
+  className?: string;
+}) {
+  const root = useCatalogRead(catalogRootChildren, undefined);
+  const provider = root.value?.find((p) => p.fqid === providerFqid) ?? null;
+  const registers = provider?.registers.map((r) => r.fqid) ?? null;
+  // simplify: one cached `show` per register. The largest SWECOV provider
+  // (scb) has 23 registers and 328 variables. Past ~30 registers the
+  // provider's own `show` should carry its registers' variables.
+  const resource = useAsyncResource(
+    registers === null ? null : `${providerFqid}\u0000${registers.join(" ")}`,
+    (signal) =>
+      Promise.all((registers ?? []).map((fqid) => sharedShow(fqid, signal))),
+  );
+  const needle = useBrowseFilter();
+  const renderName = useRenderName(needle);
+  // simplify: the search matches names and slugs only, not the server's
+  // variable matches the register page adds, which would be one facets request
+  // per register on each query. Upgrade when `/search/facets` takes a provider.
+  const sections: ColumnSection[] = (resource.data ?? []).flatMap((node) => {
+    if (node.kind !== "register") return [];
+    const variables = sortedVariables(node);
+    const items = variableItems(variables, rankVariables(variables, needle));
+    return [{ id: `register:${node.fqid}`, label: node.name, items }];
+  });
+  const failed = root.value !== null && provider === null;
+  return (
+    <ColumnList
+      label="Variables"
+      subject={provider?.name ?? undefined}
+      root={providerFqid}
+      className={className}
+      sections={resource.data === null ? null : sections}
+      selectedId={null}
+      selectedExact={false}
+      renderName={renderName}
+      empty={
+        needle.trim()
+          ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+          : "This provider lists no variables."
+      }
+      error={
+        resource.error || failed || (!root.loading && root.value === null)
           ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
           : null
       }

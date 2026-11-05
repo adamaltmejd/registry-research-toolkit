@@ -29,7 +29,11 @@ import { useAsyncResource } from "./lib/use_async_resource";
 import { useProjectCheck } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { useCatalogRead } from "./lib/use_store_read";
-import { NoRegisterList, VariableList } from "./lib/VariableList";
+import {
+  NoRegisterList,
+  ProviderVariableList,
+  VariableList,
+} from "./lib/VariableList";
 
 const useHref = (href: string) => href;
 
@@ -56,6 +60,13 @@ export function App() {
   const validation = useProjectCheck();
   const registerFqid =
     route.name === "catalog-node" ? registerOfPath(route.fqidPath) : null;
+  // A provider's own page lists all its registers' variables.
+  const providerFqid =
+    route.name === "catalog-node" &&
+    !route.fqidPath.includes("/") &&
+    route.fqidPath !== "class"
+      ? route.fqidPath
+      : null;
   const searching = useBrowseFiltering();
   const [providerRef = null, registerRef = null] = trailAncestors(route);
   const provider = useCatalogRead(ancestorNameRead, providerRef);
@@ -103,6 +114,12 @@ export function App() {
                     ? route.fqidPath
                     : null
                 }
+                className={styles.list}
+              />
+            ) : providerFqid ? (
+              <ProviderVariableList
+                key={providerFqid}
+                providerFqid={providerFqid}
                 className={styles.list}
               />
             ) : (

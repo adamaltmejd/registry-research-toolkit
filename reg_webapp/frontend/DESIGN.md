@@ -399,32 +399,37 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   holds an empty state ("Choose a register to list its variables."). The register column
   appears whole or not at all, never with a provider still loading (#2232). The two
   column headers share one height, so their rules line up. Every group is open by
-  default; a header triangle collapses it, the column header offers one toggle that
-  reads "Collapse all" while any group is open and "Expand all" once all are closed, and
-  collapse state is remembered per user. A group's items are indented `spacing.3` from
-  the group's label, not a full column (toggle and indent maintainer-decided
-  2026-10-22). A group header is the `label` level at weight 500 in `text-muted` on
-  `bg`, its disclosure a small `text-faint` triangle turned −90° when closed, with no
-  rule under it. Rows are selectable options, not links. On a variable or group page its
-  register's row stays selected, and pressing it opens the register. Selection moves
-  with arrow keys across columns, and selecting a row opens its page; type-ahead moves
-  focus only. Left on a group header collapses it, Right expands it; Right on a register
-  row moves to the variables column, and Left there moves back. Collapsing a group never
-  changes the selection: the detail pane keeps its page, and keyboard focus moves to the
-  group row. For a register the second column is flat, a concept group folded to one
-  item (#303), its identifier and panel-key variables first and the rest in Swedish
-  collation; on a group's page (or a member's, which shows that page) the same list
-  stays and the group's row is selected. The members are lanes on that page, not rows in
-  the column. A browse column fills the viewport below the top bar and scrolls its own
-  list. Every item and group carries its in-project mark on the right when it has one.
-  Below the single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two
-  columns leave the detail pane under 400px, #2107) the columns stack, one at a time;
-  the way back is the breadcrumb's first crumb, "Browse registers", drawn as a `default`
-  button on its own line above the trail so it reads as an action, not a path segment
-  (#1824). Every page's trail leads with it below the breakpoint (and only there: beside
-  the columns it would repeat them), and it opens the register list; while the search
-  holds text it reads "Show matching registers", since the list the search filters is
-  off screen. Do not mint new breakpoints.
+  default; a header triangle collapses it, pressing a collapsed group's row opens it
+  (and its page) but never closes it (maintainer 2026-11-05), the column header offers
+  one toggle that reads "Collapse all" while any group is open and "Expand all" once all
+  are closed, and collapse state is remembered per user. A group's items are indented
+  `spacing.3` from the group's label, not a full column (toggle and indent
+  maintainer-decided 2026-10-22). A group header is the `label` level at weight 500 in
+  `text-muted` on `bg`, its disclosure a small `text-faint` triangle turned −90° when
+  closed, with no rule under it. Rows are selectable options, not links. On a variable
+  or group page its register's row stays selected, and pressing it opens the register.
+  Selection moves with arrow keys across columns, and selecting a row opens its page;
+  type-ahead moves focus only. Left on a group header collapses it, Right expands it;
+  Right on a register row moves to the variables column, and Left there moves back.
+  Collapsing a group never changes the selection: the detail pane keeps its page, and
+  keyboard focus moves to the group row. On a provider's page the second column lists
+  every variable of its registers, one section per register under the register's name,
+  in the register column's order (maintainer 2026-11-05); the search filters each
+  section by name and drops a register with no match. For a register the second column
+  is flat, a concept group folded to one item (#303), its identifier and panel-key
+  variables first and the rest in Swedish collation; on a group's page (or a member's,
+  which shows that page) the same list stays and the group's row is selected. The
+  members are lanes on that page, not rows in the column. A browse column fills the
+  viewport below the top bar and scrolls its own list. Every item and group carries its
+  in-project mark on the right when it has one. Below the single narrow breakpoint
+  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
+  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
+  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
+  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
+  below the breakpoint (and only there: beside the columns it would repeat them), and it
+  opens the register list; while the search holds text it reads "Show matching
+  registers", since the list the search filters is off screen. Do not mint new
+  breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -637,7 +642,10 @@ Time is the axis every relation is drawn on.
   span with no start at all (year-independent) begins at the axis start. A one-year axis
   widens by one step of 5, backward where forward would pass the catalog's last year. A
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
-  `Timeline`, and a page with several sources draws them on one axis.
+  `Timeline`, and a page with several sources draws them on one axis. Every drawn axis
+  labels its first and last year (maintainer 2026-11-05). On a `LaneGraph` a window
+  bound whose label would touch an end's label hangs away from that end; where they
+  still touch, the bound's year stands for that end.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no
@@ -672,14 +680,18 @@ Time is the axis every relation is drawn on.
   one hop of read-only lanes, with arrows from predecessor to successor and each
   neighbour's name linking to its variable page.
 
-- A **`VariableRow`** repeats its list's axis as a thin bar, so a variable that does not
-  cover the window is visible before it is added. It is one read-only row of a
-  register's variable list, never a table with column headers: the in-project dot and
-  wash, the name in the text face as a link to the variable page, and the bar with the
-  study window block. Assistive technology reads "Delivered <years>" and, when bound, ",
-  in the project". Below `breakpoint-narrow` the bar sits on top, then the name with its
-  dot (#1826). Adding starts from the variable page, where the coverage `LaneGraph`, add
-  window and add bar show which tables and years are added.
+- A **`VariableRow`** repeats its list's axis as a thin bar (`ui/YearTrack`), so a
+  variable that does not cover the window is visible before it is added. It is one
+  read-only row of a register's variable list, or of a provider's register list (the
+  register's years as one span), never a table row: the in-project dot and wash, the
+  name in the text face as a link to its page, and the bar with the study window block.
+  The list's one header is the bars' axis (`YearAxis`): its first year over the bars'
+  start and its last over their end, in the `axis` type (maintainer 2026-11-05). The
+  axis row shares the rows' grid, so below `breakpoint-narrow`, where the bar sits on
+  top and then the name with its dot (#1826), the axis still sits over the bars.
+  Assistive technology reads "Delivered <years>" and, when bound, ", in the project";
+  the axis is decorative. Adding starts from the variable page, where the coverage
+  `LaneGraph`, add window and add bar show which tables and years are added.
 
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
   member order), columns as spans, and relations as arrows: solid for succession, dashed

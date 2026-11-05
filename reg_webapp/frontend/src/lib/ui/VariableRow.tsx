@@ -1,12 +1,10 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import styles from "./VariableRow.module.css";
-
-/** Inclusive years. */
-export type YearSpan = readonly [number, number];
+import { YearAxis, type YearSpan, YearTrack } from "./YearTrack";
 
 interface Props {
   name: string;
-  /** The variable's (or group's) own page; the name links there. */
+  /** The row's own page; the name links there. */
   href: string;
   /** Something of this row is in the open project: the dot and the wash. */
   inProject: boolean;
@@ -19,12 +17,12 @@ interface Props {
 }
 
 /**
- * One variable in a register's list (DESIGN.md → Time → VariableRow): the
- * in-project dot, the name in the text face (no FQID: the register's page
- * already says where the variables live), and a
- * thin coverage bar on the pane's axis with the study window as an
- * `accent-bg` block, so a variable that does not cover the window shows before
- * it is added. Never a table row: the list has no column headers.
+ * One row of a pane's list (DESIGN.md → Time → VariableRow): a variable in a
+ * register's list, or a register in a provider's. The in-project dot, the
+ * name in the text face (no FQID: the page already says where the rows live),
+ * and a thin `YearTrack` on the pane's axis with the study window as an
+ * `accent-bg` block, so a row that does not cover the window shows before it
+ * is added. Never a table row: the list's one header is its axis.
  */
 export function VariableRow({
   name,
@@ -34,25 +32,6 @@ export function VariableRow({
   axis,
   window,
 }: Props) {
-  // A year is a cell [year, year + 1), so a one-year span has width.
-  const [first, last] = axis;
-  const cells = Math.max(1, last - first + 1);
-  const place = ([from, to]: YearSpan): CSSProperties | null => {
-    const a = Math.max(from, first);
-    const b = Math.min(to, last);
-    if (b < a) return null;
-    return {
-      left: `${((a - first) / cells) * 100}%`,
-      width: `${((b - a + 1) / cells) * 100}%`,
-    };
-  };
-  const windowAt = window ? place(window) : null;
-  const years =
-    coverage.length === 0
-      ? "no dated delivery"
-      : coverage
-          .map(([from, to]) => (from === to ? `${from}` : `${from}–${to}`))
-          .join(", ");
   return (
     <li className={styles.row} data-in-project={inProject || undefined}>
       <InProjectDot inProject={inProject} />
@@ -62,39 +41,38 @@ export function VariableRow({
         </a>
         {inProject && <span className="visually-hidden">, in the project</span>}
       </div>
-      {/* Decorative: the years are read out beside it for assistive tech. */}
-      <span className={styles.bar} title={`Delivered ${years}`}>
-        <span className={styles.track} aria-hidden="true">
-          {windowAt && <span className={styles.window} style={windowAt} />}
-          {coverage.map((span) => {
-            const at = place(span);
-            return at ? (
-              <span
-                key={`${span[0]}:${span[1]}`}
-                className={styles.segment}
-                style={at}
-              />
-            ) : null;
-          })}
-        </span>
-        <span className="visually-hidden">Delivered {years}.</span>
+      <span className={styles.bar}>
+        <YearTrack
+          coverage={coverage}
+          axis={axis}
+          window={window}
+          inProject={inProject}
+        />
       </span>
     </li>
   );
 }
 
-/** The list a pane's VariableRows sit in. */
+/** The list a pane's VariableRows sit in, under the axis their bars share:
+ * its first and last year over the bars' column (DESIGN.md → Time). */
 export function VariableRowList({
   label,
+  axis,
   children,
 }: {
   label: string;
+  axis: YearSpan;
   children: ReactNode;
 }) {
   return (
-    <ul className={styles.list} aria-label={label}>
-      {children}
-    </ul>
+    <div className={styles.rows}>
+      <div className={styles.axisRow}>
+        <YearAxis axis={axis} className={styles.bar} />
+      </div>
+      <ul className={styles.list} aria-label={label}>
+        {children}
+      </ul>
+    </div>
   );
 }
 

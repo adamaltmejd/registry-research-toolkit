@@ -1,0 +1,50 @@
+/* The thin year bar (DESIGN.md → Time → VariableRow): a hairline track, the
+   study window as a short accent-bg block on it, the delivered years as ink
+   segments (accent in the project). */
+.bar {
+  display: block;
+}
+.track {
+  position: relative;
+  display: block;
+  height: 10px;
+}
+.track::before {
+  content: "";
+  position: absolute;
+  inset: 4px 0;
+  background: var(--border);
+}
+.window {
+  position: absolute;
+  inset-block: 0;
+  background: var(--accent-bg);
+  box-shadow:
+    inset 1px 0 0 var(--accent),
+    inset -1px 0 0 var(--accent);
+}
+.bar[data-in-project] .window {
+  background: var(--surface);
+}
+.segment {
+  position: absolute;
+  inset-block: 3px;
+  min-width: 2px;
+  border-radius: 1px;
+  background: var(--text);
+}
+.bar[data-in-project] .segment {
+  background: var(--accent);
+}
+
+/* The axis over the bars: the first year at the start, the last at the end. */
+.axis {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-axis);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-muted);
+}

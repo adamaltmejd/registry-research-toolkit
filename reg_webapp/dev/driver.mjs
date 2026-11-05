@@ -280,6 +280,25 @@ async function browsePagesCase(page, shoot) {
   const trail = main.getByRole("navigation", { name: "Breadcrumb", exact: true });
   await trail.getByRole("link", { name: "Demoleverantören", exact: true }).click();
   await page.waitForURL("**/catalog/demo");
+  // "Browse registers" leads the trail only where the columns stack.
+  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
+  if (!narrow) {
+    // Fails if a provider's page stops listing every variable of its registers,
+    // one group per register under its name (maintainer 2026-11-05), or a press
+    // on a collapsed provider's row stops opening it, or starts closing an open
+    // one. Names are the fixture's.
+    const variables = page.getByRole("listbox", { name: "Variables in Demoleverantören", exact: true });
+    await variables.getByRole("group", { name: "Basregistret", exact: true }).getByRole("option", { name: "Kön", exact: true }).waitFor();
+    await variables.getByRole("group", { name: "Hushållsregistret", exact: true }).getByRole("option", { name: "Bransch", exact: true }).waitFor();
+    const tree = page.getByRole("treegrid", { name: "Registers", exact: true });
+    const provider = (expanded) => tree.getByRole("row", { name: "Demoleverantören", exact: true, expanded });
+    await provider(true).getByRole("button", { name: "Collapse Demoleverantören", exact: true }).click();
+    await provider(false).getByText("Demoleverantören", { exact: true }).click();
+    await provider(true).waitFor();
+    await provider(true).getByText("Demoleverantören", { exact: true }).click();
+    await settled(page);
+    check((await provider(true).count()) === 1, "a press on an open provider collapsed it");
+  }
   await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
   await page.waitForURL("**/catalog/demo/hush");
   await settled(page);
@@ -300,8 +319,6 @@ async function browsePagesCase(page, shoot) {
   await open(page, "/catalog/demo/hush/fam");
   await settled(page);
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
-  // "Browse registers" leads the trail only where the columns stack.
-  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
   const crumbs = await trail.getByRole("link").filter({ visible: true }).allInnerTexts();
   const expected = [...(narrow ? ["Browse registers"] : []), "Demoleverantören", "Hushållsregistret"];
   check(JSON.stringify(crumbs) === JSON.stringify(expected),
