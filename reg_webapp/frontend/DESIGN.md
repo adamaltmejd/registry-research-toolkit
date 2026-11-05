@@ -416,28 +416,27 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   columns, and selecting a row opens its page; type-ahead moves focus only. Left on a
   group header collapses it, Right expands it; Right on a register row, or on the open
   provider row of a provider's page, moves to the variables column, and Left there moves
-  back. Collapsing a group never changes the
-  selection: the detail pane keeps its page, and keyboard focus moves to the group row.
-  On a provider's page the second column lists every variable of its registers, one
-  section per register under the register's name, in that order (maintainer 2026-11-05);
-  the search filters each section as it filters a register's list, so a section lists
-  the matches its register row counts, and drops a register with no match. Its rows
-  open on a click or Enter, not as the arrows pass (they re-root the list under the
-  variable's register), and focus stays on the opened row. For a
-  register the second column is flat, a concept group folded to one item (#303), its
-  identifier and panel-key variables first and the rest in Swedish collation; on a
-  group's page (or a member's, which shows that page) the same list stays and the
-  group's row is selected. The members are lanes on that page, not rows in the column. A
-  browse column fills the viewport below the top bar and scrolls its own list. Every
-  item and group carries its in-project mark on the right when it has one. Below the
-  single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two columns leave
-  the detail pane under 400px, #2107) the columns stack, one at a time; the way back is
-  the breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its
-  own line above the trail so it reads as an action, not a path segment (#1824). Every
-  page's trail leads with it below the breakpoint (and only there: beside the columns it
-  would repeat them), and it opens the register list; while the search holds text it
-  reads "Show matching registers", since the list the search filters is off screen. Do
-  not mint new breakpoints.
+  back. Collapsing a group never changes the selection: the detail pane keeps its page,
+  and keyboard focus moves to the group row. On a provider's page the second column
+  lists every variable of its registers, one section per register under the register's
+  name, in that order (maintainer 2026-11-05); the search filters each section as it
+  filters a register's list, so a section lists the matches its register row counts, and
+  drops a register with no match. Its rows open on a click or Enter, not as the arrows
+  pass (they re-root the list under the variable's register), and focus stays on the
+  opened row. For a register the second column is flat, a concept group folded to one
+  item (#303), its identifier and panel-key variables first and the rest in Swedish
+  collation; on a group's page (or a member's, which shows that page) the same list
+  stays and the group's row is selected. The members are lanes on that page, not rows in
+  the column. A browse column fills the viewport below the top bar and scrolls its own
+  list. Every item and group carries its in-project mark on the right when it has one.
+  Below the single narrow breakpoint (`breakpoint-narrow`, 60rem: narrower, the two
+  columns leave the detail pane under 400px, #2107) the columns stack, one at a time;
+  the way back is the breadcrumb's first crumb, "Browse registers", drawn as a `default`
+  button on its own line above the trail so it reads as an action, not a path segment
+  (#1824). Every page's trail leads with it below the breakpoint (and only there: beside
+  the columns it would repeat them), and it opens the register list; while the search
+  holds text it reads "Show matching registers", since the list the search filters is
+  off screen. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -648,15 +647,14 @@ Time is the axis every relation is drawn on.
   year-independent span (no start and no end, a timeless table's) begins at the axis
   start on a lane, so its column stays pickable; a `VariableRow` has no dated years for
   it, so it draws a bare track read as "no dated delivery" and does not count toward the
-  axis. A one-year axis
-  widens by one step of 5, backward where forward would pass the catalog's last year. A
-  page's drawings share its one axis, so a register's `VariableRow`s line up with its
-  `Timeline`, and a page with several sources draws them on one axis. The axis of a
-  `LaneGraph` (the `Timeline` and source timelines), a code timeline and a `VariableRow`
-  list labels its first and last year, at every width (maintainer 2026-11-05). On a
-  `LaneGraph` a window bound whose label would touch an end's hangs away from that end,
-  and where they still touch, the bound's label is dropped (the window's band still marks
-  it); an end's label never moves or gives way.
+  axis. A one-year axis widens by one step of 5, backward where forward would pass the
+  catalog's last year. A page's drawings share its one axis, so a register's
+  `VariableRow`s line up with its `Timeline`, and a page with several sources draws them
+  on one axis. The axis of a `LaneGraph` (the `Timeline` and source timelines), a code
+  timeline and a `VariableRow` list labels its first and last year, at every width
+  (maintainer 2026-11-05). On a `LaneGraph` a window bound whose label would touch an
+  end's hangs away from that end, and where they still touch, the bound's label is
+  dropped (the window's band still marks it); an end's label never moves or gives way.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no
