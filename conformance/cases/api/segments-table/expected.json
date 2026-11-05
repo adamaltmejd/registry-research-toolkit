@@ -1,0 +1,26 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable": ["demo/sg/kanslig", "demo/sg/svar", "demo/sg/kanslig"],
+      "/data/items/*/table": ["demo/sg/t", "demo/sg/t", "demo/sg/t"],
+      "/data/items/*/period/start": ["2018-01-01", "2018-01-01", "2020-01-01"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable": ["demo/sg/svar"],
+      "/data/items/*/period/start": ["2020-01-01"],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable": ["demo/sg2/svar"],
+      "/data/items/*/table": ["demo/sg2"],
+      "/data/next_cursor": null
+    }
+  }
+]

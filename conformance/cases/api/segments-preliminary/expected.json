@@ -24,7 +24,8 @@
         "period",
         "role",
         "table",
-        "table_name"
+        "table_name",
+        "variable"
       ]
     }
   }

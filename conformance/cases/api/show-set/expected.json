@@ -24,6 +24,7 @@
             "name": "Förvärvsinkomst, hushåll",
             "segments": [
               {
+                "variable": "demo/bas/gross-household",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "gross-household",
@@ -53,6 +54,7 @@
             "name": "Disponibel inkomst, hushåll",
             "segments": [
               {
+                "variable": "demo/bas/net-household",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "net-household",
@@ -82,6 +84,7 @@
             "name": "Förvärvsinkomst, person",
             "segments": [
               {
+                "variable": "demo/bas/gross-person",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "gross-person",
@@ -112,6 +115,7 @@
             "description": "Inkomst per person, före skatt till och med 2018.",
             "segments": [
               {
+                "variable": "demo/bas/inkomst",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "Inkomst",
@@ -124,6 +128,7 @@
                 "role": "measure"
               },
               {
+                "variable": "demo/bas/inkomst",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "Inkomst",
@@ -136,6 +141,7 @@
                 "role": "measure"
               },
               {
+                "variable": "demo/bas/inkomst",
                 "table": "demo/bas",
                 "table_name": "Basregistret",
                 "column": "Inkomst",

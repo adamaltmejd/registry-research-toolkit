@@ -65,7 +65,7 @@ fn param_schema(ty: &str) -> Value {
         "hash" => json!({"type": "string", "pattern": "^[0-9a-f]{64}$"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
         "boolean" => json!({"type": "boolean"}),
-        // At most 200 values: the table's one array, `resolve`'s `columns`.
+        // At most 200 values: `resolve`'s `columns`, `segments`' `variable`.
         "string[]" => json!({"type": "array", "items": {"type": "string"}, "maxItems": 200}),
         _ => panic!("map parameter type {ty:?}"),
     }
