@@ -7,6 +7,8 @@ MONA](https://www.scb.se/mona).
   | --------------------------- | ----------------------------------------------------------------------------------- |
   | [`crates/`](crates/)        | Rust: the `reg-meta` server (HTTP API and MCP), the catalog reader, and `reg-build` |
   | [`reg_webapp`](reg_webapp/) | Rust server container and hosted MCP edge deployment                                |
+  | [`reg_mona_runner`](reg_mona_runner/) | `swecov_extract.R`, the extract runner a SWECOV data manager runs inside MONA |
+  | [`reg_export_gate`](reg_export_gate/) | `export_gate.R`, the check a MONA pipeline runs before anything is exported   |
   | [`plugins/`](plugins/)      | The `microdata-tools-se` agent plugin                                               |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
@@ -31,9 +33,9 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 then install `microdata-tools-se` from the plugin marketplace UI.
 
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
-(or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles two skills:
-`register-metadata-search`, which documents its tools, and `register-project`, for
-drafting a `project_data.json`. Nothing else to install.
+(or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles three skills:
+`register-metadata-search`, which documents its tools, `register-project`, for drafting a
+`project_data.json`, and `register-research-scaffold`. Nothing else to install.
 
 ## Quick start
 
@@ -47,8 +49,7 @@ https://reg-meta.vqv.uk/mcp
 
 SWECOV's catalog, which answers from SWECOV's holdings, is at
 `https://data.swecov.se/mcp`. The agent plugin above does this for you (its catalog URL
-is a setting). SWECOV's catalog remains browsable at <https://data.swecov.se> on its
-last old-schema release until milestone E.
+is a setting). SWECOV's catalog is also browsable at <https://data.swecov.se>.
 
 ### Local server
 
@@ -89,11 +90,8 @@ Run the HTTP API and `/mcp` with the same binary and catalog directory:
 ```
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
-it). The SPA is archived on `archive/reg-webapp-spa` and returns in milestone E; see
-[`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
+it). The SPA is described in [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
-A local binary released after the switch reads only the v4 catalog, so SWECOV users keep
-the last old binary until milestone E.
 
 ## Development
 

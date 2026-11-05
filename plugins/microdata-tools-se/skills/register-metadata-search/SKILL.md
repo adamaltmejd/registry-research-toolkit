@@ -11,8 +11,7 @@ description: Query Swedish register metadata (SCB, Socialstyrelsen and other hol
 The plugin's `catalog` MCP server answers questions about Swedish administrative
 registers. It serves the published global catalog (`https://reg-meta.vqv.uk/mcp`);
 `show` with no `ref` lists its providers. It holds structural metadata — registers,
-tables, variables, value codes, documentation — not microdata. Classifications are not
-served yet.
+tables, variables, value codes, documentation — not microdata.
 
 ## Tools
 
