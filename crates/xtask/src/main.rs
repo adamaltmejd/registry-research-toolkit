@@ -10,6 +10,7 @@ fn main() -> ExitCode {
         Some((cmd, rest)) if cmd == "release-base-reuse" => xtask::release_base_reuse::main(rest),
         Some((cmd, rest)) if cmd == "gen-case-folding" => xtask::gen_case_folding::main(rest),
         Some((cmd, rest)) if cmd == "search-eval" => xtask::search_eval::main(rest),
+        Some((cmd, rest)) if cmd == "usage" => xtask::usage::main(rest),
         _ => {
             eprintln!("{}", xtask::USAGE);
             xtask::gh_issue::EXIT_USAGE
