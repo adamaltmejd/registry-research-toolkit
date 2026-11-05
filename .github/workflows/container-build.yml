@@ -270,7 +270,7 @@ jobs:
             code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
             asset=$(git show "$TAG:crates/reg-core/src/lib.rs" | grep -oE "$pattern" || true)
             if [ -z "$code" ] || [ "$code" != "$asset" ]; then
-              msg="schema-guard: $name: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first"
+              msg="schema-guard: $name: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the release first"
               if [ "${{ github.event_name }}" = pull_request ]; then
                 echo "::warning::$msg; PR image build skipped."
                 echo "schema_match=false" >> "$GITHUB_OUTPUT"
@@ -342,7 +342,6 @@ jobs:
           filter: blob:none
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       # Registry push auth (main/dispatch only). The username is ignored by
-      # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
       - name: Log in to registry.fly.io
         if: github.event_name != 'pull_request'

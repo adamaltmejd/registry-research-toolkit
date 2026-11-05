@@ -163,24 +163,24 @@ The Rust server sets the reads' ETags and `Cache-Control` (tiers in
 `crates/reg-catalog`, validators in `crates/reg-meta/src/validator.rs`); a POST answer
 (`validate`, `order`) carries no validator.
 
-**Early revalidation (#1453).** App code and the compiled catalog DB are immutable for a
-process lifetime; changing either replaces the process. At startup the server derives
-one token from the SHA-256 of its own binary and the selected database files. File
-bytes, not identity fields: `generation_id` does not cover `catalog_version`, which
-reaches responses. The image hashes the binary and database when it is built
-(`Dockerfile`, passed in as `REG_META_CONTENT_DIGEST` by the entrypoint): hashing the
-catalog at boot on the throttled rootfs would outlast the entrypoint's 60 s readiness
-deadline. Without the variable (local runs, the conformance suite) the server hashes its
-binary and base catalog at boot; only the image digest covers the holdings partner too.
-A GET read's strong ETag is that token plus the request's path and query, excluding
-`__edge_v`. The edge reserves this parameter for its cache generation; the server
-removes it before operation parameter validation and ETag derivation. Every other
-unknown parameter is still rejected. An edge redeploy therefore keeps browser validators
-valid for unchanged responses. A tower layer in front of every GET operation and
-download (a route layer, so another method keeps its 405) answers a matching
-`If-None-Match` with a 304 before the route runs, so a revalidation does no DB work and
-no body serialization. `If-None-Match: *` still runs the route, since it matches only a
-representation that exists. Only a 200 carries the ETag and tier.
+**Early revalidation.** App code and the compiled catalog DB are immutable for a process
+lifetime; changing either replaces the process. At startup the server derives one token
+from the SHA-256 of its own binary and the selected database files. File bytes, not
+identity fields: `generation_id` does not cover `catalog_version`, which reaches
+responses. The image hashes the binary and database when it is built (`Dockerfile`,
+passed in as `REG_META_CONTENT_DIGEST` by the entrypoint): hashing the catalog at boot
+on the throttled rootfs would outlast the entrypoint's 60 s readiness deadline. Without
+the variable (local runs, the conformance suite) the server hashes its binary and base
+catalog at boot; only the image digest covers the holdings partner too. A GET read's
+strong ETag is that token plus the request's path and query, excluding `__edge_v`. The
+edge reserves this parameter for its cache generation; the server removes it before
+operation parameter validation and ETag derivation. Every other unknown parameter is
+still rejected. An edge redeploy therefore keeps browser validators valid for unchanged
+responses. A tower layer in front of every GET operation and download (a route layer, so
+another method keeps its 405) answers a matching `If-None-Match` with a 304 before the
+route runs, so a revalidation does no DB work and no body serialization.
+`If-None-Match: *` still runs the route, since it matches only a representation that
+exists. Only a 200 carries the ETag and tier.
 
 The server owns each read operation's cache tier. Context revalidates always; catalog
 and search reads use a short browser lifetime and a longer shared-cache lifetime;
@@ -220,12 +220,12 @@ The container runs on Fly.io behind Cloudflare. The immutable SQLite artifact an
 binary are baked into a plain Docker image; `fly.toml` and the deploy job supply the
 platform-specific configuration.
 
-The global catalog has no public website (maintainer, 2026-10-20, #1709): it is not what
-SWECOV offers, so it is not published under swecov.se. Agents use its hosted MCP (no
-install, no 1.2 GB download), so `reg-webapp-global` serves `/mcp` alone at
-`reg-meta.vqv.uk`. vqv.uk is the maintainer's side-project zone, chosen to keep the
-personal altmejd.se zone out of it. `data.swecov.se` serves the SWECOV SPA, API and
-hosted MCP through its own origin and worker.
+The global catalog has no public website (maintainer ruling): it is not what SWECOV
+offers, so it is not published under swecov.se. Agents use its hosted MCP (no install,
+no 1.2 GB download), so `reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`.
+vqv.uk is the maintainer's side-project zone, chosen to keep the personal altmejd.se
+zone out of it. `data.swecov.se` serves the SWECOV SPA, API and hosted MCP through its
+own origin and worker.
 
 - **The image runs the Rust server alone**: `reg-meta serve --db /opt/reg_meta` with the
   base catalog and, for SWECOV, its paired holdings DB. There is no Python at runtime.
@@ -278,36 +278,34 @@ hosted MCP through its own origin and worker.
   build-completion order, not commit order — without the guard an older commit's slow
   build could overwrite a newer deploy; it also makes non-main dispatches deploy-inert).
   Because a guarded commit skips, `changes` diffs a push against the last deployed
-  commit, not the push's `before` (#1481): otherwise a served-path push followed by a
-  non-served one before its deploy ran would deploy neither. The last deployed commit is
-  the newest successful main run of the workflow that no later push overlapped (so it
-  finished as HEAD); a failed or overlapped run never counts, which errs toward a
-  redundant redeploy, and no such run in the last 200 counts as everything changed.
-  Dispatching HEAD's run from the skipped job was rejected: it needs `actions: write`,
-  which the workflow does not hold. Two gates guard a bad image: the entrypoint smoke
-  gate (it probes `context`, `search`, docs search and `/mcp` with `curl`, and the
-  container exits non-zero before ever serving when artifact admission or a probe fails)
-  and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never passes).
-  The docs probe searches `lisa` and requires a `doc` field in a hit. SWECOV also
-  requires a non-null `steward_config` object in context.
+  commit, not the push's `before`: otherwise a served-path push followed by a non-served
+  one before its deploy ran would deploy neither. The last deployed commit is the newest
+  successful main run of the workflow that no later push overlapped (so it finished as
+  HEAD); a failed or overlapped run never counts, which errs toward a redundant
+  redeploy, and no such run in the last 200 counts as everything changed. Two gates
+  guard a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs
+  search and `/mcp` with `curl`, and the container exits non-zero before ever serving
+  when artifact admission or a probe fails) and fly.toml's `/api/context` HTTP check
+  (flyctl reports failure if it never passes). The docs probe searches `lisa` and
+  requires a `doc` field in a hit. SWECOV also requires a non-null `steward_config`
+  object in context.
 - **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
   (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
   (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
-  or absent at the tag (every release before the v4 switch), fails red with both values
-  and "publish the switch release first". There is no pending outcome and no
-  pass-through, so between the merge of a schema change and its release every main push
-  is red here and nothing deploys (fail closed; the server would refuse to boot on the
-  mismatched asset anyway). The guard is its **own** job so every deploy path consults
-  it: `build-image`, `deploy` and `edge-deploy` all gate on
-  `needs.schema-guard.result == 'success'`, including an edge-only push that has no bake
-  to fail. Publishing the release auto-dispatches `container-build.yml`
-  (`publish_reg_meta.yml`'s `deploy-image` job), which then passes and deploys. A
-  `workflow_dispatch` `reg_meta_tag` pin follows the same rule. A PR that bumps the
-  constant is expected to be red at `schema-guard` until it merges and its release
-  publishes; the check is not required on main. The maintainer runs the release after
-  the merge; a few hours of disruption at the switch are accepted.
-- **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
-  stage (`regmeta-db`) that copies nothing from the build context; its build args (tag,
+  or absent at the tag, fails red with both values and "publish the release first".
+  There is no pending outcome and no pass-through, so between the merge of a schema
+  change and its release every main push is red here and nothing deploys (fail closed;
+  the server would refuse to boot on the mismatched asset anyway). The guard is its
+  **own** job so every deploy path consults it: `build-image`, `deploy` and
+  `edge-deploy` all gate on `needs.schema-guard.result == 'success'`, including an
+  edge-only push that has no bake to fail. Publishing the release auto-dispatches
+  `container-build.yml` (`publish_reg_meta.yml`'s `deploy-image` job), which then passes
+  and deploys. A `workflow_dispatch` `reg_meta_tag` pin follows the same rule. A PR that
+  bumps the constant is expected to be red at `schema-guard` until it merges and its
+  release publishes; the check is not required on main. The maintainer runs the release
+  after the merge.
+- **Build/registry economics**: the reg_meta DB bake lives in its own Dockerfile stage
+  (`regmeta-db`) that copies nothing from the build context; its build args (tag,
   digest) name the asset, so one re-uploaded under an existing tag changes its digest
   and rebakes. CI builds use no layer cache: the GHA buildx cache cost about 2 min per
   export, never hit the cargo layer (`COPY crates/` busts it on every change) and saved
@@ -343,7 +341,7 @@ hosted MCP through its own origin and worker.
   incompatible. Frontend-only pushes also run the schema guard and the asset guard. A
   failing `deploy-swecov` (refused pair, OOM or failed probe) still makes the whole run
   fail; the resolver then rebuilds and redeploys global on later pushes until SWECOV is
-  fixed, as in the previous deployment design.
+  fixed.
 - **Edge workers** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
   `reg-webapp-global-edge` on `reg-meta.vqv.uk/*` without assets. It forwards `/mcp`
   alone with the edge token and returns a `no-store` 404 elsewhere.
@@ -359,7 +357,7 @@ hosted MCP through its own origin and worker.
   `__edge_v=DEPLOY_VERSION`; `/mcp` is never stamped, and the global worker's forwards
   stay unchanged. CI supplies the image tag (SHA, with a run-id suffix on dispatch). A
   fresh generation makes previous `/api/*` zone-cache entries unreachable, including the
-  old 0.64 payloads with a 24-hour shared TTL. The server ignores the parameter for
+  earlier payloads with a 24-hour shared TTL. The server ignores the parameter for
   operation validation and ETags. Image-affecting pushes redeploy the SWECOV edge too,
   after its origin, so changed payloads get a new generation. Manual deploys must pass a
   fresh version rather than ship the config's `dev` default.
