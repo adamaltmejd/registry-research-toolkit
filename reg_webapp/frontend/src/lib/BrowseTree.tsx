@@ -28,7 +28,6 @@ import {
   rankFilter,
   registerOfPath,
   sortedRegisters,
-  svCollator,
 } from "./catalog";
 import {
   CLASSIFICATIONS,
@@ -50,16 +49,22 @@ import { useRoute } from "./use_router";
 import { useCatalogRead } from "./use_store_read";
 
 /** One row: a provider at level 1, a register under it; or, below the
- * providers, the classifications at level 1, each classification under it. */
+ * providers, the one "Classifications" row, which never expands: the
+ * classifications are listed in the next column, as a register's variables
+ * are (maintainer review of the classification pages, 2026-11-05, point 2). */
 interface BrowseNode {
   id: string;
   name: string;
   href: string;
   children: BrowseNode[];
-  /** Set on a register the filter keeps only through its variables: how many. */
-  variableMatches?: number;
+  /** Set on a row the filter keeps only through what it lists: how many
+   * ("4 variables", "3 classifications"). */
+  matchedOn?: string;
   /** Drawn under a rule that sets it apart from the rows above. */
   separated?: boolean;
+  /** The items a leaf row lists in the next column, each by its names: the
+   * filter keeps the row while one of them matches. */
+  listed?: { noun: [string, string]; names: string[][] };
 }
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
@@ -109,16 +114,15 @@ interface CurrentRow {
 }
 
 /** The row the current page belongs to, by key (the row's FQID): a variable,
- * group or table page lives under its register, a classification version's
- * page under its classification. */
+ * group or table page lives under its register, every classification page
+ * under the one "Classifications" row. */
 function currentRow(route: Route): CurrentRow | null {
   switch (route.name) {
     case "catalog-node": {
       const segments = route.fqidPath.split("/");
-      // A version's address shows its classification's page.
       const key =
         segments[0] === CLASSIFICATIONS
-          ? segments.slice(0, 2).join("/")
+          ? CLASSIFICATIONS
           : (registerOfPath(route.fqidPath) ?? segments[0]);
       return { key, exact: key === route.fqidPath };
     }
@@ -132,7 +136,7 @@ function currentRow(route: Route): CurrentRow | null {
  * (`facets`, per register FQID), each with its count; or all of them when its
  * own name matches. Those groups are `matched`. A group with no match is left
  * out until the filter clears (#1830), and so is a leaf row whose own name does
- * not match. */
+ * not match, unless a name it lists in the next column does. */
 function filterNodes(
   nodes: BrowseNode[],
   needle: string,
@@ -146,10 +150,21 @@ function filterNodes(
       if (node.children.length > 0) matched.add(node.id);
       return [node];
     }
+    const listedHits = node.listed
+      ? rankFilter(node.listed.names, needle, (names) => names).length
+      : 0;
+    if (node.listed && listedHits > 0)
+      return [{ ...node, matchedOn: counted(listedHits, node.listed.noun) }];
     const byName = rankFilter(node.children, needle, named);
     const byVariables = node.children
       .filter((child) => !byName.includes(child) && facets.has(child.id))
-      .map((child) => ({ ...child, variableMatches: facets.get(child.id) }));
+      .map((child) => ({
+        ...child,
+        matchedOn: counted(facets.get(child.id) ?? 0, [
+          "variable",
+          "variables",
+        ]),
+      }));
     const children = [...byName, ...byVariables];
     if (children.length === 0) return [];
     matched.add(node.id);
@@ -174,21 +189,20 @@ function browseNodes(
     })),
   }));
   if (families.length === 0) return providers;
-  // The classifications follow the providers, under a rule (maintainer
-  // 2026-11-05), by name in Swedish collation as a provider's registers are.
+  // One row after the providers, under the list's section rule (maintainer
+  // review of the classification pages, 2026-11-05, point 1); the
+  // classifications themselves are the next column's items. The filter matches
+  // them by name and slug, as that column does.
   const classifications: BrowseNode = {
     id: CLASSIFICATIONS,
     name: CLASSIFICATIONS_LABEL,
     href: catalogHref(CLASSIFICATIONS),
     separated: true,
-    children: [...families]
-      .sort((a, b) => svCollator.compare(a.name, b.name))
-      .map((family) => ({
-        id: family.fqid,
-        name: family.name,
-        href: catalogHref(family.fqid),
-        children: [],
-      })),
+    children: [],
+    listed: {
+      noun: ["classification", "classifications"],
+      names: families.map((family) => [family.name, leafSlug(family.fqid)]),
+    },
   };
   return [...providers, classifications];
 }
@@ -238,8 +252,8 @@ export function BrowseTree({ className }: { className?: string }) {
     facetError ? "" : needle,
     facets,
   );
-  // None until the tree shows: a "Collapse all" pressed while the
-  // classifications load would leave their group out of the saved state.
+  // The tree waits for both reads, so the Classifications row never arrives
+  // under a list already shown; no group toggles until then.
   const treeLoading = root.loading || families.loading;
   const expandable = (treeLoading ? [] : nodes)
     .filter((node) => node.children.length > 0)
@@ -510,7 +524,7 @@ export function BrowseTree({ className }: { className?: string }) {
                 />
               )}
             </Tree>
-            {/* Where the classifications group would be: without it a failed
+            {/* Where the Classifications row would be: without it a failed
               read would look like a catalog with none. */}
             {families.value === null && (
               <StatusRow tone="error" live="alert" className={styles.error}>
@@ -531,7 +545,8 @@ export function BrowseTree({ className }: { className?: string }) {
   );
 }
 
-const matchedCount = (n: number) => (n === 1 ? "1 variable" : `${n} variables`);
+const counted = (n: number, [one, many]: [string, string]) =>
+  `${n} ${n === 1 ? one : many}`;
 
 function BrowseItem({
   node,
@@ -560,11 +575,11 @@ function BrowseItem({
     <TreeItem
       id={node.id}
       textValue={
-        node.variableMatches === undefined
+        node.matchedOn === undefined
           ? node.name
-          : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
+          : `${node.name}, matched on ${node.matchedOn}`
       }
-      className={styles.row}
+      className={`${styles.row} ${node.separated ? styles.separated : ""}`}
       onPress={
         ariaCurrent === "true"
           ? onOpenCurrent
@@ -577,7 +592,6 @@ function BrowseItem({
           {...props}
           aria-current={ariaCurrent}
           data-holds-current={holdsCurrent || undefined}
-          data-separated={node.separated || undefined}
         />
       )}
     >
@@ -597,9 +611,9 @@ function BrowseItem({
               </span>
               {/* A register kept only through its variables says so on its
                   own line (DESIGN.md → ColumnList → Filter state). */}
-              {node.variableMatches !== undefined && (
-                <span className={styles.variableMatches}>
-                  matched on <b>{matchedCount(node.variableMatches)}</b>
+              {node.matchedOn !== undefined && (
+                <span className={styles.matchedOn}>
+                  matched on <b>{node.matchedOn}</b>
                 </span>
               )}
             </span>

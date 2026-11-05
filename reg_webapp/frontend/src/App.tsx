@@ -62,7 +62,22 @@ export function App() {
     route.fqidPath !== "class"
       ? route.fqidPath
       : null;
+  const classPath =
+    route.name === "catalog-node" &&
+    (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
+      ? route.fqidPath
+      : null;
   const searching = useBrowseFiltering();
+  // A page whose list the variables column filters: a provider's, a register's,
+  // or the list of classifications. Below the narrow breakpoint, where that
+  // column is hidden, such a page shows the column's matches instead while the
+  // search holds text.
+  const listPage =
+    route.name === "catalog-node" &&
+    (providerFqid !== null ||
+      classPath === "class" ||
+      (registerFqid !== null &&
+        unqualifiedCatalogPath(route.fqidPath).split("/").length === 2));
   const [providerRef = null, registerRef = null] = trailAncestors(route);
   const provider = useCatalogRead(ancestorNameRead, providerRef);
   const register = useCatalogRead(ancestorNameRead, registerRef);
@@ -97,7 +112,13 @@ export function App() {
           )}
           <div
             className={styles.body}
-            data-narrow-shows={route.name === "root" ? "browse" : "detail"}
+            data-narrow-shows={
+              route.name === "root"
+                ? "browse"
+                : searching && listPage
+                  ? "list"
+                  : "detail"
+            }
           >
             <BrowseTree className={styles.browse} />
             {/* One instance on every route: opening a variable from a
@@ -105,6 +126,7 @@ export function App() {
             <VariableList
               registerFqid={registerFqid}
               providerFqid={providerFqid}
+              classPath={classPath}
               selectedFqid={
                 route.name === "catalog-node" &&
                 unqualifiedCatalogPath(route.fqidPath).split("/").length > 2

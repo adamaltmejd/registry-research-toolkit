@@ -303,8 +303,10 @@ pure role remaps.
   chips; `text-faint` only for things that may recede (hints), never for text that must
   be read (3.2:1, below WCAG AA for text).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
-  ink hairline and means structure: the rule above a section, a default button's border,
-  a column chip's stroke, the axis of a graph.
+  ink hairline used only for a section rule inside the detail pane, a default button's
+  or field's border, a column chip's stroke and the axis of a graph. A rule or divider
+  in a list or browse column is always `border`, one shared rule (`.sectionRule`) in
+  both columns (maintainer review of the classification pages, 2026-11-05, point 1).
 - **Pine, the ownership colour (`accent` and its stops):** used for exactly one idea —
   this is yours, or this is where you are. Primary button fill (`accent-fg` text), the
   bar and count on a column item or group that has something in the project, the
@@ -398,22 +400,24 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   order every list of a provider's registers uses (maintainer 2026-11-05), then the
   selected register's or group's variables, one name per row with no period under it
   (maintainer 2026-11-04), then the detail pane capped at `content-max`. Below the
-  providers, under a `border-strong` rule, a "Classifications" group lists the
-  classifications by name in Swedish collation (maintainer 2026-11-05): the same group
-  row and leaf rows as a provider's, pressing the group opens the list of
-  classifications, a leaf opens its page. On a steward site the server lists only those
-  the steward's variables use, and with none the group and its rule are not drawn. The
-  search filters them by name as it filters registers, but the column's count names
-  registers only. The two columns grow with the viewport from `col-browse` and
-  `col-list` to `col-browse-max` and `col-list-max`, and the whole shell is capped at
-  `shell-max` and centred, so a wide screen gets wider lists, not a stranded pane. The
-  variables column is always there: before a register is chosen it holds an empty state
-  ("Choose a register to list its variables."). The register column appears whole or not
-  at all, never with a provider still loading (#2232). The two column headers share one
-  height, so their rules line up. Every group is open by default; a header triangle
-  collapses it, pressing a collapsed group's row opens it (and its page) but never
-  closes it (maintainer 2026-11-05), the column header offers one toggle that reads
-  "Collapse all" while any group is open and "Expand all" once all are closed, and
+  providers, under the column's section rule (`border`, the rule over another register's
+  matches in the variables column), one "Classifications" row that never expands:
+  selecting it opens the list of classifications, and the variables column then lists
+  the classifications by name in Swedish collation, as it lists a register's variables,
+  the open one selected (maintainer review of the classification pages, 2026-11-05,
+  point 2). On a steward site the server lists only those the steward's variables use,
+  and with none the row and its rule are not drawn. The search filters that list by name
+  and slug, and keeps the row while any classification matches; the register column's
+  count names registers only. The two columns grow with the viewport from `col-browse`
+  and `col-list` to `col-browse-max` and `col-list-max`, and the whole shell is capped
+  at `shell-max` and centred, so a wide screen gets wider lists, not a stranded pane.
+  The variables column is always there: before a register is chosen it holds an empty
+  state ("Choose a register to list its variables."). The register column appears whole
+  or not at all, never with a provider still loading (#2232). The two column headers
+  share one height, so their rules line up. Every group is open by default; a header
+  triangle collapses it, pressing a collapsed group's row opens it (and its page) but
+  never closes it (maintainer 2026-11-05), the column header offers one toggle that
+  reads "Collapse all" while any group is open and "Expand all" once all are closed, and
   collapse state is remembered per user. A group's items are indented `spacing.3` from
   the group's label, not a full column (toggle and indent maintainer-decided
   2026-10-22). A group header is the `label` level at weight 500 in `text-muted` on
@@ -448,47 +452,54 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   so it reads as an action, not a path segment (#1824). Every page's trail leads with it
   below the breakpoint (and only there: beside the columns it would repeat them), and it
   opens the register list; while the search holds text it reads "Show matching
-  registers", since the list the search filters is off screen. Do not mint new
-  breakpoints.
+  registers", since the list the search filters is off screen. While the search holds
+  text, a page whose list the variables column filters (a provider's, a register's, the
+  list of classifications) shows that column, with its matches, under the trail in place
+  of the page, so a phone sees which variables or classifications matched; clearing the
+  search brings the page back. This is the one exception to "Search filters in place",
+  and only below the breakpoint (maintainer ruling, 2026-11-05, accepting the exception
+  to #1829). Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
   hidden until the filter clears (#1830); with none left at all the column says so.
   Matched text is underlined in `accent` at weight 600, a register that matched only
   through its variables says so on its own line under it ("matched on 9 variables", the
-  count in `accent-ink`), the column's label becomes the count ("12 registers"), and the
-  detail pane stays put. The variables column lists the open register's matches first,
-  then every other matching register's below it in the register column's order (#1828):
-  each under its name as a header, in the register column's group-row type with a
-  `border` rule above, its first five matches (six, rather than a "1 more" row), then a
-  "12 more in <register>" row that opens the register (where the whole list is). Those
-  rows are variables, not folded into concept groups, and open in their own register on
-  a click or Enter; the arrow keys pass them without opening, so walking the list does
-  not move it to another register, and once one opens, focus returns to the column. When
-  only other registers match, a line above them says the open one has none. Escape
-  clears the filter and restores the collapse state from anywhere on the page, unless a
-  dialog, popover, the palette or another text field has focus (#1827). The command
-  palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for registers,
-  variables (with their register) and the app's places ("Go to the project", "Browse the
-  data", "Go to the start page"); classifications are browsed in the register column,
-  not searched (Operator 2026-11-04, maintainer 2026-11-05). Each kind is one request
-  for its first four hits, and the palette follows no cursor. On a steward site the
-  answer holds two lists ranked apart, the catalog's `items` and the steward's own
-  `steward.items`: the palette lists the catalog's hits, then the steward's, each in the
-  server's order, a place listed once. The two ranks never merge; a list that pages
-  follows each list's own cursor (`cursor`, `steward_cursor`) (#2110). Its results are a
-  mixed list and carry a `TypeTag`. It is a list under the field with no field of its
-  own: the top-bar field is its one input, so focus stays there, the arrow keys move
-  through the rows, and typing goes on filtering the columns. A second field in the
-  popover showed the same text twice (maintainer report 2026-10-24). The 2026-10-22
-  ruling had the palette "seeded with the field's text" (maintainer-decided 2026-10-22).
-  It still opens with that text, but the text no longer stays behind: choosing a row
-  puts the browse filter back to its value from just before the palette opened, and
-  folds the narrow field if that value is empty, so the brand comes back. This is a
-  deliberate change from that ruling (Operator 2026-10-24). Focus leaving the field for
-  anything outside the palette closes it. Below the breakpoint it is as wide as the
-  unfolded field. Escape closes the palette first, then clears the text, then folds the
-  narrow field; Tab or a press outside closes the palette.
+  count in `accent-ink`), and so does the Classifications row kept only through the
+  classifications it lists ("matched on 3 classifications"; new rule, proposed by the
+  implementer), the column's label becomes the count ("12 registers"), and the detail
+  pane stays put. The variables column lists the open register's matches first, then
+  every other matching register's below it in the register column's order (#1828): each
+  under its name as a header, in the register column's group-row type with a `border`
+  rule above, its first five matches (six, rather than a "1 more" row), then a "12 more
+  in <register>" row that opens the register (where the whole list is). Those rows are
+  variables, not folded into concept groups, and open in their own register on a click
+  or Enter; the arrow keys pass them without opening, so walking the list does not move
+  it to another register, and once one opens, focus returns to the column. When only
+  other registers match, a line above them says the open one has none. Escape clears the
+  filter and restores the collapse state from anywhere on the page, unless a dialog,
+  popover, the palette or another text field has focus (#1827). The command palette (RAC
+  `Autocomplete`) opens from Enter in the field or `⌘K`, for registers, variables (with
+  their register) and the app's places ("Go to the project", "Browse the data", "Go to
+  the start page"); classifications are browsed in the register column, not searched
+  (Operator 2026-11-04, maintainer 2026-11-05). Each kind is one request for its first
+  four hits, and the palette follows no cursor. On a steward site the answer holds two
+  lists ranked apart, the catalog's `items` and the steward's own `steward.items`: the
+  palette lists the catalog's hits, then the steward's, each in the server's order, a
+  place listed once. The two ranks never merge; a list that pages follows each list's
+  own cursor (`cursor`, `steward_cursor`) (#2110). Its results are a mixed list and
+  carry a `TypeTag`. It is a list under the field with no field of its own: the top-bar
+  field is its one input, so focus stays there, the arrow keys move through the rows,
+  and typing goes on filtering the columns. A second field in the popover showed the
+  same text twice (maintainer report 2026-10-24). The 2026-10-22 ruling had the palette
+  "seeded with the field's text" (maintainer-decided 2026-10-22). It still opens with
+  that text, but the text no longer stays behind: choosing a row puts the browse filter
+  back to its value from just before the palette opened, and folds the narrow field if
+  that value is empty, so the brand comes back. This is a deliberate change from that
+  ruling (Operator 2026-10-24). Focus leaving the field for anything outside the palette
+  closes it. Below the breakpoint it is as wide as the unfolded field. Escape closes the
+  palette first, then clears the text, then folds the narrow field; Tab or a press
+  outside closes the palette.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the

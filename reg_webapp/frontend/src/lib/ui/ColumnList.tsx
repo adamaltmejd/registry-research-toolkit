@@ -350,6 +350,14 @@ export function ColumnList({
       textValue={item.label ?? item.name}
       aria-label={item.label}
       className={styles.row}
+      // A row selected for a page under it (a group for its member, a
+      // classification for its version) opens its own page when pressed: RAC
+      // fires no selection change for a row already selected.
+      onPress={
+        item.id === selectedId && !selectedExact
+          ? () => router.navigate(item.href)
+          : undefined
+      }
       render={(props) => (
         <div
           // Items carry no href, so RAC renders a div, never a link.

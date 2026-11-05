@@ -72,9 +72,42 @@
     grid-template-columns: minmax(0, 1fr);
   }
   /* The register page lists its variables itself, so the stacked layout has
-     no second column. */
-  .body .list {
+     no second column, except on a list page while the search holds text: the
+     column's matches replace the page, under its breadcrumb (App.tsx). */
+  .body:not([data-narrow-shows="list"]) .list {
     display: none;
+  }
+  /* The page stays mounted for its `h1` alone, which stays in the accessibility
+     tree (visually hidden by the clip) while the rest leaves it. `relative`
+     makes the clip hold its absolutely placed parts too. */
+  .body[data-narrow-shows="list"] .routed {
+    position: relative;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+  }
+  .body[data-narrow-shows="list"] .routed h1 {
+    visibility: visible;
+  }
+  /* The trail over the column, together one viewport tall: the column takes
+     what the trail leaves and scrolls its own (virtualized) list. */
+  .body[data-narrow-shows="list"] {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: calc(100dvh - var(--top-bar-height, 0px));
+  }
+  .body[data-narrow-shows="list"] .detail {
+    flex: none;
+    min-height: 0;
+  }
+  .body[data-narrow-shows="list"] .list {
+    position: static;
+    order: 1;
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+    border-right: none;
   }
   .browse {
     position: static;
@@ -85,7 +118,7 @@
   }
   /* On the list the pane keeps only the root's visually hidden h1, so the page
      keeps its `main` landmark and its heading. */
-  .body[data-narrow-shows="detail"] .browse,
+  .body:not([data-narrow-shows="browse"]) .browse,
   .body[data-narrow-shows="browse"] .crumbs {
     display: none;
   }

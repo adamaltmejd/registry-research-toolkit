@@ -30,15 +30,15 @@
   flex-direction: column;
 }
 
-/* A register the filter keeps only through its variables says so on its own
-   line, the count in accent-ink (DESIGN.md → ColumnList → Filter state). */
-.variableMatches {
+/* A row the filter keeps only through what it lists says so on its own line,
+   the count in accent-ink (DESIGN.md → ColumnList → Filter state). */
+.matchedOn {
   color: var(--text-muted);
   font-size: var(--text-micro);
   font-weight: var(--body-weight);
   white-space: nowrap;
 }
-.variableMatches b {
+.matchedOn b {
   color: var(--accent-ink);
   font-weight: var(--column-weight);
 }
@@ -105,6 +105,7 @@
   transform: none;
 }
 .chevronSpacer {
+  height: 20px;
   flex: none;
   width: 20px;
 }
@@ -115,9 +116,13 @@
   }
 }
 
-/* The classifications sit below the providers under an ink rule: a section of
-   their own, not another provider (maintainer 2026-11-05). */
-.row[data-separated] {
-  margin-top: var(--space-2);
-  border-top: 1px solid var(--border-strong);
+/* The Classifications row sits below the providers under the list's section
+   rule, the one over another register's matches in the variables column
+   (maintainer review of the classification pages, 2026-11-05, point 1). */
+.separated {
+  composes: sectionRule from "./ui/ColumnList.module.css";
+}
+/* The gap goes below the rule, as under a `.register` header's rule. */
+.row.separated {
+  padding-top: var(--space-2);
 }

@@ -15,7 +15,12 @@ import {
   sortedRegisters,
   svCollator,
 } from "./catalog";
-import { sharedShow } from "./catalog_names";
+import {
+  CLASSIFICATIONS,
+  CLASSIFICATIONS_LABEL,
+  classFamiliesRead,
+  sharedShow,
+} from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { Highlight } from "./Highlight";
 import {
@@ -24,6 +29,7 @@ import {
   type ColumnSection,
 } from "./ui/ColumnList";
 import { useAsyncResource } from "./use_async_resource";
+import { useCatalogRead } from "./use_store_read";
 
 const MORE = "more:";
 
@@ -215,11 +221,14 @@ type ColumnProps = Omit<
 export function VariableList({
   registerFqid,
   providerFqid,
+  classPath,
   selectedFqid,
   className,
 }: {
   registerFqid: string | null;
   providerFqid: string | null;
+  /** A classification page's address (`class` or under it), or null. */
+  classPath: string | null;
   selectedFqid: string | null;
   className?: string;
 }) {
@@ -227,13 +236,15 @@ export function VariableList({
   const renderName = useRenderName(needle);
   const register = useRegisterColumn(registerFqid, selectedFqid, needle);
   const provider = useProviderColumn(providerFqid, needle);
+  const classifications = useClassificationColumn(classPath, needle);
   return (
     <ColumnList
-      label="Variables"
+      label={classifications ? CLASSIFICATIONS_LABEL : "Variables"}
       className={className}
       renderName={renderName}
       {...(register ??
-        provider ?? {
+        provider ??
+        classifications ?? {
           sections: [],
           size: 0,
           selectedId: null,
@@ -293,9 +304,12 @@ function useRegisterColumn(
     selectedId: items.some((item) => item.id === selectedId)
       ? selectedId
       : null,
-    selectedExact: items.some((item) => item.id === selectedId),
+    // A member's address selects its group's row, which is not that page.
+    selectedExact:
+      selectedId === selectedFqid &&
+      items.some((item) => item.id === selectedId),
     empty: needle.trim()
-      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      ? `No variables match “${needle.trim()}”. Clear the search to list them all.`
       : "This register lists no variables.",
     notice: ownEmpty
       ? `No variables in ${node?.name ?? "this register"} match “${needle.trim()}”.`
@@ -367,11 +381,59 @@ function useProviderColumn(
     selectedId: null,
     selectedExact: false,
     empty: needle.trim()
-      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      ? `No variables match “${needle.trim()}”. Clear the search to list them all.`
       : "This provider lists no variables.",
     error:
       resource.error || (!resource.loading && !provider)
         ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
+        : null,
+  };
+}
+
+/**
+ * The classification pages' column: every classification, by name in Swedish
+ * collation, as a register's column lists its variables (maintainer review
+ * of the classification pages, 2026-11-05, point 2). The search filters it by
+ * name and slug, on the list already loaded for the browse column. A version's address selects its
+ * classification's row. Null off the classification pages.
+ */
+function useClassificationColumn(
+  classPath: string | null,
+  needle: string,
+): ColumnProps | null {
+  const families = useCatalogRead(classFamiliesRead, undefined);
+  if (classPath === null) return null;
+  const items: ColumnItem[] = rankFilter(
+    [...(families.value ?? [])].sort((a, b) =>
+      svCollator.compare(a.name, b.name),
+    ),
+    needle,
+    (family) => [family.name, leafSlug(family.fqid)],
+  ).map((family) => ({
+    id: family.fqid,
+    name: family.name,
+    href: catalogHref(family.fqid),
+    inProject: 0,
+  }));
+  const selectedId =
+    classPath === CLASSIFICATIONS
+      ? null
+      : classPath.split("/").slice(0, 2).join("/");
+  const listed = items.some((item) => item.id === selectedId);
+  return {
+    size: families.value?.length ?? 0,
+    root: CLASSIFICATIONS,
+    sections: families.loading
+      ? null
+      : [{ id: "classifications", label: null, items }],
+    selectedId: listed ? selectedId : null,
+    selectedExact: listed && classPath === selectedId,
+    empty: needle.trim()
+      ? `No classifications match “${needle.trim()}”. Clear the search to list them all.`
+      : "The catalog has no classifications.",
+    error:
+      !families.loading && families.value === null
+        ? "The classifications did not load. Reload the page to try again."
         : null,
   };
 }
