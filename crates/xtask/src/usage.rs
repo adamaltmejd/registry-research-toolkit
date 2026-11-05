@@ -93,6 +93,12 @@ pub fn main(args: &[String]) -> u8 {
         let [(_, requests), (_, top)] = &results[..] else {
             unreachable!("a rollup runs two queries")
         };
+        // An empty month is past retention or not recorded yet; committing it would
+        // read as a month without use.
+        if requests.is_empty() {
+            eprintln!("usage rollup: no requests recorded for that month");
+            return EXIT_FAILED;
+        }
         let rollup = serde_json::json!({
             "month": format!("{year:04}-{month:02}"),
             "requests": requests,
@@ -269,13 +275,17 @@ fn run(sql: &str) -> Result<Vec<Value>, String> {
     let env = |name: &str| std::env::var(name).map_err(|_| format!("{name} is not set"));
     let account = env("CF_ACCOUNT_ID")?;
     let token = env("CF_ANALYTICS_TOKEN")?;
-    if !account.bytes().all(|b| b.is_ascii_hexdigit()) {
+    let token = token.trim();
+    if account.is_empty() || !account.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err("CF_ACCOUNT_ID is not an account id".to_owned());
+    }
+    if token.is_empty() || token.chars().any(char::is_control) {
+        return Err("CF_ANALYTICS_TOKEN is empty or holds a control character".to_owned());
     }
     let quote = |text: &str| text.replace('\\', "\\\\").replace('"', "\\\"");
     let config = format!(
         "header = \"Authorization: Bearer {}\"\ndata-binary = \"{} FORMAT JSON\"\n",
-        quote(&token),
+        quote(token),
         quote(&sql.replace('\n', " "))
     );
     let mut child = Command::new("curl")
@@ -288,12 +298,12 @@ fn run(sql: &str) -> Result<Vec<Value>, String> {
         .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("curl: {e}"))?;
-    child
+    // A curl that exits early closes its stdin; its own message below says why.
+    let _ = child
         .stdin
         .take()
         .expect("piped stdin")
-        .write_all(config.as_bytes())
-        .map_err(|e| format!("curl stdin: {e}"))?;
+        .write_all(config.as_bytes());
     let out = child.wait_with_output().map_err(|e| format!("curl: {e}"))?;
     let body = String::from_utf8_lossy(&out.stdout);
     if !out.status.success() {
