@@ -86,7 +86,12 @@ pub(crate) fn changes(
                             .and_then(|id| classifications.get(id)),
                     )
                     .is_some_and(|(old, new)| {
-                        if old.family != new.family || old.version == new.version {
+                        // Another part of one family (SUN's seven levels → five) is
+                        // a different code list, not a new edition of the same one.
+                        if old.family != new.family
+                            || old.part != new.part
+                            || old.version == new.version
+                        {
                             return false;
                         }
                         let codes = |hash: Option<&str>| -> Option<BTreeSet<&str>> {
