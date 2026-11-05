@@ -13,7 +13,6 @@ import {
 } from "./api";
 import pageStyles from "./CatalogNodeView.module.css";
 import { catalogHref, matchesFilter } from "./catalog";
-import { catalogWords } from "./catalog_labels";
 import { FilterInput } from "./FilterInput";
 import { InlineMarkdown } from "./InlineMarkdown";
 import styles from "./RelatedDocumentsPanel.module.css";
@@ -116,7 +115,7 @@ function DocumentRow({
       {document.kind === "parsed"
         ? "Parsed text"
         : `PDF, ${bytesLabel(document.bytes)}`}
-      ; {catalogWords(document.licence)}
+      ; {document.licence}
     </p>
   );
   const source = sourceLink && document.url && (
@@ -208,7 +207,7 @@ function DocumentGroup({
             </Button>
           </Heading>
           <p className={styles.meta}>
-            Parsed text; {licences.map(catalogWords).join(", ")}
+            Parsed text; {licences.join(", ")}
           </p>
           <a className={`link ${styles.source}`} href={url} title={url}>
             Source
