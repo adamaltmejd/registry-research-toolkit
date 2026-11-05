@@ -494,9 +494,10 @@ Re-validate a transient failure with `gh workflow run integration.yml --ref main
 
 Every release redeploys SWECOV with global.
 
-**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin` and
-`x86_64-unknown-linux-gnu`), `reg-meta-<target>` and
-`reg-export-gate-<gate version>-<target>`, each with a `.sha256`. Confirm all eight:
+**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin`,
+`x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>` and
+`reg-export-gate-<gate version>-<target>` (Windows assets end in `.exe`), each with a
+`.sha256`. Confirm all twelve:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |

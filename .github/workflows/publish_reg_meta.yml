@@ -72,12 +72,20 @@ jobs:
             target: aarch64-apple-darwin
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            exe: .exe
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
+    # Git Bash on the Windows runner, so every step is the same script.
+    defaults:
+      run:
+        shell: bash
     env:
-      ASSET: reg-meta-${{ matrix.target }}
+      ASSET: reg-meta-${{ matrix.target }}${{ matrix.exe }}
       TARGET: ${{ matrix.target }}
+      EXE: ${{ matrix.exe }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
@@ -88,14 +96,17 @@ jobs:
           test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
       # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
       - run: cargo build --release --locked -p reg-meta -p reg-export-gate
+      - name: TEMP windows mock tests
+        if: runner.os == 'Windows'
+        run: cargo test --locked -p reg-mock
       - name: Package with checksums
         run: |
           gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
-          GATE_ASSET="reg-export-gate-$gate_version-$TARGET"
+          GATE_ASSET="reg-export-gate-$gate_version-$TARGET$EXE"
           echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
           mkdir dist
-          cp target/release/reg-meta "dist/$ASSET"
-          cp target/release/reg-export-gate "dist/$GATE_ASSET"
+          cp target/release/reg-meta$EXE "dist/$ASSET"
+          cp target/release/reg-export-gate$EXE "dist/$GATE_ASSET"
           cd dist
           for name in "$ASSET" "$GATE_ASSET"; do
             shasum -a 256 "$name" > "$name.sha256"
