@@ -247,8 +247,9 @@ existing pure-TS unit tests (AGENTS.md → "Testing policy").
    and React or RAC dev warnings. `smoke` is the desktop catalog flow only. Use
    `REG_META_DB=<db_dir>` instead of `--fixture-db` when content matters.
 
-3. Run `dev.sh --fixture-db flows <out-dir>`; every case must pass, with no `check(...)`
-   weakened. A new flow behavior gets a driver scenario, not a component test.
+3. Run `dev.sh --fixture-db flows <out-dir>`; every journey must pass, with no assertion
+   weakened. A new user journey goes in `reg_webapp/dev/journeys.sh` only when the
+   Testing policy admits it; a component test is not the substitute.
 
 4. Run `reg-webapp-design-reviewer` in a clean subagent; fix or explicitly dismiss each
    finding before declaring.

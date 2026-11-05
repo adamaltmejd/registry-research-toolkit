@@ -247,6 +247,7 @@ This is the complete list of boundaries a test may assert at.
   | FQID / period grammars, interval algebra | input → expected cases and round-trip snapshots in `crates/reg-core/tests/`                                          |
   | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings                |
   | Repository tooling (`xtask`, `scripts`)  | the tool's own contract: the trust gate's output or refusal, a lint's verdict                                        |
+  | SPA over the servers → rendered page     | fixture names in `reg_webapp/dev/journeys.sh`: text, roles, URL and the saved `project_data.json`                    |
 
 ### Tiers
 
@@ -263,10 +264,11 @@ This is the complete list of boundaries a test may assert at.
    drift check are `crates/xtask` tests in `cargo test --workspace`. The OpenAPI
    snapshot is a `crates/reg-meta` test. The `reg-webapp-frontend` job runs install,
    WASM generation, type checks, lint, unit tests, build and codegen drift;
-   `reg-webapp-flows` runs the production bootstrap and shell/search browser flows
-   against a source-built synthetic fixture, at the phone (375 px) and desktop viewports
-   only; the four-width review is the design-review skill's. Each frontend job has a
-   6-minute timeout. A job that exceeds its budget fails.
+   `reg-webapp-flows` runs the production-build smoke and the user journeys
+   (`reg_webapp/dev/journeys.sh`, agent-browser) against source-built synthetic
+   fixtures, at desktop width except one narrow journey at 375 px; the four-width review
+   is the design-review skill's. Each frontend job has a 6-minute timeout. A job that
+   exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `REG_ARTIFACT_DIR=/path/to/catalog cargo test -p reg-conformance --test release`
    (plus `REG_CATALOG=<steward>` for a pair) against a release-built `reg-meta`
@@ -296,7 +298,7 @@ run by hand, not by the gate or CI.
   | `crates/` (`cargo test --workspace`) | 10 s  | 9 min  | The Rust builder's and runtime's tests and the `crates/xtask` repo-policy lints; G0 always runs them.                         |
   | conformance (`scripts/gate.sh rust`) | 30 s  | 9 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job. |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Pure-TS shell and utility contracts in jsdom. The CI job also installs, builds WASM, type-checks, lints and builds.           |
-  | flows (`scripts/gate.sh flows`)      | —     | 6 min  | Production bootstrap and shell/search browser flows; a separate job includes Rust server, WASM and Playwright setup.          |
+  | flows (`scripts/gate.sh flows`)      | —     | 6 min  | Production-build smoke and seven agent-browser user journeys; the job also builds the Rust server, WASM and the fixtures.     |
 
 One verification gate cuts across the tiers. It is named G0 so it is not confused with
 the tiers. G1 and G2 (the byte-for-byte differential harness against the previous

@@ -33,8 +33,8 @@ Do not run the sabotage by hand. Review the named change as the failure proof.
 ## The sweep
 
 Read-only. One subagent per test tree (each package's, plus `conformance/`, the SPA's
-vitest files under `reg_webapp/frontend/src` and the flows driver
-`reg_webapp/dev/driver.mjs`), through the harness's subagent tool (in Claude Code, the
+vitest files under `reg_webapp/frontend/src` and the user journeys
+`reg_webapp/dev/journeys.sh`), through the harness's subagent tool (in Claude Code, the
 Agent tool with the `general-purpose` type; Explore locates code and does not audit it),
 told to edit nothing. Launch as many at once as the harness allows and the rest in
 waves. Where the harness lets a call choose its model, use the family's mid tier (in

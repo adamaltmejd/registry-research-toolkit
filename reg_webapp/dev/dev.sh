@@ -15,14 +15,11 @@
 #                          status. For agent visual verification: random ports +
 #                          guaranteed cleanup, so it never collides and never leaks
 #                          a server.
-#   dev.sh flows <out-dir> [scenario...]
-#                          ONE-SHOT — start, run the Playwright driver (driver.mjs)
-#                          (the flow cases at four viewports; the env var
-#                          REG_WEBAPP_FLOW_VIEWPORTS, e.g. mobile,desktop, narrows
-#                          them), tear down,
-#                          exit with the driver's status. The PNGs land in
-#                          <out-dir>. Named scenarios run only those cases;
-#                          no names runs cases matching the selected fixture.
+#   dev.sh flows <out-dir> [journey...]
+#                          ONE-SHOT — start, run the user journeys (journeys.sh)
+#                          with agent-browser, tear down, exit with their status.
+#                          One PNG per journey lands in <out-dir>. Named journeys
+#                          run only those; no names runs the served fixture's.
 #   dev.sh shot [viewport...] <route>...
 #                          ONE-SHOT — screenshot each route, tear down, exit.
 #                          Viewport flags before the routes capture responsive
@@ -51,11 +48,9 @@
 #                          temp directory (<target>/debug/reg-fixture --paired), export
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
 #
-# smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
+# smoke/shot/flows run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
-# installed Google Chrome; with none, run `agent-browser install` once. `flows`
-# stays on the Playwright driver (driver.mjs): it injects request failures and
-# counts requests per case, which is Playwright's routing surface.
+# installed Google Chrome; with none, run `agent-browser install` once.
 #
 # Ports are automatic (two of these never collide); pin with RUST_PORT /
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
@@ -101,11 +96,11 @@ flows)
 	mode=flows
 	shift
 	# The output directory is a contract (the gate's declared artifact names land
-	# in it), so require it up front and hand the driver an ABSOLUTE path — it
-	# runs with the frontend as its cwd. Anything after it is a scenario name,
+	# in it), so require it up front, as an ABSOLUTE path: the agent-browser daemon
+	# resolves relative paths against its own cwd. Anything after it is a journey name,
 	# passed through unchanged; none means all of them.
 	[ "$#" -ge 1 ] || {
-		echo "dev: 'flows' needs an output directory, then optional scenario names" >&2
+		echo "dev: 'flows' needs an output directory, then optional journey names" >&2
 		exit 2
 	}
 	mkdir -p "$1" || exit 1
@@ -121,14 +116,13 @@ preview)
 	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [--fixture-db | --paired-fixture] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> [scenario...] | preview]" >&2
+	echo "usage: dev.sh [--fixture-db | --paired-fixture] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> [journey...] | preview]" >&2
 	exit 2
 	;;
 esac
 
 # The capture viewports: a named preset or a raw WxH, printed as "W H". The four
-# presets are the widths frontend/DESIGN.md designs for; the Playwright `flows`
-# driver spells the same four in its VIEWPORTS.
+# presets are the widths frontend/DESIGN.md designs for.
 viewport_size() {
 	case "$1" in
 	mobile) echo "375 812" ;;
@@ -204,7 +198,7 @@ cd "$root" || exit 1
 bin=${CARGO_TARGET_DIR:-$root/target}/debug
 
 # This checkout's OWN environment, never main's, installed on demand (near-instant
-# when already in sync): node_modules runs Vite, agent-browser and the driver.
+# when already in sync): node_modules runs Vite and agent-browser.
 if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
 	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
@@ -389,7 +383,7 @@ capture() {
 		ab a11y >"$base.a11y.txt" || return 1
 	echo "shot: $base.png ($(grep -m 1 '^axe-core' "$base.a11y.txt"))"
 	ab console | grep '^\[error\]' || true
-	# --json: agent-browser 0.39.2's text output for `errors` prints a bare "✗"
+	# --json: agent-browser 0.41.2's text output for `errors` prints a bare "✗"
 	# whatever it holds; revisit on a bump.
 	ab errors --json | bun -e 'for (const e of (await Bun.stdin.json()).data?.errors ?? [])
 	console.log("[pageerror]", e.text.split("\n")[0])'
@@ -412,9 +406,9 @@ smoke)
 	exit $?
 	;;
 flows)
-	# One-shot, like smoke: the driver owns the cases + their assertions, and the
+	# One-shot, like smoke: journeys.sh owns the journeys and their assertions, and the
 	# EXIT trap tears every server (and their process groups) down either way.
-	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
+	echo "dev: flows ${*:-(all journeys)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
 	# shellcheck disable=SC1091 # linted on its own by gate.sh lint
 	. "$root/reg_webapp/dev/journeys.sh" || exit 1
 	run_journeys "$@"
