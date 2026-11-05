@@ -1,9 +1,8 @@
 //! Test modules stay at or under 800 lines; an oversized module is split by contract
 //! surface.
 //!
-//! Rust: every integration test file, a `.rs` file under a `tests/` directory. Python, until it is gone:
-//! `test_*.py` and `conftest.py` under `tests/` or `conformance/`. Source fixtures and
-//! support scripts are not test modules. Untracked, unignored files count too.
+//! Every integration test file, a `.rs` file under a `tests/` directory. Untracked,
+//! unignored files count too.
 
 use std::fs;
 use std::path::Path;
@@ -13,12 +12,8 @@ const MAX_LINES: usize = 800;
 
 fn is_test_module(path: &str) -> bool {
     let parts: Vec<&str> = path.split('/').collect();
-    let (name, dirs) = parts.split_last().unwrap();
-    if Path::new(name).extension().is_some_and(|ext| ext == "rs") {
-        return dirs.contains(&"tests");
-    }
-    let python_test = name.starts_with("test_") || *name == "conftest.py";
-    python_test && dirs.iter().any(|d| *d == "tests" || *d == "conformance")
+    let (_, dirs) = parts.split_last().unwrap();
+    dirs.contains(&"tests")
 }
 
 #[test]
@@ -33,7 +28,6 @@ fn test_modules_stay_under_800_lines() {
             "--others",
             "--exclude-standard",
             "--",
-            "*.py",
             "*.rs",
         ])
         .output()
