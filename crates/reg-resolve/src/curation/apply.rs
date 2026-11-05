@@ -3,12 +3,12 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::Interval;
-use reg_frame::address::{Address, Comparison, GuardField};
-use reg_frame::statement::{AssertFact, Statement};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, ValueSet};
+use reg_frame::address::{Address, GuardField, PeriodSet};
+use reg_frame::statement::{AssertFact, Statement, frame_field};
+use reg_frame::{Locator, Occurrence, Record, ValueSet, bounds};
 use serde_json::{Value, json};
 
-use super::{Premise, periods, stated_fields};
+use super::{Premise, stated_fields};
 use crate::Ledger;
 
 /// A curated winner, at the final frame coordinate, for the existing override table.
@@ -96,8 +96,8 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
     let p = match subject {
         Address::Occurrence {
             periods: Some(p), ..
-        } => periods(p),
-        _ => vec![(OPEN_START.into(), OPEN_END.into())],
+        } => p.intervals(),
+        _ => vec![bounds(None, None)],
     };
     if p.len() != 1 {
         return Err("assert classification version requires one contiguous period".into());
@@ -306,9 +306,7 @@ fn span(
     context: &crate::OccurrenceContext<'_>,
 ) -> Result<Interval, String> {
     if let Record::Occurrence(row) = decode(value.clone())? {
-        return Ok(context
-            .period(&row)
-            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())));
+        return Ok(context.period(&row).unwrap_or_else(|| bounds(None, None)));
     }
     let register = records.iter().find_map(|r| match r {
         Record::Register(r)
@@ -318,15 +316,9 @@ fn span(
         }
         _ => None,
     });
-    Ok((
-        text(value, "from")
-            .or_else(|| register.and_then(|r| r.from.as_deref()))
-            .unwrap_or(OPEN_START)
-            .into(),
-        text(value, "to")
-            .or_else(|| register.and_then(|r| r.to.as_deref()))
-            .unwrap_or(OPEN_END)
-            .into(),
+    Ok(bounds(
+        text(value, "from").or_else(|| register.and_then(|r| r.from.as_deref())),
+        text(value, "to").or_else(|| register.and_then(|r| r.to.as_deref())),
     ))
 }
 
@@ -380,13 +372,7 @@ fn change(
         table: text(value, "table").map(str::to_owned),
         release: text(value, "release").map(str::to_owned),
         period: if kind == "value_set" { None } else { period },
-        field: match field {
-            "dtype" => "type",
-            "column" => "spelling",
-            "valueset" => "value_set",
-            f => f,
-        }
-        .into(),
+        field: reg_frame::statement::curation_field(field).into(),
         value: rendered(winning),
         source_value: rendered(losing),
     })
@@ -447,12 +433,7 @@ pub(super) fn table_handle(
                     .or_else(|| register.map(|r| r.register.as_str()))
                     == Some(slug)
             } else {
-                ledger
-                    .tables
-                    .get(*handle)
-                    .cloned()
-                    .unwrap_or_else(|| crate::slugify(handle))
-                    == slug
+                ledger.table_slug(handle) == slug
             }
         })
         .map(str::to_owned)
@@ -505,10 +486,6 @@ pub fn apply(
     at: &Locator,
     premise: &Premise,
 ) -> Result<Applied, String> {
-    if matches!(statement, Statement::Set { subject: Address::Occurrence { .. }, fields, .. } if fields.description.is_some())
-    {
-        return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
-    }
     let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
         records: records.to_vec(),
@@ -565,14 +542,6 @@ pub fn apply(
             }
         }
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
-            if stated_fields(fields)
-                .keys()
-                .any(|field| !matches!(field.as_str(), "table" | "variable"))
-            {
-                return Err(
-                    "set table/variable with other fields requires separate statements".into(),
-                );
-            }
             let target_handle = fields
                 .table
                 .as_ref()
@@ -702,7 +671,7 @@ pub fn apply(
                     table, periods: p, ..
                 } => (
                     table_handle(records, ledger, table)?,
-                    p.as_ref().map(periods),
+                    p.as_ref().map(PeriodSet::intervals),
                 ),
                 Address::Variable(_) | Address::Set(_) => {
                     return Err(
@@ -750,11 +719,6 @@ pub fn apply(
                     )?;
                     let mut value = json!({"kind":"occurrence","provider":register.provider,"register":register.register,"table":table,"release":null,"column":if spellings[0] == "<none>" { "" } else { &spellings[0] },"source_key":format!("stmt:{}",statement.scoped_identity(&register.provider, &register.register)),"from":null,"to":null,"label":null,"definition":null,"operational_definition":null,"unit":null,"dtype":null,"length":null,"valueset":null,"population_valuesets":[],"coded":null,"code_system":null,"sensitive":null,"identifier":null,"locator":at,"also":[],"conflicts":[]});
                     for guard in guards {
-                        if guard.comparison != Comparison::Equal {
-                            return Err(
-                                "assert occurrence cannot invent a prefix-guard value".into()
-                            );
-                        }
                         let field = frame_guard_field(guard.field);
                         value[field] = json!(guard.value);
                     }
@@ -805,7 +769,7 @@ pub fn apply(
                         return Err("assert release requires a release address".into());
                     };
                     if records.iter().any(|r| matches!(r,Record::Release(r) if r.table == table && r.release == *handle)) { return Err("assert release cannot replace a source release; use set".into()); }
-                    let p = periods(period);
+                    let p = period.intervals();
                     if p.len() != 1 {
                         return Err("assert release requires one contiguous period".into());
                     }
@@ -1012,7 +976,7 @@ pub fn apply(
                 }
             }
         }
-        _ => {}
+        Statement::Link { .. } => {}
     }
     Ok(out)
 }
@@ -1044,20 +1008,8 @@ fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Opt
     match record {
         Record::Occurrence(row) => context.period(row),
         Record::Release(row) => crate::placed(row),
-        Record::Table(row) => Some((
-            row.from.clone().unwrap_or_else(|| OPEN_START.into()),
-            row.to.clone().unwrap_or_else(|| OPEN_END.into()),
-        )),
+        Record::Table(row) => Some(bounds(row.from.as_deref(), row.to.as_deref())),
         _ => None,
-    }
-}
-
-fn target_field(field: &str) -> &str {
-    match field {
-        "type" => "dtype",
-        "spelling" => "column",
-        "value_set" => "valueset",
-        field => field,
     }
 }
 
@@ -1072,9 +1024,6 @@ fn apply_fields(
 ) -> Result<(), String> {
     let metadata_fields = fields;
     let fields = stated_fields(fields);
-    if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
-        return Err("set coverage/period with other fields requires separate statements".into());
-    }
     let mut selected = false;
     for (index, record) in records.iter().enumerate() {
         let before = tree(record);
@@ -1193,8 +1142,8 @@ fn apply_fields(
                     let period = winning
                         .as_str()
                         .expect("typed period")
-                        .parse::<reg_frame::address::PeriodSet>()?;
-                    let spans = periods(&period);
+                        .parse::<PeriodSet>()?;
+                    let spans = period.intervals();
                     let [span] = &spans[..] else {
                         return Err(format!("set {field} requires one contiguous period"));
                     };
@@ -1239,7 +1188,7 @@ fn apply_fields(
                     }
                     after["valueset"] = winning.clone();
                 }
-                _ => after[target_field(field)] = winning.clone(),
+                _ => after[frame_field(field)] = winning.clone(),
             }
         }
         if fields.get("coded") == Some(&Value::Bool(true))
@@ -1277,13 +1226,13 @@ fn apply_fields(
                     source_period(record, context).map_or(Value::Null, |p| json!(p)),
                 )
             } else {
-                (winning.clone(), before[target_field(field)].clone())
+                (winning.clone(), before[frame_field(field)].clone())
             };
             let resolves_conflict = matches!(field.as_str(), "type" | "length")
                 && before["conflicts"].as_array().is_some_and(|conflicts| {
                     conflicts.iter().any(|conflict| {
                         conflict.as_str().is_some_and(|conflict| {
-                            conflict == field || conflict == target_field(field)
+                            conflict == field || conflict == frame_field(field)
                         })
                     })
                 });
@@ -1480,7 +1429,7 @@ pub fn rekey(
             value.key.identity = (*identity).clone();
         }
     }
-    for claim in claims {
+    for claim in claims.iter_mut().map(|claim| &mut claim.change) {
         if claim.kind == "release"
             && let Some(period) = releases.get(&(
                 claim.provider.as_deref(),
@@ -1542,21 +1491,15 @@ fn fill_fields(value: &mut Value, fields: BTreeMap<String, Value>) -> Result<(),
             let set = v
                 .as_str()
                 .ok_or("period must be a string")?
-                .parse::<reg_frame::address::PeriodSet>()?;
-            let p = periods(&set);
+                .parse::<PeriodSet>()?;
+            let p = set.intervals();
             if p.len() != 1 {
                 return Err("assert fact fields require one contiguous period".into());
             }
             value["from"] = json!(p[0].0);
             value["to"] = json!(p[0].1);
         } else {
-            let target = match field.as_str() {
-                "type" => "dtype",
-                "spelling" => "column",
-                "value_set" => "valueset",
-                name => name,
-            };
-            value[target] = v;
+            value[frame_field(&field)] = v;
         }
     }
     Ok(())

@@ -71,8 +71,6 @@ pub enum Show {
         implicit: bool,
         timeless: bool,
         #[schema(required = true)]
-        unit_type: Option<String>,
-        #[schema(required = true)]
         cadence: Option<String>,
         spans: Vec<Period>,
         /// Absent when none, and on a data holder's catalog.
@@ -150,8 +148,6 @@ pub struct ShowTable {
     role: String,
     implicit: bool,
     timeless: bool,
-    #[schema(required = true)]
-    unit_type: Option<String>,
     #[schema(required = true)]
     cadence: Option<String>,
     period: Period,
@@ -518,24 +514,21 @@ fn contents(
 ) -> Result<(Vec<ShowTable>, Vec<ShowVariableRef>), Error> {
     let tables = rows(
         conn,
-        "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, u.slug, t.cadence,
-                    t.start, t.end
+        "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, t.cadence, t.start, t.end
              FROM tbl t JOIN register r ON r.id = t.register_id
                JOIN text n ON n.id = t.name_text
-               LEFT JOIN unit_type u ON u.id = t.unit_type_id
              WHERE r.pid = ? ORDER BY t.pid",
         [register],
         |row| {
             let fqid: String = row.get(0)?;
             Ok(ShowTable {
-                period: server.hull("table", &fqid, row.get(7)?, row.get(8)?),
+                period: server.hull("table", &fqid, row.get(6)?, row.get(7)?),
                 fqid,
                 name: row.get(1)?,
                 role: row.get(2)?,
                 implicit: row.get(3)?,
                 timeless: row.get(4)?,
-                unit_type: row.get(5)?,
-                cadence: row.get(6)?,
+                cadence: row.get(5)?,
             })
         },
     )?;
@@ -581,30 +574,26 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         bool,
         bool,
         Option<String>,
-        Option<String>,
     );
-    let (name, description, register, role, implicit, timeless, unit_type, cadence): Head = conn
-        .query_row(
-            "SELECT n.body, d.body, r.pid, t.role, t.implicit, t.timeless, u.slug, t.cadence
+    let (name, description, register, role, implicit, timeless, cadence): Head = conn.query_row(
+        "SELECT n.body, d.body, r.pid, t.role, t.implicit, t.timeless, t.cadence
              FROM tbl t JOIN text n ON n.id = t.name_text
                LEFT JOIN text d ON d.id = t.description_text
                JOIN register r ON r.id = t.register_id
-               LEFT JOIN unit_type u ON u.id = t.unit_type_id
              WHERE t.id = ?",
-            [entity.id],
-            |row| {
-                Ok((
-                    row.get(0)?,
-                    row.get(1)?,
-                    row.get(2)?,
-                    row.get(3)?,
-                    row.get(4)?,
-                    row.get(5)?,
-                    row.get(6)?,
-                    row.get(7)?,
-                ))
-            },
-        )?;
+        [entity.id],
+        |row| {
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                row.get(3)?,
+                row.get(4)?,
+                row.get(5)?,
+                row.get(6)?,
+            ))
+        },
+    )?;
     let spans = match server.catalog.held_spans("table", &entity.pid) {
         Some(held) => held.iter().map(|&(s, e)| server.period(s, e)).collect(),
         None => rows(
@@ -623,7 +612,6 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         role,
         implicit,
         timeless,
-        unit_type,
         cadence,
         spans,
         // The provider's releases are not the steward's files (maintainer 2026-11-04).

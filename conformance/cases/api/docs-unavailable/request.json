@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a catalog without documents (base) answers a docs operation with an empty result or not_found instead of docs_unavailable, or checks the ref or hash before checking that documents exist.",
+  "note": "Fails if a catalog without documents (base) answers docs_search or docs_get with an empty result or not_found instead of docs_unavailable, or checks the hash before checking that documents exist; or if docs_related refuses a resolved ref there instead of answering an empty list, since a page with no documents is an ordinary answer (#2252).",
   "requests": [
     {"operation": "docs_search", "path": "/api/docs/search"},
     {

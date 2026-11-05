@@ -116,9 +116,6 @@ export function TableView({ node }: { node: TableShow }) {
           // "Not stated" (DESIGN.md → Detail pane).
           ...stated("Role", node.role),
           ...stated("Cadence", node.cadence),
-          ...(node.unit_type
-            ? [{ term: "Unit type", value: node.unit_type }]
-            : []),
           ...(node.timeless ? [{ term: "Timeless", value: "Yes" }] : []),
           ...(node.implicit ? [{ term: "Implicit", value: "Yes" }] : []),
         ]}

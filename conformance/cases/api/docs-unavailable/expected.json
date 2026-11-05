@@ -1,5 +1,5 @@
 [
   {"status": 404, "json": {"/error/code": "docs_unavailable"}},
   {"status": 404, "json": {"/error/code": "docs_unavailable"}},
-  {"status": 404, "json": {"/error/code": "docs_unavailable"}}
+  {"status": 200, "json": {"/data": []}}
 ]

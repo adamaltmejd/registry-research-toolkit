@@ -29,13 +29,6 @@ pub enum Statement {
         evidence: String,
         caveat: Option<String>,
     },
-    Ack {
-        subject: Address,
-        finding: String,
-        severity: Severity,
-        evidence: Option<String>,
-        caveat: Option<String>,
-    },
 }
 
 /// A curator may state facts without introducing opaque provider coordinates.
@@ -67,15 +60,7 @@ pub enum AssertFact {
 pub enum Relation {
     Continues,
     DerivedFrom,
-    Equivalent,
     LabelOf,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum Severity {
-    Notice,
-    Review,
 }
 
 /// The closed schema of fields curation can override. Names describe catalog
@@ -163,26 +148,15 @@ impl Statement {
         let subject = match self {
             Self::Assert { subject, .. }
             | Self::Set { subject, .. }
-            | Self::Link { subject, .. }
-            | Self::Ack { subject, .. } => subject,
+            | Self::Link { subject, .. } => subject,
         };
         if matches!(subject, Address::Set(_)) && !matches!(self, Self::Set { .. }) {
             return Err("set-subject: set: subjects support only set statements".into());
         }
-        let evidence = match self {
-            Self::Assert { evidence, .. }
-            | Self::Set { evidence, .. }
-            | Self::Link { evidence, .. } => Some(evidence),
-            Self::Ack {
-                evidence, severity, ..
-            } => {
-                if *severity != Severity::Notice && evidence.is_none() {
-                    return Err("evidence is required except for an ack of a notice".into());
-                }
-                evidence.as_ref()
-            }
-        };
-        if evidence.is_some_and(|value| value.trim().is_empty()) {
+        let (Self::Assert { evidence, .. }
+        | Self::Set { evidence, .. }
+        | Self::Link { evidence, .. }) = self;
+        if evidence.trim().is_empty() {
             return Err("evidence must not be blank".into());
         }
         match self {
@@ -240,10 +214,6 @@ impl Statement {
                     return Err(format!("invalid link object: {error}"));
                 }
             }
-            Self::Ack { finding, .. } if finding.trim().is_empty() => {
-                return Err("ack finding must not be blank".into());
-            }
-            Self::Ack { .. } => {}
         }
         Ok(())
     }
@@ -285,7 +255,6 @@ impl Statement {
                     *object = address.to_string();
                 }
             }
-            Self::Ack { .. } => {}
         }
         let mut tree = serde_json::to_value(&normalized).expect("statements serialize");
         tree.as_object_mut()
@@ -388,6 +357,32 @@ impl SetFields {
             values.dedup();
         }
     }
+}
+
+/// The frame fields curation names differently, as (curation, frame); every other
+/// field has one name in both.
+pub const RENAMED_FIELDS: [(&str, &str); 3] = [
+    ("type", "dtype"),
+    ("spelling", "column"),
+    ("value_set", "valueset"),
+];
+
+/// The frame field a curation field name sets.
+#[must_use]
+pub fn frame_field(name: &str) -> &str {
+    RENAMED_FIELDS
+        .iter()
+        .find(|(curation, _)| *curation == name)
+        .map_or(name, |(_, frame)| frame)
+}
+
+/// The curation name of a frame field.
+#[must_use]
+pub fn curation_field(name: &str) -> &str {
+    RENAMED_FIELDS
+        .iter()
+        .find(|(_, frame)| *frame == name)
+        .map_or(name, |(curation, _)| curation)
 }
 
 fn validate_fields(fields: &impl Serialize) -> Result<(), String> {

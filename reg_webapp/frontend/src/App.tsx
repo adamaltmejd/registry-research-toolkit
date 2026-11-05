@@ -150,14 +150,9 @@ function RoutedView({
     case "home":
       return <Home config={stewardConfig(context)} />;
     case "root":
-      return (
-        <>
-          <h1 className="visually-hidden">Data browser</h1>
-          <p className={styles.rootPrompt}>
-            Choose a register in the list to see its variables.
-          </p>
-        </>
-      );
+      // The variables column says to choose a register; the pane does not
+      // repeat it.
+      return <h1 className="visually-hidden">Data browser</h1>;
     case "catalog-node":
       if (route.fqidPath === "class" || route.fqidPath.startsWith("class/")) {
         return route.fqidPath.split("/").length === 3 ? (

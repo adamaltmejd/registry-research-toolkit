@@ -420,7 +420,6 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
 
 fn related(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
-    require_docs(&conn)?;
     let value = params["ref"];
     let entity = refs::resolve(&conn, value)?;
     if !matches!(

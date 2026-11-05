@@ -1,10 +1,11 @@
 //! Closed, pinned steward input contract; no legacy inventory is read at runtime.
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
+use crate::error::Result;
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -19,7 +20,6 @@ pub(super) struct Pin {
 pub(super) struct Config {
     pub owner: String,
     pub scope: String,
-    pub series_root: String,
     pub curation_root: String,
     pub presentation: Presentation,
     pub inputs: Inputs,
@@ -41,12 +41,6 @@ pub(super) struct Inputs {
     pub storage_export: String,
     pub holdings: String,
     pub census_reader: String,
-    // Conversion provenance only. These legacy paths never become runtime inputs.
-    pub inventory: Option<String>,
-    pub providers: Option<String>,
-    pub slugs: Option<String>,
-    pub delivery_docs: Option<String>,
-    pub readers_root: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -138,7 +132,7 @@ pub(super) struct Mapping {
 }
 
 /// Relative paths only, including after symlink resolution.
-pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf, String> {
+pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf> {
     let rel = Path::new(relative);
     if rel.as_os_str().is_empty() || rel.components().any(|p| !matches!(p, Component::Normal(_))) {
         return Err("holdings_input_path_invalid: expected a relative input path".into());
@@ -147,14 +141,14 @@ pub(super) fn path(root: &Path, relative: &str) -> Result<PathBuf, String> {
         .join(rel)
         .canonicalize()
         .map_err(|_| "holdings_input_missing: declared input is absent".to_owned())?;
-    let root = root.canonicalize().map_err(|e| e.to_string())?;
+    let root = root.canonicalize()?;
     if !full.starts_with(root) {
         return Err("holdings_input_path_invalid: input escapes steward checkout".into());
     }
     Ok(full)
 }
 
-fn git(root: &Path, args: &[&str]) -> Result<String, String> {
+fn git(root: &Path, args: &[&str]) -> Result<String> {
     let output = Command::new("git")
         .arg("-C")
         .arg(root)
@@ -170,7 +164,7 @@ fn git(root: &Path, args: &[&str]) -> Result<String, String> {
 }
 
 #[allow(clippy::too_many_lines)]
-pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, String> {
+pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
     if pin.commit.len() != 40
         || !pin.commit.bytes().all(|b| b.is_ascii_hexdigit())
         || git(root, &["rev-parse", "HEAD"])? != pin.commit
@@ -205,7 +199,6 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, Strin
         .into_owned();
     let mut consumed = vec![
         &config.scope,
-        &config.series_root,
         &curation,
         &config.presentation.steward,
         &config.presentation.logo,
@@ -242,28 +235,24 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config, Strin
             check(root, rel, &config.pins)?;
         }
     }
-    // Legacy migration paths are accepted as provenance, not implicit source authority.
-    let _ = (
-        &config.inputs.inventory,
-        &config.inputs.providers,
-        &config.inputs.slugs,
-        &config.inputs.delivery_docs,
-        &config.inputs.readers_root,
-    );
     Ok(config)
 }
 
 /// One digest over the pinned input list, so the artifact names its inputs without
 /// carrying their paths. The per-file pins stay in the build report.
 pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
-    let mut hasher = Sha256::new();
-    for (path, sha) in pins {
-        hasher.update(format!("{path}\t{sha}\n"));
-    }
-    reg_core::hex(&hasher.finalize())
+    reg_core::sha256_hex(pin_lines(pins))
 }
 
-fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), String> {
+/// `path\tsha256\n` per pin, in path order.
+pub(super) fn pin_lines(pins: &BTreeMap<String, String>) -> String {
+    pins.iter().fold(String::new(), |mut lines, (path, sha)| {
+        writeln!(lines, "{path}\t{sha}").expect("write to String");
+        lines
+    })
+}
+
+fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<()> {
     let expected = pins
         .get(rel)
         .ok_or("holdings_input_unpinned: consumed input has no hash")?;
@@ -274,11 +263,7 @@ fn check(root: &Path, rel: &str, pins: &BTreeMap<String, String>) -> Result<(), 
 }
 
 /// Inputs cannot redirect directory traversal through a symlink, even if Git tracks it.
-fn tree(
-    dir: &Path,
-    prefix: &str,
-    out: &mut std::collections::BTreeSet<String>,
-) -> Result<(), String> {
+fn tree(dir: &Path, prefix: &str, out: &mut std::collections::BTreeSet<String>) -> Result<()> {
     for entry in std::fs::read_dir(dir).map_err(|_| "holdings_input_missing")? {
         let entry = entry.map_err(|_| "holdings_input_missing")?;
         let name = entry

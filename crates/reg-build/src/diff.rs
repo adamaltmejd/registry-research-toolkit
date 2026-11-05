@@ -15,8 +15,7 @@ use rusqlite::{Connection, OpenFlags, Row};
 use serde_json::{Value, json};
 
 mod holdings;
-
-type Res<T> = Result<T, String>;
+use crate::error::Result;
 
 const USAGE: &str = "usage: reg-build diff [--holdings] OLD NEW [--json] [-n N]";
 /// Meta keys that differ on every release: shown, but never a difference.
@@ -38,7 +37,7 @@ struct Args {
     limit: usize,
 }
 
-fn parse(args: &[String]) -> Res<Args> {
+fn parse(args: &[String]) -> Result<Args> {
     let mut paths = Vec::new();
     let (mut json, mut holdings, mut limit) = (false, false, 20);
     let mut it = args.iter();
@@ -52,7 +51,9 @@ fn parse(args: &[String]) -> Res<Args> {
                     .and_then(|v| v.parse().ok())
                     .ok_or(format!("-n needs a number\n{USAGE}"))?;
             }
-            flag if flag.starts_with('-') => return Err(format!("unknown flag {flag:?}\n{USAGE}")),
+            flag if flag.starts_with('-') => {
+                return Err(format!("unknown flag {flag:?}\n{USAGE}").into());
+            }
             path => paths.push(path.to_owned()),
         }
     }
@@ -150,19 +151,26 @@ struct Pair {
     new: Connection,
 }
 
-fn open(path: &str) -> Res<Connection> {
+fn open(path: &str) -> Result<Connection> {
     if !std::path::Path::new(path).is_file() {
-        return Err(format!("{path}: no such file"));
+        return Err(format!("{path}: no such file").into());
     }
-    Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)
-        .map_err(|e| format!("{path}: {e}"))
+    Ok(
+        Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)
+            .map_err(|e| format!("{path}: {e}"))?,
+    )
 }
 
-fn query<T>(conn: &Connection, sql: &str, f: impl Fn(&Row) -> rusqlite::Result<T>) -> Res<Vec<T>> {
+fn query<T>(
+    conn: &Connection,
+    sql: &str,
+    f: impl Fn(&Row) -> rusqlite::Result<T>,
+) -> Result<Vec<T>> {
     let mut stmt = conn.prepare(sql).map_err(|e| format!("{sql}: {e}"))?;
     let rows = stmt.query_map([], f).map_err(|e| format!("{sql}: {e}"))?;
-    rows.collect::<rusqlite::Result<_>>()
-        .map_err(|e| format!("{sql}: {e}"))
+    Ok(rows
+        .collect::<rusqlite::Result<_>>()
+        .map_err(|e| format!("{sql}: {e}"))?)
 }
 
 impl Pair {
@@ -171,13 +179,13 @@ impl Pair {
         &self,
         sql: &str,
         f: impl Fn(&Row) -> rusqlite::Result<(K, V)>,
-    ) -> Res<(BTreeMap<K, V>, BTreeMap<K, V>)> {
+    ) -> Result<(BTreeMap<K, V>, BTreeMap<K, V>)> {
         let load = |c| query(c, sql, &f).map(|v| v.into_iter().collect());
         Ok((load(&self.old)?, load(&self.new)?))
     }
 }
 
-fn schema_version(conn: &Connection, path: &str) -> Res<String> {
+fn schema_version(conn: &Connection, path: &str) -> Result<String> {
     let version: Option<String> = conn
         .query_row(
             "SELECT value FROM meta WHERE key = 'schema_version'",
@@ -185,7 +193,7 @@ fn schema_version(conn: &Connection, path: &str) -> Res<String> {
             |r| r.get(0),
         )
         .map_err(|e| format!("{path}: no meta.schema_version ({e})"))?;
-    version.ok_or(format!("{path}: no meta.schema_version"))
+    version.ok_or(format!("{path}: no meta.schema_version").into())
 }
 
 /// The keys whose values differ, in key order; a side that lacks the key is `None`.
@@ -202,7 +210,7 @@ fn changed<'a, K: Ord, V: PartialEq>(
         .collect()
 }
 
-fn schema(p: &Pair) -> Res<Section> {
+fn schema(p: &Pair) -> Result<Section> {
     let (old, new) = p.maps("SELECT type, name, sql FROM sqlite_master", |r| {
         Ok((
             (r.get::<_, String>(0)?, r.get::<_, String>(1)?),
@@ -226,7 +234,7 @@ fn schema(p: &Pair) -> Res<Section> {
     Ok(Section::flat("schema", "schema", items))
 }
 
-fn meta(p: &Pair) -> Res<Section> {
+fn meta(p: &Pair) -> Result<Section> {
     let (old, new) = p.maps("SELECT key, value FROM meta", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
     })?;
@@ -254,7 +262,7 @@ fn quote_ident(name: &str) -> String {
 }
 
 /// The ordinary tables of a catalog: no virtual (FTS) tables and no FTS shadow tables.
-fn ordinary_tables(conn: &Connection) -> Res<BTreeSet<String>> {
+fn ordinary_tables(conn: &Connection) -> Result<BTreeSet<String>> {
     let defs: BTreeMap<String, String> = query(
         conn,
         "SELECT name, sql FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'",
@@ -280,30 +288,29 @@ fn ordinary_tables(conn: &Connection) -> Res<BTreeSet<String>> {
         .collect())
 }
 
-fn rows(p: &Pair) -> Res<Section> {
+fn rows(p: &Pair) -> Result<Section> {
     // Both sides' tables: a table dropped by a same-major revision still reports its old count.
     let names: BTreeSet<String> = ordinary_tables(&p.old)?
         .union(&ordinary_tables(&p.new)?)
         .cloned()
         .collect();
-    let count = |conn: &Connection, name: &str| -> Res<Option<i64>> {
-        let exists: i64 = conn
-            .query_row(
-                "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = ?1",
-                [name],
-                |r| r.get(0),
-            )
-            .map_err(|e| e.to_string())?;
+    let count = |conn: &Connection, name: &str| -> Result<Option<i64>> {
+        let exists: i64 = conn.query_row(
+            "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = ?1",
+            [name],
+            |r| r.get(0),
+        )?;
         if exists == 0 {
             return Ok(None);
         }
-        conn.query_row(
-            &format!("SELECT count(*) FROM {}", quote_ident(name)),
-            [],
-            |r| r.get(0),
-        )
-        .map(Some)
-        .map_err(|e| format!("{name}: {e}"))
+        Ok(conn
+            .query_row(
+                &format!("SELECT count(*) FROM {}", quote_ident(name)),
+                [],
+                |r| r.get(0),
+            )
+            .map(Some)
+            .map_err(|e| format!("{name}: {e}"))?)
     };
     let mut items = Vec::new();
     for name in &names {
@@ -319,7 +326,7 @@ fn rows(p: &Pair) -> Res<Section> {
     Ok(Section::flat("rows", "rows", items))
 }
 
-fn ids(p: &Pair) -> Res<Section> {
+fn ids(p: &Pair) -> Result<Section> {
     let pair = |r: &Row| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?));
     let (old, new) = p.maps("SELECT pid, kind FROM ident", pair)?;
     let (old_retired, new_retired) = p.maps("SELECT pid, kind FROM ident_retired", pair)?;
@@ -383,7 +390,6 @@ struct TableInfo {
     name: String,
     description: Option<String>,
     role: String,
-    unit_type: Option<String>,
     timeless: i64,
     cadence: Option<String>,
     spans: Vec<(i64, i64)>,
@@ -392,17 +398,16 @@ struct TableInfo {
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
-               "role": self.role, "unit_type": self.unit_type, "timeless": self.timeless, "cadence": self.cadence,
+               "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
                "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>()})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} unit_type={} timeless={} cadence={} spans={}",
+            "name={:?} description={:?} role={} timeless={} cadence={} spans={}",
             self.name,
             self.description,
             self.role,
-            self.unit_type.as_deref().unwrap_or("-"),
             self.timeless,
             self.cadence.as_deref().unwrap_or("-"),
             self.spans
@@ -413,14 +418,13 @@ impl TableInfo {
     }
 }
 
-fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
+fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
     let mut infos: BTreeMap<String, TableInfo> = query(
         conn,
-        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence, u.slug
+        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence
                      FROM tbl t
                      JOIN text n ON n.id = t.name_text
-                     LEFT JOIN text d ON d.id = t.description_text
-                     LEFT JOIN unit_type u ON u.id = t.unit_type_id",
+                     LEFT JOIN text d ON d.id = t.description_text",
         |r| {
             Ok((
                 r.get::<_, String>(0)?,
@@ -428,7 +432,6 @@ fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
                     name: r.get(1)?,
                     description: r.get(2)?,
                     role: r.get(3)?,
-                    unit_type: r.get(6)?,
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
                     spans: Vec::new(),
@@ -458,7 +461,7 @@ fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
     Ok(infos)
 }
 
-fn tables(p: &Pair) -> Res<Section> {
+fn tables(p: &Pair) -> Result<Section> {
     let (old, new) = (table_infos(&p.old)?, table_infos(&p.new)?);
     let items = changed(&old, &new)
         .into_iter()
@@ -515,7 +518,7 @@ impl Seg {
     }
 }
 
-fn segments(conn: &Connection) -> Res<BTreeMap<String, BTreeSet<Seg>>> {
+fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
     let rows = query(
         conn,
         "SELECT v.pid, t.pid, s.start, s.end, sp.exact, s.dtype, coalesce(vs.hash, ''),
@@ -568,7 +571,7 @@ impl Run {
     }
 }
 
-fn runs(conn: &Connection) -> Res<BTreeMap<String, BTreeSet<Run>>> {
+fn runs(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Run>>> {
     let rows = query(
         conn,
         "SELECT v.pid, vt.start, vt.end, l.body, d.body, o.body, u.body
@@ -631,8 +634,8 @@ fn hash_changes(pid: &str, old: &[&Seg], new: &[&Seg]) -> Vec<HashChange> {
         .collect()
 }
 
-fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
-    let pids = |c: &Connection| -> Res<BTreeSet<String>> {
+fn variables(p: &Pair) -> Result<(Section, Vec<HashChange>)> {
+    let pids = |c: &Connection| -> Result<BTreeSet<String>> {
         Ok(query(c, "SELECT pid FROM variable", |r| r.get(0))?
             .into_iter()
             .collect())
@@ -723,7 +726,10 @@ fn short(hash: &str) -> &str {
 }
 
 /// Set-valued metadata, compared by its published entity key and member string.
-fn memberships(conn: &Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<String>>> {
+pub(super) fn memberships(
+    conn: &Connection,
+    sql: &str,
+) -> Result<BTreeMap<String, BTreeSet<String>>> {
     let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for (key, member) in query(conn, sql, |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
@@ -734,7 +740,10 @@ fn memberships(conn: &Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<St
 }
 
 /// The codes of the wanted value sets, in one pass over `vs_item`.
-fn codes(conn: &Connection, wanted: &BTreeSet<String>) -> Res<BTreeMap<String, BTreeSet<String>>> {
+fn codes(
+    conn: &Connection,
+    wanted: &BTreeSet<String>,
+) -> Result<BTreeMap<String, BTreeSet<String>>> {
     let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     if wanted.is_empty() {
         return Ok(out);
@@ -742,20 +751,18 @@ fn codes(conn: &Connection, wanted: &BTreeSet<String>) -> Res<BTreeMap<String, B
     let sql = "SELECT vs.hash, t.body FROM vs_item i
                JOIN valueset vs ON vs.id = i.valueset_id
                JOIN text t ON t.id = i.code_text";
-    let mut stmt = conn.prepare(sql).map_err(|e| e.to_string())?;
-    let mut rows = stmt.query([]).map_err(|e| e.to_string())?;
-    while let Some(row) = rows.next().map_err(|e| e.to_string())? {
-        let hash: String = row.get(0).map_err(|e| e.to_string())?;
+    let mut stmt = conn.prepare(sql)?;
+    let mut rows = stmt.query([])?;
+    while let Some(row) = rows.next()? {
+        let hash: String = row.get(0)?;
         if wanted.contains(&hash) {
-            out.entry(hash)
-                .or_default()
-                .insert(row.get(1).map_err(|e| e.to_string())?);
+            out.entry(hash).or_default().insert(row.get(1)?);
         }
     }
     Ok(out)
 }
 
-fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
+fn valuesets(p: &Pair, changes: &[HashChange]) -> Result<Section> {
     let (old, new) = p.maps("SELECT hash, n_items FROM valueset", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
     })?;
@@ -841,10 +848,10 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
 }
 
 /// Provider and register names, descriptions and urls, keyed by pid.
-fn registers(p: &Pair) -> Res<Section> {
+fn registers(p: &Pair) -> Result<Section> {
     // Fields stay separate (and NULL apart from text), so no value can mimic another.
     type Fields = Vec<(&'static str, Option<String>)>;
-    let load = |conn: &Connection| -> Res<BTreeMap<(&'static str, String), Fields>> {
+    let load = |conn: &Connection| -> Result<BTreeMap<(&'static str, String), Fields>> {
         let providers = query(
             conn,
             "SELECT p.pid, n.body, p.url FROM provider p JOIN text n ON n.id = p.name_text",
@@ -896,7 +903,7 @@ fn registers(p: &Pair) -> Res<Section> {
     Ok(Section::flat("registers", "registers", items))
 }
 
-fn findings(p: &Pair) -> Res<Section> {
+fn findings(p: &Pair) -> Result<Section> {
     let (old, new) = p.maps("SELECT code, count(*) FROM finding GROUP BY code", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
     })?;
@@ -915,14 +922,14 @@ fn findings(p: &Pair) -> Res<Section> {
 }
 
 /// The catalog sections, after the schema-version check.
-fn catalog(pair: &Pair, args: &Args) -> Res<Vec<Section>> {
+fn catalog(pair: &Pair, args: &Args) -> Result<Vec<Section>> {
     let expected = reg_core::CATALOG_SCHEMA_VERSION.to_string();
     for (conn, path) in [(&pair.old, &args.old), (&pair.new, &args.new)] {
         let version = schema_version(conn, path)?;
         if version != expected {
-            return Err(format!(
-                "{path}: schema version {version}, this build diffs {expected}"
-            ));
+            return Err(
+                format!("{path}: schema version {version}, this build diffs {expected}").into(),
+            );
         }
     }
     let (variables, hash_changes) = variables(pair)?;
@@ -940,7 +947,7 @@ fn catalog(pair: &Pair, args: &Args) -> Res<Vec<Section>> {
 }
 
 /// The report: text or JSON, and whether any counted difference exists.
-fn diff(args: &Args) -> Res<(String, bool)> {
+fn diff(args: &Args) -> Result<(String, bool)> {
     let pair = Pair {
         old: open(&args.old)?,
         new: open(&args.new)?,

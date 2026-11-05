@@ -66,8 +66,6 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** How the committed column relates to the study window, where it is more
    * than "in project": shown in its tooltip and accessible name. */
   note?: { text: string; tone: "info" | "error" } | null;
-  /** Years the column's coding changed under the same name. */
-  changes?: number[];
   /** A checkbox when true; a mark to read otherwise. */
   selectable: boolean;
   isSelected?: boolean;
@@ -272,7 +270,13 @@ export function LaneGraph({
                     <LaneName
                       lane={lane}
                       width={geometry.stacked ? width : geometry.trackX - 16}
-                      onHeight={lane.detail ? onNameHeight : undefined}
+                      // Stacked, every lane's spans start under its measured
+                      // name; beside the track only a detail grows the lane.
+                      onHeight={
+                        lane.detail || geometry.stacked
+                          ? onNameHeight
+                          : undefined
+                      }
                       focus={lane.id === focus}
                       top={placed.y}
                     />
@@ -538,20 +542,7 @@ function LaneBelow({
   onHeight: (id: string, height: number) => void;
   children: ReactNode;
 }) {
-  const measure = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) return;
-      const observer = new ResizeObserver(([entry]) => {
-        onHeight(id, Math.ceil(entry.borderBoxSize[0]?.blockSize ?? 0));
-      });
-      observer.observe(node);
-      return () => {
-        observer.disconnect();
-        onHeight(id, 0);
-      };
-    },
-    [id, onHeight],
-  );
+  const measure = useMeasuredHeight(id, onHeight);
   return (
     <div ref={measure} className={styles.below} style={{ top }}>
       {children}
@@ -596,11 +587,16 @@ function LaneName({
   focus?: boolean;
   top?: number;
 }) {
+  const measure = useMeasuredHeight(lane.id, onHeight);
   // The action is a sibling of the text block, not inside it: the block's
   // `overflow: hidden` (the ellipsis) would clip the action's focus ring.
   if (lane.action) {
     return (
-      <div className={styles.nameRow} style={width ? { width } : undefined}>
+      <div
+        ref={measure}
+        className={styles.nameRow}
+        style={width ? { width } : undefined}
+      >
         <LaneText lane={lane} />
         <span className={styles.action}>{lane.action}</span>
       </div>
@@ -610,31 +606,20 @@ function LaneName({
     <LaneText
       lane={lane}
       width={width}
-      onHeight={onHeight}
+      measure={measure}
       focus={focus}
       top={top}
     />
   );
 }
 
-function LaneText({
-  lane,
-  width,
-  onHeight,
-  focus = false,
-  top,
-}: {
-  lane: LaneModel;
-  width?: number;
-  onHeight?: (id: string, height: number) => void;
-  focus?: boolean;
-  /** The lane's place in the drawing, which moves while the lanes above
-   * measure their names. */
-  top?: number;
-}) {
-  const subId = useId();
-  const id = lane.id;
-  const measure = useCallback(
+/** A ref that reports its node's border-box height under `id`, and zero
+ * when the node goes, so the room is given back. */
+function useMeasuredHeight(
+  id: string,
+  onHeight?: (id: string, height: number) => void,
+) {
+  return useCallback(
     (node: HTMLDivElement | null) => {
       if (!node || !onHeight) return;
       const observer = new ResizeObserver(([entry]) => {
@@ -648,6 +633,24 @@ function LaneText({
     },
     [id, onHeight],
   );
+}
+
+function LaneText({
+  lane,
+  width,
+  measure,
+  focus = false,
+  top,
+}: {
+  lane: LaneModel;
+  width?: number;
+  measure?: (node: HTMLDivElement | null) => void;
+  focus?: boolean;
+  /** The lane's place in the drawing, which moves while the lanes above
+   * measure their names. */
+  top?: number;
+}) {
+  const subId = useId();
   // Focus once, when the lane is first drawn (the lanes mount only after the
   // graph is measured); keep it in view while the lanes above it grow to
   // their measured names, until focus moves on.
@@ -754,11 +757,15 @@ function Span({
 }) {
   const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
+  // A span too narrow for its name, with the name beside it, carries its
+  // years where they fit, so the bar is not an empty box.
   const showYears =
-    at.label === "inside" &&
     at.segments.length === 1 &&
-    labelWidth(`${at.table ? spanLabel(span) : span.name} ${span.years}`) <=
-      at.width;
+    labelWidth(
+      at.label === "inside"
+        ? `${at.table ? spanLabel(span) : span.name} ${span.years}`
+        : span.years,
+    ) <= at.width;
   // An unnamed series (an interrupted delivery) carries its name once, on its
   // widest part, so a one-year first delivery does not clip it.
   const widest = at.segments.reduce(

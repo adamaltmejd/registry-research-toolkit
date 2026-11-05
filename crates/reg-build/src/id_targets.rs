@@ -2,6 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use crate::error::Result;
 use rusqlite::Connection;
 use serde::Serialize;
 
@@ -53,10 +54,9 @@ impl Moved {
 type Targets = BTreeMap<(String, String), BTreeSet<Target>>;
 
 // Schema names come only from the callers' fixed main/prev names.
-fn targets(db: &Connection, schema: &str) -> Result<Targets, String> {
-    let mut stmt = db
-        .prepare(&format!(
-            "SELECT v.pid, 'variable', t.pid, f.folded, o.start, o.end
+fn targets(db: &Connection, schema: &str) -> Result<Targets> {
+    let mut stmt = db.prepare(&format!(
+        "SELECT v.pid, 'variable', t.pid, f.folded, o.start, o.end
              FROM {schema}.variable v
              LEFT JOIN {schema}.occurrence o ON o.variable_id = v.id AND o.spelling_id IS NOT NULL
              LEFT JOIN {schema}.tbl t ON t.id = o.table_id
@@ -66,22 +66,18 @@ fn targets(db: &Connection, schema: &str) -> Result<Targets, String> {
              SELECT t.pid, 'table', n.body, NULL, NULL, NULL
              FROM {schema}.tbl t JOIN {schema}.text n ON n.id = t.name_text
              WHERE t.implicit = 0"
-        ))
-        .map_err(|e| e.to_string())?;
-    let mut rows = stmt.query([]).map_err(|e| e.to_string())?;
+    ))?;
+    let mut rows = stmt.query([])?;
     let mut targets = Targets::new();
-    while let Some(row) = rows.next().map_err(|e| e.to_string())? {
-        let pid: String = row.get(0).map_err(|e| e.to_string())?;
-        let kind: String = row.get(1).map_err(|e| e.to_string())?;
+    while let Some(row) = rows.next()? {
+        let pid: String = row.get(0)?;
+        let kind: String = row.get(1)?;
         let set = targets.entry((pid, kind)).or_default();
-        if let Some(table) = row.get(2).map_err(|e| e.to_string())? {
+        if let Some(table) = row.get(2)? {
             set.insert(Target {
                 table,
-                spelling: row.get(3).map_err(|e| e.to_string())?,
-                period: row
-                    .get::<_, Option<i64>>(4)
-                    .map_err(|e| e.to_string())?
-                    .zip(row.get(5).map_err(|e| e.to_string())?),
+                spelling: row.get(3)?,
+                period: row.get::<_, Option<i64>>(4)?.zip(row.get(5)?),
             });
         }
     }
@@ -93,7 +89,7 @@ pub fn moved(
     old_schema: &str,
     new: &Connection,
     new_schema: &str,
-) -> Result<Vec<Moved>, String> {
+) -> Result<Vec<Moved>> {
     let mut new = targets(new, new_schema)?;
     Ok(targets(old, old_schema)?
         .into_iter()

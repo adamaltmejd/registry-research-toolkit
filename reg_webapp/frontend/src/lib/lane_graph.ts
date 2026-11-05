@@ -32,6 +32,9 @@ export interface LaneSpanGeometryInput {
   /** Disjoint parts of the span: the eras of a rename, or the deliveries of an
    * interrupted series. One part spanning `from`..`to` when absent. */
   segments?: LaneSegment[];
+  /** Years the column's coding changed under the same name, marked above
+   * the span. */
+  changes?: readonly number[];
 }
 
 export type LaneEdgeKind = "succession" | "rename";
@@ -61,9 +64,9 @@ export interface LaneGeometryInput {
   /** Measured px under a lane's spans for what the page sets there (a
    * column's findings on /project, #1906), by lane id. */
   below?: ReadonlyMap<string, number>;
-  /** Measured px of a lane's name block where it holds more than a name and
-   * its line (a group member's facts and description), by lane id: the lane
-   * grows to hold it. */
+  /** Measured px of a lane's name block, by lane id: where it holds more
+   * than a name and its line (a group member's facts and description) the
+   * lane grows to hold it, and stacked, the spans start under it. */
   nameHeights?: ReadonlyMap<string, number>;
 }
 
@@ -143,10 +146,13 @@ export const COVERAGE_HEIGHT = 40;
 const NAME_WIDTH = 230;
 const NAME_GAP = 16;
 const MIN_TRACK = 360;
-// Keep the two-line lane name and coding marks on separate rows.
+// Stacked, a two-line lane name and coding marks on separate rows: the room
+// kept until the name block is measured.
 const STACKED_NAME_HEIGHT = 54;
 // The row a span's coding marks take above it (the `axis` type and a pixel).
 const MARK_ROOM = 14;
+// Stacked, the least room between a measured name and its spans.
+const NAME_SPAN_GAP = 4;
 // IBM Plex Mono advances 0.6 em; the `column` type is 12 px. Set in mono, a
 // name's width follows from its length without measuring the DOM.
 const COLUMN_CHAR = 7.2;
@@ -277,8 +283,15 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   for (const lane of input.lanes) {
     const rows = rowsOf.get(lane.id) ?? 1;
     const name = input.nameHeights?.get(lane.id) ?? 0;
+    // Stacked, the spans start right under the measured name, with room for
+    // coding marks only where a span has them.
+    const marked = input.spans.some(
+      (span) => span.lane === lane.id && (span.changes?.length ?? 0) > 0,
+    );
     const top = stacked
-      ? Math.max(STACKED_NAME_HEIGHT, name + MARK_ROOM)
+      ? name > 0
+        ? name + (marked ? MARK_ROOM : NAME_SPAN_GAP)
+        : STACKED_NAME_HEIGHT
       : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
     const height =
       (stacked

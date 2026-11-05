@@ -10,7 +10,6 @@
       "/data/role": "data",
       "/data/implicit": false,
       "/data/timeless": false,
-      "/data/unit_type": null,
       "/data/cadence": "year",
       "/data/spans": [{"start": "2019-01-01", "end": "2021-01-01"}],
       "/data/releases": [
@@ -63,8 +62,7 @@
         "role",
         "row_keys",
         "spans",
-        "timeless",
-        "unit_type"
+        "timeless"
       ]
     }
   }

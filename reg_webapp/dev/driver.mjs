@@ -209,6 +209,9 @@ async function browseSearchCase(page, shoot) {
   // walks the page under a popover that still claims the field (#1871 review).
   await search.press("Enter");
   await page.getByRole("menu").waitFor();
+  // The register hit lands first: hits that mount after the Tab make RAC's
+  // Autocomplete refocus its input (its virtual focus on the new rows).
+  await page.getByRole("menuitem", { name: /^Andra registret/ }).waitFor();
   await page.keyboard.press("Tab");
   check(
     await menuGone(page),
@@ -251,6 +254,11 @@ async function browseSearchCase(page, shoot) {
   }
   await search.press("Enter");
   await page.getByRole("menu").waitFor();
+  // The palette finds a variable by its name and says its register; on a
+  // steward site it searches registers and variables, not classifications
+  // (Operator 2026-11-04). Fails if the variable arm is dropped.
+  await search.fill("kön");
+  await page.getByRole("menuitem", { name: /^Kön Basregistret/ }).first().waitFor();
   await search.fill("project");
   await page.getByRole("menuitem", { name: /^Go to the project/ }).click();
   await page.waitForURL("**/project");
@@ -581,7 +589,7 @@ async function sourceCardsCase(page, shoot) {
   await shoot("source-cards-edited");
 
   const sources = main.getByRole("region", { name: "Tables", exact: true });
-  await sources.getByRole("button", { name: "Remove KON from Basregistret", exact: true }).click();
+  await sources.getByRole("button", { name: "Remove Kön from Basregistret", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
   await page.getByRole("alertdialog").waitFor({ state: "hidden" });
   await settled(page);

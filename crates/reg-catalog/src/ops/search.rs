@@ -12,14 +12,7 @@ use super::{Cache, Operation, Param, Params, Period, Server, Type, component, cu
 use crate::{Code, Error, rows};
 
 /// The `type` values: a `search_item.kind` each.
-const TYPES: &[&str] = &[
-    "register",
-    "table",
-    "variable",
-    "classification",
-    "code",
-    "document",
-];
+const TYPES: &[&str] = &["register", "table", "variable", "code", "document"];
 
 /// How deep a ranked list pages (`operations.toml`).
 const DEPTH: usize = 1000;
@@ -130,11 +123,6 @@ pub enum SearchHit {
         /// Its column names, sorted.
         spellings: Vec<String>,
         period: Period,
-    },
-    Classification {
-        fqid: String,
-        name: String,
-        family: String,
     },
     /// One distinct (code, label) pair, not a value set; its value sets are
     /// `values?code=&label=`.
@@ -344,10 +332,11 @@ fn search_origin(
         (offset + take < DEPTH)
             .then(|| cursor::encode(generation, &context, offset + take, &last.3))
     });
-    let items = rows
+    let mut items: Vec<SearchHit> = rows
         .iter()
         .map(|(id, kind, entity, _)| hit(server, conn, &expression, *id, kind, *entity))
         .collect::<Result<_, _>>()?;
+    name_hits(server, &mut items)?;
     Ok(SearchPage {
         items,
         next_cursor,
@@ -359,8 +348,7 @@ fn search_origin(
 /// Count and page share all filters. In steward mode a register, table or variable
 /// matches only when held (by public id, over the requested interval, which its
 /// placements answer alone: a year held through steward attestation can lie outside
-/// the reference interval); classifications, codes and documents are shared and
-/// always match.
+/// the reference interval); codes and documents are shared and always match.
 ///
 /// The held set is an uncorrelated `IN`, built once per query: a correlated `EXISTS`
 /// scanned `holding_mapping` once per FTS match, and a one-letter query has ~10^5.
@@ -394,6 +382,60 @@ fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<Strin
     ))
 }
 
+/// Names a page's register, table and variable hits, and their registers, as `show`
+/// does: in steward mode an id the reference catalog defines keeps its reference name,
+/// never the holdings overlay's (often its slug, #2252). `hit` leaves each
+/// `register_name` holding the register's fqid for this pass.
+fn name_hits(server: &Server, items: &mut [SearchHit]) -> Result<(), Error> {
+    let fqids: Vec<String> = items
+        .iter()
+        .flat_map(|item| match item {
+            SearchHit::Register { fqid, .. } => vec![fqid.clone()],
+            SearchHit::Table {
+                fqid,
+                register_name,
+                ..
+            }
+            | SearchHit::Variable {
+                fqid,
+                register_name,
+                ..
+            } => {
+                vec![fqid.clone(), register_name.clone()]
+            }
+            _ => vec![],
+        })
+        .collect();
+    let names = refs::names(server, fqids.iter().map(String::as_str))?;
+    for item in items {
+        match item {
+            SearchHit::Register { fqid, name, .. } => {
+                *name = names.of(refs::Named::Register, fqid)?;
+            }
+            SearchHit::Table {
+                fqid,
+                name,
+                register_name,
+                ..
+            } => {
+                *name = names.of(refs::Named::Table, fqid)?;
+                *register_name = names.of(refs::Named::Register, register_name)?;
+            }
+            SearchHit::Variable {
+                fqid,
+                name,
+                register_name,
+                ..
+            } => {
+                *name = names.of(refs::Named::Variable, fqid)?;
+                *register_name = names.of(refs::Named::Register, register_name)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 /// A row's hit, with the fields rule 6 lists.
 fn hit(
     server: &Server,
@@ -423,11 +465,10 @@ fn hit(
             },
         )?,
         "table" => conn.query_row(
-            "SELECT t.pid, n.body, rn.body, t.role, t.start, t.end
+            "SELECT t.pid, n.body, r.pid, t.role, t.start, t.end
              FROM tbl t
                JOIN text n ON n.id = t.name_text
                JOIN register r ON r.id = t.register_id
-               JOIN text rn ON rn.id = r.name_text
              WHERE t.id = ?",
             [entity()?],
             |row| {
@@ -451,11 +492,10 @@ fn hit(
                 |row| row.get(0),
             )?;
             conn.query_row(
-                "SELECT v.pid, l.body, rn.body, d.body, v.start, v.end
+                "SELECT v.pid, l.body, r.pid, d.body, v.start, v.end
                  FROM variable v
                    JOIN text l ON l.id = v.label_text
                    JOIN register r ON r.id = v.register_id
-                   JOIN text rn ON rn.id = r.name_text
                    LEFT JOIN text d ON d.id = v.definition_text
                  WHERE v.id = ?",
                 [variable],
@@ -474,8 +514,7 @@ fn hit(
         }
         "code" => code_hit(conn, id)?,
         "document" => document_hit(conn, expression, entity()?)?,
-        // simplify: the builder emits no classification or set search rows; such a row is
-        // a defect of the artifact. Add their hits when the index gains them.
+        // The schema admits no other kind; such a row is a defect of the artifact.
         other => return Err(internal(format!("search row {id} has kind {other:?}"))),
     })
 }

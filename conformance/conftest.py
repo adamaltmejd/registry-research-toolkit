@@ -8,8 +8,7 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from holdings_artifacts import prepare_materialize
-from http_cases import ServerPool, artifact_env
+from http_cases import ServerPool
 from reader_artifacts import CASES, cached_reader_artifact
 
 
@@ -29,13 +28,7 @@ def pytest_addoption(parser):
         "--server-cmd",
         default=None,
         help="the Rust server's command template ({db}, {port}) every "
-        "HTTP and MCP case runs against (required); see conformance/README.md",
-    )
-    parser.addoption(
-        "--mcp-cmd",
-        default=None,
-        help="run the MCP stdio session against a process started from this "
-        "command template ({db}); see conformance/README.md",
+        "HTTP case runs against (required); see conformance/README.md",
     )
 
 
@@ -86,15 +79,6 @@ def http_servers(server_cmd, tmp_path_factory):
     Every server is stopped at session end, whether or not the cases passed."""
     with closing(ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))) as pool:
         yield pool
-
-
-@pytest.fixture(scope="session")
-def steward(tmp_path_factory, server_cmd):
-    """A client of the materialize cases' steward server (`prepare_materialize`)."""
-    directory = tmp_path_factory.mktemp("materialize")
-    _, output = prepare_materialize(directory)
-    with closing(ServerPool(server_cmd + " --catalog fixture", directory)) as pool:
-        yield pool.client(artifact_env(output))
 
 
 @pytest.fixture

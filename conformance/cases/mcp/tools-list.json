@@ -32,7 +32,6 @@
             "register",
             "table",
             "variable",
-            "classification",
             "code",
             "document"
           ],
@@ -238,32 +237,6 @@
                 "definition",
                 "spellings",
                 "period",
-                "type"
-              ],
-              "type": "object"
-            },
-            {
-              "properties": {
-                "family": {
-                  "type": "string"
-                },
-                "fqid": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "enum": [
-                    "classification"
-                  ],
-                  "type": "string"
-                }
-              },
-              "required": [
-                "fqid",
-                "name",
-                "family",
                 "type"
               ],
               "type": "object"
@@ -1210,12 +1183,6 @@
                 },
                 "timeless": {
                   "type": "boolean"
-                },
-                "unit_type": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
                 }
               },
               "required": [
@@ -1226,7 +1193,6 @@
                 "role",
                 "implicit",
                 "timeless",
-                "unit_type",
                 "cadence",
                 "spans",
                 "row_keys",
@@ -1539,12 +1505,6 @@
             },
             "timeless": {
               "type": "boolean"
-            },
-            "unit_type": {
-              "type": [
-                "string",
-                "null"
-              ]
             }
           },
           "required": [
@@ -1553,7 +1513,6 @@
             "role",
             "implicit",
             "timeless",
-            "unit_type",
             "cadence",
             "period"
           ],
@@ -2586,7 +2545,6 @@
         "kind": {
           "enum": [
             "continues",
-            "equivalent",
             "derived_from",
             "label_of"
           ],
@@ -2683,7 +2641,7 @@
               "type": "string"
             },
             "kind": {
-              "description": "`continues`, `equivalent`, `derived_from` or `label_of`.",
+              "description": "`continues`, `derived_from` or `label_of`.",
               "type": "string"
             },
             "prov": {

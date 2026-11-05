@@ -9,7 +9,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Value, json};
 
-use super::{Item, Pair, Res, Section, query};
+use super::{Item, Pair, Section, memberships, query};
+use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
 type Placement = (String, String, String, String);
@@ -17,24 +18,18 @@ type Column = (String, String);
 /// (code, subject key, start, end) -> occurrences.
 type Bag = BTreeMap<(String, String, String, String), i64>;
 
-/// Reader-visible text by kind, as SQL returning (natural key, body).
-const TEXT: [(&str, &str); 10] = [
-    (
-        "occurrence label",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.label_text",
-    ),
-    (
-        "occurrence definition",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.definition_text",
-    ),
-    (
-        "occurrence operational definition",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.opdef_text",
-    ),
-    (
-        "occurrence unit",
-        "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.unit_text",
-    ),
+/// Occurrence text kinds and their `occurrence` column, keyed by table, source key and
+/// bounds in `texts`.
+const OCCURRENCE_TEXT: [(&str, &str); 4] = [
+    ("label", "label_text"),
+    ("definition", "definition_text"),
+    ("operational definition", "opdef_text"),
+    ("unit", "unit_text"),
+];
+
+/// Reader-visible text by kind, as SQL returning (natural key, body), after the
+/// occurrence text.
+const TEXT: [(&str, &str); 6] = [
     (
         "variable label",
         "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text",
@@ -92,7 +87,7 @@ fn subject_cte() -> String {
 }
 
 /// A statement is keyed by its file, kind and the stable keys of what it won (overrides,
-/// relations, acks), not by its hash: the hash covers the whole statement, so a non-text
+/// relations), not by its hash: the hash covers the whole statement, so a non-text
 /// edit would read as removed and added text, and file and kind alone merge statements.
 fn statement_sql() -> String {
     format!(
@@ -103,10 +98,7 @@ fn statement_sql() -> String {
          UNION SELECT r.statement_id, r.kind || ' ' || ifnull(a.key, r.subject_id) || ' -> ' || ifnull(b.key, r.object_id) \
          FROM relation r LEFT JOIN subject a ON a.kind = r.subject_kind AND a.id = r.subject_id \
          LEFT JOIN subject b ON b.kind = r.object_kind AND b.id = r.object_id \
-         WHERE r.statement_id IS NOT NULL \
-         UNION SELECT f.ack_statement_id, 'ack ' || f.code || ' ' || ifnull(k.key, f.subject_id) \
-         FROM finding f LEFT JOIN subject k ON k.kind = f.subject_kind AND k.id = f.subject_id \
-         WHERE f.ack_statement_id IS NOT NULL) \
+         WHERE r.statement_id IS NOT NULL) \
          SELECT s.file || ' ' || s.kind || ' ' || ifnull((SELECT group_concat(t, '; ') \
          FROM (SELECT t FROM target WHERE sid = s.id ORDER BY t)), ''), \
          json_array(ifnull(e.body, ''), ifnull(c.body, '')) FROM statement s \
@@ -115,10 +107,8 @@ fn statement_sql() -> String {
     )
 }
 
-fn schema(conn: &rusqlite::Connection) -> Res<(i64, Option<String>)> {
-    let user = conn
-        .query_row("PRAGMA user_version", [], |r| r.get(0))
-        .map_err(|e| e.to_string())?;
+fn schema(conn: &rusqlite::Connection) -> Result<(i64, Option<String>)> {
+    let user = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     let meta = query(
         conn,
         "SELECT value FROM meta WHERE key = 'schema_version'",
@@ -127,7 +117,9 @@ fn schema(conn: &rusqlite::Connection) -> Res<(i64, Option<String>)> {
     Ok((user, meta.into_iter().next()))
 }
 
-fn placements(conn: &rusqlite::Connection) -> Res<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
+fn placements(
+    conn: &rusqlite::Connection,
+) -> Result<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
     let mut out: BTreeMap<Column, (String, BTreeSet<Placement>)> = BTreeMap::new();
     for (table, column, disposition) in query(
         conn,
@@ -244,7 +236,7 @@ fn totals(old: &Census, new: &Census) -> Vec<Item> {
     counts
 }
 
-fn census(p: &Pair) -> Res<Vec<Section>> {
+fn census(p: &Pair) -> Result<Vec<Section>> {
     let (old, new) = (placements(&p.old)?, placements(&p.new)?);
     let mut counts = totals(&old, &new);
 
@@ -328,24 +320,23 @@ fn census(p: &Pair) -> Res<Vec<Section>> {
     ])
 }
 
-fn text_maps(conn: &rusqlite::Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<String>>> {
-    let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
-    for (k, v) in query(conn, sql, |r| Ok((r.get(0)?, r.get(1)?)))? {
-        out.entry(k).or_default().insert(v);
-    }
-    Ok(out)
-}
-
 /// Per kind: counts, and the keys (never the bodies) changed, added and removed.
-fn texts(p: &Pair) -> Res<Section> {
-    let statement = statement_sql();
-    let kinds = TEXT
+fn texts(p: &Pair) -> Result<Section> {
+    let kinds = OCCURRENCE_TEXT
         .iter()
-        .copied()
-        .chain([("statement", statement.as_str())]);
+        .map(|(kind, column)| {
+            (
+                format!("occurrence {kind}"),
+                format!(
+                    "SELECT t.pid || '/' || o.source_key || '@' || ifnull(o.start, '') || '-' || ifnull(o.end, ''), d.body FROM occurrence o JOIN tbl t ON t.id = o.table_id JOIN text d ON d.id = o.{column}"
+                ),
+            )
+        })
+        .chain(TEXT.iter().map(|&(kind, sql)| (kind.to_owned(), sql.to_owned())))
+        .chain([("statement".to_owned(), statement_sql())]);
     let mut items = Vec::new();
     for (kind, sql) in kinds {
-        let (old, new) = (text_maps(&p.old, sql)?, text_maps(&p.new, sql)?);
+        let (old, new) = (memberships(&p.old, &sql)?, memberships(&p.new, &sql)?);
         let changed: Vec<&String> = old
             .iter()
             .filter(|(k, v)| new.get(*k).is_some_and(|n| n != *v))
@@ -376,7 +367,7 @@ fn texts(p: &Pair) -> Res<Section> {
     Ok(Section::flat("text", "reader-visible text", items))
 }
 
-fn bag(conn: &rusqlite::Connection, sql: &str) -> Res<Bag> {
+fn bag(conn: &rusqlite::Connection, sql: &str) -> Result<Bag> {
     let mut out = Bag::new();
     for k in query(conn, sql, |r| {
         Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
@@ -387,7 +378,7 @@ fn bag(conn: &rusqlite::Connection, sql: &str) -> Res<Bag> {
 }
 
 /// Per-code counts and the (code, subject, period) multiset differences.
-fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Res<Section> {
+fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Result<Section> {
     let (old, new) = (bag(&pair.old, sql)?, bag(&pair.new, sql)?);
     let keys: BTreeSet<_> = old.keys().chain(new.keys()).collect();
     let mut by_code: BTreeMap<&str, [i64; 4]> = BTreeMap::new();
@@ -425,12 +416,12 @@ fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Res<
     Ok(Section::flat(key, title, items))
 }
 
-pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Res<Vec<Section>> {
+pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Result<Vec<Section>> {
     let (os, ns) = (schema(&p.old)?, schema(&p.new)?);
     if os != ns {
         return Err(format!(
             "holdings schema mismatch: (user_version, schema_version) {old_path} {os:?}, {new_path} {ns:?}"
-        ));
+        ).into());
     }
     let meta_sql = "SELECT key, value FROM meta WHERE key IN \
                     ('generation_id', 'steward_commit', 'compiler_digest') ORDER BY key";

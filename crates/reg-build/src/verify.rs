@@ -4,6 +4,7 @@
 
 use std::path::Path;
 
+use crate::error::Result;
 use reg_frame::Item;
 use rusqlite::{Connection, OpenFlags, OptionalExtension};
 
@@ -14,13 +15,11 @@ const CHECKS: &str = include_str!("checks.sql");
 /// # Errors
 /// The first failure, naming the check: `integrity_check: …`, `post-write check failed:\n<sql>`,
 /// `valueset <hash>: content hashes to <actual>`, `doc <hash>: content hashes to <actual>`, or `previous release: <sql>`.
-pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
+pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<()> {
     let db = Connection::open_with_flags(
         path,
         OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_URI,
-    )
-    .map_err(sql)?;
+    )?;
     semantic(&db)?;
     schema_version(&db)?;
     if let Some(previous) = previous {
@@ -30,22 +29,14 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
 }
 
 /// Shared semantic-table checks for a base catalog and a supplemental catalog.
-pub(crate) fn semantic(db: &Connection) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
-    let integrity: String = db
-        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
-        .map_err(sql)?;
+pub(crate) fn semantic(db: &Connection) -> Result<()> {
+    let integrity: String = db.query_row("PRAGMA integrity_check", [], |r| r.get(0))?;
     if integrity != "ok" {
-        return Err(format!("integrity_check: {integrity}"));
+        return Err(format!("integrity_check: {integrity}").into());
     }
-    let checks = CHECKS
-        .lines()
-        .filter(|line| !line.trim_start().starts_with("--"))
-        .collect::<Vec<_>>()
-        .join("\n");
-    for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
+    for statement in &statements(CHECKS) {
         if has_rows(db, statement)? {
-            return Err(format!("post-write check failed:\n{statement}"));
+            return Err(format!("post-write check failed:\n{statement}").into());
         }
     }
     types(db)?;
@@ -55,36 +46,28 @@ pub(crate) fn semantic(db: &Connection) -> Result<(), String> {
 }
 
 /// Use the same closed family map as resolution, including the F6 exemption.
-fn types(db: &Connection) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
-    let mut stated = db
-        .prepare("SELECT dtype FROM occurrence UNION SELECT dtype FROM segment")
-        .map_err(sql)?;
-    for dtype in stated
-        .query_map([], |r| r.get::<_, Option<String>>(0))
-        .map_err(sql)?
-    {
-        if let Some(dtype) = dtype.map_err(sql)?
+fn types(db: &Connection) -> Result<()> {
+    let mut stated = db.prepare("SELECT dtype FROM occurrence UNION SELECT dtype FROM segment")?;
+    for dtype in stated.query_map([], |r| r.get::<_, Option<String>>(0))? {
+        if let Some(dtype) = dtype?
             && reg_frame::dtype_info(&dtype).is_none()
         {
-            return Err(format!("unmapped catalog dtype {dtype:?}"));
+            return Err(format!("unmapped catalog dtype {dtype:?}").into());
         }
     }
-    let mut pairs = db
-        .prepare(
-            "SELECT o.id, o.dtype, s.dtype, s.state, EXISTS (
+    let mut pairs = db.prepare(
+        "SELECT o.id, o.dtype, s.dtype, s.state, EXISTS (
              SELECT 1 FROM finding f
              WHERE f.subject_kind = 'segment' AND f.subject_id = s.id
                AND f.code = 'F6:source-conflict' AND f.severity = 'review'
                AND f.start = s.start AND f.end = s.end)
          FROM occurrence o JOIN segment s ON s.id = o.segment_id
          WHERE o.dtype IS NOT s.dtype",
-        )
-        .map_err(sql)?;
-    let mut rows = pairs.query([]).map_err(sql)?;
-    while let Some(row) = rows.next().map_err(sql)? {
-        let occurrence: Option<String> = row.get(1).map_err(sql)?;
-        let segment: Option<String> = row.get(2).map_err(sql)?;
+    )?;
+    let mut rows = pairs.query([])?;
+    while let Some(row) = rows.next()? {
+        let occurrence: Option<String> = row.get(1)?;
+        let segment: Option<String> = row.get(2)?;
         let family = |dtype: Option<&str>| {
             dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
         };
@@ -92,8 +75,9 @@ fn types(db: &Connection) -> Result<(), String> {
         if own.is_some() && segment.is_some() && published.is_none() {
             return Err(format!(
                 "occurrence {}: known type beneath a published unknown type",
-                row.get::<_, i64>(0).map_err(sql)?
-            ));
+                row.get::<_, i64>(0)?
+            )
+            .into());
         }
         if own.is_some()
             && own == published
@@ -102,11 +86,12 @@ fn types(db: &Connection) -> Result<(), String> {
         {
             return Err(format!(
                 "occurrence {}: segment type is narrower than its source",
-                row.get::<_, i64>(0).map_err(sql)?
-            ));
+                row.get::<_, i64>(0)?
+            )
+            .into());
         }
-        let state: String = row.get(3).map_err(sql)?;
-        let exempt: bool = row.get(4).map_err(sql)?;
+        let state: String = row.get(3)?;
+        let exempt: bool = row.get(4)?;
         if state != "ambiguous"
             && own.is_some()
             && own != published
@@ -114,65 +99,80 @@ fn types(db: &Connection) -> Result<(), String> {
         {
             return Err(format!(
                 "occurrence {}: type family disagrees with its segment",
-                row.get::<_, i64>(0).map_err(sql)?
-            ));
+                row.get::<_, i64>(0)?
+            )
+            .into());
         }
     }
     Ok(())
 }
 
 /// `PRAGMA user_version` and `meta.schema_version` both equal the one constant.
-fn schema_version(db: &Connection) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
-    let user: i64 = db
-        .query_row("PRAGMA user_version", [], |r| r.get(0))
-        .map_err(sql)?;
+fn schema_version(db: &Connection) -> Result<()> {
+    let user: i64 = db.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     let meta: Option<String> = db
         .query_row(
             "SELECT value FROM meta WHERE key = 'schema_version'",
             [],
             |r| r.get(0),
         )
-        .optional()
-        .map_err(sql)?;
+        .optional()?;
     let expected = reg_core::CATALOG_SCHEMA_VERSION;
     if user != i64::from(expected) || meta.as_deref() != Some(expected.to_string().as_str()) {
         return Err(format!(
             "schema version: user_version {user}, meta {}, expected {expected}",
             meta.as_deref().unwrap_or("(none)")
-        ));
+        )
+        .into());
     }
     Ok(())
 }
 
-fn has_rows(db: &Connection, statement: &str) -> Result<bool, String> {
+/// The statements of a SQL file: `--` comments dropped to the end of their line and the
+/// text split at `;`, both outside string literals; trimmed, empty ones skipped.
+pub(crate) fn statements(sql: &str) -> Vec<String> {
+    let (mut out, mut statement, mut quoted) = (Vec::new(), String::new(), false);
+    let mut chars = sql.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '-' if !quoted && chars.peek() == Some(&'-') => {
+                while chars.next_if(|&c| c != '\n').is_some() {}
+            }
+            ';' if !quoted => out.push(std::mem::take(&mut statement)),
+            _ => {
+                quoted ^= c == '\'';
+                statement.push(c);
+            }
+        }
+    }
+    out.push(statement);
+    out.iter()
+        .map(|s| s.trim())
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect()
+}
+
+fn has_rows(db: &Connection, statement: &str) -> Result<bool> {
     let mut stmt = db
         .prepare(statement)
         .map_err(|e| format!("{statement}: {e}"))?;
-    let mut found = stmt.query([]).map_err(|e| e.to_string())?;
-    Ok(found.next().map_err(|e| e.to_string())?.is_some())
+    Ok(stmt.exists([])?)
 }
 
 /// Each value set's items hash to its address, the way `reg_frame::ValueSet::new` does.
-fn valuesets(db: &Connection) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
-    let mut sets = db
-        .prepare("SELECT id, hash FROM valueset ORDER BY id")
-        .map_err(sql)?;
-    let mut items = db
-        .prepare(
-            "SELECT c.body, l.body, i.parent_ord
+fn valuesets(db: &Connection) -> Result<()> {
+    let mut sets = db.prepare("SELECT id, hash FROM valueset ORDER BY id")?;
+    let mut items = db.prepare(
+        "SELECT c.body, l.body, i.parent_ord
                FROM vs_item i
                JOIN text c ON c.id = i.code_text
                LEFT JOIN text l ON l.id = i.label_text
               WHERE i.valueset_id = ?1 ORDER BY i.ord",
-        )
-        .map_err(sql)?;
+    )?;
     let sets = sets
-        .query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?)))
-        .map_err(sql)?
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(sql)?;
+        .query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?)))?
+        .collect::<Result<Vec<_>, _>>()?;
     for (id, hash) in sets {
         let rows = items
             .query_map([id], |r| {
@@ -181,10 +181,8 @@ fn valuesets(db: &Connection) -> Result<(), String> {
                     r.get::<_, Option<String>>(1)?,
                     r.get::<_, Option<u32>>(2)?,
                 ))
-            })
-            .map_err(sql)?
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(sql)?;
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
         let list: Vec<Item> = rows
             .iter()
             .map(|(code, label, parent)| Item {
@@ -197,29 +195,21 @@ fn valuesets(db: &Connection) -> Result<(), String> {
             .collect();
         let actual = reg_core::sha256_hex(reg_frame::canonical_line(&list));
         if actual != hash {
-            return Err(format!("valueset {hash}: content hashes to {actual}"));
+            return Err(format!("valueset {hash}: content hashes to {actual}").into());
         }
     }
     Ok(())
 }
 
 /// Each stored pdf hashes to its address.
-fn pdfs(db: &Connection) -> Result<(), String> {
-    let sql = |e: rusqlite::Error| e.to_string();
-    let mut stmt = db
-        .prepare("SELECT hash, content FROM doc WHERE kind = 'pdf' ORDER BY id")
-        .map_err(sql)?;
-    let mut rows = stmt.query([]).map_err(sql)?;
-    while let Some(row) = rows.next().map_err(sql)? {
-        let hash: String = row.get(0).map_err(sql)?;
-        let actual = reg_core::sha256_hex(
-            row.get_ref(1)
-                .map_err(sql)?
-                .as_blob()
-                .map_err(|e| e.to_string())?,
-        );
+fn pdfs(db: &Connection) -> Result<()> {
+    let mut stmt = db.prepare("SELECT hash, content FROM doc WHERE kind = 'pdf' ORDER BY id")?;
+    let mut rows = stmt.query([])?;
+    while let Some(row) = rows.next()? {
+        let hash: String = row.get(0)?;
+        let actual = reg_core::sha256_hex(row.get_ref(1)?.as_blob()?);
         if actual != hash {
-            return Err(format!("doc {hash}: content hashes to {actual}"));
+            return Err(format!("doc {hash}: content hashes to {actual}").into());
         }
     }
     Ok(())
@@ -227,7 +217,7 @@ fn pdfs(db: &Connection) -> Result<(), String> {
 
 /// Ids published from v1 survive on overlapping targets or are permanently retired.
 /// Earlier releases report these changes without refusing them.
-fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
+fn compare(db: &Connection, previous: &Path) -> Result<()> {
     let fail = |what: String| format!("previous release: {what}");
     // `#`, `?` and `%` are URI syntax: encode every byte but unreserved ones and `/`.
     let encoded: String = previous
@@ -243,14 +233,15 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     let uri = format!("file:{encoded}?mode=ro");
     db.execute("ATTACH DATABASE ?1 AS prev", [uri])
         .map_err(|e| fail(format!("{}: {e}", previous.display())))?;
-    let version = |schema: &str| -> Result<Option<String>, String> {
-        db.query_row(
-            &format!("SELECT value FROM {schema}.meta WHERE key = 'schema_version'"),
-            [],
-            |r| r.get(0),
-        )
-        .optional()
-        .map_err(|e| fail(format!("{}: {e}", previous.display())))
+    let version = |schema: &str| -> Result<Option<String>> {
+        Ok(db
+            .query_row(
+                &format!("SELECT value FROM {schema}.meta WHERE key = 'schema_version'"),
+                [],
+                |r| r.get(0),
+            )
+            .optional()
+            .map_err(|e| fail(format!("{}: {e}", previous.display())))?)
     };
     let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
     match version("prev")? {
@@ -259,7 +250,8 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             return Err(fail(format!(
                 "schema {} is not comparable",
                 other.as_deref().unwrap_or("(none)")
-            )));
+            ))
+            .into());
         }
     }
     let catalog_version: String = db
@@ -284,22 +276,23 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)"),
         ("removed retirement", "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired"),
     ] {
-        let mut stmt = db.prepare(statement).map_err(|e| e.to_string())?;
-        let pids = stmt.query_map([], |r| r.get::<_, String>(0)).map_err(|e| e.to_string())?;
+        let mut stmt = db.prepare(statement)?;
+        let pids = stmt.query_map([], |r| r.get::<_, String>(0))?;
         for pid in pids {
-            let pid = pid.map_err(|e| e.to_string())?;
+            let pid = pid?;
             if !pre_v1 {
-                return Err(fail(format!("{change} {pid}")));
+                return Err(fail(format!("{change} {pid}")).into());
             }
             changes.push((pid.clone(), format!("{change} {pid}")));
         }
     }
-    for moved in crate::id_targets::moved(db, "prev", db, "main").map_err(fail)? {
+    for moved in crate::id_targets::moved(db, "prev", db, "main").map_err(|e| fail(e.into()))? {
         if !pre_v1 {
             return Err(fail(format!(
                 "moved id {}; retire the published id and mint a new one",
                 moved.text()
-            )));
+            ))
+            .into());
         }
         changes.push((moved.pid.clone(), format!("moved id {}", moved.text())));
     }

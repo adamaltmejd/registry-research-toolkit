@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_frame::ValueSet;
-use reg_frame::address::{Address, Comparison, Guard, GuardField};
+use reg_frame::address::{Address, Guard, GuardField};
 use reg_frame::statement::{Relation, SetFields, Statement};
 use reg_resolve::curation::apply::Classification;
 use reg_resolve::{Finding, Resolved, ResolvedOccurrence, Subject};
@@ -43,13 +43,11 @@ fn occurrence_address(r: &Resolved, o: &ResolvedOccurrence) -> Option<Address> {
     let table = r.tables[o.table].slug.as_deref().unwrap_or(&r.public);
     let mut guards = vec![Guard {
         field: GuardField::Key,
-        comparison: Comparison::Equal,
         value: row.source_key.clone(),
     }];
     if let Some(release) = &row.release {
         guards.push(Guard {
             field: GuardField::Release,
-            comparison: Comparison::Equal,
             value: release.clone(),
         });
     }

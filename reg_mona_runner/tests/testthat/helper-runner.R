@@ -8,7 +8,7 @@ repo_dir <- dirname(runner_dir)
 materialize_dir <- file.path(repo_dir, "conformance", "cases", "materialize")
 
 # A materialize golden as the order file the server writes: the golden omits the
-# provenance ids that vary per artifact (conformance/test_materialize.py strips
+# provenance ids that vary per artifact (the conformance `materialize` runner strips
 # them), so they are filled with placeholders of their shape, and the steward is
 # `steward` (the goldens' own is the fixture's).
 golden_order <- function(case, steward = "swecov") {
