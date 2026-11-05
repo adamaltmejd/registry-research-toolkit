@@ -444,7 +444,7 @@
   },
   {
     "name": "show",
-    "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+    "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -922,6 +922,10 @@
               "description": "A classification version's ref.",
               "type": "string"
             },
+            "classification_name": {
+              "description": "The classification version's name.",
+              "type": "string"
+            },
             "coded": {
               "description": "`yes` or `no`.",
               "type": "string"
@@ -1183,6 +1187,13 @@
                 },
                 "timeless": {
                   "type": "boolean"
+                },
+                "variables": {
+                  "description": "The variables in this table, each over the years it has here.",
+                  "items": {
+                    "$ref": "#/$defs/ShowTableVariable"
+                  },
+                  "type": "array"
                 }
               },
               "required": [
@@ -1196,6 +1207,7 @@
                 "cadence",
                 "spans",
                 "row_keys",
+                "variables",
                 "kind"
               ],
               "type": "object"
@@ -1304,8 +1316,145 @@
                 "kind"
               ],
               "type": "object"
+            },
+            {
+              "description": "A classification. Classifications are shared, so every version is listed; on a\ndata holder's catalog only the holder's variables are.",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "class_family"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "variables": {
+                  "items": {
+                    "$ref": "#/$defs/ShowClassUser"
+                  },
+                  "type": "array"
+                },
+                "versions": {
+                  "description": "In start order.",
+                  "items": {
+                    "$ref": "#/$defs/ShowClassVersion"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "versions",
+                "variables",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "family": {
+                  "$ref": "#/$defs/ShowMembership"
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "class_version"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period",
+                  "description": "The version's validity."
+                },
+                "value_set": {
+                  "$ref": "#/$defs/ValueSetRef"
+                },
+                "variables": {
+                  "description": "The variables that use this version.",
+                  "items": {
+                    "$ref": "#/$defs/ShowClassUser"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "period",
+                "value_set",
+                "family",
+                "variables",
+                "kind"
+              ],
+              "type": "object"
             }
           ]
+        },
+        "ShowClassUser": {
+          "description": "A variable that uses the classification, with its rows that carry it.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "segments": {
+              "description": "Its rows, as `segments` serves them, whose `classification` is the family's (or\nthe version's).",
+              "items": {
+                "$ref": "#/$defs/Segment"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "segments"
+          ],
+          "type": "object"
+        },
+        "ShowClassVersion": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "The version's validity."
+            },
+            "used": {
+              "description": "Whether one of `variables` uses this version.",
+              "type": "boolean"
+            },
+            "value_set": {
+              "$ref": "#/$defs/ValueSetRef"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "period",
+            "value_set",
+            "used"
+          ],
+          "type": "object"
         },
         "ShowMembership": {
           "description": "A curated set (group) or tag the variable belongs to.",
@@ -1561,6 +1710,26 @@
             "implicit",
             "timeless",
             "cadence",
+            "period"
+          ],
+          "type": "object"
+        },
+        "ShowTableVariable": {
+          "description": "A variable in a table, over the years it has in that table.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
             "period"
           ],
           "type": "object"
@@ -2073,6 +2242,10 @@
           "properties": {
             "classification": {
               "description": "A classification version's ref.",
+              "type": "string"
+            },
+            "classification_name": {
+              "description": "The classification version's name.",
               "type": "string"
             },
             "coded": {
