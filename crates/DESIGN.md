@@ -773,12 +773,13 @@ overlapping curated overrides are refused at both locations.
   non-empty and no old/new pair shares a table slug and folded spelling with overlapping
   `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
   share their register's id and are excluded. `--holdings` compares two holdings
-  catalogs of the same holdings schema instead (release step 8g): census columns by
-  (physical table, column), with placed, held and unplaced counts, changed placements
-  grouped by old and new `table_pid` and classed newly placed, folded or renamed,
-  variable or interval changed, or unmapped; reader-visible text by kind, keyed by pid
-  and source key and listing keys, never bodies; and finding and holdings-notice deltas
-  by code, compared by (code, subject, period).
+  catalogs instead (release step 8g), OLD on the same or an older holdings schema with
+  the same cross-schema report: census columns by (physical table, column), with placed,
+  held and unplaced counts, changed placements grouped by old and new `table_pid` and
+  classed newly placed, folded or renamed, variable or interval changed, or unmapped;
+  reader-visible text by kind, keyed by pid and source key and listing keys, never
+  bodies; and finding and holdings-notice deltas by code, compared by (code, subject,
+  period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a

@@ -9,7 +9,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Value, json};
 
-use super::{Item, Pair, Section, memberships, query};
+use super::{Item, Pair, Report, Section, memberships, query};
 use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
@@ -416,13 +416,42 @@ fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Resu
     Ok(Section::flat(key, title, items))
 }
 
-pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Result<Vec<Section>> {
+/// The holdings sections, and (old, current) holdings schemas when they differ. Equal
+/// schemas diff as always. Otherwise NEW must be on this build's holdings schema and OLD
+/// on an older one, each with `user_version` equal to `meta.schema_version`.
+pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Result<Report> {
     let (os, ns) = (schema(&p.old)?, schema(&p.new)?);
-    if os != ns {
-        return Err(format!(
-            "holdings schema mismatch: (user_version, schema_version) {old_path} {os:?}, {new_path} {ns:?}"
-        ).into());
+    if os == ns {
+        return Ok((same_schema(p, &os)?, None));
     }
+    let version = |(user, meta): &(i64, Option<String>)| {
+        meta.as_deref()
+            .and_then(|m| m.parse::<u32>().ok())
+            .filter(|m| i64::from(*m) == *user)
+    };
+    let current = reg_core::HOLDINGS_SCHEMA_VERSION;
+    let old = match (version(&os), version(&ns)) {
+        (Some(old), Some(new)) if new == current && old < new => old,
+        _ => {
+            return Err(format!(
+                "holdings schema mismatch: (user_version, schema_version) {old_path} {os:?}, {new_path} {ns:?}"
+            )
+            .into());
+        }
+    };
+    // A query the older schema cannot answer is a located refusal, not a silent gap.
+    let sections = (|| -> Result<Vec<Section>> {
+        let (changes, _) = super::schema_changes(p)?;
+        let mut out = vec![changes];
+        out.extend(same_schema(p, &os)?);
+        Ok(out)
+    })()
+    .map_err(|e| format!("{old_path}: holdings schema {old} is not comparable: {e}"))?;
+    Ok((sections, Some((old, current))))
+}
+
+/// Every section but schema changes; `os` is the old side's (`user_version`, `schema_version`).
+fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     let meta_sql = "SELECT key, value FROM meta WHERE key IN \
                     ('generation_id', 'steward_commit', 'compiler_digest') ORDER BY key";
     let meta = |conn| {

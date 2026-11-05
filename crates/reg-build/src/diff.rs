@@ -146,6 +146,9 @@ impl Section {
     }
 }
 
+/// The sections, and the (old, current) schema versions of a cross-schema diff.
+type Report = (Vec<Section>, Option<(u32, u32)>);
+
 /// The old and the new catalog, both read-only.
 struct Pair {
     old: Connection,
@@ -989,8 +992,8 @@ fn schema_changes(p: &Pair) -> Result<(Section, BTreeSet<String>)> {
 
 /// The catalog sections, after the schema-version check. NEW must have this build's
 /// schema; OLD may have an older one (a release diffs across a schema bump) but never a
-/// newer one. Returns the old schema version when it differs.
-fn catalog(pair: &Pair, args: &Args) -> Result<(Vec<Section>, Option<u32>)> {
+/// newer one. Returns (old, current) schema versions when they differ.
+fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
     let expected = reg_core::CATALOG_SCHEMA_VERSION;
     let refuse = |path: &str, version: &str| -> crate::error::Error {
         format!("{path}: schema version {version}, this build diffs {expected}").into()
@@ -1046,7 +1049,7 @@ fn catalog(pair: &Pair, args: &Args) -> Result<(Vec<Section>, Option<u32>)> {
         ])
     })()
     .map_err(|e| format!("{}: schema {old} is not comparable: {e}", args.old))?;
-    Ok((sections, Some(old)))
+    Ok((sections, Some((old, expected))))
 }
 
 /// The report: text or JSON, and whether any counted difference exists.
@@ -1055,19 +1058,18 @@ fn diff(args: &Args) -> Result<(String, bool)> {
         old: open(&args.old)?,
         new: open(&args.new)?,
     };
-    let (sections, old_schema) = if args.holdings {
-        (holdings::sections(&pair, &args.old, &args.new)?, None)
+    let (sections, cross) = if args.holdings {
+        holdings::sections(&pair, &args.old, &args.new)?
     } else {
         catalog(&pair, args)?
     };
     let differs = sections.iter().any(Section::differs);
-    let current = reg_core::CATALOG_SCHEMA_VERSION;
     let out = if args.json {
         let mut tree: serde_json::Map<String, Value> = sections
             .iter()
             .map(|s| (s.key.to_owned(), s.json()))
             .collect();
-        if let Some(old) = old_schema {
+        if let Some((old, current)) = cross {
             tree.insert(
                 "cross_schema".into(),
                 json!({"previous": old, "current": current}),
@@ -1077,7 +1079,7 @@ fn diff(args: &Args) -> Result<(String, bool)> {
         tree.sort_all_objects();
         tree.to_string() + "\n"
     } else {
-        let head = old_schema.map_or_else(String::new, |old| {
+        let head = cross.map_or_else(String::new, |(old, current)| {
             format!("cross-schema comparison: previous schema {old}, current schema {current}\n\n")
         });
         head + &sections
