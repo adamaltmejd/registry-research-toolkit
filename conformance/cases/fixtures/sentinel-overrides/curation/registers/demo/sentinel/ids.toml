@@ -1,5 +1,0 @@
-[tables]
-t="t"
-[variables]
-current=["t: Current"]
-control=["t: Control"]
