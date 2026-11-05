@@ -1619,14 +1619,16 @@ echoing private source values.
 
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
-The same premise path runs during holdings compilation. A referenced base public id
-records its kind and exact catalog generation/file digest in the ordinary premise;
-changing the base requires explicit lock review. `holding_relation` stores these
-ordinary `derived_from` links with qualified public-id endpoints and local statement
-provenance. The supplemental subject and reference object retain their own database
-origins, including reverse graph queries. Only derivation crosses this boundary;
-identity/succession relations are not imported as shortcuts. Standalone catalog builds
-do not admit `--base` or emit a catalog with unresolved external endpoints.
+`reg-build pin --steward-repo <dir> --config <path>` then rewrites the config's `[pins]`
+digests that the re-lock changed; it adds and drops no pin. The same premise path runs
+during holdings compilation. A referenced base public id records its kind and exact
+catalog generation/file digest in the ordinary premise; changing the base requires
+explicit lock review. `holding_relation` stores these ordinary `derived_from` links with
+qualified public-id endpoints and local statement provenance. The supplemental subject
+and reference object retain their own database origins, including reverse graph queries.
+Only derivation crosses this boundary; identity/succession relations are not imported as
+shortcuts. Standalone catalog builds do not admit `--base` or emit a catalog with
+unresolved external endpoints.
 
 Paired metadata search filters register, table and variable hits to accepted placements
 and their requested intervals before counts and ranking (above). A code or document hit

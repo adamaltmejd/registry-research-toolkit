@@ -1,0 +1,387 @@
+name: Steward deploy
+
+# Reusable: a steward repository deploys one of its holdings releases on its own Fly
+# app and edge worker (SWECOV move T5, R8 and R14; reg_webapp/DESIGN.md, "Steward
+# repositories"). Call it at the tag the steward pins, and pass the same tag:
+#
+#   jobs:
+#     deploy:
+#       uses: adamaltmejd/registry-research-toolkit/.github/workflows/steward-deploy.yml@reg_meta/vX.Y.Z
+#       with:
+#         steward: swecov
+#         reg_meta_tag: reg_meta/vX.Y.Z
+#         holdings_release: swecov/vX.Y.Z-1
+#         fly_app: reg-webapp-swecov
+#         fly_config: deploy/fly.toml
+#         wrangler_config: deploy/wrangler.jsonc
+#         zone: swecov.se
+#         public_host: data.swecov.se
+#       secrets:
+#         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
+#         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+#
+# `image` bakes reg_webapp/steward.Dockerfile from the release's `reg-meta` binary, its
+# base catalog and the holdings on `holdings_release` (every digest checked), then
+# pushes it to Fly's registry. `deploy` runs `flyctl deploy`, then deploys the
+# toolkit's worker with the release's SPA bundle and probes it, in one job serialized
+# per app; `prune` trims the registry. Origin first, then edge, as the toolkit's own
+# deploy (deploy-skew guard).
+# There is no HEAD guard: deploying an older holdings release is the rollback.
+#
+# Layout for the caller's wrangler config, whose paths resolve from its own folder:
+# the caller's checkout is the workspace root, the toolkit at the tag is `toolkit/`
+# and the unpacked SPA is `spa/`. From `deploy/wrangler.jsonc`: `"main":
+# "../toolkit/reg_webapp/edge/src/index.ts"`, `"assets": {"directory": "../spa"}`.
+#
+# `access: cloudflare-access` is for a host behind Cloudflare Access (configured in
+# Cloudflare by the maintainer, not here). The probes then send the service token
+# (CF_ACCESS_CLIENT_ID / CF_ACCESS_CLIENT_SECRET) and skip the edge-cache probe, whose
+# HIT is not asserted behind Access; with no token they skip with a notice.
+# `dry_run` stops after the image: built locally, run, and probed until its
+# entrypoint gate passes. Nothing is pushed or deployed.
+
+on:
+  workflow_call:
+    inputs:
+      steward:
+        description: The steward id (the catalog id the image serves).
+        required: true
+        type: string
+      reg_meta_tag:
+        description: The pinned toolkit release, reg_meta/vX.Y.Z (the caller's `uses:` ref).
+        required: true
+        type: string
+      holdings_release:
+        description: The caller-repository release carrying reg_meta_<steward>.db.zst.
+        required: true
+        type: string
+      fly_app:
+        description: The Fly app, as in the Fly config.
+        required: true
+        type: string
+      fly_config:
+        description: The Fly config, relative to the caller's repository root.
+        required: true
+        type: string
+      wrangler_config:
+        description: The edge worker's wrangler config, relative to the repository root.
+        required: true
+        type: string
+      zone:
+        description: The Cloudflare zone of the worker's route.
+        required: true
+        type: string
+      public_host:
+        description: The host the edge serves.
+        required: true
+        type: string
+      access:
+        description: "`public`, or `cloudflare-access` for a host behind Cloudflare Access."
+        default: public
+        type: string
+      dry_run:
+        description: Build and smoke-test the image only; push and deploy nothing.
+        default: false
+        type: boolean
+    secrets:
+      FLY_API_TOKEN:
+        required: false
+      CLOUDFLARE_API_TOKEN:
+        required: false
+      CLOUDFLARE_ACCOUNT_ID:
+        required: false
+      CF_ACCESS_CLIENT_ID:
+        required: false
+      CF_ACCESS_CLIENT_SECRET:
+        required: false
+
+env:
+  TOOLKIT: adamaltmejd/registry-research-toolkit
+  TARGET: x86_64-unknown-linux-gnu
+  # Same Cloudflare account as the toolkit's own edge deploys (container-build.yml).
+  DEFAULT_CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+  IMAGE: registry.fly.io/${{ inputs.fly_app }}:${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      STEWARD: ${{ inputs.steward }}
+      TAG: ${{ inputs.reg_meta_tag }}
+      HOLDINGS: ${{ inputs.holdings_release }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check the inputs
+        env:
+          ACCESS: ${{ inputs.access }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          FLY_TOKEN_SET: ${{ secrets.FLY_API_TOKEN != '' }}
+          CF_TOKEN_SET: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          [[ "$STEWARD" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || { echo "::error::steward '$STEWARD' is not a slug"; exit 1; }
+          [[ "$TAG" =~ ^reg_meta/v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::reg_meta_tag '$TAG' is not reg_meta/vX.Y.Z"; exit 1; }
+          case "$ACCESS" in public | cloudflare-access) ;; *) echo "::error::access '$ACCESS' is not public or cloudflare-access"; exit 1 ;; esac
+          if [ "$DRY_RUN" != true ]; then
+            [ "$FLY_TOKEN_SET" = true ] || { echo "::error::FLY_API_TOKEN is required to deploy"; exit 1; }
+            [ "$CF_TOKEN_SET" = true ] || { echo "::error::CLOUDFLARE_API_TOKEN is required to deploy"; exit 1; }
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: adamaltmejd/registry-research-toolkit
+          ref: ${{ inputs.reg_meta_tag }}
+          path: toolkit
+          persist-credentials: false
+          sparse-checkout: |
+            /reg_webapp/steward.Dockerfile
+            /reg_webapp/docker-entrypoint.sh
+          sparse-checkout-cone-mode: false
+      - name: Assemble the build context
+        run: |
+          set -euo pipefail
+          ctx="$RUNNER_TEMP/context"
+          mkdir -p "$ctx/db" "$RUNNER_TEMP/dl"
+          dl="$RUNNER_TEMP/dl"
+          gh release download "$TAG" --repo "$TOOLKIT" --dir "$dl" \
+            --pattern "reg-meta-$TARGET" --pattern "reg-meta-$TARGET.sha256" \
+            --pattern reg_meta.db.zst
+          gh release download "$HOLDINGS" --repo "$GITHUB_REPOSITORY" --dir "$dl" \
+            --pattern "reg_meta_$STEWARD.db.zst"
+          (cd "$dl" && shasum -a 256 -c "reg-meta-$TARGET.sha256")
+          digest() {
+            gh release view "$1" --repo "$2" --json assets \
+              --jq ".assets[] | select(.name == \"$3\") | .digest"
+          }
+          for check in "$TAG $TOOLKIT reg_meta.db.zst" "$HOLDINGS $GITHUB_REPOSITORY reg_meta_$STEWARD.db.zst"; do
+            read -r tag repo name <<< "$check"
+            test "$(digest "$tag" "$repo" "$name")" = "sha256:$(shasum -a 256 "$dl/$name" | cut -d' ' -f1)" ||
+              { echo "::error::$name does not match its digest on $tag"; exit 1; }
+          done
+          zstd -q -d --rm "$dl/reg_meta.db.zst" -o "$ctx/db/reg_meta.db"
+          zstd -q -d --rm "$dl/reg_meta_$STEWARD.db.zst" -o "$ctx/db/reg_meta_$STEWARD.db"
+          mv "$dl/reg-meta-$TARGET" "$ctx/reg-meta"
+          cp toolkit/reg_webapp/docker-entrypoint.sh "$ctx/"
+          echo "CONTEXT=$ctx" >> "$GITHUB_ENV"
+          du -sh "$ctx"/db/*
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to registry.fly.io
+        if: ${{ !inputs.dry_run }}
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN }}
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ env.CONTEXT }}
+          file: toolkit/reg_webapp/steward.Dockerfile
+          push: ${{ !inputs.dry_run }}
+          load: ${{ inputs.dry_run }}
+          tags: ${{ env.IMAGE }}
+          build-args: REG_META_CATALOG=${{ inputs.steward }}
+      # The dry run's proof: the entrypoint gate (context, steward context, search,
+      # docs search, /mcp) passes and the server keeps serving. A failed gate exits the
+      # container.
+      - name: Smoke-test the image
+        if: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          docker run -d --name steward-smoke -p 8000:8000 "$IMAGE"
+          # The entrypoint prints its pass line only after every gate probe; a failed
+          # gate exits the container.
+          deadline=$((SECONDS + 300))
+          # Logs captured first: under pipefail, grep -q closing the pipe early fails it.
+          while :; do
+            logs=$(docker logs steward-smoke 2>&1)
+            grep -qx 'entrypoint: smoke gate passed' <<< "$logs" && break
+            [ "$(docker inspect -f '{{.State.Running}}' steward-smoke)" = true ] ||
+              { docker logs steward-smoke; echo "::error::the entrypoint gate failed"; exit 1; }
+            [ "$SECONDS" -lt "$deadline" ] || { docker logs steward-smoke; echo "::error::the entrypoint gate did not finish within 300s"; exit 1; }
+            sleep 2
+          done
+          # Then the steward's own context and MCP through the published port.
+          curl -fsS --max-time 60 "http://127.0.0.1:8000/mcp" \
+            -H 'accept: application/json, text/event-stream' \
+            -H 'content-type: application/json' \
+            -H 'mcp-protocol-version: 2025-11-25' \
+            -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | grep -q '"name":"search"'
+          curl -fsS "http://127.0.0.1:8000/api/context" | jq -e '.data.steward_config'
+          docker logs steward-smoke 2>&1 | tail -n 5
+          docker rm -f steward-smoke
+
+  deploy:
+    needs: image
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Origin and edge in one job, one deploy per app at a time: two runs never
+    # interleave (A's SPA on B's origin), and a queued run waits rather than cancels,
+    # as an interrupted flyctl run can strand the machine mid-update.
+    concurrency:
+      group: steward-deploy-${{ inputs.fly_app }}
+      cancel-in-progress: false
+    env:
+      EDGE_HOST: ${{ inputs.public_host }}
+      ACCESS: ${{ inputs.access }}
+      CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
+        with:
+          version: "0.5.0"
+      # The entrypoint gate and the Fly config's HTTP check must pass before flyctl
+      # reports success. --ha=false keeps the single-machine topology.
+      - run: flyctl deploy --config "$FLY_CONFIG" --app "$FLY_APP" --image "$IMAGE" --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_CONFIG: ${{ inputs.fly_config }}
+          FLY_APP: ${{ inputs.fly_app }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: adamaltmejd/registry-research-toolkit
+          ref: ${{ inputs.reg_meta_tag }}
+          path: toolkit
+          persist-credentials: false
+          sparse-checkout: /reg_webapp/edge/
+          sparse-checkout-cone-mode: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: "1.4.4"
+      - name: Unpack the SPA bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.reg_meta_tag }}
+        run: |
+          set -euo pipefail
+          version=${TAG#reg_meta/v}
+          spa="reg-webapp-spa-$version.tar.zst"
+          gh release download "$TAG" --repo "$TOOLKIT" --dir "$RUNNER_TEMP" \
+            --pattern "$spa" --pattern "$spa.sha256"
+          (cd "$RUNNER_TEMP" && shasum -a 256 -c "$spa.sha256")
+          mkdir spa
+          zstd -dc "$RUNNER_TEMP/$spa" | tar -xf - -C spa
+      # The worker's route lives in the zone, which the token must list under its Zone
+      # Resources; wrangler's own refusal names neither the zone nor the fix.
+      - name: Check the Cloudflare token reaches the zone
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ZONE: ${{ inputs.zone }}
+        run: |
+          count=$(curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=$ZONE" | jq '.result | length')
+          [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone $ZONE: add it to the token's Zone Resources" >&2; exit 1; }
+      - run: >-
+          bunx wrangler@4.152.0 deploy --config "$WRANGLER_CONFIG"
+          --var "DEPLOY_VERSION:$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+        env:
+          WRANGLER_CONFIG: ${{ inputs.wrangler_config }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || env.DEFAULT_CLOUDFLARE_ACCOUNT_ID }}
+      # Behind Cloudflare Access every probe sends the service token; without one the
+      # probes cannot pass Access and are skipped.
+      - name: Probe headers
+        id: probe
+        run: |
+          if [ "$ACCESS" = public ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [ -n "$CF_ACCESS_CLIENT_ID" ] && [ -n "$CF_ACCESS_CLIENT_SECRET" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::$EDGE_HOST is behind Cloudflare Access and no service token was given: edge probes skipped"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      # As container-build.yml's SWECOV edge probes: the deployed .wasm answers 200
+      # application/wasm (the SPA mounts only once it loads), retried until the new
+      # worker version reaches the PoP.
+      - name: Edge .wasm probe
+        if: steps.probe.outputs.run == 'true'
+        run: |
+          auth=()
+          [ "$ACCESS" = public ] || auth=(-H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET")
+          window=180 interval=10
+          wasm=$(cd spa && ls assets/*.wasm)
+          deadline=$((SECONDS + window))
+          while :; do
+            read -r code type < <(curl -m 15 "${auth[@]}" -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
+            echo "$wasm: $code $type"
+            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
+            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
+            sleep "$interval"
+          done
+      # The /api/* Cache Rule and the ETag contract are zone state: a search read must
+      # reach a young HIT under this DEPLOY_VERSION and revalidate with an edge 304.
+      # Not asserted behind Access.
+      - name: Edge cache probe
+        if: steps.probe.outputs.run == 'true' && inputs.access == 'public'
+        run: |
+          window=180 interval=10
+          url="https://$EDGE_HOST/api/search?q=inkomst"
+          deadline=$((SECONDS + window))
+          while :; do
+            IFS='|' read -r code status age < <(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            echo "$code cf-cache-status: $status, age: ${age:-0}s"
+            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
+              echo "FATAL: expected a young HIT within ${window}s, last saw a HIT ${age}s old" >&2
+              exit 1
+            fi
+            sleep "$interval"
+          done
+          etag=$(curl -m 15 -A reg-meta-ci-smoke -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          echo "If-None-Match -> $code"
+          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+      # The steward's context through the edge, and the hosted MCP endpoint: initialize,
+      # tools/list naming `search`, one `search` call that is not a tool error.
+      - name: Context and MCP smoke
+        if: steps.probe.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          auth=()
+          [ "$ACCESS" = public ] || auth=(-H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET")
+          curl -sfS "${auth[@]}" -A reg-meta-ci-smoke "https://$EDGE_HOST/api/context" \
+            | jq -e '.data.steward_config.presentation' > /dev/null
+          rpc() {
+            curl -sfS "https://$EDGE_HOST/mcp" "${auth[@]}" \
+              -A 'reg-meta-ci-smoke' \
+              -H 'accept: application/json, text/event-stream' \
+              -H 'content-type: application/json' \
+              -H 'mcp-protocol-version: 2025-11-25' \
+              -d "{\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"$1\", \"params\": $2}"
+          }
+          rpc initialize '{"protocolVersion": "2025-11-25", "capabilities": {}, "clientInfo": {"name": "steward-deploy", "version": "0"}}' \
+            | jq -e '.result.serverInfo.name == "reg-meta"'
+          rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
+          rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
+            | jq -e '.result.isError == false'
+
+  # Registry prune (scripts/fly-prune.sh). A prune hiccup never fails the deploy.
+  prune:
+    needs: deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    concurrency:
+      group: fly-prune-${{ inputs.fly_app }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: adamaltmejd/registry-research-toolkit
+          ref: ${{ inputs.reg_meta_tag }}
+          path: toolkit
+          persist-credentials: false
+          sparse-checkout: /scripts/fly-prune.sh
+          sparse-checkout-cone-mode: false
+      - name: Prune old registry tags
+        continue-on-error: true
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          DEPLOYED_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+          FLY_APP: ${{ inputs.fly_app }}
+        run: bash toolkit/scripts/fly-prune.sh

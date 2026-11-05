@@ -317,6 +317,64 @@ fn holdings_base_change_invalidates_lineage_lock() {
 }
 
 #[test]
+fn pin_refresh_readmits_a_relocked_steward() {
+    // Fails if `reg-build pin` computes a digest the compiler does not (a directory pin
+    // over another file walk), leaves a changed pin stale, adds or drops a pin, or
+    // rewrites the config's own formatting (a trailing comment on the changed pin): the
+    // steward bump re-locks, refreshes the pins and must then compile.
+    let dir = Scratch::new("pin-refresh").unwrap();
+    let holdings = steward::holdings(dir.path()).unwrap();
+    let config = holdings.root.join("steward.toml");
+    let text = read(&config).unwrap();
+    let start = text.find("\"curation\" = \"").unwrap();
+    let end = start + text[start..].find('\n').unwrap();
+    let comment = " # the curation tree";
+    write(
+        &config,
+        &format!("{}{comment}{}", &text[..end], &text[end..]),
+    )
+    .unwrap();
+    let pins = |text: &str| {
+        let value: toml::Value = toml::from_str(text).unwrap();
+        value["pins"].as_table().unwrap().clone()
+    };
+    let before = pins(&read(&config).unwrap());
+    append(
+        &holdings.root.join("curation/readers/holdings.toml"),
+        "\n# re-locked\n",
+    )
+    .unwrap();
+    let git = |args: &[&str]| {
+        let status = Command::new("git")
+            .args(args)
+            .current_dir(&holdings.root)
+            .status()
+            .unwrap();
+        assert!(status.success());
+    };
+    git(&["commit", "--quiet", "-am", "re-lock"]);
+    let out = dir.path().join("pinned.db");
+    exec(holdings.command().arg("--out").arg(&out)).refused(&["holdings_input_digest_mismatch"]);
+    exec(
+        Command::new(reg_conformance::reg_build())
+            .args(["pin", "--steward-repo"])
+            .arg(&holdings.root)
+            .args(["--config", "steward.toml"]),
+    )
+    .ok();
+    let text = read(&config).unwrap();
+    let after = pins(&text);
+    assert!(before.keys().eq(after.keys()), "pin added or dropped a pin");
+    assert_ne!(
+        before["curation"], after["curation"],
+        "the changed pin is stale"
+    );
+    assert!(text.contains(comment), "the config's comment was rewritten");
+    git(&["commit", "--quiet", "-am", "refresh pins"]);
+    exec(holdings.command().arg("--out").arg(&out)).ok();
+}
+
+#[test]
 fn pin_names_the_repository_not_the_transport() {
     // Fails if the pin records the origin URL as given, so a pair built from an HTTPS
     // clone (steward CI) is refused by verify on an SSH clone (a local checkout), or if

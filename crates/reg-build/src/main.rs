@@ -9,6 +9,7 @@
 //! reg-build verify FILE --catalog FILE --steward-repo DIR
 //! reg-build holdings --base FILE --steward NAME --steward-repo DIR --config FILE
 //!                    --out FILE [--report FILE]
+//! reg-build pin --steward-repo DIR --config FILE
 //! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
 //!
@@ -751,6 +752,8 @@ fn main() -> ExitCode {
     }
     let result = if args.next_if_eq("holdings").is_some() {
         holdings::run(args)
+    } else if args.next_if_eq("pin").is_some() {
+        holdings::pin_args(args)
     } else if args.next_if_eq("verify").is_some() {
         let args: Vec<String> = args.collect();
         if args.iter().any(|arg| arg == "--catalog") {

@@ -1,0 +1,198 @@
+name: Steward build
+
+# Reusable: a steward repository builds, verifies and compares its holdings against a
+# pinned reg_meta release (SWECOV move T5, R8 and R14; reg_webapp/DESIGN.md, "Steward
+# repositories"). Call it at the tag the steward pins, and pass the same tag:
+#
+#   jobs:
+#     build:
+#       uses: adamaltmejd/registry-research-toolkit/.github/workflows/steward-build.yml@reg_meta/vX.Y.Z
+#       with: { steward: swecov, reg_meta_tag: reg_meta/vX.Y.Z, previous: swecov/vX.Y.Z-1 }
+#
+# `build` downloads the release's `reg-build` and base catalog (public, digests checked
+# against GitHub's), runs `reg-build holdings` on the caller's checkout (which also runs
+# the pair verifier and its content check), and diffs the holdings against `previous`.
+# The diff goes to the job summary: on a pull request, the summary is the review gate.
+# `conformance` runs the release's pair checks (`reg-conformance --test release`) with
+# the released `reg-meta`. The pair leaves as the workflow artifact `holdings`:
+# `reg_meta_<steward>.db.zst` and its `.sha256`, plus the private build report.
+#
+# On a pull_request event actions/checkout builds the PR's merge commit, so that is
+# the steward commit the artifact records; publish only from a push build.
+
+on:
+  workflow_call:
+    inputs:
+      steward:
+        description: The steward id (`owner` in its config; the catalog id it serves).
+        required: true
+        type: string
+      reg_meta_tag:
+        description: The pinned toolkit release, reg_meta/vX.Y.Z (the caller's `uses:` ref).
+        required: true
+        type: string
+      config:
+        description: The steward config, relative to the repository root.
+        default: steward.toml
+        type: string
+      previous:
+        description: >-
+          The baseline holdings: a release tag in the caller repository carrying
+          reg_meta_<steward>.db.zst, or an https URL of such a file. Empty on a first
+          build: the diff is skipped and the summary says so.
+        default: ""
+        type: string
+    outputs:
+      holdings_sha256:
+        description: SHA-256 of the compressed holdings, reg_meta_<steward>.db.zst.
+        value: ${{ jobs.build.outputs.holdings_sha256 }}
+
+env:
+  TOOLKIT: adamaltmejd/registry-research-toolkit
+  TARGET: x86_64-unknown-linux-gnu
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      holdings_sha256: ${{ steps.pack.outputs.sha256 }}
+    env:
+      STEWARD: ${{ inputs.steward }}
+      TAG: ${{ inputs.reg_meta_tag }}
+      CONFIG: ${{ inputs.config }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check the inputs
+        run: |
+          [[ "$STEWARD" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || { echo "::error::steward '$STEWARD' is not a slug"; exit 1; }
+          [[ "$TAG" =~ ^reg_meta/v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::reg_meta_tag '$TAG' is not reg_meta/vX.Y.Z"; exit 1; }
+      # Full blobs: the compiler reads every input and checks the config bytes against
+      # HEAD. Nothing is written into this checkout: `reg-build holdings` refuses a
+      # dirty tree, untracked files included, so every download goes to RUNNER_TEMP.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download reg-build and the base catalog
+        run: &download-base |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/toolkit"
+          mkdir -p "$dir"
+          gh release download "$TAG" --repo "$TOOLKIT" --dir "$dir" \
+            --pattern "reg-build-$TARGET" --pattern "reg-build-$TARGET.sha256" \
+            --pattern "reg-meta-$TARGET" --pattern "reg-meta-$TARGET.sha256" \
+            --pattern reg_meta.db.zst
+          (cd "$dir" && shasum -a 256 -c "reg-build-$TARGET.sha256" "reg-meta-$TARGET.sha256")
+          want=$(gh release view "$TAG" --repo "$TOOLKIT" --json assets \
+            --jq '.assets[] | select(.name == "reg_meta.db.zst") | .digest')
+          test "$want" = "sha256:$(shasum -a 256 "$dir/reg_meta.db.zst" | cut -d' ' -f1)" ||
+            { echo "::error::reg_meta.db.zst does not match its digest on $TAG"; exit 1; }
+          zstd -q -d --rm "$dir/reg_meta.db.zst" -o "$dir/reg_meta.db"
+          install -m 755 "$dir/reg-build-$TARGET" "$dir/reg-build"
+          install -m 755 "$dir/reg-meta-$TARGET" "$dir/reg-meta"
+      - name: Compile and verify the holdings
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/out"
+          mkdir -p "$out"
+          "$RUNNER_TEMP/toolkit/reg-build" holdings --base "$RUNNER_TEMP/toolkit/reg_meta.db" \
+            --steward "$STEWARD" --steward-repo "$GITHUB_WORKSPACE" --config "$CONFIG" \
+            --out "$out/reg_meta_$STEWARD.db" --report "$out/holdings-report.json" \
+            2> "$RUNNER_TEMP/holdings.log" || { cat "$RUNNER_TEMP/holdings.log"; exit 1; }
+          {
+            echo "### Holdings for \`$STEWARD\` against \`$TAG\`"
+            echo
+            echo "Steward commit \`$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)\` ($GITHUB_EVENT_NAME)."
+            echo
+            echo "\`$(tail -n 1 "$RUNNER_TEMP/holdings.log")\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Compare with the previous holdings
+        env:
+          PREVIOUS: ${{ inputs.previous }}
+        run: |
+          set -euo pipefail
+          if [ -z "$PREVIOUS" ]; then
+            printf '\nNo baseline: first build, no holdings diff.\n' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          old="$RUNNER_TEMP/previous"
+          mkdir -p "$old"
+          if [[ "$PREVIOUS" == https://* ]]; then
+            curl -fsSL --retry 3 -o "$old/holdings.db.zst" "$PREVIOUS"
+          else
+            gh release download "$PREVIOUS" --repo "$GITHUB_REPOSITORY" --dir "$old" \
+              --pattern "reg_meta_$STEWARD.db.zst"
+            want=$(gh release view "$PREVIOUS" --repo "$GITHUB_REPOSITORY" --json assets \
+              --jq ".assets[] | select(.name == \"reg_meta_$STEWARD.db.zst\") | .digest")
+            test "$want" = "sha256:$(shasum -a 256 "$old/reg_meta_$STEWARD.db.zst" | cut -d' ' -f1)" ||
+              { echo "::error::the baseline does not match its digest on $PREVIOUS"; exit 1; }
+            mv "$old/reg_meta_$STEWARD.db.zst" "$old/holdings.db.zst"
+          fi
+          zstd -q -d --rm "$old/holdings.db.zst" -o "$old/holdings.db"
+          status=0
+          "$RUNNER_TEMP/toolkit/reg-build" diff --holdings "$old/holdings.db" \
+            "$RUNNER_TEMP/out/reg_meta_$STEWARD.db" > "$RUNNER_TEMP/holdings-diff.txt" || status=$?
+          # Exit 1 only means the two differ; 2 is an error.
+          [ "$status" -le 1 ] || { cat "$RUNNER_TEMP/holdings-diff.txt"; exit 1; }
+          verdict=$([ "$status" -eq 0 ] && echo 'no change' || echo 'changed')
+          {
+            echo
+            echo "<details><summary>Holdings diff against $PREVIOUS: $verdict</summary>"
+            echo
+            echo '```text'
+            cat "$RUNNER_TEMP/holdings-diff.txt"
+            echo '```'
+            echo '</details>'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Pack the holdings
+        id: pack
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/out"
+          zstd -q -19 --rm "reg_meta_$STEWARD.db" -o "reg_meta_$STEWARD.db.zst"
+          shasum -a 256 "reg_meta_$STEWARD.db.zst" > "reg_meta_$STEWARD.db.zst.sha256"
+          echo "sha256=$(cut -d' ' -f1 "reg_meta_$STEWARD.db.zst.sha256")" >> "$GITHUB_OUTPUT"
+      # The report names every input pin: private evidence, kept with the run.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: holdings
+          path: ${{ runner.temp }}/out/
+          if-no-files-found: error
+
+  # The pair checks of the toolkit's release step 8f, run with the released reg-meta.
+  # Compiles reg-conformance at the tag (cached).
+  conformance:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      STEWARD: ${{ inputs.steward }}
+      TAG: ${{ inputs.reg_meta_tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: adamaltmejd/registry-research-toolkit
+          ref: ${{ inputs.reg_meta_tag }}
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - name: Download reg-build, reg-meta and the base catalog
+        run: *download-base
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: holdings
+          path: ${{ runner.temp }}/holdings
+      # The served directory holds the pair and nothing else.
+      - name: Pair conformance
+        run: |
+          set -euo pipefail
+          pair="$RUNNER_TEMP/pair"
+          mkdir -p "$pair"
+          (cd "$RUNNER_TEMP/holdings" && shasum -a 256 -c "reg_meta_$STEWARD.db.zst.sha256")
+          zstd -q -d "$RUNNER_TEMP/holdings/reg_meta_$STEWARD.db.zst" -o "$pair/reg_meta_$STEWARD.db"
+          mv "$RUNNER_TEMP/toolkit/reg_meta.db" "$pair/reg_meta.db"
+          REG_META_BIN="$RUNNER_TEMP/toolkit/reg-meta" REG_ARTIFACT_DIR="$pair" REG_CATALOG="$STEWARD" \
+            cargo test -p reg-conformance --test release --locked -- --nocapture

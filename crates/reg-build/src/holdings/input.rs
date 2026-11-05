@@ -291,6 +291,48 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
     Ok(config)
 }
 
+/// Recompute the digest of every path already in the config's `[pins]` and rewrite the
+/// values that changed, in place: the step after a re-lock rewrites `curation.lock`
+/// files. It adds and drops no pin, so what the steward pins stays a reviewed change.
+/// Returns the number of pins rewritten.
+pub(super) fn refresh_pins(root: &Path, config: &str) -> Result<usize> {
+    // Only `[pins]`, with each value's byte span, so the rewrite keeps every other
+    // byte (comments, spacing, line endings) as the steward wrote it.
+    #[derive(Deserialize)]
+    struct Spans {
+        pins: BTreeMap<String, toml::Spanned<String>>,
+    }
+    let config_path = path(root, config)?;
+    let _: Config = crate::toml_file(&config_path)
+        .map_err(|_| "holdings_config_invalid: malformed steward config".to_owned())?;
+    let mut text = std::fs::read_to_string(&config_path)
+        .map_err(|_| "holdings_config_invalid: unreadable steward config")?;
+    let spans: Spans = toml::from_str(&text)
+        .map_err(|_| "holdings_config_invalid: malformed steward config".to_owned())?;
+    let mut edits = Vec::new();
+    for (rel, old) in &spans.pins {
+        let full = path(root, rel)?;
+        let new = if full.is_dir() {
+            let mut files = std::collections::BTreeSet::new();
+            tree(&full, "", &mut files)?;
+            crate::digest(&full, &files)?.0
+        } else {
+            crate::sha256_file(&full)?.0
+        };
+        if new != *old.get_ref() {
+            edits.push((old.span(), new));
+        }
+    }
+    // Back to front, so an earlier span stays valid after a later one is rewritten.
+    edits.sort_by_key(|(span, _)| std::cmp::Reverse(span.start));
+    for (span, new) in &edits {
+        text.replace_range(span.clone(), &format!("\"{new}\""));
+    }
+    std::fs::write(&config_path, text)
+        .map_err(|e| format!("holdings_config_invalid: write {config}: {e}"))?;
+    Ok(edits.len())
+}
+
 /// One digest over the pinned input list, so the artifact names its inputs without
 /// carrying their paths. The per-file pins stay in the build report.
 pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {
