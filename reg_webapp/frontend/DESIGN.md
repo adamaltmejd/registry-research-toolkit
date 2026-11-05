@@ -460,7 +460,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for registers,
   variables (with their register) and the app's places ("Go to the project", "Browse the
   data", "Go to the start page"); classifications are reached through their variables
-  (Operator 2026-11-04). Its results are a mixed list and carry a `TypeTag`. It is a
+  (Operator 2026-11-04). Each kind is one request for its first four hits, and the
+  palette follows no cursor. On a steward site the answer holds two lists ranked apart,
+  the catalog's `items` and the steward's own `steward.items`: the palette lists the
+  catalog's hits, then the steward's, each in the server's order, a place listed once.
+  The two ranks never merge; a list that pages follows each list's own cursor (`cursor`,
+  `steward_cursor`) (#2110). Its results are a mixed list and carry a `TypeTag`. It is a
   list under the field with no field of its own: the top-bar field is its one input, so
   focus stays there, the arrow keys move through the rows, and typing goes on filtering
   the columns. A second field in the popover showed the same text twice (maintainer
@@ -886,7 +891,14 @@ grow new visual language meanwhile.
   (`--focus-ring-inset`, the same accent line and halo) so the scroll box and a sticky
   row never clip it. An item or group with something in the project carries a 6 px
   `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
-  While the search bar holds text, the list shows its filter state (see Layout).
+  While the search bar holds text, the list shows its filter state (see Layout). A
+  column renders every row, with no virtualization, so find-in-page works. Measured on a
+  production build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the
+  provider column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is
+  accepted (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows
+  or 150 ms a key in production. The fallback then is to virtualize only lists over
+  about 1,500 rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section
+  headers.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
