@@ -5,9 +5,9 @@
  * `history.pushState`; back/forward is `popstate`; internal `<a>` clicks are
  * intercepted so they don't full-reload.
  *
- * A cold load of a deep link (`/catalog/...`) is the edge's job: the SWECOV edge
+ * A cold load of a deep link (`/catalog/...`) is the edge's job: a steward's edge
  * worker serves `index.html` for any path that is not an asset or the API
- * (`single-page-application` fallback, reg_webapp/DESIGN.md → Deployment). The Vite
+ * (`single-page-application` fallback, reg_webapp/DESIGN.md → Steward repositories). The Vite
  * dev server does the same (`appType: 'spa'`), so `bun run dev` deep-links work.
  */
 

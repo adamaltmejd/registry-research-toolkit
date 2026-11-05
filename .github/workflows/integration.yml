@@ -1,14 +1,12 @@
 name: Artifact conformance
 
 # Server-side home for the release-asset-dependent checks: conformance against the
-# published global DB asset and, when the release has one, the paired SWECOV holdings
-# asset, served by the Rust server. They need a published release asset matching the
-# current schema, so this workflow deliberately does NOT run on push/PR — a red X on
-# unrelated work when a release is merely owed would be noise. A release whose newest
-# asset is schema-incompatible fails at server admission, like the deploy guard in
-# container-build.yml. The paired asset is optional here until the first paired
-# release exists (a missing one is a notice); once it does, a malformed or duplicated
-# one fails the job.
+# published global DB asset, served by the Rust server. It needs a published release
+# asset matching the current schema, so this workflow deliberately does NOT run on
+# push/PR — a red X on unrelated work when a release is merely owed would be noise. A
+# release whose newest asset is schema-incompatible fails at server admission, like the
+# deploy guard in container-build.yml. Steward pairs are checked in each steward
+# repository (steward-build.yml).
 on:
   # Weekly drift catch (GitHub Releases availability). Off the top of the hour —
   # GitHub delays/drops crons scheduled at :00 under load.
@@ -21,27 +19,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  # The release under test, resolved once so both legs test the same one.
-  #
-  # It must come from the EXACT release under test: the reg_meta/v* release that
-  # called this workflow (a `workflow_call` inherits the CALLER's `github` context,
-  # so `event.release.tag_name` is that tag), or — for schedule/dispatch runs — the
-  # newest published reg_meta/v* release, resolved the same way container-build.yml
-  # resolves its bake tag, plus `--exclude-drafts`: a draft carries no published
-  # assets, and a release sits in draft for the whole of the release skill's step 8.
-  # (That flag is a deliberate divergence from container-build's resolver, not
-  # drift.) NOT GitHub's `latest`, which can be a release under another tag prefix
-  # (the retired builder's tags).
-  resolve:
+  artifact-conformance:
+    name: Artifact conformance
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
       contents: read
-    outputs:
-      tag: ${{ steps.release.outputs.tag }}
-      catalogs: ${{ steps.release.outputs.catalogs }}
+    env:
+      # The release build: a debug server hashes the 1 GB catalog at boot.
+      REG_META_BIN: ${{ github.workspace }}/target/release/reg-meta
     steps:
-      - name: Resolve the release and its catalogs
-        id: release
+      # The release under test must be the EXACT one: the reg_meta/v* release that
+      # called this workflow (a `workflow_call` inherits the CALLER's `github` context,
+      # so `event.release.tag_name` is that tag), or — for schedule/dispatch runs — the
+      # newest published reg_meta/v* release, resolved the same way container-build.yml
+      # resolves its bake tag, plus `--exclude-drafts`: a draft carries no published
+      # assets, and a release sits in draft for the whole of the release skill's step 8.
+      # (That flag is a deliberate divergence from container-build's resolver, not
+      # drift.) NOT GitHub's `latest`, which can be a release under another tag prefix
+      # (the retired builder's tags).
+      - name: Resolve the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIGGER_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
@@ -54,40 +51,7 @@ jobs:
           fi
           [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the artifact from"; exit 1; }
           echo "DB source release: $tag"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          # The pair is optional until the first paired release; once the release has
-          # the asset, the swecov leg requires exactly one, digested and admitted.
-          n=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
-            -q '[.assets[] | select(.name == "reg_meta_swecov.db.zst")] | length')
-          if [ "$n" = 0 ]; then
-            echo "::notice::release $tag has no reg_meta_swecov.db.zst; paired conformance skipped"
-            echo 'catalogs=["global"]' >> "$GITHUB_OUTPUT"
-          else
-            echo 'catalogs=["global","swecov"]' >> "$GITHUB_OUTPUT"
-          fi
-
-  # One leg per catalog, in parallel: `global` serves reg_meta.db, `swecov` serves the
-  # pair (`--catalog swecov`: reg_meta_swecov.db beside reg_meta.db).
-  artifact-conformance:
-    name: Artifact conformance (${{ matrix.catalog }})
-    needs: resolve
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    permissions:
-      contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        catalog: ${{ fromJSON(needs.resolve.outputs.catalogs) }}
-    env:
-      TAG: ${{ needs.resolve.outputs.tag }}
-      SERVE_ARGS: ${{ matrix.catalog == 'swecov' && '--catalog swecov' || '' }}
-      # The release checks (crates/reg-conformance, `--test release`) serve the pair as
-      # this catalog; `global` serves reg_meta.db alone.
-      REG_CATALOG: ${{ matrix.catalog }}
-      # The release build: a debug server hashes the 1 GB catalog at boot.
-      REG_META_BIN: ${{ github.workspace }}/target/release/reg-meta
-    steps:
+          echo "TAG=$tag" >> "$GITHUB_ENV"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
@@ -100,48 +64,38 @@ jobs:
       # or duplicated asset, a malformed or mismatched digest, a schema-incompatible
       # DB or a nonpublishable manifest all fail before conformance. There is
       # deliberately no fallback to an older asset or synthetic data.
-      - name: Provision the selected release DBs
+      - name: Provision the selected release DB
         id: release-db
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CATALOG: ${{ matrix.catalog }}
         run: |
           set -euo pipefail
           echo "DB source release: $TAG"
           db_dir="$RUNNER_TEMP/global-db"
           mkdir -p "$db_dir"
-          assets=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets)
-          # fetch ASSET DB: verify the digest GitHub recorded (a single asset with a
-          # sha256 digest) BEFORE decompressing.
-          fetch() {
-            local asset=$1 db=$2 digest zst actual
-            digest=$(printf '%s' "$assets" \
-              | jq -r --arg name "$asset" '[.assets[] | select(.name == $name) | .digest]
-                    | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
-            if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
-              echo "::error::release $TAG has no single sha256-digested $asset asset"
-              exit 1
-            fi
-            gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "$asset" --dir "$db_dir"
-            zst="$db_dir/$asset"
-            actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
-            if [ "$actual" != "$digest" ]; then
-              echo "::error::$asset digest mismatch: $actual != $digest"
-              exit 1
-            fi
-            zstd -q -d --rm "$zst" -o "$db_dir/$db"
-          }
-          fetch reg_meta.db.zst reg_meta.db
-          if [ "$CATALOG" = swecov ]; then
-            fetch reg_meta_swecov.db.zst reg_meta_swecov.db
+          asset=reg_meta.db.zst
+          # Verify the digest GitHub recorded (a single asset with a sha256 digest)
+          # BEFORE decompressing.
+          digest=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+            | jq -r --arg name "$asset" '[.assets[] | select(.name == $name) | .digest]
+                  | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
+          if ! printf '%s' "$digest" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
+            echo "::error::release $TAG has no single sha256-digested $asset asset"
+            exit 1
           fi
-          # SERVE_ARGS is empty or `--catalog swecov`: split on purpose.
-          # shellcheck disable=SC2086
-          target/release/reg-meta serve --db "$db_dir" --port 18000 $SERVE_ARGS &
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "$asset" --dir "$db_dir"
+          zst="$db_dir/$asset"
+          actual="sha256:$(sha256sum "$zst" | cut -d ' ' -f 1)"
+          if [ "$actual" != "$digest" ]; then
+            echo "::error::$asset digest mismatch: $actual != $digest"
+            exit 1
+          fi
+          zstd -q -d --rm "$zst" -o "$db_dir/reg_meta.db"
+          target/release/reg-meta serve --db "$db_dir" --port 18000 &
           pid=$!
           # The refusal's error document is on the server's stderr.
           until curl -fs -o /dev/null "http://127.0.0.1:18000/api/context"; do
-            kill -0 "$pid" 2>/dev/null || { echo "::error::$CATALOG refused at server admission"; exit 1; }
+            kill -0 "$pid" 2>/dev/null || { echo "::error::global refused at server admission"; exit 1; }
             sleep 1
           done
           kill "$pid"

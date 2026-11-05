@@ -19,7 +19,7 @@ path = "tests/conformance/main.rs"
 test = false
 
 # The release tier on a real catalog (`REG_ARTIFACT_DIR`, `REG_CATALOG`): release step
-# 8f and integration.yml. `test = false` for the same reason.
+# 8d, integration.yml and steward-build.yml. `test = false` for the same reason.
 [[test]]
 name = "release"
 path = "tests/release/main.rs"

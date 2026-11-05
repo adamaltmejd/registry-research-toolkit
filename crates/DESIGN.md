@@ -133,15 +133,16 @@ so it needs an Ubuntu 24.04-era distribution or newer on the data VM), `reg-buil
 binaries for the same targets and the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the
 built `reg_webapp/frontend/dist`), which a steward repository downloads at its pinned
 tag to build, verify and deploy its holdings, the MONA runner `extract.R` (one file,
-configured by the steward's `extract-config.json`), and two DB assets, `reg_meta.db.zst`
-(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
-holdings pin the base's `catalog_sha256`). There is no separate docs asset. The
-`reg-meta` binaries serve local HTTP or MCP; the catalog is downloaded with `curl` and
-`zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use hosted MCP;
-a local Windows binary is added only if it builds and runs without special effort. The
-`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
-the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
-instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
+configured by the steward's `extract-config.json`), and one DB asset, `reg_meta.db.zst`
+(documents included). There is no separate docs asset. A steward's holdings
+(`reg_meta_<steward>.db.zst`, pinning the base's `catalog_sha256`) are released by its
+own repository against the `reg_meta` release it pins. The `reg-meta` binaries serve
+local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no PyPI
+package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows binary
+is added only if it builds and runs without special effort. The `microdata-tools-se`
+plugin declares one hosted MCP server whose URL is a user setting: the global catalog by
+default, a hosted steward catalog (`https://data.swecov.se/mcp`) instead. A local
+`reg-meta mcp` is added to the agent's MCP configuration by hand.
 
 ## The catalog builder
 
@@ -1831,15 +1832,15 @@ child × month rows carry both `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_Pers
 they must never be merged into recipient rows. This is a settled maintainer ruling
 recorded in `series/fk-vbbarn-lev4.toml` (2026-10-16).
 
-Publish `reg_meta_swecov.db.zst`, the SWECOV holdings layer, beside `reg_meta.db.zst`,
-the reference catalog, in the same `reg_meta/v*` release. They are a required pinned
-pair, not two copies of the reference catalog. In general,
-`reg-meta serve --catalog <steward> --db <dir>` opens `reg_meta.db` and
-`reg_meta_<steward>.db`, checks the configured owner, and verifies the pair. For SWECOV,
-`--catalog swecov` opens `reg_meta_swecov.db` and checks owner `steward:swecov`, both
-schema versions and the exact catalog generation/digest named by the holdings file, then
-exposes their composed view. `--catalog global` opens only `reg_meta.db`; it does not
-make physical promises. Missing or mismatched files fail before serving, with no
+A steward's holdings layer, `reg_meta_<steward>.db.zst`, is published by the steward's
+repository against the `reg_meta/v*` release whose `reg_meta.db.zst`, the reference
+catalog, it pins. They are a required pinned pair, not two copies of the reference
+catalog. In general, `reg-meta serve --catalog <steward> --db <dir>` opens `reg_meta.db`
+and `reg_meta_<steward>.db`, checks the configured owner, and verifies the pair. For
+SWECOV, `--catalog swecov` opens `reg_meta_swecov.db` and checks owner `steward:swecov`,
+both schema versions and the exact catalog generation/digest named by the holdings file,
+then exposes their composed view. `--catalog global` opens only `reg_meta.db`; it does
+not make physical promises. Missing or mismatched files fail before serving, with no
 fallback. Provider documents remain in the base catalog; approved steward-derived
 documents live in the holdings document tables. Runtime TOML is not read. Each
 response's generation identifies the selected pair; the manifest also records both
@@ -2535,9 +2536,9 @@ and not FQID kinds.
 - **Contract version.** `CONTRACT_VERSION` versions the operation set and its JSON
   shapes, and `meta` reports it on every response.
 - **Releases** are tagged per package (`reg_meta/vX.Y.Z`); each release carries the
-  `reg_meta.db.zst` catalog asset (documents included), the paired SWECOV holdings asset
-  `reg_meta_swecov.db.zst` and the binaries. `project_data.json` records the catalog
-  release it was written against in that tag form.
+  `reg_meta.db.zst` catalog asset (documents included) and the binaries. Steward
+  holdings are released in each steward's repository. `project_data.json` records the
+  catalog release it was written against in that tag form.
 - **Determinism.** The same request on the same artifact returns the same bytes: stable
   ordering with a unique final tie-breaker, sorted JSON keys where the contract says so,
   no timing in `meta`, cursors bound to the generation.

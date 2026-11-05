@@ -136,8 +136,8 @@ jobs:
       # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
-      # Same Node pin as edge-deploy-swecov (container-build.yml), which builds the SPA
-      # that ships.
+      # Same Node pin as publish_reg_meta.yml's `binaries` job, which builds the SPA
+      # bundle that ships.
       - &setup-node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

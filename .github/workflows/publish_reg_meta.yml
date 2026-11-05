@@ -1,8 +1,8 @@
 name: Release reg_meta
 
 # A published reg_meta/v* release ships no package (no PyPI;
-# crates/DESIGN.md, "Distribution"): its DB assets are checked by artifact conformance and baked
-# into the origin images by container-build.yml. The `binaries` job attaches the
+# crates/DESIGN.md, "Distribution"): its DB asset is checked by artifact conformance and baked
+# into the origin image by container-build.yml. The `binaries` job attaches the
 # `reg-meta` binaries.
 on:
   release:
@@ -21,9 +21,8 @@ jobs:
     if: startsWith(github.event.release.tag_name, 'reg_meta/v')
     uses: ./.github/workflows/wait-ci.yml
 
-  # Post-release check of this release's DB assets: conformance against the global
-  # artifact and, when the release has it, the paired reg_meta_swecov.db.zst, served by
-  # the Rust server (integration.yml). Inherits the
+  # Post-release check of this release's DB asset: conformance against the global
+  # artifact, served by the Rust server (integration.yml). Inherits the
   # reg_meta/v* gate via `needs: wait-ci` (a skipped `wait-ci` skips it), so it never fires for
   # a release under another tag prefix.
   integration:
@@ -143,10 +142,10 @@ jobs:
           cat smoke.err
           test "$status" -eq 1
           grep -q '^reg-build: unable to open database file' smoke.err
-      # The SPA bundle, built as the SWECOV edge deploy builds it (container-build.yml,
-      # `edge-deploy-swecov`): `frontend/dist` with the wasm and the API types generated
-      # at this commit, packed as `reg-webapp-spa-<reg-meta version>.tar.zst`. The Node,
-      # bun and wasm-bindgen pins match that job.
+      # The SPA bundle that steward deployments ship (steward-deploy.yml downloads it):
+      # `frontend/dist` with the wasm and the API types generated at this commit, packed
+      # as `reg-webapp-spa-<reg-meta version>.tar.zst`. The Node, bun and wasm-bindgen
+      # pins match ci.yml's frontend job.
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: matrix.spa
         with:

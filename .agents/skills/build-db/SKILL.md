@@ -78,25 +78,18 @@ edition splits) is a content change: read the diff.
 For deterministic replay, build the same pinned inputs and curation twice in fresh
 processes and compare database bytes. Overlapping builds are not performance benchmarks.
 
-## SWECOV holdings
+## Steward holdings
 
-The holdings pin is the steward checkout itself: `reg-build holdings` records its
-`origin`, `HEAD` and `--config` path and refuses a dirty tree. Compile holdings only
-against a complete `--release` base, from a clean clone of the steward repository at the
-commit you mean to build, then verify the pair and compare with a baseline holdings DB
-(release skill 8d, 8e and 8g):
+Holdings builds run in the steward repository (swecov-steward's `steward-release`
+skill), not here. A local real-seed pair test uses any clean steward checkout against a
+complete `--release` base:
 
 ```sh
-target/release/reg-build holdings --base "$run_dir/reg_meta.db" --steward swecov \
-  --steward-repo "$steward" --config steward.toml \
-  --out "$run_dir/reg_meta_swecov.db" --report "$run_dir/holdings-report.json"
-target/release/reg-build verify "$run_dir/reg_meta_swecov.db" \
-  --catalog "$run_dir/reg_meta.db" --steward-repo "$steward"
-target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" "$run_dir/reg_meta_swecov.db"
+target/release/reg-build holdings --base "$run_dir/reg_meta.db" --steward <id> \
+  --steward-repo <checkout> --config steward.toml \
+  --out "$run_dir/reg_meta_<id>.db" --report "$run_dir/holdings-report.json"
 ```
 
-Steward curation locks are recorded in the steward repository with
-`reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
 The holdings report and log are private evidence: do not paste their contents anywhere
 public.
 
