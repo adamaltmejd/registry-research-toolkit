@@ -164,7 +164,11 @@ The shipped files:
   group) and 3 significant digits. The scaffold perturbs every count with the cell key
   method; the gate cannot verify noise, which is why it still checks the minimum of 5 on
   these counts: a waived floor would let raw small counts pass under the mock-stats name
-  (maintainer, 2026-11-05).
+  (maintainer, 2026-11-05). `n_rows` (rows per cell) is a `statistic` resting on
+  `n_units`, not a count: the scaffold perturbs it as a magnitude (cell key method on
+  the sum of each unit's rows, δ = 0.1, maintainer, 2026-11-05), so it is not a whole
+  number. Its protection is the 50 units it rests on and its 3 digits; a small value
+  over 50 units is not a small cell.
 
 ## The check
 
@@ -357,9 +361,7 @@ The Rust binary and the R file are two implementations of one check, an exceptio
 "one implementation per contract". One case corpus (schema and candidate folder →
 expected pass or refusal code) runs against both, so their agreement is the oracle. The
 binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
-receipt: it names the binary version the R file imitates (0.3.0 today, while the binary
-is 0.4.0: R has not yet gained the two statistic rules, so it refuses the mock-stats
-policy as `policy_invalid` and fails those three corpus cases;
+receipt: it names the binary version the R file imitates (0.4.0 today;
 `crates/reg-export-gate/DESIGN.md`, "The R gate follows").
 
 ### The R file

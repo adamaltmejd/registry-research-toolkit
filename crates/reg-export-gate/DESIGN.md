@@ -208,6 +208,8 @@ verified gate bytes in it. The agent's side ignores dot-folders.
 this one, naming the gate version it matches: 0.3.0 (maintainer, 2026-11-04), with the
 size caps, validity read from Arrow and a duplicate column refused as `column_order`.
 Where it cannot match is in `reg_export_gate/DESIGN.md`, "The R file". From then on a
-corpus change lands with the Rust change, and R follows. 0.4.0 adds the policy's two
-optional statistic rules (`statistic_support_too_small`, `statistic_not_rounded`) for
-the mock-stats pair; R follows in its own PR.
+corpus change lands with the Rust change, and R follows. Both are at 0.4.0, which added
+the policy's two optional statistic rules (`statistic_support_too_small`,
+`statistic_not_rounded`) for the mock-stats pair. R reads a rounded rendering back
+through jsonlite (C `strtod`), since `as.numeric` is not correctly rounded at extreme
+exponents.

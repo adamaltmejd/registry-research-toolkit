@@ -23,7 +23,7 @@
 #
 # Fixed toolkit code: copy it unchanged. Its version is in every receipt.
 
-EXPORT_GATE_VERSION <- "0.3.0"
+EXPORT_GATE_VERSION <- "0.4.0"
 
 export_gate <- local({
   RECEIPT <- "receipt.json"
@@ -250,7 +250,7 @@ export_gate <- local({
         "schema",
         "min_cell_count"
       ),
-      "description"
+      c("description", "statistic_min_support", "statistic_significant_digits")
     ) &&
       is_string(p$name) &&
       grepl(SLUG, p$name) &&
@@ -258,7 +258,12 @@ export_gate <- local({
       closed(p$schema, c("name", "version")) &&
       is_string(p$schema$name) &&
       is_count(p$schema$version) &&
-      is_count(p$min_cell_count)
+      is_count(p$min_cell_count) &&
+      (is.null(p$statistic_min_support) || is_count(p$statistic_min_support)) &&
+      # 17 digits name every double, so more would be no rule at all.
+      (is.null(p$statistic_significant_digits) ||
+        (is_count(p$statistic_significant_digits) &&
+          p$statistic_significant_digits <= 17))
     if (!ok) {
       refuse("setup", list(finding("policy_invalid", where)))
     }
@@ -269,6 +274,8 @@ export_gate <- local({
       name = p$name,
       version = p$version,
       min_cell_count = p$min_cell_count,
+      statistic_min_support = p$statistic_min_support,
+      statistic_significant_digits = p$statistic_significant_digits,
       sha256 = read$sha256
     )
   }
@@ -433,6 +440,46 @@ export_gate <- local({
   # statistic is null wherever the count it rests on is suppressed, and no
   # double is NaN: a NaN carries about 51 payload bits through Parquet and the
   # rewrite, so a cell that looks suppressed could hold a value.
+  # A non-null statistic resting on a non-null support below the minimum. A
+  # minimum past int64 is above every support, as for counts.
+  support_too_small <- function(column, support, min) {
+    small <- if (min >= 2^63) {
+      !is_null(support)
+    } else {
+      as.vector(arrow::call_function(
+        "less",
+        support$cast(arrow::int64()),
+        arrow::Scalar$create(min, arrow::int64())
+      ))
+    }
+    any(!is_null(column) & small, na.rm = TRUE)
+  }
+
+  # Whether every finite double is exactly its rendering with `digits`
+  # significant digits, read back. C's sprintf rounds correctly; R's own parser
+  # (as.numeric) does not at extreme exponents (1.23e-300, 9.99e307), so the
+  # rendering is read back by jsonlite, which uses C's strtod. NaN is
+  # nan_value's finding; a value R reads as NA (the 1954 NaN) is a NaN. Both C
+  # calls follow LC_NUMERIC, which a Swedish session sets to a decimal comma, so
+  # it is "C" for the check.
+  rounded <- function(column, digits) {
+    numeric <- Sys.getlocale("LC_NUMERIC")
+    on.exit(suppressWarnings(Sys.setlocale("LC_NUMERIC", numeric)), add = TRUE)
+    suppressWarnings(Sys.setlocale("LC_NUMERIC", "C"))
+    x <- as.vector(column)
+    x <- x[!is_null(column)]
+    x <- x[is.finite(x)]
+    if (!length(x)) {
+      return(TRUE)
+    }
+    text <- sprintf("%.*e", as.integer(digits) - 1L, x)
+    back <- jsonlite::parse_json(
+      paste0("[", paste(text, collapse = ","), "]"),
+      simplifyVector = TRUE
+    )
+    length(back) == length(x) && all(as.double(back) == x)
+  }
+
   check_disclosure <- function(candidates, policy) {
     findings <- list()
     # A minimum past int64 (2^63 and up) is above every count; Arrow would
@@ -466,10 +513,30 @@ export_gate <- local({
             )
           }
         } else if (col$role == "statistic") {
-          if (any(!is_null(column) & is_null(columns[[col$support]]))) {
+          support <- columns[[col$support]]
+          if (any(!is_null(column) & is_null(support))) {
             findings <- c(
               findings,
               list(finding("unsupported_statistic", file, col$name))
+            )
+          }
+          if (
+            !is.null(policy$statistic_min_support) &&
+              support_too_small(column, support, policy$statistic_min_support)
+          ) {
+            findings <- c(
+              findings,
+              list(finding("statistic_support_too_small", file, col$name))
+            )
+          }
+          if (
+            !is.null(policy$statistic_significant_digits) &&
+              col$type == "double" &&
+              !rounded(column, policy$statistic_significant_digits)
+          ) {
+            findings <- c(
+              findings,
+              list(finding("statistic_not_rounded", file, col$name))
             )
           }
         }
