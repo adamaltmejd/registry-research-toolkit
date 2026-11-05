@@ -37,6 +37,7 @@ pub mod provenance;
 
 mod f1;
 mod gaps;
+mod integer_codes;
 mod ledger;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -1357,6 +1358,9 @@ pub(crate) fn resolve_located(
             }
         }
     }
+
+    // Before F1, so type changes compare the published segment types.
+    integer_codes::apply(&mut variables, &mut resolved, valuesets);
 
     f1::changes(
         &variables,
