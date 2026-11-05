@@ -570,19 +570,20 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   a disclosure that lists the codes under Added, Removed and Relabelled (a relabelled
   code says what it "Was:"), a page at a time with "Show more" (no correspondence tables
   yet, #795). The picked version is the one a version address names, else the latest
-  version that has started by the catalog's last year (new rule, proposed by the
-  implementer); it is local state, its part's lane on `accent-soft` and its span in the
-  group page's selected-span style. Pressing a span picks its version as the `Select`
-  does, and a version address focuses that span (new rule, proposed by the implementer:
-  picking does not change the URL, which would reload the page). Placement caveats are
-  steward working notes, not shown until the steward curates them for readers. A
-  register page has no tables table: its tables are FilterChips over the variable list,
-  each with its period, a lens with OR within the selection, offered only when two or
-  more tables deliver variables (the archived variant chips, maintainer 2026-11-03). A
-  Tables definition row links every table's page by name. A register page has no
-  "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a supplemental-only
-  variable is selectable for a project like a reference variable: `order` and `validate`
-  read the composed steward view (crates/DESIGN.md, "Three questions, three scopes").
+  version that has started by the catalog's last year (maintainer ruling, 2026-11-05);
+  it is local state, its part's lane on `accent-soft` and its span in the group page's
+  selected-span style. Pressing a span picks its version as the `Select` does
+  (maintainer ruling, 2026-11-05), and a version address focuses that span (new rule,
+  proposed by the implementer: picking does not change the URL, which would reload the
+  page). Placement caveats are steward working notes, not shown until the steward
+  curates them for readers. A register page has no tables table: its tables are
+  FilterChips over the variable list, each with its period, a lens with OR within the
+  selection, offered only when two or more tables deliver variables (the archived
+  variant chips, maintainer 2026-11-03). A Tables definition row links every table's
+  page by name. A register page has no "Unplaced releases" panel (maintainer
+  2026-11-04). In steward mode a supplemental-only variable is selectable for a project
+  like a reference variable: `order` and `validate` read the composed steward view
+  (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
