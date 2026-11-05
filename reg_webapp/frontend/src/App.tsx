@@ -29,11 +29,7 @@ import { useAsyncResource } from "./lib/use_async_resource";
 import { useProjectCheck } from "./lib/use_project";
 import { useRoute } from "./lib/use_router";
 import { useCatalogRead } from "./lib/use_store_read";
-import {
-  NoRegisterList,
-  ProviderVariableList,
-  VariableList,
-} from "./lib/VariableList";
+import { VariableList } from "./lib/VariableList";
 
 const useHref = (href: string) => href;
 
@@ -105,26 +101,20 @@ export function App() {
             data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
             <BrowseTree className={styles.browse} />
-            {registerFqid && route.name === "catalog-node" ? (
-              <VariableList
-                registerFqid={registerFqid}
-                selectedFqid={
-                  unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
-                  route.fqidPath.split("/").length > 2
-                    ? route.fqidPath
-                    : null
-                }
-                className={styles.list}
-              />
-            ) : providerFqid ? (
-              <ProviderVariableList
-                key={providerFqid}
-                providerFqid={providerFqid}
-                className={styles.list}
-              />
-            ) : (
-              <NoRegisterList className={styles.list} />
-            )}
+            {/* One instance on every route: opening a variable from a
+              provider's list keeps focus in the column as it re-roots. */}
+            <VariableList
+              registerFqid={registerFqid}
+              providerFqid={providerFqid}
+              selectedFqid={
+                route.name === "catalog-node" &&
+                unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
+                route.fqidPath.split("/").length > 2
+                  ? route.fqidPath
+                  : null
+              }
+              className={styles.list}
+            />
             <main className={styles.detail}>
               <Breadcrumbs
                 items={breadcrumbs}

@@ -411,12 +411,15 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   selectable options, not links. On a variable or group page its register's row stays
   selected, and pressing it opens the register. Selection moves with arrow keys across
   columns, and selecting a row opens its page; type-ahead moves focus only. Left on a
-  group header collapses it, Right expands it; Right on a register row moves to the
-  variables column, and Left there moves back. Collapsing a group never changes the
+  group header collapses it, Right expands it; Right on a register row, or on the open
+  provider row of a provider's page, moves to the variables column, and Left there moves
+  back. Collapsing a group never changes the
   selection: the detail pane keeps its page, and keyboard focus moves to the group row.
   On a provider's page the second column lists every variable of its registers, one
   section per register under the register's name, in that order (maintainer 2026-11-05);
-  the search filters each section by name and drops a register with no match. For a
+  the search filters each section by name and drops a register with no match. Its rows
+  open on a click or Enter, not as the arrows pass (they re-root the list under the
+  variable's register), and focus stays on the opened row. For a
   register the second column is flat, a concept group folded to one item (#303), its
   identifier and panel-key variables first and the rest in Swedish collation; on a
   group's page (or a member's, which shows that page) the same list stays and the

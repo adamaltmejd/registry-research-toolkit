@@ -96,14 +96,18 @@ export function useSettledFilter(): string | null {
  * answer yet, or when the request failed: the caller then filters on the
  * names it holds. */
 export function useRegisterMatches(
-  registerFqid: string,
+  registerFqid: string | null,
 ): ReadonlySet<string> | null {
   const query = useSettledFilter();
   const matches = useAsyncResource(
-    query === null ? null : `${registerFqid}\u0000${query}`,
-    (signal) => searchFacets(query ?? "", { signal, register: registerFqid }),
+    query === null || registerFqid === null
+      ? null
+      : `${registerFqid}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", { signal, register: registerFqid ?? "" }),
   );
-  if (query === null || matches.data === null) return null;
+  if (query === null || registerFqid === null || matches.data === null)
+    return null;
   return new Set(
     allRegisterFacets(matches.data)
       .filter((facet) => facet.fqid === registerFqid)
@@ -139,16 +143,18 @@ const OTHER_REGISTER_LIMIT = 5;
  * first; empty when nothing else matches or the request failed, so the open
  * register's list never waits on it. */
 export function useOtherRegisterMatches(
-  registerFqid: string,
+  registerFqid: string | null,
 ): { reference: RegisterFacet[]; steward: RegisterFacet[] } | null {
   const needle = useBrowseFilter().trim();
   const query = useSettledFilter();
   const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
-  const matches = useAsyncResource(query, (signal) =>
-    searchFacets(query ?? "", {
-      signal,
-      limit: OTHER_REGISTER_LIMIT + 1,
-    }),
+  const matches = useAsyncResource(
+    registerFqid === null ? null : query,
+    (signal) =>
+      searchFacets(query ?? "", {
+        signal,
+        limit: OTHER_REGISTER_LIMIT + 1,
+      }),
   );
   // The last answer stands while the next query settles and loads, so the
   // sections do not drop out and come back on every keystroke.

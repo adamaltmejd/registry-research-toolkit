@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { type ComponentProps, useCallback } from "react";
 import type { RegisterFacet, RegisterShow } from "./api";
 import {
   useBrowseFilter,
@@ -83,11 +83,30 @@ function rankVariables(variables: VariableRef[], needle: string) {
   return rankFilter(variables, needle, (row) => [row.name, leafSlug(row.fqid)]);
 }
 
+/** The search's rows: name and slug hits first, then the server's other
+ * matches (`matches`, once they arrive), which also drop name hits it lacks. */
+function matchedVariables(
+  variables: VariableRef[],
+  needle: string,
+  matches: ReadonlySet<string> | null,
+): VariableRef[] {
+  const ranked = rankVariables(variables, needle);
+  return matches
+    ? [
+        ...ranked.filter((row) => matches.has(row.fqid)),
+        ...variables.filter(
+          (row) => matches.has(row.fqid) && !ranked.includes(row),
+        ),
+      ]
+    : ranked;
+}
+
 /** Names only, except where two variables of one register share a name: then
  * the years tell them apart, on screen and in the accessible name. */
 function variableItems(
   variables: readonly VariableRef[],
   rows: readonly VariableRef[],
+  leaves = false,
 ): ColumnItem[] {
   const nameCounts = new Map<string, number>();
   for (const variable of variables) {
@@ -102,6 +121,7 @@ function variableItems(
         : undefined,
     href: catalogHref(row.fqid),
     inProject: 0,
+    leaves,
   }));
 }
 
@@ -122,34 +142,68 @@ function useRenderName(needle: string) {
   );
 }
 
+type ColumnProps = Omit<
+  ComponentProps<typeof ColumnList>,
+  "label" | "className" | "renderName"
+>;
+
+/**
+ * The variables column (DESIGN.md → Layout): a register's variables, or on a
+ * provider's page every variable of its registers. One instance serves both,
+ * so opening a variable from a provider's list keeps focus on its row while
+ * the list re-roots under the variable's register (ColumnList's refocus).
+ */
 export function VariableList({
   registerFqid,
+  providerFqid,
   selectedFqid,
   className,
 }: {
-  registerFqid: string;
+  registerFqid: string | null;
+  providerFqid: string | null;
   selectedFqid: string | null;
   className?: string;
 }) {
-  const resource = useAsyncResource(registerFqid, (signal) =>
-    sharedShow(registerFqid, signal),
-  );
   const needle = useBrowseFilter();
+  const renderName = useRenderName(needle);
+  const register = useRegisterColumn(registerFqid, selectedFqid, needle);
+  const provider = useProviderColumn(providerFqid, needle);
+  return (
+    <ColumnList
+      label="Variables"
+      className={className}
+      renderName={renderName}
+      {...(register ??
+        provider ?? {
+          sections: [],
+          selectedId: null,
+          selectedExact: false,
+          empty: "Choose a register to list its variables.",
+          error: null,
+        })}
+    />
+  );
+}
+
+/** A register's variables, its search matches first, then other registers'
+ * matches (#1828); null without a register. */
+function useRegisterColumn(
+  registerFqid: string | null,
+  selectedFqid: string | null,
+  needle: string,
+): ColumnProps | null {
+  const resource = useAsyncResource(registerFqid, (signal) =>
+    sharedShow(registerFqid ?? "", signal),
+  );
   const matches = useRegisterMatches(registerFqid);
   const otherMatches = useOtherRegisterMatches(registerFqid);
+  if (registerFqid === null) return null;
   const node = resource.data?.kind === "register" ? resource.data : null;
   const variables = sortedVariables(node);
-  const ranked = rankVariables(variables, needle);
-  const rows = matches
-    ? [
-        ...ranked.filter((row) => matches.has(row.fqid)),
-        ...variables.filter(
-          (row) => matches.has(row.fqid) && !ranked.includes(row),
-        ),
-      ]
-    : ranked;
-  const items = variableItems(variables, rows);
-  const renderName = useRenderName(needle);
+  const items = variableItems(
+    variables,
+    matchedVariables(variables, needle, matches),
+  );
   const seen = new Set(items.map((item) => item.id));
   const others = [
     ...otherRegisterSections(
@@ -161,55 +215,43 @@ export function VariableList({
   ];
   const sections = [{ id: "variables", label: null, items }, ...others];
   const ownEmpty = others.length > 0 && items.length === 0;
-  return (
-    <ColumnList
-      label="Variables"
-      subject={node?.name}
-      root={registerFqid}
-      className={className}
-      // Wait for other registers before declaring an empty search result.
-      sections={
-        resource.loading || (otherMatches === null && items.length === 0)
-          ? null
-          : sections
-      }
-      selectedId={
-        items.some((item) => item.id === selectedFqid) ? selectedFqid : null
-      }
-      selectedExact={items.some((item) => item.id === selectedFqid)}
-      renderName={renderName}
-      empty={
-        needle.trim()
-          ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
-          : "This register lists no variables."
-      }
-      notice={
-        ownEmpty
-          ? `No variables in ${node?.name ?? "this register"} match “${needle.trim()}”.`
-          : null
-      }
-      error={
-        resource.error || (!resource.loading && !node)
-          ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
-          : null
-      }
-    />
-  );
+  return {
+    subject: node?.name,
+    root: registerFqid,
+    // Wait for other registers before declaring an empty search result.
+    sections:
+      resource.loading || (otherMatches === null && items.length === 0)
+        ? null
+        : sections,
+    selectedId: items.some((item) => item.id === selectedFqid)
+      ? selectedFqid
+      : null,
+    selectedExact: items.some((item) => item.id === selectedFqid),
+    empty: needle.trim()
+      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      : "This register lists no variables.",
+    notice: ownEmpty
+      ? `No variables in ${node?.name ?? "this register"} match “${needle.trim()}”.`
+      : null,
+    error:
+      resource.error || (!resource.loading && !node)
+        ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
+        : null,
+  };
 }
 
 /**
- * The variables column on a provider's page: every variable of its registers,
- * one section per register under the register's name, in the register
- * column's order. The search filters each section by name, as in a register's
- * list, and a register with no match drops out.
+ * A provider's page: every variable of its registers, one section per
+ * register under the register's name, in the register column's order. The
+ * search filters each section by name, as in a register's list, and a
+ * register with no match drops out. Its rows open a page under another
+ * register, so they are leaving rows: a click or Enter opens one, never the
+ * arrows passing it. Null without a provider.
  */
-export function ProviderVariableList({
-  providerFqid,
-  className,
-}: {
-  providerFqid: string;
-  className?: string;
-}) {
+function useProviderColumn(
+  providerFqid: string | null,
+  needle: string,
+): ColumnProps | null {
   const root = useCatalogRead(catalogRootChildren, undefined);
   const provider = root.value?.find((p) => p.fqid === providerFqid) ?? null;
   const registers = provider
@@ -224,53 +266,33 @@ export function ProviderVariableList({
     (signal) =>
       Promise.all((registers ?? []).map((fqid) => sharedShow(fqid, signal))),
   );
-  const needle = useBrowseFilter();
-  const renderName = useRenderName(needle);
+  if (providerFqid === null) return null;
   // simplify: the search matches names and slugs only, not the server's
   // variable matches the register page adds, which would be one facets request
   // per register on each query. Upgrade when `/search/facets` takes a provider.
   const sections: ColumnSection[] = (resource.data ?? []).flatMap((node) => {
     if (node.kind !== "register") return [];
     const variables = sortedVariables(node);
-    const items = variableItems(variables, rankVariables(variables, needle));
+    const items = variableItems(
+      variables,
+      rankVariables(variables, needle),
+      true,
+    );
     return [{ id: `register:${node.fqid}`, label: node.name, items }];
   });
   const failed = root.value !== null && provider === null;
-  return (
-    <ColumnList
-      label="Variables"
-      subject={provider?.name ?? undefined}
-      root={providerFqid}
-      className={className}
-      sections={resource.data === null ? null : sections}
-      selectedId={null}
-      selectedExact={false}
-      renderName={renderName}
-      empty={
-        needle.trim()
-          ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
-          : "This provider lists no variables."
-      }
-      error={
-        resource.error || failed || (!root.loading && root.value === null)
-          ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
-          : null
-      }
-    />
-  );
-}
-
-export function NoRegisterList({ className }: { className?: string }) {
-  return (
-    <ColumnList
-      label="Variables"
-      className={className}
-      sections={[]}
-      selectedId={null}
-      selectedExact={false}
-      renderName={(item) => item.name}
-      empty="Choose a register to list its variables."
-      error={null}
-    />
-  );
+  return {
+    subject: provider?.name ?? undefined,
+    root: providerFqid,
+    sections: resource.data === null ? null : sections,
+    selectedId: null,
+    selectedExact: false,
+    empty: needle.trim()
+      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      : "This provider lists no variables.",
+    error:
+      resource.error || failed || (!root.loading && root.value === null)
+        ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
+        : null,
+  };
 }

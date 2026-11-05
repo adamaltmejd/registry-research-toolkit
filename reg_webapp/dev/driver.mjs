@@ -298,6 +298,22 @@ async function browsePagesCase(page, shoot) {
     await provider(true).getByText("Demoleverantören", { exact: true }).click();
     await settled(page);
     check((await provider(true).count()) === 1, "a press on an open provider collapsed it");
+    // Fails if → on the open provider's row stops moving into the variables
+    // column, or opening a variable from the provider's list drops focus out
+    // of the column as the list re-roots under the variable's register.
+    const inVariables = () => page.evaluate(() =>
+      document.activeElement?.getAttribute("role") === "option" &&
+      document.activeElement.closest('[data-browse-column="variables"]') !== null);
+    await provider(true).focus();
+    await page.keyboard.press("ArrowRight");
+    check(await inVariables(), "→ on the open provider did not move into the variables column");
+    await variables.getByRole("option", { name: "Bransch", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await page.waitForURL("**/catalog/demo/hush/**");
+    await settled(page);
+    check(await inVariables(), "opening a variable from the provider's list lost focus");
+    await open(page, "/catalog/demo");
+    await settled(page);
   }
   await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
   await page.waitForURL("**/catalog/demo/hush");

@@ -337,8 +337,9 @@ export function BrowseTree({ className }: { className?: string }) {
   }
 
   // → on a register row (a leaf) moves to the variables column (DESIGN.md →
-  // Layout); RAC's Tree uses → only on a group row. Captured, so the Tree
-  // never sees a key it would ignore.
+  // Layout), and so does → on the open provider row of the provider's own
+  // page, whose variables the column lists; RAC's Tree uses → only to expand
+  // a group row. Captured, so the Tree never sees a key it would ignore.
   function onKeyDownCapture(event: KeyboardEvent): void {
     const row = (event.target as Element).closest('[role="row"]');
     if (
@@ -347,7 +348,9 @@ export function BrowseTree({ className }: { className?: string }) {
       !event.metaKey &&
       !event.ctrlKey &&
       row !== null &&
-      !row.hasAttribute("aria-expanded") &&
+      (!row.hasAttribute("aria-expanded") ||
+        (row.getAttribute("aria-expanded") === "true" &&
+          row.getAttribute("aria-current") === "page")) &&
       focusBrowseColumn("variables")
     ) {
       event.preventDefault();
