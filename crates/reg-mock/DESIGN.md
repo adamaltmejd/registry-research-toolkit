@@ -40,26 +40,36 @@ order answer, `order.json` (`POST /api/project/order`, any catalog) or `manifest
 (`POST /api/project/materialize`, a steward's), plus every page under `segments/`
 (`GET /api/segments/{table}?variable=…`, and `GET /api/segments/{variable}` for a row
 key from another register) and `values/` (`GET /api/values?value_set=…`, pages named to
-sort in page order). Answers from different catalog generations are refused.
+sort in page order). Answers from different catalog generations, an order answer for
+another version of the project (its `project_hash`), and a value set whose saved pages
+do not hold each of its `n_items` codes once are refused.
 
 **Layout.** With a manifest, files and columns are the runner's: the order file's names,
-`stata_name` aliases and labels, and the row filter column as the year
-(`Attribute::Year` with its encoding). A column held in fewer years than its file
-carries its own years and is missing in the others. Without one, most researchers' case
+`stata_name` aliases and labels, and the row filter column, which places no variable, as
+the year (`Attribute::Year` with its encoding). A column is drawn from its held
+placement's segment row. A file holds its columns' requested years; a column held in
+fewer carries its own years and is missing in the others. The runner extracts a file
+without a row filter over its whole delivery, so there the mock holds fewer years than
+the extract (a `simplify:` in `delivery_files`). Without one, most researchers' case
 (they get data straight from the provider, with no delivery names yet), files follow a
 standard style: the table's public id with `_` for `/` and `-`, one file per year,
 `scb_lsum_individer_sociala_agi_ku_2019` (maintainer, 2026-11-05). Columns keep the
-catalog's names. Names never mark the data as mock, so a pipeline switches between real
-and mock by its input directory alone. Renames in the rules adopt the delivery's names
-once known.
+catalog's names, and each year's column takes that year's segment, since a value set or
+type can change between years. Sources reading one table and year share its file, as in
+the delivery layout. Names never mark the data as mock, so a pipeline switches between
+real and mock by its input directory alone. Renames in the rules adopt the delivery's
+names once known.
 
 **Types** (#2071, G8/G10, `resolve_type`): the binding's `type` in `project_data.json`
 wins; else the held storage's type (`reg_core::manifest::StorageFamily`, split into
 date/datetime and boolean); else the catalog's type. With an override, the column drops
 its storage: it is written in the override's type. An unknown type, and geometry, uuid
 or binary (maintainer, 2026-11-05), is refused, never guessed. The identifier flag comes
-from the segment, not from `type = identifier`.
+from the segment, not from `type = identifier`. A variable's segments come from its own
+table; only a row key may take another table's (a person id carried into a steward
+table).
 
 **Rules.** A file delivering several sources needs their unit, population and rows to
-agree. A column rule that names no column is refused, since a misspelt name would
-otherwise do nothing. Every refusal is returned at once, located, with a stable code.
+agree, and the sources sharing a column must state the same rule for it. A column rule
+that names no column is refused, since a misspelt name would otherwise do nothing. Every
+refusal is returned at once, located, with a stable code.

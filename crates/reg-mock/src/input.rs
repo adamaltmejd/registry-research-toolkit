@@ -20,8 +20,14 @@ pub struct Meta {
 /// `POST /api/project/order`.
 #[derive(Deserialize)]
 pub struct LogicalOrder {
+    pub project: ProjectRef,
     pub entries: Vec<Entry>,
     pub row_keys: Vec<RowKeys>,
+}
+
+#[derive(Deserialize)]
+pub struct ProjectRef {
+    pub project_hash: String,
 }
 
 #[derive(Deserialize)]
@@ -67,11 +73,19 @@ pub struct Segment {
     pub value_set: Option<ValueSetRef>,
     #[serde(default)]
     pub identifier: Option<bool>,
+    /// The held file and column of a steward catalog's row; absent elsewhere.
+    #[serde(default)]
+    pub file: Option<String>,
+    #[serde(default)]
+    pub column: Option<String>,
 }
 
 #[derive(Deserialize)]
 pub struct ValueSetRef {
     pub hash: String,
+    /// The set's size, on a values page.
+    #[serde(default)]
+    pub n_items: Option<usize>,
 }
 
 /// A page of `GET /api/values?value_set=…`.

@@ -146,9 +146,9 @@ and to a sweep.
 - **Structural validation has one authority.** `reg-build verify` owns the published
   catalog's invariants; tests run it on the synthetic artifact, they do not re-derive
   its checks.
-- **A bug fix adds no regression test.** The fix is verified once, by the run that shows
-  it; a fixed bug is not a behavior. Add a case only when the fix establishes a product
-  rule that meets the bar above, and then at most one, in the owning corpus.
+- **A bug fix adds no regression test.** The fix is verified once, by the run that
+  shows it; a fixed bug is not a behavior. Add a case only when the fix establishes a
+  product rule that meets the bar above, and then at most one, in the owning corpus.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
