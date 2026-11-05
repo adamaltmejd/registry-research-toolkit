@@ -48,17 +48,19 @@ do not hold each of its `n_items` codes once are refused.
 `stata_name` aliases and labels, and the period column, a row key placing no variable,
 as the year (`Attribute::Year`, in the row filter's encoding, a whole year without one).
 A column is drawn from its held placement's segment row. A file holds its columns'
-requested years; a column held in fewer carries its own years and is missing in the
-others. The runner extracts a file without a row filter over its whole delivery, so
-there the mock holds fewer years than the extract (a `simplify:` in `delivery_files`).
-Without one, most researchers' case (they get data straight from the provider, with no
-delivery names yet), files follow a standard style: the table's public id with `_` for
-`/` and `-`, one file per year, `scb_lsum_individer_sociala_agi_ku_2019` (maintainer,
-2026-11-05). Columns keep the catalog's names, and each year's column takes that year's
-segment, since a value set or type can change between years. Sources reading one table
-and year share its file, as in the delivery layout. Names never mark the data as mock,
-so a pipeline switches between real and mock by its input directory alone. Renames in
-the rules adopt the delivery's names once known.
+requested years; a column is missing in the years its placement does not hold (its
+segment rows), as the runner reads every column over the file's years, and takes the
+codes of every variable it delivers. The runner extracts a file without a row filter
+over its whole delivery, so there the mock holds fewer years than the extract (a
+`simplify:` in `delivery_files`). Without one, most researchers' case (they get data
+straight from the provider, with no delivery names yet), files follow a standard style:
+the table's public id with `_` for `/` and `-`, one file per year,
+`scb_lsum_individer_sociala_agi_ku_2019` (maintainer, 2026-11-05). Columns keep the
+catalog's names, and each year's column takes that year's segment, since a value set or
+type can change between years. Sources reading one table and year share its file, as in
+the delivery layout. Names never mark the data as mock, so a pipeline switches between
+real and mock by its input directory alone. Renames in the rules adopt the delivery's
+names once known.
 
 **Types** (#2071, G8/G10, `resolve_type`): the binding's `type` in `project_data.json`
 wins; else the held storage's type (`reg_core::manifest::StorageFamily`, split into

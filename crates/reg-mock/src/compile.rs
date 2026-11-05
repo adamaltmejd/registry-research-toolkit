@@ -513,15 +513,13 @@ impl Context<'_> {
                     }
                     continue;
                 };
-                let mut column_years = BTreeSet::new();
                 for r in &column.refs {
                     match self::years(&r.period) {
-                        Ok(Some(ys)) => column_years.extend(ys),
+                        Ok(Some(ys)) => years.extend(ys),
                         Ok(None) => {}
                         Err(()) => refusals.push(open_period(&r.source, &r.variable)),
                     }
                 }
-                years.extend(column_years.iter().copied());
                 // A column several requested variables share is drawn as the first.
                 let draft = Column {
                     name: &column.name,
@@ -540,8 +538,12 @@ impl Context<'_> {
                         spec_column.attribute = Some(Attribute::Year);
                         spec_column.encoding = Some(filter.encoding);
                     }
-                    spec_column.years = column_years.into_iter().collect();
-                    // Every variable the column delivers must agree on its type.
+                    // The runner reads every column over the file's years: a column is
+                    // missing only in years its placement does not hold.
+                    spec_column.years = self.held_years(&file.table, &column.name);
+                    // Every variable the column delivers must agree on its type; its
+                    // codes are all of theirs (simplify: one code list for every year,
+                    // give codes years if a pipeline checks codes by year).
                     for other in &column.refs[1..] {
                         let draft = Column {
                             source: &other.source,
@@ -555,6 +557,11 @@ impl Context<'_> {
                             self.column(&draft, Some(&column.storage), refusals)
                         {
                             same_type(&spec_column, &other_column, &file.name, refusals);
+                            for code in other_column.codes {
+                                if !spec_column.codes.iter().any(|c| c.code == code.code) {
+                                    spec_column.codes.push(code);
+                                }
+                            }
                         }
                     }
                     built.push(&r.source, spec_column);
@@ -567,6 +574,7 @@ impl Context<'_> {
             built.file.years = years.into_iter().collect();
             // A column held in every year of its file needs no years of its own.
             for column in &mut built.file.columns {
+                column.years.retain(|y| built.file.years.contains(y));
                 if column.years == built.file.years {
                     column.years.clear();
                 }
@@ -574,6 +582,18 @@ impl Context<'_> {
             files.push(built);
         }
         files
+    }
+
+    /// The years a held placement holds, from its segment rows; empty when the saved
+    /// answers have none (no mask).
+    fn held_years(&self, file: &str, column: &str) -> Vec<i32> {
+        let mut held = BTreeSet::new();
+        for segment in &self.answers.segments {
+            if segment.file.as_deref() == Some(file) && segment.column.as_deref() == Some(column) {
+                held.extend(years(&segment.period).ok().flatten().unwrap_or_default());
+            }
+        }
+        held.into_iter().collect()
     }
 
     /// The column's type, codes and flags from its segment, the project override and
