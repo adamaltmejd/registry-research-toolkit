@@ -64,18 +64,19 @@ What `compile` and `generate` hold to; each rule names its one place in the code
    column's sources agree on its column rule; a rule naming no column is refused.
 5. **Generate refuses before it writes** (`generate`): it runs compile's checks on the
    spec (`check_spec`, so a hand-edited spec gets compile's refusals) and refuses a type
-   or storage the runner does not write in the spec's format (`Kind::of`) before any row
-   is drawn. simplify: whether a unit attribute fits its column's type is found at the
-   first row, as `code_invalid`; check it up front if that refusal comes too late.
+   or storage the runner does not write in the spec's format (`Kind::of`) and a year
+   outside 1900–2100 (`year_invalid`) before any row is drawn. simplify: whether a unit
+   attribute fits its column's type is found at the first row, as `code_invalid`; check
+   it up front if that refusal comes too late.
 6. **No value changes silently** (`cell`, `from_int`, `from_text`, `write`): a supplied
    code, mapped value or attribute is written exactly or refused (`code_invalid`): a
    number that is not one, a day the calendar lacks, a boolean other than 0/1 or a
-   yes/no code, more decimals than the scale, text wider than the storage. A drawn value
-   stays within its storage. A value the format cannot hold is refused, as the runner
-   refuses it. `real` is float32 in Parquet, as the runner writes it.
+   yes/no code, more decimals than the scale, an integer or text outside its storage. A
+   drawn value stays within its storage. A value the format cannot hold is refused, as
+   the runner refuses it. `real` is float32 in Parquet, as the runner writes it.
 7. **Units are one population** (`population.rs`, `attribute_cell`): every unit
-   attribute comes from the unit, or from the unit's own stream, never a column's, so
-   files join and agree.
+   attribute comes from the unit, or from the unit's own stream over sorted codes, never
+   a column's, so files join and agree.
 8. **Same inputs, same bytes** (`rng.rs`, `write.rs`).
 
 ## Compile
