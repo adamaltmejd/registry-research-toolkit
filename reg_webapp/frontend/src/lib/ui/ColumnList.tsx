@@ -12,6 +12,7 @@ import {
   Header,
   ListBox,
   ListBoxItem,
+  type ListBoxRenderProps,
   ListBoxSection,
   ListLayout,
   type Selection,
@@ -114,6 +115,24 @@ export function ColumnList({
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
   const items = sections?.flatMap((s) => s.items) ?? null;
+  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
+  // The ListBox's state, read from its className render prop.
+  const listState = useRef<ListBoxRenderProps["state"] | null>(null);
+  // A virtualized list renders only the rows in view, plus the focused key's
+  // row wherever it is. So the selected row is made the focused key while the
+  // list does not hold focus: the refocus below and the → handoff
+  // (focusBrowseColumn) then find it in the DOM. Once per selection and list,
+  // so a type-ahead's focus is not pulled back.
+  const persisted = useRef<[unknown, string | null]>([null, null]);
+  useEffect(() => {
+    const state = listState.current;
+    if (!virtual || !state || selectedId === null) return;
+    const [lastState, lastId] = persisted.current;
+    if (lastState === state && lastId === selectedId) return;
+    persisted.current = [state, selectedId];
+    if (!state.selectionManager.isFocused)
+      state.selectionManager.setFocusedKey(selectedId);
+  });
   // Set while a key that walks the list is down: a leaving row opens on a
   // click, Enter or Space, not as the arrows or type-ahead pass it.
   const walking = useRef(false);
@@ -124,11 +143,21 @@ export function ColumnList({
   // selected row or the first own one, until the reader next presses a key
   // or the pointer.
   const refocus = useRef<string | null>(null);
+  const revealed = useRef<string | null>(null);
   useEffect(() => {
     if (refocus.current === null || refocus.current === root) return;
     const target = selectedId ?? items?.find((i) => !i.leaves)?.id;
     const box = boxRef.current;
     if (target === undefined || !box) return;
+    // The opened row keeps focus as the list re-roots (the same key, or the
+    // row focused below), but in a virtualized list the layout then places it
+    // where the list is not scrolled to: bring it into view, once per root,
+    // after the layout's own pass.
+    const reveal = (row: HTMLElement) => {
+      if (revealed.current === root) return;
+      revealed.current = root ?? null;
+      requestAnimationFrame(() => row.scrollIntoView({ block: "nearest" }));
+    };
     // RAC commits a collection's options in a pass of its own, after this
     // effect, so the target row may not exist yet: wait for it to appear.
     const tryFocus = (): boolean => {
@@ -138,12 +167,23 @@ export function ColumnList({
         box.contains(active) &&
         items?.some((i) => i.leaves && i.id === active.dataset.key);
       if (refocus.current === null) return true;
-      if (active !== document.body && !leavingFocused) return true;
+      if (active !== document.body && !leavingFocused) {
+        if (active instanceof HTMLElement && active.dataset.key === target)
+          reveal(active);
+        return true;
+      }
       const row = box.querySelector<HTMLElement>(
         `[role="option"][data-key="${CSS.escape(target)}"]`,
       );
-      row?.focus();
-      return row !== null;
+      // A virtualized list renders a row out of view once it is the focused
+      // key (see `persisted` above).
+      const manager = listState.current?.selectionManager;
+      if (row === null && virtual && manager && manager.focusedKey !== target)
+        manager.setFocusedKey(target);
+      if (row === null) return false;
+      row.focus();
+      reveal(row);
+      return true;
     };
     if (tryFocus()) return;
     const observer = new MutationObserver(() => {
@@ -202,6 +242,7 @@ export function ColumnList({
     // Two rows can open one page (a variable that is several group members).
     if (item !== undefined && item.href !== current?.href) {
       refocus.current = item.leaves ? (root ?? null) : null;
+      revealed.current = null;
       router.navigate(item.href);
     }
   }
@@ -227,7 +268,6 @@ export function ColumnList({
     }
   }
 
-  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
   // RAC's virtualized options carry an aria-posinset counted from the section's
   // header and an aria-setsize of the whole list ("2 of 4378" on the first
   // row): state each row's place in its own section instead. The Collection's
@@ -270,7 +310,10 @@ export function ColumnList({
   const list = sections !== null && (
     <ListBox
       aria-labelledby={labelId}
-      className={virtual ? `${styles.list} ${styles.virtual}` : styles.list}
+      className={({ state }) => {
+        listState.current = state;
+        return virtual ? `${styles.list} ${styles.virtual}` : styles.list;
+      }}
       selectionMode="single"
       selectionBehavior="replace"
       disallowEmptySelection
