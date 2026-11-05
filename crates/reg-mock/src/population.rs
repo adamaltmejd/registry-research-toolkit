@@ -252,7 +252,7 @@ pub fn day_in(year: i32, rng: &mut Rng) -> i64 {
 
 /// Days from 1970-01-01 of a civil date (Howard Hinnant's `days_from_civil`).
 #[must_use]
-pub fn days_from_civil(year: i32, month: u32, day: u32) -> i64 {
+fn days_from_civil(year: i32, month: u32, day: u32) -> i64 {
     let y = i64::from(year) - i64::from(month <= 2);
     let era = y.div_euclid(400);
     let yoe = y - era * 400;

@@ -6,6 +6,7 @@
 use std::sync::Arc;
 
 use crate::limit::{Limits, guard};
+use crate::usage::{self, Slot, Usage};
 use crate::{Answer, VERSION, run};
 use axum::Router;
 use axum::extract::DefaultBodyLimit;
@@ -235,7 +236,7 @@ impl ServerHandler for Tools {
     async fn call_tool(
         &self,
         request: CallToolRequestParams,
-        _: RequestContext<RoleServer>,
+        context: RequestContext<RoleServer>,
     ) -> Result<CallToolResponse, ErrorData> {
         let ops: Vec<&Operation> = ops::all()
             .filter(|op| op.tool == Some(&*request.name))
@@ -249,10 +250,21 @@ impl ServerHandler for Tools {
         let mut arguments = request.arguments.unwrap_or_default();
         let call = operation(&ops, &mut arguments)
             .and_then(|op| query(op, arguments).map(|query| (op, query)));
-        let answer = match call {
-            Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query).await,
-            Err(err) => Answer::new(&self.server, Err(err)),
+        let mut answer = match call {
+            Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query, true).await,
+            Err(err) => Answer {
+                usage: Some(Usage::refused(&request.name, &err)),
+                ..Answer::new(&self.server, Err(err))
+            },
         };
+        // Over HTTP the label goes on the response (`usage::mcp`); stdio has none.
+        let slot = context
+            .extensions
+            .get::<axum::http::request::Parts>()
+            .and_then(|parts| parts.extensions.get::<Slot>());
+        if let (Some(slot), Some(usage)) = (slot, answer.usage.take()) {
+            slot.put(usage);
+        }
         Ok(if answer.status == StatusCode::OK {
             CallToolResult::structured(answer.body)
         } else {
@@ -289,6 +301,7 @@ pub fn router(server: Arc<Server>, public_host: Option<String>, limits: Arc<Limi
     );
     Router::new()
         .route_service("/mcp", service)
+        .layer(axum::middleware::from_fn(usage::mcp))
         .layer(from_fn_with_state(limits, guard))
         .layer(DefaultBodyLimit::max(body::MAX_BYTES))
 }

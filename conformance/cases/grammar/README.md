@@ -21,6 +21,9 @@ Refusals are `invalid_ref`. `out` is one of:
 - `{"kind": "register", "provider", "register"}` — `scb/lisa`
 - `{"kind": "variable", "provider", "register", "variable"}` — `scb/lisa/kon`
 - `{"kind": "classification", "classification"}` — `class/sun2020`
+- `{"kind": "class_version", "family", "version"}` — `class/sun/2020`
+- `{"kind": "set", "provider", "register", "set"}` — `set/scb/lisa/kon`; only a leading
+  `set/` selects it
 
 Every slug matches `^[a-z](?:-?[a-z0-9])*$` and is not `class`, which is reserved in
 every slot. `group` is reserved as the first segment, for group refs

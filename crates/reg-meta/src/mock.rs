@@ -133,6 +133,10 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
             format!("spec version must be {SPEC_VERSION}: compile it again"),
         )]);
     }
+    let refusals = reg_mock::compile::check_spec(&spec);
+    if !refusals.is_empty() {
+        refuse(&refusals);
+    }
     let tables =
         generate::generate(&spec, seed, persons, allow_large).unwrap_or_else(|r| refuse(&[r]));
     write::write_all(&spec, &tables, Path::new(&out), seed, persons)

@@ -39,20 +39,24 @@ the fields it uses and ignores the rest.
 order answer, `order.json` (`POST /api/project/order`, any catalog) or `manifest.json`
 (`POST /api/project/materialize`, a steward's), plus every page under `segments/`
 (`GET /api/segments/{table}?variable=…`, and `GET /api/segments/{variable}` for a row
-key from another register) and `values/` (`GET /api/values?value_set=…`, pages named to
-sort in page order). Answers from different catalog generations, an order answer for
-another version of the project (its `project_hash`), and a value set whose saved pages
-do not hold each of its `n_items` codes once are refused.
+key from another register) and `values/` (`GET /api/values?value_set=…`, each answer's
+pages named `<answer>-0001.json`, `-0002.json`, ..., as `save-answers.sh` writes them).
+A page left out (numbering with a gap, or a last page whose `next_cursor` is not null),
+answers from different catalog generations, an order answer for another version of the
+project (its `project_hash`), and a value set whose saved pages do not hold each of its
+`n_items` codes once are refused.
 
 **Layout.** With a manifest, files and columns are the runner's: the order file's names,
-`stata_name` aliases and labels, and the row filter column, which places no variable, as
-the year (`Attribute::Year` with its encoding). A column is drawn from its held
-placement's segment row. A file holds its columns' requested years; a column held in
-fewer carries its own years and is missing in the others. The runner extracts a file
-without a row filter over its whole delivery, so there the mock holds fewer years than
-the extract (a `simplify:` in `delivery_files`). Without one, most researchers' case
-(they get data straight from the provider, with no delivery names yet), files follow a
-standard style: the table's public id with `_` for `/` and `-`, one file per year,
+`stata_name` aliases and labels, and the period column, a row key placing no variable,
+as the year (`Attribute::Year`, in the row filter's encoding, a whole year without one).
+A column is drawn from its held placement's segment row. A file holds its columns'
+requested years; a column is missing in the years its placement does not hold (its
+segment rows), as the runner reads every column over the file's years, and takes the
+codes of every variable it delivers. The runner extracts a file without a row filter
+over its whole delivery, so there the mock holds fewer years than the extract (a
+`simplify:` in `delivery_files`). Without one, most researchers' case (they get data
+straight from the provider, with no delivery names yet), files follow a standard style:
+the table's public id with `_` for `/` and `-`, one file per year,
 `scb_lsum_individer_sociala_agi_ku_2019` (maintainer, 2026-11-05). Columns keep the
 catalog's names, and each year's column takes that year's segment, since a value set or
 type can change between years. Sources reading one table and year share its file, as in
@@ -97,10 +101,11 @@ bounds, resident that year unless departed units stay). Each unit has one row wi
 probability `rows_per_unit` when the mean is at most 1, else 1 plus a Poisson draw for
 the rest. A column draws its unit attribute when the rules name one, else one of its
 codes, else a value of its type (amounts lognormal, text short and random). A
-municipality with no value set is the county seat (`<county>80`). Values are missing at
-the column's rate (the spec's 2% by default), as a sentinel code where the value set has
-one; keys and the year never are. A timeless file is drawn in the window's last year,
-and a spec with only timeless files in 2024.
+municipality with no value set is the county seat (`<county>80`), a value set of
+sentinels only is drawn as such, text is no wider than its held storage, and decimals
+keep every digit. Values are missing at the column's rate (the spec's 2% by default), as
+a sentinel code where the value set has one; keys and the year never are. A timeless
+file is drawn in the window's last year, and a spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types
 per format"), so a pipeline reads mock and real files alike:
