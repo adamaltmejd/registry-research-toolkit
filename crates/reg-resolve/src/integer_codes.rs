@@ -3,7 +3,8 @@
 //!
 //! A segment whose every covering occurrence is reader text (`char`) with a documented
 //! code list of plain integers is an integer column. Curated > rule > source: curation
-//! states text as `text`, which this rule never reads, so a curated text type stays.
+//! may state a type only under its published name, so curated text is `text`, which
+//! this rule never reads. Provenance records each change as rule `integer-codes`.
 
 use std::collections::BTreeMap;
 
@@ -65,7 +66,8 @@ pub(crate) fn apply(
         }
         variables[v].segments[s].dtype = Some("integer".to_owned());
         for i in members {
-            resolved[i].occurrence.dtype = Some("integer".to_owned());
+            let o = &mut resolved[i];
+            o.stated_dtype = o.occurrence.dtype.replace("integer".to_owned());
         }
     }
 }

@@ -164,12 +164,14 @@ impl Statement {
                 subject, fields, ..
             } => {
                 validate_fields(fields)?;
+                published_type(fields.dtype.as_deref())?;
                 fields.validate_references()?;
                 fields.validate_subject(subject)?;
             }
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                     validate_fields(fields)?;
+                    published_type(fields.dtype.as_deref())?;
                     value_set_reference(fields.value_set.as_deref())?;
                     if matches!(fact, AssertFact::Occurrence { .. }) && fields.description.is_some()
                     {
@@ -396,6 +398,18 @@ fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
         return Err("fields must state at least one field".into());
     }
     Ok(())
+}
+
+/// Curation states a type under its published name only (`integer`, `text`, ...), so a
+/// curated type never reads as a reader alias such as `char`, which the integer-code
+/// rule rewrites (#2071).
+fn published_type(dtype: Option<&str>) -> Result<(), String> {
+    match dtype {
+        Some(t) if crate::dtype_info(t).and_then(|d| d.published) != Some(t) => Err(format!(
+            "type-name: type {t:?} is not a published type name (integer, decimal, text, date, datetime, boolean, geometry, uuid, binary, identifier)"
+        )),
+        _ => Ok(()),
+    }
 }
 
 fn value_set_reference(hash: Option<&str>) -> Result<(), String> {

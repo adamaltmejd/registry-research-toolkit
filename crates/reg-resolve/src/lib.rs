@@ -299,6 +299,8 @@ pub struct ResolvedOccurrence {
     pub period: Option<Interval>,
     /// The period before the T1 clamp, when the clamp changed it.
     pub stated: Option<Interval>,
+    /// The type before the integer-code rule, when the rule changed it.
+    pub stated_dtype: Option<String>,
     /// Stated by a release of a worse edition than its period's primary.
     pub preliminary: bool,
     pub variable: Option<usize>,
@@ -619,6 +621,7 @@ pub(crate) fn resolve_located(
             release,
             period: None,
             stated: None,
+            stated_dtype: None,
             preliminary,
             variable: None,
             segment: None,
