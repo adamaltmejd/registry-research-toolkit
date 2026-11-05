@@ -1,0 +1,27 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": ["4", "6", "9"],
+      "/data/items/*/change": ["added", "added", "removed"],
+      "/data/items/2/label": null,
+      "/data/items/2/previous_label": "Övrig utbildning",
+      "/data/counts": {"added": 2, "removed": 1, "relabelled": 2},
+      "/data/classification": "class/demo-utb/v2020-niva",
+      "/data/compare": "class/demo-utb/v2000-niva"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": ["2", "3"],
+      "/data/items/*/change": ["relabelled", "relabelled"],
+      "/data/items/*/previous_label": ["Gymnasial utbildning", "Eftergymnasial utbildning"],
+      "/data/items/*/label": [
+        "Gymnasial utbildning, högst tre år",
+        "Eftergymnasial utbildning, kortare än tre år"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

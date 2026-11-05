@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions, each with its part and the versions it succeeds, and the variables that use them, each with its rows that carry the classification; `class` lists the classifications with their versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions, each with its part and the versions it succeeds, and the variables that use them, each with its rows that carry the classification; `class` lists the classifications with their versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -1478,7 +1478,7 @@
     },
     "/api/values": {
       "get": {
-        "description": "The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other.",
+        "description": "The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other. `compare` with `classification` lists the codes added, removed and relabelled from the `compare` version to the `classification` version.",
         "operationId": "values",
         "parameters": [
           {
@@ -1492,6 +1492,14 @@
           },
           {
             "name": "classification",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "compare",
             "in": "query",
             "required": false,
             "schema": {
@@ -1576,6 +1584,9 @@
                         },
                         {
                           "$ref": "#/components/schemas/ValueSetsPage"
+                        },
+                        {
+                          "$ref": "#/components/schemas/ValueChangesPage"
                         }
                       ]
                     },
@@ -1635,6 +1646,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "Change": {
+        "type": "string",
+        "description": "In page order.",
+        "enum": [
+          "added",
+          "removed",
+          "relabelled"
+        ]
       },
       "ColumnRef": {
         "type": "object",
@@ -4663,6 +4683,10 @@
               "name": {
                 "type": "string"
               },
+              "publisher": {
+                "type": "string",
+                "description": "Who publishes it."
+              },
               "variables": {
                 "type": "array",
                 "items": {
@@ -4686,6 +4710,7 @@
               "period",
               "value_set",
               "family",
+              "succeeds",
               "variables",
               "kind"
             ],
@@ -4705,9 +4730,20 @@
               "name": {
                 "type": "string"
               },
+              "part": {
+                "type": "string",
+                "description": "The line it belongs to, in a classification with several."
+              },
               "period": {
                 "$ref": "#/components/schemas/Period",
                 "description": "The version's validity."
+              },
+              "succeeds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The versions it directly succeeds, in fqid order."
               },
               "value_set": {
                 "$ref": "#/components/schemas/ValueSetRef"
@@ -4730,9 +4766,13 @@
           "fqid",
           "name",
           "version_count",
-          "period"
+          "period",
+          "versions"
         ],
         "properties": {
+          "description": {
+            "type": "string"
+          },
           "fqid": {
             "type": "string"
           },
@@ -4748,6 +4788,38 @@
             "format": "int32",
             "description": "How many versions it has.",
             "minimum": 0
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowClassFamilyVersion"
+            },
+            "description": "In start order."
+          }
+        }
+      },
+      "ShowClassFamilyVersion": {
+        "type": "object",
+        "description": "A version in the list of classifications.",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "part": {
+            "type": "string",
+            "description": "The line it belongs to, in a classification with several."
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The version's validity."
           }
         }
       },
@@ -4782,6 +4854,7 @@
           "name",
           "period",
           "value_set",
+          "succeeds",
           "used"
         ],
         "properties": {
@@ -4791,9 +4864,20 @@
           "name": {
             "type": "string"
           },
+          "part": {
+            "type": "string",
+            "description": "The line it belongs to, in a classification with several."
+          },
           "period": {
             "$ref": "#/components/schemas/Period",
             "description": "The version's validity."
+          },
+          "succeeds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The versions it directly succeeds, in fqid order."
           },
           "used": {
             "type": "boolean",
@@ -5417,6 +5501,98 @@
           },
           "ok": {
             "type": "boolean"
+          }
+        }
+      },
+      "ValueChange": {
+        "type": "object",
+        "required": [
+          "code",
+          "label",
+          "previous_label",
+          "change"
+        ],
+        "properties": {
+          "change": {
+            "$ref": "#/components/schemas/Change"
+          },
+          "code": {
+            "type": "string",
+            "description": "May be `\"\"`: a real code."
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The label in `classification`; `null` for a removed code."
+          },
+          "previous_label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The label in `compare`; `null` for an added code."
+          }
+        }
+      },
+      "ValueChangeCounts": {
+        "type": "object",
+        "required": [
+          "added",
+          "removed",
+          "relabelled"
+        ],
+        "properties": {
+          "added": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "relabelled": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "removed": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "ValueChangesPage": {
+        "type": "object",
+        "description": "The code changes from the `compare` version to the `classification` version.",
+        "required": [
+          "items",
+          "next_cursor",
+          "counts",
+          "classification",
+          "compare"
+        ],
+        "properties": {
+          "classification": {
+            "type": "string",
+            "description": "The version compared to, the newer side."
+          },
+          "compare": {
+            "type": "string",
+            "description": "The version compared from, the older side."
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ValueChangeCounts",
+            "description": "Over the whole comparison."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValueChange"
+            },
+            "description": "Added, then removed, then relabelled; by code within each."
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },

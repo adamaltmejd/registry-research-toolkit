@@ -21,9 +21,10 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     description: "Describe a provider, register, table, variable, set or classification by id \
         or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's \
         whole `segments` list, so no `segments` call per member is needed). A classification \
-        (`class/<family>`) or one of its versions lists its versions and the variables that \
-        use them, each with its rows that carry the classification; `class` lists the \
-        classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
+        (`class/<family>`) or one of its versions lists its versions, each with its part \
+        and the versions it succeeds, and the variables that use them, each with its rows \
+        that carry the classification; `class` lists the classifications with their \
+        versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
         fallback. `evidence=true` adds the provider's original texts, column names, curation \
         locators and linked documents.",
     params: &[
@@ -128,6 +129,10 @@ pub enum Show {
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
         description: Option<String>,
+        /// Who publishes it.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        publisher: Option<String>,
         /// In start order.
         versions: Vec<ShowClassVersion>,
         variables: Vec<ShowClassUser>,
@@ -139,6 +144,12 @@ pub enum Show {
         period: Period,
         value_set: ValueSetRef,
         family: ShowMembership,
+        /// The line it belongs to, in a classification with several.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        part: Option<String>,
+        /// The versions it directly succeeds, in fqid order.
+        succeeds: Vec<String>,
         /// The variables that use this version.
         variables: Vec<ShowClassUser>,
     },
@@ -157,10 +168,28 @@ pub struct ShowTableVariable {
 pub struct ShowClassFamilyRef {
     fqid: String,
     name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    description: Option<String>,
     /// How many versions it has.
     version_count: u32,
     /// From the first version's start to the last one's end.
     period: Period,
+    /// In start order.
+    versions: Vec<ShowClassFamilyVersion>,
+}
+
+/// A version in the list of classifications.
+#[derive(Serialize, ToSchema)]
+pub struct ShowClassFamilyVersion {
+    fqid: String,
+    name: String,
+    /// The version's validity.
+    period: Period,
+    /// The line it belongs to, in a classification with several.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    part: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -170,6 +199,12 @@ pub struct ShowClassVersion {
     /// The version's validity.
     period: Period,
     value_set: ValueSetRef,
+    /// The line it belongs to, in a classification with several.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    part: Option<String>,
+    /// The versions it directly succeeds, in fqid order.
+    succeeds: Vec<String>,
     /// Whether one of `variables` uses this version.
     used: bool,
 }
@@ -817,64 +852,21 @@ fn table_variables(
 }
 
 fn class_family(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
-    let (name, description): (String, Option<String>) = conn.query_row(
-        "SELECT n.body, d.body FROM class_family f JOIN text n ON n.id = f.name_text
-           LEFT JOIN text d ON d.id = f.description_text
-         WHERE f.id = ?",
+    type Row = (String, String, i64, i64, i64, Option<String>);
+    let (name, description, publisher): (String, Option<String>, Option<String>) = conn.query_row(
+        "SELECT n.body, d.body, p.body FROM class_family f JOIN text n ON n.id = f.name_text
+               LEFT JOIN text d ON d.id = f.description_text
+               LEFT JOIN text p ON p.id = f.publisher_text
+             WHERE f.id = ?",
         [entity.id],
-        |row| Ok((row.get(0)?, row.get(1)?)),
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
-    let versions: Vec<(String, String, i64, i64, i64)> = rows(
+    let versions: Vec<Row> = rows(
         conn,
-        "SELECT c.pid, n.body, c.start, c.end, c.valueset_id
+        "SELECT c.pid, n.body, c.start, c.end, c.valueset_id, p.body
              FROM class_version c JOIN text n ON n.id = c.label_text
+               LEFT JOIN text p ON p.id = c.part_text
              WHERE c.family_id = ? ORDER BY c.start, c.pid",
-        [entity.id],
-        |row| {
-            Ok((
-                row.get(0)?,
-                row.get(1)?,
-                row.get(2)?,
-                row.get(3)?,
-                row.get(4)?,
-            ))
-        },
-    )?;
-    let pids: BTreeSet<String> = versions.iter().map(|v| v.0.clone()).collect();
-    let variables = class_users(server, &pids)?;
-    let versions = versions
-        .into_iter()
-        .map(|(fqid, name, start, end, valueset)| {
-            Ok(ShowClassVersion {
-                used: variables.iter().any(|v| {
-                    v.segments
-                        .iter()
-                        .any(|s| s.classification() == Some(fqid.as_str()))
-                }),
-                fqid,
-                name,
-                period: server.period(start, end),
-                value_set: shape::value_set_ref(conn, valueset)?,
-            })
-        })
-        .collect::<Result<_, Error>>()?;
-    Ok(Show::ClassFamily {
-        fqid: entity.pid.clone(),
-        name,
-        description,
-        versions,
-        variables,
-    })
-}
-
-fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
-    type Head = (String, i64, i64, i64, String, String);
-    let (name, start, end, valueset, family, family_name): Head = conn.query_row(
-        "SELECT n.body, c.start, c.end, c.valueset_id, f.pid, fam.body
-             FROM class_version c JOIN text n ON n.id = c.label_text
-               JOIN class_family f ON f.id = c.family_id
-               JOIN text fam ON fam.id = f.name_text
-             WHERE c.id = ?",
         [entity.id],
         |row| {
             Ok((
@@ -887,6 +879,66 @@ fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<
             ))
         },
     )?;
+    let mut succeeds = successions(
+        conn,
+        "WHERE s.family_id = (SELECT id FROM class_family WHERE pid = ?1)",
+        &entity.pid,
+    )?;
+    let pids: BTreeSet<String> = versions.iter().map(|v| v.0.clone()).collect();
+    let variables = class_users(server, &pids)?;
+    let versions = versions
+        .into_iter()
+        .map(|(fqid, name, start, end, valueset, part)| {
+            Ok(ShowClassVersion {
+                used: variables.iter().any(|v| {
+                    v.segments
+                        .iter()
+                        .any(|s| s.classification() == Some(fqid.as_str()))
+                }),
+                succeeds: succeeds.remove(&fqid).unwrap_or_default(),
+                fqid,
+                name,
+                period: server.period(start, end),
+                value_set: shape::value_set_ref(conn, valueset)?,
+                part,
+            })
+        })
+        .collect::<Result<_, Error>>()?;
+    Ok(Show::ClassFamily {
+        fqid: entity.pid.clone(),
+        name,
+        description,
+        publisher,
+        versions,
+        variables,
+    })
+}
+
+fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
+    type Head = (String, i64, i64, i64, String, String, Option<String>);
+    let (name, start, end, valueset, family, family_name, part): Head = conn.query_row(
+        "SELECT n.body, c.start, c.end, c.valueset_id, f.pid, fam.body, p.body
+             FROM class_version c JOIN text n ON n.id = c.label_text
+               JOIN class_family f ON f.id = c.family_id
+               JOIN text fam ON fam.id = f.name_text
+               LEFT JOIN text p ON p.id = c.part_text
+             WHERE c.id = ?",
+        [entity.id],
+        |row| {
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                row.get(3)?,
+                row.get(4)?,
+                row.get(5)?,
+                row.get(6)?,
+            ))
+        },
+    )?;
+    let succeeds = successions(conn, "WHERE s.pid = ?1", &entity.pid)?
+        .remove(&entity.pid)
+        .unwrap_or_default();
     Ok(Show::ClassVersion {
         fqid: entity.pid.clone(),
         name,
@@ -896,13 +948,43 @@ fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<
             fqid: family,
             name: family_name,
         },
+        part,
+        succeeds,
         variables: class_users(server, &BTreeSet::from([entity.pid.clone()]))?,
     })
 }
 
+/// The curated succession edges of the class versions `filter` selects (on `s`, the
+/// successor, bound to `?1`): each successor's pid with the pids it directly succeeds,
+/// in pid order.
+fn successions(
+    conn: &Connection,
+    filter: &str,
+    bound: &str,
+) -> Result<BTreeMap<String, Vec<String>>, Error> {
+    let mut out: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for (subject, object) in rows(
+        conn,
+        &format!(
+            "SELECT s.pid, o.pid FROM relation r
+                 JOIN class_version s ON s.id = r.subject_id
+                 JOIN class_version o ON o.id = r.object_id
+             {filter}
+               AND r.kind = 'continues' AND r.subject_kind = 'class_version'
+               AND r.object_kind = 'class_version'
+             ORDER BY s.pid, o.pid"
+        ),
+        [bound],
+        |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)),
+    )? {
+        out.entry(subject).or_default().push(object);
+    }
+    Ok(out)
+}
+
 /// Every classification with a version, or on a data holder's catalog those with a row in a placement
 /// the holder holds. Both origins are read by family pid, the way the root reads
-/// providers.
+/// providers; the first origin's family wins whole, versions included.
 fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
     let origins = segments::origins(server, server.catalog.connect()?)?;
     let steward = server.catalog.steward().is_some();
@@ -910,8 +992,9 @@ fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
     for conn in &origins {
         let found = rows(
             conn,
-            "SELECT f.pid, n.body, count(*), min(c.start), max(c.end)
+            "SELECT f.pid, n.body, d.body, count(*), min(c.start), max(c.end)
                  FROM class_family f JOIN text n ON n.id = f.name_text
+                   LEFT JOIN text d ON d.id = f.description_text
                    JOIN class_version c ON c.family_id = f.id
                  GROUP BY f.id",
             [],
@@ -919,12 +1002,38 @@ fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
                 Ok(ShowClassFamilyRef {
                     fqid: row.get(0)?,
                     name: row.get(1)?,
-                    version_count: row.get(2)?,
-                    period: server.period(row.get(3)?, row.get(4)?),
+                    description: row.get(2)?,
+                    version_count: row.get(3)?,
+                    period: server.period(row.get(4)?, row.get(5)?),
+                    versions: Vec::new(),
                 })
             },
         )?;
-        for family in found {
+        let mut versions: BTreeMap<String, Vec<ShowClassFamilyVersion>> = BTreeMap::new();
+        for (family, version) in rows(
+            conn,
+            "SELECT f.pid, c.pid, n.body, c.start, c.end, p.body
+                 FROM class_version c JOIN class_family f ON f.id = c.family_id
+                   JOIN text n ON n.id = c.label_text
+                   LEFT JOIN text p ON p.id = c.part_text
+                 ORDER BY f.pid, c.start, c.pid",
+            [],
+            |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    ShowClassFamilyVersion {
+                        fqid: row.get(1)?,
+                        name: row.get(2)?,
+                        period: server.period(row.get(3)?, row.get(4)?),
+                        part: row.get(5)?,
+                    },
+                ))
+            },
+        )? {
+            versions.entry(family).or_default().push(version);
+        }
+        for mut family in found {
+            family.versions = versions.remove(&family.fqid).unwrap_or_default();
             families.entry(family.fqid.clone()).or_insert(family);
         }
     }

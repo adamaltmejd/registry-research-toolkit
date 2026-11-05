@@ -31,6 +31,10 @@
     "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "q"}
   },
   {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "compare"}
+  },
+  {
     "status": 409,
     "json": {
       "/error/code": "ambiguous_ref",

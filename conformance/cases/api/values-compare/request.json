@@ -1,0 +1,25 @@
+{
+  "note": "Fails if `values` with `compare` stops being the code set difference from `compare` to `classification`: a kept code with a new label must be `relabelled` (not removed and added), a removed code keeps its old label in `previous_label`, and items run added, then removed, then relabelled, by code within each, across pages, with `counts` over the whole comparison. Oracle: the webapp-dev fixture's code lists, inputs/codes/niva-2000.csv (1, 2, 3, 9) and niva-2020.csv (1, 2 and 3 relabelled, 4, 6).",
+  "fixture": "webapp-dev",
+  "requests": [
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {
+        "classification": "class/demo-utb/v2020-niva",
+        "compare": "class/demo-utb/v2000-niva",
+        "limit": 3
+      }
+    },
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {
+        "classification": "class/demo-utb/v2020-niva",
+        "compare": "class/demo-utb/v2000-niva",
+        "limit": 3
+      },
+      "cursor_from": [0, "/data/next_cursor"]
+    }
+  ]
+}

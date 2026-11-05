@@ -107,3 +107,15 @@ kind = "set"
 subject = "var:kommun"
 fields.description = "Uppgift om personen vid årets slut."
 evidence = "Both members state one description, so the set summary sends it as the set's."
+
+[[statement]]
+kind = "set"
+subject = "bas: Utbniva @2019"
+fields.classification = "class/demo-utb/v2000-niva"
+evidence = "Utbildningsnivå follows the 2000 level edition until 2019."
+
+[[statement]]
+kind = "set"
+subject = "bas: Utbniva @2020..2022"
+fields.classification = "class/demo-utb/v2020-niva"
+evidence = "Utbildningsnivå follows the 2020 level edition from 2020."
