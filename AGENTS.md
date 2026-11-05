@@ -12,11 +12,12 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `project_data.json` contract and structural validator, the FQID and period grammars),
   `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
   `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
-  `reg-core-wasm` (`reg-core` for the SPA), and the catalog builder: `reg-frame`,
-  `reg-readers`, `reg-resolve` and `reg-build`, with its reader config, curation and id
-  ledgers under `curation/`. `xtask` is repository and release tooling
-  (`cargo xtask gh-issue`, `scope-check`, `release-base-reuse`, `gen-case-folding`,
-  `search-eval`) and the repo-policy lints; it is not released.
+  `reg-core-wasm` (`reg-core` for the SPA), `reg-mock` (local mock data,
+  `reg-meta mock`), and the catalog builder: `reg-frame`, `reg-readers`, `reg-resolve`
+  and `reg-build`, with its reader config, curation and id ledgers under `curation/`.
+  `xtask` is repository and release tooling (`cargo xtask gh-issue`, `scope-check`,
+  `release-base-reuse`, `gen-case-folding`, `search-eval`) and the repo-policy lints; it
+  is not released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's
