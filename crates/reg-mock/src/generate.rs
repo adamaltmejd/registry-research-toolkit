@@ -109,6 +109,9 @@ pub struct Table {
 
 /// The years the population must cover: every file's and column's years, or the
 /// demography's last year when every file is timeless.
+/// The years a spec may hold.
+const YEARS: (i32, i32) = (1900, 2100);
+
 fn window(spec: &Spec) -> (i32, i32) {
     let years = spec.files.iter().flat_map(|f| {
         f.years
@@ -142,6 +145,26 @@ pub fn generate(
             "--persons",
             format!("more than {MAX_PERSONS} persons needs --allow-large"),
         ));
+    }
+    // The years the demography can be stretched to; outside them a spec is a typo.
+    let years = spec.files.iter().flat_map(|f| {
+        f.years
+            .iter()
+            .map(move |y| (y, f.name.clone()))
+            .chain(f.columns.iter().flat_map(move |c| {
+                c.years
+                    .iter()
+                    .map(move |y| (y, format!("{}/{}", f.name, c.name)))
+            }))
+    });
+    for (year, at) in years {
+        if !(YEARS.0..=YEARS.1).contains(year) {
+            return Err(Refusal::new(
+                "year_invalid",
+                at,
+                format!("a year outside {}–{}", YEARS.0, YEARS.1),
+            ));
+        }
     }
     let (first, last) = window(spec);
     let population = Population::simulate(&Demography::embedded(), seed, persons, first, last);
@@ -234,7 +257,13 @@ fn rows(
                 {
                     let rate = column.null_rate.unwrap_or(spec.null_rate);
                     let value = cell(file, column, *kind, pool, unit, rate, crng)?;
-                    // A supplied code or mapped value no wider than the held storage.
+                    // A supplied code or mapped value within the held storage: an
+                    // integer in its range, a text no wider.
+                    if let (Cell::Int(n), Some((min, max))) = (&value, int_range(column))
+                        && !(min..=max).contains(n)
+                    {
+                        return Err(not_numeric(format!("{}/{}", file.name, column.name)));
+                    }
                     let width = column.storage.as_ref().and_then(|s| s.length);
                     if let (Cell::Text(text), Some(width)) = (&value, width)
                         && width > 0
@@ -348,12 +377,25 @@ fn cell(
         .and_then(|s| s.length)
         .or(column.length);
     // A narrow integer storage keeps the delivery's range, though it is written as int32.
-    let ceiling = match column.storage.as_ref().and_then(|s| s.dtype.as_deref()) {
-        Some(t) if t.eq_ignore_ascii_case("tinyint") => 255.0,
-        Some(t) if t.eq_ignore_ascii_case("smallint") => 32_767.0,
-        _ => 2_000_000_000.0,
-    };
+    #[allow(clippy::cast_precision_loss)]
+    let ceiling = int_range(column).map_or(2_000_000_000.0, |(_, max)| max as f64);
     Ok(drawn(kind, length, ceiling, unit.year, rng))
+}
+
+/// The held integer storage's range, which the runner writes as int32 or int64.
+fn int_range(column: &SpecColumn) -> Option<(i64, i64)> {
+    let sql = column
+        .storage
+        .as_ref()?
+        .dtype
+        .as_deref()?
+        .to_ascii_lowercase();
+    Some(match sql.as_str() {
+        "tinyint" => (0, 255),
+        "smallint" => (i64::from(i16::MIN), i64::from(i16::MAX)),
+        "int" => (i64::from(i32::MIN), i64::from(i32::MAX)),
+        _ => return None,
+    })
 }
 
 fn not_numeric(at: String) -> Refusal {
@@ -428,11 +470,14 @@ fn attribute_cell(
                 .copied()
                 .filter(|c| c.len() == 4 && c.starts_with(county))
                 .collect();
-            let pool = if local.is_empty() {
+            let mut pool = if local.is_empty() {
                 codes.to_vec()
             } else {
                 local
             };
+            // Sorted, so columns listing the same codes in another order agree.
+            pool.sort_unstable();
+            pool.dedup();
             if pool.is_empty() {
                 // simplify: without a value set, the county seat (`<county>80` in every
                 // county); embed SCB's municipality list if analyses need the spread.
