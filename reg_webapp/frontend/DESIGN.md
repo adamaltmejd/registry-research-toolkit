@@ -651,10 +651,10 @@ Time is the axis every relation is drawn on.
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
   `Timeline`, and a page with several sources draws them on one axis. The axis of a
   `LaneGraph` (the `Timeline` and source timelines), a code timeline and a `VariableRow`
-  list labels its first and last year (maintainer 2026-11-05). On a `LaneGraph` a window
-  bound whose label would touch an end's hangs away from that end; the last year then
-  moves from its cell's start to the track's end, and where they still touch, the
-  bound's year stands for that end.
+  list labels its first and last year, at every width (maintainer 2026-11-05). On a
+  `LaneGraph` a window bound whose label would touch an end's hangs away from that end,
+  and where they still touch, the bound's label is dropped (the window's band still marks
+  it); an end's label never moves or gives way.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no

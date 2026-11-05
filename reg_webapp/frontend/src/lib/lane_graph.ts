@@ -343,10 +343,10 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         x: x(year),
         inWindow: inWindow(year),
       }));
-  // The axis's first and last year are always labelled (maintainer
-  // 2026-11-05). A window bound whose year would touch one hangs away from
-  // that end; where they still touch, the bound, the year being set, stands
-  // for that end.
+  // The axis's first and last year are always labelled, on their cells
+  // (maintainer 2026-11-05). A window bound whose year would touch one hangs
+  // away from that end; where they still touch, the bound's label goes (the
+  // window's band still marks it), never the end's.
   type Tick = LaneGeometry["ticks"][number];
   // A label's run, anchored as LaneGraph draws it (about 7 px per mono
   // character): a joined label's whole run, not only the bound it hangs from.
@@ -382,21 +382,11 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       if (touch(end, tick)) tick.anchor = end.year === first ? "start" : "end";
     }
   }
-  // The last year sits on its cell like every year; where a bound still
-  // touches it there, it hangs left from the track's end (its cell's end).
-  const shownEnds = endTicks.flatMap((end) => {
-    const clear = (tick: Tick) =>
-      boundTicks.every((bound) => !touch(tick, bound));
-    if (clear(end)) return [end];
-    const atTrackEnd: Tick = {
-      ...end,
-      x: trackX + trackWidth,
-      anchor: "end",
-    };
-    return end.year === last && clear(atTrackEnd) ? [atTrackEnd] : [];
-  });
+  const shownBounds = boundTicks.filter((bound) =>
+    endTicks.every((end) => !touch(end, bound)),
+  );
   // A regular year gives way to every labelled bound and end.
-  const fixed = [...shownEnds, ...boundTicks];
+  const fixed = [...endTicks, ...shownBounds];
   const ticks = [
     ...tickYears(input.axis, pxPerYear)
       .filter((year) => year !== first && year !== last)
