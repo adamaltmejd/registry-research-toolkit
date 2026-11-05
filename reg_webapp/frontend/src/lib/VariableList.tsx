@@ -309,7 +309,7 @@ function useRegisterColumn(
       selectedId === selectedFqid &&
       items.some((item) => item.id === selectedId),
     empty: needle.trim()
-      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      ? `No variables match “${needle.trim()}”. Clear the search to list them all.`
       : "This register lists no variables.",
     notice: ownEmpty
       ? `No variables in ${node?.name ?? "this register"} match “${needle.trim()}”.`
@@ -381,7 +381,7 @@ function useProviderColumn(
     selectedId: null,
     selectedExact: false,
     empty: needle.trim()
-      ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
+      ? `No variables match “${needle.trim()}”. Clear the search to list them all.`
       : "This provider lists no variables.",
     error:
       resource.error || (!resource.loading && !provider)
@@ -429,7 +429,7 @@ function useClassificationColumn(
     selectedId: listed ? selectedId : null,
     selectedExact: listed && classPath === selectedId,
     empty: needle.trim()
-      ? `No classifications match “${needle.trim()}”. Press Escape to clear the search.`
+      ? `No classifications match “${needle.trim()}”. Clear the search to list them all.`
       : "The catalog has no classifications.",
     error:
       !families.loading && families.value === null
