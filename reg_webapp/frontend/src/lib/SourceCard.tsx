@@ -222,32 +222,40 @@ export function SourceCard({
             </div>
           )}
           {pinned && (
-            <div className={styles.controls}>
-              <Select
-                label="Classification"
-                aria-label={`Classification for ${name} in ${tableName}`}
-                value={binding.classification ?? ""}
-                options={[
-                  { id: "", name: "Not pinned" },
-                  ...pinOptions.map((ref) => ({
-                    id: ref,
-                    name: `${names.get(ref) ?? "Classification name unavailable"}${!candidates.includes(ref) ? " (not delivered in this period)" : ""}`,
-                  })),
-                ]}
-                onChange={(ref) => {
-                  const changed = edit(
-                    pinClassification(
-                      draft,
-                      sourceIndex,
-                      bindingIndex,
-                      ref || null,
-                    ),
-                  );
-                  // Clearing the pin can remove this select with its finding.
-                  if (changed && !ref)
-                    focusAfterRemoval([() => heading.current]);
-                }}
-              />
+            <div className={styles.controls} aria-busy={loading || undefined}>
+              {/* The names come from the card's own rows, so until they land a
+                pinned version has none: a placeholder, not a failure. */}
+              {loading ? (
+                <NameSkeleton label="Loading classification names" />
+              ) : (
+                <Select
+                  label="Classification"
+                  aria-label={`Classification for ${name} in ${tableName}`}
+                  value={binding.classification ?? ""}
+                  options={[
+                    { id: "", name: "Not pinned" },
+                    ...pinOptions.map((ref) => ({
+                      id: ref,
+                      // `catalogNames` names a version from the rows already
+                      // read, or by its id, never with a `show` per version.
+                      name: `${names.get(ref) ?? ref}${!candidates.includes(ref) ? " (not delivered in this period)" : ""}`,
+                    })),
+                  ]}
+                  onChange={(ref) => {
+                    const changed = edit(
+                      pinClassification(
+                        draft,
+                        sourceIndex,
+                        bindingIndex,
+                        ref || null,
+                      ),
+                    );
+                    // Clearing the pin can remove this select with its finding.
+                    if (changed && !ref)
+                      focusAfterRemoval([() => heading.current]);
+                  }}
+                />
+              )}
             </div>
           )}
           {findings.length > 0 && (

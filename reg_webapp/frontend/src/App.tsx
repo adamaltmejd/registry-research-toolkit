@@ -10,7 +10,6 @@ import {
 import { BrowseTree } from "./lib/BrowseTree";
 import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
-import { ClassificationView } from "./lib/ClassificationView";
 import {
   registerOfPath,
   routeBreadcrumbs,
@@ -160,13 +159,6 @@ function RoutedView({
       // repeat it.
       return <h1 className="visually-hidden">Data browser</h1>;
     case "catalog-node":
-      if (route.fqidPath === "class" || route.fqidPath.startsWith("class/")) {
-        return route.fqidPath.split("/").length === 3 ? (
-          <ClassificationView key={route.fqidPath} fqidPath={route.fqidPath} />
-        ) : (
-          <NotFound path={`/catalog/${route.fqidPath}`} />
-        );
-      }
       return (
         <CatalogNodeView
           key={route.fqidPath}

@@ -27,7 +27,12 @@ export function useSelectionBar(
     const place = () => {
       frame = 0;
       const bar = barRef.current;
-      if (!bar) return;
+      // No bar (ColumnList's virtualized list): the rows draw their own.
+      if (!bar) {
+        delete box.dataset.selectionBar;
+        last = null;
+        return;
+      }
       box.dataset.selectionBar = "";
       const row = box.querySelector<HTMLElement>(
         '[role="option"][data-selected], [role="row"][data-selected]',

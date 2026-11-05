@@ -26,7 +26,10 @@ export function ProviderView({
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
   const registers = sortedRegisters(node.registers).map((register) => ({
     register,
-    years: datedYearRuns([register], bounds),
+    years: datedYearRuns(
+      register.periods.map((period) => ({ period })),
+      bounds,
+    ),
   }));
   const axis = dataAxis(
     registers.flatMap(({ years }) =>

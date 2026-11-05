@@ -12,8 +12,11 @@ import {
   Header,
   ListBox,
   ListBoxItem,
+  type ListBoxRenderProps,
   ListBoxSection,
+  ListLayout,
   type Selection,
+  Virtualizer,
 } from "react-aria-components";
 import { router } from "../router";
 import styles from "./ColumnList.module.css";
@@ -56,6 +59,10 @@ interface Props {
   root?: string;
   /** Null while the items load. */
   sections: readonly ColumnSection[] | null;
+  /** How many rows the list holds with no search. Over VIRTUALIZE_OVER it
+   * renders only the rows in view, searching or not, so a search never
+   * switches it between the two and remounts it (focus would drop). */
+  size: number;
   /** The item whose page is open, or null. */
   selectedId: string | null;
   /** True when that page is the item's own, not one under it. */
@@ -76,6 +83,36 @@ interface Props {
  * type-ahead letter) moves focus, and selection with it. */
 const OPEN_KEYS = new Set(["Enter", " "]);
 
+// Over this many rows the list renders only the rows in view: a provider's
+// page lists every variable of its registers (4,378 on /catalog/scb), which
+// took seconds to paint whole, and the global catalog's largest registers
+// pass it too (ULF, FRIDA, HEK). Below it every row renders, so find-in-page
+// works (DESIGN.md → ColumnList).
+const VIRTUALIZE_OVER = 1500;
+
+// Row and header heights the layout starts from, then measures: a header
+// wraps, so heights differ.
+const LAYOUT_OPTIONS = { estimatedRowHeight: 29, estimatedHeadingHeight: 31 };
+
+// Keeps a focused virtualized row in view until it stops moving: rows are
+// measured only once rendered (names wrap), and each measurement moves the
+// rows after it.
+function revealAfterLayout(row: HTMLElement): void {
+  // simplify: a frame loop capped at 30 frames (half a second); revisit if
+  // RAC's layout gains a settle callback.
+  let frames = 0;
+  let lastTop = Number.NaN;
+  const step = () => {
+    if (!row.isConnected || document.activeElement !== row) return;
+    row.scrollIntoView({ block: "nearest" });
+    const top = row.getBoundingClientRect().top;
+    if (top === lastTop || ++frames >= 30) return;
+    lastTop = top;
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
  * items, the current page's selected. Selection follows the arrow keys and a
@@ -88,6 +125,7 @@ export function ColumnList({
   subject,
   root,
   sections,
+  size,
   selectedId,
   selectedExact,
   renderName,
@@ -101,6 +139,55 @@ export function ColumnList({
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
   const items = sections?.flatMap((s) => s.items) ?? null;
+  const virtual = size > VIRTUALIZE_OVER;
+  // The ListBox's state, read from its className render prop.
+  const listState = useRef<ListBoxRenderProps["state"] | null>(null);
+  // A virtualized list renders only the rows in view, plus the focused key's
+  // row wherever it is. So the selected row is made the focused key whenever
+  // the list does not hold focus: every way back in (→ from the register
+  // column via focusBrowseColumn, Tab, the refocus below) then finds it in the
+  // DOM, as in a list rendered whole. Set as focus leaves the column (a
+  // type-ahead moved the focused key off the selected row), and as the
+  // selection or the list changes while focus is elsewhere (a fresh load, a
+  // re-root, a search cleared); never while the list holds focus, so a
+  // type-ahead's focus is not pulled back.
+  const persistSelected = (): void => {
+    const manager = listState.current?.selectionManager;
+    if (!virtual || !manager || selectedId === null) return;
+    if (manager.focusedKey !== selectedId) manager.setFocusedKey(selectedId);
+  };
+  // Run from the ListBox's ref, not an effect: RAC mounts the list's state in
+  // a commit of its own, after this component's effects, and fills its
+  // collection later still (a fresh load). A focused key not yet in the
+  // collection is dropped, so wait for the options to render.
+  const persisted = useRef<[unknown, string | null]>([null, null]);
+  const onListRef = (element: HTMLDivElement | null) => {
+    if (!element || !virtual || selectedId === null) return;
+    const tryPersist = (): boolean => {
+      const state = listState.current;
+      if (!state || !state.collection.getItem(selectedId)) return false;
+      const [lastState, lastId] = persisted.current;
+      if (lastState === state && lastId === selectedId) return true;
+      persisted.current = [state, selectedId];
+      if (!state.selectionManager.isFocused) persistSelected();
+      return true;
+    };
+    if (tryPersist()) return;
+    const observer = new MutationObserver(() => {
+      if (tryPersist()) observer.disconnect();
+    });
+    observer.observe(element, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  };
+  function onBlurCapture(event: FocusEvent): void {
+    const to = event.relatedTarget;
+    if (!virtual || (to instanceof Node && event.currentTarget.contains(to)))
+      return;
+    // This capture handler runs before RAC's own blur: unfocus the list
+    // first, or RAC focuses the new focused key's row and pulls focus back.
+    listState.current?.selectionManager.setFocused(false);
+    persistSelected();
+  }
   // Set while a key that walks the list is down: a leaving row opens on a
   // click, Enter or Space, not as the arrows or type-ahead pass it.
   const walking = useRef(false);
@@ -111,11 +198,21 @@ export function ColumnList({
   // selected row or the first own one, until the reader next presses a key
   // or the pointer.
   const refocus = useRef<string | null>(null);
+  const revealed = useRef<string | null>(null);
   useEffect(() => {
     if (refocus.current === null || refocus.current === root) return;
     const target = selectedId ?? items?.find((i) => !i.leaves)?.id;
     const box = boxRef.current;
     if (target === undefined || !box) return;
+    // The opened row keeps focus as the list re-roots (the same key, or the
+    // row focused below), but in a virtualized list the layout then places it
+    // where the list is not scrolled to: bring it into view, once per root,
+    // after the layout's own pass.
+    const reveal = (row: HTMLElement) => {
+      if (revealed.current === root) return;
+      revealed.current = root ?? null;
+      revealAfterLayout(row);
+    };
     // RAC commits a collection's options in a pass of its own, after this
     // effect, so the target row may not exist yet: wait for it to appear.
     const tryFocus = (): boolean => {
@@ -125,12 +222,23 @@ export function ColumnList({
         box.contains(active) &&
         items?.some((i) => i.leaves && i.id === active.dataset.key);
       if (refocus.current === null) return true;
-      if (active !== document.body && !leavingFocused) return true;
+      if (active !== document.body && !leavingFocused) {
+        if (active instanceof HTMLElement && active.dataset.key === target)
+          reveal(active);
+        return true;
+      }
       const row = box.querySelector<HTMLElement>(
         `[role="option"][data-key="${CSS.escape(target)}"]`,
       );
-      row?.focus();
-      return row !== null;
+      // A virtualized list renders a row out of view once it is the focused
+      // key (see `persisted` above).
+      const manager = listState.current?.selectionManager;
+      if (row === null && virtual && manager && manager.focusedKey !== target)
+        manager.setFocusedKey(target);
+      if (row === null) return false;
+      row.focus();
+      reveal(row);
+      return true;
     };
     if (tryFocus()) return;
     const observer = new MutationObserver(() => {
@@ -165,6 +273,11 @@ export function ColumnList({
   }, []);
 
   function onFocusCapture(event: FocusEvent): void {
+    // Every focus change in a virtualized list (arrival, the arrows, Home,
+    // End, Page keys, type-ahead): RAC and the browser scroll the row into
+    // view at its estimated place, then measuring the rows passed moves it.
+    const row = event.target;
+    if (virtual && row instanceof HTMLElement) revealAfterLayout(row);
     const from = event.relatedTarget;
     if (
       pressing.current ||
@@ -189,6 +302,7 @@ export function ColumnList({
     // Two rows can open one page (a variable that is several group members).
     if (item !== undefined && item.href !== current?.href) {
       refocus.current = item.leaves ? (root ?? null) : null;
+      revealed.current = null;
       router.navigate(item.href);
     }
   }
@@ -214,6 +328,21 @@ export function ColumnList({
     }
   }
 
+  // RAC's virtualized options carry an aria-posinset counted from the section's
+  // header and an aria-setsize of the whole list ("2 of 4378" on the first
+  // row): state each row's place in its own section instead. The Collection's
+  // items change whenever this does, so it needs no dependency of its own.
+  const place = virtual
+    ? new Map(
+        sections?.flatMap((section) =>
+          section.items.map((item, at) => [
+            item.id,
+            [at + 1, section.items.length] as const,
+          ]),
+        ),
+      )
+    : null;
+
   const option = (item: ColumnItem) => (
     <ListBoxItem
       key={item.id}
@@ -225,6 +354,8 @@ export function ColumnList({
         <div
           // Items carry no href, so RAC renders a div, never a link.
           {...(props as ComponentProps<"div">)}
+          aria-posinset={place?.get(item.id)?.[0] ?? props["aria-posinset"]}
+          aria-setsize={place?.get(item.id)?.[1] ?? props["aria-setsize"]}
           aria-current={
             item.id !== selectedId ? undefined : selectedExact ? "page" : "true"
           }
@@ -234,6 +365,54 @@ export function ColumnList({
       <span className={styles.name}>{renderName(item)}</span>
       <InProjectMark count={item.inProject} />
     </ListBoxItem>
+  );
+
+  const list = sections !== null && (
+    <ListBox
+      ref={onListRef}
+      aria-labelledby={labelId}
+      className={({ state }) => {
+        listState.current = state;
+        return virtual ? `${styles.list} ${styles.virtual}` : styles.list;
+      }}
+      selectionMode="single"
+      selectionBehavior="replace"
+      disallowEmptySelection
+      selectedKeys={selectedId === null ? [] : [selectedId]}
+      onSelectionChange={onSelectionChange}
+    >
+      {/* A flat list is plain options; only labelled runs get a section
+      (an unnamed group would be noise to a screen reader). */}
+      {sections.map((section, index) =>
+        section.label === null ? (
+          <Collection
+            key={section.id}
+            items={section.items}
+            dependencies={[renderName, selectedId, selectedExact]}
+          >
+            {option}
+          </Collection>
+        ) : (
+          section.items.length > 0 && (
+            <ListBoxSection key={section.id} id={section.id}>
+              <Header
+                className={styles.register}
+                title={section.label}
+                data-first={index === 0 || undefined}
+              >
+                {section.label}
+              </Header>
+              <Collection
+                items={section.items}
+                dependencies={[renderName, selectedId, selectedExact]}
+              >
+                {option}
+              </Collection>
+            </ListBoxSection>
+          )
+        ),
+      )}
+    </ListBox>
   );
 
   return (
@@ -248,6 +427,7 @@ export function ColumnList({
         walking.current = false;
       }}
       onFocusCapture={onFocusCapture}
+      onBlurCapture={onBlurCapture}
       onPointerDownCapture={() => {
         walking.current = false;
         pressing.current = true;
@@ -263,7 +443,10 @@ export function ColumnList({
         </span>
       </div>
       {/* The scroll box: the list and the column's one selection bar. */}
-      <div ref={boxRef} className={styles.scroller}>
+      <div
+        ref={boxRef}
+        className={`${styles.scroller} ${virtual ? styles.virtualScroller : ""}`}
+      >
         {error !== null ? (
           <StatusRow tone="error" live="alert" className={styles.error}>
             {error}
@@ -277,56 +460,26 @@ export function ColumnList({
             {notice !== null && <p className={styles.note}>{notice}</p>}
             {items?.length === 0 ? (
               <p className={styles.note}>{empty}</p>
+            ) : virtual ? (
+              <Virtualizer layout={ListLayout} layoutOptions={LAYOUT_OPTIONS}>
+                {list}
+              </Virtualizer>
             ) : (
-              <ListBox
-                aria-labelledby={labelId}
-                className={styles.list}
-                selectionMode="single"
-                selectionBehavior="replace"
-                disallowEmptySelection
-                selectedKeys={selectedId === null ? [] : [selectedId]}
-                onSelectionChange={onSelectionChange}
-              >
-                {/* A flat list is plain options; only labelled runs get a section
-              (an unnamed group would be noise to a screen reader). */}
-                {sections.map((section) =>
-                  section.label === null ? (
-                    <Collection
-                      key={section.id}
-                      items={section.items}
-                      dependencies={[renderName, selectedId, selectedExact]}
-                    >
-                      {option}
-                    </Collection>
-                  ) : (
-                    section.items.length > 0 && (
-                      <ListBoxSection key={section.id} id={section.id}>
-                        <Header
-                          className={styles.register}
-                          title={section.label}
-                        >
-                          {section.label}
-                        </Header>
-                        <Collection
-                          items={section.items}
-                          dependencies={[renderName, selectedId, selectedExact]}
-                        >
-                          {option}
-                        </Collection>
-                      </ListBoxSection>
-                    )
-                  ),
-                )}
-              </ListBox>
+              list
             )}
           </>
         )}
-        <span
-          ref={barRef}
-          className={styles.selectionBar}
-          aria-hidden="true"
-          hidden
-        />
+        {/* A virtualized list's rows sit in the layout's own positioned
+        wrappers, out of the bar's reach: there the selected row draws its
+        own bar. */}
+        {!virtual && (
+          <span
+            ref={barRef}
+            className={styles.selectionBar}
+            aria-hidden="true"
+            hidden
+          />
+        )}
       </div>
     </nav>
   );

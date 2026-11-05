@@ -252,8 +252,7 @@ attribute and nothing else. Do not pre-build it; design so that it stays that sm
 The site is a steward site (SWECOV now, IFAU next) and shows only what its steward
 holds. Screens use the researcher's words, never the catalog's internal model
 (maintainer 2026-11-04, #2066). The steward's own name, description and order
-instructions come from `/api/context`, never from code. Some screens still use the old
-words; the slices in `SPA-REDESIGN.md` bring them in line.
+instructions come from `/api/context`, never from code.
 
   | Say                                                              | Not                                    |
   | ---------------------------------------------------------------- | -------------------------------------- |
@@ -268,7 +267,7 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Group                                                            | groups, part of                        |
   | Notes on this data                                               | findings, data warnings                |
   | Row identifier                                                   | row keys                               |
-  | Who is included                                                  | populations                            |
+  | Classification, version                                          | class family, vintage                  |
   | Table (in a project)                                             | source                                 |
   | Column, variable                                                 | binding                                |
   | Check                                                            | draft check, catalog check             |
@@ -284,8 +283,10 @@ catalog does not state has no pill. The SPA never edits a project's type: a proj
 states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
-source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
-stated has no row. A yes/no fact (identifier, sensitive) shows only when yes.
+source and provenance, timeless, implicit, cadence, edition, primary, populations,
+releases, and a table's row keys (the catalog marks every identifier column as one;
+Operator Q2, #2252). A fact that is not stated has no row. A yes/no fact (identifier,
+sensitive) shows only when yes.
 
 ## Colors
 
@@ -396,52 +397,59 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   Registers grouped under sticky provider headers, by name in Swedish collation, the
   order every list of a provider's registers uses (maintainer 2026-11-05), then the
   selected register's or group's variables, one name per row with no period under it
-  (maintainer 2026-11-04), then the detail pane capped at `content-max`. The two columns
-  grow with the viewport from `col-browse` and `col-list` to `col-browse-max` and
-  `col-list-max`, and the whole shell is capped at `shell-max` and centred, so a wide
-  screen gets wider lists, not a stranded pane. The variables column is always there:
-  before a register is chosen it holds an empty state ("Choose a register to list its
-  variables."). The register column appears whole or not at all, never with a provider
-  still loading (#2232). The two column headers share one height, so their rules line
-  up. Every group is open by default; a header triangle collapses it, pressing a
-  collapsed group's row opens it (and its page) but never closes it (maintainer
-  2026-11-05), the column header offers one toggle that reads "Collapse all" while any
-  group is open and "Expand all" once all are closed, and collapse state is remembered
-  per user. A group's items are indented `spacing.3` from the group's label, not a full
-  column (toggle and indent maintainer-decided 2026-10-22). A group header is the
-  `label` level at weight 500 in `text-muted` on `bg`, its disclosure a small
-  `text-faint` triangle turned −90° when closed, with no rule under it. Rows are
-  selectable options, not links. On a variable or group page its register's row stays
-  selected, and pressing it opens the register. Selection moves with arrow keys across
-  columns, and selecting a row opens its page; type-ahead moves focus only, and focus
-  arriving in a column from outside it (Tab, →) lands on a row but opens nothing. Left
-  on a group header collapses it, Right expands it; Right on a register row, or on the
-  open provider row of a provider's page, moves to the variables column, and Left there
-  moves back. Collapsing a group never changes the selection: the detail pane keeps its
-  page, and keyboard focus moves to the group row. On a provider's page the second
-  column lists every variable of its registers, one section per register under the
-  register's name, in that column's order (maintainer 2026-11-05), name hits first while
-  searching; the search filters each section as it filters a register's list, so a
-  section lists the matches its register row counts, and drops a register with no match.
-  Its rows open on a click, Enter or Space, not as the arrows pass (they re-root the
-  list under the variable's register), and focus stays on the opened row. For a register
-  the second column is flat, a concept group folded to one item (#303) that opens the
-  group's page, sorted by name in Swedish collation with no special ordering, the group
-  by its own name; while searching, the group stands at its best-matching member's place
-  and its row names the one member that matched ("person: Kommun"), or counts several
-  ("Inkomstmått: 4 matching"), the visible text and the accessible name the same. A
-  provider's list does not fold. On a group's page (or a member's, which shows that
-  page) the same list stays and the group's row is selected. The members are lanes on
-  that page, not rows in the column. A browse column fills the viewport below the top
-  bar and scrolls its own list. Every item and group carries its in-project mark on the
-  right when it has one. Below the single narrow breakpoint (`breakpoint-narrow`, 60rem:
-  narrower, the two columns leave the detail pane under 400px, #2107) the columns stack,
-  one at a time; the way back is the breadcrumb's first crumb, "Browse registers", drawn
-  as a `default` button on its own line above the trail so it reads as an action, not a
-  path segment (#1824). Every page's trail leads with it below the breakpoint (and only
-  there: beside the columns it would repeat them), and it opens the register list; while
-  the search holds text it reads "Show matching registers", since the list the search
-  filters is off screen. Do not mint new breakpoints.
+  (maintainer 2026-11-04), then the detail pane capped at `content-max`. Below the
+  providers, under a `border-strong` rule, a "Classifications" group lists the
+  classifications by name in Swedish collation (maintainer 2026-11-05): the same group
+  row and leaf rows as a provider's, pressing the group opens the list of
+  classifications, a leaf opens its page. On a steward site the server lists only those
+  the steward's variables use, and with none the group and its rule are not drawn. The
+  search filters them by name as it filters registers, but the column's count names
+  registers only. The two columns grow with the viewport from `col-browse` and
+  `col-list` to `col-browse-max` and `col-list-max`, and the whole shell is capped at
+  `shell-max` and centred, so a wide screen gets wider lists, not a stranded pane. The
+  variables column is always there: before a register is chosen it holds an empty state
+  ("Choose a register to list its variables."). The register column appears whole or not
+  at all, never with a provider still loading (#2232). The two column headers share one
+  height, so their rules line up. Every group is open by default; a header triangle
+  collapses it, pressing a collapsed group's row opens it (and its page) but never
+  closes it (maintainer 2026-11-05), the column header offers one toggle that reads
+  "Collapse all" while any group is open and "Expand all" once all are closed, and
+  collapse state is remembered per user. A group's items are indented `spacing.3` from
+  the group's label, not a full column (toggle and indent maintainer-decided
+  2026-10-22). A group header is the `label` level at weight 500 in `text-muted` on
+  `bg`, its disclosure a small `text-faint` triangle turned −90° when closed, with no
+  rule under it. Rows are selectable options, not links. On a variable or group page its
+  register's row stays selected, and pressing it opens the register. Selection moves
+  with arrow keys across columns, and selecting a row opens its page; type-ahead moves
+  focus only, and focus arriving in a column from outside it (Tab, →) lands on a row but
+  opens nothing. Left on a group header collapses it, Right expands it; Right on a
+  register row, or on the open provider row of a provider's page, moves to the variables
+  column, and Left there moves back. Collapsing a group never changes the selection: the
+  detail pane keeps its page, and keyboard focus moves to the group row. On a provider's
+  page the second column lists every variable of its registers, one section per register
+  under the register's name, in that column's order (maintainer 2026-11-05), name hits
+  first while searching; the search filters each section as it filters a register's
+  list, so a section lists the matches its register row counts, and drops a register
+  with no match. Its rows open on a click, Enter or Space, not as the arrows pass (they
+  re-root the list under the variable's register), and focus stays on the opened row.
+  For a register the second column is flat, a concept group folded to one item (#303)
+  that opens the group's page, sorted by name in Swedish collation with no special
+  ordering, the group by its own name; while searching, the group stands at its
+  best-matching member's place and its row names the one member that matched ("person:
+  Kommun"), or counts several ("Inkomstmått: 4 matching"), the visible text and the
+  accessible name the same. A provider's list does not fold. On a group's page (or a
+  member's, which shows that page) the same list stays and the group's row is selected.
+  The members are lanes on that page, not rows in the column. A browse column fills the
+  viewport below the top bar and scrolls its own list. Every item and group carries its
+  in-project mark on the right when it has one. Below the single narrow breakpoint
+  (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
+  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
+  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
+  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
+  below the breakpoint (and only there: beside the columns it would repeat them), and it
+  opens the register list; while the search holds text it reads "Show matching
+  registers", since the list the search filters is off screen. Do not mint new
+  breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -462,25 +470,25 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   dialog, popover, the palette or another text field has focus (#1827). The command
   palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for registers,
   variables (with their register) and the app's places ("Go to the project", "Browse the
-  data", "Go to the start page"); classifications are reached through their variables
-  (Operator 2026-11-04). Each kind is one request for its first four hits, and the
-  palette follows no cursor. On a steward site the answer holds two lists ranked apart,
-  the catalog's `items` and the steward's own `steward.items`: the palette lists the
-  catalog's hits, then the steward's, each in the server's order, a place listed once.
-  The two ranks never merge; a list that pages follows each list's own cursor (`cursor`,
-  `steward_cursor`) (#2110). Its results are a mixed list and carry a `TypeTag`. It is a
-  list under the field with no field of its own: the top-bar field is its one input, so
-  focus stays there, the arrow keys move through the rows, and typing goes on filtering
-  the columns. A second field in the popover showed the same text twice (maintainer
-  report 2026-10-24). The 2026-10-22 ruling had the palette "seeded with the field's
-  text" (maintainer-decided 2026-10-22). It still opens with that text, but the text no
-  longer stays behind: choosing a row puts the browse filter back to its value from just
-  before the palette opened, and folds the narrow field if that value is empty, so the
-  brand comes back. This is a deliberate change from that ruling (Operator 2026-10-24).
-  Focus leaving the field for anything outside the palette closes it. Below the
-  breakpoint it is as wide as the unfolded field. Escape closes the palette first, then
-  clears the text, then folds the narrow field; Tab or a press outside closes the
-  palette.
+  data", "Go to the start page"); classifications are browsed in the register column,
+  not searched (Operator 2026-11-04, maintainer 2026-11-05). Each kind is one request
+  for its first four hits, and the palette follows no cursor. On a steward site the
+  answer holds two lists ranked apart, the catalog's `items` and the steward's own
+  `steward.items`: the palette lists the catalog's hits, then the steward's, each in the
+  server's order, a place listed once. The two ranks never merge; a list that pages
+  follows each list's own cursor (`cursor`, `steward_cursor`) (#2110). Its results are a
+  mixed list and carry a `TypeTag`. It is a list under the field with no field of its
+  own: the top-bar field is its one input, so focus stays there, the arrow keys move
+  through the rows, and typing goes on filtering the columns. A second field in the
+  popover showed the same text twice (maintainer report 2026-10-24). The 2026-10-22
+  ruling had the palette "seeded with the field's text" (maintainer-decided 2026-10-22).
+  It still opens with that text, but the text no longer stays behind: choosing a row
+  puts the browse filter back to its value from just before the palette opened, and
+  folds the narrow field if that value is empty, so the brand comes back. This is a
+  deliberate change from that ruling (Operator 2026-10-24). Focus leaving the field for
+  anything outside the palette closes it. Below the breakpoint it is as wide as the
+  unfolded field. Escape closes the palette first, then clears the text, then folds the
+  narrow field; Tab or a press outside closes the palette.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
@@ -492,10 +500,16 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
   already make, so the trail fetches nothing of its own; an ancestor whose name has not
   arrived is left out, never shown as its slug. A group page's trail skips the group
-  namespace, and a classification page has none. Then, on a register's or a variable's
-  page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line, facets as a
-  labelled row, the actions row, then definitions, then the `Timeline`, then the list of
-  variables or columns, "Notes on this data" (the findings, only when there are any;
+  namespace. A classification page's one ancestor is the list of classifications, so its
+  trail is "Classifications", on a version address too: that address renders the family
+  page, whose `h1` already names the family (slice 3, Q4). The list itself
+  (`/catalog/class`) has no ancestors and lists the classifications as a provider's page
+  lists its registers: one `VariableRow` per classification by name, its version count
+  after the name when it has more than one, over its versions' years. Then, on a
+  register's, table's, variable's, group's or classification's page the kind mark (its
+  `TypeTag`, with the glyph on a register or variable), `h1`, member-of line, facets as
+  a labelled row, the actions row, then definitions, then the `Timeline`, then the list
+  of variables or columns, "Notes on this data" (the findings, only when there are any;
   maintainer 2026-11-04), then source documents. A variable page has no source and
   provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
   `spacing.5`. A grouped variable has no page of its own (maintainer 2026-11-04): its
@@ -527,17 +541,41 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   provider's wording is the Description: once when every period agrees, otherwise each
   wording under its years. It sits under the facts, above the `Timeline`. Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are
-  the files and columns the steward has, over the years it has them. A table page leaves
-  out a Row keys, Populations or Releases panel with nothing to list, and Timeless or
-  Implicit when "No". Placement caveats are steward working notes, not shown until the
-  steward curates them for readers. A register page has no tables table: its tables are
-  FilterChips over the variable list, each with its period, a lens with OR within the
-  selection, offered only when two or more tables deliver variables (the archived
-  variant chips, maintainer 2026-11-03). A Tables definition row links every table's
-  page by name. A register page has no "Unplaced releases" panel (maintainer
-  2026-11-04). In steward mode a supplemental-only variable is selectable for a project
-  like a reference variable: `order` and `validate` read the composed steward view
-  (crates/DESIGN.md, "Three questions, three scopes").
+  the files and columns the steward has, over the years it has them. A table page shows
+  its `h1` name, a member-of line naming its register, its description only when stated,
+  a Years row, then its variables as `VariableRow`s on the table's own axis (the years
+  its variables have in it, not the register's), each over the years it has in this
+  table, then notes and source documents; it has no role, cadence, row-key, population
+  or release section (Operator Q2, #2252). A classification page is its family's
+  (Operator Q4, #2252): the family name as `h1`, its description only when stated, then
+  a Versions panel listing every version in start order (Q1), each with its name, its
+  years, and the steward's variables that use it as `VariableRow`s over the years their
+  columns use that version, or "No variable here uses this version." A used version is a
+  disclosure whose trigger shows its name, years and a count ("24 variables"), closed by
+  default; its rows mount only while open. A family with one used version, or at most 30
+  rows in all (about two screens), opens whole: a short list costs less to show than to
+  open version by version, and a long one (lkf: 36 used versions, ~700 rows) would
+  otherwise be a 35,000 px page. Which versions are open is local state, not in the URL.
+  A run of consecutive versions no variable uses folds into one muted line giving their
+  count and years ("9 versions, 1982–1990: …"; a lone version keeps its name), so a
+  47-version family is not a page of empty entries; a version address inside a run
+  splits it, and that version keeps its own entry. Where the family's variables span
+  registers, each row names its register on a muted second line. Every version shares
+  the family's one axis range (from the dated deliveries; a year-independent row does
+  not widen it), so bars compare across versions and with the codes below by year,
+  though not pixel for pixel: the rows' bar column and the code timeline's track sit in
+  different layouts. Then the `CodeTimeline` of the codes those columns use (their value
+  sets, not the version's whole list; Q3). A version's address renders the family page
+  with that version current and open: its heading on `accent-soft`, focused and scrolled
+  into view as a grouped variable's lane is. Placement caveats are steward working
+  notes, not shown until the steward curates them for readers. A register page has no
+  tables table: its tables are FilterChips over the variable list, each with its period,
+  a lens with OR within the selection, offered only when two or more tables deliver
+  variables (the archived variant chips, maintainer 2026-11-03). A Tables definition row
+  links every table's page by name. A register page has no "Unplaced releases" panel
+  (maintainer 2026-11-04). In steward mode a supplemental-only variable is selectable
+  for a project like a reference variable: `order` and `validate` read the composed
+  steward view (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -656,17 +694,18 @@ Time is the axis every relation is drawn on.
   period as well as the study window. Data still delivered ends at the catalog's last
   year, and data whose start is unknown begins at its first, where that data is drawn. A
   year-independent span (no start and no end, a timeless table's) begins at the axis
-  start on a lane, so its column stays pickable; a `VariableRow` has no dated years for
-  it, so it draws a bare track read as "No dated delivery." and does not count toward
-  the axis. A one-year axis widens by one step of 5, backward where forward would pass
-  the catalog's last year. A page's drawings share its one axis, so a register's
-  `VariableRow`s line up with its `Timeline`, and a page with several sources draws them
-  on one axis. The axis of a `LaneGraph` (the `Timeline` and source timelines), a code
-  timeline and a `VariableRow` list labels its first and last year, at every width
-  (maintainer 2026-11-05), each on its own cell against the track's edge. On a
-  `LaneGraph` a window bound whose label would touch an end's hangs away from that end,
-  and where they still touch, the bound's label is dropped (the window's band still
-  marks it); an end's label never moves or gives way.
+  start on a lane (and ends at its end, never past it), so its column stays pickable; a
+  `VariableRow` has no dated years for it, so it draws a bare track read as "No dated
+  delivery." and does not count toward the axis. A one-year axis widens by one step of
+  5, backward where forward would pass the catalog's last year. A page's drawings share
+  its one year range, so they compare by year, not pixel for pixel: a `VariableRow`'s
+  bar column, the `Timeline` and the `CodeTimeline` each have their own gutters. A page
+  with several sources draws them on one range. The axis of a `LaneGraph` (the
+  `Timeline` and source timelines), a code timeline and a `VariableRow` list labels its
+  first and last year, at every width (maintainer 2026-11-05), each on its own cell
+  against the track's edge. On a `LaneGraph` a window bound whose label would touch an
+  end's hangs away from that end, and where they still touch, the bound's label is
+  dropped (the window's band still marks it); an end's label never moves or gives way.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no
@@ -897,13 +936,17 @@ grow new visual language meanwhile.
   `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
   While the search bar holds text, the list shows its filter state (see Layout). In the
   variables column a name, and a section's register name, wraps rather than truncates:
-  many variable names share a long start and differ only at the end. A column renders
-  every row, with no virtualization, so find-in-page works. Measured on a production
-  build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the provider
-  column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is accepted
-  (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows or 150
-  ms a key in production. The fallback then is to virtualize only lists over about 1,500
-  rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section headers.
+  many variable names share a long start and differ only at the end. A list of up to
+  1,500 rows renders every row, so find-in-page works. A longer one (a provider's page:
+  4,378 rows on /catalog/scb) renders only the rows in view, with RAC's `Virtualizer`
+  and `ListLayout`: whole, it took about 3.2 s to paint and 820 ms an arrow key at 6×
+  CPU throttling on a production build; virtualized, 1.0 s and 22 ms. There its register
+  headers scroll with the rows (RAC 1.22.1's `ListLayout` cannot keep them sticky) and
+  find-in-page sees only the rows in view; the search bar covers it. The global
+  catalog's largest registers (ULF, FRIDA, HEK) pass the threshold too; in a virtualized
+  list the selected row draws its own static bar, since the layout places rows where the
+  moving bar cannot measure them. The unfiltered list's size decides, so a search never
+  switches a list between the two (that remounts it and drops focus).
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
@@ -913,13 +956,14 @@ grow new visual language meanwhile.
   with its years in micro mono `text-muted` only where the type changes over time. The
   words are the catalog types in plain words ("Words"; #2071). No hue: the type is a
   fact, not a node kind, so it never borrows a `TypeTag` colour.
-- **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
-  register's or a variable's page title, where it leads with a glyph in its ink (a table
-  for a register, one filled column of it for a variable). A group page's kind mark has
-  no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
-  Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
-  px, `sm` radius. A palette row shows a name and its `TypeTag`, never an identifier
-  (maintainer Q5, 2026-11-04).
+- **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a detail
+  page's title, where a register's or a variable's leads with a glyph in its ink (a
+  table for a register, one filled column of it for a variable). A table's, group's or
+  classification's kind mark has no glyph. The label is fixed per type (Register, Table,
+  Variable, Code list, Classification, Group) and a caller passes only the type. A table
+  takes its register's hue: it is part of the register, and the word tells them apart.
+  0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row shows a name
+  and its `TypeTag`, never an identifier (maintainer Q5, 2026-11-04).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's
@@ -981,8 +1025,10 @@ grow new visual language meanwhile.
   a near-duplicate of a primitive.
 - Do keep one `primary` button per pane. Don't add counters, hero sections, decorative
   gradients, oversized cards, cards inside cards, or stock imagery.
-- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`. Don't
-  add breakpoints or `display: contents` (it strips accessibility roles).
+- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`, on the
+  fixture and on a real steward pair (`REG_META_DB` with `REG_META_CATALOG`), with a
+  fresh-agent rendered review before merge. Don't add breakpoints or `display: contents`
+  (it strips accessibility roles).
 - Do keep focus visible via `:focus-visible` (or `[data-focus-visible]` on RAC parts)
   `{ box-shadow: var(--focus-ring) }` in each component's own CSS, and respect
   `prefers-reduced-motion`. Motion answers a user action at the three durations above;

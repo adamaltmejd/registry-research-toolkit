@@ -444,7 +444,7 @@
   },
   {
     "name": "show",
-    "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+    "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -1005,7 +1005,7 @@
           "type": "object"
         },
         "Show": {
-          "description": "A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back.",
+          "description": "A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back.",
           "oneOf": [
             {
               "description": "On a data holder's catalog, the holder's own providers too.",
@@ -1318,6 +1318,28 @@
               "type": "object"
             },
             {
+              "description": "The classifications, at ref `class`, in fqid order. On a data holder's catalog\nonly those the holder's variables use.",
+              "properties": {
+                "families": {
+                  "items": {
+                    "$ref": "#/$defs/ShowClassFamilyRef"
+                  },
+                  "type": "array"
+                },
+                "kind": {
+                  "enum": [
+                    "class_families"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "families",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
               "description": "A classification. Classifications are shared, so every version is listed; on a\ndata holder's catalog only the holder's variables are.",
               "properties": {
                 "description": {
@@ -1402,6 +1424,33 @@
               "type": "object"
             }
           ]
+        },
+        "ShowClassFamilyRef": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "From the first version's start to the last one's end."
+            },
+            "version_count": {
+              "description": "How many versions it has.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "version_count",
+            "period"
+          ],
+          "type": "object"
         },
         "ShowClassUser": {
           "description": "A variable that uses the classification, with its rows that carry it.",
@@ -1504,8 +1553,12 @@
             "name": {
               "type": "string"
             },
-            "period": {
-              "$ref": "#/$defs/Period"
+            "periods": {
+              "description": "The periods its dated tables are delivered, merged, in start order. Gaps stay gaps.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             },
             "variables": {
               "items": {
@@ -1517,7 +1570,7 @@
           "required": [
             "fqid",
             "name",
-            "period",
+            "periods",
             "variables"
           ],
           "type": "object"
@@ -1715,7 +1768,7 @@
           "type": "object"
         },
         "ShowTableVariable": {
-          "description": "A variable in a table, over the years it has in that table.",
+          "description": "A variable in a table, over the periods it has in that table.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -1723,14 +1776,18 @@
             "name": {
               "type": "string"
             },
-            "period": {
-              "$ref": "#/$defs/Period"
+            "periods": {
+              "description": "The periods its segments here cover, merged, in start order. Gaps stay gaps.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             }
           },
           "required": [
             "fqid",
             "name",
-            "period"
+            "periods"
           ],
           "type": "object"
         },

@@ -144,7 +144,17 @@ export function CodeTimeline({
       };
       list.uses.push({
         column: `${fqid}\u0000${segment.column}`,
-        years: columnYearRuns([segment], bounds, axis[0]),
+        // Clamped to the axis: a year-independent segment runs to the catalog
+        // maximum, past a dated-only family axis.
+        years: columnYearRuns([segment], bounds, axis[0]).flatMap(
+          ({ from, to }) => {
+            const run = {
+              from: Math.max(from, axis[0]),
+              to: Math.min(to, axis[1]),
+            };
+            return run.from > run.to ? [] : [run];
+          },
+        ),
       });
       byHash.set(segment.value_set.hash, list);
     }

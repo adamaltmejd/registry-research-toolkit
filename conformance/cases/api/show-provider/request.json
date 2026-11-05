@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a provider's registers are not listed in pid order with their coverage hull, or the provider summary gains or loses a field.",
+  "note": "Fails if a provider's registers are not listed in pid order with the periods their dated tables are delivered, or the provider summary gains or loses a field.",
   "fixture": "entities",
   "requests": [
     {"operation": "show", "path": "/api/catalog/demo"}

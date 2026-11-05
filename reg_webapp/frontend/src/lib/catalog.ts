@@ -146,12 +146,13 @@ export function leafSlug(fqid: string): string {
 }
 
 /** The catalog pages above a route's page, provider then register: the
- * ancestors its trail names. The group namespace (`set/`) and the
- * classification axis have no pages of their own, so they add none. */
+ * ancestors its trail names. The group namespace (`set/`) has no page of its
+ * own, so it adds none; a classification's one ancestor is the list of
+ * classifications (`class`). */
 export function trailAncestors(route: Route): string[] {
   if (route.name !== "catalog-node") return [];
-  if (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
-    return [];
+  if (route.fqidPath === "class") return [];
+  if (route.fqidPath.startsWith("class/")) return ["class"];
   const segments = fqidSegments(unqualifiedCatalogPath(route.fqidPath));
   return segments
     .slice(0, Math.min(segments.length - 1, 2))
@@ -181,17 +182,4 @@ export function routeBreadcrumbs(
       return label ? [{ label, href: catalogHref(fqid) }] : [];
     }),
   ];
-}
-
-const classificationSuffixes: Record<string, string> = {
-  niva: "nivå",
-  inr: "inriktning",
-};
-
-/** Vintage classification names share the same spelling in lists and pins. */
-export function humanizeClassificationSlug(slug: string): string {
-  const m = /^([a-z]+)(\d{4})(?:-(.+))?$/.exec(slug);
-  if (!m) return slug;
-  const suffix = m[3];
-  return `${m[1].toUpperCase()} ${m[2]}${suffix ? ` (${classificationSuffixes[suffix] ?? suffix.replaceAll("-", " ")})` : ""}`;
 }

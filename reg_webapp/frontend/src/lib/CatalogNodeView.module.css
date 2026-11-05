@@ -43,10 +43,6 @@
 .disclosureButton svg {
   flex-shrink: 0;
 }
-/* A count trigger in a table cell ("21 releases") stays on one line. */
-.countTrigger {
-  white-space: nowrap;
-}
 .disclosure[data-expanded] > .disclosureHeading .disclosureButton svg {
   transform: rotate(90deg);
 }

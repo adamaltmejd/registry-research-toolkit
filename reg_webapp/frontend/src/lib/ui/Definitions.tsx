@@ -20,8 +20,8 @@ export interface Definition {
 
 interface Props {
   /** The page's kind mark over its title. Registers and variables have glyphs;
-   * groups use the Group label without a glyph. */
-  kind?: "register" | "variable" | "group";
+   * tables, groups and classifications use their label without a glyph. */
+  kind?: "register" | "table" | "variable" | "group" | "classification";
   title: string;
   /** The subject's machine identifier under the title, in mono; omitted where
    * the breadcrumb already ends in it. */
