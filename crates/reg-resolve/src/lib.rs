@@ -37,6 +37,7 @@ pub mod provenance;
 
 mod f1;
 mod gaps;
+mod integer_codes;
 mod ledger;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -298,6 +299,8 @@ pub struct ResolvedOccurrence {
     pub period: Option<Interval>,
     /// The period before the T1 clamp, when the clamp changed it.
     pub stated: Option<Interval>,
+    /// The type before the integer-code rule, when the rule changed it.
+    pub stated_dtype: Option<String>,
     /// Stated by a release of a worse edition than its period's primary.
     pub preliminary: bool,
     pub variable: Option<usize>,
@@ -618,6 +621,7 @@ pub(crate) fn resolve_located(
             release,
             period: None,
             stated: None,
+            stated_dtype: None,
             preliminary,
             variable: None,
             segment: None,
@@ -1257,6 +1261,10 @@ pub(crate) fn resolve_located(
             texts,
         });
     }
+    // Before any finding names a segment by index (it rejoins segments) and before F1,
+    // so type changes compare the published segment types.
+    integer_codes::apply(&mut variables, &mut resolved, valuesets);
+
     // Evaluate the exemption on final segments, after adjacent components have joined.
     // Assignments can merge keys; this exemption applies only within one source key.
     let mut segment_occurrences: BTreeMap<(usize, usize), Vec<&ResolvedOccurrence>> =

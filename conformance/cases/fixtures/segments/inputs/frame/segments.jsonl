@@ -18,3 +18,13 @@
 {"kind":"occurrence","provider":"demo","register":"sg","table":"r","release":"r2020","column":"Prel","source_key":"k5","label":"Prel"}
 {"kind":"occurrence","provider":"demo","register":"sg","table":"r","release":"r2021","column":"Prel","source_key":"k5","label":"Prel"}
 {"kind":"occurrence","provider":"demo","register":"sg2","table":"","column":"Svar","source_key":"k1","label":"Svar","from":"2018-01-01","to":"2019-12-31"}
+{"kind":"register","provider":"demo","register":"ic","name":"Heltalskoder"}
+{"kind":"table","provider":"demo","register":"ic","table":"","name":"Heltalskoder"}
+{"kind":"value_set","items":[{"code":"1","label":"Ett"},{"code":"2","label":"Två"}],"names":["ic12"]}
+{"kind":"value_set","items":[{"code":"01","label":"Ett"},{"code":"02","label":"Två"}],"names":["ic0"]}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Heltal","source_key":"h","label":"Heltal","dtype":"char","from":"2018-01-01","to":"2021-12-31","valueset":"ic12"}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Heltal","source_key":"h","label":"Heltal","dtype":"int","from":"2022-01-01","to":"2022-12-31","valueset":"ic12"}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Nolla","source_key":"n","label":"Nolla","dtype":"char","from":"2018-01-01","to":"2021-12-31","valueset":"ic0"}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Blandad","source_key":"b","label":"Blandad","dtype":"char","from":"2018-01-01","to":"2019-12-31","valueset":"ic12"}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Blandad","source_key":"b","label":"Blandad","dtype":"char","from":"2018-01-01","to":"2019-12-31","valueset":"ic0"}
+{"kind":"occurrence","provider":"demo","register":"ic","table":"","column":"Id","source_key":"i","label":"Id","dtype":"char","identifier":true,"from":"2018-01-01","to":"2021-12-31","valueset":"ic12"}
