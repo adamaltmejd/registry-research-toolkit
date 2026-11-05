@@ -76,7 +76,12 @@ impl Kind {
             "tinyint" | "smallint" | "int" => Self::Int32,
             "bigint" => Self::Int64,
             "decimal" | "numeric" => {
-                Self::Decimal(digits(storage.precision, 18), digits(storage.scale, 0))
+                let (precision, scale) = (digits(storage.precision, 18), digits(storage.scale, 0));
+                // SQL Server's bounds, which Parquet's decimal128 shares.
+                if !(1..=38).contains(&precision) || scale > precision {
+                    return Err(format!("{sql}({precision}, {scale})"));
+                }
+                Self::Decimal(precision, scale)
             }
             "float" => Self::Float64,
             "real" => Self::Float32,
@@ -120,6 +125,10 @@ pub fn generate(
     persons: u64,
     allow_large: bool,
 ) -> Result<Vec<(String, Table)>, Refusal> {
+    // A spec is a file anyone can edit: check what compile checked.
+    if let Some(refusal) = crate::compile::check_spec(spec).into_iter().next() {
+        return Err(refusal);
+    }
     if persons > MAX_PERSONS && !allow_large {
         return Err(Refusal::new(
             "size_too_large",
@@ -300,7 +309,13 @@ fn cell(
         .as_ref()
         .and_then(|s| s.length)
         .or(column.length);
-    Ok(drawn(kind, length, unit.year, rng))
+    // A narrow integer storage keeps the delivery's range, though it is written as int32.
+    let ceiling = match column.storage.as_ref().and_then(|s| s.dtype.as_deref()) {
+        Some(t) if t.eq_ignore_ascii_case("tinyint") => 255.0,
+        Some(t) if t.eq_ignore_ascii_case("smallint") => 32_767.0,
+        _ => 2_000_000_000.0,
+    };
+    Ok(drawn(kind, length, ceiling, unit.year, rng))
 }
 
 fn not_numeric(at: String) -> Refusal {
@@ -367,11 +382,12 @@ fn attribute_cell(
                 || unit.firm.map(|f| f.county.as_str()),
                 |p| Some(p.county.as_str()),
             )?;
-            // A code of the person's county (its first two digits), else any code.
+            // A code of the person's county (its first two digits), else any code; a
+            // value set of sentinels only is drawn as such.
             let codes: Vec<&str> = column
                 .codes
                 .iter()
-                .filter(|c| !c.sentinel)
+                .filter(|c| !c.sentinel || column.codes.iter().all(|c| c.sentinel))
                 .map(|c| c.code.as_str())
                 .collect();
             let local: Vec<&str> = codes
@@ -459,12 +475,12 @@ fn scaled(code: &str, scale: u8) -> Option<i128> {
 }
 
 /// A value from the type alone: an amount, a short text, a day or time in the year.
-fn drawn(kind: Kind, length: Option<i64>, year: i32, rng: &mut Rng) -> Cell {
+fn drawn(kind: Kind, length: Option<i64>, ceiling: f64, year: i32, rng: &mut Rng) -> Cell {
     // A skewed amount (median about 150), as most uncoded register numbers are.
     let mut amount = || (5.0 + 1.5 * rng.normal()).exp();
     match kind {
         #[allow(clippy::cast_possible_truncation)]
-        Kind::Int32 | Kind::Int64 => Cell::Int(amount().round().min(2_000_000_000.0) as i64),
+        Kind::Int32 | Kind::Int64 => Cell::Int(amount().round().min(ceiling) as i64),
         Kind::Decimal(precision, scale) => {
             // The largest value is one scaled unit below 10^(p - s): 0.999 for (3, 3).
             let max = 10i128.pow(u32::from(precision)) - 1;
