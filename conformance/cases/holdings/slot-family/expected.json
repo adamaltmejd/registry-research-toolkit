@@ -1,34 +1,5 @@
 {
-  "note": "The synthetic delivery document in columns.toml places one variable at positions 1, 2 and 10 in Pool. All three columns retain the complete 2017-2020 delivery. Coverage lists physical columns in census ordinal order, independently of declaration order or numeric slot order.",
-  "held": [
-    {
-      "table": "steward/slots",
-      "column": "Position1",
-      "file": "Pool",
-      "period": {
-        "start": "2017-01-01",
-        "end": "2021-01-01"
-      }
-    },
-    {
-      "table": "steward/slots",
-      "column": "Position10",
-      "file": "Pool",
-      "period": {
-        "start": "2017-01-01",
-        "end": "2021-01-01"
-      }
-    },
-    {
-      "table": "steward/slots",
-      "column": "Slot2",
-      "file": "Pool",
-      "period": {
-        "start": "2017-01-01",
-        "end": "2021-01-01"
-      }
-    }
-  ],
+  "note": "The synthetic delivery document in columns.toml places one variable at positions 1, 2 and 10 in Pool. The materialize slot-family case serves the family's placements; this file holds the verify refusal of invented family evidence.",
   "verify_refusal": {
     "sql": "UPDATE holding_column SET slot_family='invented-family' WHERE slot_family='received-position'",
     "code": "holdings_slot_source_mismatch",

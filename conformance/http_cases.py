@@ -13,7 +13,7 @@ import time
 from contextlib import suppress
 
 import httpx2
-from reader_artifacts import REPO, cached_reader_artifact
+from reader_artifacts import REPO
 
 READY_PATH = "/openapi.json"
 # The line `reg-meta serve` prints on stderr once bound.
@@ -24,16 +24,6 @@ SERVER_READY_SECONDS = 120
 def artifact_env(path):
     """The environment the app needs to serve the artifact at `path`."""
     return {"REG_META_DB": str(path.parent)}
-
-
-def fixture_source(request):
-    """A case's fixture: a directory name under `cases/fixtures` (default `base`)."""
-    return request.get("fixture", "base")
-
-
-def cached_case_artifact(request):
-    """A case's cached, read-only artifact, built by `reg-build` from its fixture."""
-    return cached_reader_artifact(fixture_source(request))
 
 
 class ServerPool:

@@ -2,9 +2,5 @@
   "refusal": "stale_declared_mapping_target",
   "previous_pin_refusal": "holdings_pin_invalid",
   "route_locator": "fixture:slot-route",
-  "decision_locator": "fixture:slot",
-  "removed_column": "Slot2",
-  "added_column": "Added",
-  "new_notice": "mapping_missing",
-  "retained_mapping": ["Pool", "Code", "steward/slots", "steward/slots/code", "2017-01-01", "2018-01-01"]
+  "decision_locator": "fixture:slot"
 }
