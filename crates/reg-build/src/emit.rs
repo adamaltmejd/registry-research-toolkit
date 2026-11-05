@@ -219,7 +219,13 @@ fn write_provenance(
                 Cell::Str(prov.into()),
                 opt_int(statement),
                 rule.map_or(Cell::Null, |code| Cell::Str(code.into())),
-                opt_str(value.value.as_ref()),
+                // A winning type publishes under the catalog's name, like the
+                // occurrence it set; the losing source value stays as stated evidence.
+                if value.field == "type" {
+                    published_dtype(value.value.as_deref())
+                } else {
+                    opt_str(value.value.as_ref())
+                },
                 opt_str(value.source_value.as_ref()),
             ],
         );
