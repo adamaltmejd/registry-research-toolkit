@@ -10,9 +10,11 @@ export interface UsageDataset {
 }
 
 const LABEL_HEADER = "x-reg-usage";
-// An SPA pick beacon carries one FQID; the grammar's characters, bounded.
+// An SPA pick beacon carries the FQIDs one add picked: the grammar's characters,
+// bounded, at most MAX_EVENT_PICKS (under the 250 data points a worker may write).
 const FQID = /^[a-z0-9][a-z0-9\-_/]{0,199}$/;
-const MAX_EVENT_BYTES = 1024;
+const MAX_EVENT_PICKS = 100;
+const MAX_EVENT_BYTES = 24 * 1024;
 
 // User-Agent substrings to a client family, first match wins. Agents before
 // browsers: an agent's UA can name a browser engine too.
@@ -175,11 +177,11 @@ export function recordRequest(
   return response;
 }
 
-// The SPA's pick beacon, `POST /api/event` with `{"fqid": "..."}`: answered here, never
-// forwarded or cached. A Cloudflare rate-limiting rule on the path bounds it, since the
-// origin's per-client limit never sees it. Only the SPA's own page may send it
-// (`Sec-Fetch-Site: same-origin`), with a declared length, so another site cannot
-// inflate picks and no body is read unbounded.
+// The SPA's pick beacon, `POST /api/event` with `{"fqids": ["...", ...]}`, one per add:
+// answered here, never forwarded or cached. The origin's per-client limit never sees
+// it; the site's Cloudflare rule on `/api/` counts it, one request per add, beside the
+// reads. Only the SPA's own page may send it (`Sec-Fetch-Site: same-origin`), with a
+// declared length, so another site cannot inflate picks and no body is read unbounded.
 export async function recordPick(
   dataset: UsageDataset | undefined,
   steward: string,
@@ -194,23 +196,31 @@ export async function recordPick(
   if (!(Number(length) <= MAX_EVENT_BYTES)) return answer(413);
   const text = await request.text();
   if (text.length > MAX_EVENT_BYTES) return answer(413);
-  let fqid: unknown;
+  let fqids: unknown;
   try {
     const event: unknown = JSON.parse(text);
-    fqid = event && typeof event === "object" ? (event as { fqid?: unknown }).fqid : undefined;
+    fqids = event && typeof event === "object" ? (event as { fqids?: unknown }).fqids : undefined;
   } catch {
     return answer(400);
   }
-  if (typeof fqid !== "string" || !FQID.test(fqid)) return answer(400);
+  if (
+    !Array.isArray(fqids) ||
+    fqids.length === 0 ||
+    fqids.length > MAX_EVENT_PICKS ||
+    !fqids.every((fqid) => typeof fqid === "string" && FQID.test(fqid))
+  )
+    return answer(400);
   if (dataset) {
-    write(
-      dataset,
-      steward,
-      { surface: "spa", kind: "pick", op: "event", fqid },
-      request,
-      { cache: "", status: 204 },
-      [0, -1, -1, -1],
-    );
+    for (const fqid of fqids as string[]) {
+      write(
+        dataset,
+        steward,
+        { surface: "spa", kind: "pick", op: "event", fqid },
+        request,
+        { cache: "", status: 204 },
+        [0, -1, -1, -1],
+      );
+    }
   }
   return answer(204);
 }

@@ -266,11 +266,12 @@ own origin and worker.
   - **Client family** comes from a fixed User-Agent substring table. The raw User-Agent,
     the IP address and any cookie are never written.
   - **An MCP `order`** adds one `pick` data point per bound variable.
-  - **`POST /api/event`** (SPA deployment only) is the SPA's pick beacon,
-    `{"fqid": ...}`, answered 204 `no-store` at the edge and never forwarded. It is
-    taken only same-origin (`Sec-Fetch-Site`) with a declared length of at most 1 KiB.
-    Because it never reaches the origin's rate limit, a Cloudflare rate-limiting rule on
-    that path bounds it.
+  - **`POST /api/event`** (SPA deployment only) is the SPA's pick beacon, one request
+    per add, `{"fqids": [...]}` with at most 100 ids, answered 204 `no-store` at the
+    edge and never forwarded. It is taken only same-origin (`Sec-Fetch-Site`) with a
+    declared length of at most 24 KiB. It never reaches the origin's rate limit; the
+    site's Cloudflare rate-limiting rule on `/api/` counts it with the reads, one
+    request per add.
   - **Invocation logs are off** (`observability.logs.invocation_logs: false`). They
     record each request's URL, search text included, outside the scrub.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
