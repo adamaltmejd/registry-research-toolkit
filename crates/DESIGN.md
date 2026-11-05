@@ -753,27 +753,32 @@ overlapping curated overrides are refused at both locations.
 
 **Decisions taken in milestone C.**
 
-- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
-  catalogs by natural key (pid, table name, meta key), never by row id, in nine
-  sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
-  kind changed, moved, retired), provider and register names, table names, roles,
-  unit-type slugs and spans, per-variable segments, label and definition runs, value
-  sets (including shared-hash sentinel changes and the codes added and removed where
-  only a segment's value-set hash changed), and finding counts per code. Text shows at
-  most `N` (default 20) per section; `--json` is complete. Exit 0 when nothing differs,
-  1 when something does (the meta keys `generation_id`, `catalog_version`,
-  `builder_version` and `curation_digest` never count, since they differ every release),
-  2 on a usage or IO error or a missing or different `schema_version` major. A surviving
-  variable id is listed as moved when both occurrence target sets are non-empty and no
-  old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
-  periods. Explicit table ids are compared by table name; implicit tables share their
-  register's id and are excluded. `--holdings` compares two holdings catalogs of the
-  same holdings schema instead (release step 8g): census columns by (physical table,
-  column), with placed, held and unplaced counts, changed placements grouped by old and
-  new `table_pid` and classed newly placed, folded or renamed, variable or interval
-  changed, or unmapped; reader-visible text by kind, keyed by pid and source key and
-  listing keys, never bodies; and finding and holdings-notice deltas by code, compared
-  by (code, subject, period).
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares a current-schema
+  NEW with an OLD of the same or an older schema by natural key (pid, table name, meta
+  key), never by row id, in nine sections: schema (`sqlite_master`), meta, row counts
+  per table, ids (added, removed, kind changed, moved, retired), provider and register
+  names, table names, roles, cadences and spans, per-variable segments, label and
+  definition runs, value sets (including shared-hash sentinel changes and the codes
+  added and removed where only a segment's value-set hash changed), and finding counts
+  per code. Text shows at most `N` (default 20) per section; `--json` is complete. Exit
+  0 when nothing differs, 1 when something does (the meta keys `generation_id`,
+  `catalog_version`, `builder_version` and `curation_digest` never count, since they
+  differ every release), 2 on a usage or IO error, a missing `schema_version`, a NEW not
+  on this build's schema or an OLD on a newer one. Across a schema bump the report
+  starts with a cross-schema line (`cross_schema` in JSON) and a schema changes section
+  naming each table and column on one side only; those are never row-diffed, the other
+  sections read only what both sides have, and a query the older schema cannot answer
+  exits 2 as `OLD: schema N is not comparable: <error>`. A schema-only difference exits 1.
+  A surviving variable id is listed as moved when both occurrence target sets are
+  non-empty and no old/new pair shares a table slug and folded spelling with overlapping
+  `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
+  share their register's id and are excluded. `--holdings` compares two holdings
+  catalogs of the same holdings schema instead (release step 8g): census columns by
+  (physical table, column), with placed, held and unplaced counts, changed placements
+  grouped by old and new `table_pid` and classed newly placed, folded or renamed,
+  variable or interval changed, or unmapped; reader-visible text by kind, keyed by pid
+  and source key and listing keys, never bodies; and finding and holdings-notice deltas
+  by code, compared by (code, subject, period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a

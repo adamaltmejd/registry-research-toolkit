@@ -286,10 +286,16 @@ target/release/reg-build diff "$prev/reg_meta.db" "$evidence/catalog/reg_meta.db
 ```
 
 Exit 0 means no changes, 1 means differences to review, and 2 means an error that stops
-the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
-the diff, confirms only intended changes, and puts its summary in the release notes.
-After 8b passes, and again after the diff review, record each step:
-`echo "8b $base_sha" >> "$evidence/passed"`,
+the release. Handle exit 1 explicitly if running under `set -e`. Across a catalog schema
+bump the diff accepts a previous DB on an older schema (never a newer one): the text
+starts with `cross-schema comparison: previous schema N, current schema M` (JSON
+`cross_schema`), and a `schema changes` section (JSON `schema_changes`) names each table
+and column on one side only, without diffing their rows. Review that section against the
+bump's PR. A query the older schema cannot answer exits 2 with
+`schema N is not comparable: <sqlite error>`, which needs the same reviewed procedure
+change as 8b. The builder agent reads the diff, confirms only intended changes, and puts
+its summary in the release notes. After 8b passes, and again after the diff review,
+record each step: `echo "8b $base_sha" >> "$evidence/passed"`,
 `echo "8c $base_sha" >> "$evidence/passed"`.
 
 #### 8d. Compile the holdings
