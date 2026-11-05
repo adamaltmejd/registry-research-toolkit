@@ -114,10 +114,9 @@ HTTP API             MCP over stdio (local catalog)
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
 - `xtask`: repository tooling, not shipped. `cargo xtask gh-issue` is the
   maintainer-author trust gate for issue reads; its tests hold the repo-policy lints.
-  The release skill runs `release-base-reuse` (step 8a) and `scope-check` (8h, the
-  holdings asset's content gate). The scope check sits here, not in `reg-build`, so the
-  gate on the public asset stays independent of the code that writes it; it reads the
-  builder's DDL source but keeps its own meta-key allowlist and size bounds.
+  The release skill runs `release-base-reuse` (step 8a). The holdings asset's content
+  gate is part of the pair verifier (`reg-build/src/holdings/scope.rs`), not here: a
+  steward repository verifies its pair with the released `reg-build` alone.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of

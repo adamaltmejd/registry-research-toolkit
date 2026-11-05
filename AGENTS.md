@@ -15,7 +15,7 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `reg-core-wasm` (`reg-core` for the SPA), `reg-mock` (local mock data,
   `reg-meta mock`), and the catalog builder: `reg-frame`, `reg-readers`, `reg-resolve`
   and `reg-build`, with its reader config, curation and id ledgers under `curation/`.
-  `xtask` is repository and release tooling (`cargo xtask gh-issue`, `scope-check`,
+  `xtask` is repository and release tooling (`cargo xtask gh-issue`,
   `release-base-reuse`, `gen-case-folding`, `search-eval`) and the repo-policy lints; it
   is not released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
@@ -145,9 +145,9 @@ and to a sweep.
 - **Structural validation has one authority.** `reg-build verify` owns the published
   catalog's invariants; tests run it on the synthetic artifact, they do not re-derive
   its checks.
-- **A bug fix adds no regression test.** The fix is verified once, by the run that
-  shows it; a fixed bug is not a behavior. Add a case only when the fix establishes a
-  product rule that meets the bar above, and then at most one, in the owning corpus.
+- **A bug fix adds no regression test.** The fix is verified once, by the run that shows
+  it; a fixed bug is not a behavior. Add a case only when the fix establishes a product
+  rule that meets the bar above, and then at most one, in the owning corpus.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
@@ -165,8 +165,8 @@ and to a sweep.
 - **Tests**: `cargo test` (crates), the `reg-conformance` harness (conformance), its
   `--test release` target for real-artifact checks. Build coverage is fully synthetic.
 - **Tooling**: Rust (`crates/xtask`), shell (`scripts/gate.sh`) and bun for the SPA. The
-  repository holds no Python; the xtask test `no_python` fails on any tracked `.py`
-  file or Python project file.
+  repository holds no Python; the xtask test `no_python` fails on any tracked `.py` file
+  or Python project file.
 
 # Run
 
@@ -181,11 +181,11 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `bash scripts/gate.sh all` — the full gate before a PR (`g0`, `rust`, `flows`,
   `frontend`). The R packages are not gated: their testthat suites run only by hand
   (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
-- `bash scripts/gate.sh lint` — panache (markdown) and shellcheck. The repo-policy
-  lints (provider vocabulary, skill reads and aliases, test size, no Python) and the
-  plugin schema drift check are `crates/xtask` tests, run by `crates`.
-- `bash scripts/gate.sh g0 rust` — lint and crates, plus the conformance run against
-  the Rust server.
+- `bash scripts/gate.sh lint` — panache (markdown) and shellcheck. The repo-policy lints
+  (provider vocabulary, skill reads and aliases, test size, no Python) and the plugin
+  schema drift check are `crates/xtask` tests, run by `crates`.
+- `bash scripts/gate.sh g0 rust` — lint and crates, plus the conformance run against the
+  Rust server.
 - `bash scripts/gate.sh regen` — regenerate rebase-sensitive generated files; after a
   rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
@@ -195,8 +195,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=swecov] cargo test -p reg-conformance --test release`
   (release step 8f).
 - Local prerequisites: `cargo install cargo-machete --locked`, panache at the
-  `PANACHE_VERSION` in `scripts/gate.sh` (`cargo install panache --version <pin>
-  --locked`), shellcheck and bun.
+  `PANACHE_VERSION` in `scripts/gate.sh`
+  (`cargo install panache --version <pin> --locked`), shellcheck and bun.
 - A new worktree needs no setup step: the gate and `dev.sh` install the SPA's packages
   on demand.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs

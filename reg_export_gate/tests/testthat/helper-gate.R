@@ -21,7 +21,7 @@ ARROW_TYPES <- list(
 
 # JSON null is a null cell; in a double column the string "NaN" is NaN.
 json_values <- function(col) {
-  unlist(lapply(col$values, function(v) {
+  x <- unlist(lapply(col$values, function(v) {
     if (is.null(v)) {
       NA
     } else if (col$type == "double" && identical(v, "NaN")) {
@@ -30,6 +30,12 @@ json_values <- function(col) {
       v
     }
   }))
+  # A column of nulls only is logical NA in R, which Arrow will not convert to a
+  # number or a string: give it the declared type.
+  if (is.logical(x) && col$type != "bool") {
+    x <- switch(col$type, int32 = as.integer(x), string = as.character(x), as.double(x))
+  }
+  x
 }
 
 BITS <- "^0x[0-9A-Fa-f]{16}$"

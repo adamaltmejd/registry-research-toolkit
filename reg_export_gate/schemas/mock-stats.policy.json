@@ -1,0 +1,11 @@
+{
+  "format": "reg-export-gate/policy",
+  "format_version": 1,
+  "name": "mock-stats-min5",
+  "version": 1,
+  "description": "Mock statistics: every count is at least 5 or null; a statistic rests on at least 50 units (5 per decile group) and has at most 3 significant digits. The counts are cell-key perturbed by the scaffold, which the gate cannot verify.",
+  "schema": { "name": "mock-stats", "version": 1 },
+  "min_cell_count": 5,
+  "statistic_min_support": 50,
+  "statistic_significant_digits": 3
+}
