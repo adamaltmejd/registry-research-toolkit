@@ -6,7 +6,13 @@ import {
   useRegisterMatches,
 } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref, leafSlug, rankFilter, svCollator } from "./catalog";
+import {
+  catalogHref,
+  leafSlug,
+  rankFilter,
+  sortedRegisters,
+  svCollator,
+} from "./catalog";
 import { catalogRootChildren, sharedShow } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { Highlight } from "./Highlight";
@@ -206,10 +212,13 @@ export function ProviderVariableList({
 }) {
   const root = useCatalogRead(catalogRootChildren, undefined);
   const provider = root.value?.find((p) => p.fqid === providerFqid) ?? null;
-  const registers = provider?.registers.map((r) => r.fqid) ?? null;
+  const registers = provider
+    ? sortedRegisters(provider.registers).map((r) => r.fqid)
+    : null;
   // simplify: one cached `show` per register. The largest SWECOV provider
-  // (scb) has 23 registers and 328 variables. Past ~30 registers the
-  // provider's own `show` should carry its registers' variables.
+  // (scb) has 36 registers and 4378 variables on the 0.76.0 pair, past the
+  // ~30-register trigger already: the provider's own `show` should carry its
+  // registers' variables (and the list may need measuring for virtualization).
   const resource = useAsyncResource(
     registers === null ? null : `${providerFqid}\u0000${registers.join(" ")}`,
     (signal) =>

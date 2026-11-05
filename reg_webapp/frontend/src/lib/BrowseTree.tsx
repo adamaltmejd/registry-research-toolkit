@@ -17,7 +17,13 @@ import {
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
-import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
+import {
+  catalogHref,
+  leafSlug,
+  rankFilter,
+  registerOfPath,
+  sortedRegisters,
+} from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
@@ -139,7 +145,7 @@ function browseNodes(root: RootChild[]): BrowseNode[] {
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
-    children: child.registers.map((register) => ({
+    children: sortedRegisters(child.registers).map((register) => ({
       id: register.fqid,
       name: register.name ?? register.fqid,
       href: catalogHref(register.fqid),

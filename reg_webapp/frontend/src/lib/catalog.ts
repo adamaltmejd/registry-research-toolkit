@@ -21,6 +21,17 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 
+/** A provider's registers in the one order every list of them uses: the
+ * register column, the provider page and its variables column (maintainer
+ * 2026-11-05), by name in Swedish collation. The server lists them by FQID. */
+export function sortedRegisters<
+  R extends { fqid: string; name?: string | null },
+>(registers: readonly R[]): R[] {
+  return [...registers].sort((a, b) =>
+    svCollator.compare(a.name ?? a.fqid, b.name ?? b.fqid),
+  );
+}
+
 // ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so

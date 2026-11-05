@@ -1,6 +1,6 @@
 import type { Context, ProviderShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref, svCollator } from "./catalog";
+import { catalogHref, sortedRegisters } from "./catalog";
 import { dataAxis } from "./period";
 import { columnYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
@@ -24,12 +24,10 @@ export function ProviderView({
   const study = studyWindow(draft);
   const catalogBounds = windowBounds(context);
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
-  const registers = [...node.registers]
-    .sort((a, b) => svCollator.compare(a.name, b.name))
-    .map((register) => ({
-      register,
-      years: columnYearRuns([register], bounds),
-    }));
+  const registers = sortedRegisters(node.registers).map((register) => ({
+    register,
+    years: columnYearRuns([register], bounds),
+  }));
   const axis = dataAxis(
     registers.flatMap(({ years }) =>
       years.flatMap((run) => [run.from, run.to]),
