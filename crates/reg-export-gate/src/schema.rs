@@ -95,6 +95,13 @@ pub struct Policy {
     pub description: Option<String>,
     pub schema: SchemaRef,
     pub min_cell_count: u64,
+    /// The smallest support count a non-null statistic may rest on; absent, no rule.
+    #[serde(default)]
+    pub statistic_min_support: Option<u64>,
+    /// The significant digits a non-null `double` statistic is rounded to; absent, no
+    /// rule.
+    #[serde(default)]
+    pub statistic_significant_digits: Option<u32>,
     /// SHA-256 of the file as read, for the receipt.
     #[serde(skip)]
     pub sha256: String,
@@ -253,7 +260,12 @@ pub(crate) fn load_policy(path: Option<&Path>, schema: &Schema) -> Result<Policy
     let ok = is_slug(&policy.name)
         && policy.version >= 1
         && policy.schema.version >= 1
-        && policy.min_cell_count >= 1;
+        && policy.min_cell_count >= 1
+        && policy.statistic_min_support.is_none_or(|n| n >= 1)
+        // 17 digits name every double, so more would be no rule at all.
+        && policy
+            .statistic_significant_digits
+            .is_none_or(|d| (1..=17).contains(&d));
     if !ok {
         return Err(invalid());
     }

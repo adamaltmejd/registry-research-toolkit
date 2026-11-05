@@ -131,15 +131,40 @@ policy applies one minimum to both.
   "version": 1,
   "description": "optional",
   "schema": { "name": "trial", "version": 1 },
-  "min_cell_count": 5
+  "min_cell_count": 5,
+  "statistic_min_support": 50,
+  "statistic_significant_digits": 3
 }
 ```
 
 The policy names the schema name and version it was written for; any other pairing is
-refused. `min_cell_count` is a positive integer.
+refused. `min_cell_count` is a positive integer. Two fields are optional, and without
+one its rule does not apply:
 
-The shipped files: `schemas/trial.schema.json` and `schemas/trial.policy.json` (minimum
-5), for the first MONA trial.
+- `statistic_min_support`, a positive integer: a non-null `statistic` rests on a support
+  count of at least this.
+- `statistic_significant_digits`, an integer from 1 to 17: a non-null `double` statistic
+  is exactly the double nearest its own decimal rendering with that many significant
+  digits (C's `%.*e`, read back by a correctly rounded parser). An unrounded double
+  carries 64 bits the other rules leave free; 3 digits leave about 10. R's own parser
+  (`as.numeric`) is not correctly rounded at extreme exponents, so the R gate reads the
+  rendering back through jsonlite (C `strtod`); the corpus pins two such values.
+
+A gate that predates a field refuses a policy naming it (`policy_invalid`), so an older
+gate fails closed.
+
+The shipped files:
+
+- `schemas/trial.schema.json` and `schemas/trial.policy.json` (minimum 5), for the first
+  MONA trial.
+- `schemas/mock-stats.schema.json` and `schemas/mock-stats.policy.json`, the marginal
+  statistics for local mock data (#707 milestone 2): unit counts and deciles of the
+  delivered files, by year, age range and sex, written by the `register-mock-data`
+  scaffold. The policy is minimum 5, statistics on at least 50 units (5 per decile
+  group) and 3 significant digits. The scaffold perturbs every count with the cell key
+  method; the gate cannot verify noise, which is why it still checks the minimum of 5 on
+  these counts: a waived floor would let raw small counts pass under the mock-stats name
+  (maintainer, 2026-11-05).
 
 ## The check
 
@@ -168,7 +193,10 @@ output. In order:
    `int32` `INT_MIN`; the `int64` NA sentinel), so both gates read validity from Arrow,
    the R gate through Arrow compute functions, never R's conversion: that NaN is
    `nan_value`, a sentinel count is `min_cell_count`, and a sentinel in an integer
-   dimension is an ordinary value.
+   dimension is an ordinary value. Under a policy with the optional fields, a non-null
+   `statistic` resting on a support below `statistic_min_support` is
+   `statistic_support_too_small`, and a `double` statistic not rounded to
+   `statistic_significant_digits` is `statistic_not_rounded`.
 4. **Backstop scan.** Every value is scanned for personnummer and samordningsnummer
    shapes (10 or 12 digits, optional `-` or `+`, a valid month and day or day + 60, not
    inside a longer digit run): strings as written, integers in full, dates as their day
@@ -248,7 +276,8 @@ The code is the category; the rule locates the finding. Both are stable.
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
   `column_order`, `column_type`.
-- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`.
+- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`,
+  `statistic_support_too_small`, `statistic_not_rounded`.
 - `backstop`: `identifier_pattern`.
 - `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
   `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
@@ -328,7 +357,9 @@ The Rust binary and the R file are two implementations of one check, an exceptio
 "one implementation per contract". One case corpus (schema and candidate folder →
 expected pass or refusal code) runs against both, so their agreement is the oracle. The
 binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
-receipt: it names the binary version the R file imitates (0.3.0 today;
+receipt: it names the binary version the R file imitates (0.3.0 today, while the binary
+is 0.4.0: R has not yet gained the two statistic rules, so it refuses the mock-stats
+policy as `policy_invalid` and fails those three corpus cases;
 `crates/reg-export-gate/DESIGN.md`, "The R gate follows").
 
 ### The R file
