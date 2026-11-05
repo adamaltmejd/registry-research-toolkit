@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "format": "dta",
+  "layout": "delivery",
+  "project": { "name": "Every type", "hash": "fixture" },
+  "catalog_generation": "fixture",
+  "null_rate": 0.1,
+  "files": [
+    {
+      "name": "persons",
+      "source": "p",
+      "unit": "person",
+      "population": { "age_min": 16 },
+      "rows_per_unit": 1.5,
+      "years": [2019, 2020],
+      "columns": [
+        { "name": "LopNr", "type": "identifier", "attribute": "person_key", "identifier": true },
+        { "name": "Kon", "type": "text", "storage": { "type": "char", "length": 1 }, "attribute": "sex" },
+        { "name": "FodelseAr", "type": "integer", "storage": { "type": "smallint" }, "attribute": "birth_year" },
+        { "name": "Lan", "type": "text", "storage": { "type": "varchar", "length": 2 }, "attribute": "county" },
+        { "name": "Kommun", "type": "text", "attribute": "municipality" },
+        { "name": "DodDatum", "type": "date", "storage": { "type": "date" }, "attribute": "death_date" },
+        { "name": "Inkomst", "type": "decimal", "storage": { "type": "decimal", "precision": 12, "scale": 2 } },
+        { "name": "Stor", "type": "decimal", "storage": { "type": "decimal", "precision": 20, "scale": 4 } },
+        { "name": "Andel", "type": "decimal", "storage": { "type": "real" } },
+        { "name": "Antal", "type": "integer", "storage": { "type": "bigint" } },
+        { "name": "Flagga", "type": "boolean", "storage": { "type": "bit" } },
+        { "name": "Registrerad", "type": "datetime", "storage": { "type": "datetime2" } },
+        { "name": "Sun2000niva", "type": "text", "codes": [
+          { "code": "1", "label": "Förgymnasial", "sentinel": false },
+          { "code": "5", "label": "Eftergymnasial", "sentinel": false },
+          { "code": "*", "label": "Uppgift saknas", "sentinel": true }
+        ] },
+        { "name": "AyfAr", "type": "integer", "storage": { "type": "int" }, "attribute": "year", "encoding": "year", "null_rate": 0.0 }
+      ]
+    },
+    {
+      "name": "firms",
+      "source": "f",
+      "unit": "firm",
+      "rows_per_unit": 1.0,
+      "years": [],
+      "columns": [
+        { "name": "PeOrgNr", "type": "integer", "attribute": "firm_key", "identifier": true },
+        { "name": "Namn", "type": "text" }
+      ]
+    }
+  ]
+}

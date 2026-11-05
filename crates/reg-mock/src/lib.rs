@@ -3,9 +3,13 @@
 //! the researcher's machine. Reads no data rows: only catalog metadata and the rules.
 
 pub mod compile;
+pub mod generate;
 pub mod input;
+pub mod population;
+mod rng;
 pub mod rules;
 pub mod spec;
+pub mod write;
 
 use serde::Serialize;
 

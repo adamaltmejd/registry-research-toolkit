@@ -73,3 +73,59 @@ table).
 agree, and the sources sharing a column must state the same rule for it. A column rule
 that names no column is refused, since a misspelt name would otherwise do nothing. Every
 refusal is returned at once, located, with a stable code.
+
+## Generate
+
+`reg-meta mock generate --spec --out DIR [--seed N] [--persons N] [--allow-large]`
+writes one file per spec file, `<name>.<dta|parquet|csv>`, and `mock_manifest.json`
+(files, row counts, seed, persons, the mock marker). `--seed` defaults to 1 and
+`--persons` to 10 000. More than 1 000 000 persons needs `--allow-large`.
+
+**Population** (`population.rs`). One simulated population serves every file, so keys
+join across files. Its structure comes from SCB's public demography 1968–2024
+(`data/demography.csv`: population, deaths, immigrants and emigrants by year, sex and
+age; `data/county.csv`: population by county), embedded in the binary. The population of
+the year before the window is scaled to `--persons`; each year then adds births and
+immigrants and removes deaths and emigrants at the observed rates. Years outside
+1968–2024 use the nearest year's figures. Firms are one per 20 persons, and each person
+has one employer for life (a `simplify:`). Keys are synthetic and disjoint: persons from
+900 000 001, firms from 800 000 001, any other identifier from 700 000 001 (random, so
+it joins nothing; a rule marks a person or firm id as `person_key` or `firm_key`).
+
+**Rows.** A person file holds, each year, the persons its population rules admit (age
+bounds, resident that year unless departed units stay). Each unit has one row with
+probability `rows_per_unit` when the mean is at most 1, else 1 plus a Poisson draw for
+the rest. A column draws its unit attribute when the rules name one, else one of its
+codes, else a value of its type (amounts lognormal, text short and random). A
+municipality with no value set is the county seat (`<county>80`). Values are missing at
+the column's rate (the spec's 2% by default), as a sentinel code where the value set has
+one; keys and the year never are. A timeless file is drawn in the window's last year,
+and a spec with only timeless files in 2024.
+
+**Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types
+per format"), so a pipeline reads mock and real files alike:
+
+  | type                                 | dta             | parquet                 |
+  | :----------------------------------- | :-------------- | :---------------------- |
+  | int storage, or integer without one  | long            | int32                   |
+  | bigint, an identifier without one    | double `%20.0g` | int64                   |
+  | decimal(p ≤ 15)                      | double `%20.0g` | decimal128              |
+  | decimal(p > 15)                      | str             | decimal128              |
+  | float, real, decimal without storage | double `%10.0g` | float64 (real: float32) |
+  | date                                 | `%td`           | date32                  |
+  | datetime                             | `%tc` (ms)      | timestamp(µs, UTC)      |
+  | text                                 | str, NULL as "" | string                  |
+  | bit, boolean                         | long (0/1)      | bool                    |
+
+CSV quotes a field only when it must and ends lines with LF. Every file states that it
+is mock data where the format has a place for it (the `.dta` dataset label, a Parquet
+key-value entry) and in `mock_manifest.json`, never in a file or column name.
+
+**Determinism.** The same spec, seed and `--persons` give byte-identical files: the
+generator is xoshiro256\*\* written out (`rng.rs`, not `rand`, whose output may change
+between releases), each file and column draws from its own stream keyed by its name, the
+`.dta` timestamp is unset and Parquet's `created_by` is fixed.
+
+**Refreshing the demography.** `data/refresh.sh` (bash, curl and jq) fetches the tables
+from SCB's statistical database API (CC0) and rewrites both CSVs. Run it by hand at
+release time when SCB publishes a new year; the diff is the review.
