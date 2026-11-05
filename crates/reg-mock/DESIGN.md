@@ -47,7 +47,8 @@ What `compile` and `generate` hold to; each rule names its one place in the code
    - *type*: the project's `type` for any of its variables, matched by variable (its own
      source first), so a row key or a carried copy without a binding takes it too; two
      different `type`s are refused (`column_types_disagree`). Else the held storage's
-     type, else the catalog's (#2071, G8/G10, `resolve_type`).
+     type, else the catalog's, which every segment must state alike (#2071, G8/G10,
+     `resolve_type`).
    - *segments*: per reference, those overlapping one of the column's years (the order's
      period for a timeless file), from the held placement's rows (delivery), else the
      reference's table, else, for a reference without a binding only, any table (a
@@ -76,8 +77,8 @@ What `compile` and `generate` hold to; each rule names its one place in the code
    drawn value stays within its storage. A value the format cannot hold is refused, as
    the runner refuses it. `real` is float32 in Parquet, as the runner writes it.
 7. **Units are one population** (`population.rs`, `attribute_cell`): every unit
-   attribute comes from the unit, or from the unit's own stream over sorted codes, never
-   a column's, so files join and agree.
+   attribute comes from the unit, or from the unit's own stream over the spec's sorted
+   municipality codes, never a column's, so files join and agree.
 8. **Same inputs, same bytes** (`rng.rs`, `write.rs`).
 
 ## Compile
@@ -147,12 +148,14 @@ it joins nothing; a rule marks a person or firm id as `person_key` or `firm_key`
 bounds, resident that year unless departed units stay). Each unit has one row with
 probability `rows_per_unit` when the mean is at most 1, else 1 plus a Poisson draw for
 the rest. A column draws its unit attribute when the rules name one, else one of its
-codes, else a value of its type (amounts lognormal, text short and random). A
-municipality with no value set is the county seat (`<county>80`), a value set of
-sentinels only is drawn as such, text is no wider than its held storage, and decimals
-keep every digit. Values are missing at the column's rate (the spec's 2% by default), as
-a sentinel code where the value set has one; keys and the year never are. A timeless
-file is drawn in the window's last year, and a spec with only timeless files in 2024.
+codes, else a value of its type (amounts lognormal, text short and random). A unit's
+municipality is drawn once from every municipality code in the spec, in its county where
+one is, so a column may hold a code its own value set lacks; with no codes at all it is
+the county seat (`<county>80`). A value set of sentinels only is drawn as such, text is
+no wider than its held storage, and decimals keep every digit. Values are missing at the
+column's rate (the spec's 2% by default), as a sentinel code where the value set has
+one; keys and the year never are. A timeless file is drawn in the window's last year,
+and a spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types
 per format"), so a pipeline reads mock and real files alike:

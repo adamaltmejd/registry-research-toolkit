@@ -1266,7 +1266,7 @@
     },
     "/api/search/facets": {
       "get": {
-        "description": "Per register, how many variables a search query matches.",
+        "description": "Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers.",
         "operationId": "search_facets",
         "parameters": [
           {
@@ -1279,6 +1279,14 @@
           },
           {
             "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
             "in": "query",
             "required": false,
             "schema": {
@@ -4339,7 +4347,7 @@
               "registers": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ShowRegisterRef"
+                  "$ref": "#/components/schemas/ShowProviderRegister"
                 },
                 "description": "On a data holder's catalog, the holder's own registers too."
               }
@@ -4634,6 +4642,53 @@
             "items": {
               "$ref": "#/components/schemas/ShowRegisterRef"
             }
+          }
+        }
+      },
+      "ShowProviderRegister": {
+        "type": "object",
+        "description": "A provider's register with its variables, so the provider alone lists every\nvariable of its registers.",
+        "required": [
+          "fqid",
+          "name",
+          "period",
+          "variables"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowProviderVariable"
+            }
+          }
+        }
+      },
+      "ShowProviderVariable": {
+        "type": "object",
+        "description": "A variable in a provider's register list: what the list shows (the name, and the\nyears where two names repeat), not the tables `show` on the register lists.",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
           }
         }
       },

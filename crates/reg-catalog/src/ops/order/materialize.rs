@@ -693,13 +693,8 @@ fn keys(
     draft: &mut Draft,
     findings: &mut Vec<Issue>,
 ) -> Result<(), Error> {
-    let requirements: Vec<Value> = serde_json::from_str(&holding.keys).map_err(|_| {
-        Error::new(
-            Code::InternalError,
-            "The holder's row-key data is invalid.",
-            vec![],
-        )
-    })?;
+    let requirements: Vec<Value> = serde_json::from_str(&holding.keys)
+        .map_err(|_| Error::internal("The holder's row-key data is invalid."))?;
     let mut columns = held.prepare(
         "SELECT c.id, m.table_pid, m.start, m.end, m.carried, c.name, m.caveat
          FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
@@ -719,13 +714,7 @@ fn keys(
                     let (lo, hi) = token
                         .trim()
                         .parse::<reg_core::Period>()
-                        .map_err(|_| {
-                            Error::new(
-                                Code::InternalError,
-                                "The holder's row-key data is invalid.",
-                                vec![],
-                            )
-                        })?
+                        .map_err(|_| Error::internal("The holder's row-key data is invalid."))?
                         .iso_bounds();
                     Ok((super::day(&lo), super::day(&hi) + 1))
                 })

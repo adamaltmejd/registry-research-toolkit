@@ -62,11 +62,11 @@ fn run_compile(mut args: impl Iterator<Item = String>) -> ! {
         usage("mock compile: --project, --rules, --answers and --out are required");
     };
     let project = read_json(&project);
-    let rules: Rules = serde_json::from_value(read_json(&rules)).unwrap_or_else(|e| {
+    let rules: Rules = reg_mock::from_json(&read_json(&rules)).unwrap_or_else(|e| {
         refuse(&[Refusal::new(
             "rules_invalid",
             rules.display().to_string(),
-            e.to_string(),
+            e,
         )])
     });
     let answers = load_answers(&answers).unwrap_or_else(|r| refuse(&[r]));
@@ -119,11 +119,11 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
     let seed = number(seed, "--seed", 1);
     let persons = number(persons, "--persons", generate::DEFAULT_PERSONS);
     let spec_path = PathBuf::from(spec);
-    let spec: Spec = serde_json::from_value(read_json(&spec_path)).unwrap_or_else(|e| {
+    let spec: Spec = reg_mock::from_json(&read_json(&spec_path)).unwrap_or_else(|e| {
         refuse(&[Refusal::new(
             "spec_invalid",
             spec_path.display().to_string(),
-            e.to_string(),
+            e,
         )])
     });
     if spec.version != SPEC_VERSION {

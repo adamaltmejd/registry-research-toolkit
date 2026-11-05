@@ -168,6 +168,19 @@ pub fn generate(
     }
     let (first, last) = window(spec);
     let population = Population::simulate(&Demography::embedded(), seed, persons, first, last);
+    // Every municipality code the spec holds: a unit's municipality is drawn from them
+    // once, so files whose value sets differ still agree on it.
+    let mut municipalities: Vec<&str> = spec
+        .files
+        .iter()
+        .flat_map(|f| &f.columns)
+        .filter(|c| c.attribute == Some(Attribute::Municipality))
+        .flat_map(|c| &c.codes)
+        .filter(|c| !c.sentinel)
+        .map(|c| c.code.as_str())
+        .collect();
+    municipalities.sort_unstable();
+    municipalities.dedup();
     let mut tables = Vec::new();
     for file in &spec.files {
         let kinds = file
@@ -183,7 +196,7 @@ pub fn generate(
                 })
             })
             .collect::<Result<Vec<_>, _>>()?;
-        let rows = rows(spec, file, &kinds, &population, seed, last)?;
+        let rows = rows(spec, file, &kinds, &population, &municipalities, seed, last)?;
         tables.push((file.name.clone(), Table { kinds, rows }));
     }
     Ok(tables)
@@ -192,6 +205,7 @@ pub fn generate(
 /// One unit's row in one year.
 struct Unit_<'a> {
     seed: u64,
+    municipalities: &'a [&'a str],
     year: i32,
     person: Option<&'a crate::population::Person>,
     firm: Option<&'a crate::population::Firm>,
@@ -202,6 +216,7 @@ fn rows(
     file: &SpecFile,
     kinds: &[Kind],
     population: &Population,
+    municipalities: &[&str],
     seed: u64,
     last: i32,
 ) -> Result<Vec<Vec<Cell>>, Refusal> {
@@ -226,6 +241,7 @@ fn rows(
                 .filter(|p| eligible(file, p, year))
                 .map(|p| Unit_ {
                     seed,
+                    municipalities,
                     year,
                     person: Some(p),
                     firm: Some(&population.firms[firm_of(p.key, population.firms.len())]),
@@ -236,6 +252,7 @@ fn rows(
                 .iter()
                 .map(|f| Unit_ {
                     seed,
+                    municipalities,
                     year,
                     person: None,
                     firm: Some(f),
@@ -358,8 +375,7 @@ fn cell(
         return from_text(code, kind).ok_or_else(|| not_numeric(at()));
     }
     if let Some(attribute) = column.attribute {
-        return attribute_cell(column, kind, &pool.codes, attribute, unit, rng)
-            .ok_or_else(|| not_numeric(at()));
+        return attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()));
     }
     if !pool.codes.is_empty() {
         let code = pool.codes[pick(rng, pool.codes.len())];
@@ -415,7 +431,6 @@ fn pick(rng: &mut Rng, n: usize) -> usize {
 fn attribute_cell(
     column: &SpecColumn,
     kind: Kind,
-    codes: &[&str],
     attribute: Attribute,
     unit: &Unit_<'_>,
     rng: &mut Rng,
@@ -463,21 +478,21 @@ fn attribute_cell(
                 || unit.firm.map(|f| f.county.as_str()),
                 |p| Some(p.county.as_str()),
             )?;
-            // A code of the person's county (its first two digits), else any code.
-            // simplify: filtered per row; key the pool by county if 1M-person runs slow.
+            // A code of the person's county (its first two digits), else any code, from
+            // every municipality code in the spec, so each file agrees; a column may then
+            // hold a code its own value set lacks. simplify: filtered per row; key the
+            // pool by county if 1M-person runs slow.
+            let codes = unit.municipalities;
             let local: Vec<&str> = codes
                 .iter()
                 .copied()
                 .filter(|c| c.len() == 4 && c.starts_with(county))
                 .collect();
-            let mut pool = if local.is_empty() {
+            let pool = if local.is_empty() {
                 codes.to_vec()
             } else {
                 local
             };
-            // Sorted, so columns listing the same codes in another order agree.
-            pool.sort_unstable();
-            pool.dedup();
             if pool.is_empty() {
                 // simplify: without a value set, the county seat (`<county>80` in every
                 // county); embed SCB's municipality list if analyses need the spread.

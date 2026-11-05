@@ -75,14 +75,15 @@ shared and always match. Both cursors bind both component generations."""
 [[operation]]
 name = "search_facets"
 http = ["GET /api/search/facets"]
-params = { q = "string", register = "ref?", limit = "limit?" }
+params = { q = "string", register = "ref?", provider = "ref?", limit = "limit?" }
 result = "RegisterFacets: {registers: [{fqid, name?, variable_matches, variables?: [{fqid, name}]}]} in FQID order"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """Per register, the count of `search`'s `variable` hits for `q`, counted in one \
 `GROUP BY register_id` over the FTS match (schema §2.1): not cut by `limit` or the \
 depth-1000 bound. Registers with no match are absent. With `register`, the list holds \
 only that register and its entry adds `variables`: the matched variables (FQID and \
-name) in FQID order, never cut. Without `register`, `limit` adds each register's first \
+name) in FQID order, never cut. With `provider`, the list holds only that provider's \
+registers, each with every match listed and its `name`. Without either, `limit` adds each register's first \
 `limit` matched variables, `variable_matches` still counting them all, and a listed \
 entry adds the register's `name`. Absent, it is counts only. No MCP tool: it feeds \
 the SPA's in-place register filter, and an agent narrows with `search`'s `register`. \
@@ -104,7 +105,9 @@ tool = "show"
 params = { ref = "ref?", evidence = "boolean?" }
 result = "Show"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
-note = """The summary for any ref; no ref is the catalog root. Sets require \
+note = """The summary for any ref; no ref is the catalog root. A provider lists its \
+registers each with its variables, as the register's own summary lists them, so the \
+provider alone lists every variable of its registers. Sets require \
 set/<provider>/<register>/<slug>; malformed set refs are invalid_ref. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
 (`coverage`). Variable summaries show the curated description, the coverage hull, and \

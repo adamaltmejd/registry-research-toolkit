@@ -396,11 +396,7 @@ impl Catalog {
         if self.holdings.is_some() {
             let entity = crate::ops::refs::resolve(&conn, value)?;
             if !self.serves(&entity.kind, &entity.pid) {
-                return Err(Error::new(
-                    Code::NotFound,
-                    format!("Nothing is named {value:?}."),
-                    vec![value.into()],
-                ));
+                return Err(Error::not_found(value));
             }
         }
         Ok(conn)
@@ -455,13 +451,10 @@ impl Catalog {
     /// Physical facts attached under an explicit database origin for public-id joins.
     /// Steward mode only: every caller checks for the holdings pair first.
     pub(crate) fn attach_holdings(&self, conn: &Connection) -> Result<(), Error> {
-        let holdings = self.holdings.as_ref().ok_or_else(|| {
-            Error::new(
-                Code::InternalError,
-                "Holdings attached without a holdings database.",
-                vec![],
-            )
-        })?;
+        let holdings = self
+            .holdings
+            .as_ref()
+            .ok_or_else(|| Error::internal("Holdings attached without a holdings database."))?;
         conn.execute(
             "ATTACH DATABASE ? AS held",
             [crate::read_uri(&holdings.path)],

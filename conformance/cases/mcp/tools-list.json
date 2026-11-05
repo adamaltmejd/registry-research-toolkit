@@ -1042,7 +1042,7 @@
                 "registers": {
                   "description": "On a data holder's catalog, the holder's own registers too.",
                   "items": {
-                    "$ref": "#/$defs/ShowRegisterRef"
+                    "$ref": "#/$defs/ShowProviderRegister"
                   },
                   "type": "array"
                 }
@@ -1343,6 +1343,53 @@
             "fqid",
             "name",
             "registers"
+          ],
+          "type": "object"
+        },
+        "ShowProviderRegister": {
+          "description": "A provider's register with its variables, so the provider alone lists every\nvariable of its registers.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "variables": {
+              "items": {
+                "$ref": "#/$defs/ShowProviderVariable"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "period",
+            "variables"
+          ],
+          "type": "object"
+        },
+        "ShowProviderVariable": {
+          "description": "A variable in a provider's register list: what the list shows (the name, and the\nyears where two names repeat), not the tables `show` on the register lists.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "period"
           ],
           "type": "object"
         },

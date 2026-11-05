@@ -790,11 +790,7 @@ fn refused(
             "fqid_unresolved",
             format!("{value} names no {what} in the catalog."),
         )),
-        _ => Err(Error::new(
-            Code::InternalError,
-            format!("Resolving {value:?} failed."),
-            vec![],
-        )),
+        _ => Err(Error::internal(format!("Resolving {value:?} failed."))),
     }
 }
 

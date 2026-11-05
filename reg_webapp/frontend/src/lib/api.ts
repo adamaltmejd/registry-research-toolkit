@@ -86,6 +86,27 @@ export async function apiGet<T>(
 }
 
 /**
+ * Report the variables one add put in the project: the usage statistics' pick beacon,
+ * one request per add (`reg_webapp/DESIGN.md` → "Usage recording"), answered at the
+ * edge and never forwarded. Fire and forget: the variable ids only (at most 100),
+ * nothing from the project, and a failure (no edge in local dev, an old browser)
+ * changes nothing on the page.
+ */
+export function reportPicks(fqids: string[]): void {
+  if (!fqids.length) return;
+  try {
+    navigator.sendBeacon?.(
+      `${API_BASE}/event`,
+      new Blob([JSON.stringify({ fqids: fqids.slice(0, 100) })], {
+        type: "application/json",
+      }),
+    );
+  } catch {
+    // A beacon is best-effort.
+  }
+}
+
+/**
  * POST `body` as JSON to `path` (relative to `/api`) and return the parsed JSON
  * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
  * body when present); `checkProjectOrder` reads a blocked order out of it.
@@ -317,6 +338,7 @@ function searchGet<T>(
     limit?: number;
     type?: SearchType;
     register?: string;
+    provider?: string;
     cursor?: string;
   },
 ): Promise<T> {
@@ -329,6 +351,9 @@ function searchGet<T>(
   }
   if (options?.register !== undefined) {
     params.set("register", options.register);
+  }
+  if (options?.provider !== undefined) {
+    params.set("provider", options.provider);
   }
   if (options?.cursor !== undefined) {
     params.set("cursor", options.cursor);
@@ -370,13 +395,15 @@ export type RegisterFacets = RustSchemas["RegisterFacets"];
 /** Per register, how many of its variables match `q` (#1785): every match, no
  * paging, before concept groups fold. A register without a match is absent.
  * With `register`, only that register, and its entry lists every matched
- * variable (#1788); without it, `limit` lists each register's first `limit`
- * and names the register (#1828). */
+ * variable (#1788); with `provider`, each of its registers, every match
+ * listed; without either, `limit` lists each register's first `limit` and
+ * names the register (#1828). */
 export async function searchFacets(
   q: string,
   options?: {
     signal?: AbortSignal;
     register?: string;
+    provider?: string;
     limit?: number;
   },
 ): Promise<RegisterFacets> {
