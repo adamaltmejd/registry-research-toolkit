@@ -253,13 +253,21 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
 /// files. It adds and drops no pin, so what the steward pins stays a reviewed change.
 /// Returns the number of pins rewritten.
 pub(super) fn refresh_pins(root: &Path, config: &str) -> Result<usize> {
+    // Only `[pins]`, with each value's byte span, so the rewrite keeps every other
+    // byte (comments, spacing, line endings) as the steward wrote it.
+    #[derive(Deserialize)]
+    struct Spans {
+        pins: BTreeMap<String, toml::Spanned<String>>,
+    }
     let config_path = path(root, config)?;
-    let parsed: Config = crate::toml_file(&config_path)
+    let _: Config = crate::toml_file(&config_path)
         .map_err(|_| "holdings_config_invalid: malformed steward config".to_owned())?;
     let mut text = std::fs::read_to_string(&config_path)
         .map_err(|_| "holdings_config_invalid: unreadable steward config")?;
-    let mut changed = 0;
-    for (rel, old) in &parsed.pins {
+    let spans: Spans = toml::from_str(&text)
+        .map_err(|_| "holdings_config_invalid: malformed steward config".to_owned())?;
+    let mut edits = Vec::new();
+    for (rel, old) in &spans.pins {
         let full = path(root, rel)?;
         let new = if full.is_dir() {
             let mut files = std::collections::BTreeSet::new();
@@ -268,22 +276,18 @@ pub(super) fn refresh_pins(root: &Path, config: &str) -> Result<usize> {
         } else {
             crate::sha256_file(&full)?.0
         };
-        if new == *old {
-            continue;
+        if new != *old.get_ref() {
+            edits.push((old.span(), new));
         }
-        let line = format!("\"{rel}\" = \"{old}\"\n");
-        if text.matches(&line).count() != 1 {
-            return Err(format!(
-                "holdings_config_invalid: pin {rel:?} is not one `\"path\" = \"sha256\"` line"
-            )
-            .into());
-        }
-        text = text.replacen(&line, &format!("\"{rel}\" = \"{new}\"\n"), 1);
-        changed += 1;
+    }
+    // Back to front, so an earlier span stays valid after a later one is rewritten.
+    edits.sort_by_key(|(span, _)| std::cmp::Reverse(span.start));
+    for (span, new) in &edits {
+        text.replace_range(span.clone(), &format!("\"{new}\""));
     }
     std::fs::write(&config_path, text)
         .map_err(|e| format!("holdings_config_invalid: write {config}: {e}"))?;
-    Ok(changed)
+    Ok(edits.len())
 }
 
 /// One digest over the pinned input list, so the artifact names its inputs without

@@ -188,24 +188,25 @@ jobs:
         run: |
           set -euo pipefail
           docker run -d --name steward-smoke -p 8000:8000 "$IMAGE"
+          # The entrypoint prints its pass line only after every gate probe; a failed
+          # gate exits the container.
           deadline=$((SECONDS + 300))
-          until curl -fsS -o /dev/null "http://127.0.0.1:8000/api/context"; do
+          # Logs captured first: under pipefail, grep -q closing the pipe early fails it.
+          while :; do
+            logs=$(docker logs steward-smoke 2>&1)
+            grep -qx 'entrypoint: smoke gate passed' <<< "$logs" && break
             [ "$(docker inspect -f '{{.State.Running}}' steward-smoke)" = true ] ||
-              { docker logs steward-smoke; echo "::error::the container exited before serving"; exit 1; }
-            [ "$SECONDS" -lt "$deadline" ] || { docker logs steward-smoke; exit 1; }
+              { docker logs steward-smoke; echo "::error::the entrypoint gate failed"; exit 1; }
+            [ "$SECONDS" -lt "$deadline" ] || { docker logs steward-smoke; echo "::error::the entrypoint gate did not finish within 300s"; exit 1; }
             sleep 2
           done
-          # The gate's last probe is /mcp; once it answers here, give the gate the same
-          # call and check the container is still up.
+          # Then the steward's own context and MCP through the published port.
           curl -fsS --max-time 60 "http://127.0.0.1:8000/mcp" \
             -H 'accept: application/json, text/event-stream' \
             -H 'content-type: application/json' \
             -H 'mcp-protocol-version: 2025-11-25' \
             -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | grep -q '"name":"search"'
           curl -fsS "http://127.0.0.1:8000/api/context" | jq -e '.data.steward_config'
-          sleep 5
-          [ "$(docker inspect -f '{{.State.Running}}' steward-smoke)" = true ] ||
-            { docker logs steward-smoke; echo "::error::the entrypoint gate failed"; exit 1; }
           docker logs steward-smoke 2>&1 | tail -n 5
           docker rm -f steward-smoke
 

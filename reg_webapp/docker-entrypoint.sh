@@ -86,6 +86,9 @@ curl -fsS --max-time "$MAX_TIME" "$BASE/mcp" \
     -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' \
     | grep -q '"name":"search"' || fail "/mcp tools/list"
 
+# The line a dry run waits for (steward-deploy.yml): the gate has finished.
+echo "entrypoint: smoke gate passed" >&2
+
 # Gate passed. Preload the DB into the page cache in the background, so later
 # requests never read cold pages from the throttled rootfs (~17 MB/s; the VM is sized
 # to hold it, fly.toml). Best effort.
