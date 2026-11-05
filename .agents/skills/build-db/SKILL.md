@@ -80,14 +80,15 @@ processes and compare database bytes. Overlapping builds are not performance ben
 
 ## SWECOV holdings
 
-The holdings pin is the root `stewards.toml`: the steward repository, an exact commit
-and the config path. Compile holdings only against a complete `--release` base, from a
-clean SSH clone of the steward repository checked out at the pin, then verify the pair
-and compare with a baseline holdings DB (release skill 8d, 8e and 8g):
+The holdings pin is the steward checkout itself: `reg-build holdings` records its
+`origin`, `HEAD` and `--config` path and refuses a dirty tree. Compile holdings only
+against a complete `--release` base, from a clean clone of the steward repository at the
+commit you mean to build, then verify the pair and compare with a baseline holdings DB
+(release skill 8d, 8e and 8g):
 
 ```sh
 target/release/reg-build holdings --base "$run_dir/reg_meta.db" --steward swecov \
-  --steward-repo "$steward" --registry stewards.toml \
+  --steward-repo "$steward" --config steward.toml \
   --out "$run_dir/reg_meta_swecov.db" --report "$run_dir/holdings-report.json"
 target/release/reg-build verify "$run_dir/reg_meta_swecov.db" \
   --catalog "$run_dir/reg_meta.db" --steward-repo "$steward"

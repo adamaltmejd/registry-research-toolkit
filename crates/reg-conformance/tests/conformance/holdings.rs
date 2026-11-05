@@ -308,8 +308,7 @@ fn holdings_base_change_invalidates_lineage_lock() {
             .arg(&changed)
             .args(["--steward", "fixture", "--steward-repo"])
             .arg(&holdings.root)
-            .arg("--registry")
-            .arg(&holdings.registry)
+            .args(["--config", "steward.toml"])
             .arg("--out")
             .arg(&out),
     )
