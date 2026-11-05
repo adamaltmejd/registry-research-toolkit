@@ -5,7 +5,8 @@
 # agent-browser session (fresh storage), clicks with the pointer, and asserts only
 # what the rendered page shows (text, roles and names, the URL) plus, in J5, the saved
 # project file. A click a journey cannot make is a suspected UI defect, never routed
-# around with keyboard input. Layout, focus and the other widths are the rendered
+# around with keyboard input. Keys only enter text: `fill` types into a field, and J2
+# presses Enter in the search field to open its palette, as a user does. Layout, focus and the other widths are the rendered
 # design review's. Names and values are the fixtures': webapp-dev
 # (conformance/cases/fixtures/webapp-dev) and the paired holdings fixture
 # (conformance/cases/holdings). Each journey's comment names the regression it catches.
@@ -27,7 +28,11 @@ see() {
 	local tries=50
 	until ab find role "$1" text --name "$2" --exact >/dev/null 2>&1; do
 		tries=$((tries - 1))
-		[ "$tries" -gt 0 ] || fail "no $1 \"$2\" appeared" || return 1
+		if [ "$tries" -eq 0 ]; then
+			ab find role "$1" text --name "$2" --exact >/dev/null # its "Names seen"
+			fail "no $1 \"$2\" appeared"
+			return 1
+		fi
 		sleep 0.2
 	done
 }
@@ -193,6 +198,12 @@ JOURNEYS=(
 # session, then check the page threw nothing. Prints each journey's time.
 run_journeys() {
 	local entry name fixture viewport started rc=0 ran=0 errors
+	for name in "$@"; do
+		[[ " ${JOURNEYS[*]} " == *" $name:"* ]] || {
+			echo "journey: unknown \"$name\"; pick from ${JOURNEYS[*]%%:*}" >&2
+			return 2
+		}
+	done
 	for entry in "${JOURNEYS[@]}"; do
 		IFS=: read -r name fixture viewport <<<"$entry"
 		if [ "$#" -gt 0 ]; then

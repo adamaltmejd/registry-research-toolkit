@@ -157,7 +157,7 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 ## Troubleshooting
 
 - Screenshot shows breadcrumbs + `Loading…` → the fetch hadn't landed; re-run, or raise
-  `settled()`'s 10 s timeout.
+  agent-browser's 25 s wait timeout (`AGENT_BROWSER_DEFAULT_TIMEOUT`, in ms).
 - The Rust server exits at boot about the DB/schema → no `REG_META_DB`, or an
   inadmissible schema. Use `--fixture-db` or a current release asset.
 - agent-browser cannot launch Chrome (`smoke` / `shot` / `flows`) → `$ab doctor` names
