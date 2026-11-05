@@ -421,6 +421,7 @@ export type RootChild = RootShow["providers"][number];
 
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
+export type ClassFamilyShow = Extract<ShowNode, { kind: "class_family" }>;
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogFindingGroup = RustSchemas["FindingGroup"];

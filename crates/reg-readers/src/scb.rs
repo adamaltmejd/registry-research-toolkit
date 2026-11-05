@@ -1137,16 +1137,19 @@ fn number(bytes: &[u8]) -> Option<u64> {
 }
 
 /// CP1252 bytes as text. The five bytes CP1252 leaves undefined occur in the export as
-/// DOS CP850 remnants and decode as CP850.
+/// DOS CP850 remnants and decode as CP850. SCB's Windows line breaks (`\r\n`, and a lone
+/// `\r`) become `\n`, so served text carries one line-break form.
 fn decode(bytes: &[u8]) -> String {
     let (text, _) = encoding_rs::WINDOWS_1252.decode_without_bom_handling(bytes);
-    text.chars()
+    text.replace("\r\n", "\n")
+        .chars()
         .map(|c| match c {
             '\u{81}' => 'ü',
             '\u{8D}' => 'ì',
             '\u{8F}' => 'Å',
             '\u{90}' => 'É',
             '\u{9D}' => 'Ø',
+            '\r' => '\n',
             c => c,
         })
         .collect()

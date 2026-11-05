@@ -1553,8 +1553,12 @@
             "name": {
               "type": "string"
             },
-            "period": {
-              "$ref": "#/$defs/Period"
+            "periods": {
+              "description": "The periods its dated tables are delivered, merged, in start order. Gaps stay gaps.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             },
             "variables": {
               "items": {
@@ -1566,7 +1570,7 @@
           "required": [
             "fqid",
             "name",
-            "period",
+            "periods",
             "variables"
           ],
           "type": "object"
@@ -1764,7 +1768,7 @@
           "type": "object"
         },
         "ShowTableVariable": {
-          "description": "A variable in a table, over the years it has in that table.",
+          "description": "A variable in a table, over the periods it has in that table.",
           "properties": {
             "fqid": {
               "type": "string"
@@ -1772,14 +1776,18 @@
             "name": {
               "type": "string"
             },
-            "period": {
-              "$ref": "#/$defs/Period"
+            "periods": {
+              "description": "The periods its segments here cover, merged, in start order. Gaps stay gaps.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             }
           },
           "required": [
             "fqid",
             "name",
-            "period"
+            "periods"
           ],
           "type": "object"
         },

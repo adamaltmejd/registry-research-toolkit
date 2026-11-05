@@ -182,16 +182,3 @@ export function routeBreadcrumbs(
     }),
   ];
 }
-
-const classificationSuffixes: Record<string, string> = {
-  niva: "nivå",
-  inr: "inriktning",
-};
-
-/** Vintage classification names share the same spelling in lists and pins. */
-export function humanizeClassificationSlug(slug: string): string {
-  const m = /^([a-z]+)(\d{4})(?:-(.+))?$/.exec(slug);
-  if (!m) return slug;
-  const suffix = m[3];
-  return `${m[1].toUpperCase()} ${m[2]}${suffix ? ` (${classificationSuffixes[suffix] ?? suffix.replaceAll("-", " ")})` : ""}`;
-}

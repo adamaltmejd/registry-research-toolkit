@@ -144,12 +144,13 @@ pub enum Show {
     },
 }
 
-/// A variable in a table, over the years it has in that table.
+/// A variable in a table, over the periods it has in that table.
 #[derive(Serialize, ToSchema)]
 pub struct ShowTableVariable {
     fqid: String,
     name: String,
-    period: Period,
+    /// The periods its segments here cover, merged, in start order. Gaps stay gaps.
+    periods: Vec<Period>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -205,7 +206,8 @@ pub struct ShowRegisterRef {
 pub struct ShowProviderRegister {
     fqid: String,
     name: String,
-    period: Period,
+    /// The periods its dated tables are delivered, merged, in start order. Gaps stay gaps.
+    periods: Vec<Period>,
     variables: Vec<ShowProviderVariable>,
 }
 
@@ -413,6 +415,30 @@ fn served_registers(
     Ok(by_provider)
 }
 
+/// A register's delivered periods: in steward mode the years it is held, else the merged
+/// spans of its dated (not timeless) tables.
+fn register_periods(
+    server: &Server,
+    conn: &Connection,
+    register: &str,
+) -> Result<Vec<Period>, Error> {
+    let spans: Vec<reg_core::days::Span> = match server.catalog.held_spans("register", register) {
+        Some(held) => held.to_vec(),
+        None => rows(
+            conn,
+            "SELECT s.start, s.end FROM tbl_span s JOIN tbl t ON t.id = s.table_id
+               JOIN register r ON r.id = t.register_id
+             WHERE r.pid = ? AND NOT t.timeless",
+            [register],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?,
+    };
+    Ok(reg_core::days::merge(spans)
+        .into_iter()
+        .map(|(start, end)| server.period(start, end))
+        .collect())
+}
+
 fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
     let name = conn.query_row(
         "SELECT n.body FROM provider p JOIN text n ON n.id = p.name_text WHERE p.id = ?",
@@ -434,9 +460,9 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                         period: v.period,
                     })
                     .collect(),
+                periods: register_periods(server, conn, &register.fqid)?,
                 fqid: register.fqid,
                 name: register.name,
-                period: register.period,
             })
         })
         .collect::<Result<_, Error>>()?;
@@ -736,7 +762,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
     })
 }
 
-/// A table's variables, each over the hull of the years its segments here hold, from
+/// A table's variables, each over the merged periods its segments here hold, from
 /// both origins; in steward mode only the pairs the steward places, clipped as
 /// `row_keys` clips.
 fn table_variables(
@@ -761,27 +787,29 @@ fn table_variables(
         found.extend(spans(extra)?);
     }
     let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
-    let mut hulls: BTreeMap<String, (i64, i64)> = BTreeMap::new();
+    let mut spans_of: BTreeMap<String, Vec<reg_core::days::Span>> = BTreeMap::new();
     for (fqid, start, end) in found {
         if !server.catalog.serves_in(&fqid, pid) {
             continue;
         }
         let days = match held.as_mut() {
-            Some(held) => held.clip(pid, &fqid, (start, end))?,
-            None => Some((start, end)),
+            Some(held) => held.clip_each(pid, &fqid, (start, end))?,
+            None => vec![(start, end)],
         };
-        if let Some((start, end)) = days {
-            let hull = hulls.entry(fqid).or_insert((start, end));
-            *hull = (hull.0.min(start), hull.1.max(end));
+        if !days.is_empty() {
+            spans_of.entry(fqid).or_default().extend(days);
         }
     }
-    let names = refs::names(server, hulls.keys().map(String::as_str))?;
-    hulls
+    let names = refs::names(server, spans_of.keys().map(String::as_str))?;
+    spans_of
         .into_iter()
-        .map(|(fqid, (start, end))| {
+        .map(|(fqid, spans)| {
             Ok(ShowTableVariable {
                 name: names.of(refs::Named::Variable, &fqid)?,
-                period: server.period(start, end),
+                periods: reg_core::days::merge(spans)
+                    .into_iter()
+                    .map(|(start, end)| server.period(start, end))
+                    .collect(),
                 fqid,
             })
         })
