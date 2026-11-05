@@ -371,11 +371,13 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     return b + gap > c && d + gap > a;
   };
   const axisEnds = [first, last].filter((year) => !bounds.includes(year));
-  const endTicks = axisEnds.map((year) => ({
-    year,
-    x: x(year),
-    inWindow: false,
-  }));
+  // The first year hangs right from the track's start, the last left from its
+  // end (the end of that year's cell), as on a VariableRow list's axis.
+  const endTicks: Tick[] = axisEnds.map((year) =>
+    year === first
+      ? { year, x: x(year), inWindow: false, anchor: "start" }
+      : { year, x: x(year + 1), inWindow: false, anchor: "end" },
+  );
   for (const tick of boundTicks) {
     if (tick.anchor !== undefined) continue;
     for (const end of endTicks) {
