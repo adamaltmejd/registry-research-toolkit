@@ -386,9 +386,47 @@ fn materialize(
         ));
     }
     let (entries, change) = entries(&at, binding, &pieces);
+    outcome
+        .findings
+        .extend(type_differs(&at, binding, &entries));
     outcome.entries = entries;
     outcome.findings.extend(change);
     Ok(outcome)
+}
+
+/// `binding_type_differs`: one per entry whose catalog type is known and is not the
+/// binding's type override, at the entry's period. An unknown catalog type is what the
+/// override fills, so it is not reported. A steward's order drops the finding where the
+/// held storage is of the override's family (`materialize::build`, G14).
+fn type_differs(at: &Located, binding: &Binding, entries: &[OrderEntry]) -> Vec<Issue> {
+    let Some(stated) = binding.column_type else {
+        return Vec::new();
+    };
+    entries
+        .iter()
+        .filter_map(|e| {
+            let catalog = e.dtype.as_deref()?;
+            (catalog != stated.as_str()).then(|| {
+                let mut issue = at.issue(
+                    IssueLevel::Warning,
+                    "binding_type_differs",
+                    &e.table,
+                    None,
+                    format!(
+                        "the project gives {} the type {}, but the catalog has {catalog} in \
+                         {} over [{}, {})",
+                        e.variable,
+                        stated.as_str(),
+                        e.table,
+                        e.period.start.as_deref().unwrap_or("open"),
+                        e.period.end.as_deref().unwrap_or("open"),
+                    ),
+                );
+                issue.period = Some(e.period.clone());
+                issue
+            })
+        })
+        .collect()
 }
 
 /// A binding's finding constructor.

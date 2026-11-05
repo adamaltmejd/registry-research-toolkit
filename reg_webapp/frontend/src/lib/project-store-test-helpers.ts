@@ -19,7 +19,7 @@ export function add(
   return {
     registerVariant,
     period,
-    binding: { variable, type: "categorical", ...over },
+    binding: { variable, ...over },
   };
 }
 

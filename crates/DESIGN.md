@@ -1078,7 +1078,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 5.2.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 6.0.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -1121,11 +1121,11 @@ whole-project finding) and `source_outside_window` (a dated source period wholly
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`period_clipped`, `form_change`, `table_succession_undated`, `identifier` and
-`coverage_end_unstated`. Each is an `Issue` whose `path` points at the source, binding
-or panel and whose `source`, `variable`, `table` and `period` say what it is about
-(`null` for a whole-project finding). The conditions are the order check's to state in
-its own tests; the rules that shape them:
+`period_clipped`, `form_change`, `table_succession_undated`, `identifier`,
+`coverage_end_unstated` and `binding_type_differs`. Each is an `Issue` whose `path`
+points at the source, binding or panel and whose `source`, `variable`, `table` and
+`period` say what it is about (`null` for a whole-project finding). The conditions are
+the order check's to state in its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -1147,6 +1147,14 @@ its own tests; the rules that shape them:
 - A table succession with no `at` is not followed: the check returns
   `table_succession_undated` naming the successor and clips the rest. No day is inferred
   from coverage (v4 §2.1); D's `link … at` supplies the day.
+- `binding_type_differs` is a warning, one per entry whose catalog type is known and is
+  not the binding's `type` override, at the binding over the entry's period; the message
+  names both types (#2071, maintainer G10). It signals a catalog to fix: the entry keeps
+  the catalog type. An unknown catalog type is what the override fills, so it gets none.
+  On a steward server the holdings stage drops it where every steward column holding
+  those days is stored in the override's family (`manifest::StorageFamily`, the same
+  families the holdings build compares storage by), since the researcher then describes
+  the real file (G14).
 
 ### A clear order
 
@@ -1162,7 +1170,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "5.2.0",
+    "project": {"name": "income-panel", "schema_version": "6.0.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1212,7 +1220,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1241,7 +1249,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1832,7 +1840,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-5.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+6.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2285,6 +2293,21 @@ a steward server `validate` and `order` also run the holdings stage of
 `materialize_order` would not block: a variable the steward does not hold is
 `mapping_missing` at check time, not when the coordinator makes the order (#2194). A
 steward `order` that succeeds carries the holdings stage's warnings with its own.
+
+### Project document 6.0.0
+
+`schema_version` `6.0.0` makes the binding `type` an optional override of the catalog
+type for the whole binding, in the catalog's published names (`integer`, `decimal`,
+`text`, `date`, `datetime`, `boolean`, `geometry`, `uuid`, `binary`, `identifier`), and
+removes `id_subtype`, `numeric_subtype`, `date_format` and `datetime_format` (#2071,
+maintainer G10–G12). Absent means the catalog type. A 5.x type name is
+`invalid_enum_value`, a removed field `unexpected_field`, an explicit `null` type
+`invalid_field_type`. The extract's storage is the steward's SQL type, so the override
+reaches no order file; the order check compares it with the catalog
+(`binding_type_differs`, "The logical order"). A 5.2.0 document is re-authored by
+deleting `type` and the four fields.
+
+Nothing else changes: 5.2.0 below holds otherwise.
 
 ### Project document 5.2.0
 

@@ -1,12 +1,11 @@
 import type { ReactNode } from "react";
-import { segmentType } from "./add_columns";
 import type { CatalogSegment } from "./api";
 import pageStyles from "./CatalogNodeView.module.css";
 import { catalogHref, humanizeClassificationSlug } from "./catalog";
 import { yearWindowLabel } from "./period";
 import { columnYearRuns } from "./study_window";
 import type { Definition } from "./ui/Definitions";
-import { TypePill } from "./ui/TypePill";
+import { type ColumnType, TypePill } from "./ui/TypePill";
 import styles from "./variable_facts.module.css";
 
 /** One fact of a segment, keyed so equal values group; null when the catalog
@@ -92,16 +91,42 @@ export function factYears(
   );
 }
 
-/** The Type row: one pill per type the columns are written as, with its years
- * inside only where the type changes over time (maintainer 2026-11-04). */
+const COLUMN_TYPES = {
+  integer: true,
+  decimal: true,
+  text: true,
+  date: true,
+  datetime: true,
+  boolean: true,
+  geometry: true,
+  uuid: true,
+  binary: true,
+  identifier: true,
+} satisfies Record<ColumnType, true>;
+
+/** A segment's type as the catalog states it, or null where it states none (no
+ * pill). An identifier column shows as Identifier whatever it is stored as
+ * (maintainer 2026-11-04: an identifier is its Type pill). */
+function segmentType(segment: CatalogSegment): ColumnType | null {
+  if (segment.identifier === true) return "identifier";
+  const type = segment.type;
+  return type !== undefined && Object.hasOwn(COLUMN_TYPES, type)
+    ? (type as ColumnType)
+    : null;
+}
+
+/** The Type row: one pill per catalog type of the columns, with its years
+ * inside only where the type changes over time (maintainer 2026-11-04); a
+ * column whose type the catalog does not state adds no pill, but the stated
+ * type then carries its years, so it never reads as the whole history. */
 export function typeFact(
   segments: readonly CatalogSegment[],
   bounds: readonly [number, number],
 ): Definition[] {
-  const { groups } = groupFact(segments, (row) => ({
-    key: segmentType(row),
-    value: null,
-  }));
+  const { groups, unstated } = groupFact(segments, (row) => {
+    const type = segmentType(row);
+    return type && { key: type, value: null };
+  });
   if (groups.length === 0) return [];
   return [
     {
@@ -111,9 +136,9 @@ export function typeFact(
           {groups.map(([type, group]) => (
             <TypePill
               key={type}
-              type={segmentType(group.segments[0])}
+              type={type as ColumnType}
               years={
-                groups.length > 1
+                groups.length > 1 || unstated
                   ? columnYearRuns(group.segments, bounds)
                       .map(yearWindowLabel)
                       .join(", ")

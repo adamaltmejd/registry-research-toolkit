@@ -5,6 +5,8 @@ use reg_readers::holdings as census;
 use rusqlite::{Connection, params};
 
 use reg_core::days::{self, Span};
+use reg_core::manifest::StorageFamily;
+use reg_core::project::ColumnType;
 
 use super::input;
 use crate::error::{Result, rows};
@@ -425,41 +427,32 @@ fn storage_findings(
     storage: &census::Storage,
     segments: &[Segment],
 ) -> Result<()> {
-    let physical = storage.data_type.to_ascii_lowercase();
-    let storage_family = match physical.as_str() {
-        "tinyint" | "smallint" | "int" | "bigint" | "bit" => Some("integer"),
-        "decimal" | "numeric" | "real" | "float" | "money" | "smallmoney" => Some("real"),
-        "char" | "nchar" | "varchar" | "nvarchar" | "text" | "ntext" => Some("text"),
-        "date" | "datetime" | "datetime2" | "smalldatetime" | "datetimeoffset" | "time" => {
-            Some("date")
-        }
-        _ => None,
-    };
-    if storage_family.is_none() {
+    let Some(storage_family) = StorageFamily::of(&storage.data_type) else {
         return Err("holdings_storage_unsafe: unsupported orderable storage type".into());
-    }
+    };
     let mut findings = BTreeSet::new();
     for segment in segments {
-        let dtype = segment.dtype.as_deref().and_then(reg_frame::dtype_info);
-        let family = dtype.and_then(|d| d.family);
-        let logical_family = match family {
-            Some("integer" | "boolean") => Some("integer"),
-            Some("decimal") => Some("real"),
-            Some("text" | "identifier") => Some("text"),
-            Some("temporal") => Some("date"),
-            _ => None,
-        };
-        if logical_family.is_none() {
+        // The published name: the family of the catalog type the order override uses too.
+        let logical_family = segment
+            .dtype
+            .as_deref()
+            .and_then(reg_frame::dtype_info)
+            .and_then(|d| d.published)
+            .and_then(ColumnType::parse)
+            .and_then(ColumnType::storage_family);
+        let Some(logical_family) = logical_family else {
             findings.insert("uncurated");
-        } else if (logical_family == Some("text") && storage_family != Some("text"))
-            || (logical_family == Some("real") && storage_family == Some("integer"))
+            continue;
+        };
+        if (logical_family == StorageFamily::Text && storage_family != StorageFamily::Text)
+            || (logical_family == StorageFamily::Real && storage_family == StorageFamily::Integer)
         {
             findings.insert("narrower");
         } else if logical_family != storage_family {
             findings.insert("disagrees");
         }
-        if logical_family == Some("text")
-            && storage_family == Some("text")
+        if logical_family == StorageFamily::Text
+            && storage_family == StorageFamily::Text
             && storage
                 .length
                 .zip(segment.length)

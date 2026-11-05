@@ -7,7 +7,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Order case",
         "sources": [
@@ -15,20 +15,20 @@
             "name": "unknown-table",
             "table": "demo/imp/nope",
             "period": 2019,
-            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
             "name": "unknown-variable",
             "table": "demo/imp",
             "period": 2019,
-            "bindings": [{"variable": "demo/imp/nope", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/nope"}]
           },
           {
             "name": "pin",
             "table": "demo/imp",
             "period": 2019,
             "bindings": [
-              {"variable": "demo/imp/kon", "type": "categorical", "classification": "class/kon/2020"}
+              {"variable": "demo/imp/kon", "classification": "class/kon/2020"}
             ]
           }
         ]

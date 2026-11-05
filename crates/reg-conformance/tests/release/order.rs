@@ -471,7 +471,7 @@ fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> 
 
 fn project(pid: &str, period: &Value, variables: &[String]) -> Value {
     json!({
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [{
@@ -480,7 +480,7 @@ fn project(pid: &str, period: &Value, variables: &[String]) -> Value {
             "period": period,
             "bindings": variables
                 .iter()
-                .map(|v| json!({"variable": v, "type": "categorical"}))
+                .map(|v| json!({"variable": v}))
                 .collect::<Vec<_>>(),
         }],
     })

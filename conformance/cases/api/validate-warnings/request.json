@@ -7,7 +7,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Order case",
         "sources": [
@@ -16,45 +16,45 @@
             "table": "demo/imp",
             "period": 2020,
             "bindings": [
-              {"variable": "demo/imp/lopnr", "type": "id", "id_subtype": "integer"},
-              {"variable": "demo/imp/kansl", "type": "numeric"}
+              {"variable": "demo/imp/lopnr"},
+              {"variable": "demo/imp/kansl"}
             ]
           },
           {
             "name": "editions",
             "table": "demo/pre",
             "period": 2019,
-            "bindings": [{"variable": "demo/pre/mat", "type": "numeric"}]
+            "bindings": [{"variable": "demo/pre/mat"}]
           },
           {
             "name": "replaced",
             "table": "demo/rep",
             "period": {"from": 2015, "to": 2020},
-            "bindings": [{"variable": "demo/rep/gammal", "type": "numeric"}]
+            "bindings": [{"variable": "demo/rep/gammal"}]
           },
           {
             "name": "forms",
             "table": "demo/nam/a",
             "period": {"from": 2018, "to": 2020},
-            "bindings": [{"variable": "demo/nam/belopptot", "type": "numeric"}]
+            "bindings": [{"variable": "demo/nam/belopptot"}]
           },
           {
             "name": "open",
             "table": "demo/opn",
             "period": 2019,
-            "bindings": [{"variable": "demo/opn/y", "type": "numeric"}]
+            "bindings": [{"variable": "demo/opn/y"}]
           },
           {
             "name": "undated",
             "table": "demo/und/ett",
             "period": {"from": 2016, "to": 2019},
-            "bindings": [{"variable": "demo/und/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/und/ink"}]
           },
           {
             "name": "replaced-undated",
             "table": "demo/rep",
             "period": 2019,
-            "bindings": [{"variable": "demo/rep/ny", "type": "numeric"}]
+            "bindings": [{"variable": "demo/rep/ny"}]
           }
         ]
       }
@@ -64,7 +64,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "query": {"verbose": "true"},
-      "body": {"schema_version": "5.2.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
+      "body": {"schema_version": "6.0.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
     }
   ]
 }

@@ -403,7 +403,7 @@ async function projectPagesCase(page, shoot) {
   // variable_not_in_table refusal (order/window.rs), including table:null refs.
   const blockedProject = JSON.parse(readFileSync(projectFile, "utf8"));
   blockedProject.sources[0] = { ...blockedProject.sources[0], table: "demo/hush/fam", period: 2021,
-    bindings: [{ variable: "demo/hush/bransch", type: "categorical", display_name: "industry" }] };
+    bindings: [{ variable: "demo/hush/bransch", display_name: "industry" }] };
   await openProjectFile({ name: "blocked-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(blockedProject)) }, true);
   await verdict.getByText(/^Can't be ordered yet: 1 problem\./).waitFor();
   check((await delivered.count()) === 0, "a blocked order still showed what will be delivered");
@@ -479,7 +479,7 @@ async function projectUnknownColumnCase(page, shoot) {
     import.meta.url,
   );
   const unknown = JSON.parse(readFileSync(projectFile, "utf8"));
-  unknown.sources[0].bindings.push({ variable: "demo/bas/nope", type: "categorical", display_name: "nope" });
+  unknown.sources[0].bindings.push({ variable: "demo/bas/nope", display_name: "nope" });
   const chooser = page.waitForEvent("filechooser");
   await main.getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles({
@@ -562,9 +562,8 @@ async function browseGroupCase(page, shoot) {
   await shoot("browse-group-project");
 }
 
-// Project + catalog → saved project boundary. Fails if changing a binding's
-// type keeps its old subtype, a keyboard period edit is not saved, or removing
-// a lane loses focus or removes the wrong binding. Existing cases open files
+// Project + catalog → saved project boundary. Fails if a keyboard period edit
+// is not saved, or removing a lane loses focus or removes the wrong binding. Existing cases open files
 // and add columns; none edits a source card. Names and initial values come from
 // webapp-dev/project_data.json; the expected year-int range follows one ArrowRight
 // on the To year thumb of its 2020 period. The fixture has no classification refs.
@@ -579,8 +578,6 @@ async function sourceCardsCase(page, shoot) {
   await (await chooser).setFiles(projectFile.pathname);
   await settled(page);
 
-  await main.getByRole("button", { name: /Type for Ålder in Basregistret/ }).click();
-  await page.getByRole("option", { name: "Other", exact: true }).click();
   const period = main.getByRole("group", { name: "Years for Basregistret", exact: true });
   const toYear = period.getByRole("slider", { name: /^To year/ });
   await toYear.focus();
@@ -604,9 +601,8 @@ async function sourceCardsCase(page, shoot) {
   const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
   const source = saved.sources[0];
   check(saved.sources.length === 1 && source.bindings.length === 1 &&
-    source.bindings[0].variable === "demo/bas/alder" && source.bindings[0].type === "opaque" &&
-    !("numeric_subtype" in source.bindings[0]),
-  "the downloaded source lost Ålder's type edit, kept its numeric subtype, or removed the wrong binding");
+    source.bindings[0].variable === "demo/bas/alder",
+  "the downloaded source removed the wrong binding");
   check(source.period !== null && !Array.isArray(source.period) &&
     typeof source.period === "object" && source.period.from === 2020 && source.period.to === 2021,
   "the keyboard period edit did not save the year-int range 2020–2021");
@@ -637,7 +633,7 @@ async function openWindowedFixture(page, name) {
 }
 
 // Project + catalog → saved project boundary. Fails if a variable-page add
-// confuses identical spellings in different tables, loses the binding/type or
+// confuses identical spellings in different tables, writes a binding type, loses the binding or
 // years to add, retains a tick outside the moved years,
 // leaves an already-bound column selectable, or strands a failed register read
 // without a working Retry, or a focused span stops naming its column, table
@@ -705,8 +701,8 @@ async function addVariableColumnsCase(page, shoot) {
   const saved = JSON.parse(readFileSync(await (await downloaded).path(), "utf8"));
   const added = saved.sources.filter((item) => item.table === "demo/hush/fam");
   check(added.length === 1 && added[0].bindings.length === 1 &&
-    added[0].bindings[0].variable === "demo/hush/antal" && added[0].bindings[0].type === "numeric",
-  "the downloaded project lost the selected table, binding or numeric type");
+    added[0].bindings[0].variable === "demo/hush/antal" && !("type" in added[0].bindings[0]),
+  "the downloaded project lost the selected table or binding, or wrote a type (#2071: the catalog's stands)");
   check(saved.sources.length === fixture.sources.length + 1,
     "adding a column changed unrelated project sources");
   await shoot("add-variable-project");
@@ -716,8 +712,8 @@ async function addVariableColumnsCase(page, shoot) {
 
 // #2056, browser boundary over webapp-dev's Antal segments and its variable
 // notice. Fails if variable dispatch or the timeline's lane per table is lost,
-// the Type fact stops reading the binding type an add writes (Numeric for int,
-// as add-variable-columns downloads), the no-project line's "Create a project"
+// the Type fact stops showing the catalog type in plain words (Whole number for
+// Antal's int), the no-project line's "Create a project"
 // stops making the spans selectable in place, or the page fetches evidence again
 // (maintainer 2026-11-04: no source and provenance in the web app). Existing
 // cases only browse register/table pages.
@@ -736,7 +732,7 @@ async function browseVariableCase(page, shoot) {
   await timeline.getByText("Familjer", { exact: true }).waitFor();
   await timeline.getByText("Individer", { exact: true }).waitFor();
   const type = main.locator("header div").filter({ has: page.locator("dt", { hasText: /^Type$/ }) });
-  check((await type.locator("dd").innerText()).trim() === "Numeric", "the Type fact lost the binding type");
+  check((await type.locator("dd").innerText()).trim() === "Whole number", "the Type fact lost the catalog type");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   await findings.getByRole("button", { name: /^Notice: source notice/ }).click();
   await findings.getByText("Antal redovisas på både individ- och familjetabellen.", { exact: true }).waitFor();
@@ -961,7 +957,7 @@ async function stewardHeldCase(page, shoot) {
   // RelativeId is in the catalog but Pool holds no column of it. Fails if the
   // project page reads a steward order the server would not make as orderable
   // (the check skipping the holdings stage reads "Ready to order").
-  fixture.project.sources[0].bindings.push({ variable: "demo/held/relative-id", type: "numeric" });
+  fixture.project.sources[0].bindings.push({ variable: "demo/held/relative-id" });
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("main").getByRole("button", { name: "Open a project file…", exact: true }).click();
   await (await chooser).setFiles({ name: "paired-project.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fixture.project)) });

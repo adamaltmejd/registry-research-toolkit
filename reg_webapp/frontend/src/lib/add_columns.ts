@@ -131,32 +131,23 @@ export function columnWindowPeriod(
     : null;
 }
 
-/** A segment's binding type: what an add writes and what the variable page's
- * Type pill shows, so the two never disagree. */
-export function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
-  if (segment.identifier === true) return "id";
-  if (segment.coded === "yes") return "categorical";
-  if (segment.type === "integer" || segment.type === "decimal")
-    return "numeric";
-  if (segment.type === "date" || segment.type === "datetime")
-    return segment.type;
-  return "opaque";
-}
-
+/** An added binding: no `type`, so the order reads the catalog's (#2071); the
+ * classification is pinned when every coded segment states the same one. */
 function defaultBinding(
   variable: string,
   segments: readonly CatalogSegment[],
 ): ProjectBinding {
-  const types = new Set(segments.map(segmentType));
-  const type = types.size === 1 ? segmentType(segments[0]) : "opaque";
   const classification = segments[0]?.classification;
   return {
     variable,
-    type,
     follow_successor: false,
-    ...(type === "categorical" &&
-    classification &&
-    segments.every((segment) => segment.classification === classification)
+    ...(classification &&
+    segments.every(
+      (segment) =>
+        segment.coded === "yes" &&
+        segment.identifier !== true &&
+        segment.classification === classification,
+    )
       ? { classification }
       : {}),
   };
