@@ -1,13 +1,10 @@
 name: CI
 
 on:
-  # rebuild-c: milestone C's integration branch; its stacked
-  # PRs need CI until it merges into main.
   push:
-    branches: [main, rebuild-c]
+    branches: [main]
   pull_request:
-    branches: [main, rebuild-c]
-  workflow_call:
+    branches: [main]
   # Manual re-fire (#326): GitHub occasionally drops a push event (hit on the
   # #317 rollout — container-build.yml got the event, ci.yml didn't), and the
   # deploy gate (wait-ci in container-build.yml) hard-requires a green ci.yml
@@ -101,7 +98,6 @@ jobs:
               - 'crates/reg-catalog/**'
               - 'crates/reg-build/**'
               - 'conformance/cases/fixtures/**'
-              - 'crates/reg-meta/openapi.json'
               # Oracles the frontend unit tests read: the fold corpus
               # and the server's unsupported-version case
               # (reg_core.test.ts); reg-core's structural corpus is under
@@ -140,21 +136,27 @@ jobs:
       # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
-      # Keep the archived frontend runtime while the deployment remains unchanged.
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      # Same Node pin as edge-deploy-swecov (container-build.yml), which builds the SPA
+      # that ships.
+      - &setup-node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "26.12.1"
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      - &setup-bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: "1.4.4"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
       # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
       # both together; a mismatch fails the bindgen run).
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+      - &rust-wasm
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
-      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
+      - &rust-cache
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - &wasm-bindgen
+        uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
         with:
           tool: wasm-bindgen@0.2.129
       # The gate script runs from the repository root. `frontend`: gen:wasm and its size budget, check
@@ -178,27 +180,11 @@ jobs:
         with:
           sparse-checkout: *no-locks
           sparse-checkout-cone-mode: false
-      # The frontend bins (biome, vitest, vite, openapi-typescript)
-      # are `#!/usr/bin/env node` launchers, so bun does not decide the runtime
-      # they get: without this step the gates run on whatever node the runner
-      # happens to ship, and stop exercising the one production builds use.
-      # Keep the archived frontend runtime while the deployment remains unchanged.
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "26.12.1"
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: "1.4.4"
-      # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
-      # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
-      # both together; a mismatch fails the bindgen run).
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
-      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
-        with:
-          tool: wasm-bindgen@0.2.129
+      - *setup-node
+      - *setup-bun
+      - *rust-wasm
+      - *rust-cache
+      - *wasm-bindgen
       - run: bun install --frozen-lockfile
       # The build smoke (scripts/smoke_build.ts) loads the built app in a real
       # headless Chromium via Playwright. Cache the browser binary (keyed on the

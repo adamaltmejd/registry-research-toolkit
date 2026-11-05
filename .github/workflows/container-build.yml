@@ -6,18 +6,12 @@
 #   swecov  reg-webapp-swecov behind a worker on data.swecov.se that serves the SPA
 #           as static assets and passes `/api`, `/openapi.json` and `/mcp` through.
 #
-# SWECOV defaults off: all four SWECOV jobs require repository variable
-# SWECOV_DEPLOY to equal exactly "on". After the paired release exists, the
-# maintainer first runs `gh variable set SWECOV_DEPLOY --body on`, then
-# `gh workflow run container-build.yml` (dispatch); never wait for the next push.
-# SWECOV origin and edge always deploy together, including frontend-only pushes.
-# Unset or any other value skips those jobs; turning it off again stops SWECOV
-# redeploys on later pushes without affecting global.
+# SWECOV origin and edge always deploy together, including frontend-only pushes. A
+# release without the paired SWECOV asset blocks only the SWECOV jobs
+# (`swecov-asset-guard`); global still deploys.
 #
 # PRs: build-only. `build-image` proves the multi-stage Dockerfile still builds,
-# including the digest-verified DB bake, the `reg-meta` Rust build and the #224
-# provenance-confinement assertion #3 (the RUN check fails the build if
-# reg_meta.provenance.db* is present). Nothing deploys.
+# including the digest-verified DB bake and the `reg-meta` Rust build. Nothing deploys.
 #
 # Pushes to main: the `changes` filter, diffed against the last deployed commit rather
 # than the push's `before` (#1481, see the job), scopes four deploy jobs. Image-affecting paths
@@ -64,6 +58,13 @@ on:
           resolve the newest reg_meta/v* release.
         required: false
         default: ""
+
+env:
+  # Image tag for the pushed artifact and the edge DEPLOY_VERSION. Dispatch re-builds on
+  # an existing main HEAD (e.g. after a data-only reg_meta release) get a -<run_id>
+  # suffix so they don't overwrite the plain :sha tag, keeping every pushed tag an
+  # immutable rollback handle (#290). Push builds use the bare sha.
+  IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
 
 jobs:
   # Path scoping runs as a job (not `on.paths`) so image and edge surfaces
@@ -288,7 +289,6 @@ jobs:
   swecov-asset-guard:
     needs: schema-guard
     if: >-
-      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success'
     runs-on: ubuntu-latest
@@ -325,13 +325,6 @@ jobs:
       (needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    env:
-      # Image tag for the pushed artifact. Dispatch re-builds on an existing
-      # main HEAD (e.g. after a data-only reg_meta release) get a -<run_id>
-      # suffix so they don't overwrite the plain :sha tag — keeping every
-      # pushed tag an immutable rollback handle (#290). Push builds use the
-      # bare sha. The deploy job computes the identical expression.
-      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
       # Exactly what the Dockerfile COPYs (`Cargo.toml`, `Cargo.lock`, `crates/`,
       # `reg_webapp/docker-entrypoint.sh`) plus the Dockerfile itself and `.dockerignore`,
@@ -388,7 +381,6 @@ jobs:
     # loudly if the release has no reg_meta_swecov.db.zst (an empty digest),
     # rather than shipping the steward without its holdings DB (#1091).
     if: >-
-      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.schema-guard.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
@@ -396,8 +388,6 @@ jobs:
       needs.changes.outputs.edge_swecov == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    env:
-      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
       # Same build context as `build-image`.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -454,7 +444,8 @@ jobs:
       # Build times vary, so an older commit's deploy
       # can reach this job AFTER a newer commit already deployed; without this
       # check it would roll prod back. Also blocks non-main dispatches.
-      - name: Skip unless HEAD of main
+      - &head-guard
+        name: Skip unless HEAD of main
         id: head
         env:
           GH_TOKEN: ${{ github.token }}
@@ -477,7 +468,7 @@ jobs:
         run: >-
           flyctl deploy
           --config reg_webapp/fly.toml
-          --image registry.fly.io/reg-webapp-global:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          --image registry.fly.io/reg-webapp-global:${{ env.IMAGE_TAG }}
           --ha=false
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -515,7 +506,7 @@ jobs:
           # .created, so on a >KEEP-releases-old commit the just-deployed tag could
           # sort outside the keep window and the prune would delete the manifest
           # prod is actively running (review on #296).
-          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          DEPLOYED_TAG: ${{ env.IMAGE_TAG }}
           FLY_APP: reg-webapp-global
         run: &prune-registry |
           set -euo pipefail
@@ -564,7 +555,6 @@ jobs:
   deploy-swecov:
     needs: [build-swecov-image, wait-ci, schema-guard, swecov-asset-guard]
     if: >-
-      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && needs.build-swecov-image.result == 'success' &&
       needs.swecov-asset-guard.outputs.ok == 'true' &&
       needs.wait-ci.result == 'success' &&
@@ -585,16 +575,7 @@ jobs:
             /reg_webapp/Dockerfile
           sparse-checkout-cone-mode: false
           filter: blob:none
-      - name: Skip unless HEAD of main
-        id: head
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
-          if [ "$main_sha" != "$GITHUB_SHA" ]; then
-            echo "::notice::skipping SWECOV deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
+      - *head-guard
       - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
         if: steps.head.outputs.skip != 'true'
         with:
@@ -603,7 +584,7 @@ jobs:
         run: >-
           flyctl deploy
           --config reg_webapp/fly.swecov.toml
-          --image registry.fly.io/reg-webapp-swecov:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          --image registry.fly.io/reg-webapp-swecov:${{ env.IMAGE_TAG }}
           --ha=false
           --wait-timeout 10m0s
         env:
@@ -625,7 +606,7 @@ jobs:
         continue-on-error: true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
-          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          DEPLOYED_TAG: ${{ env.IMAGE_TAG }}
           FLY_APP: reg-webapp-swecov
         run: *prune-registry
 
@@ -662,17 +643,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: "1.4.4"
-      # Same stale-deploy guard as the origin job (see comment there).
-      - name: Skip unless HEAD of main
-        id: head
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
-          if [ "$main_sha" != "$GITHUB_SHA" ]; then
-            echo "::notice::skipping edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
+      - *head-guard
       # The worker's route lives in zone vqv.uk, which the token must list under its
       # Zone Resources; wrangler's own refusal names neither the zone nor the fix.
       - name: Check the Cloudflare token reaches zone vqv.uk
@@ -723,7 +694,6 @@ jobs:
   edge-deploy-swecov:
     needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard, swecov-asset-guard]
     if: >-
-      vars.SWECOV_DEPLOY == 'on' &&
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
       needs.schema-guard.result == 'success' &&
@@ -752,16 +722,7 @@ jobs:
             /reg_webapp/frontend/
           sparse-checkout-cone-mode: false
           filter: blob:none
-      - name: Skip unless HEAD of main
-        id: head
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
-          if [ "$main_sha" != "$GITHUB_SHA" ]; then
-            echo "::notice::skipping SWECOV edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
+      - *head-guard
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: steps.head.outputs.skip != 'true'
         with:
@@ -799,7 +760,7 @@ jobs:
       - if: steps.head.outputs.skip != 'true'
         run: >-
           bunx wrangler@4.152.0 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
-          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          --var DEPLOY_VERSION:${{ env.IMAGE_TAG }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
@@ -843,7 +804,7 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: data.swecov.se
-          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+          DEPLOY_VERSION: ${{ env.IMAGE_TAG }}
         run: |
           window=180 interval=10
           url="https://$EDGE_HOST/api/search?q=inkomst"
