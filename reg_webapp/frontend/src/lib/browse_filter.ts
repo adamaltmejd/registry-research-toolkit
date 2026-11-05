@@ -116,6 +116,32 @@ export function useRegisterMatches(
   );
 }
 
+/** The provider's registers' variables the server matches for the filter, by
+ * register FQID: one request for the whole provider, the admission the browse
+ * tree counts, so each register's section lists the number its tree row says.
+ * Null as `useRegisterMatches` is. */
+export function useProviderMatches(
+  providerFqid: string | null,
+): ReadonlyMap<string, ReadonlySet<string>> | null {
+  const query = useSettledFilter();
+  const matches = useAsyncResource(
+    query === null || providerFqid === null
+      ? null
+      : `${providerFqid}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", { signal, provider: providerFqid ?? "" }),
+  );
+  if (query === null || providerFqid === null || matches.data === null)
+    return null;
+  const byRegister = new Map<string, Set<string>>();
+  for (const facet of allRegisterFacets(matches.data)) {
+    const set = byRegister.get(facet.fqid) ?? new Set<string>();
+    for (const variable of facet.variables ?? []) set.add(variable.fqid);
+    byRegister.set(facet.fqid, set);
+  }
+  return byRegister;
+}
+
 /** The registers the browse tree shows for the filter, in its order (name
  * hits first within a provider), published by the tree so the variables
  * column lists other registers' matches in the same order (#1828). */

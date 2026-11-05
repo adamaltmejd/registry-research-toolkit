@@ -417,7 +417,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   selection: the detail pane keeps its page, and keyboard focus moves to the group row.
   On a provider's page the second column lists every variable of its registers, one
   section per register under the register's name, in that order (maintainer 2026-11-05);
-  the search filters each section by name and drops a register with no match. Its rows
+  the search filters each section as it filters a register's list, so a section lists
+  the matches its register row counts, and drops a register with no match. Its rows
   open on a click or Enter, not as the arrows pass (they re-root the list under the
   variable's register), and focus stays on the opened row. For a
   register the second column is flat, a concept group folded to one item (#303), its

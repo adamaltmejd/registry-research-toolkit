@@ -1266,7 +1266,7 @@
     },
     "/api/search/facets": {
       "get": {
-        "description": "Per register, how many variables a search query matches.",
+        "description": "Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers.",
         "operationId": "search_facets",
         "parameters": [
           {
@@ -1279,6 +1279,14 @@
           },
           {
             "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
             "in": "query",
             "required": false,
             "schema": {

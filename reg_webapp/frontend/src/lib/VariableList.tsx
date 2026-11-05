@@ -3,6 +3,7 @@ import type { RegisterFacet, RegisterShow } from "./api";
 import {
   useBrowseFilter,
   useOtherRegisterMatches,
+  useProviderMatches,
   useRegisterMatches,
 } from "./browse_filter";
 import styles from "./CatalogNodeView.module.css";
@@ -243,8 +244,9 @@ function useRegisterColumn(
 /**
  * A provider's page: every variable of its registers, one section per
  * register under the register's name, in the register column's order. The
- * search filters each section by name, as in a register's list, and a
- * register with no match drops out. Its rows open a page under another
+ * search filters each section as a register's list is filtered, by the
+ * server's matches for the whole provider in one request, so a section lists
+ * what its tree row counts; a register with no match drops out. Its rows open a page under another
  * register, so they are leaving rows: a click or Enter opens one, never the
  * arrows passing it. Null without a provider.
  */
@@ -266,16 +268,18 @@ function useProviderColumn(
     (signal) =>
       Promise.all((registers ?? []).map((fqid) => sharedShow(fqid, signal))),
   );
+  const matches = useProviderMatches(providerFqid);
   if (providerFqid === null) return null;
-  // simplify: the search matches names and slugs only, not the server's
-  // variable matches the register page adds, which would be one facets request
-  // per register on each query. Upgrade when `/search/facets` takes a provider.
   const sections: ColumnSection[] = (resource.data ?? []).flatMap((node) => {
     if (node.kind !== "register") return [];
     const variables = sortedVariables(node);
     const items = variableItems(
       variables,
-      rankVariables(variables, needle),
+      matchedVariables(
+        variables,
+        needle,
+        matches && (matches.get(node.fqid) ?? new Set()),
+      ),
       true,
     );
     return [{ id: `register:${node.fqid}`, label: node.name, items }];

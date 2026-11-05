@@ -333,7 +333,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Per register, how many variables a search query matches. */
+        /** @description Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers. */
         get: operations["search_facets"];
         put?: never;
         post?: never;
@@ -2038,6 +2038,7 @@ export interface operations {
             query: {
                 q: string;
                 register?: string;
+                provider?: string;
                 limit?: number;
             };
             header?: never;
