@@ -44,14 +44,15 @@ What `compile` and `generate` hold to; each rule names its one place in the code
 2. **A physical column is resolved once** (`Context::resolve`). Its references (the
    variables it delivers, and row keys) are gathered first: in the delivery layout the
    order file's column, in the standard layout one name in one table-year file. Then:
-   - *type*: the project's `type` for any of its variables, matched by variable, so a
-     row key or a carried copy without a binding takes it too; two different `type`s are
-     refused (`column_types_disagree`). Else the held storage's type, else the catalog's
-     (#2071, G8/G10, `resolve_type`).
-   - *segments*: per reference, those overlapping the column's period, from the held
-     placement's rows (delivery), else the reference's table, else, for a reference
-     without a binding only, any table (a person id carried from another register). None
-     for a reference is `segment_missing`.
+   - *type*: the project's `type` for any of its variables, matched by variable (its own
+     source first), so a row key or a carried copy without a binding takes it too; two
+     different `type`s are refused (`column_types_disagree`). Else the held storage's
+     type, else the catalog's (#2071, G8/G10, `resolve_type`).
+   - *segments*: per reference, those overlapping one of the column's years (the order's
+     period for a timeless file), from the held placement's rows (delivery), else the
+     reference's table, else, for a reference without a binding only, any table (a
+     person id carried from another register). None for a reference is
+     `segment_missing`.
    - *codes*: every code of every value set of those segments, once.
    - *identifier and length*: the earliest segment's.
 3. **Years** (`delivery_files`, `standard_files`): a delivery file holds the union of
