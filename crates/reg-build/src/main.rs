@@ -7,8 +7,8 @@
 //! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR] [--base FILE]
 //! reg-build verify FILE [--previous FILE]
 //! reg-build verify FILE --catalog FILE --steward-repo DIR
-//! reg-build holdings --base FILE --steward NAME --steward-repo DIR --out FILE
-//!                    [--registry FILE] [--report FILE]
+//! reg-build holdings --base FILE --steward NAME --steward-repo DIR --config FILE
+//!                    --out FILE [--report FILE]
 //! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
 //!

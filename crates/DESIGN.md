@@ -1332,25 +1332,27 @@ maintainer creates the GitHub repository; **e-repo** prepares its layout and exa
 commit pin before e-holdings. Its access controls must protect the private inputs;
 public metadata definitions do not authorize publishing private source files.
 
-The toolkit contains only generic compilation/serving code and a steward pin registry,
-`stewards.toml`: each steward id selects `repo`, exact `commit` and relative `config`
-path. The dedicated repo's `steward.toml` declares owner id, scope, presentation paths,
-reader/input roles and semantic curation root. Use `scope.toml`, `branding/`
-(`steward.json`, logo), `curation/registers/` (normal ledgers and statements, including
-slots), `curation/readers/`, and `inputs/` (census, storage export, provider source
-TOML/converted transcription CSV, inventory and legacy slug evidence). Pin selected
-delivery-document evidence there too, retaining originals privately. Reuse the catalog
-input-pin discipline: verify the supplied checkout against the exact commit and declared
-paths/hashes; no implicit latest branch or neighbouring inputs. The compiled holdings
-file carries presentation/config data needed at runtime; serving never checks out that
-repo or parses its TOML. `context` serves only what the site shows: the steward's
-presentation and logo, the server version and the period span. In steward mode the span
-is the hull of the placements, not of the reference registers (which cover years the
-steward does not hold); outside it, the hull of the registers. A timeless period (both
-bounds open) is left out, so one timeless table cannot take the study-years slider's
-bounds; an ongoing register still leaves the end open. Dropping whole periods, not
-single open bounds, keeps the hull ordered. A hull open at both ends (one period open at
-the start, another at the end) has no span either.
+The toolkit contains only generic compilation and serving code; it pins no steward. The
+steward repository pins a `reg_meta` release instead and builds its holdings from its
+own checkout (maintainer 2026-11-04): `reg-build holdings` records the checkout's
+`origin` URL, `HEAD` commit and the `--config` path as the steward pin, and refuses a
+dirty tree, untracked files included. The dedicated repo's `steward.toml` declares owner
+id, scope, presentation paths, reader/input roles and semantic curation root. Use
+`scope.toml`, `branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers
+and statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+export, provider source TOML/converted transcription CSV, inventory and legacy slug
+evidence). Pin selected delivery-document evidence there too, retaining originals
+privately. Reuse the catalog input-pin discipline: verify the declared paths/hashes in
+the clean checkout; no implicit latest branch or neighbouring inputs. The compiled
+holdings file carries presentation/config data needed at runtime; serving never checks
+out that repo or parses its TOML. `context` serves only what the site shows: the
+steward's presentation and logo, the server version and the period span. In steward mode
+the span is the hull of the placements, not of the reference registers (which cover
+years the steward does not hold); outside it, the hull of the registers. A timeless
+period (both bounds open) is left out, so one timeless table cannot take the study-years
+slider's bounds; an ongoing register still leaves the end open. Dropping whole periods,
+not single open bounds, keeps the hull ordered. A hull open at both ends (one period
+open at the start, another at the end) has no span either.
 
 The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
 catalog**. Their normal semantic tables live in the holdings file's supplemental part,
@@ -1523,27 +1525,26 @@ disagreement auto-corrects provider types.
 
 ### Compiled facts and publication
 
-`reg-build holdings --base <published-db> --steward <id> --steward-repo <checkout> --out <file>`
-is the separate stage. The id selects the toolkit's `stewards.toml` pin; the supplied
-checkout must match it, and its config supplies all input/curation paths. It verifies
-the catalog, reads it without modifying or copying it, and emits only the holdings layer
-(maintainer 2026-10-29). The base's entities, row ids, documents and search indexes stay
-in the catalog file. Holdings inputs and stored cross-file mappings use public ids;
-integer ids are local to each database and never joined across files without their
-database origin. Do not import schema-v3's obsolete programme id ranges or `UNION ALL`
-of unqualified row ids.
-`reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>` validates
-the pair, including cross-file references that SQLite cannot enforce as foreign keys. It
-admits the clean steward checkout against the repository, commit, config and input pins
-recorded in the holdings file, then independently re-reads the census and storage
-export. Every census table and exact physical column must be present, with no extra
-coordinates; offered columns must match the source schema, table type, storage type,
-length, precision and scale. Compiler-recorded counts are summaries, not the oracle.
-Physical mappings must equal the complete admitted explicit mappings or automatic
-spelling matches: interval unions grouped by table, variable, role, carried flag, caveat
-and authored window. Verification derives these expectations from the admitted sources
-independently of compiler candidates and placements, including shared projection keys.
-Missing coverage or changed attributes refuse with located
+`reg-build holdings --base <published-db> --steward <id> --steward-repo <checkout> --config <path> --out <file>`
+is the separate stage. The clean checkout is the pin; the config at `<path>` must name
+owner `<id>` and supplies all input/curation paths. It verifies the catalog, reads it
+without modifying or copying it, and emits only the holdings layer (maintainer
+2026-10-29). The base's entities, row ids, documents and search indexes stay in the
+catalog file. Holdings inputs and stored cross-file mappings use public ids; integer ids
+are local to each database and never joined across files without their database origin.
+Do not import schema-v3's obsolete programme id ranges or `UNION ALL` of unqualified row
+ids. `reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>`
+validates the pair, including cross-file references that SQLite cannot enforce as
+foreign keys. It admits the clean steward checkout against the repository, commit,
+config and input pins recorded in the holdings file, then independently re-reads the
+census and storage export. Every census table and exact physical column must be present,
+with no extra coordinates; offered columns must match the source schema, table type,
+storage type, length, precision and scale. Compiler-recorded counts are summaries, not
+the oracle. Physical mappings must equal the complete admitted explicit mappings or
+automatic spelling matches: interval unions grouped by table, variable, role, carried
+flag, caveat and authored window. Verification derives these expectations from the
+admitted sources independently of compiler candidates and placements, including shared
+projection keys. Missing coverage or changed attributes refuse with located
 `holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
 artifact table/column ids without printing private physical identifiers.
 
@@ -1599,10 +1600,9 @@ The compiler's closed steward config adds `inputs.holdings` (authored replacemen
 topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
 SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
 individual file pins are also accepted. Every supplemental manifest input is pinned too.
-Config bytes must match the selected Git commit, including when index flags hide
+Config bytes must match the checkout's `HEAD` commit, including when index flags hide
 worktree changes. Paths stay inside that checkout and directory traversal refuses
-symlinks. `--registry <file>` selects an explicit alternative pin registry, including
-the synthetic corpus; it does not weaken commit or input admission.
+symlinks.
 
 `inputs.holdings` declares physical tables and reviewed column decisions once. The old
 inventory and series remain migration evidence, not additional compiler authorities.

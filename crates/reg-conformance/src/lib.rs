@@ -308,10 +308,8 @@ pub fn holdings_case() -> PathBuf {
 pub struct Holdings {
     /// The cached base artifact the holdings compile against (read-only, shared).
     pub base: PathBuf,
-    /// The steward checkout: a git repository whose head pins its inputs.
+    /// The steward checkout: a clean git repository whose head pins its inputs.
     pub root: PathBuf,
-    /// The `stewards.toml` naming that head.
-    pub registry: PathBuf,
 }
 
 impl Holdings {
@@ -325,8 +323,7 @@ impl Holdings {
             .arg(&self.base)
             .args(["--steward", "fixture", "--steward-repo"])
             .arg(&self.root)
-            .arg("--registry")
-            .arg(&self.registry);
+            .args(["--config", "steward.toml"]);
         command
     }
 }
@@ -361,19 +358,16 @@ pub fn lock_steward(root: &Path) -> Result<(), String> {
     .map(drop)
 }
 
-/// The steward checkout at `directory/steward`, pinned (`pin_steward`) with its
-/// registry beside it.
+/// The steward checkout at `directory/steward`, pinned (`pin_steward`).
 ///
 /// # Errors
 /// When the base cannot be built or a git step fails.
 pub fn pinned_holdings(directory: &Path) -> Result<Holdings, String> {
     let root = directory.join("steward");
-    let registry = directory.join("stewards.toml");
-    pin_steward(&root, &registry)?;
+    pin_steward(&root)?;
     Ok(Holdings {
         base: cached_reader_artifact(&holdings_case().join("base"))?,
         root,
-        registry,
     })
 }
 
@@ -388,12 +382,12 @@ pub fn prepare_holdings(directory: &Path) -> Result<Holdings, String> {
 }
 
 /// Pin the steward checkout at `root` (including a refusal case's mutations): write
-/// `steward.toml` with the digest of every consumed input, commit it all in a fresh
-/// git repository and name that commit in `registry`.
+/// `steward.toml` with the digest of every consumed input and commit it all in a fresh
+/// git repository with an `origin`, which `reg-build holdings` records.
 ///
 /// # Errors
 /// When an input cannot be read or a git step fails.
-pub fn pin_steward(root: &Path, registry: &Path) -> Result<(), String> {
+pub fn pin_steward(root: &Path) -> Result<(), String> {
     let mut roles = vec![
         "scope.toml",
         "curation",
@@ -464,18 +458,10 @@ pub fn pin_steward(root: &Path, registry: &Path) -> Result<(), String> {
         "-m",
         "Pin synthetic inputs",
     ])?;
-    let commit = git(&["rev-parse", "HEAD"])?;
     if git(&["remote", "get-url", "origin"]).is_err() {
         git(&["remote", "add", "origin", "fixture"])?;
     }
-    fs::write(
-        registry,
-        format!(
-            "[fixture]\nrepo = \"fixture\"\ncommit = \"{}\"\nconfig = \"steward.toml\"\n",
-            commit.trim()
-        ),
-    )
-    .map_err(|e| e.to_string())
+    Ok(())
 }
 
 /// Build the synthetic paired catalog into `out`: the holdings as

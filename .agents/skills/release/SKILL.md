@@ -43,9 +43,9 @@ A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
 
    - **Also compare the builder and inputs since the last `reg_meta/v*` tag**: catalog
      content or schema changes under `crates/reg-build/`, `crates/reg-resolve/`,
-     `crates/reg-readers/`, `crates/reg-frame/`, `curation/` (including the inputs pin)
-     and the root `stewards.toml` (the steward pin) need a `reg_meta` release to refresh
-     the assets.
+     `crates/reg-readers/`, `crates/reg-frame/` and `curation/` (including the inputs
+     pin) need a `reg_meta` release to refresh the assets. Steward repository commits do
+     not: a steward builds from its own checkout.
    - Nothing changed: say there is nothing to release.
 
 3. Anything still ambiguous: stop and ask. **A major bump needs explicit confirmation**
@@ -144,7 +144,7 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 ### 8. Build and upload release assets
 
 There is no step 7. The numbers stay because `cargo xtask release-base-reuse` and each
-evidence directory's `passed` marks name steps 8a–8i.
+evidence directory's `passed` marks name steps 8a–8c.
 
 Every release builds a **pair**: `reg_meta.db.zst` (the reference catalog, documents
 inside) and `reg_meta_swecov.db.zst` (the SWECOV holdings: the catalog schema's
@@ -240,15 +240,12 @@ what it prints:
   exit means rebuild): keep `$earlier_evidence` as `$evidence` and set
   `base_sha=$(cut -d' ' -f1 "$evidence/base.sha256")`.
 - A step carries over only when `$evidence/passed` lists it; otherwise the command says
-  `run it`. Each step below appends `<step> <base sha>` to `passed` once it passes, so a
-  build whose checks never finished carries nothing over, and a mark made against
-  another base does not count.
-- `holdings: rebuild` (`stewards.toml` changed, no pair that passed 8e, or a pair that
-  no longer matches `holdings.sha256`): redo 8d-8g.
-- `8f: rerun` (a reader-side crate, `crates/reg-conformance` included, or `conformance/`
-  changed, or the holdings were rebuilt): rerun 8f with binaries built at the release
-  commit.
-- Always rerun 8h and the 8i `base_sha` check at the release commit.
+  `run it`. 8b and 8c append `<step> <base sha>` to `passed` once they pass, so a build
+  whose checks never finished carries nothing over, and a mark made against another base
+  does not count.
+- Always run 8d-8h and the 8i `base_sha` check at the release commit: the holdings build
+  from the steward checkout, which no toolkit file pins, so an earlier pair never
+  carries over.
 
 The release notes record both commits, the built one and the release one, and the
 command's output, including when the built commit is a squash-merged PR head that is not
@@ -300,19 +297,17 @@ record each step: `echo "8b $base_sha" >> "$evidence/passed"`,
 
 #### 8d. Compile the holdings
 
-The pin is `stewards.toml`: the steward repository, an exact commit and the config path.
-The compiler refuses unless the checkout is exactly the pin: `origin` must equal the
-registry's URL byte for byte (SSH, so an HTTPS clone fails with `holdings_pin_invalid`),
-`HEAD` must be the commit, and the tree must be clean including untracked files. Never
-edit the steward checkout. Re-lock the pin in a reviewed PR before the bump, not during
-the release.
+The pin is the steward checkout itself: a fresh clone of swecov-steward at `main`. The
+compiler records its `origin` URL, `HEAD` commit and `--config` path in the pair, and
+refuses a dirty tree, untracked files included, with `holdings_pin_invalid`. Never edit
+the steward checkout. The steward's re-lock against this release's base lands on
+swecov-steward `main` in a reviewed PR before the bump, not during the release.
 
 ```sh
-pin=$(sed -n '/^\[swecov\]/,/^\[/s/^commit = "\(.*\)"/\1/p' stewards.toml)
 git clone git@github.com:adamaltmejd/swecov-steward.git "$steward"
-git -C "$steward" checkout --detach "$pin"
+git -C "$steward" rev-parse HEAD > "$evidence/steward-revision"
 target/release/reg-build holdings --base "$evidence/catalog/reg_meta.db" --steward swecov \
-  --steward-repo "$steward" --registry stewards.toml \
+  --steward-repo "$steward" --config steward.toml \
   --out "$evidence/catalog/reg_meta_swecov.db" --report "$evidence/holdings-report.json" \
   2> "$evidence/holdings.log"
 ```
@@ -336,13 +331,7 @@ sqlite3 -readonly "$evidence/catalog/reg_meta_swecov.db" "SELECT value FROM meta
 ```
 
 The pair verifier takes `--catalog` and `--steward-repo` and no `--previous`. The `meta`
-value must equal `$base_sha`. A failure stops publication. On a pass, record the pair's
-digest and the step:
-
-```sh
-shasum -a 256 "$evidence/catalog/reg_meta_swecov.db" > "$evidence/holdings.sha256"
-echo "8e $base_sha" >> "$evidence/passed"
-```
+value must equal `$base_sha`. A failure stops publication.
 
 #### 8f. Run conformance against the pair
 
@@ -359,10 +348,9 @@ REG_CATALOG=swecov cargo test -p reg-conformance --test release --locked -- --no
 
 `gate.sh rust` runs the same target on a synthetic artifact; that run does not validate
 the release DB. A red artifact run stops publication; a failure only in the pair run
-stops it too. When both pass, `echo "8f $base_sha" >> "$evidence/passed"`. Do not change
-tests to get a pass. If pair admission times out at server start, raise
-`SERVER_READY_SECONDS` (120) in `crates/reg-conformance/tests/common/server.rs` through
-a reviewed PR, not in place.
+stops it too. Do not change tests to get a pass. If pair admission times out at server
+start, raise `SERVER_READY_SECONDS` (120) in
+`crates/reg-conformance/tests/common/server.rs` through a reviewed PR, not in place.
 
 Reading the pair run: the order census reads `reg_meta.db` and the holdings file
 directly, and the server serves both. On the pair it samples the reference tables the
@@ -403,8 +391,7 @@ target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
 
 Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping there);
 exit 2 is an error and stops the release. The maintainer reads that summary for
-go/no-go; its counts go in the release notes. On a go,
-`echo "8g $base_sha" >> "$evidence/passed"`.
+go/no-go; its counts go in the release notes.
 
 #### 8h. Scope check
 

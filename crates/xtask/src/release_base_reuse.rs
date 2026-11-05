@@ -21,15 +21,9 @@
 //! - Bytes: `catalog/reg_meta.db` still hashes to the recorded `base.sha256`.
 //!
 //! A step's result carries over only when the evidence's `passed` file lists it against
-//! this base digest (each step appends `<step> <base sha>` once it passes), and the pair
-//! only when it still hashes to `holdings.sha256`, recorded when 8e passed, and pins
-//! this base's `catalog_sha256`. It also says what the diff does touch:
-//!
-//! - `stewards.toml` changed: rebuild the holdings and redo their checks (8d-8g).
-//! - A reader-side path changed (a workspace crate outside the builder closure, such
-//!   as `crates/reg-conformance`, or `conformance/`): rerun the 8f conformance.
-//!
-//! The scope check (8h) and the 8i `base_sha` check always run at the release commit.
+//! this base digest (each step appends `<step> <base sha>` once it passes); only 8b and
+//! 8c can. The holdings (8d-8h) build from a steward checkout that no toolkit file pins,
+//! so they and the 8i `base_sha` check always run at the release commit.
 //!
 //! The evidence directory must hold what step 8a records: `source-revision`,
 //! `rustc.txt`, `build-args.txt`, `base.sha256` and `catalog/reg_meta.db`. A missing or
@@ -58,9 +52,6 @@ const ALWAYS_BUILDER: [&str; 5] = [
     ".cargo",
     ":(glob)rust-toolchain*",
 ];
-// The case corpus; the release checks themselves are a reader-side crate.
-const READER_EXTRA: [&str; 1] = ["conformance"];
-const HOLDINGS: [&str; 1] = ["stewards.toml"];
 
 /// Step 8a's `reg-build build` value options.
 const BUILD_VALUES: [&str; 6] = [
@@ -312,57 +303,6 @@ fn passed_steps(evidence: &Path, base_sha: &str) -> BTreeSet<String> {
         .collect()
 }
 
-/// Why the earlier pair cannot be reused, or `None` when it can.
-fn holdings_reason(
-    evidence: &Path,
-    passed: &BTreeSet<String>,
-    steward_change: &[String],
-    base_sha: &str,
-) -> Result<Option<&'static str>, String> {
-    if !steward_change.is_empty() {
-        return Ok(Some("stewards.toml changed"));
-    }
-    let pair = evidence.join("catalog/reg_meta_swecov.db");
-    if !pair.is_file() || !passed.contains("8e") {
-        return Ok(Some(
-            "no pair that passed 8e against this base in the evidence",
-        ));
-    }
-    let digest = evidence.join("holdings.sha256");
-    if !digest.is_file()
-        || sha256(&pair)?
-            != first_word(
-                &fs::read_to_string(&digest).map_err(|e| format!("{}: {e}", digest.display()))?,
-            )
-    {
-        return Ok(Some("the pair no longer matches holdings.sha256"));
-    }
-    let conn = open_ro(&pair)?;
-    if meta_value(&conn, "catalog_sha256")?.as_deref() != Some(base_sha) {
-        return Ok(Some("the pair does not pin this base's catalog_sha256"));
-    }
-    let registry = read_toml(Path::new("stewards.toml"))?;
-    let swecov = registry
-        .get("swecov")
-        .ok_or("stewards.toml has no [swecov]")?;
-    for (key, field) in [
-        ("steward_repo", "repo"),
-        ("steward_commit", "commit"),
-        ("steward_config", "config"),
-    ] {
-        let wanted = swecov
-            .get(field)
-            .and_then(toml::Value::as_str)
-            .ok_or_else(|| format!("stewards.toml [swecov] has no {field}"))?;
-        if meta_value(&conn, key)?.as_deref() != Some(wanted) {
-            return Ok(Some(
-                "the pair's steward pin is not this release's stewards.toml",
-            ));
-        }
-    }
-    Ok(None)
-}
-
 /// Workspace package ids `root_name` reaches through normal and build deps. Fails
 /// closed: an absent root or resolve node would shrink the builder paths to nothing.
 fn workspace_closure(
@@ -429,7 +369,6 @@ fn run(evidence: &Path) -> Result<u8, String> {
     let PathSets {
         builder_dirs,
         builder: builder_paths,
-        reader: reader_paths,
     } = PathSets::read(&repo)?;
 
     println!("built   {built} ({})", evidence.display());
@@ -452,30 +391,10 @@ fn run(evidence: &Path) -> Result<u8, String> {
             println!("{step}: run it (not passed in the evidence)");
         }
     }
-    let steward_change = changed(&built, &release, &HOLDINGS.map(str::to_owned))?;
-    let holdings = holdings_reason(&evidence, &passed, &steward_change, &base_sha)?;
-    if let Some(reason) = holdings {
-        println!("holdings: rebuild, redo 8d-8g ({reason})");
-    } else {
-        println!("holdings: reuse; 8d and 8e carry over");
-        if passed.contains("8g") {
-            println!("8g: carries over");
-        } else {
-            println!("8g: run it (not passed in the evidence)");
-        }
-    }
-    let readers = changed(&built, &release, &reader_paths)?;
-    if !readers.is_empty() {
-        println!(
-            "8f: rerun (reader-side change):\n  {}",
-            readers.join("\n  ")
-        );
-    } else if holdings.is_some() || !passed.contains("8f") {
-        println!("8f: run it (holdings rebuilt, or not passed in the evidence)");
-    } else {
-        println!("8f: carries over");
-    }
-    println!("always: 8h scope check and the 8i base_sha check at the release commit");
+    // The holdings build from a steward checkout, not a toolkit pin, so nothing here
+    // can show an earlier pair is still current.
+    println!("8d-8h: run them at the release commit (the holdings are always rebuilt)");
+    println!("always: the 8i base_sha check at the release commit");
     Ok(0)
 }
 
@@ -485,8 +404,6 @@ struct PathSets {
     builder_dirs: Vec<String>,
     /// What the base build reads.
     builder: Vec<String>,
-    /// What only the readers (step 8f) read.
-    reader: Vec<String>,
 }
 
 impl PathSets {
@@ -528,7 +445,7 @@ impl PathSets {
         // `--workspace` builds unify features across every member, so any member's
         // manifest can change what the builder links (e.g. a reader crate enabling a
         // feature of a shared dependency) without touching Cargo.lock.
-        let manifests = sorted(reader.clone(), "/Cargo.toml");
+        let manifests = sorted(reader, "/Cargo.toml");
         Ok(Self {
             builder: [
                 builder_dirs.clone(),
@@ -536,7 +453,6 @@ impl PathSets {
                 ALWAYS_BUILDER.map(str::to_owned).to_vec(),
             ]
             .concat(),
-            reader: [sorted(reader, ""), READER_EXTRA.map(str::to_owned).to_vec()].concat(),
             builder_dirs,
         })
     }
