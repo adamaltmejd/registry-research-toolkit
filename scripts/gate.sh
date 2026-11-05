@@ -27,8 +27,9 @@ FIXTURE=$ROOT/crates/reg-build/fixture
 # it, the frontend step fails: raising the budget is a maintainer call. About 68 KB gz
 # measured after the search fold left (it was about 145 KB with it).
 WASM_GZ_BUDGET=200000
-# The markdown checker. CI installs this version (ci.yml `lint`); locally,
-# `cargo install panache --version <pin> --locked`.
+# The markdown checker and its one pin: ci.yml `lint` reads it to install that release;
+# locally, `cargo install panache --version <pin> --locked`. ci.yml and Renovate parse
+# this exact `PANACHE_VERSION=<version>` line.
 PANACHE_VERSION=3.17.1
 
 # The last failure, for the summary line.

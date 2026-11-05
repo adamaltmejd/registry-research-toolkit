@@ -32,8 +32,8 @@ with its necessary dependency closure. For a complete refresh, audit these surfa
 together, reading actual files rather than a saved version list:
 
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.sh` (`PANACHE_VERSION`,
-  which must equal the `panache@` install in `ci.yml`), `reg_webapp/Dockerfile`, and the
-  Rust toolchain and `Cargo.toml`/`Cargo.lock` dependencies.
+  the release CI's `lint` job installs), `reg_webapp/Dockerfile`, and the Rust toolchain
+  and `Cargo.toml`/`Cargo.lock` dependencies.
 - The SPA: `reg_webapp/frontend/package.json` and `bun.lock` (exact pins, including
   `agent-browser`, `playwright` and React Aria), the wrangler pin in
   `.github/workflows/container-build.yml` (`bunx wrangler@<pin> deploy`), and the

@@ -15,18 +15,17 @@
   },
   "customManagers": [
     {
-      "description": "The panache pin: the gate's PANACHE_VERSION and the CI `lint` install, which must match (the gate refuses any other version).",
+      "description": "The panache pin, the gate's PANACHE_VERSION (CI's `lint` job installs the release it names).",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^scripts/gate\\.sh$/",
-        "/^\\.github/workflows/ci\\.yml$/"
+        "/^scripts/gate\\.sh$/"
       ],
       "matchStrings": [
-        "PANACHE_VERSION=(?<currentValue>[0-9][^\\s]*)",
-        "tool: panache@(?<currentValue>[0-9][^\\s]*)"
+        "PANACHE_VERSION=(?<currentValue>[0-9][^\\s]*)"
       ],
-      "depNameTemplate": "panache",
-      "datasourceTemplate": "crate"
+      "depNameTemplate": "jolars/panache",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
   "packageRules": [
