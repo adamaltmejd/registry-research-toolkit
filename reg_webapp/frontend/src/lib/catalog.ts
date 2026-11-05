@@ -146,12 +146,13 @@ export function leafSlug(fqid: string): string {
 }
 
 /** The catalog pages above a route's page, provider then register: the
- * ancestors its trail names. The group namespace (`set/`) and the
- * classification axis have no pages of their own, so they add none. */
+ * ancestors its trail names. The group namespace (`set/`) has no page of its
+ * own, so it adds none; a classification's one ancestor is the list of
+ * classifications (`class`). */
 export function trailAncestors(route: Route): string[] {
   if (route.name !== "catalog-node") return [];
-  if (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
-    return [];
+  if (route.fqidPath === "class") return [];
+  if (route.fqidPath.startsWith("class/")) return ["class"];
   const segments = fqidSegments(unqualifiedCatalogPath(route.fqidPath));
   return segments
     .slice(0, Math.min(segments.length - 1, 2))

@@ -8,7 +8,12 @@ import {
   TreeItem,
   TreeItemContent,
 } from "react-aria-components";
-import { type RootChild, SEARCH_MIN_QUERY_LENGTH, searchFacets } from "./api";
+import {
+  type ClassFamilyRef,
+  type RootChild,
+  SEARCH_MIN_QUERY_LENGTH,
+  searchFacets,
+} from "./api";
 import styles from "./BrowseTree.module.css";
 import {
   allRegisterFacets,
@@ -23,8 +28,14 @@ import {
   rankFilter,
   registerOfPath,
   sortedRegisters,
+  svCollator,
 } from "./catalog";
-import { catalogRootChildren } from "./catalog_names";
+import {
+  CLASSIFICATIONS,
+  CLASSIFICATIONS_LABEL,
+  catalogRootChildren,
+  classFamiliesRead,
+} from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
 import { keepFocusVisible, type TreeState, visibleKey } from "./tree_focus";
@@ -38,7 +49,8 @@ import { useAsyncResource } from "./use_async_resource";
 import { useRoute } from "./use_router";
 import { useCatalogRead } from "./use_store_read";
 
-/** One row: a provider at level 1, a register under it. */
+/** One row: a provider at level 1, a register under it; or, below the
+ * providers, the classifications at level 1, each classification under it. */
 interface BrowseNode {
   id: string;
   name: string;
@@ -46,6 +58,8 @@ interface BrowseNode {
   children: BrowseNode[];
   /** Set on a register the filter keeps only through its variables: how many. */
   variableMatches?: number;
+  /** Drawn under a rule that sets it apart from the rows above. */
+  separated?: boolean;
 }
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
@@ -95,13 +109,17 @@ interface CurrentRow {
 }
 
 /** The row the current page belongs to, by key (the row's FQID): a variable,
- * group or table page lives under its register, a classification page under
- * the classification root. */
+ * group or table page lives under its register, a classification version's
+ * page under its classification. */
 function currentRow(route: Route): CurrentRow | null {
   switch (route.name) {
     case "catalog-node": {
+      const segments = route.fqidPath.split("/");
+      // A version's address shows its classification's page.
       const key =
-        registerOfPath(route.fqidPath) ?? route.fqidPath.split("/")[0];
+        segments[0] === CLASSIFICATIONS
+          ? segments.slice(0, 2).join("/")
+          : (registerOfPath(route.fqidPath) ?? segments[0]);
       return { key, exact: key === route.fqidPath };
     }
     default:
@@ -140,8 +158,11 @@ function filterNodes(
   return { nodes: filtered, matched };
 }
 
-function browseNodes(root: RootChild[]): BrowseNode[] {
-  return root.map((child) => ({
+function browseNodes(
+  root: RootChild[],
+  families: ClassFamilyRef[],
+): BrowseNode[] {
+  const providers = root.map((child) => ({
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
@@ -152,6 +173,24 @@ function browseNodes(root: RootChild[]): BrowseNode[] {
       children: [],
     })),
   }));
+  if (families.length === 0) return providers;
+  // The classifications follow the providers, under a rule (maintainer
+  // 2026-11-05), by name in Swedish collation as a provider's registers are.
+  const classifications: BrowseNode = {
+    id: CLASSIFICATIONS,
+    name: CLASSIFICATIONS_LABEL,
+    href: catalogHref(CLASSIFICATIONS),
+    separated: true,
+    children: [...families]
+      .sort((a, b) => svCollator.compare(a.name, b.name))
+      .map((family) => ({
+        id: family.fqid,
+        name: family.name,
+        href: catalogHref(family.fqid),
+        children: [],
+      })),
+  };
+  return [...providers, classifications];
 }
 
 /**
@@ -189,7 +228,8 @@ export function BrowseTree({ className }: { className?: string }) {
   );
   const current = currentRow(route);
   const currentKey = current?.key ?? null;
-  const allNodes = browseNodes(root.value ?? []);
+  const families = useCatalogRead(classFamiliesRead, undefined);
+  const allNodes = browseNodes(root.value ?? [], families.value ?? []);
   // Without facets, name-only filtering would hide possible variable matches.
   // Keep the loaded registers visible until the researcher retries the search.
   const facetError = facetResource.error;
@@ -198,7 +238,10 @@ export function BrowseTree({ className }: { className?: string }) {
     facetError ? "" : needle,
     facets,
   );
-  const expandable = nodes
+  // None until the tree shows: a "Collapse all" pressed while the
+  // classifications load would leave their group out of the saved state.
+  const treeLoading = root.loading || families.loading;
+  const expandable = (treeLoading ? [] : nodes)
     .filter((node) => node.children.length > 0)
     .map((node) => node.id);
   // The search field's "N matches": the registers the filter keeps. No count
@@ -211,7 +254,7 @@ export function BrowseTree({ className }: { className?: string }) {
   const matchCount =
     filtering && root.value !== null && !facetsPending && !facetError
       ? nodes
-          .filter((node) => matched.has(node.id))
+          .filter((node) => node.id !== CLASSIFICATIONS && matched.has(node.id))
           .reduce((sum, node) => sum + node.children.length, 0)
       : null;
   useEffect(() => {
@@ -223,6 +266,7 @@ export function BrowseTree({ className }: { className?: string }) {
   const order =
     filtering && !facetError
       ? nodes
+          .filter((node) => node.id !== CLASSIFICATIONS)
           .flatMap((node) => node.children.map((child) => child.id))
           .join(" ")
       : "";
@@ -394,7 +438,7 @@ export function BrowseTree({ className }: { className?: string }) {
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>
-        {root.loading ? (
+        {treeLoading ? (
           <p className={styles.note} aria-busy="true">
             Loading the catalog…
           </p>
@@ -413,7 +457,11 @@ export function BrowseTree({ className }: { className?: string }) {
             <Tree
               // A fixed name: the visible label turns into the count while
               // filtering.
-              aria-label="Registers"
+              aria-label={
+                families.value?.length
+                  ? "Registers and classifications"
+                  : "Registers"
+              }
               className={({ state }) => {
                 treeState.current = state;
                 return styles.tree;
@@ -521,6 +569,7 @@ function BrowseItem({
           {...props}
           aria-current={ariaCurrent}
           data-holds-current={holdsCurrent || undefined}
+          data-separated={node.separated || undefined}
         />
       )}
     >

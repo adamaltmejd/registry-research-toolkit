@@ -1,5 +1,6 @@
 import type { Context, OrderCheck } from "./api";
 import styles from "./CatalogNodeView.module.css";
+import { ClassificationsView } from "./ClassificationsView";
 import { ClassificationView } from "./ClassificationView";
 import { sharedShow } from "./catalog_names";
 import { GroupView } from "./GroupView";
@@ -87,6 +88,8 @@ export function CatalogNodeView({
           validation={validation}
         />
       );
+    case "class_families":
+      return <ClassificationsView node={node} context={context} />;
     case "class_family":
       return (
         <ClassificationView
