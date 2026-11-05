@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/bindings/0/numeric_subtype",
+      "message": "unexpected key 'numeric_subtype' on binding"
+    }
+  ]
+}

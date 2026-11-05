@@ -16,10 +16,10 @@ use reg_core::IssueLevel;
 use reg_core::days::{merge, minus, overlap};
 use reg_core::manifest::{
     CatalogIdentity, Clip, Column, Encoding, File, HoldingsIdentity, MANIFEST_VERSION, Manifest,
-    Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage, safe_file_name,
-    stata_name,
+    Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage, StorageFamily,
+    safe_file_name, stata_name,
 };
-use reg_core::project::{ExtractFormat, ProjectData};
+use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
 use rusqlite::Connection;
 use serde_json::Value;
 
@@ -331,7 +331,12 @@ fn build(
     files.sort_by(|a, b| (a.0, &a.1.name).cmp(&(b.0, &b.1.name)));
     let mut physical: Vec<Issue> = findings;
     physical.sort_by(|a, b| (&a.path, a.key()).cmp(&(&b.path, b.key())));
-    let mut all: Vec<Issue> = order.findings.iter().map(|f| f.issue.clone()).collect();
+    let mut all: Vec<Issue> = Vec::new();
+    for finding in &order.findings {
+        if !held_as_stated(server, held, project, &finding.issue)? {
+            all.push(finding.issue.clone());
+        }
+    }
     all.extend(physical);
     if all.iter().any(Issue::blocks) {
         return Ok(Err(all));
@@ -344,6 +349,54 @@ fn build(
         clips,
         findings: all,
     }))
+}
+
+/// Whether `issue` is a `binding_type_differs` whose binding's type override is of the
+/// storage family of every steward column that holds its days (maintainer G14): the
+/// project then matches the file it gets, and the catalog type is not what it reads.
+fn held_as_stated(
+    server: &Server,
+    held: &Connection,
+    project: &ProjectData,
+    issue: &Issue,
+) -> Result<bool, Error> {
+    let (true, Some(table), Some(variable), Some(period)) = (
+        issue.code == "binding_type_differs",
+        &issue.table,
+        &issue.variable,
+        &issue.period,
+    ) else {
+        return Ok(false);
+    };
+    let stated = project
+        .sources
+        .iter()
+        .enumerate()
+        .flat_map(|(s, source)| {
+            let at = move |b| format!("/sources/{s}/bindings/{b}");
+            source
+                .bindings
+                .iter()
+                .enumerate()
+                .map(move |(b, binding)| (at(b), binding))
+        })
+        .find(|(path, _)| *path == issue.path)
+        .and_then(|(_, binding)| binding.column_type)
+        .and_then(ColumnType::storage_family);
+    let Some(stated) = stated else {
+        return Ok(false);
+    };
+    let placements = placements(held, table, variable, period.days(server.open))?;
+    if placements.is_empty() {
+        return Ok(false);
+    }
+    for p in &placements {
+        let storage = stored(held, p.column)?.storage;
+        if storage.dtype.as_deref().and_then(StorageFamily::of) != Some(stated) {
+            return Ok(false);
+        }
+    }
+    Ok(true)
 }
 
 /// A binding's reference to the days of `entry` a column holds.

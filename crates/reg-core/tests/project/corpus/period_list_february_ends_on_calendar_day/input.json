@@ -1,5 +1,5 @@
 {
-  "schema_version": "5.2.0",
+  "schema_version": "6.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "rust_difference",
   "sources": [
@@ -12,8 +12,7 @@
       ],
       "bindings": [
         {
-          "variable": "scb/lisa/kon",
-          "type": "categorical"
+          "variable": "scb/lisa/kon"
         }
       ]
     }

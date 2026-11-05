@@ -1,0 +1,111 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "10"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "6.0.0",
+    "reg_meta_version": "0.76.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/typ",
+      "table": "demo/typ",
+      "table_name": "Typregistret",
+      "variable": "demo/typ/belopp",
+      "variable_name": "Belopp",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Belopp",
+      "type": "integer",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    },
+    {
+      "source": "s",
+      "binding": 1,
+      "provider": "demo",
+      "register": "demo/typ",
+      "table": "demo/typ",
+      "table_name": "Typregistret",
+      "variable": "demo/typ/namn",
+      "variable_name": "Namn",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Namn",
+      "type": "text",
+      "length": 20,
+      "value_set": null,
+      "classification": null
+    },
+    {
+      "source": "s",
+      "binding": 2,
+      "provider": "demo",
+      "register": "demo/typ",
+      "table": "demo/typ",
+      "table_name": "Typregistret",
+      "variable": "demo/typ/okand",
+      "variable_name": "Okänd typ",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Okand",
+      "type": null,
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/typ",
+      "table_name": "Typregistret",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/typ/lopnr",
+          "variable_name": "Löpnummer",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "warning",
+      "code": "binding_type_differs",
+      "path": "/sources/0/bindings/0",
+      "message": "the project gives demo/typ/belopp the type text, but the catalog has integer in demo/typ over [2020-01-01, 2021-01-01)",
+      "source": "s",
+      "variable": "demo/typ/belopp",
+      "variable_name": "Belopp",
+      "table": "demo/typ",
+      "table_name": "Typregistret",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null,
+      "successor_name": null
+    }
+  ]
+}

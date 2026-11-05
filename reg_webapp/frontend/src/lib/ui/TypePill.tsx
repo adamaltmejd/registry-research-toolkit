@@ -2,37 +2,33 @@ import type { ReactNode } from "react";
 import type { ProjectBinding } from "../project_data";
 import styles from "./TypePill.module.css";
 
-/** A column's type as a project binding states it: the one type list of the
- * site (maintainer 2026-11-04). Uncoded text is "Other". */
-export type ColumnType = ProjectBinding["type"];
+/** A column's catalog type: the names a project binding's optional `type`
+ * override uses too, the one type list of the site (#2071). */
+export type ColumnType = NonNullable<ProjectBinding["type"]>;
 
 const WORDS: Record<ColumnType, string> = {
-  id: "Identifier",
-  categorical: "Categorical",
-  numeric: "Numeric",
+  integer: "Whole number",
+  decimal: "Decimal number",
+  text: "Text",
   date: "Date",
   datetime: "Date and time",
-  opaque: "Other",
+  boolean: "Yes or no",
+  geometry: "Geometry",
+  uuid: "UUID",
+  binary: "Binary",
+  identifier: "Identifier",
 };
+
+const NUMBER = <path d="M4 1 3 11M9 1 8 11M1 4h10M1 8h10" />;
+const OTHER = <circle cx="6" cy="6" r="4.5" />;
 
 /** Decorative: the word beside the glyph carries the type. Drawn on a 12 px
  * box in the pill's muted ink. */
 const GLYPHS: Record<ColumnType, ReactNode> = {
-  // A key: the column picks out one unit.
-  id: (
-    <>
-      <circle cx="4" cy="6" r="2.5" />
-      <path d="M6.5 6h4.5M9.5 6v2" />
-    </>
-  ),
-  // A list of codes with their labels.
-  categorical: (
-    <>
-      <path className={styles.fill} d="M1 1.5h2v2H1zM1 5h2v2H1zM1 8.5h2v2H1z" />
-      <path d="M4.5 2.5H11M4.5 6H11M4.5 9.5H11" />
-    </>
-  ),
-  numeric: <path d="M4 1 3 11M9 1 8 11M1 4h10M1 8h10" />,
+  integer: NUMBER,
+  decimal: NUMBER,
+  // Lines of text.
+  text: <path d="M1 2.5h10M1 6h10M1 9.5h6" />,
   date: (
     <>
       <rect x="1" y="2" width="10" height="9" rx="1" />
@@ -46,7 +42,18 @@ const GLYPHS: Record<ColumnType, ReactNode> = {
       <path d="M6 3.5V6l2 1.5" />
     </>
   ),
-  opaque: <circle cx="6" cy="6" r="4.5" />,
+  // A tick.
+  boolean: <path d="M1.5 6.5 4.5 9.5 10.5 2.5" />,
+  geometry: <path d="M6 1.5 11 10.5H1z" />,
+  uuid: OTHER,
+  binary: OTHER,
+  // A key: the column picks out one unit.
+  identifier: (
+    <>
+      <circle cx="4" cy="6" r="2.5" />
+      <path d="M6.5 6h4.5M9.5 6v2" />
+    </>
+  ),
 };
 
 /**

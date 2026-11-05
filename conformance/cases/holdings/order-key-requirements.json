@@ -1,7 +1,7 @@
 {
   "note": "The base catalogs RelativeId as an identifier alongside Id, but Pool declares only Id as its entity component. A steward order carries that received key from Pool over its mapped/requested span, with physical spelling Received_Id, and never the catalog identifier RelativeId, which Pool does not hold (binding it is mapping_missing). The implicit Year period column remains physical period metadata rather than an invented logical time PID. Oracle: Pool's authored key and census, the base frame, and the 2018 request.",
   "project": {
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.64.0",
     "name": "Declared holdings key",
     "sources": [
@@ -10,7 +10,7 @@
         "table": "demo/held",
         "period": {"from": 2018, "to": 2018},
         "bindings": [
-          {"variable": "demo/held/value", "type": "numeric"}
+          {"variable": "demo/held/value"}
         ]
       }
     ]

@@ -26,7 +26,6 @@ import {
   pinClassification,
   removeBinding,
   removeSource,
-  setBindingType,
   setSourcePeriod,
 } from "./source_edits";
 import { columnYearRuns, tableYears } from "./study_window";
@@ -39,14 +38,6 @@ import { StatusRow } from "./ui/StatusRow";
 import { issueId, type ValidationIssue } from "./validation";
 
 type Table = RegisterShow["tables"][number];
-const TYPES = [
-  { id: "id", name: "Identifier" },
-  { id: "categorical", name: "Categorical" },
-  { id: "numeric", name: "Numeric" },
-  { id: "date", name: "Date" },
-  { id: "datetime", name: "Date and time" },
-  { id: "opaque", name: "Other" },
-];
 
 export function SourceCard({
   draft,
@@ -214,27 +205,11 @@ export function SourceCard({
               ))}
             </div>
           )}
-          <div className={styles.controls}>
-            <Select
-              label="Type"
-              aria-label={`Type for ${name} in ${tableName}`}
-              value={binding.type}
-              options={TYPES}
-              onChange={(type) =>
-                edit(
-                  setBindingType(
-                    draft,
-                    sourceIndex,
-                    bindingIndex,
-                    type as typeof binding.type,
-                  ),
-                )
-              }
-            />
-            {(binding.classification ||
-              findings.some(
-                (issue) => issue.code === "classification_version_ambiguous",
-              )) && (
+          {(binding.classification ||
+            findings.some(
+              (issue) => issue.code === "classification_version_ambiguous",
+            )) && (
+            <div className={styles.controls}>
               <Select
                 label="Classification"
                 aria-label={`Classification for ${name} in ${tableName}`}
@@ -260,8 +235,8 @@ export function SourceCard({
                     focusAfterRemoval([() => heading.current]);
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
           <ul className={styles.plainList}>
             {findings.map((issue) => (
               <LocatedIssue

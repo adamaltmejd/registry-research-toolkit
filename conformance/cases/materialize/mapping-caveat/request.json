@@ -1,7 +1,7 @@
 {
   "note": "Fails if a selected mapping's authored caveat (the earlier-coding warning, Operator 2026-10-19 warn-not-hold) is dropped from the order file, blocks it, or is not located at the binding over the selected days.",
   "project": {
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.71.0",
     "name": "Mapping caveat",
     "sources": [
@@ -11,8 +11,7 @@
         "period": 2017,
         "bindings": [
           {
-            "variable": "steward/slots/code",
-            "type": "numeric"
+            "variable": "steward/slots/code"
           }
         ]
       }

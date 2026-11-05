@@ -1,7 +1,7 @@
 {
   "note": "Fails if a row-key-only request is refused or emits its key twice (once ordered, once as the held key).",
   "project": {
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.71.0",
     "name": "Key only",
     "sources": [
@@ -11,8 +11,7 @@
         "period": 2017,
         "bindings": [
           {
-            "variable": "demo/held/id",
-            "type": "numeric"
+            "variable": "demo/held/id"
           }
         ]
       }

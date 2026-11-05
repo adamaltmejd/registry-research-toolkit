@@ -203,7 +203,7 @@ def census(db_path, holdings_path=None):
 
 def project(pid, period, variables):
     return {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [
@@ -211,7 +211,7 @@ def project(pid, period, variables):
                 "name": "s",
                 "table": pid,
                 "period": period,
-                "bindings": [{"variable": v, "type": "categorical"} for v in variables],
+                "bindings": [{"variable": v} for v in variables],
             }
         ],
     }

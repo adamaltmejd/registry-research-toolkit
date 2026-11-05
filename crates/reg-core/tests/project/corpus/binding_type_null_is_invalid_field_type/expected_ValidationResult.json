@@ -4,7 +4,7 @@
       "level": "error",
       "code": "invalid_field_type",
       "path": "/sources/0/bindings/0/type",
-      "message": "binding 'type' must not be null"
+      "message": "binding 'type' must not be null when present"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "note": "Code is catalog text but held in Pool as int; Slot2 is catalog integer and held as int (slots.csv, storage.csv). Fails if `integer` on Code, the held storage's family, still gets `binding_type_differs` (maintainer G14), or if `text` on Slot2, which no held column stores, loses it: the suppression follows the storage family, not steward mode.",
+  "project": {
+    "schema_version": "6.0.0",
+    "reg_meta_version": "0.76.0",
+    "name": "Held type",
+    "sources": [
+      {
+        "name": "s",
+        "table": "steward/slots",
+        "period": 2017,
+        "bindings": [
+          {
+            "variable": "steward/slots/code",
+            "type": "integer"
+          },
+          {
+            "variable": "steward/slots/slot2",
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+}

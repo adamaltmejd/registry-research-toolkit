@@ -184,6 +184,32 @@ pub struct Storage {
     pub scale: Option<i64>,
 }
 
+/// The coarse class a SQL storage type and a catalog type are compared by: the holdings
+/// build's storage findings and the order's binding type override (G14) both read it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StorageFamily {
+    Integer,
+    Real,
+    Text,
+    Date,
+}
+
+impl StorageFamily {
+    /// The family of a SQL Server storage type (`data_type`, any case), if orderable.
+    #[must_use]
+    pub fn of(sql_type: &str) -> Option<Self> {
+        match sql_type.to_ascii_lowercase().as_str() {
+            "tinyint" | "smallint" | "int" | "bigint" | "bit" => Some(Self::Integer),
+            "decimal" | "numeric" | "real" | "float" | "money" | "smallmoney" => Some(Self::Real),
+            "char" | "nchar" | "varchar" | "nvarchar" | "text" | "ntext" => Some(Self::Text),
+            "date" | "datetime" | "datetime2" | "smalldatetime" | "datetimeoffset" | "time" => {
+                Some(Self::Date)
+            }
+            _ => None,
+        }
+    }
+}
+
 /// `ordered`: requested; `row_key`: a key the file needs; `carried`: the parent table's key copied into this one.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ColumnRole))]

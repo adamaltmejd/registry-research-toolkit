@@ -276,9 +276,12 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
   | Check did not run                                                | check failed, error, unchecked         |
 
-**Type** is one list for every screen: Categorical, Numeric, Date, Date and time,
-Identifier, Other (uncoded text is Other). It is shown as a pill with a glyph, with
-years only when the type changes by period.
+**Type** is one list for every screen, the catalog's types in plain words: Whole number,
+Decimal number, Text, Date, Date and time, Yes or no, Geometry, UUID, Binary, Identifier
+(an identifier column is Identifier whatever it is stored as). It is shown as a pill
+with a glyph, with years only when the type changes by period; a column whose type the
+catalog does not state has no pill. The SPA never edits a project's type: a project
+states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
 source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
@@ -607,15 +610,13 @@ Time is the axis every relation is drawn on.
   affected. A ghost "Remove table" in the card header also asks first. Focus returns to
   the card heading after a column removal, or the Tables heading after a source removal.
 
-  Each lane's below slot holds a labelled type `Select`, an optional classification pin,
-  and its findings. Types use plain words: Identifier, Categorical, Numeric, Date, Date
-  and time, Opaque. A type change drops subtype and format fields owned by other types,
-  and retains the classification. The pin appears for a binding with a classification or
-  a catalog ambiguity finding, using named versions from segments on this table
-  overlapping the source period, plus "Not pinned" to clear it. A stored pin outside
-  those candidates remains named and marked "not delivered in this period". Versions use
-  a scrolling listbox, never chips. These controls also appear in plain rows for term
-  periods.
+  Each lane's below slot holds an optional classification pin and its findings. There is
+  no type control: an added column states no type, so the order reads the catalog's
+  (#2071, G13). The pin appears for a binding with a classification or a catalog
+  ambiguity finding, using named versions from segments on this table overlapping the
+  source period, plus "Not pinned" to clear it. A stored pin outside those candidates
+  remains named and marked "not delivered in this period". Versions use a scrolling
+  listbox, never chips. These controls also appear in plain rows for term periods.
 
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
@@ -867,9 +868,8 @@ grow new visual language meanwhile.
 - **TypePill:** a column's type: a 12 px glyph in `text-muted` and the word in a
   `border` hairline `sm` box on `surface`, 0.75 rem, line-height 1.4, padding 0 6 px,
   with its years in micro mono `text-muted` only where the type changes over time. The
-  words are the binding types: Identifier, Categorical, Numeric, Date, Date and time,
-  Other (uncoded text is Other; maintainer 2026-11-04). No hue: the type is a fact, not
-  a node kind, so it never borrows a `TypeTag` colour.
+  words are the catalog types in plain words ("Words"; #2071). No hue: the type is a
+  fact, not a node kind, so it never borrows a `TypeTag` colour.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
   register's or a variable's page title, where it leads with a glyph in its ink (a table
   for a register, one filled column of it for a variable). A group page's kind mark has

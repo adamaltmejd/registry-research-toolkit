@@ -22,7 +22,7 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   binding names a three-segment binding FQID in `variable`. The optional top-level
   `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
   measures a source period against; absent means the full history.
-- **`extract_format`** is an optional top-level string in contract 5.2.0: `dta`,
+- **`extract_format`** is an optional top-level string (contract 5.2.0 on): `dta`,
   `parquet` or `csv`. Absent means the order authoring default (`dta`), which the order
   file resolves; the default is never written into the project. The structural layer
   refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
@@ -33,6 +33,19 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   rules live in [../DESIGN.md](../DESIGN.md). The structural layer refuses non-boolean
   values, including explicit `null`; catalog resolution ensures the binding names a
   variable. Other object types remain closed and refuse this field.
+- **`Binding.type`** is an optional override of the catalog type for the whole binding
+  (contract 6.0.0, maintainer G10–G12 in #2071), in the catalog's published type names:
+  `integer`, `decimal`, `text`, `date`, `datetime`, `boolean`, `geometry`, `uuid`,
+  `binary`, `identifier`. Absent means the catalog type. A binding is not split by year:
+  years whose delivery differs go in their own source by period, or the catalog is
+  fixed. The structural layer refuses a non-string or explicit `null`
+  (`invalid_field_type`) and any other name (`invalid_enum_value`), so a 5.x name
+  (`categorical`, `numeric`, `id`, `opaque`) is refused. The 5.x `id_subtype`,
+  `numeric_subtype`, `date_format` and `datetime_format` are gone (`unexpected_field`):
+  an extract's storage comes from the steward's SQL types, never from the project. The
+  override informs the order check only (`binding_type_differs`,
+  [../DESIGN.md](../DESIGN.md), "The logical order"); it changes no entry and no order
+  file.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
@@ -157,13 +170,12 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                          |
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                             |
   | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                  |
-  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `extract_format` is outside its allowed set.                                                                                                                                                                                                                             |
-  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.2.0).                                                                                                                                                  |
+  | `invalid_enum_value`                   | A binding `type` or `extract_format` is outside its allowed set.                                                                                                                                                                                                                                                    |
+  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `register_variant`, `value_set`, `representation`, the 5.x subtype and format fields and a panel's keys are unknown keys in 6.0.0).                                                                                                               |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `classification` is not `class/<family>/<version>`, or a `table` is not `<provider>/<register>[/<table>]`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                       |
   | `fqid_table_mismatch`                  | A binding's provider and register differ from its source's `table`. The table lives once, on the source.                                                                                                                                                                                                            |
   | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"`, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
   | `invalid_window`                       | The study window's `to` is before its `from`.                                                                                                                                                                                                                                                                       |
-  | `subtype_on_wrong_type`                | A subtype or format field is set on a binding whose `type` does not own it.                                                                                                                                                                                                                                         |
   | `empty_bindings`                       | A source has no bindings.                                                                                                                                                                                                                                                                                           |
   | `duplicate_source_name`                | Two sources share a `name`.                                                                                                                                                                                                                                                                                         |
   | `display_name_collision`               | Two bindings of one source share an explicit `display_name`.                                                                                                                                                                                                                                                        |
@@ -173,7 +185,7 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `panel_member_unknown_source`          | A panel member's `source` names no source.                                                                                                                                                                                                                                                                          |
 
 **Codes other layers emit.** The order check adds the catalog rules of project document
-5.2.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
+6.0.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
 `unsupported_schema_version`. All belong to the same stable registry.
 
 ## One grammar

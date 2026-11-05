@@ -1,11 +1,12 @@
 {
-  "schema_version": "5.2.0",
+  "schema_version": "6.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
   "window": {
     "from": 2018,
     "to": 2019
   },
+  "extract_format": "parquet",
   "sources": [
     {
       "name": "lisa_2018",
@@ -14,31 +15,16 @@
       "bindings": [
         {
           "variable": "scb/lisa/lopnr",
-          "type": "id",
-          "display_name": "LopNr_PersonNr",
-          "id_subtype": "integer"
+          "display_name": "LopNr_PersonNr"
         },
         {
           "variable": "scb/lisa/ar",
-          "type": "numeric",
+          "type": "integer",
           "display_name": "AR",
-          "numeric_subtype": "integer"
-        },
-        {
-          "variable": "scb/lisa/fodelsedatum",
-          "type": "date",
-          "display_name": "FodelseDatum",
-          "date_format": "%Y%m%d"
-        },
-        {
-          "variable": "scb/lisa/registreringstid",
-          "type": "datetime",
-          "display_name": "RegistreringsTid",
-          "datetime_format": "%Y-%m-%dT%H:%M:%S"
+          "follow_successor": true
         },
         {
           "variable": "scb/lisa/ssyk",
-          "type": "categorical",
           "display_name": "Ssyk4",
           "classification": "class/ssyk/2012"
         }

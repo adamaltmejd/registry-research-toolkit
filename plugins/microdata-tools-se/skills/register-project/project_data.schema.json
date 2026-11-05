@@ -45,8 +45,7 @@
       "type": "object",
       "description": "One variable to extract.",
       "required": [
-        "variable",
-        "type"
+        "variable"
       ],
       "properties": {
         "classification": {
@@ -56,18 +55,6 @@
           ],
           "description": "A classification version's public id `class/<family>/<version>`.",
           "pattern": "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$"
-        },
-        "date_format": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "datetime_format": {
-          "type": [
-            "string",
-            "null"
-          ]
         },
         "display_name": {
           "type": [
@@ -80,28 +67,9 @@
           "description": "Follow the variable's continues successors after it ends; absent means false.",
           "default": false
         },
-        "id_subtype": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ProjectIdSubtype"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "numeric_subtype": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ProjectNumericSubtype"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "type": {
-          "$ref": "#/$defs/ProjectColumnType"
+          "$ref": "#/$defs/ProjectColumnType",
+          "description": "Overrides the catalog type for the whole binding; absent means the catalog type.\nAn explicit `null` is `invalid_field_type`."
         },
         "variable": {
           "type": "string",
@@ -113,12 +81,16 @@
     "ProjectColumnType": {
       "type": "string",
       "enum": [
-        "id",
-        "categorical",
-        "numeric",
+        "integer",
+        "decimal",
+        "text",
         "date",
         "datetime",
-        "opaque"
+        "boolean",
+        "geometry",
+        "uuid",
+        "binary",
+        "identifier"
       ]
     },
     "ProjectExtractFormat": {
@@ -127,20 +99,6 @@
         "dta",
         "parquet",
         "csv"
-      ]
-    },
-    "ProjectIdSubtype": {
-      "type": "string",
-      "enum": [
-        "integer",
-        "string"
-      ]
-    },
-    "ProjectNumericSubtype": {
-      "type": "string",
-      "enum": [
-        "integer",
-        "double"
       ]
     },
     "ProjectPanel": {
