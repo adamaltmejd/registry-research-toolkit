@@ -94,14 +94,21 @@ const VIRTUALIZE_OVER = 1500;
 // wraps, so heights differ.
 const LAYOUT_OPTIONS = { estimatedRowHeight: 29, estimatedHeadingHeight: 31 };
 
-// Scrolls a virtualized row into view over two frames: rows the scroll
-// passes are measured in the first and can move it.
+// Keeps a focused virtualized row in view until it stops moving: rows are
+// measured only once rendered (names wrap), and each measurement moves the
+// rows after it.
 function revealAfterLayout(row: HTMLElement): void {
-  let frames = 2;
+  // simplify: a frame loop capped at 30 frames (half a second); revisit if
+  // RAC's layout gains a settle callback.
+  let frames = 0;
+  let lastTop = Number.NaN;
   const step = () => {
-    if (!row.isConnected) return;
+    if (!row.isConnected || document.activeElement !== row) return;
     row.scrollIntoView({ block: "nearest" });
-    if (--frames > 0) requestAnimationFrame(step);
+    const top = row.getBoundingClientRect().top;
+    if (top === lastTop || ++frames >= 30) return;
+    lastTop = top;
+    requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
 }
@@ -266,6 +273,11 @@ export function ColumnList({
   }, []);
 
   function onFocusCapture(event: FocusEvent): void {
+    // Every focus change in a virtualized list (arrival, the arrows, Home,
+    // End, Page keys, type-ahead): RAC and the browser scroll the row into
+    // view at its estimated place, then measuring the rows passed moves it.
+    const row = event.target;
+    if (virtual && row instanceof HTMLElement) revealAfterLayout(row);
     const from = event.relatedTarget;
     if (
       pressing.current ||
@@ -278,11 +290,6 @@ export function ColumnList({
     setTimeout(() => {
       arriving.current = false;
     });
-    // The browser scrolls the row it focuses into view, but in a virtualized
-    // list the rows it scrolls past are then measured and the row moves: bring
-    // it into view again once the layout has settled.
-    const row = event.target;
-    if (virtual && row instanceof HTMLElement) revealAfterLayout(row);
   }
 
   function onSelectionChange(keys: Selection): void {
