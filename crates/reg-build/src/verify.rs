@@ -243,17 +243,31 @@ fn compare(db: &Connection, previous: &Path) -> Result<()> {
             .optional()
             .map_err(|e| fail(format!("{}: {e}", previous.display())))?)
     };
-    let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
-    match version("prev")? {
-        Some(p) if p == current => {}
-        other => {
+    // `schema_version` already equals the constant, so `current` parses.
+    let current = version("main")?
+        .and_then(|v| v.parse::<u32>().ok())
+        .ok_or_else(|| "meta has no schema_version".to_owned())?;
+    // An older schema stays comparable while the id queries below still run on it; a
+    // newer one is never assumed to be.
+    let prev_text = version("prev")?;
+    let prev = match prev_text.as_deref().map(str::parse::<u32>) {
+        Some(Ok(p)) if p <= current => p,
+        _ => {
             return Err(fail(format!(
                 "schema {} is not comparable",
-                other.as_deref().unwrap_or("(none)")
+                prev_text.as_deref().unwrap_or("(none)")
             ))
             .into());
         }
-    }
+    };
+    // A query error on the same schema is a broken file, not a schema gap.
+    let incomparable = |e: crate::error::Error| {
+        if prev == current {
+            fail(e.into())
+        } else {
+            fail(format!("schema {prev} is not comparable: {e}"))
+        }
+    };
     let catalog_version: String = db
         .query_row(
             "SELECT value FROM prev.meta WHERE key = 'catalog_version'",
@@ -266,6 +280,11 @@ fn compare(db: &Connection, previous: &Path) -> Result<()> {
         .next()
         .and_then(|major| major.parse::<u64>().ok())
         .is_none_or(|major| major == 0);
+    if prev != current {
+        println!(
+            "previous release: cross-schema comparison: previous schema {prev}, current schema {current}"
+        );
+    }
     let mut changes = Vec::new();
     for (change, statement) in [
         ("removed id", "SELECT p.pid FROM prev.ident p
@@ -276,17 +295,16 @@ fn compare(db: &Connection, previous: &Path) -> Result<()> {
             AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)"),
         ("removed retirement", "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired"),
     ] {
-        let mut stmt = db.prepare(statement)?;
-        let pids = stmt.query_map([], |r| r.get::<_, String>(0))?;
+        let pids = crate::error::rows(db, statement, [], |r| r.get::<_, String>(0))
+            .map_err(incomparable)?;
         for pid in pids {
-            let pid = pid?;
             if !pre_v1 {
                 return Err(fail(format!("{change} {pid}")).into());
             }
             changes.push((pid.clone(), format!("{change} {pid}")));
         }
     }
-    for moved in crate::id_targets::moved(db, "prev", db, "main").map_err(|e| fail(e.into()))? {
+    for moved in crate::id_targets::moved(db, "prev", db, "main").map_err(incomparable)? {
         if !pre_v1 {
             return Err(fail(format!(
                 "moved id {}; retire the published id and mint a new one",

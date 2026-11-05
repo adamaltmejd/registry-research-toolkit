@@ -267,9 +267,13 @@ target/release/reg-build verify "$evidence/catalog/reg_meta.db" --previous "$pre
 
 Retain stdout in `catalog-verify.txt` beside `catalog-diff.json`, including the pre-v1
 id-change report when the previous release is pre-v1. `--previous` is required. A
-verification failure stops publication. The current verifier requires the previous DB to
-have the same schema version; a future schema bump that makes it incomparable needs a
-reviewed procedure change before release, not an unrecorded skip.
+verification failure stops publication. The verifier compares across a catalog schema
+bump: the previous DB's schema version must be present and no newer than the current
+one, and when it is older stdout carries a `cross-schema comparison: previous schema N,
+current schema M` line that the evidence keeps. If the id queries cannot run on the
+older schema (a dropped table or column), verify refuses with `previous release: schema
+N is not comparable: <sqlite error>`; that refusal needs a reviewed procedure change
+before release, not an unrecorded skip.
 
 #### 8c. Review the catalog diff
 

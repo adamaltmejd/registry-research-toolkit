@@ -790,8 +790,10 @@ overlapping curated overrides are refused at both locations.
   release. `emit` runs it on the staged file before replacing the output, so conformance
   and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
-  `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. When the previous release's catalog version has an
+  `PRAGMA user_version`; `verify` requires both to equal it. A previous file with a
+  missing or newer schema version is not comparable; an older one is compared while the
+  id queries still run on it (a missing table or column refuses as `schema N is not
+  comparable: <sqlite error>`), and stdout records the cross-schema comparison. When the previous release's catalog version has an
   integer major of at least 1, removed ids from `ident` or `var_set` must appear with
   the same kind in `ident_retired`, and existing retirements must remain. A published
   variable id's targets are its column-bearing occurrences' (table slug, folded
