@@ -72,8 +72,9 @@ fn damaged_pair_is_refused_at_startup() {
         &db,
         &format!("UPDATE meta SET value='{pinned}' WHERE key='catalog_sha256'"),
     );
-    let started = server::start(dir.path(), &argv, &[("REG_META_CATALOG_SHA256", &pinned)]);
-    let port = started.unwrap().port;
-    let (status, _) = client::json(port, "GET", "/api/context", &[], None).unwrap();
+    // Bound, not a temporary: the server stops when its handle drops.
+    let pinned_server =
+        server::start(dir.path(), &argv, &[("REG_META_CATALOG_SHA256", &pinned)]).unwrap();
+    let (status, _) = client::json(pinned_server.port, "GET", "/api/context", &[], None).unwrap();
     assert_eq!(status, 200);
 }
