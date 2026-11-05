@@ -9,7 +9,7 @@ Each named step runs its commands in order from the repository root and stops at
 first failure. `all` runs g0, rust, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`, `frontend` and
-`flows`. `rust` also owns release admission on the synthetic artifact, so the Rust
+`flows`. `rust` also runs the release checks on the synthetic artifact, so the Rust
 binaries are built once per job.
 `regen` also blesses the plugin project schema. Stdlib only.
 """
@@ -34,13 +34,6 @@ FRONTEND = ROOT / "reg_webapp/frontend"
 # project-less `uvx` reads only the host uv config, which may delay them; without this a
 # freshly bumped tool pin fails locally until the host cutoff passes.
 os.environ["UV_EXCLUDE_NEWER"] = "false"
-CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
-# A raised write limit: the suite and release admission replay many projects from one
-# address (the Rust suite's MCP burst case drops it to pin the default).
-SERVER_CMD = (
-    "--server-cmd='target/debug/reg-meta serve --db {db} --port {port}"
-    " --write-limit 100000'"
-)
 ALL = ("g0", "rust", "flows", "frontend")
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
@@ -63,19 +56,14 @@ def run(command, cwd=ROOT, env=None, **kwargs):
         print(f"  elapsed {time.monotonic() - started:.2f} s", flush=True)
 
 
-def base_artifact() -> Path:
-    """The `base` conformance fixture's artifact directory, from the fixture cache.
-
-    Built by `target/debug/reg-build`: the caller has built the workspace."""
-    out = run("target/debug/reg-fixture base", stdout=subprocess.PIPE, text=True)
-    return Path(out.stdout.strip()).parent
-
-
 def crates() -> None:
     run("cargo fmt --all --check")
     run("cargo clippy --workspace --all-targets --locked -- -D warnings")
-    # `--all-targets` skips `test = false` targets: the conformance suite, by name.
-    run("cargo clippy -p reg-conformance --test conformance --locked -- -D warnings")
+    # `--all-targets` skips `test = false` targets: the conformance suites, by name.
+    run(
+        "cargo clippy -p reg-conformance --test conformance --test release --locked"
+        " -- -D warnings"
+    )
     run("cargo test --workspace --locked")
     # Unused crate dependencies; a false positive is ignored in that crate's
     # Cargo.toml (`[package.metadata.cargo-machete] ignored`) with a reason.
@@ -114,17 +102,10 @@ def rust() -> None:
     with tempfile.TemporaryDirectory(prefix="gate-paired-") as out:
         run(f"target/debug/reg-fixture --paired {out}")
         run(f"target/debug/xtask scope-check {Path(out) / 'reg_meta_fixture.db'}")
-    # The Rust harness (crates/reg-conformance), then the surfaces not yet ported.
+    # The conformance suite (crates/reg-conformance), then the release checks with the
+    # `base` fixture's artifact standing in for a real one (no `REG_ARTIFACT_DIR`).
     run("cargo test -p reg-conformance --test conformance --locked")
-    run(f"{CONFORMANCE} {SERVER_CMD}")
-    # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
-    # on it as it would on a release. `-m release` runs only the selected-artifact
-    # checks: the rest of the suite does not read `--artifact-dir` and already ran
-    # above.
-    artifact = base_artifact()
-    run(
-        f"{CONFORMANCE} -m release --run-release --artifact-dir={artifact} {SERVER_CMD}"
-    )
+    run("cargo test -p reg-conformance --test release --locked")
 
 
 def flows() -> None:

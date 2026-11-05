@@ -65,7 +65,7 @@ jobs:
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
-      # process, then release admission on the synthetic artifact (`-m release`): the
+      # process, then the release checks on the synthetic artifact (`--test release`): the
       # one job that builds the binaries, so the builder leg below does not.
       # Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust

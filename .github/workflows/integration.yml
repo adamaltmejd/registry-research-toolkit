@@ -82,19 +82,16 @@ jobs:
     env:
       TAG: ${{ needs.resolve.outputs.tag }}
       SERVE_ARGS: ${{ matrix.catalog == 'swecov' && '--catalog swecov' || '' }}
-      # The release build: a debug server hashes the 1 GB catalog at boot and debug
-      # `reg-build verify` is slow on it. The harness finds this `reg-build` through
-      # REG_BUILD_BIN (conformance/reader_artifacts.py).
-      REG_BUILD_BIN: ${{ github.workspace }}/target/release/reg-build
+      # The release checks (crates/reg-conformance, `--test release`) serve the pair as
+      # this catalog; `global` serves reg_meta.db alone.
+      REG_CATALOG: ${{ matrix.catalog }}
+      # The release build: a debug server hashes the 1 GB catalog at boot.
+      REG_META_BIN: ${{ github.workspace }}/target/release/reg-meta
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-        with:
-          version: "0.13.6"
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
-      - run: uv sync --frozen
-      - run: cargo build --release --locked -p reg-meta -p reg-build
+      - run: cargo build --release --locked -p reg-meta
       # Tier 3 admits the downloaded artifact and its embedded import_manifest,
       # never synthetic data.
       #
@@ -150,11 +147,9 @@ jobs:
           kill "$pid"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
       # Schema drift against a published asset is a release-drift failure.
-      # Search runs against the Rust server (`--server-cmd`). `-m release` runs
-      # only the checks on the downloaded artifact: the fixture-bound corpus
-      # ignores it and already ran in CI's `rust` job.
+      # Only the release checks read the downloaded artifact: the fixture-bound
+      # corpus already ran in CI's `rust` job.
       - name: Run artifact conformance against the downloaded DB
-        run: |
-          uv run python -m pytest conformance -m release --run-release -n auto --durations=0 \
-            --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
-            --server-cmd="target/release/reg-meta serve --db {db} --port {port} --write-limit 100000 $SERVE_ARGS" -q
+        env:
+          REG_ARTIFACT_DIR: ${{ steps.release-db.outputs.db_dir }}
+        run: cargo test -p reg-conformance --test release --locked -- --nocapture

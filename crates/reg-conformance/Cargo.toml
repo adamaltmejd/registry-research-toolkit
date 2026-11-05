@@ -18,6 +18,13 @@ name = "conformance"
 path = "tests/conformance/main.rs"
 test = false
 
+# The release tier on a real catalog (`REG_ARTIFACT_DIR`, `REG_CATALOG`): release step
+# 8f and integration.yml. `test = false` for the same reason.
+[[test]]
+name = "release"
+path = "tests/release/main.rs"
+test = false
+
 [dev-dependencies]
 # The MCP outputSchema check (tests/conformance/mcp.rs). Test-only, but its url → idna
 # chain adds 35 crates. simplify: revisit if the conformance target's cold CI compile

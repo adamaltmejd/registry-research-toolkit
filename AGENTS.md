@@ -172,8 +172,8 @@ and to a sweep.
   compatibility, regenerate-not-migrate, no ORM).
 - **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
   materializer, HTTP API and MCP tools. There is no Python web backend.
-- **Tests**: `cargo test` (crates), pytest + pytest-xdist (conformance),
-  `@pytest.mark.release` for real-artifact tests. Build coverage is fully synthetic.
+- **Tests**: `cargo test` (crates), the `reg-conformance` harness (conformance), its
+  `--test release` target for real-artifact checks. Build coverage is fully synthetic.
 - **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
   and run with `uvx` (not a dev dep).
 
@@ -199,9 +199,10 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   files; after a rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
   Operator schedules them with the maintainer.
-- Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
-- Real-artifact conformance: the `rust` step in `scripts/gate.py` shows the flags
-  (`--run-release --artifact-dir=… --server-cmd=…`).
+- Narrow runs: `cargo test -p <crate>`.
+- Real-artifact conformance:
+  `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=swecov] cargo test -p reg-conformance --test release`
+  (release step 8f).
 - Local prerequisite: `cargo install cargo-machete --locked`.
 - A new worktree needs no setup step: Python syncs on the first `uv run`.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs
