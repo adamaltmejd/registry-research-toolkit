@@ -45,6 +45,7 @@ mod proposals;
 mod retired;
 mod search;
 mod sets;
+mod steward_names;
 mod timing;
 mod verify;
 
@@ -182,7 +183,7 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
         })?;
     let line = Lines::new(&text).at(key.span().start);
     Ok(format!(
-        "{}:{line}: {code}: ledger id {id:?} {reason} (--release)",
+        "{}:{line}: {code}: ledger id {id:?} {reason}",
         path.display()
     ))
 }
@@ -343,6 +344,17 @@ fn build_with_provenance(
         repo.clone_into(&mut manifest.repo);
         commit.clone_into(&mut manifest.commit);
     }
+    // A steward holdings build (with a base) curates its own holdings; only the global
+    // catalog must not name a steward.
+    if base.is_none() {
+        steward_names::curation(
+            &args.curation,
+            &args.inputs,
+            &manifest.input,
+            &statements,
+            &reg_readers::curation::load_classifications(&args.curation)?,
+        )?;
+    }
     timing::done("load curation", t);
     let t = std::time::Instant::now();
     let outputs = read_all(args, &manifest)?;
@@ -469,6 +481,9 @@ fn build_with_provenance(
         base,
     )?;
     timing::done("resolve", t);
+    if base.is_none() {
+        steward_names::ids(&args.curation, &resolved)?;
+    }
     let t = std::time::Instant::now();
     let mut report = BTreeMap::new();
     let mut refusals = Vec::new();
@@ -494,12 +509,12 @@ fn build_with_provenance(
                 (
                     &r.report.unplaced_ids,
                     "ledger-id-unplaced",
-                    "has no placed variable",
+                    "has no placed variable (--release)",
                 ),
                 (
                     &r.report.split_ids,
                     "ledger-id-split",
-                    "anchors more than one variable",
+                    "anchors more than one variable (--release)",
                 ),
             ] {
                 if !ids.is_empty() {

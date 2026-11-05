@@ -225,19 +225,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/iot.toml:3469\n\nS
 kind = "assert"
 subject = "individer-och-dodsbon: CDISP04H_INKLGP @2015..2019"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04H; för 2015–2019 skiljer sig variabeln därför från CDISP04H. Motsvarar DispInkFam04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/iot.toml:5501\n\nSWECOV holds CDISP04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkFam04_INKLGP as 'Disponibel inkomst för familj - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04H_INKLGP beside CDISP04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "private:ev-2318"
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: CDISP04_INKLGP @2015..2019"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst (individens delkomponent), 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04; för 2015–2019 skiljer sig variabeln därför från CDISP04. Motsvarar DispInk04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/iot.toml:5490\n\nSWECOV holds CDISP04_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInk04_INKLGP as 'Disponibel inkomst (individens delkomponent) - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04_INKLGP beside CDISP04 in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "private:ev-2319"
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: CDISPKE04H_INKLGP @2015..2019"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISPKE04H; för 2015–2019 skiljer sig variabeln därför från CDISPKE04H. Motsvarar DispInkKE04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/iot.toml:5512\n\nSWECOV holds CDISPKE04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkKE04_INKLGP (described under DispInkKE_INKLGP as 'Disponibel inkomst per konsumtionsenhet för familj - inkl. lön intjänat i annat nordiskt land') and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISPKE04H_INKLGP beside CDISPKE04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+evidence = "private:ev-2320"
 
 [[statement]]
 kind = "set"
@@ -1857,67 +1857,67 @@ evidence = "value set: 5 integer codes"
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r2771'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2321"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r3442'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2322"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r5796'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2323"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r5811'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2324"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r2771'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2325"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r3442'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2326"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r5796'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2327"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r5811'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2328"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r2771'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2329"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r3442'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2330"
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r5796'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2331"
 
 [[statement]]
 kind = "set"

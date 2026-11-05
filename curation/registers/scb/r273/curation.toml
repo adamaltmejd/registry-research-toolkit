@@ -4565,14 +4565,14 @@ evidence = "The definition explicitly measures the full three-position SUN 2000 
 kind = "set"
 subject = "var:afsokyrkerf"
 fields = { "description" = "Erfarenhet i sökt yrke" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/stativ.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3471"
 
 
 [[statement]]
 kind = "set"
 subject = "var:afsokyrkutb"
 fields = { "description" = "Utbildning i sökt yrke" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/stativ.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3472"
 
 
 [[statement]]
@@ -4586,7 +4586,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 kind = "set"
 subject = "var:kassagrupp-inom-arbetsloshetskassan"
 fields = { "description" = "Kassagrupp" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/stativ.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3473"
 
 
 [[statement]]

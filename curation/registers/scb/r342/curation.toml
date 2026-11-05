@@ -948,35 +948,35 @@ evidence = "Gymnasieskola tests SKOLA: school name -> school-unit name (2013+); 
 kind = "set"
 subject = "var:gymnasieprogram"
 fields = { "description" = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-prov.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3618"
 
 
 [[statement]]
 kind = "set"
 subject = "var:kurs"
 fields = { "description" = "Kurskod för vilken kurs det gäller" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-prov.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3619"
 
 
 [[statement]]
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-prov.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3620"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolenhetskod"
 fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-prov.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3621"
 
 
 [[statement]]
 kind = "set"
 subject = "var:studievag-gymnasieskolan"
 fields = { "description" = "Studieväg" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-prov.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3622"
 
 [[statement]]
 kind = "set"

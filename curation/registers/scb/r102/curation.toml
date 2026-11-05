@@ -31,13 +31,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/gymnasieskola-bety
 kind = "assert"
 subject = "slutbetyg: utbildningstyp @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programtyp", "definition" = "Visar om en elev läser Högskole(förberedande) program (HP), yrkes(förberedande) program (YP) ,IV-program (IV), introduktionsprogram(IM) eller specialutformade program (SM) som inte klan anknytas till något nationellt program" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/gymnasieskola-betyg.toml:21\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-0005"
 
 [[statement]]
 kind = "assert"
 subject = "slutbetyg: AvgAr @1972..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Avgångsår", "definition" = "Avgångsår" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/gymnasieskola-betyg.toml:10\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213); extended from 1990 to 1972 because SWECOV holds the column in GymnasieskolaAvg_Individ_1973–1990 (LA1972–LA1989), and 1990 was not an SCB boundary (#1603; maintainer ruling 2026-10-15)."
+evidence = "private:ev-0006"
 
 [[statement]]
 kind = "set"
@@ -7453,7 +7453,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 kind = "set"
 subject = "var:skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans). Koden avser skolan som utfärdade elevens slutbetyg, gymnasieintyg eller nya grundskolebetyg, beroende på tabell." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:208293:opdef_text; rel070-base/reg_meta.db:occurrence:211384:opdef_text; rel070-base/reg_meta.db:occurrence:206221:opdef_text; rel070-base/reg_meta.db:occurrence:208039:opdef_text. One variable, one description."
+evidence = "private:ev-0007"
 
 [[statement]]
 kind = "set"
@@ -7465,7 +7465,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 kind = "set"
 subject = "var:utokad"
 fields = { "description" = "Kursen är en s.k. utökad kurs." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-0008"
 
 [[statement]]
 kind = "set"

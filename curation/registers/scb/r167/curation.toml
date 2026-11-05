@@ -3,31 +3,31 @@
 kind = "assert"
 subject = "release:konkurser-offentliga-ackord/2022"
 fact = { "entity" = "release", "name" = "2022", "period" = "2022" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:16\n\nSWECOV holds Konkurs_2022 for edition 2022; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024 rows 18210-18219 describe Konkurs_2022 with the same columns and types as Konkurs_2021."
+evidence = "private:ev-0120"
 
 [[statement]]
 kind = "assert"
 subject = "release:konkurser-offentliga-ackord/2023"
 fact = { "entity" = "release", "name" = "2023", "period" = "2023" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:22\n\nSWECOV holds Konkurs_2023 for edition 2023; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+evidence = "private:ev-0121"
 
 [[statement]]
 kind = "assert"
 subject = "release:konkurser-offentliga-ackord/2024"
 fact = { "entity" = "release", "name" = "2024", "period" = "2024" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:28\n\nSWECOV holds Konkurs_2024 for edition 2024; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+evidence = "private:ev-0122"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: PersonNr_opnr @2015..2024"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer för gäldenär som är enskild firma eller privatperson", "definition" = "Gäldenärens personnummer när gäldenären är en enskild firma eller en privatperson (från och med 1996). Levereras som löpnummer i kolumnen P1105_LopNr_PersonNr_opnr.", "type" = "text", "identifier" = true, "sensitive" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:208\n\nSWECOV holds P1105_LopNr_PersonNr_opnr in Konkurs_2015..Konkurs_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source Konk.OffAck and view Konkurs_ÅÅÅÅ; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F1, maintainer round 5)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer för gäldenär som är enskild firma eller privatperson", "definition" = "Gäldenärens personnummer när gäldenären är en enskild firma eller en privatperson (från och med 1996). Levereras som löpnummer.", "type" = "text", "identifier" = true, "sensitive" = false } }
+evidence = "private:ev-0123"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: tidning @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Nummer på postgumman (från och med 1997)", "definition" = "Nummer på postgumman (från och med 1997)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:174\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-0124"
 
 [[statement]]
 kind = "set"
@@ -207,193 +207,193 @@ evidence = "python-builder-pre-cutover:curation/classifications/SNI92.toml:22\n\
 kind = "assert"
 subject = "konkurser-offentliga-ackord: opnr @2022-01-01..2022-12-31 where key = 'v56' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "char", "length" = 12, "sensitive" = false, "identifier" = true } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:34\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18210, documents opnr in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 6, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0125"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: opnr @2023-01-01..2023-12-31 where key = 'v56' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "char", "length" = 12, "sensitive" = false, "identifier" = true } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:34\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18210, documents opnr in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 6, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0126"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: opnr @2024-01-01..2024-12-31 where key = 'v56' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "char", "length" = 12, "sensitive" = false, "identifier" = true } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:34\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18210, documents opnr in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 6, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0127"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: opnr @2022..2024"
 fields = { "operational_definition" = "personnummer eller organisationsnummer hämtas från Bolagsverket" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:34\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18210, documents opnr in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 6, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0128"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: beslutstid @2022-01-01..2022-12-31 where key = 'v97' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Referensmånad", "definition" = "Den månad de lämnade/redovisade uppgifterna avser.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:43\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18212, documents beslutstid in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 7, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0129"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: beslutstid @2023-01-01..2023-12-31 where key = 'v97' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Referensmånad", "definition" = "Den månad de lämnade/redovisade uppgifterna avser.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:43\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18212, documents beslutstid in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 7, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0130"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: beslutstid @2024-01-01..2024-12-31 where key = 'v97' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Referensmånad", "definition" = "Den månad de lämnade/redovisade uppgifterna avser.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:43\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18212, documents beslutstid in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 7, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0131"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: beslutstid @2022..2024"
 fields = { "operational_definition" = "Anges med en kod för en av de tolv månaderna under ett år." }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:43\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18212, documents beslutstid in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 7, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0132"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: lan @2022-01-01..2022-12-31 where key = 'v49' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:52\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18213, documents lan in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 8, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0133"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: lan @2023-01-01..2023-12-31 where key = 'v49' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:52\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18213, documents lan in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 8, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0134"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: lan @2024-01-01..2024-12-31 where key = 'v49' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:52\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18213, documents lan in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 8, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0135"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: lan @2022..2024"
 fields = { "operational_definition" = "hämtas från Bolagsverket" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:52\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18213, documents lan in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 8, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0136"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: kommun @2022-01-01..2022-12-31 where key = 'v36' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kommun", "definition" = "Regional indelning i kommuner.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:61\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18214, documents kommun in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 9, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0137"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: kommun @2023-01-01..2023-12-31 where key = 'v36' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kommun", "definition" = "Regional indelning i kommuner.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:61\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18214, documents kommun in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 9, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0138"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: kommun @2024-01-01..2024-12-31 where key = 'v36' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kommun", "definition" = "Regional indelning i kommuner.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:61\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18214, documents kommun in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 9, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0139"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: kommun @2022..2024"
 fields = { "operational_definition" = "hämtas från Bolagsverket" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:61\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18214, documents kommun in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 9, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+evidence = "private:ev-0140"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: obtyp @2022-01-01..2022-12-31 where key = 'v21549' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Objekttyp", "definition" = "Objekttyp", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:70\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18215, documents obtyp in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 10, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0141"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: obtyp @2023-01-01..2023-12-31 where key = 'v21549' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Objekttyp", "definition" = "Objekttyp", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:70\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18215, documents obtyp in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 10, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0142"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: obtyp @2024-01-01..2024-12-31 where key = 'v21549' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Objekttyp", "definition" = "Objekttyp", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:70\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18215, documents obtyp in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 10, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0143"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: obtyp @2022..2024"
 fields = { "operational_definition" = "Variablen hämtas från Bolagsverket" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:70\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18215, documents obtyp in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 10, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0144"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: fform @2022-01-01..2022-12-31 where key = 'v34' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:79\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18216, documents fform in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 11, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0145"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: fform @2023-01-01..2023-12-31 where key = 'v34' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:79\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18216, documents fform in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 11, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0146"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: fform @2024-01-01..2024-12-31 where key = 'v34' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Juridisk form", "definition" = "Klassificering av juridiska enheter efter deras juridiska form. Tilldelas av Skatteverket. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:79\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18216, documents fform in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 11, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0147"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: fform @2022..2024"
 fields = { "operational_definition" = "variabeln hämtas  från Bolagsverket" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:79\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18216, documents fform in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 11, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0148"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: bransch @2022-01-01..2022-12-31 where key = 'v18011' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "definition" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:88\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18217, documents bransch in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 12, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). The list's 'SNI2002' text is stale: SCB documents bransch as SNI2007 (VarId 18011) in every version 2009-2021, so the clone keeps SNI2007."
+evidence = "private:ev-0149"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: bransch @2023-01-01..2023-12-31 where key = 'v18011' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "definition" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:88\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18217, documents bransch in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 12, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). The list's 'SNI2002' text is stale: SCB documents bransch as SNI2007 (VarId 18011) in every version 2009-2021, so the clone keeps SNI2007."
+evidence = "private:ev-0150"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: bransch @2024-01-01..2024-12-31 where key = 'v18011' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "definition" = "Näringsgren SNI2007 (femsifferkod) i huvudsysslan", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:88\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18217, documents bransch in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 12, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). The list's 'SNI2002' text is stale: SCB documents bransch as SNI2007 (VarId 18011) in every version 2009-2021, so the clone keeps SNI2007."
+evidence = "private:ev-0151"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: bransch @2022..2024"
 fields = { "operational_definition" = "variabeln hämtas från FDB" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:88\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18217, documents bransch in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 12, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). The list's 'SNI2002' text is stale: SCB documents bransch as SNI2007 (VarId 18011) in every version 2009-2021, so the clone keeps SNI2007."
+evidence = "private:ev-0152"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: startar @2022-01-01..2022-12-31 where key = 'v4040' and release = '2022'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Företagsenhetens startår enligt FDB", "definition" = "Företagsenhetens startår enligt FDB.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:106\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0153"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: startar @2023-01-01..2023-12-31 where key = 'v4040' and release = '2023'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Företagsenhetens startår enligt FDB", "definition" = "Företagsenhetens startår enligt FDB.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:106\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0154"
 
 [[statement]]
 kind = "assert"
 subject = "konkurser-offentliga-ackord: startar @2024-01-01..2024-12-31 where key = 'v4040' and release = '2024'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Företagsenhetens startår enligt FDB", "definition" = "Företagsenhetens startår enligt FDB.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:106\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0155"
 
 [[statement]]
 kind = "set"
 subject = "konkurser-offentliga-ackord: startar @2022..2024"
 fields = { "operational_definition" = "hämtas från FDB" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/konkurser.toml:106\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+evidence = "private:ev-0156"
 
 [[statement]]
 kind = "set"

@@ -3,7 +3,7 @@
 kind = "set"
 subject = "ekb-manad: hhstatus"
 fields = { "period" = "2015..2023" }
-evidence = "python-builder-pre-cutover:curation/registers/sos/ekb.toml:897\n\nThe EKB_MANAD HHSTATUS row leaves Data från and Data till blank. Socialstyrelsen's delivery list for SWECOV includes HHSTATUS in the monthly person file SWECOV_SOS_EKB_PERS for 2015-2023, so the field is available in that window. The window claims no years outside the delivery and does not extend EKB_AR. All original prose, type, coding and bounds remain unchanged."
+evidence = "private:ev-3776"
 
 [[statement]]
 kind = "set"
@@ -6801,73 +6801,73 @@ evidence = "#2102 same-label cluster 'Totalt belopp under året' (2 variables): 
 kind = "set"
 subject = "var:ovrigt-annat-januari"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i januari (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND01: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND01 is a separate column in the same table (row 261). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND01 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 15 (ANNATIND01), row 261 (OVRIGSKULDIND01), row 482."
+evidence = "private:ev-3777"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-februari"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i februari (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND02: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND02 is a separate column in the same table (row 262). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND02 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 16 (ANNATIND02), row 262 (OVRIGSKULDIND02), row 482."
+evidence = "private:ev-3778"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-mars"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i mars (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND03: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND03 is a separate column in the same table (row 263). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND03 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 17 (ANNATIND03), row 263 (OVRIGSKULDIND03), row 482."
+evidence = "private:ev-3779"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-april"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i april (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND04: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND04 is a separate column in the same table (row 264). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND04 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 18 (ANNATIND04), row 264 (OVRIGSKULDIND04), row 482."
+evidence = "private:ev-3780"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-maj"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i maj (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND05: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND05 is a separate column in the same table (row 265). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND05 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 19 (ANNATIND05), row 265 (OVRIGSKULDIND05), row 482."
+evidence = "private:ev-3781"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-juni"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i juni (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND06: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND06 is a separate column in the same table (row 266). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND06 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 20 (ANNATIND06), row 266 (OVRIGSKULDIND06), row 482."
+evidence = "private:ev-3782"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-juli"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i juli (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND07: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND07 is a separate column in the same table (row 267). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND07 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 21 (ANNATIND07), row 267 (OVRIGSKULDIND07), row 482."
+evidence = "private:ev-3783"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-augusti"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i augusti (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND08: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND08 is a separate column in the same table (row 268). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND08 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 22 (ANNATIND08), row 268 (OVRIGSKULDIND08), row 482."
+evidence = "private:ev-3784"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-september"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i september (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND09: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND09 is a separate column in the same table (row 269). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND09 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 23 (ANNATIND09), row 269 (OVRIGSKULDIND09), row 482."
+evidence = "private:ev-3785"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-oktober"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i oktober (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND10: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND10 is a separate column in the same table (row 270). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND10 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 24 (ANNATIND10), row 270 (OVRIGSKULDIND10), row 482."
+evidence = "private:ev-3786"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-november"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i november (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND11: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND11 is a separate column in the same table (row 271). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND11 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 25 (ANNATIND11), row 271 (OVRIGSKULDIND11), row 482."
+evidence = "private:ev-3787"
 
 [[statement]]
 kind = "set"
 subject = "var:ovrigt-annat-december"
 fields = { "description" = "Anger om ekonomiskt bistånd för livsföringen i övrigt, kategorin annat, har betalats ut i december (1 = utbetalt, 0 = inget utbetalt). Kodtexten för 1 i källan nämner övrig skuld, men fältet gäller kategorin annat." }
-evidence = "ANNATIND12: label and definition say 'kategorin annat'; the column name is the 'annat' category, and OVRIGSKULDIND12 is a separate column in the same table (row 272). The code text 'Ekonomiskt bistånd för övrig skuld utbetalt' (with the same trailing comma and line break) is a copy of OVRIGSKULDIND12 (value set #7073 is shared). EKB_MANAD ANNATIND (row 482) has the code text '...för annat utbetalt'. SWECOV deliveries list ANNATIND and OVRIGSKULDIND as separate columns.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 26 (ANNATIND12), row 272 (OVRIGSKULDIND12), row 482."
+evidence = "private:ev-3788"
 
 [[statement]]
 kind = "set"

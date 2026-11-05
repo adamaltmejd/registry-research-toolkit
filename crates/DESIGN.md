@@ -537,6 +537,35 @@ Matching and premise validation live in `reg-resolve`; lock IO and located diagn
 live in `reg-build`. Curated values take precedence over rules and sources; two
 overlapping curated overrides are refused at both locations.
 
+**Steward provenance (maintainer ruling, 2026-11-05).** The global catalog may be
+enriched with facts a data steward supplied, but nothing public may say that a fact came
+from a steward. That a steward exists is public. Evidence that names a steward lives in
+the private inputs repository, in `catalog/evidence/private-evidence.toml`
+(`ev-NNNN = "<text>"`), and public curation cites it as `evidence = "private:ev-NNNN"`.
+The manifest declares the file as an input with reader `private-evidence`. Its digest
+enters the input table, and the reader returns no frame. The global build refuses, at
+the statement's file and line, a reference that is malformed (`private-evidence-ref`),
+one that has no declared input (`private-evidence-undeclared`) and one the pinned file
+does not hold (`private-evidence-unresolved`). The catalog stores the reference string
+only. The private text is never read into a frame, so no reader can serve it. Because
+evidence is not part of a statement's identity, moving evidence moves no lock key.
+
+The global build also refuses `steward-name` for every curated string outside the
+private references: evidence, caveat, and the text fields of `fact` and `fields`. It
+reports each refusal at once, located, before any input is read. It also refuses a
+published id (a register's public name, a table or variable slug) that names a steward,
+located at its `ids.toml` line when the ledger holds it. Such an id is switched with no
+retirement and no redirect. The names are an exact list in `reg-build`'s
+`steward_names.rs`: `SWECOV`, `P1105`, `Leveransrapport` and `IFAU`. They are compared
+case-insensitively as whole tokens, with text split at every non-alphanumeric character,
+so `P1105_LopNr` and `p1105-lopnr` match and a code such as `CP1105` does not. A new
+steward adds its names to the list. There are no patterns. Source names are not curated
+text and are not checked: `subject`, link `object`, `spelling`, and a classification's
+`value_set` locator. A delivered spelling stays as the source delivers it. A steward
+holdings build (`reg-build holdings`, which passes a base) checks none of this: its
+curation is the steward's own. The ruling applies from the change forward. Git history
+and earlier release assets are left unchanged.
+
 **Value sets, populations and series.**
 
 - Value sets are content-addressed.

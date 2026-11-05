@@ -24,49 +24,49 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.
 kind = "assert"
 subject = "individregister: MSPR2_ALT @2008..2008"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för språkval (alternativ)", "definition" = "Moderna språk inom ramen för språkval (alternativ)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:236\n\nSWECOV holds MSPR2_ALT in Grund_Fkl_Fth_2008 (2008); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individregister. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-2107"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: FTH @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Anger om eleven är inskriven i fritidshem", "definition" = "Anger om eleven är inskriven i fritidshem" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:21\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2108"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: OBTIDFTH @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Eleven är inskriven på fritidshem under obekväma tider.", "definition" = "Eleven är inskriven på fritidshem under obekväma tider." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:76\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2109"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: GRREKTFTH @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Gemensam rektor med fritidshem", "definition" = "Gemensam rektor med fritidshem" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:32\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2110"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: HMANFTH @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Huvudman fritidshem", "definition" = "Huvudman fritidshem" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:43\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2111"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: MSPR1_SPRAK @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för elevens val (språk)", "definition" = "Moderna språk inom ramen för elevens val (språk)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:54\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2112"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: MSPR2_SPRAK @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för språkval (språk)", "definition" = "Moderna språk inom ramen för språkval (språk)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:65\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2113"
 
 [[statement]]
 kind = "assert"
 subject = "individregister: Ar @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "År", "definition" = "År" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:10\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2114"
 
 [[statement]]
 kind = "set"
@@ -1230,70 +1230,70 @@ evidence = "Klassificeringen av svensk och utländsk bakgrund ingår i kandidatg
 kind = "set"
 subject = "var:alternativ-till-sprakval"
 fields = { "description" = "Alternativ till språkval" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2115"
 
 
 [[statement]]
 kind = "set"
 subject = "var:anpassad-studigang"
 fields = { "description" = "Anpassad studiegång" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2116"
 
 
 [[statement]]
 kind = "set"
 subject = "var:deltagit-sva"
 fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2117"
 
 
 [[statement]]
 kind = "set"
 subject = "var:inriktning"
 fields = { "description" = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2118"
 
 
 [[statement]]
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2119"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolenhetskod"
 fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2120"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2121"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
 fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202210:opdef_text. One variable, one description."
+evidence = "private:ev-2122"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skom"
 fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:201937:opdef_text. One variable, one description."
+evidence = "private:ev-2123"
 
 
 [[statement]]
 kind = "set"
 subject = "var:stud-handl-ml"
 fields = { "description" = "Studiehandlening på modersmål" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-elever.toml:141\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2124"
 
 [[statement]]
 kind = "set"

@@ -1149,13 +1149,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/utbildningsanalyse
 kind = "assert"
 subject = "distansundervisning-grundskola: PersonNr @2020..2022"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för eleven", "definition" = "Elevens personnummer, levererat som löpnummer.", "sensitive" = false, "identifier" = true } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utbildningsanalyser.toml:5292\n\nSWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_grund_VT20, Distansutb_grund_HT20_VT21 and Distansutb_grund_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-grundskola. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
+evidence = "private:ev-3625"
 
 [[statement]]
 kind = "assert"
 subject = "distansundervisning-gymnasieskolan: PersonNr @2020..2022"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för eleven", "definition" = "Elevens personnummer, levererat som löpnummer.", "sensitive" = false, "identifier" = true } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utbildningsanalyser.toml:5305\n\nSWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_gymn_VT20, Distansutb_gymn_HT20_VT21 and Distansutb_gymn_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-gymnasieskolan. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
+evidence = "private:ev-3626"
 
 [[statement]]
 kind = "set"
@@ -16299,7 +16299,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen 
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/utbildningsanalyser.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3627"
 
 [[statement]]
 kind = "set"
@@ -16389,7 +16389,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVär
 kind = "set"
 subject = "var:vt-veckor-termin"
 fields = { "description" = "Antal veckor under vårterminens januari–mars, exklusive lov." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:509978:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire year; retain the within-year reference period and exclusion of school holidays. Evidence: rel070-base/reg_meta.db occurrences 509978."
+evidence = "private:ev-3628"
 
 [[statement]]
 kind = "set"
