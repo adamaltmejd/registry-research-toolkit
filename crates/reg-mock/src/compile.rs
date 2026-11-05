@@ -573,13 +573,7 @@ impl Context<'_> {
                 }
             }
             built.file.years = years.into_iter().collect();
-            // A column held in every year of its file needs no years of its own.
-            for column in &mut built.file.columns {
-                column.years.retain(|y| built.file.years.contains(y));
-                if column.years == built.file.years {
-                    column.years.clear();
-                }
-            }
+            self.finish_delivery_file(&file.table, &mut built, refusals);
             files.push(built);
         }
         files
@@ -595,6 +589,58 @@ impl Context<'_> {
             }
         }
         held.into_iter().collect()
+    }
+
+    /// A delivery file's columns over all its years: their placements' codes, and
+    /// years only where a column is missing in some.
+    fn finish_delivery_file(&self, table: &str, built: &mut Built, refusals: &mut Vec<Refusal>) {
+        // The runner extracts each column over all the file's years: its codes are
+        // its placement's in each of them, not only in its own requested years.
+        for column in &mut built.file.columns {
+            if column.codes.is_empty() && column.attribute.is_some() {
+                continue;
+            }
+            let at = format!("{}/{}", built.file.name, column.name);
+            for hash in self.held_value_sets(table, &column.name, &built.file.years) {
+                let Some(codes) = self.answers.values.get(hash) else {
+                    refusals.push(Refusal::new(
+                        "values_missing",
+                        at.clone(),
+                        format!(
+                            "save every page of the values answer for value_set={hash} \
+                             into values/"
+                        ),
+                    ));
+                    continue;
+                };
+                for code in codes {
+                    if !column.codes.iter().any(|c| c.code == code.code) {
+                        column.codes.push(code.clone());
+                    }
+                }
+            }
+        }
+        // A column held in every year of its file needs no years of its own.
+        for column in &mut built.file.columns {
+            column.years.retain(|y| built.file.years.contains(y));
+            if column.years == built.file.years {
+                column.years.clear();
+            }
+        }
+    }
+
+    /// The value sets of a held placement's segment rows in any of `years`.
+    fn held_value_sets(&self, file: &str, column: &str, years: &[i32]) -> BTreeSet<&str> {
+        self.answers
+            .segments
+            .iter()
+            .filter(|s| s.file.as_deref() == Some(file) && s.column.as_deref() == Some(column))
+            .filter(|s| match self::years(&s.period) {
+                Ok(Some(held)) => held.iter().any(|y| years.contains(y)),
+                _ => true,
+            })
+            .filter_map(|s| s.value_set.as_ref().map(|v| v.hash.as_str()))
+            .collect()
     }
 
     /// The column's type, codes and flags from its segment, the project override and
