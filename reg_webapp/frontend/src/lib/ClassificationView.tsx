@@ -31,8 +31,17 @@ export function ClassificationView({
   const { draft } = useProject();
   const study = studyWindow(draft);
   const catalogBounds = windowBounds(context);
-  const bounds = [catalogBounds.min, catalogBounds.max] as const;
   const versions = laneOrder(node.versions);
+  // The axis reaches every version's start, past the catalog's years where a
+  // version starts outside them (ICD-11, ICD-8 on a later-starting steward), so
+  // every version has a span to pick (maintainer ruling, 2026-11-05).
+  const starts = versions.flatMap((v) =>
+    v.period.start ? [Number(v.period.start.slice(0, 4))] : [],
+  );
+  const bounds = [
+    Math.min(catalogBounds.min, ...starts),
+    Math.max(catalogBounds.max, ...starts),
+  ] as const;
   const byFqid = new Map(versions.map((version) => [version.fqid, version]));
   // The latest version by start (the API's order) when no address picks one,
   // passing over a version that starts after the catalog's last year (ICD-11).
@@ -40,7 +49,7 @@ export function ClassificationView({
     node.versions.findLast(
       (v) =>
         v.period.start === null ||
-        Number(v.period.start.slice(0, 4)) <= bounds[1],
+        Number(v.period.start.slice(0, 4)) <= catalogBounds.max,
     )?.fqid ??
     node.versions.at(-1)?.fqid ??
     null;
@@ -65,8 +74,6 @@ export function ClassificationView({
   // 1996) draws arrows.
   const laneOf = (v: Version) => v.part ?? node.name;
   const spans: LaneSpanModel[] = versions.flatMap((v) =>
-    // A version that starts after the axis ends (ICD-11) has no span; it
-    // stays in the version picker.
     columnYearRuns([v], bounds, axis[0]).map((run) => {
       const years = catalogPeriodLabel(v.period);
       const name = versionName(v);
@@ -80,7 +87,7 @@ export function ClassificationView({
         to: run.to,
         years,
         state: "default",
-        // Pressing a version picks it, as the Select below does.
+        // Pressing a version picks it: the graph is the wide layout's picker.
         selectable: true,
         isSelected: v.fqid === picked,
         accessibleName: name,
@@ -129,24 +136,29 @@ export function ClassificationView({
             : []),
         ]}
       />
-      <Panel title="Versions">
-        <LaneGraph
-          label="Versions"
-          lanes={lanes}
-          spans={spans}
-          edges={edges}
-          axis={axis}
-          window={study ? [study.from, study.to] : null}
-          focusSpan={focus}
-          hint={null}
-          onToggle={setChosen}
-        />
-      </Panel>
+      {/* The graph is the picker on a wide layout and the Select below the
+          narrow breakpoint, where a year is too narrow to press (maintainer
+          ruling, 2026-11-05). */}
+      <div className={classStyles.wide}>
+        <Panel title="Versions">
+          <LaneGraph
+            label="Versions"
+            lanes={lanes}
+            spans={spans}
+            edges={edges}
+            axis={axis}
+            window={study ? [study.from, study.to] : null}
+            focusSpan={focus}
+            hint={null}
+            onToggle={setChosen}
+          />
+        </Panel>
+      </div>
       {version && (
         <Panel title="Codes">
           <div className={classStyles.codes}>
             {versions.length > 1 && (
-              <div className={classStyles.field}>
+              <div className={classStyles.narrow}>
                 <Select
                   label="Version"
                   value={version.fqid}

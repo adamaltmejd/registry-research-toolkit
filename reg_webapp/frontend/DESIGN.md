@@ -571,22 +571,24 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   on its part's lane, with no name on it: its tooltip names the version and its years in
   the UI face. Succession within a part reads as order along its lane; an arrow is drawn
   only where a version continues into another part (SUN 1996 into its three parts).
-  Lanes run in the order each part first starts. A version that starts after the axis
-  ends (ICD-11) has no span, but stays in the picker and on the list. A "Codes" panel
-  follows: a "Version" `Select` (offered when there are two or more; an option adds the
-  years only when the name lacks them), capped at the code search's 40ch so their edges
-  meet (new rule, proposed by the implementer), the picked version's whole list through
-  `ValueSetCodes`, then "Changes since" and the name of each version it succeeds: the
-  counts as one line ("2 added, 1 removed, 2 relabelled.", or "No codes changed."), then
-  a disclosure that lists the codes under Added, Removed and Relabelled (a relabelled
-  code says what it "Was:"), a page at a time with "Show more" (no correspondence tables
-  yet, #795). The picked version is the one a version address names, else the latest
-  version that has started by the catalog's last year (maintainer ruling, 2026-11-05);
-  it is local state, its part's lane on `accent-soft` and its span in the group page's
-  selected-span style. Pressing a span picks its version as the `Select` does
-  (maintainer ruling, 2026-11-05), and a version address focuses that span (new rule,
-  proposed by the implementer: picking does not change the URL, which would reload the
-  page). Placement caveats are steward working notes, not shown until the steward
+  Lanes run in the order each part first starts. The page's axis reaches every version's
+  start, beyond the catalog's years where needed (ICD-11), so every version has a span.
+  The graph is the version picker on a wide layout; below the narrow breakpoint the
+  graph is hidden and a full-width "Version" `Select` picks instead ("on phones we
+  should probably have a dropdown rather than a graph", maintainer ruling, 2026-11-05),
+  offered when there are two or more versions, an option adding the years only when the
+  name lacks them. A "Codes" panel follows: the narrow layout's `Select`, the picked
+  version's whole list through `ValueSetCodes`, then "Changes since" and the name of
+  each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
+  or "No codes changed."), then a disclosure that lists the codes under Added, Removed
+  and Relabelled (a relabelled code says what it "Was:"), a page at a time with "Show
+  more" (no correspondence tables yet, #795). The picked version is the one a version
+  address names, else the latest version that has started by the catalog's last year
+  (maintainer ruling, 2026-11-05); it is local state, its part's lane on `accent-soft`
+  and its span in the group page's selected-span style. Pressing a span picks its
+  version (maintainer ruling, 2026-11-05), and a version address focuses that span (new
+  rule, proposed by the implementer: picking does not change the URL, which would reload
+  the page). Placement caveats are steward working notes, not shown until the steward
   curates them for readers. A register page has no tables table: its tables are
   FilterChips over the variable list, each with its period, a lens with OR within the
   selection, offered only when two or more tables deliver variables (the archived
@@ -882,8 +884,6 @@ grow new visual language meanwhile.
   `surface` with a `border-strong` hairline and `sm` radius. Text uses `body-sm`; focus
   uses the shared ring. Options use plain names, and the overlay uses `--z-popover`.
   Type and classification controls compose this shared primitive.
-- **FilterInput:** the type-to-filter field over one list, at most 40ch wide, with its
-  "12 of 740" count beside it while filtering (new rule, proposed by the implementer).
 - **AddBar:** the shared sticky bottom bar for staged columns on the variable page. Its
   one `primary` button reads "Add N columns to project". The caller omits it when
   nothing is selected.
