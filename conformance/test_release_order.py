@@ -70,12 +70,68 @@ def serving(db, table_id):
     ]
 
 
-def census(db_path):
+def unheld(holdings, variables, segments):
+    """Whether the steward's holdings leave a bound variable `mapping_missing` over its
+    clipped segments (the logical order's entries), read from the holdings file alone:
+    either no `holding_mapping` row places any day of the variable's entries, or a day
+    no mapping places lies in an `ambiguous_delivered_owners` notice naming it. Partial
+    coverage only warns. A projection's copy of its parent's days is dropped by the
+    server but never empties a held variable, so it is not modelled here
+    (crates/reg-catalog/src/ops/order/materialize.rs, `gaps` and `clip`)."""
+
+    def windows(sql, table, variable):
+        return holdings.execute(sql, (table, variable)).fetchall()
+
+    held = dict.fromkeys(variables, False)
+    contested = False
+    for table, variable, lo, hi, *_ in segments:
+        if variable not in held:
+            continue
+        placed = sorted(
+            (max(lo, a), min(hi, z))
+            for a, z in windows(
+                "SELECT start, end FROM holding_mapping"
+                " WHERE table_pid = ? AND variable_pid = ?",
+                table,
+                variable,
+            )
+            if a < hi and z > lo
+        )
+        held[variable] = held[variable] or bool(placed)
+        missing, at = [], lo
+        for a, z in placed:
+            if a > at:
+                missing.append((at, a))
+            at = max(at, z)
+        if at < hi:
+            missing.append((at, hi))
+        contested = contested or any(
+            a < n_hi and n_lo < z
+            for a, z in missing
+            for n_lo, n_hi in windows(
+                "SELECT n.start, n.end FROM holding_notice n"
+                " JOIN holding_notice_candidate c ON c.notice_id = n.id"
+                " WHERE n.code = 'ambiguous_delivered_owners' AND n.start IS NOT NULL"
+                " AND c.table_pid = ? AND c.variable_pid = ?",
+                table,
+                variable,
+            )
+        )
+    return contested or not all(held.values())
+
+
+def census(db_path, holdings_path=None):
     """Per sampled table: (pid, project period, bound variable pids, blocked, the
     segments of the tables serving the period, each clipped to its serving window,
-    as (table pid, variable, start, end, spelling)), read from the artifact alone;
+    as (table pid, variable, start, end, spelling)), read from the artifact alone,
+    plus the steward's holdings file at `holdings_path` when the server serves one;
     and `meta`'s `open_start`."""
-    with closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as db:
+    with (
+        closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as db,
+        closing(
+            sqlite3.connect(f"file:{holdings_path or ':memory:'}?mode=ro", uri=True)
+        ) as holdings,
+    ):
         pids = [row[0] for row in db.execute("SELECT pid FROM tbl ORDER BY pid")]
         step = max(len(pids) // SAMPLE, 1)
         tables = []
@@ -132,6 +188,9 @@ def census(db_path):
                 s[4] == "ambiguous" and (s[1] in variables or s[6] == "row_key")
                 for s in segments
             ) or any(v not in covered for v in variables)
+            # A steward server also blocks what its holdings cannot deliver (#2210).
+            if holdings_path is not None and not blocked:
+                blocked = unheld(holdings, variables, segments)
             spans = [
                 (t, v, s_lo, s_hi, exact) for t, v, s_lo, s_hi, _, exact, _ in segments
             ]
@@ -164,9 +223,17 @@ def test_sampled_whole_table_orders_agree_with_census(artifact_dir, http_servers
     (or orders one it finds blocked: an ambiguous or preliminary window let through),
     when an entry's spelling is not the one the artifact holds at the entry's start,
     when repeated orders serialize different bytes, or when the MCP `order` tool
-    answers a different document than HTTP."""
+    answers a different document than HTTP. Under `--catalog NAME` it also fails when
+    validate accepts a binding the steward's `reg_meta_NAME.db` places on no day of the
+    period (or leaves a contested day unplaced), or refuses one it places."""
     db_path = artifact_dir / "reg_meta.db"
-    tables, open_start = census(db_path)
+    # The server, not the directory, decides: the global run serves the same directory.
+    argv = http_servers.template
+    steward = argv[argv.index("--catalog") + 1] if "--catalog" in argv else None
+    holdings_path = (
+        None if steward in (None, "global") else artifact_dir / f"reg_meta_{steward}.db"
+    )
+    tables, open_start = census(db_path, holdings_path)
     assert tables, "the artifact has no table to sample"
     client = http_servers.client(artifact_env(db_path))
     for index, (pid, period, variables, blocked, segments) in enumerate(tables):
