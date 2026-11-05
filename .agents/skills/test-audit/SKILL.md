@@ -16,7 +16,7 @@ block: each block is a claim about one boundary.
 
 ## At review: the change touches a test
 
-Four answers, from the diff and the PR body, each checked against its policy rule. A
+Five answers, from the diff and the PR body, each checked against its policy rule. A
 missing one sends the change back.
 
 1. Which boundary (from the table) and which stated behavior.
@@ -24,6 +24,9 @@ missing one sends the change back.
 3. Why the boundary's existing cases do not already catch that failure, and whether this
    is the behavior's hardest case.
 4. Where each expected value comes from.
+5. Why running the code, or the release's `reg-build verify` and `reg-build diff`, would
+   not show the failure anyway. A test that exists only because a bug was fixed fails
+   this question.
 
 Do not run the sabotage by hand. Review the named change as the failure proof.
 
@@ -57,6 +60,8 @@ One line per block that fails the bar, no hedging:
 - `detector:` wording, layout, CSS, incidental ordering or a count that is not the
   stated behavior.
 - `promise:` the name or docstring claims more than the scenario exercises.
+- `obvious:` the failure would show on any run of the code or in the release's
+  `verify`/`diff`, or the block only pins a bug that was fixed.
 - `seam:` asserts the implementation's shape instead of a boundary's output: a private
   function, an object's internals, a call, a SQL string, a mock of an internal module, a
   component's props or state. Also a helper or product hook that only this block needs
