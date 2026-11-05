@@ -441,7 +441,19 @@ pub(super) fn sections(p: &Pair, old_path: &str, new_path: &str) -> Result<Repor
     };
     // A query the older schema cannot answer is a located refusal, not a silent gap.
     let sections = (|| -> Result<Vec<Section>> {
-        let (changes, _) = super::schema_changes(p)?;
+        let (mut changes, _) = super::schema_changes(p)?;
+        // The version itself counts: a bump that changes only a CHECK, a type or an
+        // index has no one-sided table or column, yet is still a schema-only difference.
+        changes.groups.insert(
+            0,
+            (
+                "version",
+                vec![Item::new(
+                    json!({"old": old, "new": current}),
+                    format!("holdings schema {old} → {current}"),
+                )],
+            ),
+        );
         let mut out = vec![changes];
         out.extend(same_schema(p, &os)?);
         Ok(out)

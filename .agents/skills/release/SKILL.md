@@ -387,14 +387,14 @@ pin. `reg-build diff --holdings` accepts a baseline on an older holdings schema,
 newer one; it refuses a missing or non-numeric schema, or a `PRAGMA user_version` that
 differs from the `schema_version` meta key, and names both sides. Across a schema bump
 the text starts with `cross-schema comparison: previous schema N, current schema M`
-(JSON `cross_schema`) and a `schema changes` section (JSON `schema_changes`) names each
-table and column on one side only, without diffing their rows; a query the older schema
-cannot answer exits 2 with `holdings schema N is not comparable: <sqlite error>`. It
-reports census placement per column (placed, held, unplaced, and the changed placements
-by old to new `table_pid`, classed newly placed, folded or renamed, variable or interval
-changed, or unmapped), reader-visible text changes by kind (keys, never bodies), and
-finding and holdings-notice deltas by code. The JSON goes to the evidence directory
-only.
+(JSON `cross_schema`) and a `schema changes` section (JSON `schema_changes`) counts the
+version change and names each table and column on one side only, without diffing their
+rows; a query the older schema cannot answer exits 2 with
+`holdings schema N is not comparable: <sqlite error>`. It reports census placement per
+column (placed, held, unplaced, and the changed placements by old to new `table_pid`,
+classed newly placed, folded or renamed, variable or interval changed, or unmapped),
+reader-visible text changes by kind (keys, never bodies), and finding and
+holdings-notice deltas by code. The JSON goes to the evidence directory only.
 
 ```sh
 target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \
