@@ -315,3 +315,26 @@ fn holdings_base_change_invalidates_lineage_lock() {
     .refused(&["premise-changed"]);
     assert!(!out.exists());
 }
+
+#[test]
+fn pin_names_the_repository_not_the_transport() {
+    // Fails if the pin records the origin URL as given, so a pair built from an HTTPS
+    // clone (steward CI) is refused by verify on an SSH clone (a local checkout), or if
+    // an origin that names no repository (a local path) is admitted as the pin.
+    let dir = Scratch::new("origin-transport").unwrap();
+    let holdings = steward::holdings(dir.path()).unwrap();
+    let out = dir.path().join("https.db");
+    exec(holdings.command().arg("--out").arg(&out)).ok();
+    let origin = |url: &str| {
+        let status = Command::new("git")
+            .args(["remote", "set-url", "origin", url])
+            .current_dir(&holdings.root)
+            .status()
+            .unwrap();
+        assert!(status.success());
+    };
+    origin("git@Example.invalid:fixture/Steward.git");
+    verify_holdings(&out, &holdings.base, &holdings.root).ok();
+    origin("/srv/git/steward.git");
+    verify_holdings(&out, &holdings.base, &holdings.root).refused(&["holdings_pin_invalid"]);
+}

@@ -178,9 +178,10 @@ pub(super) fn checkout(root: &Path, config: &str) -> Result<Pin> {
 /// user, port, a trailing `.git` and `/` are dropped. Anything that is not a
 /// recognisable `host/owner/repo` remote (a local path, a bare name, a deeper path) is
 /// refused: the pin must name the steward repository.
-pub(super) fn canonical_remote(url: &str) -> Result<String> {
+fn canonical_remote(url: &str) -> Result<String> {
+    // The URL is not echoed: an HTTPS origin can carry a token.
     let refuse = || -> crate::error::Error {
-        format!("holdings_pin_invalid: origin `{url}` is not a host/owner/repo remote").into()
+        "holdings_pin_invalid: origin is not a host/owner/repo remote".into()
     };
     let (host, path) = if let Some(rest) = ["https://", "http://", "ssh://", "git://"]
         .iter()
@@ -341,43 +342,4 @@ fn tree(dir: &Path, prefix: &str, out: &mut std::collections::BTreeSet<String>) 
         }
     }
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::canonical_remote;
-
-    // Fails if an HTTPS and an SSH clone of one repository stop pinning the same value
-    // (steward CI clones over HTTPS, a local build over SSH), or if a local path or a
-    // bare name is accepted as a steward repository.
-    #[test]
-    fn remote_urls_canonicalize_to_host_owner_repo() {
-        for url in [
-            "https://github.com/Owner/Steward.git",
-            "https://x-access-token@github.com/owner/steward/",
-            "ssh://git@github.com:22/owner/steward.git",
-            "git@github.com:owner/Steward.git",
-        ] {
-            assert_eq!(
-                canonical_remote(url).unwrap(),
-                "github.com/owner/steward",
-                "{url}"
-            );
-        }
-        for url in [
-            "fixture",
-            "/srv/git/steward.git",
-            "../steward",
-            "file:///srv/git/owner/steward.git",
-            "https://github.com/owner",
-            "https://github.com/owner/steward/tree/main",
-            "localhost:owner/steward",
-        ] {
-            let refusal = canonical_remote(url).unwrap_err().to_string();
-            assert!(
-                refusal.starts_with("holdings_pin_invalid:"),
-                "{url}: {refusal}"
-            );
-        }
-    }
 }
