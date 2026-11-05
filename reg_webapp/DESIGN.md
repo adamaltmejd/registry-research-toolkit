@@ -456,8 +456,8 @@ origin hits that bypass the edge.
 Aggregate counts only, for the maintainer. Nothing links one request to another: no IP
 address, no user id, no cookie, no hash of either. The edge worker records each request
 in Workers Analytics Engine (3-month retention, fixed by Cloudflare); the server keeps
-nothing and logs nothing. Counting at the edge also counts cache hits, which never
-reach the server.
+nothing and logs nothing. Counting at the edge also counts cache hits, which never reach
+the server.
 
 The server labels what a request asked for (`crates/reg-meta/src/usage.rs`), so the
 worker needs no copy of the route table and parses no bodies. Every operation's
@@ -471,21 +471,20 @@ only the fields the request has:
   `order` names none; the SPA reports a pick with its own beacon instead.
 - `q`, `n`: a search's text and the hits on the answered page. `n: 0` is a search that
   found nothing.
-- `err`: a refusal's code, including an MCP tool call refused before it ran (its `op`
-  is then the tool name).
+- `err`: a refusal's code, including an MCP tool call refused before it ran (its `op` is
+  then the tool name).
 
 Search text and ids pass a scrub first: a word holding an `@` and any run of six or more
 digits (`-` or `+` allowed between them, any Unicode digit) become `<redacted>`. That
 covers person and organisation numbers, dates, phone numbers written without spaces and
 email addresses, and also removes a six-digit code someone searched for (accepted,
 maintainer 2026-11-04). Digits split by spaces pass: joining them would also join years
-listed in a search. The text is kept
-at most 200 characters and never shown to users. The header is ASCII (other characters
-as JSON `\u` escapes) and at most 4 KiB. Ids are dropped first, then the text is cut.
-The cached copy of a response keeps its label, so a cache hit is labelled too. A 304
-revalidation answered before the route runs carries no label. The edge counts it as a
-revalidation without attributing it, which also stops one browser's repeat views from
-counting as fresh opens.
+listed in a search. The text is kept at most 200 characters and never shown to users.
+The header is ASCII (other characters as JSON `\u` escapes) and at most 4 KiB. Ids are
+dropped first, then the text is cut. The cached copy of a response keeps its label, so a
+cache hit is labelled too. A 304 revalidation answered before the route runs carries no
+label. The edge counts it as a revalidation without attributing it, which also stops one
+browser's repeat views from counting as fresh opens.
 
 Every response also carries `Server-Timing: app;dur=<ms>`, the server's own time. The
 edge records it beside its own time to the origin, which lets real traffic be checked
