@@ -3,37 +3,37 @@
 kind = "assert"
 subject = "varu-landfordelat-intrastat: SPIN2002 @1997..2011"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Produktgrupp enligt SPIN 2002", "definition" = "Produktgrupp enligt SPIN 2002." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:171\n\nSWECOV holds SPIN2002 in UHV_1997..UHV_2011; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (UHV sheet) lists it for 1997-2011; SCB's Registerinformation export carries no row for it on this variant (the catalog has SPIN2007/SPIN2015 only) (#1302)."
+evidence = "private:ev-2049"
 
 [[statement]]
 kind = "assert"
 subject = "release:varu-landfordelat-intrastat/1997"
 fact = { "entity" = "release", "name" = "1997", "period" = "1997" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:184\n\nSWECOV holds UHV_1997 with the variant's layout (InfUtf, Landskod, Varde, Vikt, AnnanKvant, …); SCB's Registerinformation export documents this variant from 1999. HA0201 DO 2011 pp. 4 and 18 describe the same foreign-trade-by-goods-and-country statistics before 1999. Named in the variant's own YYYY convention."
+evidence = "private:ev-2050"
 
 [[statement]]
 kind = "assert"
 subject = "release:varu-landfordelat-intrastat/1998"
 fact = { "entity" = "release", "name" = "1998", "period" = "1998" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:190\n\nSWECOV holds UHV_1998 with the variant's layout (InfUtf, Landskod, Varde, Vikt, AnnanKvant, …); SCB's Registerinformation export documents this variant from 1999. HA0201 DO 2011 pp. 4 and 18 describe the same foreign-trade-by-goods-and-country statistics before 1999. Named in the variant's own YYYY convention."
+evidence = "private:ev-2051"
 
 [[statement]]
 kind = "assert"
 subject = "varu-landfordelat-intrastat: KN8 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)", "definition" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:10\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-2052"
 
 [[statement]]
 kind = "assert"
 subject = "varu-landfordelat-intrastat: InfUtf @1997-01-01..1997-12-31 where key = 'v18337' and release = '1997'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "private:ev-2053"
 
 [[statement]]
 kind = "assert"
 subject = "varu-landfordelat-intrastat: InfUtf @1998-01-01..1998-12-31 where key = 'v18337' and release = '1998'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "private:ev-2054"
 
 [[statement]]
 kind = "set"
@@ -483,7 +483,7 @@ evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Tr
 kind = "set"
 subject = "varu-landfordelat-intrastat: Varde where key = 'v19317'"
 fields = { "variable" = "none" }
-evidence = "Intrastat 2011-2026 lists two keys under the one delivered column Varde: v19318 (fakturerat värde) and v19317 (statistiskt värde); 1999-2010 list only v19318. No delivery document says which value the column holds. Maintainer ruling 2026-11-04 (#2073): withhold v19317 on Intrastat so Varde reads as the invoiced value; revisit if SCB or a SWECOV delivery note says otherwise. v19317 keeps the Extrastat Varde."
+evidence = "private:ev-2055"
 
 [[statement]]
 kind = "set"

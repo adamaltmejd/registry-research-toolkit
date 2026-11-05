@@ -1,0 +1,34 @@
+{
+  "marker": "evidence = \"Delivery lists hold column A; the source export has no row for it.\"",
+  "refused": {
+    "evidence": {
+      "file": "registers/demo/r/curation.toml",
+      "to": "evidence = \"SWECOV's delivery lists hold column A.\"",
+      "located": "registers/demo/r/curation.toml:1: steward-name: evidence names a steward (SWECOV)"
+    },
+    "caveat": {
+      "file": "registers/demo/r/curation.toml",
+      "to": "caveat = \"Labelled a weight in the P1105 variable list.\"\nevidence = \"Delivery lists hold column A.\"",
+      "located": "registers/demo/r/curation.toml:1: steward-name: caveat names a steward (P1105)"
+    },
+    "id": {
+      "file": "registers/demo/r/ids.toml",
+      "from": "x = [\"t: X\"]",
+      "to": "ifau-x = [\"t: X\"]",
+      "located": "registers/demo/r/ids.toml:7: steward-name: id \"ifau-x\" of demo/r names a steward (IFAU)"
+    },
+    "manifest": {
+      "file": "inputs.toml",
+      "from": "name = \"Demo\"",
+      "to": "name = \"Demo (SWECOV)\"",
+      "located": "inputs.toml:6: steward-name: the line names a steward (SWECOV)"
+    },
+    "unresolved": {
+      "file": "registers/demo/r/curation.toml",
+      "to": "evidence = \"private:ev-0002\"",
+      "located": "registers/demo/r/curation.toml:1: private-evidence-unresolved: ev-0002"
+    }
+  },
+  "allowed": "evidence = \"private:ev-0001\"",
+  "published_evidence": ["private:ev-0001"]
+}

@@ -11,7 +11,8 @@
 //! - [`classification`]: classification CSVs, read as value sets;
 //! - [`docs`]: the `markdown` and `pdf-list` readers, parsed texts and pinned PDFs with
 //!   their subjects;
-//! - [`frame`]: the frame as JSONL, written by hand (conformance fixtures).
+//! - [`frame`]: the frame as JSONL, written by hand (conformance fixtures);
+//! - [`private_evidence`]: the private evidence file, read for its keys only.
 
 pub mod classification;
 pub mod curation;
@@ -19,6 +20,7 @@ pub mod docs;
 pub mod frame;
 pub mod holdings;
 pub mod names;
+pub mod private_evidence;
 pub mod scb;
 pub mod transcription;
 pub mod workbook;
@@ -150,6 +152,7 @@ pub fn read(
             classification::read(root, &input.path, &classification::Config::load(&config)?)
         }
         "frame" => frame::read(root, &input.path),
+        "private-evidence" => private_evidence::read(root, &input.path),
         other => Err(error(&input.name, format!("unknown reader {other:?}"))),
     }
 }

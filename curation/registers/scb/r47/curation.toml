@@ -3,7 +3,7 @@
 kind = "assert"
 subject = "grundutbildning-examina: tmgrp @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "tmgrp", "definition" = "Kodkolumn i examensleveransen; innebörden är inte dokumenterad." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1249\n\nSWECOV holds tmgrp in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024; SCB's P1105 Leveransrapport 2023-2024 (Postbeskrivning) lists it for Hreg_Examina_1990_2022. It is in no variable list and SCB's Registerinformation export carries no row for it on grundutbildning-examina. LOVA's TMGRP name match is not used as evidence. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3668"
 caveat = "Delivery is documented; the column's meaning and codes are not."
 
 [[statement]]
@@ -47,481 +47,481 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:801\n\nS
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2015-01-01..2015-06-30 where key = 'v1275' and release = 'r5768'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3669"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2015-07-01..2015-12-31 where key = 'v1275' and release = 'r6179'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3670"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2016-01-01..2016-06-30 where key = 'v1275' and release = 'r11137'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3671"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2016-07-01..2016-12-31 where key = 'v1275' and release = 'r9855'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3672"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2017-01-01..2017-06-30 where key = 'v1275' and release = 'r11142'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3673"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2017-07-01..2017-12-31 where key = 'v1275' and release = 'r11272'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3674"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2018-01-01..2018-06-30 where key = 'v1275' and release = 'r12948'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3675"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2018-07-01..2018-12-31 where key = 'v1275' and release = 'r12583'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3676"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2019-01-01..2019-06-30 where key = 'v1275' and release = 'r13625'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3677"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2019-07-01..2019-12-31 where key = 'v1275' and release = 'r13626'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3678"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2020-01-01..2020-06-30 where key = 'v1275' and release = 'r14377'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3679"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2020-07-01..2020-12-31 where key = 'v1275' and release = 'r15066'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3680"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2021-01-01..2021-06-30 where key = 'v1275' and release = 'r16168'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3681"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2021-07-01..2021-12-31 where key = 'v1275' and release = 'r17701'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3682"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2022-01-01..2022-06-30 where key = 'v1275' and release = 'r18256'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3683"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2022-07-01..2022-12-31 where key = 'v1275' and release = 'r18422'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3684"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2023-01-01..2023-06-30 where key = 'v1275' and release = 'r18714'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3685"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2023-07-01..2023-12-31 where key = 'v1275' and release = 'r18914'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3686"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2024-01-01..2024-06-30 where key = 'v1275' and release = 'r19151'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3687"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LInr @2024-07-01..2024-12-31 where key = 'v1275' and release = 'r19453'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3688"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2015-01-01..2015-06-30 where key = 'v1278' and release = 'r5768'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3689"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2015-07-01..2015-12-31 where key = 'v1278' and release = 'r6179'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3690"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2016-01-01..2016-06-30 where key = 'v1278' and release = 'r11137'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3691"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2016-07-01..2016-12-31 where key = 'v1278' and release = 'r9855'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3692"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2017-01-01..2017-06-30 where key = 'v1278' and release = 'r11142'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3693"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2017-07-01..2017-12-31 where key = 'v1278' and release = 'r11272'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3694"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2018-01-01..2018-06-30 where key = 'v1278' and release = 'r12948'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3695"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2018-07-01..2018-12-31 where key = 'v1278' and release = 'r12583'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3696"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2019-01-01..2019-06-30 where key = 'v1278' and release = 'r13625'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3697"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2019-07-01..2019-12-31 where key = 'v1278' and release = 'r13626'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3698"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2020-01-01..2020-06-30 where key = 'v1278' and release = 'r14377'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3699"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2020-07-01..2020-12-31 where key = 'v1278' and release = 'r15066'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3700"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2021-01-01..2021-06-30 where key = 'v1278' and release = 'r16168'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3701"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2021-07-01..2021-12-31 where key = 'v1278' and release = 'r17701'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3702"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2022-01-01..2022-06-30 where key = 'v1278' and release = 'r18256'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3703"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2022-07-01..2022-12-31 where key = 'v1278' and release = 'r18422'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3704"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2023-01-01..2023-06-30 where key = 'v1278' and release = 'r18714'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3705"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2023-07-01..2023-12-31 where key = 'v1278' and release = 'r18914'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3706"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2024-01-01..2024-06-30 where key = 'v1278' and release = 'r19151'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3707"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: LProg @2024-07-01..2024-12-31 where key = 'v1278' and release = 'r19453'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3708"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: Omr @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Utbildningsområde", "definition" = "Utbildningsområde" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1117\n\nSWECOV holds Omr in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024). SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, sheet Högskola row 112 (Omr, Utbildningsområde, 1990-VT2022, HREG, Hreg_Examina); Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning row 12380 (Hreg_Examina_1990_2022, Omr char(2)) and Högskola row 169 (code list Hreg_H_omr); Utkast_P1105_Variabellista_uppd2025_v5.xlsx, Högskola row 112 (1990-HT2024). SCB's Registerinformation export carries no row for the column on grundutbildning-examina. Not the course-level scb/hreg/utbildningsomrade: no equivalence is asserted. Maintainer ruling 2026-10-14 (#1516)."
+evidence = "private:ev-3709"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2000Inr3_amnegrupp @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1128\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3710"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2000Inr3_amnegrupp @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1029\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3711"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2000Inr3_amnegrupp @2015..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1194\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3712"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2000Inr3_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1139\n\nSWECOV holds SUN2000Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3713"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2000Inr3_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1040\n\nSWECOV holds SUN2000Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3714"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2000Niva_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1150\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3715"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2000Niva_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1051\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3716"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2000Niva_lprog @2015..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1205\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3717"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2020Inr3_amnegrupp @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1161\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3718"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2020Inr3_amnegrupp @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1062\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3719"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2020Inr3_amnegrupp @2015..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1216\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3720"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2020Inr3_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1172\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3721"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2020Inr3_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1073\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3722"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2020Inr3_lprog @2015..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1227\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3723"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-poang: SUN2020Niva_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2020)", "definition" = "Programmets sunnivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1183\n\nSWECOV holds SUN2020Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3724"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: SUN2020Niva_lprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2020)", "definition" = "Programmets sunnivå (SUN2020)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1084\n\nSWECOV holds SUN2020Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3725"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: Termin @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Termin för examen", "definition" = "Termin för examen" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1238\n\nSWECOV holds Termin in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-examina. holdings_period is the SWECOV holdings range (#1302). The other Hreg Termin variables are registration, credit or application terms, not the degree term."
+evidence = "private:ev-3726"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: omr_amnegrupp @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens utbildningsområde", "definition" = "Ämnesgruppens utbildningsområde" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1095\n\nSWECOV holds omr_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3727"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: omr_yprog @1993..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Yrkesexamensprogrammets utbildningsområde", "definition" = "Yrkesexamensprogrammets utbildningsområde" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:1106\n\nSWECOV holds omr_yprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+evidence = "private:ev-3728"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2000Inr_lprog @2007..2024"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "type" = "text" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:297\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "private:ev-3729"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: SUN2020Niva3_lprog @2007..2024"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Programmets sunnivå på 3-siffernivå (SUN2020)", "definition" = "Programmets sunnivå på 3-siffernivå (SUN2020)", "type" = "text" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:308\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "private:ev-3730"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: FFG_hskod @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare.", "definition" = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:99\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3731"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: FFG_lprog @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)", "definition" = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:110\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3732"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: FFG_Yprog @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare.", "definition" = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:132\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3733"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: FFG_Stud @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare.", "definition" = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:121\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3734"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: benamning @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Benämning till namnare. Lärosätets detaljerade examensbenämning.", "definition" = "Benämning till namnare. Lärosätets detaljerade examensbenämning." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:176\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3735"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv1 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, detaljerad nivå", "definition" = "Examensinriktningsgrupp, detaljerad nivå" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:187\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3736"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv1namn @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, detaljerad nivå. Benämning.", "definition" = "Examensinriktningsgrupp, detaljerad nivå. Benämning." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:198\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3737"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv3 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, grov nivå", "definition" = "Examensinriktningsgrupp, grov nivå" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:231\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3738"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv3namn @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, grov nivå. Benämning.", "definition" = "Examensinriktningsgrupp, grov nivå. Benämning." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:242\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3739"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv2 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, mellannivå", "definition" = "Examensinriktningsgrupp, mellannivå" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:209\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3740"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: grp1niv2namn @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, mellannivå. Benämning.", "definition" = "Examensinriktningsgrupp, mellannivå. Benämning." } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:220\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3741"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: TermNrKurs @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Kursens terminsnummer", "definition" = "Kursens terminsnummer" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:154\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3742"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: THPoang @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Kursregistreringens högskolepoäng inom terminen", "definition" = "Kursregistreringens högskolepoäng inom terminen" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:165\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3743"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: sun2000inr @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-inriktning, 2000-års nomenklatur", "definition" = "SUN-inriktning, 2000-års nomenklatur" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:253\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3744"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: SUN2020Inr @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-inriktning, 2020-års nomenklatur", "definition" = "SUN-inriktning, 2020-års nomenklatur" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:275\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3745"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: sun2000niva @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-nivå, 2000-års nomenklatur", "definition" = "SUN-nivå, 2000-års nomenklatur" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:264\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3746"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-examina: SUN2020Niva @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-nivå, 2020-års nomenklatur", "definition" = "SUN-nivå, 2020-års nomenklatur" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:286\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3747"
 
 [[statement]]
 kind = "assert"
 subject = "grundutbildning-1993: FFGArTermin_Stud @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "År+Termin för första registrering på svenskt lärosäte", "definition" = "År+Termin för första registrering på svenskt lärosäte" } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:143\n\nSWECOV's delivery lists hold the column on this variant (python-builder-pre-cutover:reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "private:ev-3748"
 
 [[statement]]
 kind = "set"
@@ -815,121 +815,121 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2015-01-01..2015-06-30 where key = 'v1267' and release = 'r5768'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3749"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2015-07-01..2015-12-31 where key = 'v1267' and release = 'r6179'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3750"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2016-01-01..2016-06-30 where key = 'v1267' and release = 'r11137'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3751"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2016-07-01..2016-12-31 where key = 'v1267' and release = 'r9855'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3752"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2017-01-01..2017-06-30 where key = 'v1267' and release = 'r11142'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3753"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2017-07-01..2017-12-31 where key = 'v1267' and release = 'r11272'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3754"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2018-01-01..2018-06-30 where key = 'v1267' and release = 'r12948'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3755"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2018-07-01..2018-12-31 where key = 'v1267' and release = 'r12583'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3756"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2019-01-01..2019-06-30 where key = 'v1267' and release = 'r13625'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3757"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2019-07-01..2019-12-31 where key = 'v1267' and release = 'r13626'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3758"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2020-01-01..2020-06-30 where key = 'v1267' and release = 'r14377'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3759"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2020-07-01..2020-12-31 where key = 'v1267' and release = 'r15066'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3760"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2021-01-01..2021-06-30 where key = 'v1267' and release = 'r16168'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3761"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2021-07-01..2021-12-31 where key = 'v1267' and release = 'r17701'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3762"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2022-01-01..2022-06-30 where key = 'v1267' and release = 'r18256'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3763"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2022-07-01..2022-12-31 where key = 'v1267' and release = 'r18422'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3764"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2023-01-01..2023-06-30 where key = 'v1267' and release = 'r18714'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3765"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2023-07-01..2023-12-31 where key = 'v1267' and release = 'r18914'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3766"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2024-01-01..2024-06-30 where key = 'v1267' and release = 'r19151'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3767"
 
 [[statement]]
 kind = "assert"
 subject = "sokande-grund-avancerad: Kurskod @2024-07-01..2024-12-31 where key = 'v1267' and release = 'r19453'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Kurskod för högskolekurs", "definition" = "Normalt av högskolorna satt kurskod. Kurskoden är unik inom ett lärosäte.", "type" = "char", "length" = 6, "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/hreg.toml:50\n\nSWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+evidence = "private:ev-3768"
 
 [[statement]]
 kind = "set"
@@ -3378,49 +3378,49 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 kind = "set"
 subject = "var:hogskolans-interna-programkod"
 fields = { "description" = "Lärosätets kod på programmet" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:385\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3769"
 
 
 [[statement]]
 kind = "set"
 subject = "var:hogskolekod"
 fields = { "description" = "Lärosäte, kod (klartext i hjälptabell). Lärosätets externa namnkod översätts till SCB:s interna kod och avser lärosäten med examensrätt på forskarnivå." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:236015:opdef_text. One variable, one description."
+evidence = "private:ev-3770"
 
 
 [[statement]]
 kind = "set"
 subject = "var:hogskolenamn"
 fields = { "description" = "Lärosäte, klartext. Namnet avser lärosäten utan eller med begränsat examenstillstånd på forskarnivå." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:236091:opdef_text. One variable, one description."
+evidence = "private:ev-3771"
 
 
 [[statement]]
 kind = "set"
 subject = "var:inriktningskod-for-utbildningsprogram"
 fields = { "description" = "Högskolans interna programinriktning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:379\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3772"
 
 
 [[statement]]
 kind = "set"
 subject = "var:kurskod"
 fields = { "description" = "Kurskod" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:349\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3773"
 
 
 [[statement]]
 kind = "set"
 subject = "var:kursort"
 fields = { "description" = "Studieort, kurs" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:367\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3774"
 
 
 [[statement]]
 kind = "set"
 subject = "var:progort"
 fields = { "description" = "Studieort, program" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/hreg.toml:397\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3775"
 
 [[statement]]
 kind = "set"

@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "9186fcbceeb2283a50c7f684764869e4dda5765e"
+commit = "e5fda6563b7f406d6fa05792bc2af3b057e48e5c"
 
 [[provider]]
 pid = "scb"
@@ -195,6 +195,13 @@ reader = "sos-workbook"
 path = "catalog/source/Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx"
 provider = "sos"
 register = "thr"
+
+# Curation evidence that names a data steward, cited as private:ev-NNNN. Its keys are
+# checked; its text never enters the catalog (crates/DESIGN.md, "Steward provenance").
+[[input]]
+name = "private-evidence"
+reader = "private-evidence"
+path = "catalog/evidence/private-evidence.toml"
 
 [[input]]
 name = "classifications"

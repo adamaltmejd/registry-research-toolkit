@@ -511,3 +511,81 @@ fn reserved_provider_prefixes_refuse_at_lock() {
         write(&frame, &original_frame).unwrap();
     }
 }
+
+#[test]
+fn steward_names_stay_out_of_the_global_catalog() {
+    // Regression: the global build publishes curated text, a line of a curation file
+    // without source names (inputs.toml) or an id that names a data steward, or accepts a private:ev-NNNN reference the pinned private evidence file
+    // does not hold (maintainer ruling, 2026-11-05). Each refusal is located with its
+    // code. Twin: a resolving reference builds, and the catalog carries the reference
+    // only, never the private text.
+    let fixture = cases().join("lock/evidence-identity");
+    let case = cases().join("lock/steward-names");
+    let expected = read_json(&case.join("expected.json")).unwrap();
+    let marker = expected["marker"].as_str().unwrap();
+    let setup = |label: &str| {
+        let dir = scratch(label);
+        let curation = curation_copy(&fixture, dir.path());
+        let inputs = dir.path().join("inputs");
+        copy_tree(&fixture.join("inputs"), &inputs).unwrap();
+        fs::copy(
+            case.join("private-evidence.toml"),
+            inputs.join("private-evidence.toml"),
+        )
+        .unwrap();
+        let mut manifest = read(&curation.join("inputs.toml")).unwrap();
+        manifest.push_str(
+            "\n[[input]]\nname = \"private-evidence\"\nreader = \"private-evidence\"\npath = \"private-evidence.toml\"\n",
+        );
+        write(&curation.join("inputs.toml"), &manifest).unwrap();
+        (dir, curation, inputs)
+    };
+    let build = |dir: &Scratch, curation: &Path, inputs: &Path| {
+        curated("lock", inputs, curation, &[]).ok();
+        let catalog = dir.path().join("catalog.db");
+        let ran = curated(
+            "build",
+            inputs,
+            curation,
+            &["--release".as_ref(), "--out".as_ref(), catalog.as_os_str()],
+        );
+        (ran, catalog)
+    };
+    for (scenario, want) in expected["refused"].as_object().unwrap() {
+        let (dir, curation, inputs) = setup(scenario);
+        let from = want.get("from").and_then(Value::as_str).unwrap_or(marker);
+        edit(
+            &curation.join(want["file"].as_str().unwrap()),
+            from,
+            want["to"].as_str().unwrap(),
+            false,
+        )
+        .unwrap();
+        build(&dir, &curation, &inputs)
+            .0
+            .refused(&[want["located"].as_str().unwrap()]);
+    }
+    let (dir, curation, inputs) = setup("steward-names-allowed");
+    edit(
+        &curation.join("registers/demo/r/curation.toml"),
+        marker,
+        expected["allowed"].as_str().unwrap(),
+        false,
+    )
+    .unwrap();
+    let (ran, catalog) = build(&dir, &curation, &inputs);
+    ran.ok();
+    let published = column(
+        &catalog,
+        "SELECT t.body FROM statement s JOIN text t ON t.id = s.evidence_text ORDER BY 1",
+    );
+    assert_eq!(serde_json::json!(published), expected["published_evidence"]);
+    let private = read(&case.join("private-evidence.toml")).unwrap();
+    let text = private.split('"').nth(1).unwrap();
+    assert!(
+        column(&catalog, "SELECT body FROM text")
+            .iter()
+            .all(|body| !body.contains(text)),
+        "the private evidence text reached the catalog"
+    );
+}

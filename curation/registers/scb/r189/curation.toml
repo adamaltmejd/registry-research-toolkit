@@ -17,61 +17,61 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/grundskola-ak9.tom
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r5624'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2056"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r5627'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2057"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6237'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2058"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6238'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2059"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6239'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2060"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6240'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2061"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6241'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2062"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7544'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2063"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7545'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2064"
 
 [[statement]]
 kind = "set"
 subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7546'"
 fields = { type = "integer" }
-evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+evidence = "private:ev-2065"
 
 [[statement]]
 kind = "set"
@@ -1788,49 +1788,49 @@ evidence = "VT är en källkod; den delade etiketten kräver disambiguering med 
 kind = "set"
 subject = "var:beh-yrk"
 fields = { "description" = "Gy-behörighet till yrkesprogram. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200229:opdef_text; rel070-base/reg_meta.db:occurrence:200710:opdef_text. One variable, one description."
+evidence = "private:ev-2066"
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-estetiska-program"
 fields = { "description" = "Gy-behörighet till estetiska programmet. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200225:opdef_text; rel070-base/reg_meta.db:occurrence:200706:opdef_text. One variable, one description."
+evidence = "private:ev-2067"
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-naturvetenskapsprogram-teknikprogram"
 fields = { "description" = "Gy-behörighet till naturvetenskapsprogrammet och teknikprogrammet. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200228:opdef_text; rel070-base/reg_meta.db:occurrence:200709:opdef_text. One variable, one description."
+evidence = "private:ev-2068"
 
 
 [[statement]]
 kind = "set"
 subject = "var:behorighet-programinriktade-individuella-val"
 fields = { "description" = "Programinriktat individuellt val. Behörigheten beräknas från vilka ämnen eleven har godkänt i och det totala antalet godkända ämnen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:200227:opdef_text; rel070-base/reg_meta.db:occurrence:200708:opdef_text. One variable, one description."
+evidence = "private:ev-2069"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-bild"
 fields = { "description" = "Betyg i ämnet bild" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2070"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-i-amnet-hem-och-konsumentkunskap"
 fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2071"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-i-amnet-idrott-och-halsa"
 fields = { "description" = "Betyg i ämnet idrott och hälsa" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2072"
 
 
 [[statement]]
@@ -1844,77 +1844,77 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 kind = "set"
 subject = "var:betyg-religion"
 fields = { "description" = "Betyg i ämnet religion" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2073"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-samhallskunskap"
 fields = { "description" = "Betyg i ämnet samhällskunskap" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2074"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-slojd"
 fields = { "description" = "Betyg i ämnet slöjd" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2075"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-svenska"
 fields = { "description" = "Betyg i ämnet svenska" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2076"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-teckensprak"
 fields = { "description" = "Betyg i ämnet teckenspråk" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2077"
 
 
 [[statement]]
 kind = "set"
 subject = "var:betyg-teknik"
 fields = { "description" = "Betyg i ämnet teknik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2078"
 
 
 [[statement]]
 kind = "set"
 subject = "var:bi"
 fields = { "description" = "Betyg i ämnet biologi" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2079"
 
 
 [[statement]]
 kind = "set"
 subject = "var:fy"
 fields = { "description" = "Betyg i ämnet fysik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2080"
 
 
 [[statement]]
 kind = "set"
 subject = "var:ge"
 fields = { "description" = "Betyg i ämnet geografi" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2081"
 
 
 [[statement]]
 kind = "set"
 subject = "var:hi"
 fields = { "description" = "Betyg i ämnet historia" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2082"
 
 
 [[statement]]
 kind = "set"
 subject = "var:ke"
 fields = { "description" = "Betyg i ämnet kemi" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2083"
 
 
 [[statement]]
@@ -1928,14 +1928,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDrif
 kind = "set"
 subject = "var:moderna-sprak-elevens-val-sprak"
 fields = { "description" = "Moderna språk inom ramen för elevens val (språk)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2084"
 
 
 [[statement]]
 kind = "set"
 subject = "var:moderna-sprak-sprakval"
 fields = { "description" = "Moderna språk inom ramen för språkval (språk)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2085"
 
 
 [[statement]]
@@ -1949,7 +1949,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDrif
 kind = "set"
 subject = "var:mu"
 fields = { "description" = "Betyg i ämnet musik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-ak9.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2086"
 
 [[statement]]
 kind = "set"

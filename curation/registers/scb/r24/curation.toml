@@ -555,43 +555,43 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3403\n\n
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1990"
 fact = { "entity" = "release", "name" = "1990", "period" = "1990" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5065\n\nSWECOV holds UREG1990 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2311"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1991"
 fact = { "entity" = "release", "name" = "1991", "period" = "1991" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5071\n\nSWECOV holds UREG1991 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2312"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1992"
 fact = { "entity" = "release", "name" = "1992", "period" = "1992" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5077\n\nSWECOV holds UREG1992 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2313"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1993"
 fact = { "entity" = "release", "name" = "1993", "period" = "1993" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5083\n\nSWECOV holds UREG1993 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2314"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1994"
 fact = { "entity" = "release", "name" = "1994", "period" = "1994" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5089\n\nSWECOV holds UREG1994 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2315"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1995"
 fact = { "entity" = "release", "name" = "1995", "period" = "1995" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5095\n\nSWECOV holds UREG1995 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2316"
 
 [[statement]]
 kind = "assert"
 subject = "release:personens-hogsta-utbildning-16-74/1996"
 fact = { "entity" = "release", "name" = "1996", "period" = "1996" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:5101\n\nSWECOV holds UREG1996 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "private:ev-2317"
 
 [[statement]]
 kind = "set"

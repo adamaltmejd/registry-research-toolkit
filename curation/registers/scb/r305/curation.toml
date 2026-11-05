@@ -1079,14 +1079,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3474"
 
 
 [[statement]]
 kind = "set"
 subject = "var:resultat-delprov-matematik-huvudrakning"
 fields = { "description" = "Elevens delprovsresultat i matematik, delprov G2. Delprov G2 avser huvudräkning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:202966:opdef_text. One variable, one description."
+evidence = "private:ev-3475"
 
 
 [[statement]]
@@ -1100,28 +1100,28 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 kind = "set"
 subject = "var:skolenhetskod"
 fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3476"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3477"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
 fields = { "description" = "Skolkommun" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3478"
 
 
 [[statement]]
 kind = "set"
 subject = "var:sv-eller-sva"
 fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/grundskola-prov-ak3.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3479"
 
 [[statement]]
 kind = "set"

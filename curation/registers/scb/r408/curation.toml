@@ -2,8 +2,8 @@
 [[statement]]
 kind = "assert"
 subject = "sus: Id @2024..2024"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Löpnummer för sjukfall", "definition" = "Unikt löpnummer för varje sjukfall. Levereras i kolumnen P1105_LopNr_Id.", "type" = "integer", "identifier" = true, "sensitive" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/anst.toml:163\n\nSWECOV holds P1105_LopNr_Id in SuS_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source SUS for 2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F6, maintainer round 5)."
+fact = { "entity" = "occurrence", "fields" = { "label" = "Löpnummer för sjukfall", "definition" = "Unikt löpnummer för varje sjukfall.", "type" = "integer", "identifier" = true, "sensitive" = false } }
+evidence = "private:ev-3664"
 
 [[statement]]
 kind = "set"
@@ -1365,21 +1365,21 @@ evidence = "Variabeln anger urvalets stratum.\ncatalog:variable_text:3349:19723:
 kind = "set"
 subject = "var:ersdagar"
 fields = { "description" = "Antal ersättningsdagar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/anst.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3665"
 
 
 [[statement]]
 kind = "set"
 subject = "var:imp-ind-anst"
 fields = { "description" = "Anger om antal anställningar är imputerat eller inte." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/anst.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3666"
 
 
 [[statement]]
 kind = "set"
 subject = "var:person-organisationsnummer-juridiska-enheter"
 fields = { "description" = "Organisationsnummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3667"
 
 [[statement]]
 kind = "set"

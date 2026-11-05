@@ -3,73 +3,73 @@
 kind = "set"
 subject = "individer-16plus: cfarnr"
 fields = { "spelling" = "CfarNr_LISA" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3502\n\nComplete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3486"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: peorgnr"
 fields = { "spelling" = "PeOrgNr_LISA" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3526\n\nComplete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3487"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: sjukp_bdag @1994..2009"
 fields = { "spelling" = "SjukP_Bdag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3568\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3488"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: sjukp_belopp @1994..2009"
 fields = { "spelling" = "SjukP_Belopp_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3640\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3489"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: sjukp_ndag @1994..2007"
 fields = { "spelling" = "SjukP_Ndag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3604\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3490"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus: sjukp_ndag @2008..2009"
 fields = { "spelling" = "SjukP_Ndag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3616\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3491"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: cfarnr"
 fields = { "spelling" = "CfarNr_LISA" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3490\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3492"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: peorgnr"
 fields = { "spelling" = "PeOrgNr_LISA" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3514\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3493"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: sjukp_bdag"
 fields = { "spelling" = "SjukP_Bdag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3556\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3494"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: sjukp_belopp"
 fields = { "spelling" = "SjukP_Belopp_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3628\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3495"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: sjukp_ndag @2010..2011"
 fields = { "spelling" = "SjukP_Ndag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3580\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3496"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: sjukp_ndag @2012..2015"
 fields = { "spelling" = "SjukP_Ndag_MiDAS" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3592\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3497"
 
 [[statement]]
 kind = "set"
@@ -81,7 +81,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3376\n\n
 kind = "set"
 subject = "individer-16plus: astnr"
 fields = { "spelling" = "AstNr_LISA" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3476\n\nComplete accepted physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) contain only AstNr_LISA for this exact own native quantity; exported AstNr is absent. SCB's P1105 delivery variable list (Bilaga 2, 2023-2024) places AstNr_LISA in view Individ_ÅÅÅÅ for these years. Same correction as the 2010-2015 individer-15plus entries. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3498"
 
 [[statement]]
 kind = "set"
@@ -153,13 +153,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:2359\n\n
 kind = "set"
 subject = "individer-15plus: cfarnr_lisa"
 fields = { "variable" = "cfar-nummer" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:2369\n\nOne CFAR workplace number under two delivery headers: CfarNr in Arbetsställen 1990-2023, CfarNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). CfarNrSreg is the co-delivered Sysselsättningsregister reading (Individ 2013-2015) and keeps its own key. Per-variant operational definitions stay on the states."
+evidence = "private:ev-3499"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: peorgnr_lisa"
 fields = { "variable" = "person-orgnr" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:2374\n\nOne person/organisation number under two delivery headers: PeOrgNr in Arbetsställen and Företag 1990-2023, PeOrgNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). PeOrgNrSreg is the co-delivered Sysselsättningsregister reading (Individ 1990-2015) and keeps its own key."
+evidence = "private:ev-3500"
 
 [[statement]]
 kind = "set"
@@ -639,61 +639,61 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:2184\n\n
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2011-01-01..2011-12-31 where key = 'v44791' and release = 'r7319'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3501"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2012-01-01..2012-12-31 where key = 'v44791' and release = 'r7309'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3502"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2013-01-01..2013-12-31 where key = 'v44791' and release = 'r6053'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3503"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2014-01-01..2014-12-31 where key = 'v44791' and release = 'r8612'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3504"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2015-01-01..2015-12-31 where key = 'v44791' and release = 'r11268'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3505"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2016-01-01..2016-12-31 where key = 'v44791' and release = 'r12202'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3506"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2017-01-01..2017-12-31 where key = 'v44791' and release = 'r13286'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3507"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2018-01-01..2018-12-31 where key = 'v44791' and release = 'r14349'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3508"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TPENSAU @2019-01-01..2019-12-31 where key = 'v44791' and release = 'r16266'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3509"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: tpensau @2011..2019"
 fields = { "operational_definition" = "Nordisk pension, utländskt beskattad.\r\n\r\nInkomsterna som levereras från respektive lands skattemyndighet är redovisade på ett id-nummer (TIN) kompletterat med bland annat namn och adress. Dessa uppgifter personnummermatchas för att identifiera folkbokförda i Sverige genom en modell för att koppla på det svenska personnumret. Denna hantering ger en viss osäkerhet på mikrodatanivå, det kan i undantagsfall därför förekomma att nordiska inkomster har kopplats till fel person." }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+evidence = "private:ev-3510"
 
 [[statement]]
 kind = "set"
@@ -861,55 +861,55 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:179\n\nS
 kind = "assert"
 subject = "individer-15plus: DispInkKE @2010-01-01..2010-12-31 where key = 'v2574' and release = 'r8652'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+evidence = "private:ev-3511"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: DispInkKE @2011-01-01..2011-12-31 where key = 'v2574' and release = 'r7319'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+evidence = "private:ev-3512"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: DispInkKE @2012-01-01..2012-12-31 where key = 'v2574' and release = 'r7309'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+evidence = "private:ev-3513"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: AldPens_INKLGP @2011..2019"
 fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Summa inkomst av pensioner, inklusive pension från annat nordiskt land", "definition" = "Summa inkomst av pensioner inklusive pension från annat nordiskt land, 2011–2019 (SCB LISA ändringar 2020). Från 2020 ingår sådan pension i AldPens; för 2011–2019 är detta en annan definition än AldPens.", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3538\n\nSWECOV holds AldPens_INKLGP in Individ_2011 through Individ_2019 (2011-2019); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individer-15plus. holdings_period is the SWECOV holdings range (#1302). Sibling aldpens (AldPens, is_sensitive=false, is_identifier=false); a different definition, so not that variable."
+evidence = "private:ev-3514"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: AmPol @2016-01-01..2016-12-31 where key = 'v31597' and release = 'r12202'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Summa inkomst föranledd av arbetsmarknadspolitisk åtgärd", "definition" = "Den under året summerade inkomsten föranledd av arbetsmarknadspolitisk åtgärd.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:84\n\nSWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+evidence = "private:ev-3515"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: ampol @2016"
 fields = { "operational_definition" = "Summering av skattefri och skattepliktig ersättning vid deltagande i arbetsmarknadspolitiska program.\r\nErsättningen avser inkomståret oavsett år för händelse." }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:84\n\nSWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+evidence = "private:ev-3516"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: BAS @2020-01-01..2020-12-31 where key = 'v45149' and release = 'r18093'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsmarknadsstatus", "definition" = "Klassificering av personer utifrån deras situation på arbetsmarknaden.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+evidence = "private:ev-3517"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: BAS @2021-01-01..2021-12-31 where key = 'v45149' and release = 'r18668'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsmarknadsstatus", "definition" = "Klassificering av personer utifrån deras situation på arbetsmarknaden.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+evidence = "private:ev-3518"
 
 [[statement]]
 kind = "set"
 subject = "individer-15plus: bas @2020..2021"
 fields = { "operational_definition" = "Klassificeringen är hierarkisk i sin uppbyggnad, där sysselsatt prioriteras högts och därefter enligt prioriteringsordningen arbetslös, studerande, pensionär och sjuk. Det innebär att om en person har blivit klassificerad som sysselsatt, kan samma person inte bli klassificerad till någon annan status, och på motsvarande sätt för de statusar som följer i hierarkin." }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+evidence = "private:ev-3519"
 
 [[statement]]
 kind = "set"
@@ -939,19 +939,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:2098\n\n
 kind = "assert"
 subject = "individer-15plus: DispInkKE04 @2010-01-01..2010-12-31 where key = 'v21516' and release = 'r8652'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+evidence = "private:ev-3520"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: DispInkKE04 @2011-01-01..2011-12-31 where key = 'v21516' and release = 'r7319'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+evidence = "private:ev-3521"
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: DispInkKE04 @2012-01-01..2012-12-31 where key = 'v21516' and release = 'r7309'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
-evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+evidence = "private:ev-3522"
 
 [[statement]]
 kind = "set"
@@ -17288,7 +17288,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:anlaggningstillgangar"
 fields = { "description" = "Anläggningstillgångar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:565\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3523"
 
 [[statement]]
 kind = "set"
@@ -17798,19 +17798,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:avsattningar"
 fields = { "description" = "Avsättningar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:613\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3524"
 
 [[statement]]
 kind = "set"
 subject = "var:avsattningar-langfristiga-skulder-per-nettoomsattning"
 fields = { "description" = "Avsättningar o långfristiga skulder/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:763\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3525"
 
 [[statement]]
 kind = "set"
 subject = "var:avskrivningar-i-relation-till-nettoomsattningen"
 fields = { "description" = "Avskrivningar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:775\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3526"
 
 [[statement]]
 kind = "set"
@@ -17894,13 +17894,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:bostbidrfam"
 fields = { "description" = "Bostadsbidrag för familj" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A724\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:625\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3527"
 
 [[statement]]
 kind = "set"
 subject = "var:bostbidru"
 fields = { "description" = "Bostadsbidrag (uppdelat på huvudsökande och medsökande)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:631\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3528"
 
 [[statement]]
 kind = "set"
@@ -17936,7 +17936,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:bruttoinvesteringar-maskiner-inventarier"
 fields = { "description" = "Bruttoinvestering i maskiner och inventarier" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:643\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3529"
 
 [[statement]]
 kind = "set"
@@ -17960,7 +17960,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:civilstand"
 fields = { "description" = "Civilstånd" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A56\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:649\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3530"
 
 [[statement]]
 kind = "set"
@@ -18032,7 +18032,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:eget-kapital-i-relation-till-nettoomsattningen"
 fields = { "description" = "Eget kapital/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:751\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3531"
 
 [[statement]]
 kind = "set"
@@ -18218,7 +18218,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 kind = "set"
 subject = "var:familjestallning"
 fields = { "description" = "Familjeställning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A58\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:673\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3532"
 
 [[statement]]
 kind = "set"
@@ -18248,7 +18248,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:finansiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "description" = "Finansiella anläggningstillgångar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:715\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3533"
 
 [[statement]]
 kind = "set"
@@ -18338,7 +18338,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:foradlingsvarde"
 fields = { "description" = "Förädlingsvärde" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:679\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3534"
 
 [[statement]]
 kind = "set"
@@ -18578,13 +18578,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:garantipension"
 fields = { "description" = "Garantipension" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A678\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:781\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3535"
 
 [[statement]]
 kind = "set"
 subject = "var:garpensand"
 fields = { "description" = "Andel/grad för garantipension" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A679\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:787\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3536"
 
 [[statement]]
 kind = "set"
@@ -18674,7 +18674,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:immateriella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "description" = "Immateriella anläggningstillgångar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:697\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3537"
 
 [[statement]]
 kind = "set"
@@ -18710,7 +18710,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomst-av-kapital"
 fields = { "description" = "Inkomst av kapital." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A661\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:793\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/inkomst-av-kapital"
+evidence = "private:ev-3538"
 
 [[statement]]
 kind = "set"
@@ -18758,7 +18758,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomst-foranledd-sjukdom-2"
 fields = { "description" = "Summa inkomst föranledd av sjukdom, arbetsskada och rehabilitering under året. Summerar sjukpenning, arbetsskadeersättning, ersättning som utgör anställningsinkomst och rehabiliteringsersättning i IoT." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A514\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:799\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/inkomst-foranledd-sjukdom-2\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376244:opdef_text; rel070-base/reg_meta.db:occurrence:377272:opdef_text; rel070-base/reg_meta.db:occurrence:378455:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The exact benefit components are documented only from 2000, while earlier occurrences supply only a general annual sickness/rehabilitation income concept. Evidence: rel070-base/reg_meta.db occurrences 376244, 377272, 371847.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 376244, 377272, 371847."
+evidence = "private:ev-3539"
 
 [[statement]]
 kind = "set"
@@ -18770,7 +18770,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomst-foranledd-studier-2"
 fields = { "description" = "Summa inkomst föranledd av studier. Summerar studiemedel eller studiehjälp, utbildningsbidrag för doktorander och rekryteringsbidrag enligt IoT." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A465\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:805\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376252:opdef_text; rel070-base/reg_meta.db:occurrence:377287:opdef_text; rel070-base/reg_meta.db:occurrence:379739:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The component list, including recruitment grant, is documented only from 2005; it must not apply to older years with a generic student-income sum. Evidence: rel070-base/reg_meta.db occurrences 376252, 377287, 371870.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 376252, 377287, 371870."
+evidence = "private:ev-3540"
 
 [[statement]]
 kind = "set"
@@ -18794,7 +18794,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:inkomstpensionstillagg"
 fields = { "description" = "Inkomstpensionstillägg" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:811\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3541"
 
 [[statement]]
 kind = "set"
@@ -18980,7 +18980,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:kassa-bank-kortfristiga-placeringar-per-nettoomsattning"
 fields = { "description" = "Kassa, bank o kortfristiga placeringar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:739\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3542"
 
 [[statement]]
 kind = "set"
@@ -19046,7 +19046,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:kortfristiga-skulder-i-relation-till-nettoomsattningen"
 fields = { "description" = "Kortfristiga skulder/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:745\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3543"
 
 [[statement]]
 kind = "set"
@@ -19058,7 +19058,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:kostnader-loner-ersattningar"
 fields = { "description" = "Lönekostnader och andra ersättningar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:817\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3544"
 
 [[statement]]
 kind = "set"
@@ -19118,13 +19118,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ku1peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A254\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:823\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3545"
 
 [[statement]]
 kind = "set"
 subject = "var:ku1ssykar"
 fields = { "description" = "Årtal för yrkesuppgift, för yrkesverksamma" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A280\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:829\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3546"
 
 [[statement]]
 kind = "set"
@@ -19178,7 +19178,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ku2peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A319\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:835\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3547"
 
 [[statement]]
 kind = "set"
@@ -19202,13 +19202,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ku3astnr"
 fields = { "description" = "Arbetsställenummer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A384\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:841\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3548"
 
 [[statement]]
 kind = "set"
 subject = "var:ku3cfarnr"
 fields = { "description" = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A383\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:847\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3549"
 
 [[statement]]
 kind = "set"
@@ -19256,7 +19256,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ku3peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A382\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:853\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3550"
 
 [[statement]]
 kind = "set"
@@ -19268,13 +19268,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:kundfordringar-i-relation-till-nettoomsattningen"
 fields = { "description" = "Kundfordringar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:727\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3551"
 
 [[statement]]
 kind = "set"
 subject = "var:lager-pagaende-arbeten-per-nettoomsattning"
 fields = { "description" = "Lager o pågående arbeten/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:721\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3552"
 
 [[statement]]
 kind = "set"
@@ -19616,7 +19616,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:loneinkomst"
 fields = { "description" = "Deklarerad löneinkomst; från 2020 ingår även utländsk beskattad lön från annat nordiskt land." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A415\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:859\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/loneinkomst"
+evidence = "private:ev-3553"
 
 [[statement]]
 kind = "set"
@@ -19634,19 +19634,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:maskiner-och-inventarier-i-relation-till-nettoomsattningen"
 fields = { "description" = "Maskiner o inventarier/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:709\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3554"
 
 [[statement]]
 kind = "set"
 subject = "var:matar-yrke-huvudsaklig-inkl-harledda-foretagare"
 fields = { "description" = "Årtal för yrkesuppgift, inkl. härledda yrken för företagare" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1021\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3555"
 
 [[statement]]
 kind = "set"
 subject = "var:materiella-anlaggningstillgangar-per-nettoomsattning"
 fields = { "description" = "Materiella anläggningstillgångar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:703\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3556"
 
 [[statement]]
 kind = "set"
@@ -19802,13 +19802,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 kind = "set"
 subject = "var:naringsgren-huvud-arbetsstalle-sni2007g"
 fields = { "description" = "Näringsgren, SNI2007, grov nivå (15 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:589\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:368687:opdef_text; rel070-base/reg_meta.db:occurrence:369057:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The imported person/principal-job sentence comes from a template on workplace or enterprise records. It cannot restrict the scope of these object-table industry measures; the base description already names classification and grouping. Evidence: rel070-base/reg_meta.db occurrences 368687, 368788, 369057."
+evidence = "private:ev-3557"
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-arbetsstalle-sni2007u"
 fields = { "description" = "Näringsgren, SNI2007, utökad nivå (51 grupper)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:595\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:368688:opdef_text; rel070-base/reg_meta.db:occurrence:369058:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The imported person/principal-job sentence comes from a template on workplace or enterprise records. It cannot restrict the scope of these object-table industry measures; the base description already names classification and grouping. Evidence: rel070-base/reg_meta.db occurrences 368688, 368789, 369058."
+evidence = "private:ev-3558"
 
 [[statement]]
 kind = "set"
@@ -19838,13 +19838,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 kind = "set"
 subject = "var:naringsgren-huvud-foretag-sni2007g"
 fields = { "description" = "Företagets huvudsakliga näringsgren enligt SNI 2007, grupperad i 15 grupper. Näringsgrenen avser den juridiska enheten och hämtas från företagsregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:901\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: SCB LISA inventory: Org_Sni2007G enterprise variable, 15 groups, 2008-2024; id-docs/docs-vars/acquired/lisa/text/c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162.json; rel070-base/reg_meta.db foretag table, same spelling/key/value set across coverage."
+evidence = "private:ev-3559"
 
 [[statement]]
 kind = "set"
 subject = "var:naringsgren-huvud-foretag-sni2007u"
 fields = { "description" = "Företagets huvudsakliga näringsgren enligt SNI 2007, grupperad i 51 grupper. Näringsgrenen avser den juridiska enheten och hämtas från företagsregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:907\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nIdentity review: SCB LISA inventory: Org_Sni2007U enterprise variable, 51 groups, 2008-2024; id-docs/docs-vars/acquired/lisa/text/c96b4e7387af6acbff885e51465d8fabaca5376c4cdf2a1086bf7842ac5c5162.json; rel070-base/reg_meta.db foretag table, same spelling/key/value set across coverage."
+evidence = "private:ev-3560"
 
 [[statement]]
 kind = "set"
@@ -20132,7 +20132,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:nettoinvesteringar-maskiner-inventarier"
 fields = { "description" = "Nettoinvestering i maskiner och inventarier" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:871\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3561"
 
 [[statement]]
 kind = "set"
@@ -20144,7 +20144,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:nettoomsattning-justerad-merchanting"
 fields = { "description" = "Nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:877\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3562"
 
 [[statement]]
 kind = "set"
@@ -20156,7 +20156,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:obeskattade-reserver-i-relation-till-nettoomsattningen"
 fields = { "description" = "Obeskattade reserver/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:757\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3563"
 
 [[statement]]
 kind = "set"
@@ -20204,7 +20204,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:org-belkommun"
 fields = { "description" = "Belägenhetskommun för största arbetsstället" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:883\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3564"
 
 [[statement]]
 kind = "set"
@@ -20288,25 +20288,25 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:org-typ"
 fields = { "description" = "Företagstyp (ett- eller flerarbetsställeföretag). Härleds från företagets antal arbetsställen enligt BAS." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:925\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:371599:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: BAS provenance is documented only for 2023 and must not be assigned to the full 1990–2021 enterprise history. Evidence: rel070-base/reg_meta.db occurrences 369107, 371599.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 369107, 371599."
+evidence = "private:ev-3565"
 
 [[statement]]
 kind = "set"
 subject = "var:org-typbas"
 fields = { "description" = "Typ av företag (ett- eller flerarbetsställeföretag, finns inte i Företagsdatabasen, uppgift saknas). Antalet arbetsställen hämtas från FDB med november prioriterad, annars senaste förekomst i årets slutliga månadsversioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:931\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:371512:opdef_text. One variable, one description."
+evidence = "private:ev-3566"
 
 [[statement]]
 kind = "set"
 subject = "var:ovriga-kortfristiga-fordringar-per-nettoomsattning"
 fields = { "description" = "Övriga kortfristiga fordringar/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:733\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3567"
 
 [[statement]]
 kind = "set"
 subject = "var:ovriga-rorelseintakter"
 fields = { "description" = "Övriga rörelseintäkter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:937\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3568"
 
 [[statement]]
 kind = "set"
@@ -20330,13 +20330,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:person-orgnr"
 fields = { "description" = "Företagets person- eller organisationsnummer; ersätts med löpnummer vid leverans. I individtabellerna avses företaget för personens huvudsakliga sysselsättning; vid identitetsbyte under året väljs den senaste identiteten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A10\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A161\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:943\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nMaintainer description review 2026-11-02: scb/lisa/person-orgnr\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376233:opdef_text; rel070-base/reg_meta.db:occurrence:373484:opdef_text; rel070-base/reg_meta.db:occurrence:373790:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The PID also identifies enterprises and workplaces directly. Bound the principal-job scope to individual tables and the latest-ID rule to the documented 2017–2021 period. Evidence: rel070-base/reg_meta.db occurrences 368297, 371802, 373484, 373790, 375630.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Redo the coordinator date scoping: the 2022 onward silence does not establish loss of principal-job scope or latest-identity selection. Evidence: rel070-base/reg_meta.db occurrences 368297, 371802, 373484, 373790."
+evidence = "private:ev-3569"
 
 [[statement]]
 kind = "set"
 subject = "var:personalkostnader-i-relation-till-foradlingsvardet"
 fields = { "description" = "Personalkostnader/förädlingsvärde" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:769\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3570"
 
 [[statement]]
 kind = "set"
@@ -20348,7 +20348,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:personalkostnader-per-omsattning"
 fields = { "description" = "Personalkostnader/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:691\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3571"
 
 [[statement]]
 kind = "set"
@@ -20366,7 +20366,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:premiepension"
 fields = { "description" = "Premiepension" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A676\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:949\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3572"
 
 [[statement]]
 kind = "set"
@@ -20486,7 +20486,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:redovisat-resultat"
 fields = { "description" = "Årets resultat" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:955\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3573"
 
 [[statement]]
 kind = "set"
@@ -20570,7 +20570,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:resultat-efter-finansiella-poster"
 fields = { "description" = "Resultat efter finansiella poster" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:961\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3574"
 
 [[statement]]
 kind = "set"
@@ -20600,7 +20600,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:rorelsekapital-per-nettoomsattning"
 fields = { "description" = "Rörelsekapital/nettoomsättning" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:685\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3575"
 
 [[statement]]
 kind = "set"
@@ -20612,7 +20612,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:rorelseresultat"
 fields = { "description" = "Rörelseresultat" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:967\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3576"
 
 [[statement]]
 kind = "set"
@@ -20630,7 +20630,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:sarskilt-pensionstillagg"
 fields = { "description" = "Särskilt pensionstillägg" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A669\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:973\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3577"
 
 [[statement]]
 kind = "set"
@@ -20642,7 +20642,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:sateskommun"
 fields = { "description" = "Säteskommunen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:979\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3578"
 
 [[statement]]
 kind = "set"
@@ -20690,7 +20690,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:senaste-invandringsar"
 fields = { "description" = "Senaste invandringsår" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A59\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:985\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3579"
 
 [[statement]]
 kind = "set"
@@ -20876,7 +20876,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 kind = "set"
 subject = "var:skattekostnader"
 fields = { "description" = "Skatt på årets resultat" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:991\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3580"
 
 [[statement]]
 kind = "set"
@@ -20924,7 +20924,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:sociala-kostnader-personalkostnader"
 fields = { "description" = "Sociala kostnader och andra avgifter" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:997\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3581"
 
 [[statement]]
 kind = "set"
@@ -20948,7 +20948,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ssyk-overensstammelse"
 fields = { "description" = "Yrkets överensstämmelse med största förvärvskälla" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A281\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1003\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3582"
 
 [[statement]]
 kind = "set"
@@ -21014,7 +21014,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:ssyk4-2012-j16"
 fields = { "description" = "Yrke enligt SSYK2012, 4-siffernivå, inkl. härledda yrken för företagare" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1015\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3583"
 
 [[statement]]
 kind = "set"
@@ -21086,7 +21086,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:studiemedel-studiehjalp-lan-och-bidrag"
 fields = { "description" = "Studiemedel och studiehjälp" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A448\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1033\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3584"
 
 [[statement]]
 kind = "set"
@@ -21122,7 +21122,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:summa-bruttoinvesteringar"
 fields = { "description" = "Summa bruttoinvesteringar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1039\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3585"
 
 [[statement]]
 kind = "set"
@@ -21146,31 +21146,31 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:summa-kortfristiga-skulder"
 fields = { "description" = "Kortfristiga skulder" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1045\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3586"
 
 [[statement]]
 kind = "set"
 subject = "var:summa-langfristiga-skulder"
 fields = { "description" = "Långfristiga skulder" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1051\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3587"
 
 [[statement]]
 kind = "set"
 subject = "var:summa-nettoinvesteringar"
 fields = { "description" = "Summa nettoinvesteringar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1057\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3588"
 
 [[statement]]
 kind = "set"
 subject = "var:summa-obeskattade-reserver"
 fields = { "description" = "Obeskattade reserver" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1063\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3589"
 
 [[statement]]
 kind = "set"
 subject = "var:summa-omsattningstillgangar"
 fields = { "description" = "Omsättningstillgångar" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1069\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3590"
 
 [[statement]]
 kind = "set"
@@ -21260,7 +21260,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:sysselsattningsstatus-november-fran-2019"
 fields = { "description" = "Sysselsättningsstatus enligt justerad metod 2019" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1081\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3591"
 
 [[statement]]
 kind = "set"
@@ -21284,7 +21284,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:tillaggspension"
 fields = { "description" = "Tilläggspension" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A674\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1087\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3592"
 
 [[statement]]
 kind = "set"
@@ -21308,7 +21308,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:tillpensand"
 fields = { "description" = "Andel/grad för tilläggspension" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A675\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1093\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3593"
 
 [[statement]]
 kind = "set"
@@ -21494,7 +21494,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:yrke-3-sifferniva-huvudsaklig-inkl-harledda-foretagare-2012"
 fields = { "description" = "Yrke enligt SSYK2012, 3-siffernivå, inkl. härledda yrken för företagare" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1009\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3594"
 
 [[statement]]
 kind = "set"
@@ -21512,7 +21512,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 kind = "set"
 subject = "var:yrkeskod-orgnummer-overensstammelse-inkl-harledda-foretagare"
 fields = { "description" = "Yrkets överensstämmelse med novemberjobbet, inkl. härledda yrken för företagare" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:1027\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-3595"
 
 [[statement]]
 kind = "set"

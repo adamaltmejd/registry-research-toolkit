@@ -1429,7 +1429,7 @@ evidence = "Grupperingen avser moderns födelseland.\ncatalog:occurrence-locator
 kind = "set"
 subject = "var:arskurs"
 fields = { "description" = "Årskurs" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2305"
 
 
 [[statement]]
@@ -1450,21 +1450,21 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 kind = "set"
 subject = "var:inriktninggy"
 fields = { "description" = "Typ av fristående gymnasieskola. Typen avser skolenheten där eleven studerar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:214113:opdef_text; rel070-base/reg_meta.db:occurrence:214503:opdef_text. One variable, one description."
+evidence = "private:ev-2306"
 
 
 [[statement]]
 kind = "set"
 subject = "var:klassbeteckning"
 fields = { "description" = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2307"
 
 
 [[statement]]
 kind = "set"
 subject = "var:kommun"
 fields = { "description" = "Skolkommun. Kommunen där studierna bedrivs härleds från skolkodens fyra första positioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:213442:opdef_text; rel070-base/reg_meta.db:occurrence:213914:opdef_text; rel070-base/reg_meta.db:occurrence:214037:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 213442, 213914, 213980, 214037."
+evidence = "private:ev-2308"
 
 
 [[statement]]
@@ -1485,14 +1485,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVari
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Löpnummer i populationen" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+evidence = "private:ev-2309"
 
 
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
 fields = { "description" = "Skolkommun. Uppgiften avser kommunen där skolan ligger." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/scb/gymnasieskola-elever.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:214143:opdef_text. One variable, one description."
+evidence = "private:ev-2310"
 
 [[statement]]
 kind = "set"

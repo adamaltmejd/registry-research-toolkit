@@ -5,6 +5,6 @@
 [variables]
 "gisaid" = ["FHM_CovidWGS: Gisaid"]
 "lineage-field" = ["FHM_CovidWGS: Lineage"]
-"p1105-lopnr-personnr" = ["FHM_CovidWGS: P1105_LopNr_PersonNr"]
+"lopnr-personnr" = ["FHM_CovidWGS: LopNr_PersonNr"]
 "provdatum" = ["FHM_CovidWGS: Provdatum"]
 "smilab-nr" = ["FHM_CovidWGS: SmiLab_nr"]
