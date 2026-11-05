@@ -23,9 +23,10 @@ approved a plan on 2026-11-04 that removes everything else.
 - **One PR per slice**, straight to main; the site works after each.
 - **Delete with the code.** Component tests are not ported; behaviour is pinned through
   the flows driver (`reg_webapp/dev/driver.mjs`).
-- **Each PR** passes `gate.sh frontend flows`, an independent Opus review and a design
-  review (`reg-webapp-design-reviewer`), and carries screenshots at 375, 768, 1280 and
-  1920 px on the fixture and on the real SWECOV pair.
+- **Each PR** passes `gate.sh frontend flows`, a Codex source review
+  (`codex -C <wt> review --base origin/main`) and a fresh-agent rendered design review
+  (`reg-webapp-design-reviewer`) at 375, 768, 1280 and 1920 px on the fixture and on the
+  real SWECOV pair.
 - **Release window.** No slice merges between a schema-bump PR and the release that
   publishes it. The Operator sequences merges.
 
@@ -40,7 +41,8 @@ approved a plan on 2026-11-04 that removes everything else.
   | 4   | Group page carries every member; grouped variables lose their own page                         | server D                        | open                                                                            |
   | 5   | Project page: one check, order instructions, delivery summary                                  | —                               | #2209                                                                           |
   | 6   | Shell: study years, name breadcrumbs, palette rows                                             | —                               | #2221                                                                           |
-  | 7   | Cleanup: dead modules, docs; delete this tracker                                               | 1–6                             |                                                                                 |
+  | 7   | Cleanup: dead modules, docs; delete this tracker                                               | 1–6, 8                          |                                                                                 |
+  | 8   | Provider page, provider variables column, timeline axis                                        | —                               | open                                                                            |
   | A   | Server: names in responses (the SPA then drops its name fan-out in 7)                          | 0.75.0                          | #2208                                                                           |
   | B   | Server: reader findings only                                                                   | —                               |                                                                                 |
   | C   | Server: context serves presentation and period span only; fix `period_span`                    | 0.75.0                          | #2206                                                                           |

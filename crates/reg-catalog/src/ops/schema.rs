@@ -135,13 +135,6 @@ struct ScopeTable {
     locals: Vec<(usize, i64, Option<i64>)>,
 }
 
-fn invalid_ref(value: &str, kind: &str, operation: &str) -> Error {
-    Error::invalid_ref(
-        value,
-        format!("{value:?} is a {kind}, which {operation} does not take."),
-    )
-}
-
 /// The database origins a ref's lines are read from: the reference catalog and, in
 /// steward mode, the holdings, whose supplemental segments share public ids.
 fn origins(server: &Server, conn: Connection) -> Result<Vec<Connection>, Error> {
@@ -178,7 +171,13 @@ fn scope(
             "SELECT DISTINCT t.id, t.pid FROM segment s JOIN tbl t ON t.id = s.table_id
              WHERE s.variable_id = ? ORDER BY t.pid",
         ),
-        kind => return Err(invalid_ref(value, kind, operation)),
+        kind => {
+            return Err(refs::wrong_kind(
+                value,
+                kind,
+                &format!("which {operation} does not take"),
+            ));
+        }
     };
     // The narrowing table may be the steward's own: the first origin naming it wins,
     // and the ref's origin's error stands when none does.
@@ -404,13 +403,8 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let request = super::days(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
     // The cursor is checked before the ref: a cursor from another generation is stale
     // whatever its ref now resolves to.
-    let context = cursor::context(params);
-    let (offset, after) = match params.get("cursor") {
-        Some(token) => {
-            let (offset, text) =
-                cursor::decode(token, server.catalog.generation(), &context, usize::MAX)?;
-            (offset, Some(position(&text)?))
-        }
+    let (offset, after) = match cursor::start(server, params, "cursor", "", usize::MAX)? {
+        Some((offset, text)) => (offset, Some(position(&text)?)),
         None => (0, None),
     };
     let conn = server.catalog.connect_for_ref(params["ref"])?;
@@ -443,9 +437,10 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         .take(limit + 1)
         .collect();
     let next_cursor = cursor::next(&mut rest, limit, |last| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &context,
+        Some(cursor::token(
+            server,
+            params,
+            "",
             offset + limit,
             &format!(
                 "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",

@@ -105,9 +105,10 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
              WHERE s.variable_id = ? ORDER BY t.pid",
         ),
         kind => {
-            return Err(Error::invalid_ref(
+            return Err(refs::wrong_kind(
                 value,
-                format!("{value:?} is a {kind}, which coverage does not take."),
+                kind,
+                "which coverage does not take",
             ));
         }
     };
@@ -184,9 +185,10 @@ fn held(
         "table" => "m.table_pid = ?1",
         "register" => "(m.table_pid = ?1 OR substr(m.table_pid, 1, length(?1) + 1) = ?1 || '/')",
         kind => {
-            return Err(Error::invalid_ref(
+            return Err(refs::wrong_kind(
                 &hit.pid,
-                format!("{:?} is a {kind}, which coverage does not take.", hit.pid),
+                kind,
+                "which coverage does not take",
             ));
         }
     };
@@ -227,13 +229,7 @@ fn held(
             releases: vec![],
         });
     }
-    let (start, end) = hull.ok_or_else(|| {
-        Error::new(
-            crate::Code::NotFound,
-            format!("Nothing is named {:?}.", hit.pid),
-            vec![hit.pid.clone().into()],
-        )
-    })?;
+    let (start, end) = hull.ok_or_else(|| Error::not_found(&hit.pid))?;
     Ok(serde_json::to_value(Coverage {
         fqid: hit.pid,
         kind: hit.kind,

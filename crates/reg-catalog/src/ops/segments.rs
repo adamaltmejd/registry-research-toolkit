@@ -53,7 +53,7 @@ pub struct SegmentPage {
 /// with one form and one provider wording. A fact the catalog does not state is left
 /// out, never `null`: no type, no value set, `coded` unknown, and `state` clear (the
 /// default).
-#[derive(Clone, Serialize, ToSchema)]
+#[derive(Clone, Default, Serialize, ToSchema)]
 pub struct Segment {
     /// The variable's fqid.
     variable: String,
@@ -176,26 +176,12 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             (variable_pids(server, named)?, Some(pid))
         }
         (kind, true) => {
-            return Err(Error::invalid_ref(
-                given,
-                format!("{given:?} is a {kind}, not a variable."),
-            ));
+            return Err(refs::wrong_kind(given, kind, "not a variable"));
         }
     };
     let evidence = flag(params, "evidence")?;
     let limit = limit(params)?;
-    let offset = match params.get("cursor") {
-        Some(&token) => {
-            cursor::decode(
-                token,
-                server.catalog.generation(),
-                &cursor::context(params),
-                usize::MAX,
-            )?
-            .0
-        }
-        None => 0,
-    };
+    let offset = cursor::start(server, params, "cursor", "", usize::MAX)?.map_or(0, |(o, _)| o);
     // simplify: the whole list is built, then paged; a variable has tens of rows and
     // a table read at most 200 variables' rows in one table. Page in SQL again if a
     // list reaches thousands.
@@ -220,12 +206,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     sort(&mut rows);
     let mut page: Vec<Row> = rows.into_iter().skip(offset).take(limit + 1).collect();
     let next_cursor = cursor::next(&mut page, limit, |_| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &cursor::context(params),
-            offset + limit,
-            "",
-        ))
+        Some(cursor::token(server, params, "", offset + limit, ""))
     });
     let items = served(server, &origins, page, evidence)?;
     Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
@@ -260,14 +241,8 @@ fn variable_pids(server: &Server, values: &[&str]) -> Result<Vec<String>, Error>
     let mut pids = values
         .iter()
         .map(|&value| {
-            let hit = refs::resolve(&server.catalog.connect_for_ref(value)?, value)?;
-            if hit.kind != "variable" {
-                return Err(Error::invalid_ref(
-                    value,
-                    format!("{value:?} is a {}, not a variable.", hit.kind),
-                ));
-            }
-            Ok(hit.pid)
+            let conn = server.catalog.connect_for_ref(value)?;
+            Ok(refs::expect(&conn, value, &["variable"], "not a variable")?.pid)
         })
         .collect::<Result<Vec<_>, Error>>()?;
     pids.sort_unstable();
@@ -457,30 +432,21 @@ fn segment_rows(
                 valueset_id: row.get(8)?,
                 start: row.get(2)?,
                 end: row.get(3)?,
+                // `variable` is set by `listed`, which has the pid; `table_name` per page
+                // in `segments`, after paging.
                 segment: Segment {
-                    // Set by `listed`, which has the pid.
-                    variable: String::new(),
                     table: row.get(1)?,
-                    // Named per page in `segments`, after paging.
-                    table_name: String::new(),
                     column: row.get(4)?,
-                    period: Period {
-                        start: None,
-                        end: None,
-                    },
-                    file: None,
-                    wording: None,
                     dtype: row.get(5)?,
                     length: row.get(6)?,
                     format: row.get(7)?,
-                    value_set: None,
                     classification: row.get(9)?,
                     coded: stated(row.get(10)?, "unknown"),
                     sensitive: row.get(11)?,
                     identifier: row.get(12)?,
                     role: row.get(13)?,
                     state: stated(row.get(14)?, "clear"),
-                    evidence: None,
+                    ..Segment::default()
                 },
             })
         },
@@ -576,27 +542,10 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
         start,
         end,
         segment: Segment {
-            variable: String::new(),
             table: table.to_owned(),
-            table_name: String::new(),
             column: column.to_owned(),
-            period: Period {
-                start: None,
-                end: None,
-            },
-            file: None,
-            wording: None,
-            dtype: None,
-            length: None,
-            format: None,
-            value_set: None,
-            classification: None,
-            coded: None,
-            sensitive: None,
-            identifier: None,
             role: role.to_owned(),
-            state: None,
-            evidence: None,
+            ..Segment::default()
         },
     }
 }

@@ -68,7 +68,7 @@ export function CatalogNodeView({
   const { node, focus } = resource.data;
   switch (node.kind) {
     case "provider":
-      return <ProviderView node={node} />;
+      return <ProviderView node={node} context={context} />;
     case "register":
       return <RegisterView key={node.fqid} node={node} context={context} />;
     case "table":

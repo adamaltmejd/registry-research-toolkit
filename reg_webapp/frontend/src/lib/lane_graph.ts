@@ -343,24 +343,59 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         x: x(year),
         inWindow: inWindow(year),
       }));
-  // The joined label's run: an axis year keeps clear of all of it, not only
-  // of the bound it hangs from (about 7 px per mono character).
-  const joinedTick = joined ? boundTicks[0] : null;
-  const reach =
-    joinedTick?.label === undefined
-      ? null
-      : joinedTick.anchor === "end"
-        ? [joinedTick.x - joinedTick.label.length * 7, joinedTick.x]
-        : [joinedTick.x, joinedTick.x + joinedTick.label.length * 7];
+  // The axis's first and last year are always labelled, on their cells
+  // (maintainer 2026-11-05). A window bound whose year would touch one hangs
+  // away from that end; where they still touch, the bound's label goes (the
+  // window's band still marks it), never the end's.
+  type Tick = LaneGeometry["ticks"][number];
+  // A label's run, anchored as LaneGraph draws it (about 7 px per mono
+  // character): a joined label's whole run, not only the bound it hangs from.
+  const run = (tick: Tick): [number, number] => {
+    const length = (tick.label ?? String(tick.year)).length * 7;
+    const anchor =
+      tick.anchor ??
+      (tick.x - trackX < 16
+        ? "start"
+        : input.width - tick.x < 16
+          ? "end"
+          : "middle");
+    return anchor === "start"
+      ? [tick.x, tick.x + length]
+      : anchor === "end"
+        ? [tick.x - length, tick.x]
+        : [tick.x - length / 2, tick.x + length / 2];
+  };
+  const touch = (one: Tick, other: Tick, gap = 4) => {
+    const [a, b] = run(one);
+    const [c, d] = run(other);
+    return b + gap > c && d + gap > a;
+  };
+  const axisEnds = [first, last].filter((year) => !bounds.includes(year));
+  // Each end's label sits on its own cell, against the track's edge: a tick's
+  // x is its cell's start, so the last year hangs back from the cell's end,
+  // not from its start, where it would read as the year before.
+  const endTicks: Tick[] = axisEnds.map((year) =>
+    year === first
+      ? { year, x: x(year), inWindow: false, anchor: "start" }
+      : { year, x: x(year + 1), inWindow: false, anchor: "end" },
+  );
+  for (const tick of boundTicks) {
+    if (tick.anchor !== undefined) continue;
+    for (const end of endTicks) {
+      if (touch(end, tick)) tick.anchor = end.year === first ? "start" : "end";
+    }
+  }
+  const shownBounds = boundTicks.filter((bound) =>
+    endTicks.every((end) => !touch(end, bound)),
+  );
+  // A regular year gives way to every labelled bound and end.
+  const fixed = [...endTicks, ...shownBounds];
   const ticks = [
     ...tickYears(input.axis, pxPerYear)
-      .filter((year) =>
-        reach
-          ? x(year) <= reach[0] - 18 || x(year) >= reach[1] + 18
-          : bounds.every((bound) => Math.abs(x(year) - x(bound)) >= 36),
-      )
-      .map((year) => ({ year, x: x(year), inWindow: false })),
-    ...boundTicks,
+      .filter((year) => year !== first && year !== last)
+      .map((year) => ({ year, x: x(year), inWindow: false }))
+      .filter((tick) => fixed.every((other) => !touch(tick, other, 8))),
+    ...fixed,
   ].sort((a, b) => a.x - b.x);
 
   const curve = (x1: number, y1: number, x2: number, y2: number) => {

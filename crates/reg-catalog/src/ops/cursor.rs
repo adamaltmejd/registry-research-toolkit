@@ -1,26 +1,70 @@
 //! Cursors: opaque, bound to the catalog generation and to the request they continue
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
-use super::Params;
+use super::{Params, Server};
 use reg_core::{hex, sha256_hex};
 
 use crate::{Code, Error};
 
-/// The cursor context of a request: every parameter but `cursor` and `limit`, sorted
-/// by name, as `name=<hex of the value>` joined by `&`. Hex, because a free-text
-/// value may hold `&` or `=`, which would let two requests share a context.
-pub(super) fn context(params: &Params) -> String {
-    params
+/// The cursor context of a request: every parameter but the cursors and `limit`, sorted
+/// by name, as `name=<hex of the value>` joined by `&`, then `extra` (what else makes
+/// the request's pages distinct: search's origin). Hex, because a free-text value may
+/// hold `&` or `=`, which would let two requests share a context.
+fn context(params: &Params, extra: &str) -> String {
+    let context = params
         .values
         .iter()
-        .filter(|(name, _)| !matches!(**name, "cursor" | "steward_cursor" | "limit"))
+        .filter(|(name, _)| **name != "limit" && !params.cursors.contains(*name))
         .flat_map(|(name, values)| {
             values
                 .iter()
                 .map(move |value| format!("{name}={}", hex(value.as_bytes())))
         })
         .collect::<Vec<_>>()
-        .join("&")
+        .join("&");
+    format!("{context}{extra}")
+}
+
+/// The offset and position of the request's cursor parameter `name` (offset 1 to
+/// `depth`), `None` on the first page.
+///
+/// # Errors
+///
+/// [`decode`]'s.
+pub(super) fn start(
+    server: &Server,
+    params: &Params,
+    name: &str,
+    extra: &str,
+    depth: usize,
+) -> Result<Option<(usize, String)>, Error> {
+    params
+        .get(name)
+        .map(|token| {
+            decode(
+                token,
+                server.catalog.generation(),
+                &context(params, extra),
+                depth,
+            )
+        })
+        .transpose()
+}
+
+/// The cursor for the page that starts at `offset` after the row at `position`.
+pub(super) fn token(
+    server: &Server,
+    params: &Params,
+    extra: &str,
+    offset: usize,
+    position: &str,
+) -> String {
+    encode(
+        server.catalog.generation(),
+        &context(params, extra),
+        offset,
+        position,
+    )
 }
 
 /// The page tail: a fetch of `take` rows plus one that came back longer than `take`
@@ -49,7 +93,7 @@ pub fn invalid(message: &str) -> Error {
 /// next page starts and the position of the row before it (last, so it may hold a
 /// `.`).
 #[must_use]
-pub fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
+fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
     hex(format!("{generation}.{}.{offset}.{position}", sha256_hex(context)).as_bytes())
 }
 
@@ -59,7 +103,7 @@ pub fn encode(generation: &str, context: &str, offset: usize, position: &str) ->
 ///
 /// `stale_cursor` for another generation's cursor; `invalid_cursor` for one that
 /// does not decode, continues another request or passes the depth.
-pub fn decode(
+fn decode(
     cursor: &str,
     generation: &str,
     context: &str,
