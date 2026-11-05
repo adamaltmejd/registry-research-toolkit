@@ -127,8 +127,8 @@ flows() {
 		run_in "$FRONTEND" bun scripts/smoke_build.ts || return 1
 	local out dev=$ROOT/reg_webapp/dev/dev.sh
 	out=$(mktemp -d "${TMPDIR:-/tmp}/gate-flows.XXXXXX") || return 1
-	run bash "$dev" --fixture-db flows "$out" </dev/null &&
-		run bash "$dev" --paired-fixture flows "$out" steward-held </dev/null || return 1
+	# PILOT: J7 (paired) returns with the full port.
+	run bash "$dev" --fixture-db flows "$out" </dev/null || return 1
 	# Kept on failure: the screenshots are the evidence.
 	rm -rf "$out"
 }

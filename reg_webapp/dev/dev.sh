@@ -259,7 +259,7 @@ fi
 # The idle timeout reaps the daemon even if this script is SIGKILLed.
 ab_session=""
 ab_socket_dir=""
-if [ "$mode" = smoke ] || [ "$mode" = shot ]; then
+if [ "$mode" = smoke ] || [ "$mode" = shot ] || [ "$mode" = flows ]; then
 	ab_session="reg-webapp-dev-$$"
 	# The daemon's sockets and pid/target files default to ~/.agent-browser, which a
 	# sandboxed agent shell cannot write (#1776). A private temp dir keeps the run off
@@ -415,8 +415,9 @@ flows)
 	# One-shot, like smoke: the driver owns the cases + their assertions, and the
 	# EXIT trap tears every server (and their process groups) down either way.
 	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
-	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../dev/driver.mjs "$out_dir" "$@")
+	# shellcheck disable=SC1091 # linted on its own by gate.sh lint
+	. "$root/reg_webapp/dev/journeys.sh" || exit 1
+	run_journeys "$@"
 	exit $?
 	;;
 shot)
