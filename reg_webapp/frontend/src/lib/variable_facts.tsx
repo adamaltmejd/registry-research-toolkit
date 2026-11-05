@@ -117,12 +117,13 @@ function segmentType(segment: CatalogSegment): ColumnType | null {
 
 /** The Type row: one pill per catalog type of the columns, with its years
  * inside only where the type changes over time (maintainer 2026-11-04); a
- * column whose type the catalog does not state adds none. */
+ * column whose type the catalog does not state adds no pill, but the stated
+ * type then carries its years, so it never reads as the whole history. */
 export function typeFact(
   segments: readonly CatalogSegment[],
   bounds: readonly [number, number],
 ): Definition[] {
-  const { groups } = groupFact(segments, (row) => {
+  const { groups, unstated } = groupFact(segments, (row) => {
     const type = segmentType(row);
     return type && { key: type, value: null };
   });
@@ -137,7 +138,7 @@ export function typeFact(
               key={type}
               type={type as ColumnType}
               years={
-                groups.length > 1
+                groups.length > 1 || unstated
                   ? columnYearRuns(group.segments, bounds)
                       .map(yearWindowLabel)
                       .join(", ")
