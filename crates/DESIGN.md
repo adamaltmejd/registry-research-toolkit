@@ -175,13 +175,17 @@ compared: an `ambiguous` segment is skipped and a gap is not a change.
   family), `char`/`text` (text), `date`/`datetime` (temporal), `boolean`, `geometry`,
   `uuid`, `binary`, `unspecified` and `identifier`. Reader config normalizes source and
   format literals before they enter the frame. `unspecified` is recognized unknown
-  evidence, not a family or a fallback for unmapped names. An unknown side never creates
-  a type-change finding. Integer/decimal, text/integer, text/decimal and transitions
-  between those families and temporal remain changes. Integer/decimal transitions
-  produce one notice per (variable, table), dated at the first such transition; its
-  message counts those transitions and names their first and last day. Other family
-  changes retain one notice per transition. A curated `set type` that removes the drift
-  leaves no type-change notice; switchers without strict evidence remain uncurated.
+  evidence, not a family or a fallback for unmapped names. The catalog publishes one
+  name per dtype: `integer`, `decimal`, `text`, `date`, `datetime`, `boolean`,
+  `geometry`, `uuid`, `binary`, `identifier`, and NULL for `unspecified`; aliases stay
+  in reader config and curation only, and `reg-build verify` refuses an alias in the
+  catalog (maintainer 2026-11-04, #2071). An unknown side never creates a type-change
+  finding. Integer/decimal, text/integer, text/decimal and transitions between those
+  families and temporal remain changes. Integer/decimal transitions produce one notice
+  per (variable, table), dated at the first such transition; its message counts those
+  transitions and names their first and last day. Other family changes retain one notice
+  per transition. A curated `set type` that removes the drift leaves no type-change
+  notice; switchers without strict evidence remain uncurated.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
   uncoded. Skip an edition-only transition only when both sides bind versions of one
   classification family, the versions differ, each observed code set is a subset of its
@@ -1166,21 +1170,21 @@ and `sun2000niva`.
        "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
        "display_name": null,
        "period": {"start": "2003-01-01", "end": "2004-01-01"},
-       "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
+       "spelling": "DispInk", "type": "integer", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
        "table": "scb/lisa/individ", "table_name": "Individer",
        "variable": "scb/lisa/dispink", "variable_name": "Disponibel inkomst",
        "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
-       "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
+       "spelling": "DispInk04", "type": "integer", "length": 8, "value_set": null,
        "classification": null},
       {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
        "table": "scb/lisa/individ", "table_name": "Individer",
        "variable": "scb/lisa/sun2000niva", "variable_name": "Utbildningsnivå",
        "display_name": null,
        "period": {"start": "2004-01-01", "end": "2007-01-01"},
-       "spelling": "Sun2000niva", "type": "char", "length": 3,
+       "spelling": "Sun2000niva", "type": "text", "length": 3,
        "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
     ],
     "row_keys": [

@@ -35,7 +35,7 @@
     "json": {
       "/data/items/*/variable": ["demo/sp/alder", "demo/sp/id", "demo/sp/kon", "demo/sp/lankod", "demo/sp/ort"],
       "/data/items/*/spelling": ["Alder", "Id", "Kon", "Lan", "Ort"],
-      "/data/items/*/type": ["int", "char", "char", "char", "char"],
+      "/data/items/*/type": ["integer", "text", "text", "text", "text"],
       "/data/items/*/period": [
         {"start": "2017-01-01", "end": "2018-01-01"},
         {"start": "2017-01-01", "end": "2018-01-01"},
