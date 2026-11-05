@@ -58,3 +58,11 @@
   font-family: var(--font-mono);
   white-space: nowrap;
 }
+
+/* A lone version's years, as a version line's. */
+.single {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}

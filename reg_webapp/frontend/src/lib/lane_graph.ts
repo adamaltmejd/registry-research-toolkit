@@ -224,7 +224,11 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         };
       });
       const room = Math.max(...segments.map((segment) => segment.width));
-      const need = labelWidth(span.name);
+      // A span with no name (a classification version, named in its tooltip)
+      // needs no label room and may touch its neighbour: a yearly series
+      // stays on one row.
+      const need = span.name ? labelWidth(span.name) : 0;
+      const packGap = span.name ? PACK_GAP : 0;
       // Beside the span first, then in a gap between its deliveries; where no
       // room is free the name sits over the bars at the track's end, uncut.
       const gaps = segments.slice(0, -1).map((segment, i) => ({
@@ -249,7 +253,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         left + width,
         label === "inside" ? left : left + labelX + need,
       );
-      let row = rowEnds.findIndex((rowEnd) => rowEnd + PACK_GAP <= start);
+      let row = rowEnds.findIndex((rowEnd) => rowEnd + packGap <= start);
       if (row < 0) {
         row = rowEnds.length;
         rowEnds.push(end);

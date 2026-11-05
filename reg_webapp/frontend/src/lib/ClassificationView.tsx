@@ -56,37 +56,22 @@ export function ClassificationView({
     study,
     bounds,
   );
-  const parts = new Set(versions.map((v) => v.part ?? ""));
-  const successors = new Map<string, Version[]>();
-  for (const v of versions)
-    for (const older of v.succeeds)
-      successors.set(older, [...(successors.get(older) ?? []), v]);
-  const lanes: LaneModel[] = versions.map((v) => ({
-    id: v.fqid,
-    name: v.name,
-    // A classification with parts says which each version belongs to; the
-    // name alone often does too, but not always (SUN 1996).
-    sub: parts.size > 1 && v.part ? { text: v.part } : null,
-    wrap: true,
-    current: v.fqid === picked,
-    relations: [
-      ...v.succeeds.flatMap((older) => {
-        const name = byFqid.get(older)?.name;
-        return name ? [`Continues ${name}`] : [];
-      }),
-      ...(successors.get(v.fqid) ?? []).map(
-        (newer) => `Succeeded by ${newer.name}`,
-      ),
-    ],
-  }));
+  // One lane per part, named by it; a classification without parts is one
+  // lane under its own name (the approved plan). Succession within a part
+  // reads as order along its lane; only a version split across parts (SUN
+  // 1996) draws arrows.
+  const laneOf = (v: Version) => v.part ?? node.name;
   const spans: LaneSpanModel[] = versions.flatMap((v) =>
+    // A version that starts after the axis ends (ICD-11) has no span; it
+    // stays in the version picker.
     columnYearRuns([v], bounds, axis[0]).map((run) => {
       const years = catalogPeriodLabel(v.period);
       return {
         id: v.fqid,
-        lane: v.fqid,
-        // The lane's name column names the version; the span is its years.
+        lane: laneOf(v),
+        // No column name: the version is named in the tooltip, in the UI face.
         name: "",
+        label: v.name,
         from: run.from,
         to: run.to,
         years,
@@ -96,16 +81,36 @@ export function ClassificationView({
       };
     }),
   );
-  const edges = versions.flatMap((v) =>
-    v.succeeds
-      .filter((older) => byFqid.has(older))
-      .map((older) => ({
-        id: `${older}>${v.fqid}`,
-        from: older,
-        to: v.fqid,
-        kind: "succession" as const,
-      })),
+  const drawn = new Set(spans.map((span) => span.id));
+  const crossings = versions.flatMap((v) =>
+    v.succeeds.flatMap((older) => {
+      const from = byFqid.get(older);
+      return from &&
+        drawn.has(older) &&
+        drawn.has(v.fqid) &&
+        laneOf(from) !== laneOf(v)
+        ? [{ from, to: v }]
+        : [];
+    }),
   );
+  const edges = crossings.map(({ from, to }) => ({
+    id: `${from.fqid}>${to.fqid}`,
+    from: from.fqid,
+    to: to.fqid,
+    kind: "succession" as const,
+  }));
+  const pickedLane = version ? laneOf(version) : null;
+  const lanes: LaneModel[] = [...new Set(versions.map(laneOf))].map((lane) => ({
+    id: lane,
+    name: lane,
+    wrap: true,
+    current: lane === pickedLane,
+    relations: crossings.flatMap(({ from, to }) =>
+      laneOf(to) === lane ? [`${to.name} continues ${from.name}`] : [],
+    ),
+  }));
+  const focused = focus ? byFqid.get(focus) : undefined;
+  const focusLane = focused ? laneOf(focused) : null;
   return (
     <article className={styles.page}>
       <Definitions
@@ -128,7 +133,7 @@ export function ClassificationView({
           edges={edges}
           axis={axis}
           window={study ? [study.from, study.to] : null}
-          focus={focus}
+          focus={focusLane}
         />
       </Panel>
       {version && (
@@ -171,9 +176,7 @@ export function ClassificationView({
 }
 
 /** The versions part by part, each part where its first version starts, and
- * by start within a part: a part's succession reads down its lanes, and an
- * arrow crosses parts only where a version is split (SUN 1996 into its
- * three parts). */
+ * by start within a part: the lanes' order and the version picker's. */
 function laneOrder(versions: readonly Version[]): Version[] {
   const parts = [...new Set(versions.map((version) => version.part ?? ""))];
   return parts.flatMap((part) =>

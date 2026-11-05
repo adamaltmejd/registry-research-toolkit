@@ -44,8 +44,16 @@ export function ClassificationsView({ node }: { node: ClassFamiliesShow }) {
 }
 
 /** A classification's versions in start order, grouped under its parts (in
- * the order each part first starts) when it has more than one. */
+ * the order each part first starts) when it has more than one; a lone version is only its years. */
 function Versions({ family }: { family: ClassFamilyRef }) {
+  // One version: its name would repeat the classification's, so only its
+  // years.
+  if (family.versions.length === 1)
+    return (
+      <p className={listStyles.single}>
+        {catalogPeriodLabel(family.versions[0].period)}
+      </p>
+    );
   const parts = [
     ...new Set(family.versions.map((version) => version.part ?? "")),
   ];

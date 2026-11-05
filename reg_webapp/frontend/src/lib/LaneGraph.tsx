@@ -42,8 +42,8 @@ export interface LaneModel {
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
   /** The name and its line wrap and the lane grows to hold them, as with a
-   * `detail`: where long names share their first words (a classification's
-   * versions). */
+   * `detail`: a long name rather than an ellipsis (a classification's
+   * lanes, named by its parts or its own long name). */
   wrap?: boolean;
   /** Its relations as sentences, for a screen reader: the edges are drawn
    * only. */
@@ -81,6 +81,9 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** Starts with the column name, then the variable, the years and the
    * state. */
   accessibleName: string;
+  /** What a span with no column name stands for (a classification
+   * version), named in its tooltip in the UI face before its years. */
+  label?: string;
 }
 
 export interface LaneEdgeModel {
@@ -867,8 +870,8 @@ function Span({
       offset={6}
       style={{ zIndex: "var(--z-popover)" }}
     >
-      {/* A span without a column name (a classification version, named in
-          its lane) says its years alone. */}
+      {/* A span without a column name (a classification version) says its
+          label and years in the UI face. */}
       <span>
         {span.name ? (
           <>
@@ -876,7 +879,7 @@ function Span({
             {span.where && ` in ${span.where}`}, {span.years}
           </>
         ) : (
-          span.years
+          `${span.label ? `${span.label}, ` : ""}${span.years}`
         )}
       </span>
       {span.note && <span>{span.note.text}</span>}
