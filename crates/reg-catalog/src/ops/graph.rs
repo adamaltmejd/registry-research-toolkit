@@ -8,7 +8,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 
 use super::{Cache, Operation, Param, Params, Period, Server, Type, component, refs};
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 /// `relation.kind`.
 const KINDS: &[&str] = &["continues", "derived_from", "label_of"];
@@ -104,16 +104,15 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
         // simplify: classification graphs (versions and their correspondences) are not
         // served; serve them when a reader needs version correspondences.
         "class_family" | "class_version" => {
-            return Err(Error::new(
-                Code::InternalError,
-                format!("{value:?}: classification graphs are not served yet."),
-                vec![],
-            ));
+            return Err(Error::internal(format!(
+                "{value:?}: classification graphs are not served yet."
+            )));
         }
         other => {
-            return Err(Error::invalid_ref(
+            return Err(refs::wrong_kind(
                 value,
-                format!("{value:?} is a {other}, not a variable, a table or a register."),
+                other,
+                "not a variable, a table or a register",
             ));
         }
     }

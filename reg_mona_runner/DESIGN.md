@@ -29,9 +29,8 @@ the orders. Run steps are in [README.md](README.md).
   helper (`reg_export_gate/DESIGN.md`, "The R file"), since each file is uploaded alone.
 - **One configuration block.** The steward id, the export root and the connection (DSN
   `P1105`) sit at the top of the script, so another steward copies the file and edits
-  that block. Two environment variables (`SWECOV_EXTRACT_BASE` and
-  `SWECOV_EXTRACT_CONNECTION`) override the root and the connection; they exist for the
-  tests and are unset on MONA.
+  that block. One environment variable, `SWECOV_EXTRACT_BASE`, overrides the root; it
+  exists for the tests and is unset on MONA.
 - **No dry run** (maintainer, 2026-10-21). A rerun overwrites the order's export folder
   and archive copy, so a run is cheap to repeat.
 - **Source or Rscript.** Under `source()` in an interactive session the script reports
@@ -44,12 +43,15 @@ Every `<base>/orders/*.json` runs independently, in name order; the file stem is
 project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared first:
 
 1. Parse and check the whole manifest before touching the database: version, then mode
-   and steward, then shape. Each object is closed, so an unknown field anywhere is a
-   refusal. A field the order file writes as null is required and may be null (a
-   timeless file's `delivery`, a storage `length`); a field it omits when empty is
-   optional. `extract_format` is required: the runner has no default format. A column
-   without an expected storage `type` is refused, since the storage check below needs
-   one.
+   and steward, then shape. The manifest, its provenance and every object the runner
+   reads (files, columns, storage, row filters) are closed, so an unknown field there is
+   a refusal. What the runner does not read (clips, findings, a column's `role`, `refs`
+   and `slot`, the provenance ids) is only required by name: order files come from the
+   catalog's writer, not by hand (maintainer, Q8, 2026-11-04). A field the order file
+   writes as null is required and may be null (a timeless file's `delivery`, a storage
+   `length`); a field it omits when empty is optional. `extract_format` is required: the
+   runner has no default format. A column without an expected storage `type` is refused,
+   since the storage check below needs one.
 2. Plan the files: one per manifest file, named `<name>.<format>` (the catalog names the
    file after the physical table, [../crates/DESIGN.md](../crates/DESIGN.md), "MONA
    order file"), its columns in manifest order (ordered columns first, then held keys).

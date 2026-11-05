@@ -59,6 +59,22 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
   expect_refused(base, "900", 6L)
 })
 
+test_that("an unknown top-level field is refused (6)", {
+  # Regression: the manifest's own key set is not closed, so an order carrying a
+  # section this runner does not know (a newer writer's, say) extracts as if it
+  # were absent.
+  base <- export_root(
+    text = list(
+      `900` = order_text("key-only", function(doc) {
+        doc$suppress <- list("lopnr")
+        doc
+      })
+    )
+  )
+  expect_identical(run_runner(base)$status, 6L)
+  expect_refused(base, "900", 6L)
+})
+
 test_that("a column with a null storage type is refused (6)", {
   # Regression: a null type passes as "any storage", so a drifted column is
   # extracted without the check the order promises.
