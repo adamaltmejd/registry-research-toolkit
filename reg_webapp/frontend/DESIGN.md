@@ -684,18 +684,18 @@ Time is the axis every relation is drawn on.
   period as well as the study window. Data still delivered ends at the catalog's last
   year, and data whose start is unknown begins at its first, where that data is drawn. A
   year-independent span (no start and no end, a timeless table's) begins at the axis
-  start on a lane, so its column stays pickable; a `VariableRow` has no dated years for
-  it, so it draws a bare track read as "No dated delivery." and does not count toward
-  the axis. A one-year axis widens by one step of 5, backward where forward would pass
-  the catalog's last year. A page's drawings share its one year range, so they compare
-  by year, not pixel for pixel: a `VariableRow`'s bar column, the `Timeline` and the
-  `CodeTimeline` each have their own gutters. A page with several sources draws them on
-  one range. The axis of a `LaneGraph` (the `Timeline` and source timelines), a code
-  timeline and a `VariableRow` list labels its first and last year, at every width
-  (maintainer 2026-11-05), each on its own cell against the track's edge. On a
-  `LaneGraph` a window bound whose label would touch an end's hangs away from that end,
-  and where they still touch, the bound's label is dropped (the window's band still
-  marks it); an end's label never moves or gives way.
+  start on a lane (and ends at its end, never past it), so its column stays pickable; a
+  `VariableRow` has no dated years for it, so it draws a bare track read as "No dated
+  delivery." and does not count toward the axis. A one-year axis widens by one step of
+  5, backward where forward would pass the catalog's last year. A page's drawings share
+  its one year range, so they compare by year, not pixel for pixel: a `VariableRow`'s
+  bar column, the `Timeline` and the `CodeTimeline` each have their own gutters. A page
+  with several sources draws them on one range. The axis of a `LaneGraph` (the
+  `Timeline` and source timelines), a code timeline and a `VariableRow` list labels its
+  first and last year, at every width (maintainer 2026-11-05), each on its own cell
+  against the track's edge. On a `LaneGraph` a window bound whose label would touch an
+  end's hangs away from that end, and where they still touch, the bound's label is
+  dropped (the window's band still marks it); an end's label never moves or gives way.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no
