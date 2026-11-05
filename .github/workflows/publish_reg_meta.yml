@@ -54,8 +54,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), and
-  # the export gate's `reg-export-gate`, named by the gate crate's own version
+  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), the
+  # `reg-build` binary a steward repository builds and verifies its holdings with, the
+  # SPA bundle a steward deploy serves (Linux leg only; the bundle is
+  # platform-independent), and the export gate's `reg-export-gate`, named by the gate crate's own version
   # (crates/reg-export-gate/DESIGN.md), built natively on each runner, each with a
   # `shasum -a 256 -c` checksum file. Not gated
   # on `wait-ci`: the tagged commit already passed CI on main, and gating would skip the
@@ -72,6 +74,7 @@ jobs:
             target: aarch64-apple-darwin
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            spa: true
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
@@ -81,13 +84,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          targets: ${{ matrix.spa && 'wasm32-unknown-unknown' || '' }}
       # A runner image that changes architecture must fail here, not ship a
       # mislabelled asset.
       - name: Check the host target
         run: |
           test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
       # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
-      - run: cargo build --release --locked -p reg-meta -p reg-export-gate
+      - run: cargo build --release --locked -p reg-meta -p reg-build -p reg-export-gate
       - name: Package with checksums
         run: |
           gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
@@ -95,9 +100,10 @@ jobs:
           echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
           mkdir dist
           cp target/release/reg-meta "dist/$ASSET"
+          cp target/release/reg-build "dist/reg-build-$TARGET"
           cp target/release/reg-export-gate "dist/$GATE_ASSET"
           cd dist
-          for name in "$ASSET" "$GATE_ASSET"; do
+          for name in "$ASSET" "reg-build-$TARGET" "$GATE_ASSET"; do
             shasum -a 256 "$name" > "$name.sha256"
             shasum -a 256 -c "$name.sha256"
           done
@@ -119,6 +125,45 @@ jobs:
           echo "$out"
           test "$status" -eq 10
           test "$out" = "refused: setup"
+      # A missing catalog is `verify`'s refusal (exit 1, `reg-build: <error>`).
+      - name: Smoke-test the builder binary
+        run: |
+          status=0
+          "dist/reg-build-$TARGET" verify "$RUNNER_TEMP/no-catalog.db" 2> smoke.err || status=$?
+          cat smoke.err
+          test "$status" -eq 1
+          grep -q '^reg-build: unable to open database file' smoke.err
+      # The SPA bundle, built as the SWECOV edge deploy builds it (container-build.yml,
+      # `edge-deploy-swecov`): `frontend/dist` with the wasm and the API types generated
+      # at this commit, packed as `reg-webapp-spa-<reg-meta version>.tar.zst`. The Node,
+      # bun and wasm-bindgen pins match that job.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: matrix.spa
+        with:
+          node-version: "26.12.1"
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        if: matrix.spa
+        with:
+          bun-version: "1.4.4"
+      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
+        if: matrix.spa
+        with:
+          tool: wasm-bindgen@0.2.129
+      - name: Build and pack the SPA bundle
+        if: matrix.spa
+        run: |
+          version=$(cargo pkgid -p reg-meta | sed 's/.*[#@]//')
+          spa="reg-webapp-spa-$version.tar.zst"
+          (cd reg_webapp/frontend && bun install --frozen-lockfile &&
+            bun run gen:wasm && bun run gen:types && bun run build)
+          tar -C reg_webapp/frontend/dist -cf - . | zstd -q -19 -o "dist/$spa"
+          # The bundle must hold the page and the wasm the SPA mounts with.
+          listing=$(zstd -dc "dist/$spa" | tar -tf -)
+          grep -qx './index.html' <<< "$listing"
+          grep -q '^\./assets/.*\.wasm$' <<< "$listing"
+          cd dist
+          shasum -a 256 "$spa" > "$spa.sha256"
+          shasum -a 256 -c "$spa.sha256"
       # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
       # or a gh retry after the first upload landed (HTTP 422), skips an asset that
       # exists with the same digest and fails on a different one.
@@ -128,7 +173,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
-          for name in "$ASSET" "$ASSET.sha256" "$GATE_ASSET" "$GATE_ASSET.sha256"; do
+          for path in dist/*; do
+            name=${path#dist/}
             remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
               --jq ".assets[] | select(.name == \"$name\") | .digest")
             if [ -z "$remote" ]; then
