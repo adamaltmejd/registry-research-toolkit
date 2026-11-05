@@ -156,7 +156,10 @@ jobs:
           spa="reg-webapp-spa-$version.tar.zst"
           (cd reg_webapp/frontend && bun install --frozen-lockfile &&
             bun run gen:wasm && bun run gen:types && bun run build)
-          tar -C reg_webapp/frontend/dist -cf - . | zstd -q -19 -o "dist/$spa"
+          # Normalized entries: a rerun rebuilds the same bytes, so the upload step
+          # skips the asset instead of refusing a digest mismatch.
+          tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner --format=gnu \
+            -C reg_webapp/frontend/dist -cf - . | zstd -q -19 -o "dist/$spa"
           # The bundle must hold the page and the wasm the SPA mounts with.
           listing=$(zstd -dc "dist/$spa" | tar -tf -)
           grep -qx './index.html' <<< "$listing"
