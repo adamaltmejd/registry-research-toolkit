@@ -45,6 +45,21 @@ fn texts<'a>(value: &'a Value, path: &str, out: &mut Vec<(String, &'a str)>) {
     }
 }
 
+/// Every key and string value of `value`.
+fn decoded<'a>(value: &'a Value, out: &mut Vec<&'a str>) {
+    match value {
+        Value::String(text) => out.push(text),
+        Value::Array(items) => items.iter().for_each(|item| decoded(item, out)),
+        Value::Object(fields) => {
+            for (key, item) in fields {
+                out.push(key);
+                decoded(item, out);
+            }
+        }
+        _ => {}
+    }
+}
+
 /// Refusals for one curated entry at `at`: steward tokens in its text and unresolved
 /// private evidence references.
 fn entry(at: &str, value: &Value, keys: Option<&BTreeSet<String>>, out: &mut Vec<String>) {
@@ -123,12 +138,27 @@ pub(crate) fn curation(
             &mut out,
         );
     }
-    // Files with no source names: every line, comments included, is public text.
+    // Files with no source names: every decoded key and value is public text, and so is
+    // every raw line, for the comments. The raw scan alone misses escapes (`\nSWECOV`).
     for file in ["inputs.toml", "tag-vocabulary.toml", "retired.toml"] {
         let path = curation.join(file);
         let Ok(text) = std::fs::read_to_string(&path) else {
             continue;
         };
+        // The loaders that read these files refuse invalid TOML first.
+        if let Ok(table) = toml::from_str::<toml::Table>(&text) {
+            let value = serde_json::to_value(&table)?;
+            let mut strings = Vec::new();
+            decoded(&value, &mut strings);
+            for text in strings {
+                if let Some(name) = reg_readers::private_evidence::steward_name(text) {
+                    out.push(format!(
+                        "{}: steward-name: {text:?} names a steward ({name}); reword it without the steward",
+                        path.display()
+                    ));
+                }
+            }
+        }
         for (n, line) in text.lines().enumerate() {
             if let Some(name) = reg_readers::private_evidence::steward_name(line) {
                 out.push(format!(

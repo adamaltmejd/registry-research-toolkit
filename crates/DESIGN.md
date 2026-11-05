@@ -567,10 +567,11 @@ are no patterns. Source names are not curated text and are not checked: `subject
 `object`, a statement's own `spelling` field, and a classification's `value_set`
 locator, each at its exact field path (a facet axis named `spelling` is still checked).
 A delivered spelling stays as the source delivers it. `inputs.toml`,
-`tag-vocabulary.toml` and `retired.toml` hold no source names, so every line of them is
-checked, comments included. A steward holdings build (`reg-build holdings`, which passes
-a base) checks none of this: its curation is the steward's own. The ruling applies from
-the change forward. Git history and earlier release assets are left unchanged.
+`tag-vocabulary.toml` and `retired.toml` hold no source names, so every decoded key and
+value of them is checked, and every raw line too, for the comments. A steward holdings
+build (`reg-build holdings`, which passes a base) checks none of this: its curation is
+the steward's own. The ruling applies from the change forward. Git history and earlier
+release assets are left unchanged.
 
 **Value sets, populations and series.**
 
