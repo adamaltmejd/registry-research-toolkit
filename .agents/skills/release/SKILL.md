@@ -24,8 +24,8 @@ draft or tag already exists, follow Error recovery first.
   | reg_meta | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`) | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
-`reg_meta_swecov.db.zst` (step 8), and the `reg-meta` and `reg-export-gate` binaries
-(step 10; the gate's is named by its own crate version).
+`reg_meta_swecov.db.zst` (step 8), the `reg-meta`, `reg-build` and `reg-export-gate`
+binaries and the SPA bundle (step 10; the gate's is named by its own crate version).
 
 ## Validation
 
@@ -298,10 +298,11 @@ record each step: `echo "8b $base_sha" >> "$evidence/passed"`,
 #### 8d. Compile the holdings
 
 The pin is the steward checkout itself: a fresh clone of swecov-steward at `main`. The
-compiler records its `origin` URL, `HEAD` commit and `--config` path in the pair, and
-refuses a dirty tree, untracked files included, with `holdings_pin_invalid`. Never edit
-the steward checkout. The steward's re-lock against this release's base lands on
-swecov-steward `main` in a reviewed PR before the bump, not during the release.
+compiler records its `origin` (canonical `host/owner/repo`), `HEAD` commit and
+`--config` path in the pair, and refuses a dirty tree, untracked files included, with
+`holdings_pin_invalid`. Never edit the steward checkout. The steward's re-lock against
+this release's base lands on swecov-steward `main` in a reviewed PR before the bump, not
+during the release.
 
 ```sh
 git clone git@github.com:adamaltmejd/swecov-steward.git "$steward"
@@ -477,20 +478,23 @@ Re-validate a transient failure with `gh workflow run integration.yml --ref main
 Every release redeploys SWECOV with global.
 
 **Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin`,
-`x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>` and
-`reg-export-gate-<gate version>-<target>` (Windows assets end in `.exe`), each with a
-`.sha256`. Confirm all twelve:
+`x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>`,
+`reg-build-<target>` and `reg-export-gate-<gate version>-<target>` (Windows assets end
+in `.exe`), and from the Linux leg the SPA bundle `reg-webapp-spa-X.Y.Z.tar.zst`, each
+with a `.sha256`. A steward repository downloads `reg-build` and the SPA bundle at its
+pinned tag. Confirm all twenty:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |
-  grep -E '^reg-(meta|export-gate)-'
+  grep -E '^reg-(meta|build|export-gate|webapp-spa)-'
 ```
 
 If one failed, fix the cause on main and upload by hand from the release commit:
-`cargo build --release --locked -p reg-meta -p reg-export-gate`, copy to
-`reg-meta-<target>` and `reg-export-gate-<gate version>-<target>` (the version from
-`cargo pkgid -p reg-export-gate`), `shasum -a 256 <asset> > <asset>.sha256` for each,
-then `gh release upload reg_meta/vX.Y.Z <asset> <asset>.sha256`.
+`cargo build --release --locked -p reg-meta -p reg-build -p reg-export-gate`, copy to
+`reg-meta-<target>`, `reg-build-<target>` and `reg-export-gate-<gate version>-<target>`
+(the version from `cargo pkgid -p reg-export-gate`),
+`shasum -a 256 <asset> > <asset>.sha256` for each, then
+`gh release upload reg_meta/vX.Y.Z <asset> <asset>.sha256`.
 `gh workflow run publish_reg_meta.yml --ref <branch>` tests the job without a release.
 
 ### 11. Verify the deployed artifact

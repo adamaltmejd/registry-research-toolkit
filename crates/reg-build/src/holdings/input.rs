@@ -167,10 +167,53 @@ fn git(root: &Path, args: &[&str]) -> Result<String> {
 /// The pin of the checkout at `root` as it stands; `admit` then refuses a dirty tree.
 pub(super) fn checkout(root: &Path, config: &str) -> Result<Pin> {
     Ok(Pin {
-        repo: git(root, &["remote", "get-url", "origin"])?,
+        repo: canonical_remote(&git(root, &["remote", "get-url", "origin"])?)?,
         commit: git(root, &["rev-parse", "HEAD"])?,
         config: config.to_owned(),
     })
+}
+
+/// A remote URL's canonical form, `<host>/<owner>/<repo>` lower-cased, so an HTTPS
+/// clone (steward CI) and an SSH clone (a local build) pin the same repository. Scheme,
+/// user, port, a trailing `.git` and `/` are dropped. Anything that is not a
+/// recognisable `host/owner/repo` remote (a local path, a bare name, a deeper path) is
+/// refused: the pin must name the steward repository.
+fn canonical_remote(url: &str) -> Result<String> {
+    // The URL is not echoed: an HTTPS origin can carry a token.
+    let refuse = || -> crate::error::Error {
+        "holdings_pin_invalid: origin is not a host/owner/repo remote".into()
+    };
+    let (host, path) = if let Some(rest) = ["https://", "http://", "ssh://", "git://"]
+        .iter()
+        .find_map(|scheme| url.strip_prefix(scheme))
+    {
+        rest.split_once('/').ok_or_else(refuse)?
+    } else if let Some((host, path)) = url.split_once(':') {
+        // scp-like `git@host:owner/repo`; a `/` before the `:` makes it a path.
+        if host.contains('/') {
+            return Err(refuse());
+        }
+        (host, path)
+    } else {
+        return Err(refuse());
+    };
+    let host = host.rsplit('@').next().unwrap_or(host);
+    let host = host.split(':').next().unwrap_or(host);
+    let path = path.trim_end_matches('/');
+    let path = path.strip_suffix(".git").unwrap_or(path);
+    let name = |s: &str| {
+        !s.is_empty()
+            && s.bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b"-_.".contains(&b))
+            && !s.starts_with('.')
+    };
+    let host_ok = name(host) && host.contains('.');
+    match path.split('/').collect::<Vec<_>>()[..] {
+        [owner, repo] if host_ok && name(owner) && name(repo) => {
+            Ok(format!("{host}/{owner}/{repo}").to_ascii_lowercase())
+        }
+        _ => Err(refuse()),
+    }
 }
 
 #[allow(clippy::too_many_lines)]
@@ -178,7 +221,7 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
     if pin.commit.len() != 40
         || !pin.commit.bytes().all(|b| b.is_ascii_hexdigit())
         || git(root, &["rev-parse", "HEAD"])? != pin.commit
-        || git(root, &["remote", "get-url", "origin"])? != pin.repo
+        || canonical_remote(&git(root, &["remote", "get-url", "origin"])?)? != pin.repo
         || !git(root, &["status", "--porcelain", "--untracked-files=all"])?.is_empty()
     {
         return Err("holdings_pin_invalid: checkout must match the exact clean steward pin".into());

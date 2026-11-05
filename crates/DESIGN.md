@@ -129,16 +129,18 @@ digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for ma
 arm64, Linux x86_64 and Windows x86_64 (`.exe`) with SHA-256 checksums, the export
 gate's `reg-export-gate` binaries for the same targets (named by the gate crate's own
 version, `reg-export-gate-<version>-<target>`; the Linux build links the runner's glibc,
-so it needs an Ubuntu 24.04-era distribution or newer on the data VM), and two DB
-assets, `reg_meta.db.zst` (documents included) and the paired `reg_meta_swecov.db.zst`,
-built in the same run (the holdings pin the base's `catalog_sha256`). There is no
-separate docs asset. The `reg-meta` binaries serve local HTTP or MCP; the catalog is
-downloaded with `curl` and `zstd`. There is no PyPI package and no `fetch` run mode.
-Windows agents use hosted MCP; a local Windows binary is added only if it builds and
-runs without special effort. The `microdata-tools-se` plugin declares one hosted MCP
-server whose URL is a user setting: the global catalog by default, a hosted steward
-catalog (`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the
-agent's MCP configuration by hand.
+so it needs an Ubuntu 24.04-era distribution or newer on the data VM), `reg-build`
+binaries for the same targets and the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the
+built `reg_webapp/frontend/dist`), which a steward repository downloads at its pinned
+tag to build, verify and deploy its holdings, and two DB assets, `reg_meta.db.zst`
+(documents included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the
+holdings pin the base's `catalog_sha256`). There is no separate docs asset. The
+`reg-meta` binaries serve local HTTP or MCP; the catalog is downloaded with `curl` and
+`zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use hosted MCP;
+a local Windows binary is added only if it builds and runs without special effort. The
+`microdata-tools-se` plugin declares one hosted MCP server whose URL is a user setting:
+the global catalog by default, a hosted steward catalog (`https://data.swecov.se/mcp`)
+instead. A local `reg-meta mcp` is added to the agent's MCP configuration by hand.
 
 ## The catalog builder
 
@@ -1334,11 +1336,13 @@ public metadata definitions do not authorize publishing private source files.
 The toolkit contains only generic compilation and serving code; it pins no steward. The
 steward repository pins a `reg_meta` release instead and builds its holdings from its
 own checkout (maintainer 2026-11-04): `reg-build holdings` records the checkout's
-`origin` URL, `HEAD` commit and the `--config` path as the steward pin, and refuses a
-dirty tree, untracked files included. The dedicated repo's `steward.toml` declares owner
-id, scope, presentation paths, reader/input roles and semantic curation root. Use
-`scope.toml`, `branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers
-and statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+`origin` as `<host>/<owner>/<repo>` (scheme, user, port and `.git` dropped, lower-cased,
+so HTTPS and SSH clones pin alike; a local path or bare name is refused), its `HEAD`
+commit and the `--config` path as the steward pin, and refuses a dirty tree, untracked
+files included. The dedicated repo's `steward.toml` declares owner id, scope,
+presentation paths, reader/input roles and semantic curation root. Use `scope.toml`,
+`branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers and
+statements, including slots), `curation/readers/`, and `inputs/` (census, storage
 export, provider source TOML/converted transcription CSV, inventory and legacy slug
 evidence). Pin selected delivery-document evidence there too, retaining originals
 privately. Reuse the catalog input-pin discipline: verify the declared paths/hashes in
