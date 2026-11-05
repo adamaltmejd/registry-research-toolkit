@@ -643,10 +643,12 @@ Time is the axis every relation is drawn on.
   span with no start at all (year-independent) begins at the axis start. A one-year axis
   widens by one step of 5, backward where forward would pass the catalog's last year. A
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
-  `Timeline`, and a page with several sources draws them on one axis. Every drawn axis
-  labels its first and last year (maintainer 2026-11-05). On a `LaneGraph` a window
-  bound whose label would touch an end's label hangs away from that end; where they
-  still touch, the bound's year stands for that end.
+  `Timeline`, and a page with several sources draws them on one axis. The axis of a
+  `LaneGraph` (the `Timeline` and source timelines), a code timeline and a `VariableRow`
+  list labels its first and last year (maintainer 2026-11-05). On a `LaneGraph` a window
+  bound whose label would touch an end's hangs away from that end; the last year then
+  moves from its cell's start to the track's end, and where they still touch, the
+  bound's year stands for that end.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no

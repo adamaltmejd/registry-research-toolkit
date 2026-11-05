@@ -371,22 +371,30 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     return b + gap > c && d + gap > a;
   };
   const axisEnds = [first, last].filter((year) => !bounds.includes(year));
-  // The first year hangs right from the track's start, the last left from its
-  // end (the end of that year's cell), as on a VariableRow list's axis.
-  const endTicks: Tick[] = axisEnds.map((year) =>
-    year === first
-      ? { year, x: x(year), inWindow: false, anchor: "start" }
-      : { year, x: x(year + 1), inWindow: false, anchor: "end" },
-  );
+  const endTicks: Tick[] = axisEnds.map((year) => ({
+    year,
+    x: x(year),
+    inWindow: false,
+  }));
   for (const tick of boundTicks) {
     if (tick.anchor !== undefined) continue;
     for (const end of endTicks) {
       if (touch(end, tick)) tick.anchor = end.year === first ? "start" : "end";
     }
   }
-  const shownEnds = endTicks.filter((end) =>
-    boundTicks.every((bound) => !touch(end, bound)),
-  );
+  // The last year sits on its cell like every year; where a bound still
+  // touches it there, it hangs left from the track's end (its cell's end).
+  const shownEnds = endTicks.flatMap((end) => {
+    const clear = (tick: Tick) =>
+      boundTicks.every((bound) => !touch(tick, bound));
+    if (clear(end)) return [end];
+    const atTrackEnd: Tick = {
+      ...end,
+      x: trackX + trackWidth,
+      anchor: "end",
+    };
+    return end.year === last && clear(atTrackEnd) ? [atTrackEnd] : [];
+  });
   // A regular year gives way to every labelled bound and end.
   const fixed = [...shownEnds, ...boundTicks];
   const ticks = [
