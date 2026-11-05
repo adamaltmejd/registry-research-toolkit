@@ -88,6 +88,10 @@ pub struct Segment {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
     classification: Option<String>,
+    /// The classification version's name.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    classification_name: Option<String>,
     /// `yes` or `no`.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
@@ -149,6 +153,12 @@ pub struct Override {
 pub struct StatementLocation {
     pub(super) file: String,
     pub(super) line: i64,
+}
+
+impl Segment {
+    pub(super) fn classification(&self) -> Option<&str> {
+        self.classification.as_deref()
+    }
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -279,7 +289,12 @@ fn served(
     rows: Vec<Row>,
     evidence: bool,
 ) -> Result<Vec<Segment>, Error> {
-    let names = refs::names(server, rows.iter().map(|row| row.segment.table.as_str()))?;
+    let names = refs::names(
+        server,
+        rows.iter().flat_map(|row| {
+            std::iter::once(row.segment.table.as_str()).chain(row.segment.classification.as_deref())
+        }),
+    )?;
     let mut items = Vec::with_capacity(rows.len());
     for Row {
         id,
@@ -292,6 +307,11 @@ fn served(
     {
         let conn = &origins[origin];
         segment.table_name = names.of(refs::Named::Table, &segment.table)?;
+        segment.classification_name = segment
+            .classification
+            .as_deref()
+            .map(|c| names.of(refs::Named::ClassVersion, c))
+            .transpose()?;
         segment.period = server.period(start, end);
         segment.value_set = valueset_id
             .map(|valueset| shape::value_set_ref(conn, valueset))

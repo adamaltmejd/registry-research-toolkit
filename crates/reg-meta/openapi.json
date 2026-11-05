@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -4209,6 +4209,10 @@
             "type": "string",
             "description": "A classification version's ref."
           },
+          "classification_name": {
+            "type": "string",
+            "description": "The classification version's name."
+          },
           "coded": {
             "type": "string",
             "description": "`yes` or `no`."
@@ -4437,6 +4441,7 @@
               "cadence",
               "spans",
               "row_keys",
+              "variables",
               "kind"
             ],
             "properties": {
@@ -4495,6 +4500,13 @@
               },
               "timeless": {
                 "type": "boolean"
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowTableVariable"
+                },
+                "description": "The variables in this table, each over the years it has here."
               }
             }
           },
@@ -4602,9 +4614,146 @@
                 }
               }
             }
+          },
+          {
+            "type": "object",
+            "description": "A classification. Classifications are shared, so every version is listed; on a\ndata holder's catalog only the holder's variables are.",
+            "required": [
+              "fqid",
+              "name",
+              "versions",
+              "variables",
+              "kind"
+            ],
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "class_family"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowClassUser"
+                }
+              },
+              "versions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowClassVersion"
+                },
+                "description": "In start order."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "period",
+              "value_set",
+              "family",
+              "variables",
+              "kind"
+            ],
+            "properties": {
+              "family": {
+                "$ref": "#/components/schemas/ShowMembership"
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "class_version"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period",
+                "description": "The version's validity."
+              },
+              "value_set": {
+                "$ref": "#/components/schemas/ValueSetRef"
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowClassUser"
+                },
+                "description": "The variables that use this version."
+              }
+            }
           }
         ],
         "description": "A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back."
+      },
+      "ShowClassUser": {
+        "type": "object",
+        "description": "A variable that uses the classification, with its rows that carry it.",
+        "required": [
+          "fqid",
+          "name",
+          "segments"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "description": "Its rows, as `segments` serves them, whose `classification` is the family's (or\nthe version's)."
+          }
+        }
+      },
+      "ShowClassVersion": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "period",
+          "value_set",
+          "used"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "The version's validity."
+          },
+          "used": {
+            "type": "boolean",
+            "description": "Whether one of `variables` uses this version."
+          },
+          "value_set": {
+            "$ref": "#/components/schemas/ValueSetRef"
+          }
+        }
       },
       "ShowMembership": {
         "type": "object",
@@ -4861,6 +5010,26 @@
           },
           "timeless": {
             "type": "boolean"
+          }
+        }
+      },
+      "ShowTableVariable": {
+        "type": "object",
+        "description": "A variable in a table, over the years it has in that table.",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
           }
         }
       },

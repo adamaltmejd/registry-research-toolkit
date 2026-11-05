@@ -1,10 +1,17 @@
 [
   {
-    "status": 422,
-    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "class/kind"}
+    "status": 200,
+    "json": {
+      "/data/kind": "class_family",
+      "/data/versions/*/used": [true, true]
+    }
   },
   {
-    "status": 422,
-    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "class/kind/old"}
+    "status": 200,
+    "json": {
+      "/data/kind": "class_version",
+      "/data/family/fqid": "class/kind",
+      "/data/variables/*/segments/*/classification": [["class/kind/old"], ["class/kind/old"]]
+    }
   }
 ]
