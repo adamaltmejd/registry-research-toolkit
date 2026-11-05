@@ -776,11 +776,11 @@ fn table_variables(
             continue;
         }
         let days = match held.as_mut() {
-            Some(held) => held.clip(pid, &fqid, (start, end))?,
-            None => Some((start, end)),
+            Some(held) => held.clip_each(pid, &fqid, (start, end))?,
+            None => vec![(start, end)],
         };
-        if let Some(span) = days {
-            spans_of.entry(fqid).or_default().push(span);
+        if !days.is_empty() {
+            spans_of.entry(fqid).or_default().extend(days);
         }
     }
     let names = refs::names(server, spans_of.keys().map(String::as_str))?;
