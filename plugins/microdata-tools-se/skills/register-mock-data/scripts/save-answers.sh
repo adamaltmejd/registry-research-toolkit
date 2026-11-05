@@ -26,8 +26,21 @@ esac
 rm -rf "$dir/segments" "$dir/values" "$dir/order.json" "$dir/manifest.json"
 mkdir -p "$dir/segments" "$dir/values"
 
-curl -sS --fail-with-body -X POST "$base/api/project/$mode" \
-  -H 'content-type: application/json' --data @"$project" -o "$dir/$answer"
+# curl with the answer in FILE; on an error answer, its code, message and each error
+# finding go to stderr (curl --fail-with-body writes them into FILE, not the terminal).
+fetch() {
+  local out=$1
+  shift
+  if ! curl -sS --fail-with-body "$@" -o "$out"; then
+    jq -r '.error | "\(.code): \(.message)",
+      (.fields.findings[]? | select(.level == "error") | "  \(.path): \(.message)")' \
+      "$out" >&2 2>/dev/null || cat "$out" >&2
+    exit 1
+  fi
+}
+
+fetch "$dir/$answer" -X POST "$base/api/project/$mode" \
+  -H 'content-type: application/json' --data @"$project"
 
 # Every page of a GET, as PREFIX-0001.json, PREFIX-0002.json, ...
 pages() {
@@ -36,10 +49,10 @@ pages() {
     local out
     out=$(printf '%s-%04d.json' "$prefix" "$page")
     if [ -n "$cursor" ]; then
-      curl -sS --fail-with-body -G "$url" "${@:3}" --data-urlencode "limit=200" \
-        --data-urlencode "cursor=$cursor" -o "$out"
+      fetch "$out" -G "$url" "${@:3}" --data-urlencode "limit=200" \
+        --data-urlencode "cursor=$cursor"
     else
-      curl -sS --fail-with-body -G "$url" "${@:3}" --data-urlencode "limit=200" -o "$out"
+      fetch "$out" -G "$url" "${@:3}" --data-urlencode "limit=200"
     fi
     cursor=$(jq -r '.data.next_cursor // empty' "$out")
     [ -z "$cursor" ] && break
