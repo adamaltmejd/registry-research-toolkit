@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -1125,7 +1125,7 @@ export interface components {
             items: components["schemas"]["Segment"][];
             next_cursor: string | null;
         };
-        /** @description A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back. */
+        /** @description A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back. */
         Show: {
             /** @enum {string} */
             kind: "root";
@@ -1202,6 +1202,10 @@ export interface components {
             sets?: components["schemas"]["ShowMembership"][];
             tags?: components["schemas"]["ShowMembership"][];
         } | {
+            families: components["schemas"]["ShowClassFamilyRef"][];
+            /** @enum {string} */
+            kind: "class_families";
+        } | {
             description?: string;
             fqid: string;
             /** @enum {string} */
@@ -1221,6 +1225,17 @@ export interface components {
             value_set: components["schemas"]["ValueSetRef"];
             /** @description The variables that use this version. */
             variables: components["schemas"]["ShowClassUser"][];
+        };
+        ShowClassFamilyRef: {
+            fqid: string;
+            name: string;
+            /** @description From the first version's start to the last one's end. */
+            period: components["schemas"]["Period"];
+            /**
+             * Format: int32
+             * @description How many versions it has.
+             */
+            version_count: number;
         };
         /** @description A variable that uses the classification, with its rows that carry it. */
         ShowClassUser: {

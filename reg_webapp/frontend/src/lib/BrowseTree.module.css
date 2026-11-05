@@ -114,3 +114,10 @@
     transition: none;
   }
 }
+
+/* The classifications sit below the providers under an ink rule: a section of
+   their own, not another provider (maintainer 2026-11-05). */
+.row[data-separated] {
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--border-strong);
+}

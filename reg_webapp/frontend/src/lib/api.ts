@@ -422,6 +422,9 @@ export type RootChild = RootShow["providers"][number];
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type ClassFamilyShow = Extract<ShowNode, { kind: "class_family" }>;
+export type ClassFamiliesShow = Extract<ShowNode, { kind: "class_families" }>;
+/** A classification as the classification list names it. */
+export type ClassFamilyRef = ClassFamiliesShow["families"][number];
 export type CatalogPeriod = RustSchemas["Period"];
 export type CatalogFinding = RustSchemas["Finding"];
 export type CatalogFindingGroup = RustSchemas["FindingGroup"];

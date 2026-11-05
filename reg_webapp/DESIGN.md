@@ -94,6 +94,11 @@ Hierarchical sets start at level one, load children by parent code, and keep exp
 branches while search shows flat matches with levels. Only active search shows a
 matching result count; sentinel items are labelled in plain words.
 
+The list of classifications (`/catalog/class`) reads `show` at ref `class`: each
+family's name, version count and years (its first version's start to its last's end). On
+a steward site the server lists only the families a held placement's rows carry. The
+browse column lists them from the same read, below the providers.
+
 A classification family page (`/catalog/class/<family>`) reads `show`: its versions in
 start order and the steward's variables that use them, each with the `segments` rows
 that carry the family. A version route (`/catalog/class/<family>/<version>`) reads the

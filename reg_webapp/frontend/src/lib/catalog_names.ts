@@ -1,6 +1,7 @@
 import {
   ApiError,
   type CatalogSegment,
+  type ClassFamilyRef,
   type Graph,
   getGraph,
   getSegments,
@@ -171,6 +172,24 @@ export function catalogRootChildren(): Read<RootChild[]> {
   });
 }
 
+/** The classification list's address (`/catalog/class`) and its name: the
+ * list is a page of the browse column, not an entity with a name of its own. */
+export const CLASSIFICATIONS = "class";
+export const CLASSIFICATIONS_LABEL = "Classifications";
+const CLASSIFICATIONS_NAME: Read<string> = {
+  value: CLASSIFICATIONS_LABEL,
+  loading: false,
+};
+
+/** The classifications, for the browse column's list of them and its page:
+ * on a steward site only those its variables use (the server scopes it). */
+export function classFamiliesRead(): Read<ClassFamilyRef[]> {
+  return read("class", async () => {
+    const node = await getShow("class");
+    return node.kind === "class_families" ? node.families : [];
+  });
+}
+
 /** A register's display names, shared by table headers and located findings. */
 export function registerRead(ref: string): Read<RegisterShow> {
   return read(`register:${ref}`, () => loadRegister(ref));
@@ -330,6 +349,7 @@ export function catalogNameRead(ref: string | null): Read<string> {
  * column makes, a register's from the register read its variable list shares,
  * so a trail issues no request of its own. */
 export function ancestorNameRead(ref: string | null): Read<string> {
+  if (ref === CLASSIFICATIONS) return CLASSIFICATIONS_NAME;
   if (ref === null || ref.includes("/")) return catalogNameRead(ref);
   const root = catalogRootChildren();
   return {
