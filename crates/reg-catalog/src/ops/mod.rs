@@ -63,11 +63,10 @@ impl Server {
     pub fn new(catalog: Catalog, version: &'static str) -> Result<Self, Error> {
         let day = |key: &str| {
             catalog.meta(key).parse::<i64>().map_err(|_| {
-                Error::new(
-                    Code::InternalError,
-                    format!("meta {key} is not a day number: {:?}", catalog.meta(key)),
-                    vec![],
-                )
+                Error::internal(format!(
+                    "meta {key} is not a day number: {:?}",
+                    catalog.meta(key)
+                ))
             })
         };
         let open = (day("open_start")?, day("open_end")?);
@@ -211,6 +210,8 @@ type Components = Vec<(String, RefOr<Schema>)>;
 #[derive(Default)]
 pub struct Params<'a> {
     values: BTreeMap<&'a str, Vec<&'a str>>,
+    /// The operation's [`Type::Cursor`] parameters, which a cursor's context leaves out.
+    cursors: Vec<&'static str>,
 }
 
 impl<'a> Params<'a> {
@@ -357,7 +358,14 @@ pub fn call<T>(
     run: Run<T>,
     query: &[(String, String)],
 ) -> Result<T, Error> {
-    let mut params = Params::default();
+    let mut params = Params {
+        cursors: declared
+            .iter()
+            .filter(|p| matches!(p.ty, Type::Cursor))
+            .map(|p| p.name)
+            .collect(),
+        ..Params::default()
+    };
     for (name, value) in query {
         // Unknown and repeated parameters are errors, never ignored; a repeat is an
         // array's next value.

@@ -57,15 +57,7 @@ fn resolve(server: &Server, params: &Params) -> Result<Value, Error> {
         .get("register")
         .map(|value| {
             let origin = server.catalog.connect_for_ref(value)?;
-            let entity = refs::resolve(&origin, value)?;
-            if entity.kind == "register" {
-                Ok(entity.pid)
-            } else {
-                Err(Error::invalid_ref(
-                    value,
-                    format!("{value:?} is a {}, not a register.", entity.kind),
-                ))
-            }
+            Ok::<_, Error>(refs::expect(&origin, value, &["register"], "not a register")?.pid)
         })
         .transpose()?;
     let conn = server.catalog.connect()?;

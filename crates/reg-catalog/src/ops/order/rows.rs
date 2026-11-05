@@ -10,7 +10,7 @@ use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
 use crate::ops::Server;
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
@@ -128,13 +128,7 @@ fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySeg
                         let (lo, hi) = token
                             .trim()
                             .parse::<reg_core::Period>()
-                            .map_err(|_| {
-                                Error::new(
-                                    Code::InternalError,
-                                    "The holder's row-key data is invalid.",
-                                    vec![],
-                                )
-                            })?
+                            .map_err(|_| Error::internal("The holder's row-key data is invalid."))?
                             .iso_bounds();
                         Ok((key.start.max(day(&lo)), key.end.min(day(&hi) + 1)))
                     })

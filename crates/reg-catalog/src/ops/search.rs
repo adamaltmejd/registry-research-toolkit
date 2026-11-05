@@ -182,14 +182,7 @@ pub struct FacetVariable {
 
 /// The register a `register` parameter names (rule 4).
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
-    let entity = refs::resolve(conn, value)?;
-    if entity.kind != "register" {
-        return Err(Error::invalid_ref(
-            value,
-            format!("{value:?} is a {}, not a register.", entity.kind),
-        ));
-    }
-    Ok(entity.id)
+    Ok(refs::expect(conn, value, &["register"], "not a register")?.id)
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -234,11 +227,7 @@ fn require_tag(server: &Server, conn: &Connection, value: &str) -> Result<(), Er
     {
         return Ok(());
     }
-    Err(Error::new(
-        Code::NotFound,
-        format!("Nothing is named {value:?}."),
-        vec![value.into()],
-    ))
+    Err(Error::not_found(value))
 }
 
 fn search_origin(
@@ -262,17 +251,12 @@ fn search_origin(
     let period = super::days(params, "period")?;
     let limit = super::limit(params)?;
     let paired = server.catalog.steward().is_some();
-    let context = if paired {
-        format!("{}&origin={origin}", cursor::context(params))
+    let origin = if paired {
+        format!("&origin={origin}")
     } else {
-        cursor::context(params)
+        String::new()
     };
-    let generation = server.catalog.generation();
-    let offset = params
-        .get(cursor_name)
-        .map(|c| cursor::decode(c, generation, &context, DEPTH))
-        .transpose()?
-        .map_or(0, |(offset, _)| offset);
+    let offset = cursor::start(server, params, cursor_name, &origin, DEPTH)?.map_or(0, |(o, _)| o);
     let register = match params
         .get("register")
         .map(|r| register(conn, r))
@@ -330,7 +314,7 @@ fn search_origin(
     )?;
     let next_cursor = cursor::next(&mut rows, take, |last| {
         (offset + take < DEPTH)
-            .then(|| cursor::encode(generation, &context, offset + take, &last.3))
+            .then(|| cursor::token(server, params, &origin, offset + take, &last.3))
     });
     let mut items: Vec<SearchHit> = rows
         .iter()
@@ -445,7 +429,7 @@ fn hit(
     kind: &str,
     entity: Option<i64>,
 ) -> Result<SearchHit, Error> {
-    let entity = || entity.ok_or_else(|| internal(format!("search row {id} has no entity")));
+    let entity = || entity.ok_or_else(|| Error::internal(format!("search row {id} has no entity")));
     Ok(match kind {
         "register" => conn.query_row(
             "SELECT r.pid, n.body, d.body, r.start, r.end
@@ -515,7 +499,11 @@ fn hit(
         "code" => code_hit(conn, id)?,
         "document" => document_hit(conn, expression, entity()?)?,
         // The schema admits no other kind; such a row is a defect of the artifact.
-        other => return Err(internal(format!("search row {id} has kind {other:?}"))),
+        other => {
+            return Err(Error::internal(format!(
+                "search row {id} has kind {other:?}"
+            )));
+        }
     })
 }
 
@@ -569,10 +557,6 @@ fn document_hit(conn: &Connection, expression: &str, doc: i64) -> rusqlite::Resu
         heading,
         page,
     })
-}
-
-fn internal(message: String) -> Error {
-    Error::new(Code::InternalError, message, vec![])
 }
 
 fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {

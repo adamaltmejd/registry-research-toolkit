@@ -9,8 +9,15 @@
 // origin's ETag/Cache-Control contract governs API
 // caching exactly as a classic proxied origin (#220).
 
+import { recordPick, recordRequest, type UsageDataset } from "./usage";
+
 interface Env {
   ASSETS?: Fetcher;
+  // Workers Analytics Engine dataset for usage statistics (./usage.ts); absent in
+  // a local run without the binding, which then records nothing.
+  USAGE?: UsageDataset;
+  // The deployment's steward, the first column of every usage data point.
+  STEWARD?: string;
   DEPLOY_VERSION?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
@@ -25,6 +32,8 @@ interface Env {
 // (never a navigation) reaches the worker even without run_worker_first.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;
+// The SPA's pick beacon (./usage.ts), answered here on a deployment with the SPA.
+const EVENT_PATH = /^\/api\/event$/;
 // Hashed static assets (assets.run_worker_first has `/assets/*` too): a miss is a
 // 404, not the SPA fallback, which frontend/public/_headers would stamp immutable
 // for a year under the asset's URL (#1454). A hashed asset is never HTML, so an
@@ -51,6 +60,10 @@ export default {
       });
     }
     const url = new URL(request.url);
+    const steward = env.STEWARD ?? "unknown";
+    if (env.ASSETS && EVENT_PATH.test(url.pathname)) {
+      return recordPick(env.USAGE, steward, request);
+    }
     const mcp = MCP_PATH.test(url.pathname);
     const api = env.ASSETS && ORIGIN_PATHS.some((re) => re.test(url.pathname));
     const toOrigin = mcp || api;
@@ -64,7 +77,9 @@ export default {
       if (api) url.searchParams.set(VERSION_PARAM, env.DEPLOY_VERSION!);
       const forwarded = api ? new Request(url, request) : new Request(request);
       forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
-      return fetch(forwarded);
+      const started = Date.now();
+      const response = await fetch(forwarded);
+      return recordRequest(env.USAGE, steward, request, url, response, started);
     }
     if (!env.ASSETS) return notFound();
     const response = await env.ASSETS.fetch(request);

@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use crate::{IssueLevel, ValidationIssue};
 
 /// A half-open `[start, end)` of ISO days, `null` for an open end.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Period {
