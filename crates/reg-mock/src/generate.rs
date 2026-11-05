@@ -168,6 +168,7 @@ pub fn generate(
 
 /// One unit's row in one year.
 struct Unit_<'a> {
+    seed: u64,
     year: i32,
     person: Option<&'a crate::population::Person>,
     firm: Option<&'a crate::population::Firm>,
@@ -200,6 +201,7 @@ fn rows(
                 .iter()
                 .filter(|p| eligible(file, p, year))
                 .map(|p| Unit_ {
+                    seed,
                     year,
                     person: Some(p),
                     firm: Some(&population.firms[firm_of(p.key, population.firms.len())]),
@@ -209,6 +211,7 @@ fn rows(
                 .firms
                 .iter()
                 .map(|f| Unit_ {
+                    seed,
                     year,
                     person: None,
                     firm: Some(f),
@@ -227,7 +230,16 @@ fn rows(
                 let mut row = Vec::with_capacity(kinds.len());
                 for ((column, kind), crng) in file.columns.iter().zip(kinds).zip(&mut columns) {
                     let rate = column.null_rate.unwrap_or(spec.null_rate);
-                    row.push(cell(file, column, *kind, unit, rate, crng)?);
+                    let value = cell(file, column, *kind, unit, rate, crng)?;
+                    // A supplied code or mapped value no wider than the held storage.
+                    let width = column.storage.as_ref().and_then(|s| s.length);
+                    if let (Cell::Text(text), Some(width)) = (&value, width)
+                        && width > 0
+                        && text.chars().count() > usize::try_from(width).unwrap_or(usize::MAX)
+                    {
+                        return Err(not_numeric(format!("{}/{}", file.name, column.name)));
+                    }
+                    row.push(value);
                 }
                 rows.push(row);
             }
@@ -308,7 +320,7 @@ fn cell(
     if column.identifier {
         // A key of its own kind, not joinable to persons or firms.
         let key = 700_000_001 + i64::try_from(rng.below(10_000_000)).expect("fits");
-        return Ok(from_int(key, kind));
+        return from_int(key, kind).ok_or_else(|| not_numeric(at()));
     }
     // The held storage's width is the delivery's; the catalog's otherwise.
     let length = column
@@ -329,8 +341,8 @@ fn not_numeric(at: String) -> Refusal {
     Refusal::new(
         "code_invalid",
         at,
-        "a code or mapped value does not fit the column's type (a number, a calendar date, \
-         the storage's precision): fix the codes or the map in the rules, or the column's type",
+        "a code or mapped value does not fit the column's type (a number, a calendar date, a boolean, \
+         the storage's precision or width): fix the codes or the map in the rules, or the column's type",
     )
 }
 
@@ -360,8 +372,8 @@ fn attribute_cell(
         _ => from_text(&reg_core::issue::iso_day(day).replace('-', ""), kind),
     };
     Some(match attribute {
-        Attribute::PersonKey => from_int(person?.key, kind),
-        Attribute::FirmKey => from_int(unit.firm?.key, kind),
+        Attribute::PersonKey => from_int(person?.key, kind)?,
+        Attribute::FirmKey => from_int(unit.firm?.key, kind)?,
         Attribute::Sex => {
             let sex = if person?.sex == 1 { "male" } else { "female" };
             let code = column
@@ -408,7 +420,11 @@ fn attribute_cell(
                 // county); embed SCB's municipality list if analyses need the spread.
                 return from_text(&mapped(&format!("{county}80")), kind);
             }
-            from_text(&mapped(pool[pick(rng, pool.len())]), kind)?
+            // One municipality per unit, the same in every file: drawn from the unit's
+            // own stream, not the column's.
+            let key = person.map_or_else(|| unit.firm.map(|f| f.key), |p| Some(p.key))?;
+            let mut stable = Rng::new(unit.seed, &format!("municipality/{key}"));
+            from_text(&mapped(pool[pick(&mut stable, pool.len())]), kind)?
         }
         Attribute::DeathDate => match person?.exit {
             Some((day, Exit::Death)) if year_of(day) <= unit.year => date(day)?,
@@ -439,15 +455,20 @@ fn year_cell(
     }
 }
 
-fn from_int(n: i64, kind: Kind) -> Cell {
-    match kind {
+/// An integer in the column's kind, or `None` when its decimal storage cannot hold it.
+fn from_int(n: i64, kind: Kind) -> Option<Cell> {
+    Some(match kind {
         Kind::Text => Cell::Text(n.to_string()),
         #[allow(clippy::cast_precision_loss)]
         Kind::Float64 | Kind::Float32 => Cell::Real(n as f64),
-        Kind::Decimal(_, scale) => Cell::Decimal(i128::from(n) * 10i128.pow(u32::from(scale))),
+        Kind::Decimal(precision, scale) => Cell::Decimal(
+            i128::from(n)
+                .checked_mul(10i128.checked_pow(u32::from(scale))?)
+                .filter(|v| v.unsigned_abs() < 10u128.pow(u32::from(precision)))?,
+        ),
         Kind::Bool => Cell::Bool(n != 0),
         _ => Cell::Int(n),
-    }
+    })
 }
 
 /// A code in the column's kind, or `None` when a numeric kind's code is not a number.
@@ -460,7 +481,11 @@ fn from_text(code: &str, kind: Kind) -> Option<Cell> {
             scaled(code.trim(), scale)
                 .filter(|v| v.unsigned_abs() < 10u128.pow(u32::from(precision)))?,
         ),
-        Kind::Bool => Cell::Bool(matches!(code.trim(), "1" | "true" | "J" | "j")),
+        Kind::Bool => match code.trim().to_ascii_lowercase().as_str() {
+            "1" | "true" | "j" | "ja" | "y" | "yes" => Cell::Bool(true),
+            "0" | "false" | "n" | "nej" | "no" => Cell::Bool(false),
+            _ => return None,
+        },
         Kind::Date | Kind::DateTime => temporal(code.trim(), kind)?,
     })
 }

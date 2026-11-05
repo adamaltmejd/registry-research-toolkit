@@ -282,8 +282,14 @@ fn arrow_column<'a>(
         }
         Kind::Float32 => {
             let mut b = Float32Builder::new();
-            #[allow(clippy::cast_possible_truncation)]
-            cells.for_each(|c| b.append_option(float(c).map(|x| x as f32)));
+            for c in cells {
+                #[allow(clippy::cast_possible_truncation)]
+                let x = float(c).map(|x| x as f32);
+                if x.is_some_and(|x| !x.is_finite()) {
+                    return Err("a value past real's range in a real column".into());
+                }
+                b.append_option(x);
+            }
             (DataType::Float32, Arc::new(b.finish()))
         }
         Kind::Bool => {
