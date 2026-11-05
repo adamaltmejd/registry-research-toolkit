@@ -183,7 +183,7 @@ fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<Str
         })?;
     let line = Lines::new(&text).at(key.span().start);
     Ok(format!(
-        "{}:{line}: {code}: ledger id {id:?} {reason}",
+        "{}:{line}: {code}: ledger id {id:?} {reason} (--release)",
         path.display()
     ))
 }
@@ -509,12 +509,12 @@ fn build_with_provenance(
                 (
                     &r.report.unplaced_ids,
                     "ledger-id-unplaced",
-                    "has no placed variable (--release)",
+                    "has no placed variable",
                 ),
                 (
                     &r.report.split_ids,
                     "ledger-id-split",
-                    "anchors more than one variable (--release)",
+                    "anchors more than one variable",
                 ),
             ] {
                 if !ids.is_empty() {

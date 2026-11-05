@@ -40,7 +40,15 @@ pub fn is_key(key: &str) -> bool {
 /// # Errors
 /// An unreadable file, invalid TOML, a malformed key or blank text.
 pub fn keys(root: &Path, path: &str) -> Result<std::collections::BTreeSet<String>, ReadError> {
-    let entries: BTreeMap<String, String> = crate::config(&root.join(path))?;
+    let file = root.join(path);
+    let text = std::fs::read_to_string(&file).map_err(|e| error(path, e.to_string()))?;
+    // The file is private: a refusal names a line and the parser's message, never the
+    // offending source line that `toml::de::Error`'s Display quotes.
+    let entries: BTreeMap<String, String> =
+        toml::from_str(&text).map_err(|e: toml::de::Error| {
+            let line = crate::curation::Lines::new(&text).at(e.span().map_or(0, |s| s.start));
+            error(&format!("{path}:{line}"), e.message())
+        })?;
     for (key, text) in &entries {
         if !is_key(key) {
             return Err(error(

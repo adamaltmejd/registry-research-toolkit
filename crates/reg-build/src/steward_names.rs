@@ -187,21 +187,40 @@ pub(crate) fn ids(curation: &Path, resolved: &[reg_resolve::Resolved]) -> Result
             .chain(r.variables.iter().map(|v| &v.slug));
         for id in ids {
             if let Some(token) = reg_readers::private_evidence::steward_name(id) {
-                let reason = format!("names a steward ({token}); switch it, with no retirement");
-                out.push(
-                    crate::ledger_refusal(&ledger, id, "steward-name", &reason).unwrap_or_else(
-                        |_| {
-                            format!(
-                                "{}: steward-name: id {id:?} of {provider}/{register} {reason}",
-                                ledger.display()
-                            )
-                        },
-                    ),
-                );
+                let at = match ledger_line(&ledger, id) {
+                    Some(line) => format!("{}:{line}", ledger.display()),
+                    None => ledger.display().to_string(),
+                };
+                out.push(format!(
+                    "{at}: steward-name: id {id:?} of {provider}/{register} names a steward ({token}); switch it, with no retirement"
+                ));
             }
         }
     }
     refuse(out)
+}
+
+/// The `ids.toml` line that states `id`: the `public` name, a `[tables]` value or a
+/// `[variables]` key. `None` for an id the ledger does not state (a slugified handle).
+fn ledger_line(path: &Path, id: &str) -> Option<usize> {
+    #[derive(serde::Deserialize)]
+    struct Spans {
+        public: Option<toml::Spanned<String>>,
+        #[serde(default)]
+        tables: std::collections::BTreeMap<String, toml::Spanned<String>>,
+        #[serde(default)]
+        variables: std::collections::BTreeMap<toml::Spanned<String>, toml::Value>,
+    }
+    let text = std::fs::read_to_string(path).ok()?;
+    let spans: Spans = toml::from_str(&text).ok()?;
+    let span = spans
+        .public
+        .iter()
+        .chain(spans.tables.values())
+        .chain(spans.variables.keys())
+        .find(|stated| stated.get_ref() == id)?
+        .span();
+    Some(reg_readers::curation::Lines::new(&text).at(span.start))
 }
 
 fn refuse(mut out: Vec<String>) -> Result<()> {

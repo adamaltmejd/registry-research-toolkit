@@ -15,7 +15,7 @@
       "file": "registers/demo/r/ids.toml",
       "from": "x = [\"t: X\"]",
       "to": "ifau-x = [\"t: X\"]",
-      "located": "registers/demo/r/ids.toml:7: steward-name: ledger id \"ifau-x\" names a steward (IFAU)"
+      "located": "registers/demo/r/ids.toml:7: steward-name: id \"ifau-x\" of demo/r names a steward (IFAU)"
     },
     "manifest": {
       "file": "inputs.toml",
