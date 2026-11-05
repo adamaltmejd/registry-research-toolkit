@@ -704,6 +704,7 @@ impl Context<'_> {
             }
         };
         let mut codes: Vec<Code> = Vec::new();
+        let mut seen = BTreeSet::new();
         let hashes: BTreeSet<&str> = segments
             .iter()
             .filter_map(|s| s.value_set.as_ref().map(|v| v.hash.as_str()))
@@ -720,7 +721,7 @@ impl Context<'_> {
                 return None;
             };
             for code in set {
-                if !codes.iter().any(|c| c.code == code.code) {
+                if seen.insert(code.code.as_str()) {
                     codes.push(code.clone());
                 }
             }
