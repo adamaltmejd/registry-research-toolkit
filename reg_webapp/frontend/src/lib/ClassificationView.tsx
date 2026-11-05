@@ -4,13 +4,16 @@ import styles from "./CatalogNodeView.module.css";
 import classStyles from "./ClassificationView.module.css";
 import { CodeTimeline } from "./CodeTimeline";
 import { catalogHref, svCollator } from "./catalog";
+import { catalogRootChildren } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { dataAxis } from "./period";
 import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
+import { NameSkeleton } from "./ui/Skeleton";
 import { VariableRow, VariableRowList } from "./ui/VariableRow";
 import { useProject } from "./use_project";
+import { useCatalogRead } from "./use_store_read";
 import { windowBounds } from "./window_bounds";
 
 /** A classification family's page (DESIGN.md → Detail pane): its versions in
@@ -70,9 +73,26 @@ export function ClassificationView({
     if (top < bar || bottom > window.innerHeight)
       heading.scrollIntoView({ block: "center" });
   }, []);
+  // The register names come from the root read the browse column makes, so
+  // naming each row's register costs no request per register.
+  const root = useCatalogRead(catalogRootChildren, undefined);
+  const registerNames = new Map(
+    (root.value ?? []).flatMap((provider) =>
+      provider.registers.map((register) => [register.fqid, register.name]),
+    ),
+  );
+  // Only a list that spans registers names them: on one register's family the
+  // name alone is enough.
+  const crossRegister =
+    new Set(variables.map((variable) => registerOf(variable.fqid))).size > 1;
+  const registerLabel = (register: string) =>
+    registerNames.get(register) ??
+    (root.loading ? <NameSkeleton label="Loading register name" /> : null);
+  const items = versionItems(node.versions, variables, focus);
   return (
     <article className={styles.page}>
       <Definitions
+        kind="classification"
         title={node.name}
         definitions={
           node.description
@@ -82,38 +102,38 @@ export function ClassificationView({
       />
       <Panel title="Versions" flush>
         <ul className={classStyles.versions}>
-          {node.versions.map((version) => {
-            const users = variables.flatMap((variable) => {
-              const rows = variable.segments.filter(
-                (segment) => segment.classification === version.fqid,
-              );
-              return rows.length > 0 ? [{ variable, rows }] : [];
-            });
-            const current = version.fqid === focus;
-            return (
+          {items.map((item) =>
+            item.kind === "unused" ? (
               <li
-                key={version.fqid}
+                key={item.versions[0].fqid}
+                className={`${classStyles.version} ${classStyles.unused}`}
+              >
+                {unusedLine(item.versions)}
+              </li>
+            ) : (
+              <li
+                key={item.version.fqid}
                 className={classStyles.version}
-                data-current={current || undefined}
+                data-current={item.version.fqid === focus || undefined}
               >
                 <div className={classStyles.versionHead}>
                   <h3
-                    ref={current ? focusVersion : undefined}
-                    tabIndex={current ? -1 : undefined}
+                    ref={item.version.fqid === focus ? focusVersion : undefined}
+                    tabIndex={item.version.fqid === focus ? -1 : undefined}
                     className={classStyles.versionName}
                   >
-                    {version.name}
+                    {item.version.name}
                   </h3>
                   <span className={classStyles.years}>
-                    {catalogPeriodLabel(version.period)}
+                    {catalogPeriodLabel(item.version.period)}
                   </span>
                 </div>
-                {users.length > 0 ? (
+                {item.users.length > 0 ? (
                   <VariableRowList
-                    label={`Variables using ${version.name}`}
+                    label={`Variables using ${item.version.name}`}
                     axis={axis}
                   >
-                    {users.map(({ variable, rows }) => (
+                    {item.users.map(({ variable, rows }) => (
                       <VariableRow
                         key={variable.fqid}
                         name={variable.name}
@@ -122,17 +142,22 @@ export function ClassificationView({
                         coverage={datedYearRuns(rows, bounds)}
                         axis={axis}
                         window={studyYears}
+                        detail={
+                          crossRegister
+                            ? registerLabel(registerOf(variable.fqid))
+                            : undefined
+                        }
                       />
                     ))}
                   </VariableRowList>
                 ) : (
-                  <p className={classStyles.unused}>
+                  <p className={classStyles.unusedNote}>
                     No variable here uses this version.
                   </p>
                 )}
               </li>
-            );
-          })}
+            ),
+          )}
         </ul>
       </Panel>
       <CodeTimeline
@@ -143,4 +168,56 @@ export function ClassificationView({
       />
     </article>
   );
+}
+
+type Version = ClassFamilyShow["versions"][number];
+type User = ClassFamilyShow["variables"][number];
+
+const registerOf = (fqid: string) => fqid.split("/").slice(0, 2).join("/");
+
+/** The versions in start order, with each run of consecutive versions no
+ * variable uses folded into one line, so a long family is not a page of empty
+ * entries. A version address that lands inside a run splits it: the focused
+ * version keeps its own entry (heading, years, focus), and the versions
+ * before and after it fold on their own. */
+function versionItems(
+  versions: readonly Version[],
+  variables: readonly User[],
+  focus: string | null,
+) {
+  const items: (
+    | {
+        kind: "version";
+        version: Version;
+        users: { variable: User; rows: User["segments"] }[];
+      }
+    | { kind: "unused"; versions: Version[] }
+  )[] = [];
+  for (const version of versions) {
+    const users = variables.flatMap((variable) => {
+      const rows = variable.segments.filter(
+        (segment) => segment.classification === version.fqid,
+      );
+      return rows.length > 0 ? [{ variable, rows }] : [];
+    });
+    const last = items.at(-1);
+    if (users.length > 0 || version.fqid === focus)
+      items.push({ kind: "version", version, users });
+    else if (last?.kind === "unused") last.versions.push(version);
+    else items.push({ kind: "unused", versions: [version] });
+  }
+  return items;
+}
+
+/** A folded run, by its versions' names: all of them up to three, else the
+ * first two and the last. */
+function unusedLine(versions: readonly Version[]): string {
+  const names = versions.map((version) => version.name);
+  if (names.length === 1)
+    return `${names[0]}: no variable here uses this version.`;
+  const listed =
+    names.length <= 3
+      ? names.join(", ")
+      : `${names[0]}, ${names[1]} … ${names.at(-1)}`;
+  return `${listed}: no variable here uses these versions.`;
 }

@@ -17,8 +17,9 @@ import { useCatalogRead } from "./use_store_read";
 import { windowBounds } from "./window_bounds";
 
 /** A table's page (DESIGN.md → Detail pane): its name, its description where
- * stated, its years, and its variables on the register page's axis, each over
- * the years it has in this table. */
+ * stated, its years, and its variables on the table's own axis (the years its
+ * variables have here, not the register's), each over the years it has in
+ * this table. */
 export function TableView({
   node,
   context,
@@ -52,6 +53,7 @@ export function TableView({
   return (
     <article className={styles.page}>
       <Definitions
+        kind="table"
         title={node.name}
         memberOf={[
           {

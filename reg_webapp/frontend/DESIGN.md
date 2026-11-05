@@ -495,8 +495,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   arrived is left out, never shown as its slug. A group page's trail skips the group
   namespace. A classification page has no ancestors, so its trail is the "Browse
   registers" crumb alone, on a version address too: that address renders the family
-  page, whose `h1` already names the family (slice 3, Q4). Then, on a register's or a
-  variable's page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line,
+  page, whose `h1` already names the family (slice 3, Q4). Then, on a register's, table's,
+  variable's, group's or classification's page the kind mark (its `TypeTag`, with the
+  glyph on a register or variable), `h1`, member-of line,
   facets as a labelled row, the actions row, then definitions, then the `Timeline`, then
   the list of variables or columns, "Notes on this data" (the findings, only when there
   are any; maintainer 2026-11-04), then source documents. A variable page has no source
@@ -532,13 +533,20 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   facts read the one per-period list (`segments`): on a steward deployment its rows are
   the files and columns the steward has, over the years it has them. A table page shows
   its `h1` name, a member-of line naming its register, its description only when stated,
-  a Years row, then its variables as `VariableRow`s on one axis, each over the years it
-  has in this table, then notes and source documents; it has no role, cadence, row-key,
+  a Years row, then its variables as `VariableRow`s on the table's own axis (the years its
+  variables have in it, not the register's), each over the years it has in this table,
+  then notes and source documents; it has no role, cadence, row-key,
   population or release section (Operator Q2, #2252). A classification page is its
   family's (Operator Q4, #2252): the family name as `h1`, its description only when
   stated, then a Versions panel listing every version in start order (Q1), each with its
   name, its years, and the steward's variables that use it as `VariableRow`s over the
-  years their columns use that version, or "No variable here uses this version." Then
+  years their columns use that version, or "No variable here uses this version." A run
+  of consecutive versions no variable uses folds into one muted line naming them (all up
+  to three, else the first two … the last), so a 47-version family is not a page of
+  empty entries; a version address inside a run splits it, and that version keeps its
+  own entry. Where the family's variables span registers, each row names its register
+  on a muted second line. Every version shares the family's one axis, so bars compare
+  across versions and line up with the codes below. Then
   the `CodeTimeline` of the codes those columns use (their value sets, not the version's
   whole list; Q3). A version's address renders the family page with that version
   current: its heading on `accent-soft`, focused and scrolled into view as a grouped
@@ -927,10 +935,12 @@ grow new visual language meanwhile.
   words are the catalog types in plain words ("Words"; #2071). No hue: the type is a
   fact, not a node kind, so it never borrows a `TypeTag` colour.
 - **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
-  register's or a variable's page title, where it leads with a glyph in its ink (a table
-  for a register, one filled column of it for a variable). A group page's kind mark has
-  no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
-  Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
+  detail page's title, where a register's or a variable's leads with a glyph in its ink
+  (a table for a register, one filled column of it for a variable). A table's, group's
+  or classification's kind mark has no glyph. The label is fixed per type (Register,
+  Table, Variable, Code list, Classification, Group) and a caller passes only the type. A
+  table takes its register's hue: it is part of the register, and the word tells them
+  apart. 0.75 rem, line-height 1.4, padding 1 px 7
   px, `sm` radius. A palette row shows a name and its `TypeTag`, never an identifier
   (maintainer Q5, 2026-11-04).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),

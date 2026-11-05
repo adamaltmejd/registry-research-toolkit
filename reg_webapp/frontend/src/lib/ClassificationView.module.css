@@ -39,8 +39,14 @@
   font-size: var(--text-sm);
 }
 
-.unused {
+.unusedNote {
   margin: 0;
   padding: 0 var(--space-3) var(--space-3);
+  color: var(--text-muted);
+}
+
+/* A run of versions no variable uses, folded into one line. */
+.unused {
+  padding: var(--space-3);
   color: var(--text-muted);
 }

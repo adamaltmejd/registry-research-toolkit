@@ -3,6 +3,9 @@ import styles from "./TypeTag.module.css";
 
 const TYPES = {
   register: { label: "Register", style: styles.reg },
+  // A table is a part of its register, so it takes the register's hue; the
+  // word tells the two apart.
+  table: { label: "Table", style: styles.reg },
   variable: { label: "Variable", style: styles.var },
   codeList: { label: "Code list", style: styles.code },
   classification: { label: "Classification", style: styles.class },

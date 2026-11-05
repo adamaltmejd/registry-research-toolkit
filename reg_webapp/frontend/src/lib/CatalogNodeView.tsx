@@ -47,20 +47,27 @@ export function CatalogNodeView({
     );
   }
   if (resource.error || !resource.data) {
+    const missing = resource.status === 404 || resource.status === 422;
     return (
-      <StatusRow tone="error" live="alert">
-        {resource.status === 404 || resource.status === 422 ? (
-          <>
-            Nothing in the catalog at this address. Check the link, or choose a
-            register in the list.
-          </>
-        ) : (
-          <>
-            This page did not load ({resource.error}). Reload the page to try
-            again.
-          </>
-        )}
-      </StatusRow>
+      <>
+        {/* Every page has an h1; the notice below already says it visibly. */}
+        <h1 className="visually-hidden">
+          {missing ? "Not in the catalog" : "Page did not load"}
+        </h1>
+        <StatusRow tone="error" live="alert">
+          {missing ? (
+            <>
+              Nothing in the catalog at this address. Check the link, or choose
+              a register in the list.
+            </>
+          ) : (
+            <>
+              This page did not load ({resource.error}). Reload the page to try
+              again.
+            </>
+          )}
+        </StatusRow>
+      </>
     );
   }
   const { node, focus } = resource.data;
