@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "9"
+    "schema_version": "10"
   },
   "project": {
     "name": "Order case",
@@ -24,7 +24,7 @@
         "end": null
       },
       "spelling": "Kod",
-      "type": "char",
+      "type": "text",
       "length": 2,
       "value_set": null,
       "classification": null

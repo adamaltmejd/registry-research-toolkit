@@ -6,7 +6,7 @@
     "steward": "fixture",
     "catalog": {
       "release": "dev",
-      "schema": "9"
+      "schema": "10"
     },
     "holdings": {
       "owner": "fixture"

@@ -12,7 +12,7 @@
           "variable": "demo/sp/yrke",
           "name": "Yrke",
           "spelling": "Yrke",
-          "type": "char",
+          "type": "text",
           "length": 4,
           "value_set": null,
           "role": "measure",
@@ -26,7 +26,7 @@
           "variable": "demo/sp/ort",
           "name": "Ort",
           "spelling": "Ort",
-          "type": "char",
+          "type": "text",
           "length": 20,
           "value_set": null,
           "role": "measure",
@@ -37,7 +37,7 @@
       "/data/tables/0/changed": [
         {
           "variable": "demo/sp/alder",
-          "changes": [{"field": "type", "from": "int", "to": "char"}]
+          "changes": [{"field": "type", "from": "integer", "to": "text"}]
         },
         {
           "variable": "demo/sp/lankod",

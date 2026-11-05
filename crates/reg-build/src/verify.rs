@@ -45,14 +45,15 @@ pub(crate) fn semantic(db: &Connection) -> Result<()> {
     Ok(())
 }
 
-/// Use the same closed family map as resolution, including the F6 exemption.
+/// Use the same closed family map as resolution, including the F6 exemption. The
+/// catalog holds only published names, never a reader or curation alias (#2071).
 fn types(db: &Connection) -> Result<()> {
     let mut stated = db.prepare("SELECT dtype FROM occurrence UNION SELECT dtype FROM segment")?;
     for dtype in stated.query_map([], |r| r.get::<_, Option<String>>(0))? {
         if let Some(dtype) = dtype?
-            && reg_frame::dtype_info(&dtype).is_none()
+            && reg_frame::dtype_info(&dtype).and_then(|d| d.published) != Some(dtype.as_str())
         {
-            return Err(format!("unmapped catalog dtype {dtype:?}").into());
+            return Err(format!("unpublished catalog dtype {dtype:?}").into());
         }
     }
     let mut pairs = db.prepare(
