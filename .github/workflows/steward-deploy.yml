@@ -295,8 +295,8 @@ jobs:
             echo "::notice::$EDGE_HOST is behind Cloudflare Access and no service token was given: edge probes skipped"
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
-      # The deployed .wasm answers 200 application/wasm (the SPA mounts only once it loads), retried until the new
-      # worker version reaches the PoP.
+      # The deployed .wasm answers 200 application/wasm (the SPA mounts only once it
+      # loads), retried until the new worker version reaches the PoP.
       - name: Edge .wasm probe
         if: steps.probe.outputs.run == 'true'
         run: |
