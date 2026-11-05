@@ -2944,7 +2944,7 @@
         {
           "properties": {
             "data": {
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/$defs/ValueItemsPage"
                 },

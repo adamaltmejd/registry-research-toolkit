@@ -1578,7 +1578,7 @@
                   ],
                   "properties": {
                     "data": {
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "$ref": "#/components/schemas/ValueItemsPage"
                         },
