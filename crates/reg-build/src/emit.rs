@@ -414,23 +414,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
-    let unit_type_id = sorted_ids(
-        catalog
-            .registers
-            .iter()
-            .flat_map(|r| r.tables.iter().filter_map(|t| t.table.unit_type.as_deref())),
-    );
-    for (slug, id) in &unit_type_id {
-        rows.push(
-            "unit_type",
-            vec![
-                Cell::Int(*id),
-                Cell::Str((*slug).into()),
-                Cell::Text((*slug).into()),
-            ],
-        );
-    }
-
     for p in &catalog.providers {
         let pid = provider_id[p.pid.as_str()];
         rows.push(
@@ -514,7 +497,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     ),
                     Cell::Int(i64::from(table.slug.is_none())),
                     Cell::Int(i64::from(table.timeless)),
-                    opt_int(table.table.unit_type.as_deref().map(|u| unit_type_id[u])),
                     if table.timeless {
                         Cell::Null
                     } else {
@@ -793,7 +775,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             );
         }
 
-        for (finding_index, f) in r.findings.iter().enumerate() {
+        for f in &r.findings {
             let (kind, subject) = match f.subject {
                 Subject::Register => ("register", register_row),
                 Subject::Release(x) => ("release", release_id[&(ri, x)]),
@@ -804,12 +786,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             let period = f.period.as_ref().map(|p| (start(&p.0), end(&p.1)));
             findings.push((
                 (reg_pid.clone(), f.code, kind, subject, period),
-                (
-                    register_row,
-                    f.severity,
-                    f.message.clone(),
-                    r.acknowledgements.get(&finding_index).cloned(),
-                ),
+                (register_row, f.severity, f.message.clone()),
             ));
         }
     }
@@ -939,7 +916,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 row_of(notice.subject),
                 period,
             ),
-            (register_id[&reg_pid], "notice", notice.text.clone(), None),
+            (register_id[&reg_pid], "notice", notice.text.clone()),
         ));
     }
     // Relation ids follow (kind, subject id, object id, at); the entity kinds break the
@@ -990,10 +967,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
         );
     }
     findings.sort();
-    for (
-        i,
-        ((_, code, kind, subject, period), (register_row, severity, message, acknowledgement)),
-    ) in findings.into_iter().enumerate()
+    for (i, ((_, code, kind, subject, period), (register_row, severity, message))) in
+        findings.into_iter().enumerate()
     {
         rows.push(
             "finding",
@@ -1007,12 +982,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 opt_int(period.map(|p| p.0)),
                 opt_int(period.map(|p| p.1)),
                 Cell::Text(message),
-                opt_text(acknowledgement.as_ref().and_then(|a| a.caveat.as_ref())),
-                opt_int(
-                    acknowledgement
-                        .as_ref()
-                        .map(|a| statement_id[a.statement.as_str()]),
-                ),
+                Cell::Null,
             ],
         );
     }

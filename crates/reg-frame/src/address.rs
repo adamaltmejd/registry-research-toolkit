@@ -92,16 +92,9 @@ impl GuardField {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub enum Comparison {
-    Equal,
-    Prefix,
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Guard {
     pub field: GuardField,
-    pub comparison: Comparison,
     pub value: String,
 }
 
@@ -222,11 +215,8 @@ fn split_keyword<'a>(text: &'a str, keyword: &str) -> Option<(&'a str, &'a str)>
 fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
     let mut guards = Vec::new();
     while !text.is_empty() {
-        let (field, rest) = text.split_once('=').ok_or("a guard needs = or ^=")?;
-        let prefix = field.trim_end().ends_with('^');
-        let field = field.trim();
-        let field = field.strip_suffix('^').unwrap_or(field).trim();
-        let field = match field {
+        let (field, rest) = text.split_once('=').ok_or("a guard needs =")?;
+        let field = match field.trim() {
             "label" => GuardField::Label,
             "type" => GuardField::Type,
             "unit" => GuardField::Unit,
@@ -234,9 +224,6 @@ fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
             "release" => GuardField::Release,
             _ => return Err("guards allow only label, type, unit, key and release".to_owned()),
         };
-        if prefix && matches!(field, GuardField::Key | GuardField::Release) {
-            return Err("where key and where release allow exact equality only".to_owned());
-        }
         let quoted = rest
             .trim_start()
             .strip_prefix('\'')
@@ -247,11 +234,6 @@ fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
         }
         guards.push(Guard {
             field,
-            comparison: if prefix {
-                Comparison::Prefix
-            } else {
-                Comparison::Equal
-            },
             value: value.to_owned(),
         });
         let rest = rest.trim();
@@ -292,33 +274,15 @@ fn expand(text: &str) -> Result<Vec<String>, String> {
     if body.contains('{') {
         return Err("nested brace lists are not allowed".to_owned());
     }
-    let range = body.split_once("..").filter(|(start, end)| {
-        !start.is_empty()
-            && !end.is_empty()
-            && start.bytes().all(|b| b.is_ascii_digit())
-            && end.bytes().all(|b| b.is_ascii_digit())
-    });
+    // Otherwise an asserted occurrence would invent the spelling `x01..12`.
+    if body.contains("..") {
+        return Err("brace ranges are not supported; list the spellings".to_owned());
+    }
     let choices = if body.contains(',') {
         if body.split(',').any(str::is_empty) {
             return Err("brace list items must not be empty".to_owned());
         }
         body.split(',').map(str::to_owned).collect()
-    } else if let Some((start, end)) = range {
-        let lo = start.parse::<u32>().map_err(|e| e.to_string())?;
-        let hi = end.parse::<u32>().map_err(|e| e.to_string())?;
-        if lo > hi || hi - lo >= 10_000 {
-            return Err(
-                "a brace range must ascend and expand to at most 10000 spellings".to_owned(),
-            );
-        }
-        let width = if start.starts_with('0') {
-            start.len()
-        } else {
-            0
-        };
-        (lo..=hi)
-            .map(|n| format!("{n:0width$}"))
-            .collect::<Vec<_>>()
     } else {
         if body.is_empty() {
             return Err("brace list items must not be empty".to_owned());
@@ -361,12 +325,7 @@ impl fmt::Display for Address {
                 }
                 for (i, guard) in guards.iter().enumerate() {
                     let join = if i == 0 { " where " } else { " and " };
-                    let op = if guard.comparison == Comparison::Equal {
-                        "="
-                    } else {
-                        "^="
-                    };
-                    write!(f, "{join}{} {op} '{}'", guard.field.name(), guard.value)?;
+                    write!(f, "{join}{} = '{}'", guard.field.name(), guard.value)?;
                 }
                 Ok(())
             }

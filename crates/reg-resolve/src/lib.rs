@@ -45,8 +45,8 @@ use reg_core::{
     Form, Interval, fold_identity, intersect, label_key, merge, next_iso_day, prev_iso_day,
 };
 use reg_frame::{
-    Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
-    dtype_info, widest_dtype,
+    Locator, OPEN_END, Occurrence, Record, Register, Release, Table, ValueSet, bounds, dtype_info,
+    widest_dtype,
 };
 use serde::Serialize;
 
@@ -166,12 +166,8 @@ impl<'a> OccurrenceContext<'a> {
                     row.table.as_str(),
                     release.as_str(),
                 ))
-                .and_then(|r| {
-                    r.from
-                        .as_ref()
-                        .zip(r.to.as_ref())
-                        .map(|(a, b)| (a.clone(), b.clone()))
-                });
+                .copied()
+                .and_then(placed);
         }
         let table = self.tables.get(&(
             row.provider.as_str(),
@@ -181,17 +177,15 @@ impl<'a> OccurrenceContext<'a> {
         let register = self
             .registers
             .get(&(row.provider.as_str(), row.register.as_str()));
-        Some((
+        Some(bounds(
             row.from
-                .clone()
-                .or_else(|| table.and_then(|t| t.from.clone()))
-                .or_else(|| register.and_then(|r| r.from.clone()))
-                .unwrap_or_else(|| OPEN_START.into()),
+                .as_deref()
+                .or_else(|| table.and_then(|t| t.from.as_deref()))
+                .or_else(|| register.and_then(|r| r.from.as_deref())),
             row.to
-                .clone()
-                .or_else(|| table.and_then(|t| t.to.clone()))
-                .or_else(|| register.and_then(|r| r.to.clone()))
-                .unwrap_or_else(|| OPEN_END.into()),
+                .as_deref()
+                .or_else(|| table.and_then(|t| t.to.as_deref()))
+                .or_else(|| register.and_then(|r| r.to.as_deref())),
         ))
     }
 
@@ -215,7 +209,6 @@ pub struct Resolved {
     pub occurrences: Vec<ResolvedOccurrence>,
     pub gaps: Vec<Gap>,
     pub findings: Vec<Finding>,
-    pub acknowledgements: BTreeMap<usize, curation::ack::Acknowledgement>,
     /// Source keys for register-level F5 findings, without changing their published subject.
     pub finding_keys: BTreeMap<usize, String>,
     pub report: Report,
@@ -497,13 +490,7 @@ pub(crate) fn resolve_located(
                 handle.to_owned()
             }
         });
-        let slug = (!handle.is_empty()).then(|| {
-            ledger
-                .tables
-                .get(handle)
-                .cloned()
-                .unwrap_or_else(|| slugify(handle))
-        });
+        let slug = (!handle.is_empty()).then(|| ledger.table_slug(handle));
         table_index.insert(handle.to_owned(), tables.len());
         tables.push(ResolvedTable {
             table,
@@ -593,14 +580,9 @@ pub(crate) fn resolve_located(
 
     // Periods and the T1 clamp.
     let bound = |table: &Table| -> Option<Interval> {
-        let from = table.from.clone().or_else(|| register.from.clone());
-        let to = table.to.clone().or_else(|| register.to.clone());
-        (from.is_some() || to.is_some()).then(|| {
-            (
-                from.unwrap_or_else(|| OPEN_START.to_owned()),
-                to.unwrap_or_else(|| OPEN_END.to_owned()),
-            )
-        })
+        let from = table.from.as_deref().or(register.from.as_deref());
+        let to = table.to.as_deref().or(register.to.as_deref());
+        (from.is_some() || to.is_some()).then(|| bounds(from, to))
     };
     let mut resolved: Vec<ResolvedOccurrence> = Vec::new();
     let mut dated = vec![false; tables.len()];
@@ -648,10 +630,7 @@ pub(crate) fn resolve_located(
         }
         dated[t] |= from.is_some() || to.is_some();
         let limit = bound(&tables[t].table);
-        let stated = (
-            from.clone().unwrap_or_else(|| OPEN_START.to_owned()),
-            to.clone().unwrap_or_else(|| OPEN_END.to_owned()),
-        );
+        let stated = bounds(from.as_deref(), to.as_deref());
         if stated.0 > stated.1 {
             return Err(format!(
                 "{}:{}: {} is documented from {} to the earlier {}",
@@ -699,7 +678,7 @@ pub(crate) fn resolve_located(
         };
         t.timeless = bound(&t.table).is_none() && !dated[i];
         if t.spans.is_empty() {
-            t.spans = vec![(OPEN_START.to_owned(), OPEN_END.to_owned())];
+            t.spans = vec![bounds(None, None)];
         }
     }
 
@@ -1415,9 +1394,10 @@ pub(crate) fn resolve_located(
         if let Some(defaults) = &defaults {
             if let Some(v) = defaults.occurrences[i].variable {
                 let slug = &defaults.variables[v].slug;
-                let target = variables.iter().position(|v| v.slug == *slug).ok_or_else(|| {
-                    format!("set variable would orphan gap marker for {slug:?}; ack the finding instead")
-                })?;
+                let target = variables
+                    .iter()
+                    .position(|v| v.slug == *slug)
+                    .ok_or_else(|| format!("set variable would orphan gap marker for {slug:?}"))?;
                 marker_variable.push((i, target));
             }
         } else if let Some(vs) = key_variables.get(key)
@@ -1479,13 +1459,12 @@ pub(crate) fn resolve_located(
     }
 
     let coverage = reg_core::hull(tables.iter().filter(|t| !t.timeless).flat_map(|t| &t.spans))
-        .unwrap_or_else(|| (OPEN_START.to_owned(), OPEN_END.to_owned()));
+        .unwrap_or_else(|| bounds(None, None));
     let public = match &ledger.public {
         Some(public) if !reg_core::is_slug(public) => {
             return Err(format!("ledger public name {public:?} is not a slug"));
         }
-        Some(public) => public.clone(),
-        None => register.register.clone(),
+        _ => ledger.public_name(&register.register).to_owned(),
     };
     Ok(Resolved {
         public,
@@ -1497,7 +1476,6 @@ pub(crate) fn resolve_located(
         occurrences: resolved,
         gaps,
         findings,
-        acknowledgements: BTreeMap::new(),
         finding_keys,
         report,
     })

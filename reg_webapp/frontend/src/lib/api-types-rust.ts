@@ -577,7 +577,7 @@ export interface components {
             caveat: string | null;
             /** @description The subject's fqid. */
             from: string;
-            /** @description `continues`, `equivalent`, `derived_from` or `label_of`. */
+            /** @description `continues`, `derived_from` or `label_of`. */
             kind: string;
             /** @description `source`, `curated` or `rule`. */
             prov: string;
@@ -1059,12 +1059,6 @@ export interface components {
             /** @enum {string} */
             type: "variable";
         } | {
-            family: string;
-            fqid: string;
-            name: string;
-            /** @enum {string} */
-            type: "classification";
-        } | {
             code: string;
             label: string | null;
             /** @enum {string} */
@@ -1174,7 +1168,6 @@ export interface components {
             row_keys: components["schemas"]["ShowRowKey"][];
             spans: components["schemas"]["Period"][];
             timeless: boolean;
-            unit_type: string | null;
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
             /**
@@ -1263,7 +1256,6 @@ export interface components {
             period: components["schemas"]["Period"];
             role: string;
             timeless: boolean;
-            unit_type: string | null;
         };
         ShowVariableRef: {
             fqid: string;
@@ -1757,7 +1749,7 @@ export interface operations {
     graph: {
         parameters: {
             query?: {
-                kind?: "continues" | "equivalent" | "derived_from" | "label_of";
+                kind?: "continues" | "derived_from" | "label_of";
             };
             header?: never;
             path: {
@@ -1994,7 +1986,7 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
-                type?: "register" | "table" | "variable" | "classification" | "code" | "document";
+                type?: "register" | "table" | "variable" | "code" | "document";
                 register?: string;
                 period?: string;
                 tag?: string;

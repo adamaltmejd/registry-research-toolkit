@@ -218,11 +218,7 @@ impl Catalog {
         let generation = meta
             .get("generation_id")
             .ok_or_else(|| refuse("missing generation_id"))?;
-        if generation.len() != 64
-            || !generation
-                .bytes()
-                .all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
-        {
+        if !reg_core::is_sha256_hex(generation) {
             return Err(refuse("malformed generation_id"));
         }
         if meta

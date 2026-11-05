@@ -724,7 +724,6 @@
               "type": "string",
               "enum": [
                 "continues",
-                "equivalent",
                 "derived_from",
                 "label_of"
               ]
@@ -1161,7 +1160,6 @@
                 "register",
                 "table",
                 "variable",
-                "classification",
                 "code",
                 "document"
               ]
@@ -2323,7 +2321,7 @@
           },
           "kind": {
             "type": "string",
-            "description": "`continues`, `equivalent`, `derived_from` or `label_of`."
+            "description": "`continues`, `derived_from` or `label_of`."
           },
           "prov": {
             "type": "string",
@@ -4107,32 +4105,6 @@
           },
           {
             "type": "object",
-            "required": [
-              "fqid",
-              "name",
-              "family",
-              "type"
-            ],
-            "properties": {
-              "family": {
-                "type": "string"
-              },
-              "fqid": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "classification"
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
             "description": "One distinct (code, label) pair, not a value set; its value sets are\n`values?code=&label=`.",
             "required": [
               "code",
@@ -4479,7 +4451,6 @@
               "role",
               "implicit",
               "timeless",
-              "unit_type",
               "cadence",
               "spans",
               "row_keys",
@@ -4541,12 +4512,6 @@
               },
               "timeless": {
                 "type": "boolean"
-              },
-              "unit_type": {
-                "type": [
-                  "string",
-                  "null"
-                ]
               }
             }
           },
@@ -4831,7 +4796,6 @@
           "role",
           "implicit",
           "timeless",
-          "unit_type",
           "cadence",
           "period"
         ],
@@ -4859,12 +4823,6 @@
           },
           "timeless": {
             "type": "boolean"
-          },
-          "unit_type": {
-            "type": [
-              "string",
-              "null"
-            ]
           }
         }
       },

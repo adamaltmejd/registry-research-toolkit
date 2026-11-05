@@ -271,12 +271,11 @@ Accepting one requires reviewed curation and a premise lock.
 
 **Curation.**
 
-- A `link` or `ack` changes exactly its selected subjects or findings. Source links are
-  not displaced to accept a conflicting curated link. With no statements, artifact bytes
-  are unchanged.
-- Four statement kinds: `assert`, `set`, `link` and `ack`. `bind` and `assign` are gone:
-  the ledger names registers and tables; moving a row or assigning its variable is a
-  field change.
+- A `link` changes exactly its selected subjects. Source links are not displaced to
+  accept a conflicting curated link. With no statements, artifact bytes are unchanged.
+- Three statement kinds: `assert`, `set` and `link`. `bind` and `assign` are gone: the
+  ledger names registers and tables; moving a row or assigning its variable is a field
+  change.
 - Each register has one optional `curation.toml` beside `ids.toml`, containing
   `[[statement]]` tables. Statements have no hand-written ids. Register-local locks hash
   normalized typed content, including caveat but excluding evidence, file and line.
@@ -290,12 +289,12 @@ Accepting one requires reviewed curation and a premise lock.
   writes resolved decisions.
 - Application is one ordered pass: parent table/release assertions, table coverage
   overrides, occurrence/release period overrides, table moves, remaining assertions,
-  variable assignments, ordinary fields, then links, then acknowledgements. Each stage
-  reads an immutable snapshot; later stages see the accepted corrections. Coverage
-  precedes period checks, and corrected periods precede moves and occurrence assertions.
-  A coverage or period override must be a separate statement without other fields.
-  Coordinate changes carry existing provenance forward without changing its reviewed
-  source values. There is no fixpoint or second application pass.
+  variable assignments, ordinary fields, then links. Each stage reads an immutable
+  snapshot; later stages see the accepted corrections. Coverage precedes period checks,
+  and corrected periods precede moves and occurrence assertions. A coverage or period
+  override must be a separate statement without other fields. Coordinate changes carry
+  existing provenance forward without changing its reviewed source values. There is no
+  fixpoint or second application pass.
 - `set table = "<slug>"` moves selected whole occurrences to an existing table before
   default resolution. It does not merge source rows or rank sources. Disagreements at
   the destination follow the existing F6 and ambiguity rules; a curator corrects the
@@ -376,12 +375,12 @@ Accepting one requires reviewed curation and a premise lock.
   depend on type, existing value sets and population alternatives; period changes depend
   on release placement and parent coverage. Source changes reopen review. With no
   statements, artifact bytes remain unchanged.
-- `link` applies `continues`, `derived_from`, `equivalent` and `label_of` after field
-  application and identity resolution. Endpoints use the selected whole occurrences,
-  ledger variables or tables, or a resolved register/variable FQID. Release endpoints
-  remain refused. Optional `at` periods become merged validity intervals. Each relation
-  carries its statement and caveat. An exact source-edge duplicate gains curated
-  provenance without changing the graph's topology.
+- `link` applies `continues`, `derived_from` and `label_of` after field application and
+  identity resolution. Endpoints use the selected whole occurrences, ledger variables or
+  tables, or a resolved register/variable FQID. Release endpoints remain refused.
+  Optional `at` periods become merged validity intervals. Each relation carries its
+  statement and caveat. An exact source-edge duplicate gains curated provenance without
+  changing the graph's topology.
 - A table `continues` points from successor to predecessor. The real corpus drops no
   successions, so no successor-choice or `reject` form exists. Curated links that close
   a cycle or give a table a second successor on one day refuse at their statement
@@ -392,20 +391,9 @@ Accepting one requires reviewed curation and a premise lock.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
-- Acknowledgement validation and publication share the complete finding collector,
-  including F3 and V1 proposals after curated links.
-- `ack` retains the finding, its severity and message, and records the statement's file,
-  line, evidence and caveat through `ack_statement_id`. Its declared severity must match
-  the finding. The reviewed premise snapshots the finding and its supporting source
-  facts; a missing finding is a located `stale-ack` refusal. Legacy finding codes are
-  not guessed to be equivalent to new findings. Resolver findings are addressable
-  through their variable, occurrence or release; F5 markers retain their register-level
-  published finding but carry internal key metadata for exact acknowledgement.
-  Link-stage source notices are not resolver findings and cannot currently be
-  acknowledged. Acknowledgements do not change structural ambiguity: orders still refuse
-  ambiguous segments. F5 is currently a notice, F6 a review; neither independently
-  blocks orders. Notice acknowledgements annotate; there is currently no separate
-  generic review-finding order blocker to suppress. F7 edition findings remain warnings.
+- Publication uses the complete finding collector, including F3 and V1 proposals after
+  curated links. F5 is currently a notice, F6 a review; neither independently blocks
+  orders. F7 edition findings remain warnings.
 - `classification` selects an exact curated `class/<family>/<version>` for whole
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
@@ -417,8 +405,8 @@ Accepting one requires reviewed curation and a premise lock.
   not support, or content shared by several unbound versions leave the link unset;
   containment never makes one. Variable `tags` applies as normalized membership,
   independently of identity, binding, ordering and peers. Table and occurrence `role`
-  values use one validated vocabulary for each entity kind. `unit_type` populates the
-  table's unit-type reference; variables do not inherit it. Table setters require a
+  values use one validated vocabulary for each entity kind. `unit_type` is accepted but
+  no longer published (the catalog dropped its unit-type table). Table setters require a
   source-stated or asserted table, not a synthesized implicit table. Table and release
   `name` changes preserve their public ids; variable names use `label`. Variable
   `synonyms` enrich search labels without adding delivery aliases. `set sentinels` at an
@@ -468,9 +456,8 @@ Accepting one requires reviewed curation and a premise lock.
   redundant-set finding.
 - Source premise field projections and their canonical sort keys are shared per source
   within each immutable view. Statement, conflict and lock bookkeeping clone shared
-  snapshots; acknowledgement findings copy only the snapshot they extend. Field
-  applications retain before/after records only for changed facts, while metadata and
-  provenance remain independent of record changes.
+  snapshots. Field applications retain before/after records only for changed facts,
+  while metadata and provenance remain independent of record changes.
 - Evaluation serializes shared code-list facts once per phase and indexes selectors and
   application dependencies once per register phase. Conflict candidates share source
   locators, assertion addresses or table moves; the identity and overlap rules still
@@ -487,20 +474,17 @@ Accepting one requires reviewed curation and a premise lock.
 The address grammar is:
 
 ```text
-<table>: <spelling> [@<period-set>] [where <field> (=|^=) '<value>' [and ...]]
+<table>: <spelling> [@<period-set>] [where <field> = '<value>' [and ...]]
 var:<id>
 table:<slug>
 release:<table-slug>/<handle>
 ```
 
 Tables and ids are catalog slugs; spellings match folded. Brace lists expand literal
-alternatives (`{a,b}`) and inclusive numeric ranges (`jobbink{01..12}`), preserving
-leading zeroes. Comma-separated alternatives are literal; only an entire numeric
-`start..end` brace body is a range. `<none>` addresses a documented-without-column
-marker. Expansion is limited to 10,000 spellings. Period sets are comma-separated unions
-of `reg-core` periods, with open endpoints (`..2009`, `2019..`) parsed through that same
-grammar. Guards read only source `label`, `type`, `unit`, `key` or `release`, with exact
-or prefix comparison; `key` and `release` allow equality only.
+alternatives (`{a,b}`). `<none>` addresses a documented-without-column marker. Expansion
+is limited to 10,000 spellings. Period sets are comma-separated unions of `reg-core`
+periods, with open endpoints (`..2009`, `2019..`) parsed through that same grammar.
+Guards read only source `label`, `type`, `unit`, `key` or `release`, by exact equality.
 `where release = '<handle>'` compares the release's source handle exactly as recorded in
 the frame. Provider coordinates have slots only in `where key`, `where release`, and
 direct release addresses, all opaque strings. A direct release address names the release
@@ -511,11 +495,11 @@ Regular expressions are refused. Edition and qualifier remain release attributes
 `:edition` and `/qualifier` address suffixes are unsupported syntax and are refused with
 a message pointing at `where release` (maintainer ruling, 2026-10-27).
 
-All four kinds deny unknown fields. `evidence` is nonblank text (including
-`doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. Evidence
-carried over in D from the retired Python builder cites its files at the git tag
-`python-builder-pre-cutover`: `python-builder-pre-cutover:curation/…` is a file under
-that builder's package directory, usually with a `:<line>` suffix, and
+All three kinds deny unknown fields. `evidence` is nonblank text (including
+`doc:<hash>#page=12`). Evidence carried over in D from the retired Python builder cites
+its files at the git tag `python-builder-pre-cutover`:
+`python-builder-pre-cutover:curation/…` is a file under that builder's package
+directory, usually with a `:<line>` suffix, and
 `python-builder-pre-cutover:reg_webapp/…` a repository path (a file or, for the `series`
 directory, a directory), both at that tag. `caveat` is optional user-facing text.
 Kind-specific content is:
@@ -525,9 +509,7 @@ Kind-specific content is:
   `classification-version` with `family`, `version` and `items`;
 - `set`: `subject` and nonempty `fields`;
 - `link`: `subject`, typed `relation`, `object` (address or catalog FQID) and optional
-  `at` period set;
-- `ack`: `subject`, `finding`, `severity` (`notice` or `review`), and evidence when
-  required.
+  `at` period set.
 
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
@@ -2433,20 +2415,18 @@ are curation (D). A call returns one ranked list.
    FTS5 scores a row by its weighted hit count against its whole token count, so a hit
    weighs most in an id or spelling and least in a definition or document text: a
    variable labelled `Vikt` ranks above a longer one whose definition says vikt.
-3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
-   `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
-   unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
-   equal token count.
-4. **Filters**, ANDed with the match. `type` keeps `kind = type`; `classification` is
-   empty until D. `register` resolves through `refs::resolve`; a ref of another kind is
-   `invalid_ref`; it keeps `search_item.register_id = id`, which drops code rows and
-   keeps a document linked to that register (its first linked subject's). `period` keeps
-   `start < e AND s < end` over the row's hull, which drops code and document rows (no
-   span). So `type=code` with `register` or `period` is empty. `tag` accepts a tag slug
-   or its `tag/<slug>` public id and keeps only variables belonging to that tag; an
-   unknown tag refuses with `not_found`, like an unknown register. It applies before
-   paging and paired-result counts, and belongs to the cursor context like every other
-   search filter.
+3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
+   `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
+   query hits the same weighted count in rows of equal token count.
+4. **Filters**, ANDed with the match. `type` keeps `kind = type`. `register` resolves
+   through `refs::resolve`; a ref of another kind is `invalid_ref`; it keeps
+   `search_item.register_id = id`, which drops code rows and keeps a document linked to
+   that register (its first linked subject's). `period` keeps `start < e AND s < end`
+   over the row's hull, which drops code and document rows (no span). So `type=code`
+   with `register` or `period` is empty. `tag` accepts a tag slug or its `tag/<slug>`
+   public id and keeps only variables belonging to that tag; an unknown tag refuses with
+   `not_found`, like an unknown register. It applies before paging and paired-result
+   counts, and belongs to the cursor context like every other search filter.
 5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
    cursor's context is every parameter but `cursor` and `limit`, its offset the hits
    returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page
@@ -2587,11 +2567,11 @@ tag memberships, and `search?tag=` narrows discovery to the tag's variables.
 
 `graph` returns the `relation` edges where the ref is the subject or the object. A
 relation has a `kind`: `continues` (successor → predecessor, with its evidenced `at`),
-`derived_from` (the lineage), `equivalent` and `label_of`. `kind` narrows the edges. A
-lone entity with no relations returns no edges. Variable succession and table succession
-use `continues`; a representation change is not a separate succession model. The public
-`at` period is stored as `at_start`/`at_end` on the relation, and no day is inferred
-from a coverage end.
+`derived_from` (the lineage) and `label_of`. `kind` narrows the edges. A lone entity
+with no relations returns no edges. Variable succession and table succession use
+`continues`; a representation change is not a separate succession model. The public `at`
+period is stored as `at_start`/`at_end` on the relation, and no day is inferred from a
+coverage end.
 
 ## Documentation and what is not in the catalog
 
@@ -2644,7 +2624,6 @@ terms describe its cross-provider meanings.
   | set            | A register-local presentation group at `set/<provider>/<register>/<slug>`; not an order binding.       |
   | binding        | A project's use of a variable, named by its FQID.                                                      |
   | segment        | A maximal run of one form of a variable in one table.                                                  |
-  | equivalent     | A curated symmetric relation between variables in different registers or providers.                    |
   | classification | A named vocabulary family, `class/<slug>`, with versions at `class/<slug>/<version>`.                  |
   | valueset       | A content-addressed code list on a segment.                                                            |
 

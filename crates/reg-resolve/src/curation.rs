@@ -2,16 +2,15 @@
 //! moved/asserted frame; other overrides never feed selector resolution. Selectors
 //! and premises describe the source the curator reviewed.
 
-pub mod ack;
 pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
 use reg_core::{Interval, fold_identity, intersect};
-use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
+use reg_frame::address::{Address, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, Statement};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Record};
+use reg_frame::{Locator, Record, bounds};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -105,52 +104,6 @@ impl SharedSources {
     }
 }
 
-/// Convert a validated period set to inclusive ISO date intervals.
-///
-/// # Panics
-/// Panics if a `PeriodSet` contains a period that cannot be parsed.
-#[must_use]
-pub fn periods(set: &PeriodSet) -> Vec<Interval> {
-    set.to_string()
-        .split(',')
-        .map(|text| {
-            if let Some(end) = text.strip_prefix("..") {
-                (
-                    OPEN_START.to_owned(),
-                    end.parse::<reg_core::Period>()
-                        .expect("validated period")
-                        .iso_bounds()
-                        .1,
-                )
-            } else if let Some(start) = text.strip_suffix("..") {
-                (
-                    start
-                        .parse::<reg_core::Period>()
-                        .expect("validated period")
-                        .iso_bounds()
-                        .0,
-                    OPEN_END.to_owned(),
-                )
-            } else {
-                text.parse::<reg_core::Period>()
-                    .expect("validated period")
-                    .iso_bounds()
-            }
-        })
-        .collect()
-}
-
-fn bounds(fields: &BTreeMap<String, Value>) -> Interval {
-    let bound = |name, default: &str| {
-        fields
-            .get(name)
-            .and_then(Value::as_str)
-            .unwrap_or(default)
-            .to_owned()
-    };
-    (bound("from", OPEN_START), bound("to", OPEN_END))
-}
-
 #[allow(clippy::too_many_lines)]
 fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
     let context = crate::OccurrenceContext::new(records);
@@ -162,17 +115,11 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             let (mut locators, period) = match record {
                 Record::Register(r) => (
                     vec![r.locator.clone()],
-                    Some((
-                        r.from.clone().unwrap_or_else(|| OPEN_START.into()),
-                        r.to.clone().unwrap_or_else(|| OPEN_END.into()),
-                    )),
+                    Some(bounds(r.from.as_deref(), r.to.as_deref())),
                 ),
                 Record::Table(t) => (
                     vec![t.locator.clone()],
-                    Some((
-                        t.from.clone().unwrap_or_else(|| OPEN_START.into()),
-                        t.to.clone().unwrap_or_else(|| OPEN_END.into()),
-                    )),
+                    Some(bounds(t.from.as_deref(), t.to.as_deref())),
                 ),
                 Record::Release(r) => (
                     vec![r.locator.clone()],
@@ -198,12 +145,10 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 unreachable!("record is an object")
             };
             let mut fields: BTreeMap<_, _> = value.into_iter().collect();
-            for (source, target) in [
-                ("dtype", "type"),
-                ("column", "spelling"),
-                ("source_key", "key"),
-                ("valueset", "value_set"),
-            ] {
+            for (target, source) in reg_frame::statement::RENAMED_FIELDS
+                .into_iter()
+                .chain([("key", "source_key")])
+            {
                 if let Some(value) = fields.remove(source) {
                     fields.insert(target.into(), value);
                 }
@@ -222,11 +167,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                         .or_else(|| register.map(|r| r.register.clone()))
                         .unwrap_or_default()
                 } else {
-                    ledger
-                        .tables
-                        .get(handle)
-                        .cloned()
-                        .unwrap_or_else(|| crate::slugify(handle))
+                    ledger.table_slug(handle)
                 };
                 fields.insert("table_slug".into(), Value::String(slug));
             }
@@ -236,7 +177,13 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                     .as_ref()
                     .map_or(Value::Null, |p| serde_json::json!([p.0, p.1])),
             );
-            fields.insert("coverage".into(), serde_json::json!(bounds(&fields)));
+            fields.insert(
+                "coverage".into(),
+                serde_json::json!(bounds(
+                    fields.get("from").and_then(Value::as_str),
+                    fields.get("to").and_then(Value::as_str),
+                )),
+            );
             Some(Source {
                 fields: Arc::new(fields),
                 locators,
@@ -395,7 +342,7 @@ fn select_from(
         Address::Occurrence {
             periods: Some(scope),
             ..
-        } => Some(periods(scope)),
+        } => Some(scope.intervals()),
         _ => None,
     };
     candidates
@@ -420,10 +367,7 @@ fn select_from(
                         && guards.iter().all(|g| {
                             source
                                 .text(g.field.name())
-                                .is_some_and(|value| match g.comparison {
-                                    Comparison::Equal => value == g.value,
-                                    Comparison::Prefix => value.starts_with(&g.value),
-                                })
+                                .is_some_and(|value| value == g.value)
                         })
                 }
                 Address::Set(slug) => {
@@ -467,7 +411,7 @@ fn select_from(
                     None,
                 ) => return None,
                 (_, Some(period)) => vec![period.clone()],
-                (_, None) => vec![(OPEN_START.into(), OPEN_END.into())],
+                (_, None) => vec![bounds(None, None)],
             };
             (!spans.is_empty()).then_some(Match {
                 source: index,
@@ -611,7 +555,7 @@ fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
                 source
                     .period
                     .as_ref()
-                    .is_some_and(|span| reg_core::merge(periods(&p)) == vec![span.clone()])
+                    .is_some_and(|span| reg_core::merge(p.intervals()) == vec![span.clone()])
             })
     } else {
         source.fields.get(field).unwrap_or(&Value::Null) == expected
@@ -761,27 +705,11 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
                 .map_or_else(|_| object.clone(), |a| a.to_string());
             BTreeSet::from([format!("relation:{relation:?}:{object}")])
         }
-        Statement::Ack { finding, .. } => BTreeSet::from([format!("finding:{finding}")]),
     }
 }
 
 fn moves_table(statement: &Statement) -> bool {
     matches!(statement, Statement::Set { fields, .. } if fields.table.is_some())
-}
-
-/// A field introduced by an accepted table move or assertion, in final source coordinates.
-/// `statement` indexes the evaluated statements supplied to [`applied_conflicts`].
-pub struct AppliedClaim<'a> {
-    pub statement: usize,
-    pub kind: &'a str,
-    pub locator: &'a Locator,
-    pub identity: Option<&'a crate::OccurrenceIdentity>,
-    pub provider: Option<&'a str>,
-    pub register: Option<&'a str>,
-    pub table: Option<&'a str>,
-    pub release: Option<&'a str>,
-    pub field: &'a str,
-    pub period: Option<&'a Interval>,
 }
 
 fn premise_source(premise: &SourcePremise) -> Source {
@@ -818,10 +746,7 @@ fn variable_membership_field(statement: &Statement) -> Option<&'static str> {
 }
 
 fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
-    let span = source
-        .period
-        .clone()
-        .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
+    let span = source.period.clone().unwrap_or_else(|| bounds(None, None));
     if variable_membership_field(statement).is_some() {
         return vec![span];
     }
@@ -829,7 +754,8 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         Address::Occurrence {
             periods: Some(scope),
             ..
-        } => periods(scope)
+        } => scope
+            .intervals()
             .iter()
             .filter_map(|p| intersect(&span, p))
             .collect(),
@@ -839,7 +765,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         at: Some(scope), ..
     } = statement
     {
-        selected = reg_core::overlap(&selected, &periods(scope));
+        selected = reg_core::overlap(&selected, &scope.intervals());
     }
     selected
 }
@@ -887,11 +813,12 @@ fn premise_overlap(
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
 /// statements. Uses the same effects, source identity and interval overlap as the
-/// register-local evaluator; the build boundary adds authoring locations.
+/// register-local evaluator; the build boundary adds authoring locations. Each claim
+/// pairs an applied change with the index of its statement in `statements`.
 #[must_use]
 pub fn applied_conflicts(
     statements: &[(&Statement, &Premise)],
-    claims: &[AppliedClaim<'_>],
+    claims: &[(usize, &apply::Change)],
 ) -> Vec<(usize, usize)> {
     let mut conflicts = BTreeSet::new();
     let evaluated: Vec<_> = statements
@@ -919,23 +846,23 @@ pub fn applied_conflicts(
             }
         }
     }
-    for claim in claims {
+    for &(statement, claim) in claims {
         // Set-wide sentinel conflicts are checked globally by value-set hash.
         if claim.field == "sentinels" {
             continue;
         }
-        let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
+        let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.clone()))]);
         for (field, value) in [
-            ("provider", claim.provider),
-            ("register", claim.register),
-            ("table", claim.table),
-            ("release", claim.release),
+            ("provider", claim.provider.as_deref()),
+            ("register", claim.register.as_deref()),
+            ("table", claim.table.as_deref()),
+            ("release", claim.release.as_deref()),
         ] {
             if let Some(value) = value {
                 fields.insert(field.into(), Value::String(value.into()));
             }
         }
-        if let Some(identity) = claim.identity {
+        if let Some(identity) = &claim.identity {
             fields.insert("spelling".into(), Value::String(identity.column.clone()));
             fields.insert("key".into(), Value::String(identity.source_key.clone()));
             fields.insert("period".into(), serde_json::json!(identity.period));
@@ -943,21 +870,16 @@ pub fn applied_conflicts(
         let source = Source {
             fields: Arc::new(fields),
             locators: vec![claim.locator.clone()],
-            period: claim.period.cloned(),
+            period: claim.period.clone(),
         };
         let claimed = Match {
             source: 0,
-            spans: vec![
-                claim
-                    .period
-                    .cloned()
-                    .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
-            ],
+            spans: vec![claim.period.clone().unwrap_or_else(|| bounds(None, None))],
         };
-        let field = BTreeSet::from([claim.field.to_owned()]);
-        for &(index, row) in by_locator.get(claim.locator).into_iter().flatten() {
+        let field = BTreeSet::from([claim.field.clone()]);
+        for &(index, row) in by_locator.get(&claim.locator).into_iter().flatten() {
             let (effects, sources) = &evaluated[index];
-            if index == claim.statement || effects.is_disjoint(&field) {
+            if index == statement || effects.is_disjoint(&field) {
                 continue;
             }
             let (selected, spans) = &sources[row];
@@ -970,7 +892,7 @@ pub fn applied_conflicts(
                     &claimed,
                 )
             {
-                conflicts.insert((index.min(claim.statement), index.max(claim.statement)));
+                conflicts.insert((index.min(statement), index.max(statement)));
             }
         }
     }
@@ -995,8 +917,7 @@ fn subject(statement: &Statement) -> &Address {
     match statement {
         Statement::Assert { subject, .. }
         | Statement::Set { subject, .. }
-        | Statement::Link { subject, .. }
-        | Statement::Ack { subject, .. } => subject,
+        | Statement::Link { subject, .. } => subject,
     }
 }
 
@@ -1019,26 +940,15 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
             a_table == b_table
                 && a_spellings.iter().any(|s| b_spellings.contains(s))
                 && !a_guards.iter().any(|a| {
-                    b_guards.iter().any(|b| {
-                        a.field == b.field
-                            && match (a.comparison, b.comparison) {
-                                (Comparison::Equal, Comparison::Equal) => a.value != b.value,
-                                (Comparison::Equal, Comparison::Prefix) => {
-                                    !a.value.starts_with(&b.value)
-                                }
-                                (Comparison::Prefix, Comparison::Equal) => {
-                                    !b.value.starts_with(&a.value)
-                                }
-                                (Comparison::Prefix, Comparison::Prefix) => {
-                                    !a.value.starts_with(&b.value) && !b.value.starts_with(&a.value)
-                                }
-                            }
-                    })
+                    b_guards
+                        .iter()
+                        .any(|b| a.field == b.field && a.value != b.value)
                 })
                 && match (a_periods, b_periods) {
-                    (Some(a), Some(b)) => periods(a)
+                    (Some(a), Some(b)) => a
+                        .intervals()
                         .iter()
-                        .any(|a| periods(b).iter().any(|b| intersect(a, b).is_some())),
+                        .any(|a| b.intervals().iter().any(|b| intersect(a, b).is_some())),
                     _ => true,
                 }
         }
@@ -1179,11 +1089,7 @@ impl ReferenceView {
                 .filter(|(_, s)| s.text("kind") == Some("register"))
                 .map(|(source, s)| Match {
                     source,
-                    spans: vec![
-                        s.period
-                            .clone()
-                            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
-                    ],
+                    spans: vec![s.period.clone().unwrap_or_else(|| bounds(None, None))],
                 })
                 .collect()
         };
@@ -1395,7 +1301,7 @@ fn application_dependencies(
                 hashes.insert(hash.clone());
             }
         }
-        _ => return Ok(Vec::new()),
+        Statement::Link { .. } => return Ok(Vec::new()),
     }
     for (provider, register, table, release) in &contexts {
         let key = |kind: &str, table: Option<String>, release: Option<String>| {
@@ -1448,7 +1354,7 @@ fn application_dependencies(
                 || fields.sentinels.is_some()
         }
         Statement::Assert { .. } => true,
-        _ => false,
+        Statement::Link { .. } => false,
     };
     for index in selected
         .iter()
@@ -1669,7 +1575,8 @@ pub fn resolve(
                     .spans
                     .iter()
                     .flat_map(|span| {
-                        periods(scope)
+                        scope
+                            .intervals()
                             .iter()
                             .filter_map(|s| intersect(span, s))
                             .collect::<Vec<_>>()
@@ -1698,10 +1605,7 @@ pub fn resolve(
             }
             if !matches!(
                 statement,
-                Statement::Ack {
-                    subject: Address::Variable(_),
-                    ..
-                } | Statement::Link {
+                Statement::Link {
                     subject: Address::Variable(_),
                     ..
                 }
@@ -1785,10 +1689,7 @@ pub fn resolve(
                             .iter()
                             .any(|m| view[m.source].text("spelling") == Some(""))
                     {
-                        return Err(
-                            "set variable cannot target a gap marker; ack the finding instead"
-                                .into(),
-                        );
+                        return Err("set variable cannot target a gap marker".into());
                     }
                     if values.variable.as_deref().is_some_and(|v| v != "none")
                         && matches.iter().any(|m| view[m.source].period.is_none())
@@ -1848,7 +1749,7 @@ pub fn resolve(
                         return Err("redundant assert: the source now states this fact".into());
                     }
                 }
-                Statement::Ack { .. } | Statement::Link { .. } => {
+                Statement::Link { .. } => {
                     fields.extend(evidence_fields.iter().cloned());
                 }
             }

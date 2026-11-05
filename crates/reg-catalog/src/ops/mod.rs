@@ -463,9 +463,7 @@ pub fn flag(params: &Params, name: &str) -> Result<bool, Error> {
 pub fn hash<'a>(params: &Params<'a>, name: &str) -> Result<Option<&'a str>, Error> {
     match params.get(name).copied() {
         None => Ok(None),
-        Some(h) if h.len() == 64 && h.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) => {
-            Ok(Some(h))
-        }
+        Some(h) if reg_core::is_sha256_hex(h) => Ok(Some(h)),
         Some(_) => Err(Error::invalid_parameter(name)),
     }
 }

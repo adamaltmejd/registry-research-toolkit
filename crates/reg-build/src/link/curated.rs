@@ -18,7 +18,6 @@ fn relation_kind(relation: reg_frame::statement::Relation) -> &'static str {
     match relation {
         reg_frame::statement::Relation::Continues => "continues",
         reg_frame::statement::Relation::DerivedFrom => "derived_from",
-        reg_frame::statement::Relation::Equivalent => "equivalent",
         reg_frame::statement::Relation::LabelOf => "label_of",
     }
 }

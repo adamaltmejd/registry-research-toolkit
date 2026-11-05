@@ -47,7 +47,7 @@ contract_version = "5.2.0"
 name = "search"
 http = ["GET /api/search"]
 tool = "search"
-params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", tag = "string?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?" }
+params = { q = "string", type = "enum(register|table|variable|code|document)?", register = "ref?", period = "period?", tag = "string?", limit = "limit?", cursor = "cursor?", steward_cursor = "cursor?" }
 result = "Page<SearchHit>"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """One ranked list per call over primary `search` and fallback `search_description` \
@@ -62,15 +62,14 @@ is one distinct (code, label) pair, not a value set (schema §2.1, "Code search"
 `register` and `period` do not apply to it and exclude `code` rows from a \
 filtered search. Its value sets come from `values?code=&label=`. The tokenizer is \
 `unicode61 remove_diacritics 2`, so `lan` finds `län` (#2163); an exact match \
-(diacritics kept) ranks before a folded one of the same tier. `set` hits wait for D. \
-Classification hits are empty until D curates classifications. `q` is at \
+(diacritics kept) ranks before a folded one of the same tier. `set` hits wait for D. `q` is at \
 most 200 characters with no NUL; a query with no letter or digit returns no items, not \
 an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
 50, maximum 200. A paired steward returns a separately labelled `steward` group \
 with its own total and cursor (`steward_cursor`); reference ranks never mix with \
 supplemental ranks. A paired catalog serves only what the steward holds: registers, \
 tables and variables without an accepted placement (over `period`, when given) are \
-filtered out before ranks, counts and paging; classifications, codes and documents are \
+filtered out before ranks, counts and paging; codes and documents are \
 shared and always match. Both cursors bind both component generations."""
 
 [[operation]]
@@ -179,7 +178,7 @@ are gone: a value set is addressed by content."""
 name = "graph"
 http = ["GET /api/graph/{ref}"]
 tool = "graph"
-params = { ref = "ref", kind = "enum(continues|equivalent|derived_from|label_of)?" }
+params = { ref = "ref", kind = "enum(continues|derived_from|label_of)?" }
 result = "Graph {focus, nodes, edges}"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The `relation` edges where the ref is subject or object (`relation_subject`, \
@@ -368,9 +367,9 @@ steward_config = "paired mode only: StewardConfig {presentation: {id, name, long
 
 [shape.Show]
 note = """A `kind`-tagged summary: root (providers), provider (registers), register \
-(name, description, period, tables [{fqid, name, role, implicit, timeless, unit_type, \
+(name, description, period, tables [{fqid, name, role, implicit, timeless, \
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
-(name, description, register, role, implicit, timeless, unit_type, cadence, spans \
+(name, description, register, role, implicit, timeless, cadence, spans \
 [Period], releases? [Release], row_keys [{fqid, spelling, period}]), variable (name, \
 optional description, register, period, sets/tags [{fqid, name}] when non-empty, \
 optional evidence {texts, source_only, spellings, statements, documents}), \
