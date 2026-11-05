@@ -101,6 +101,8 @@ jobs:
         run: cargo test --locked -p reg-mock
       - name: Package with checksums
         run: |
+          # Git Bash on Windows has sha256sum, not shasum; both print `<hash>  <name>`.
+          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; else sha256sum --text "$@"; fi; }
           gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
           GATE_ASSET="reg-export-gate-$gate_version-$TARGET$EXE"
           echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
@@ -109,8 +111,8 @@ jobs:
           cp target/release/reg-export-gate$EXE "dist/$GATE_ASSET"
           cd dist
           for name in "$ASSET" "$GATE_ASSET"; do
-            shasum -a 256 "$name" > "$name.sha256"
-            shasum -a 256 -c "$name.sha256"
+            sha256 "$name" > "$name.sha256"
+            sha256 -c "$name.sha256"
           done
       # The binary has no --help; a missing catalog is its documented refusal
       # (`db_not_found`, exit 10), which proves it loads and parses its arguments.
@@ -139,6 +141,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
+          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; else sha256sum --text "$@"; fi; }
           for name in "$ASSET" "$ASSET.sha256" "$GATE_ASSET" "$GATE_ASSET.sha256"; do
             remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
               --jq ".assets[] | select(.name == \"$name\") | .digest")
@@ -152,7 +155,7 @@ jobs:
                 }
             fi
             if [ -n "$remote" ]; then
-              test "$remote" = "sha256:$(shasum -a 256 "dist/$name" | cut -d' ' -f1)" ||
+              test "$remote" = "sha256:$(sha256 "dist/$name" | cut -d' ' -f1)" ||
                 { echo "::error::$name exists on $TAG with a different digest"; exit 1; }
             fi
           done
