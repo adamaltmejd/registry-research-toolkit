@@ -44,12 +44,15 @@ export function ClassificationView({
     )?.fqid ??
     node.versions.at(-1)?.fqid ??
     null;
-  const [picked, setPicked] = useState(focus ?? fallback);
-  const [pickedFor, setPickedFor] = useState(focus);
-  if (focus !== pickedFor) {
-    setPickedFor(focus);
-    setPicked(focus ?? fallback);
+  // Only the reader's own pick is state; until they pick, the address or the
+  // default (which moves when the deployment's years arrive) decides.
+  const [chosen, setChosen] = useState<string | null>(null);
+  const [chosenFor, setChosenFor] = useState(focus);
+  if (focus !== chosenFor) {
+    setChosenFor(focus);
+    setChosen(null);
   }
+  const picked = chosen ?? focus ?? fallback;
   const version = picked ? byFqid.get(picked) : undefined;
   const axis = dataAxis(
     datedYearRuns(versions, bounds).flatMap((run) => [run.from, run.to]),
@@ -136,7 +139,7 @@ export function ClassificationView({
           window={study ? [study.from, study.to] : null}
           focusSpan={focus}
           hint={null}
-          onToggle={setPicked}
+          onToggle={setChosen}
         />
       </Panel>
       {version && (
@@ -151,7 +154,7 @@ export function ClassificationView({
                     id: v.fqid,
                     name: versionName(v),
                   }))}
-                  onChange={setPicked}
+                  onChange={setChosen}
                 />
               </div>
             )}

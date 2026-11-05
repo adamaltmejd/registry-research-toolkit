@@ -796,11 +796,16 @@ function Span({
 }) {
   const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
   const focusInput = useFocusOnce(focus, at.y);
+  // Set while the page moves focus here itself (a version address): that
+  // focus opens no tooltip, which would cover the lane's name.
+  const quiet = useRef(false);
   // The checkbox's root is its label; focus lands on its input.
   const pickRef = useCallback(
     (node: HTMLLabelElement | null) => {
       face.current = node;
+      quiet.current = true;
       focusInput(node?.querySelector("input") ?? null);
+      quiet.current = false;
     },
     [focusInput],
   );
@@ -912,6 +917,7 @@ function Span({
     </Tooltip>
   );
   const show = (on: boolean) => {
+    if (on && quiet.current) return;
     setOpen(on);
     onActive(on ? span.id : null);
   };
