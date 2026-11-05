@@ -202,8 +202,10 @@
   --text-faint: var(--gray-7);
 
   /* Rules. `border` is the hairline between rows and columns; `border-strong` is
-     an INK hairline and means structure: the rule above a section, a default
-     button's border, a column chip's stroke, a graph axis. */
+     an INK hairline used ONLY for: a detail-pane section rule, a default
+     button's or field's border, a column chip's stroke, a graph axis. Never a
+     rule or divider in a list or browse column: that is `border`
+     (ColumnList `.sectionRule`). */
   --border: var(--gray-9);
   --border-strong: var(--gray-1);
 

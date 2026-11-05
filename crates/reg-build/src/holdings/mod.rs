@@ -123,6 +123,19 @@ pub(crate) fn verify_args(mut args: impl Iterator<Item = String>) -> Result<()> 
     verify::pair(&file, Path::new(base), Path::new(root))
 }
 
+/// `reg-build pin --steward-repo DIR --config FILE`: refresh the config's pin digests.
+pub(crate) fn pin_args(args: impl Iterator<Item = String>) -> Result<()> {
+    let flags = flags(args)?;
+    let usage = "usage: reg-build pin --steward-repo DIR --config FILE";
+    if flags.len() != 2 || !flags.contains_key("--steward-repo") || !flags.contains_key("--config")
+    {
+        return Err(usage.into());
+    }
+    let changed = input::refresh_pins(Path::new(&flags["--steward-repo"]), &flags["--config"])?;
+    eprintln!("reg-build: pin: {changed} pin(s) rewritten");
+    Ok(())
+}
+
 pub(super) fn open(path: &Path) -> Result<Connection> {
     Ok(Connection::open_with_flags(
         path,
