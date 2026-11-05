@@ -79,10 +79,12 @@ export function ClassificationView({
       [v],
       [
         bounds[0],
-        Math.max(
-          catalogBounds.max,
-          v.period.start ? Number(v.period.start.slice(0, 4)) : bounds[0],
-        ),
+        v.period.end
+          ? bounds[1]
+          : Math.max(
+              catalogBounds.max,
+              v.period.start ? Number(v.period.start.slice(0, 4)) : bounds[0],
+            ),
       ],
       axis[0],
     ).map((run) => {
@@ -161,7 +163,7 @@ export function ClassificationView({
         onToggle={setChosen}
       />
       {version && (
-        <Panel title={`Codes in ${versionName(version)}`}>
+        <Panel title={`Codes in ${version.name}`}>
           <div className={classStyles.codes}>
             <ValueSetCodes
               key={version.fqid}
