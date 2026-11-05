@@ -134,6 +134,27 @@ fn pop(object: &mut Value, key: &str) -> Value {
 }
 
 #[test]
+fn table_row_key_shows_the_years_held() {
+    // Fails if a steward table's row key keeps the reference years (#2217): the base
+    // documents demo/keyed/id in Visits over 2017..2022; Visits places it in Id over
+    // 2017 and IdAlt over 2018..2020 (materialize/fixture/keyed.toml).
+    let port = steward::materialize().unwrap();
+    let (status, shown) =
+        client::json(port, "GET", "/api/catalog/demo/keyed/visits", &[], None).unwrap();
+    assert_eq!(status, 200, "{shown}");
+    let held_years = json!({"start": "2017-01-01", "end": "2021-01-01"});
+    let data = &shown["data"];
+    assert_eq!(data["spans"], json!([held_years]));
+    let keys: Vec<_> = data["row_keys"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|key| (key["fqid"].clone(), key["period"].clone()))
+        .collect();
+    assert_eq!(keys, [(json!("demo/keyed/id"), held_years)]);
+}
+
+#[test]
 fn unnamed_project_is_a_logical_draft_but_no_order_file() {
     // Fails if a whitespace-only name reaches the order file's provenance, or if
     // refusing it also refuses the logical order of the same draft.
