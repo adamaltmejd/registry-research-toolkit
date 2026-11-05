@@ -1150,9 +1150,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Str(format!("class/{family}")),
                 Cell::Str("classification".into()),
                 Cell::Text(facts.name.into()),
-                facts
-                    .publisher
-                    .map_or(Cell::Null, |s| Cell::Text(s.into())),
+                facts.publisher.map_or(Cell::Null, |s| Cell::Text(s.into())),
                 facts
                     .description
                     .map_or(Cell::Null, |s| Cell::Text(s.into())),
