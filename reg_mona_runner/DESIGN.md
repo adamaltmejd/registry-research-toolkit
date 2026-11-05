@@ -1,11 +1,11 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
-`extract.R` turns order files into extract files inside MONA. It reads the MONA
-order file (version 4) that `materialize_order` writes, whose contract is
+`extract.R` turns order files into extract files inside MONA. It reads the MONA order
+file (version 4) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
-`crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent and
-no network reach MONA, so the script is one self-contained file that gets uploaded with
-the orders. Run steps are in [README.md](README.md).
+`crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
+and no network reach MONA, so the script is one self-contained file that gets uploaded
+with the orders. Run steps are in [README.md](README.md).
 
 ## Shape
 
@@ -27,12 +27,12 @@ the orders. Run steps are in [README.md](README.md).
   format that order needs, so a MONA without arrow still runs `.dta` and `.csv` orders;
   one still missing fails that order with exit code 2. The export gate carries the same
   helper (`reg_export_gate/DESIGN.md`, "The R file"), since each file is uploaded alone.
-- **One generic script, one steward file.** The steward id, the export root and the
-  ODBC connection arguments are a closed JSON file the steward repository keeps
+- **One generic script, one steward file.** The steward id, the export root and the ODBC
+  connection arguments are a closed JSON file the steward repository keeps
   (`extract-config.json`, or the path in `REG_EXTRACT_CONFIG`), read after the package
   install, so every steward runs the released `extract.R` unchanged (SWECOV move, R11).
-  A missing or malformed file is exit code 2 before any order. The tests write their
-  own file; there is no other override.
+  A missing or malformed file is exit code 2 before any order. The tests write their own
+  file; there is no other override.
 - **No dry run** (maintainer, 2026-10-21). A rerun overwrites the order's export folder
   and archive copy, so a run is cheap to repeat.
 - **Source or Rscript.** Under `source()` in an interactive session the script reports

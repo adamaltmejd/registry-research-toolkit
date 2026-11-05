@@ -363,8 +363,8 @@ it matches (`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
   the pipeline. The install runs in the call, after the path checks and before the prior
   export is cleared, not when the file is sourced: sourcing stays free of side effects,
   and a mistyped path refuses at once without a slow install. The extract runner
-  (`reg_mona_runner/extract.R`) carries the same helper, since each file is
-  uploaded to MONA alone.
+  (`reg_mona_runner/extract.R`) carries the same helper, since each file is uploaded to
+  MONA alone.
 - **Two names.** Sourcing defines `EXPORT_GATE_VERSION` and `export_gate()`; the helpers
   live in the function's closure, so the file does not clutter the pipeline's
   environment.
