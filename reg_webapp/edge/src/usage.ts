@@ -15,6 +15,10 @@ const LABEL_HEADER = "x-reg-usage";
 const FQID = /^[a-z0-9][a-z0-9\-_/]{0,199}$/;
 const MAX_EVENT_PICKS = 100;
 const MAX_EVENT_BYTES = 24 * 1024;
+// The origin's scrub for ids (crates/reg-meta/src/usage.rs `scrub`): a run of six or
+// more digits, `-` or `+` allowed between, is a person number or the like. FQID admits
+// only ASCII digits, so this is the same rule.
+const DIGIT_RUN = /[0-9](?:[-+]?[0-9]){5,}/g;
 
 // User-Agent substrings to a client family, first match wins. Agents before
 // browsers: an agent's UA can name a browser engine too.
@@ -215,7 +219,7 @@ export async function recordPick(
       write(
         dataset,
         steward,
-        { surface: "spa", kind: "pick", op: "event", fqid },
+        { surface: "spa", kind: "pick", op: "event", fqid: fqid.replace(DIGIT_RUN, "<redacted>") },
         request,
         { cache: "", status: 204 },
         [0, -1, -1, -1],
