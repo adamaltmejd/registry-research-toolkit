@@ -158,6 +158,8 @@ pub struct ShowClassFamilyRef {
     name: String,
     /// How many versions it has.
     version_count: u32,
+    /// From the first version's start to the last one's end.
+    period: Period,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -870,7 +872,7 @@ fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<
     })
 }
 
-/// Every classification, or on a data holder's catalog those with a row in a placement
+/// Every classification with a version, or on a data holder's catalog those with a row in a placement
 /// the holder holds. Both origins are read by family pid, the way the root reads
 /// providers.
 fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
@@ -880,14 +882,17 @@ fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
     for conn in &origins {
         let found = rows(
             conn,
-            "SELECT f.pid, n.body, (SELECT count(*) FROM class_version c WHERE c.family_id = f.id)
-                 FROM class_family f JOIN text n ON n.id = f.name_text",
+            "SELECT f.pid, n.body, count(*), min(c.start), max(c.end)
+                 FROM class_family f JOIN text n ON n.id = f.name_text
+                   JOIN class_version c ON c.family_id = f.id
+                 GROUP BY f.id",
             [],
             |row| {
                 Ok(ShowClassFamilyRef {
                     fqid: row.get(0)?,
                     name: row.get(1)?,
                     version_count: row.get(2)?,
+                    period: server.period(row.get(3)?, row.get(4)?),
                 })
             },
         )?;

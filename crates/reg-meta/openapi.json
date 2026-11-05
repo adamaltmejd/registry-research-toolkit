@@ -4729,7 +4729,8 @@
         "required": [
           "fqid",
           "name",
-          "version_count"
+          "version_count",
+          "period"
         ],
         "properties": {
           "fqid": {
@@ -4737,6 +4738,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period",
+            "description": "From the first version's start to the last one's end."
           },
           "version_count": {
             "type": "integer",

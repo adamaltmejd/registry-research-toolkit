@@ -1229,6 +1229,8 @@ export interface components {
         ShowClassFamilyRef: {
             fqid: string;
             name: string;
+            /** @description From the first version's start to the last one's end. */
+            period: components["schemas"]["Period"];
             /**
              * Format: int32
              * @description How many versions it has.

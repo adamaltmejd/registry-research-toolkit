@@ -1433,6 +1433,10 @@
             "name": {
               "type": "string"
             },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "From the first version's start to the last one's end."
+            },
             "version_count": {
               "description": "How many versions it has.",
               "format": "int32",
@@ -1443,7 +1447,8 @@
           "required": [
             "fqid",
             "name",
-            "version_count"
+            "version_count",
+            "period"
           ],
           "type": "object"
         },
