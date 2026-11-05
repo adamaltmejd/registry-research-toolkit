@@ -246,8 +246,9 @@ what it prints:
   another base does not count.
 - `holdings: rebuild` (`stewards.toml` changed, no pair that passed 8e, or a pair that
   no longer matches `holdings.sha256`): redo 8d-8g.
-- `8f: rerun` (a reader-side crate, `conformance/` or the Python lock changed, or the
-  holdings were rebuilt): rerun 8f with binaries built at the release commit.
+- `8f: rerun` (a reader-side crate, `crates/reg-conformance` included, or `conformance/`
+  changed, or the holdings were rebuilt): rerun 8f with binaries built at the release
+  commit.
 - Always rerun 8h and the 8i `base_sha` check at the release commit.
 
 The release notes record both commits, the built one and the release one, and the
@@ -346,36 +347,34 @@ echo "8e $base_sha" >> "$evidence/passed"
 
 #### 8f. Run conformance against the pair
 
-Use the release tier's command from `scripts/gate.py`, pointed at the new catalog
-directory, first for the global catalog and then for the pair. The second run adds
-`--catalog swecov` to the server command, which makes the server admit
-`reg_meta_swecov.db` beside `reg_meta.db`:
+Run the release checks (`crates/reg-conformance`, `--test release`) on the new catalog
+directory with the release server, first for the global catalog and then for the pair.
+`REG_CATALOG=swecov` makes the server admit `reg_meta_swecov.db` beside `reg_meta.db`
+(`--catalog swecov`) and adds the held-only sweep:
 
 ```sh
-uv run python -m pytest conformance -q -n auto -m release --run-release \
-  --artifact-dir="$evidence/catalog" \
-  --server-cmd='target/release/reg-meta serve --db {db} --port {port} --write-limit 100000'
-uv run python -m pytest conformance -q -n auto -m release --run-release \
-  --artifact-dir="$evidence/catalog" \
-  --server-cmd='target/release/reg-meta serve --db {db} --port {port} --write-limit 100000 --catalog swecov'
+export REG_META_BIN=target/release/reg-meta REG_ARTIFACT_DIR="$evidence/catalog"
+cargo test -p reg-conformance --test release --locked -- --nocapture
+REG_CATALOG=swecov cargo test -p reg-conformance --test release --locked -- --nocapture
 ```
 
-`gate.py rust` itself selects a synthetic artifact and accepts no artifact override;
-that run does not validate the release DB. A red artifact run stops publication; a
-failure only in the pair run stops it too. When both pass,
-`echo "8f $base_sha" >> "$evidence/passed"`. Do not change tests to get a pass. If pair
-admission times out at server start, raise `SERVER_READY_SECONDS` (120) in
-`conformance/http_cases.py` through a reviewed PR, not in place.
+`gate.py rust` runs the same target on a synthetic artifact; that run does not validate
+the release DB. A red artifact run stops publication; a failure only in the pair run
+stops it too. When both pass, `echo "8f $base_sha" >> "$evidence/passed"`. Do not change
+tests to get a pass. If pair admission times out at server start, raise
+`SERVER_READY_SECONDS` (120) in `crates/reg-conformance/tests/common/server.rs` through
+a reviewed PR, not in place.
 
-Reading the pair run: the tests read `reg_meta.db` directly and serve both files. Under
-a steward, `ops/order` takes row keys from the holdings (`holding_mapping` joined to
-each table's `key_requirements`, `ops/order/rows.rs`), not from the catalog's `row_key`
-segments. The window and serving logic has no steward branch. A table the steward holds
-nothing for therefore orders with the same entries but no row keys and no row-key window
-findings. `test_release_order.py` marks a table blocked when a row-key segment is
-ambiguous, so a `validate`/`order` disagreement on exactly such a table in the pair run
-is this divergence, not an order defect. It still stops the release: the maintainer
-decides, and the finding is recorded in the notes.
+Reading the pair run: the order census reads `reg_meta.db` and the holdings file
+directly, and the server serves both. On the pair it samples the reference tables the
+holdings place something in and binds only the variables placed there. It reads the
+holdings file's own segments beside the catalog's (steward attestation). It counts a row
+key only when the holdings place it in the table, since a steward takes its row keys
+from the holdings (`ops/order/rows.rs`). Each run prints
+`release order: N tables sampled, M blocked`; record both lines in the notes. A sample
+where most tables are blocked covers little: report it to the maintainer, do not wave it
+through. Any census/server disagreement fails the run and stops the release for the
+maintainer's call. Never adjust the census, or its row-key approximation, to get a pass.
 
 #### 8g. Compare the holdings census with the previous paired release
 

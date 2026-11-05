@@ -13,12 +13,6 @@ dev = [
   "ruff>=0.17.3",
 ]
 
-[tool.pytest.ini_options]
-pythonpath = ["conformance"]
-markers = [
-  "release: conformance cases run against a real artifact selected with --run-release --artifact-dir",
-]
-
 [tool.ruff]
 target-version = "py315"
 

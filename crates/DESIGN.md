@@ -2262,10 +2262,15 @@ actual-file spelling differing from the latest catalog spelling. Project-only ca
 deferred. This restores the holdings/steward cases removed in C; it does not introduce
 another test suite or resolver oracle.
 
-`conformance/test_release_order.py` keeps its independent published-catalog SQL census,
-repeat-byte and HTTP/MCP checks. It has no steward mode. The holdings release proof is
-release step 8g (`reg-build diff --holdings` against the previous paired release) plus
-the integration workflow's `swecov` leg. Real-artifact runs are maintainer scheduled.
+The release checks (`crates/reg-conformance`, `--test release`) keep an independent
+published-catalog SQL census of sampled whole-table orders and their repeat bytes. On a
+steward pair the census also reads the holdings file: it samples the reference tables
+the holdings place something in, binds only the variables placed there, and models the
+holdings' own segments and row keys. A held-only sweep there checks that the browse
+root, every register and table page, search and segments name only held ids, since that
+filter lives in each reader operation. The holdings release proof is release step 8g
+(`reg-build diff --holdings` against the previous paired release) plus the integration
+workflow's `swecov` leg. Real-artifact runs are maintainer scheduled.
 
 The runner and its manifests moved together (#2125). Its testthat suite reads the
 materialize corpus's manifests and covers the pre-database refusals only; extraction is
