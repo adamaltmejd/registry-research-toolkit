@@ -17,6 +17,7 @@ pub enum Named {
     Register,
     Table,
     Variable,
+    ClassVersion,
 }
 
 /// The display names [`names`] read, by kind and public id.
@@ -40,8 +41,9 @@ impl Names {
     }
 }
 
-/// The display names of the registers, tables and variables among `fqids`, as `show`
-/// gives them: a register's or a table's name, a variable's label. In steward mode an
+/// The display names of the registers, tables, variables and classification versions
+/// among `fqids`, as `show` gives them: a register's or a table's name, a variable's or
+/// a version's label. In steward mode an
 /// id the reference catalog defines keeps its reference name (an overlay's is its
 /// slug), as `show` does. One query per origin however many ids, so a list response
 /// names its rows with one call, never a read per row.
@@ -70,7 +72,7 @@ pub fn names<'a>(
     Ok(Names(names))
 }
 
-/// [`names`] in one origin: one query over the three kinds.
+/// [`names`] in one origin: one query over the four kinds.
 fn origin_names(
     conn: &Connection,
     fqids: &[&str],
@@ -84,13 +86,17 @@ fn origin_names(
            JOIN tbl t ON t.pid = x.value JOIN text n ON n.id = t.name_text
          UNION ALL
          SELECT 2, v.pid, n.body FROM json_each(?1) x
-           JOIN variable v ON v.pid = x.value JOIN text n ON n.id = v.label_text",
+           JOIN variable v ON v.pid = x.value JOIN text n ON n.id = v.label_text
+         UNION ALL
+         SELECT 3, c.pid, n.body FROM json_each(?1) x
+           JOIN class_version c ON c.pid = x.value JOIN text n ON n.id = c.label_text",
         [serde_json::Value::from(fqids).to_string()],
         |row| {
             let kind = match row.get::<_, i64>(0)? {
                 0 => Named::Register,
                 1 => Named::Table,
-                _ => Named::Variable,
+                2 => Named::Variable,
+                _ => Named::ClassVersion,
             };
             Ok(((kind, row.get(1)?), row.get(2)?))
         },

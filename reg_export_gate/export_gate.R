@@ -23,12 +23,16 @@
 #
 # Fixed toolkit code: copy it unchanged. Its version is in every receipt.
 
-EXPORT_GATE_VERSION <- "0.2.0"
+EXPORT_GATE_VERSION <- "0.3.0"
 
 export_gate <- local({
   RECEIPT <- "receipt.json"
   ARROW_FLOOR <- "9.0.0"
   REPORT <- "export_gate_report.json"
+  # The size caps (maintainer, 2026-11-04), the Rust gate's: a staging file and
+  # its rewrite are at most 8 MiB, a staging file at most 100,000 rows.
+  MAX_FILE_BYTES <- 8 * 1024 * 1024
+  MAX_ROWS <- 100000
   # Schema type -> the Arrow types a Parquet column of that type may have.
   TYPES <- list(
     integer = c("int32", "int64"),
@@ -311,96 +315,158 @@ export_gate <- local({
     if (length(findings)) refuse("inventory", findings)
   }
 
-  # Parsed from the bytes in memory, so no file handle stays open in staging.
-  read_candidates <- function(staging, schema) {
-    lapply(schema$files, function(f) {
-      bytes <- read_bytes(file.path(staging, f$name))
-      table <- tryCatch(
-        arrow::read_parquet(bytes, as_data_frame = FALSE),
-        error = function(e) NULL,
-        warning = function(w) NULL
-      )
-      list(spec = f, table = table)
+  # Each schema file, read once into memory (at most the byte cap plus one
+  # byte) and parsed from those bytes, so no file handle stays open in staging.
+  # The order is the Rust gate's: the byte cap, the footer's row count, the
+  # columns against the schema, then the rows, counted again as decoded. The
+  # result is a candidate with its columns (one per schema column, in schema
+  # order) or its structure findings.
+  read_candidate <- function(staging, spec) {
+    file <- spec$name
+    fail <- function(rule) {
+      list(spec = spec, findings = list(finding(rule, file)))
+    }
+    quiet <- function(expr) {
+      tryCatch(expr, error = function(e) NULL, warning = function(w) NULL)
+    }
+    bytes <- quiet({
+      con <- file(file.path(staging, file), "rb")
+      on.exit(close(con))
+      readBin(con, "raw", n = MAX_FILE_BYTES + 1)
     })
+    if (is.null(bytes)) {
+      return(fail("unreadable"))
+    }
+    if (length(bytes) > MAX_FILE_BYTES) {
+      return(fail("too_large"))
+    }
+    reader <- quiet(arrow::ParquetFileReader$create(bytes))
+    if (is.null(reader)) {
+      return(fail("unreadable"))
+    }
+    # simplify: the footer's total only; the Rust gate also checks each row
+    # group's count and their sum before decoding. The recount after decoding
+    # below catches a footer that understates, at the cost of decoding it.
+    if (reader$num_rows > MAX_ROWS) {
+      return(fail("too_large"))
+    }
+    schema <- quiet(reader$GetSchema())
+    if (is.null(schema)) {
+      return(fail("unreadable"))
+    }
+    findings <- check_columns(spec, schema)
+    if (length(findings)) {
+      return(list(spec = spec, findings = findings))
+    }
+    table <- quiet(reader$ReadTable())
+    if (is.null(table)) {
+      return(fail("unreadable"))
+    }
+    if (table$num_rows > MAX_ROWS) {
+      return(fail("too_large"))
+    }
+    have <- names(table)
+    columns <- lapply(spec$columns, function(col) {
+      column <- table$column(match(col$name, have) - 1L)
+      if (is_dictionary(column$type)) {
+        column$cast(column$type$value_type)
+      } else {
+        column
+      }
+    })
+    names(columns) <- vapply(spec$columns, function(col) col$name, "")
+    list(spec = spec, columns = columns)
   }
 
-  check_structure <- function(candidates) {
+  # arrow R restores the author's Arrow types from the file's ARROW:schema
+  # entry and has no switch to skip it; the Rust gate ignores it and takes
+  # types from the Parquet types alone. The one hint that matters for an
+  # accepted type is a dictionary (an R factor, a pandas category): its
+  # Parquet type is its value type, so the gate reads it as that.
+  is_dictionary <- function(type) type$id == arrow::Type$DICTIONARY
+  field_type <- function(type) {
+    if (is_dictionary(type)) type$value_type$ToString() else type$ToString()
+  }
+
+  # The file's columns are the schema's, in its order, each of an accepted
+  # type. A duplicate name is column_order; its type is the first column's.
+  check_columns <- function(spec, schema) {
+    file <- spec$name
     findings <- list()
-    for (cand in candidates) {
-      file <- cand$spec$name
-      if (is.null(cand$table)) {
-        findings <- c(findings, list(finding("unreadable", file)))
-        next
-      }
-      want <- vapply(cand$spec$columns, function(col) col$name, "")
-      have <- names(cand$table)
-      for (col in setdiff(want, have)) {
-        findings <- c(findings, list(finding("missing_column", file, col)))
-      }
-      for (i in which(!have %in% want)) {
-        findings <- c(
-          findings,
-          list(finding("extra_column", file, position = i))
-        )
-      }
-      if (setequal(want, have) && !identical(want, have)) {
-        findings <- c(findings, list(finding("column_order", file)))
-      }
-      for (col in cand$spec$columns) {
-        if (col$name %in% have) {
-          type <- cand$table$schema$GetFieldByName(col$name)$type$ToString()
-          if (!type %in% TYPES[[col$type]]) {
-            findings <- c(
-              findings,
-              list(finding("column_type", file, col$name))
-            )
-          }
-        }
+    want <- vapply(spec$columns, function(col) col$name, "")
+    have <- names(schema)
+    for (col in setdiff(want, have)) {
+      findings <- c(findings, list(finding("missing_column", file, col)))
+    }
+    for (i in which(!have %in% want)) {
+      findings <- c(findings, list(finding("extra_column", file, position = i)))
+    }
+    if (setequal(want, have) && !identical(want, have)) {
+      findings <- c(findings, list(finding("column_order", file)))
+    }
+    for (col in spec$columns) {
+      at <- match(col$name, have)
+      if (!is.na(at) && !field_type(schema[[at]]$type) %in% TYPES[[col$type]]) {
+        findings <- c(findings, list(finding("column_type", file, col$name)))
       }
     }
-    if (length(findings)) refuse("structure", findings)
+    findings
   }
 
-  # Base is.na() on the converted column, not an Arrow compute call, so the
-  # check runs on older arrow releases too. NaN is refused before it matters.
-  is_null <- function(column) is.na(as.vector(column))
+  check_structure <- function(staging, schema) {
+    candidates <- lapply(schema$files, function(f) read_candidate(staging, f))
+    findings <- unlist(lapply(candidates, `[[`, "findings"), recursive = FALSE)
+    if (length(findings)) {
+      refuse("structure", findings)
+    }
+    candidates
+  }
+
+  # Null-ness is Arrow's validity, which is what the rewrite writes, never R's
+  # NA conversion: R reads some valid values as NA (a NaN whose low word is
+  # 1954, int32 INT_MIN, the int64 NA sentinel). So these rules use Arrow
+  # compute functions, and such a NaN is a NaN, such an integer a value.
+  any_true <- function(x) any(as.vector(x), na.rm = TRUE)
+  is_null <- function(column) as.vector(arrow::call_function("is_null", column))
 
   # Every count is at least the policy's minimum or null (suppressed), a
   # statistic is null wherever the count it rests on is suppressed, and no
   # double is NaN: a NaN carries about 51 payload bits through Parquet and the
-  # rewrite, so a cell that looks suppressed could hold a value. R reads some
-  # valid Arrow values as NA (a NaN whose low word is 1954, int32 INT_MIN, the
-  # int64 NA sentinel), and the rewrite writes them as values: a column whose R
-  # NAs are not exactly its Arrow nulls is refused, so every rule here sees the
-  # same nulls the rewrite writes.
+  # rewrite, so a cell that looks suppressed could hold a value.
   check_disclosure <- function(candidates, policy) {
     findings <- list()
+    # A minimum past int64 (2^63 and up) is above every count; Arrow would
+    # clamp it to INT64_MAX, letting that count pass.
+    above_all <- policy$min_cell_count >= 2^63
+    minimum <- if (!above_all) {
+      arrow::Scalar$create(policy$min_cell_count, arrow::int64())
+    }
     for (cand in candidates) {
       file <- cand$spec$name
-      table <- cand$table
+      columns <- cand$columns
       for (col in cand$spec$columns) {
-        column <- table[[col$name]]
-        values <- as.vector(column)
-        nan <- if (col$type == "double") is.nan(values) else FALSE
-        # R's is.na() is TRUE for NaN too, which has its own rule.
-        if (sum(is.na(values) & !nan) != column$null_count) {
-          findings <- c(findings, list(finding("na_not_null", file, col$name)))
-        }
-        if (any(nan)) {
+        column <- columns[[col$name]]
+        if (
+          col$type == "double" &&
+            any_true(arrow::call_function("is_nan", column))
+        ) {
           findings <- c(findings, list(finding("nan_value", file, col$name)))
         }
         if (col$role %in% COUNT_ROLES) {
-          values <- as.vector(table[[col$name]]$cast(arrow::float64()))
-          if (any(values[!is.na(values)] < policy$min_cell_count)) {
+          # A negative count is below any minimum.
+          below <- if (above_all) {
+            !is_null(column)
+          } else {
+            arrow::call_function("less", column$cast(arrow::int64()), minimum)
+          }
+          if (any_true(below)) {
             findings <- c(
               findings,
               list(finding("min_cell_count", file, col$name))
             )
           }
         } else if (col$role == "statistic") {
-          if (
-            any(!is_null(table[[col$name]]) & is_null(table[[col$support]]))
-          ) {
+          if (any(!is_null(column) & is_null(columns[[col$support]]))) {
             findings <- c(
               findings,
               list(finding("unsupported_statistic", file, col$name))
@@ -437,7 +503,7 @@ export_gate <- local({
     for (cand in candidates) {
       file <- cand$spec$name
       for (col in cand$spec$columns) {
-        values <- scan_text(cand$table[[col$name]], col$type)
+        values <- scan_text(cand$columns[[col$name]], col$type)
         if (any(grepl(IDENTIFIER, values[!is.na(values)], perl = TRUE))) {
           findings <- c(
             findings,
@@ -484,7 +550,7 @@ export_gate <- local({
   write_checked <- function(cand, path) {
     columns <- lapply(cand$spec$columns, function(col) {
       type <- EXPORT_TYPES[[col$type]]()
-      chunks <- cand$table[[col$name]]$cast(type)$chunks
+      chunks <- cand$columns[[col$name]]$cast(type)$chunks
       do.call(arrow::concat_arrays, c(chunks, list(type = type)))
     })
     names(columns) <- vapply(cand$spec$columns, function(col) col$name, "")
@@ -497,7 +563,8 @@ export_gate <- local({
       use_dictionary = FALSE,
       write_statistics = FALSE
     )
-    list(name = cand$spec$name, sha256 = sha256(read_bytes(path)))
+    bytes <- read_bytes(path)
+    list(name = cand$spec$name, sha256 = sha256(bytes), size = length(bytes))
   }
 
   # Writes the checked tables and the receipt into a new folder beside
@@ -514,6 +581,13 @@ export_gate <- local({
     written <- lapply(candidates, function(cand) {
       write_checked(cand, file.path(fresh, cand$spec$name))
     })
+    # The rewrite is uncompressed, so a compressed staging file under the cap
+    # can grow past it: such a file is too_large too.
+    big <- Filter(function(w) w$size > MAX_FILE_BYTES, written)
+    if (length(big)) {
+      refuse("structure", lapply(big, function(w) finding("too_large", w$name)))
+    }
+    written <- lapply(written, function(w) w[c("name", "sha256")])
     write_json(receipt(schema, policy, written), file.path(fresh, RECEIPT))
     # file.rename() warns on failure; the failure is the refusal.
     if (!suppressWarnings(file.rename(fresh, output))) {
@@ -712,8 +786,7 @@ export_gate <- local({
     schema <- load_schema(schema_path)
     policy <- load_policy(policy_path, schema)
     check_inventory(staging, schema)
-    candidates <- read_candidates(staging, schema)
-    check_structure(candidates)
+    candidates <- check_structure(staging, schema)
     check_disclosure(candidates, policy)
     check_backstop(candidates)
     export(output, schema, policy, candidates)

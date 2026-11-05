@@ -122,7 +122,7 @@ Column types matter: R `integer` is the schema's `integer`, `numeric` its `doubl
 The console shows
 
 ```text
-export gate 0.2.0: pass, 2 files
+export gate 0.3.0: pass, 2 files
   written with receipt.json to \\micro.intra\...\export_gate_trial\export
 ```
 
@@ -142,7 +142,7 @@ exported.
 The call stops with an error, for example
 
 ```text
-export gate 0.2.0: refused (disclosure)
+export gate 0.3.0: refused (disclosure)
   min_cell_count file=persons_by_year_group.parquet column=n_persons
 Error: export gate refused (disclosure); report in ...\.diagnostics\export_gate_report.json
 ```

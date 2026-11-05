@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable or set by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -1091,6 +1091,8 @@ export interface components {
         Segment: {
             /** @description A classification version's ref. */
             classification?: string;
+            /** @description The classification version's name. */
+            classification_name?: string;
             /** @description `yes` or `no`. */
             coded?: string;
             /** @description The column name it is delivered under; on a data holder's catalog, the holder's column. */
@@ -1166,6 +1168,8 @@ export interface components {
             row_keys: components["schemas"]["ShowRowKey"][];
             spans: components["schemas"]["Period"][];
             timeless: boolean;
+            /** @description The variables in this table, each over the years it has here. */
+            variables: components["schemas"]["ShowTableVariable"][];
         } | {
             axes: components["schemas"]["ShowSetAxis"][];
             /**
@@ -1197,6 +1201,45 @@ export interface components {
             register: string;
             sets?: components["schemas"]["ShowMembership"][];
             tags?: components["schemas"]["ShowMembership"][];
+        } | {
+            description?: string;
+            fqid: string;
+            /** @enum {string} */
+            kind: "class_family";
+            name: string;
+            variables: components["schemas"]["ShowClassUser"][];
+            /** @description In start order. */
+            versions: components["schemas"]["ShowClassVersion"][];
+        } | {
+            family: components["schemas"]["ShowMembership"];
+            fqid: string;
+            /** @enum {string} */
+            kind: "class_version";
+            name: string;
+            /** @description The version's validity. */
+            period: components["schemas"]["Period"];
+            value_set: components["schemas"]["ValueSetRef"];
+            /** @description The variables that use this version. */
+            variables: components["schemas"]["ShowClassUser"][];
+        };
+        /** @description A variable that uses the classification, with its rows that carry it. */
+        ShowClassUser: {
+            fqid: string;
+            name: string;
+            /**
+             * @description Its rows, as `segments` serves them, whose `classification` is the family's (or
+             *     the version's).
+             */
+            segments: components["schemas"]["Segment"][];
+        };
+        ShowClassVersion: {
+            fqid: string;
+            name: string;
+            /** @description The version's validity. */
+            period: components["schemas"]["Period"];
+            /** @description Whether one of `variables` uses this version. */
+            used: boolean;
+            value_set: components["schemas"]["ValueSetRef"];
         };
         /** @description A curated set (group) or tag the variable belongs to. */
         ShowMembership: {
@@ -1278,6 +1321,12 @@ export interface components {
             period: components["schemas"]["Period"];
             role: string;
             timeless: boolean;
+        };
+        /** @description A variable in a table, over the years it has in that table. */
+        ShowTableVariable: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
         };
         ShowVariableRef: {
             fqid: string;
