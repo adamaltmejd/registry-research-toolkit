@@ -40,7 +40,7 @@ export function DeliverySummary({
     );
   const variableLink = (ref: string) =>
     loadingName(ref) ? (
-      variableName(ref)
+      <span className={styles.pendingLink}>{variableName(ref)}</span>
     ) : (
       <a className="link" href={catalogHref(ref)}>
         {variableName(ref)}
@@ -149,7 +149,11 @@ export function DeliverySummary({
               </h3>
               <ul className={styles.columns} aria-label="Columns">
                 {[...columns].map(([id, column]) => (
-                  <li key={id} className={styles.column}>
+                  <li
+                    key={id}
+                    className={styles.column}
+                    aria-busy={loadingName(column.variable) || undefined}
+                  >
                     <ColumnChip
                       name={column.spelling}
                       years={
@@ -167,7 +171,10 @@ export function DeliverySummary({
                   <span className="micro-label">Years not available</span>
                   <ul className={styles.plainList}>
                     {clips.map((clip) => (
-                      <li key={JSON.stringify(clip)}>
+                      <li
+                        key={JSON.stringify(clip)}
+                        aria-busy={loadingName(clip.variable) || undefined}
+                      >
                         {variableName(clip.variable)}{" "}
                         <span className={styles.years}>
                           {catalogPeriodRuns(
@@ -184,7 +191,11 @@ export function DeliverySummary({
                   <span className="micro-label">Row identifier</span>
                   <ul className={styles.plainList}>
                     {[...rowKeys].map(([id, column]) => (
-                      <li key={id} className={styles.column}>
+                      <li
+                        key={id}
+                        className={styles.column}
+                        aria-busy={loadingName(column.variable) || undefined}
+                      >
                         <ColumnChip
                           name={column.spelling}
                           years={

@@ -132,11 +132,21 @@ function variableItems(
   }));
 }
 
+/** The search-time label of a folded group: its one matching member by name, or
+ * the count (member names contain commas, so a list would misread). */
+function foldLabel(group: string, members: readonly string[] = []): string {
+  const names = [...new Set(members)];
+  return names.length === 1
+    ? `${group}: ${names[0]}`
+    : `${group}: ${names.length} matching`;
+}
+
 /** A register's rows with each concept group folded to one row (#303) that opens
  * the group's page, at the place of its first member in `items`: under its own
  * name in the name order, or at its best-ranked member while searching. While
- * searching the row names the members that matched ("person: Kommun"): the group's
- * own name may not contain the search text. */
+ * searching the row names the one member that matched ("person: Kommun"), or counts
+ * several ("Inkomstmått: 4 matching"): the group's own name may not contain the
+ * search text. */
 function foldGroups(
   items: readonly ColumnItem[],
   sets: RegisterShow["sets"],
@@ -163,7 +173,7 @@ function foldGroups(
         id: set.fqid,
         name: set.name,
         label: searching
-          ? `${set.name}: ${[...new Set(matched.get(set.fqid))].join(", ")}`
+          ? foldLabel(set.name, matched.get(set.fqid))
           : undefined,
         href: catalogHref(set.fqid),
       },

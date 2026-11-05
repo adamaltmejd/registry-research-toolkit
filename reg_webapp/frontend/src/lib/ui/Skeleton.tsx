@@ -34,10 +34,9 @@ export function Skeleton({ variant = "line", width, count = 1 }: Props) {
 export function NameSkeleton({ label }: { label: string }) {
   return (
     <>
-      <span
-        className={`${styles.skeleton} ${styles.line} ${styles.name}`}
-        aria-hidden="true"
-      />
+      <span className={styles.nameBox} aria-hidden="true">
+        <span className={`${styles.skeleton} ${styles.name}`} />
+      </span>
       <span className="visually-hidden">{label}</span>
     </>
   );
