@@ -792,24 +792,25 @@ overlapping curated overrides are refused at both locations.
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it. A previous file with a
   missing or newer schema version is not comparable; an older one is compared while the
-  id queries still run on it (a missing table or column refuses as `schema N is not
-  comparable: <sqlite error>`), and stdout records the cross-schema comparison. When the previous release's catalog version has an
-  integer major of at least 1, removed ids from `ident` or `var_set` must appear with
-  the same kind in `ident_retired`, and existing retirements must remain. A published
-  variable id's targets are its column-bearing occurrences' (table slug, folded
-  spelling, `[start, end)` period) triples. Targets overlap when table and spelling
-  match and their periods overlap; matching names in disjoint periods do not preserve
-  identity. An explicit table id targets its table name. Implicit tables share their
-  register's id and are excluded from the table rule. If an id of the same kind
-  survives, both target sets are non-empty, and no old/new targets overlap,
-  `verify --previous` refuses it as moved under that same version rule, naming the pid
-  and both target sets; retire that id and mint a new one. Otherwise, missing unretired
-  ids, moved ids and removed retirements are reported on stdout, one line per id in id
-  order with a total count, without refusing. The rule follows the previous release's
-  version, whatever the candidate's: a `dev` or 1.0.0 candidate compared with a 0.x
-  release is lenient. No flag changes this rule; other verification checks still apply.
-  Overlapping targets, including growth, are allowed. `diff` lists and counts moved ids
-  in its `ids` section. Registers and providers are excluded from this rule.
+  id queries still run on it (a missing table or column refuses as
+  `schema N is not comparable: <sqlite error>`), and stdout records the cross-schema
+  comparison. When the previous release's catalog version has an integer major of at
+  least 1, removed ids from `ident` or `var_set` must appear with the same kind in
+  `ident_retired`, and existing retirements must remain. A published variable id's
+  targets are its column-bearing occurrences' (table slug, folded spelling,
+  `[start, end)` period) triples. Targets overlap when table and spelling match and
+  their periods overlap; matching names in disjoint periods do not preserve identity. An
+  explicit table id targets its table name. Implicit tables share their register's id
+  and are excluded from the table rule. If an id of the same kind survives, both target
+  sets are non-empty, and no old/new targets overlap, `verify --previous` refuses it as
+  moved under that same version rule, naming the pid and both target sets; retire that
+  id and mint a new one. Otherwise, missing unretired ids, moved ids and removed
+  retirements are reported on stdout, one line per id in id order with a total count,
+  without refusing. The rule follows the previous release's version, whatever the
+  candidate's: a `dev` or 1.0.0 candidate compared with a 0.x release is lenient. No
+  flag changes this rule; other verification checks still apply. Overlapping targets,
+  including growth, are allowed. `diff` lists and counts moved ids in its `ids` section.
+  Registers and providers are excluded from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
