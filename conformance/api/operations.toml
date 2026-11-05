@@ -117,11 +117,20 @@ and linked documents; provenance is absent by default."""
 name = "segments"
 http = ["GET /api/segments/{ref}"]
 tool = "segments"
-params = { ref = "ref", period = "period?", table = "ref?", value_set_name = "string?", evidence = "boolean?", limit = "limit?", cursor = "cursor?" }
+params = { ref = "ref", variable = "string[]?", period = "period?", table = "ref?", value_set_name = "string?", evidence = "boolean?", limit = "limit?", cursor = "cursor?" }
 result = "Page<Segment>"
 errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """A variable's one per-period list: per table, column name and period one row, \
-`ORDER BY start, table, column, file`, offset-paged. A segment (schema §1.2) is cut \
+`ORDER BY start, table, column, file, variable`, offset-paged. With `variable` (up to \
+200 variable refs) the ref is a table (a register with an implicit table names it) and \
+the list is those variables' rows in that table, one list in the same order, so a \
+project's table reads its columns in one request rather than one per column (#2232); \
+each row names its `variable`. A table ref without `variable` stays `invalid_ref` \
+(a whole table's list is thousands of rows, rebuilt per page), `variable` with a \
+variable ref and `table` with a table ref are `invalid_parameter` (each would \
+contradict the ref), and a `variable` value that is not a variable is `invalid_ref`. \
+A cursor binds a digest of the request, so it stays short however many variables are \
+named. A segment (schema §1.2) is cut \
 where the provider's wording changes (`variable_text`), so each row carries one \
 `wording`. On a paired catalog the rows are the accepted placements: the held column \
 name, the `file` it is held in and the years held, with the form of the catalog \
@@ -366,7 +375,9 @@ reg_meta_version = "string; the server's version, which seeds a new project's re
 steward_config = "paired mode only: StewardConfig {presentation: {id, name, long_name?, description?, order_instructions?}, logo (SVG markup)}; admission refuses a presentation without string id and name; runtime reads no steward TOML"
 
 [shape.Show]
-note = """A `kind`-tagged summary: root (providers), provider (registers), register \
+note = """A `kind`-tagged summary: root (providers [{fqid, name, registers}], each \
+provider's registers as its provider summary lists them, so one read draws the whole \
+register list), provider (registers [{fqid, name, period}]), register \
 (name, description, period, tables [{fqid, name, role, implicit, timeless, \
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, cadence, spans \
@@ -396,6 +407,7 @@ populations = "[{name, definition, ref_day}]"
 
 [shape.Segment]
 note = "A fact the catalog does not state is absent, never null: `coded` unknown and `state` clear are left out too."
+variable = "string; the variable's fqid"
 table = "string; the table's fqid"
 table_name = "string; the table's name, as `show` gives it"
 column = "string; the column name, the latest primary occurrence's spelling; on a paired catalog the held column's"

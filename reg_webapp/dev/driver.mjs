@@ -467,6 +467,38 @@ async function projectPagesCase(page, shoot) {
     `the opened project's window ${JSON.stringify(clamped)} was not clamped to the catalog span ${spanYears}`);
 }
 
+// A column the catalog does not know fails alone (#2232): its card says the years
+// did not load, and removing it gives the table's other columns their years. Fails if
+// the refusal fails every column the table read named, which no later read retries,
+// so the card stays without years after the removal. Its own case: a page that has
+// already read Kön and Ålder reads the unknown column alone, as before the fix.
+async function projectUnknownColumnCase(page, shoot) {
+  const main = page.getByRole("main");
+  const projectFile = new URL(
+    "../../conformance/cases/fixtures/webapp-dev/project_data.json",
+    import.meta.url,
+  );
+  const unknown = JSON.parse(readFileSync(projectFile, "utf8"));
+  unknown.sources[0].bindings.push({ variable: "demo/bas/nope", type: "categorical", display_name: "nope" });
+  const chooser = page.waitForEvent("filechooser");
+  await main.getByRole("button", { name: "Open a project file…", exact: true }).click();
+  await (await chooser).setFiles({
+    name: "unknown-column.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(unknown)),
+  });
+  const tables = main.getByRole("region", { name: "Tables", exact: true });
+  const yearsFailed = tables.getByText(/^The years did not load\./);
+  await yearsFailed.waitFor();
+  await shoot("project-unknown-column");
+  // A variable the catalog does not know has no name to show.
+  await tables.getByRole("button", { name: /^Remove Variable name unavailable from / }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Remove column", exact: true }).click();
+  await tables.getByRole("img", { name: /^KON, Kön, .*in project/ }).waitFor();
+  await tables.getByRole("img", { name: /^Alder, Ålder, .*in project/ }).waitFor();
+  check((await yearsFailed.count()) === 0, "removing the unknown column left its table's years unloaded");
+}
+
 // Browser boundary: group links, member lanes and member navigation.
 // Fails if groups lose their namespaced route, members leave API (authored)
 // order, a lane title stops joining its varying facets in curated axis order
@@ -1000,6 +1032,12 @@ const scenarios = {
     shots: 3,
     route: "/project",
     run: projectPagesCase,
+  },
+  "project-unknown-column": {
+    fixture: "webapp-dev",
+    shots: 1,
+    route: "/project",
+    run: projectUnknownColumnCase,
   },
   "add-variable-columns": {
     fixture: "webapp-dev",

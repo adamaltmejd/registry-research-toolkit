@@ -389,9 +389,8 @@ export async function searchFacets(
   ).data;
 }
 
-/** Provider and register entries of the current catalog summary. */
+/** A provider of the catalog root, with its registers. */
 export type RootChild = RootShow["providers"][number];
-export type RegisterChild = ProviderShow["registers"][number];
 
 export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
@@ -412,15 +411,18 @@ export function getGraph(
   );
 }
 
-/** All structural segments, following the server's generation-bound cursor. */
+/** All structural segments, following the server's generation-bound cursor. With
+ * `variables`, `ref` is a table and the rows are those variables' in it. */
 export async function getSegments(
   ref: string,
-  options?: { signal?: AbortSignal },
+  options?: { signal?: AbortSignal; variables?: readonly string[] },
 ): Promise<CatalogSegment[]> {
   const items: CatalogSegment[] = [];
   let cursor: string | null = null;
   do {
     const query = new URLSearchParams({ limit: "200" });
+    for (const variable of options?.variables ?? [])
+      query.append("variable", variable);
     if (cursor !== null) query.set("cursor", cursor);
     const page = await rustGet<RustSchemas["SegmentPage"]>(
       `/segments/${encodeFqid(ref)}`,

@@ -37,5 +37,21 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/sg/t"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "variable"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "table"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/sg/r"}
   }
 ]

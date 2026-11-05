@@ -1,0 +1,22 @@
+{
+  "note": "Fails if a table ref with `variable` stops listing only the named variables' rows in that table (Tidig and Bransch, also in table t, stay out), stops naming each row's `variable`, orders them other than (start, table, column, ...) so Kanslig 2018 precedes Svar 2018, or repeats or skips a row across the page boundary at limit 3 (Kanslig 2020 ends page one, Svar 2020 alone fills page two, which carries no cursor); or if a register with an implicit table (demo/sg2) stops naming that table. Oracle: the fixture's JSONL (#2232).",
+  "fixture": "segments",
+  "requests": [
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sg/t",
+      "query": {"variable": ["demo/sg/svar", "demo/sg/kanslig"], "limit": 3}
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sg/t",
+      "query": {"variable": ["demo/sg/svar", "demo/sg/kanslig"], "limit": 3},
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sg2",
+      "query": {"variable": ["demo/sg2/svar"]}
+    }
+  ]
+}
