@@ -29,14 +29,23 @@ export function DeliverySummary({
   ];
   const names = useCatalogNames(refs);
   const pending = useCatalogNamesPending(refs);
-  // A name still loading is a placeholder; only a settled miss says so.
+  // A name still loading is a placeholder, not a link; only a settled miss
+  // says the name is unavailable.
+  const loadingName = (ref: string) => pending.has(ref) && !names.has(ref);
   const variableName = (ref: string) =>
-    names.get(ref) ??
-    (pending.has(ref) ? (
+    loadingName(ref) ? (
       <NameSkeleton label="Loading variable name" />
     ) : (
-      "Variable name unavailable"
-    ));
+      (names.get(ref) ?? "Variable name unavailable")
+    );
+  const variableLink = (ref: string) =>
+    loadingName(ref) ? (
+      variableName(ref)
+    ) : (
+      <a className="link" href={catalogHref(ref)}>
+        {variableName(ref)}
+      </a>
+    );
   const groups = new Map<
     string,
     { source: string; table: string; entries: Entry[] }
@@ -125,11 +134,11 @@ export function DeliverySummary({
               <h3
                 id={`delivery-${encodeURIComponent(key)}`}
                 className={styles.tableHeading}
-                aria-busy={pending.has(group.table) || undefined}
+                aria-busy={loadingName(group.table) || undefined}
               >
                 {/* As on the table's card: the file's join key stands in
                     only where the catalog has no name. */}
-                {pending.has(group.table) && !names.has(group.table) ? (
+                {loadingName(group.table) ? (
                   <NameSkeleton label="Loading table name" />
                 ) : (
                   <a className="link" href={catalogHref(group.table)}>
@@ -149,9 +158,7 @@ export function DeliverySummary({
                           : catalogPeriodRuns(column.periods)
                       }
                     />
-                    <a className="link" href={catalogHref(column.variable)}>
-                      {variableName(column.variable)}
-                    </a>
+                    {variableLink(column.variable)}
                   </li>
                 ))}
               </ul>
@@ -186,9 +193,7 @@ export function DeliverySummary({
                               : catalogPeriodRuns(column.periods)
                           }
                         />
-                        <a className="link" href={catalogHref(column.variable)}>
-                          {variableName(column.variable)}
-                        </a>
+                        {variableLink(column.variable)}
                       </li>
                     ))}
                   </ul>
