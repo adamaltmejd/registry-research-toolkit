@@ -31,6 +31,10 @@ on:
         description: The steward's curation directory, relative to the repository root.
         default: curation
         type: string
+      config:
+        description: The steward config, relative to the repository root.
+        default: steward.toml
+        type: string
     secrets:
       BUMP_TOKEN:
         required: true
@@ -48,6 +52,7 @@ jobs:
       GH_TOKEN: ${{ secrets.BUMP_TOKEN }}
       STEWARD: ${{ inputs.steward }}
       CURATION: ${{ inputs.curation }}
+      CONFIG: ${{ inputs.config }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -71,7 +76,9 @@ jobs:
             exit 0
           fi
           { echo "current=$current"; echo "newest=$newest"; echo "branch=$branch"; } >> "$GITHUB_OUTPUT"
-      - name: Re-lock against the newer base
+      # The re-lock rewrites curation lock files, so the config's `[pins]` digests are
+      # refreshed after it; `reg-build pin` adds and drops no pin.
+      - name: Re-lock against the newer base and refresh the pins
         if: steps.find.outputs.newest
         env:
           NEWEST: ${{ steps.find.outputs.newest }}
@@ -91,6 +98,7 @@ jobs:
           install -m 755 "$dir/reg-build-$TARGET" "$dir/reg-build"
           "$dir/reg-build" lock --base "$dir/reg_meta.db" --inputs "$GITHUB_WORKSPACE" \
             --curation "$GITHUB_WORKSPACE/$CURATION"
+          "$dir/reg-build" pin --steward-repo "$GITHUB_WORKSPACE" --config "$CONFIG"
       - name: Move the pin and open the PR
         if: steps.find.outputs.newest
         env:
@@ -102,10 +110,12 @@ jobs:
           set -euo pipefail
           old=${CURRENT//./\\.}
           sed -i "s|^tag = \"$old\"$|tag = \"$NEWEST\"|" toolkit.toml
-          # Every reusable-workflow ref at the old pin moves with it.
+          # Every mention of the old pin in the caller's workflows moves with it: the
+          # `steward-*.yml@` refs and the `reg_meta_tag` inputs that must name the same
+          # release. `reg_meta/v0.77.0` never matches inside `reg_meta/v0.77.01`.
           for f in .github/workflows/*.yml .github/workflows/*.yaml; do
             [ -f "$f" ] || continue
-            sed -i "s|\(/\.github/workflows/steward-[a-z]*\.yml\)@$old\$|\1@$NEWEST|; s|\(/\.github/workflows/steward-[a-z]*\.yml\)@$old\([[:space:]]\)|\1@$NEWEST\2|" "$f"
+            perl -pi -e 's#\Q$ENV{CURRENT}\E(?![0-9.])#$ENV{NEWEST}#g' "$f"
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

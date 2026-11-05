@@ -455,8 +455,10 @@ lists its inputs and an example call.
   service token, and the cache probe is skipped. `dry_run` builds and runs the image and
   stops there.
 - `steward-bump.yml`: when a newer `reg_meta/v*` release exists, re-locks the curation
-  against its base, moves `toolkit.toml` and the caller's `uses:` refs, and opens a PR
-  with a token the caller supplies (`GITHUB_TOKEN` cannot change workflow files).
+  against its base, refreshes the config's `[pins]` digests (`reg-build pin`, which adds
+  and drops no pin), moves `toolkit.toml` and every mention of the old tag in the
+  caller's workflows (the `uses:` refs and `reg_meta_tag` inputs), and opens a PR with a
+  token the caller supplies (`GITHUB_TOKEN` cannot change workflow files).
 
 The inputs of these workflows are a contract with every steward repository. A change to
 them breaks a steward only at its next bump, as a red PR; the release notes name it.

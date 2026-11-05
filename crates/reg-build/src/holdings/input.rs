@@ -248,6 +248,44 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
     Ok(config)
 }
 
+/// Recompute the digest of every path already in the config's `[pins]` and rewrite the
+/// values that changed, in place: the step after a re-lock rewrites `curation.lock`
+/// files. It adds and drops no pin, so what the steward pins stays a reviewed change.
+/// Returns the number of pins rewritten.
+pub(super) fn refresh_pins(root: &Path, config: &str) -> Result<usize> {
+    let config_path = path(root, config)?;
+    let parsed: Config = crate::toml_file(&config_path)
+        .map_err(|_| "holdings_config_invalid: malformed steward config".to_owned())?;
+    let mut text = std::fs::read_to_string(&config_path)
+        .map_err(|_| "holdings_config_invalid: unreadable steward config")?;
+    let mut changed = 0;
+    for (rel, old) in &parsed.pins {
+        let full = path(root, rel)?;
+        let new = if full.is_dir() {
+            let mut files = std::collections::BTreeSet::new();
+            tree(&full, "", &mut files)?;
+            crate::digest(&full, &files)?.0
+        } else {
+            crate::sha256_file(&full)?.0
+        };
+        if new == *old {
+            continue;
+        }
+        let line = format!("\"{rel}\" = \"{old}\"\n");
+        if text.matches(&line).count() != 1 {
+            return Err(format!(
+                "holdings_config_invalid: pin {rel:?} is not one `\"path\" = \"sha256\"` line"
+            )
+            .into());
+        }
+        text = text.replacen(&line, &format!("\"{rel}\" = \"{new}\"\n"), 1);
+        changed += 1;
+    }
+    std::fs::write(&config_path, text)
+        .map_err(|e| format!("holdings_config_invalid: write {config}: {e}"))?;
+    Ok(changed)
+}
+
 /// One digest over the pinned input list, so the artifact names its inputs without
 /// carrying their paths. The per-file pins stay in the build report.
 pub(super) fn manifest_digest(pins: &BTreeMap<String, String>) -> String {

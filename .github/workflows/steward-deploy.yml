@@ -22,9 +22,10 @@ name: Steward deploy
 #
 # `image` bakes reg_webapp/steward.Dockerfile from the release's `reg-meta` binary, its
 # base catalog and the holdings on `holdings_release` (every digest checked), then
-# pushes it to Fly's registry. `deploy` runs `flyctl deploy`, `edge` deploys the
-# toolkit's worker with the release's SPA bundle and probes it, `prune` trims the
-# registry. Origin first, then edge, as the toolkit's own deploy (deploy-skew guard).
+# pushes it to Fly's registry. `deploy` runs `flyctl deploy`, then deploys the
+# toolkit's worker with the release's SPA bundle and probes it, in one job serialized
+# per app; `prune` trims the registry. Origin first, then edge, as the toolkit's own
+# deploy (deploy-skew guard).
 # There is no HEAD guard: deploying an older holdings release is the rollback.
 #
 # Layout for the caller's wrangler config, whose paths resolve from its own folder:
@@ -214,11 +215,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    # One deploy per app at a time; queue rather than cancel, as an interrupted flyctl
-    # run can strand the machine mid-update.
+    # Origin and edge in one job, one deploy per app at a time: two runs never
+    # interleave (A's SPA on B's origin), and a queued run waits rather than cancels,
+    # as an interrupted flyctl run can strand the machine mid-update.
     concurrency:
-      group: fly-deploy-${{ inputs.fly_app }}
+      group: steward-deploy-${{ inputs.fly_app }}
       cancel-in-progress: false
+    env:
+      EDGE_HOST: ${{ inputs.public_host }}
+      ACCESS: ${{ inputs.access }}
+      CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -233,24 +240,6 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_CONFIG: ${{ inputs.fly_config }}
           FLY_APP: ${{ inputs.fly_app }}
-
-  edge:
-    needs: deploy
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    concurrency:
-      group: edge-deploy-${{ inputs.fly_app }}
-      cancel-in-progress: false
-    env:
-      EDGE_HOST: ${{ inputs.public_host }}
-      ACCESS: ${{ inputs.access }}
-      CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
-      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: adamaltmejd/registry-research-toolkit

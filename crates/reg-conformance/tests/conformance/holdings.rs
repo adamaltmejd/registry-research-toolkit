@@ -315,3 +315,46 @@ fn holdings_base_change_invalidates_lineage_lock() {
     .refused(&["premise-changed"]);
     assert!(!out.exists());
 }
+
+#[test]
+fn pin_refresh_readmits_a_relocked_steward() {
+    // Fails if `reg-build pin` computes a digest the compiler does not (a directory pin
+    // over another file walk), leaves a changed pin stale, or adds a pin: the steward
+    // bump re-locks, refreshes the pins and must then compile.
+    let dir = Scratch::new("pin-refresh").unwrap();
+    let holdings = steward::holdings(dir.path()).unwrap();
+    let config = holdings.root.join("steward.toml");
+    let before = read(&config).unwrap();
+    append(
+        &holdings.root.join("curation/readers/holdings.toml"),
+        "\n# re-locked\n",
+    )
+    .unwrap();
+    let git = |args: &[&str]| {
+        let status = Command::new("git")
+            .args(args)
+            .current_dir(&holdings.root)
+            .status()
+            .unwrap();
+        assert!(status.success());
+    };
+    git(&["commit", "--quiet", "-am", "re-lock"]);
+    let out = dir.path().join("pinned.db");
+    exec(holdings.command().arg("--out").arg(&out)).refused(&["holdings_input_digest_mismatch"]);
+    exec(
+        Command::new(reg_conformance::reg_build())
+            .args(["pin", "--steward-repo"])
+            .arg(&holdings.root)
+            .args(["--config", "steward.toml"]),
+    )
+    .ok();
+    let after = read(&config).unwrap();
+    assert_eq!(
+        before.lines().count(),
+        after.lines().count(),
+        "pin added or dropped a line"
+    );
+    assert_ne!(before, after, "pin rewrote nothing");
+    git(&["commit", "--quiet", "-am", "refresh pins"]);
+    exec(holdings.command().arg("--out").arg(&out)).ok();
+}
