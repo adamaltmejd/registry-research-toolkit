@@ -1351,10 +1351,20 @@ dependencies = [
  "axum",
  "reg-catalog",
  "reg-core",
+ "reg-mock",
  "rmcp",
  "serde_json",
  "sha2",
  "tokio",
+]
+
+[[package]]
+name = "reg-mock"
+version = "0.0.0"
+dependencies = [
+ "reg-core",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

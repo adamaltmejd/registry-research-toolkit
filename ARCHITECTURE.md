@@ -72,7 +72,8 @@ registry-research-toolkit/
   crates/
     reg-core/       # project_data.json contract + structural validator, grammars
     reg-catalog/    # catalog reader and its operations
-    reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
+    reg-meta/       # binary: `serve` (HTTP API + /mcp), `mcp` (stdio), `mock` (offline)
+    reg-mock/       # local mock data: rules and spec contracts, compile
     reg-core-wasm/  # reg-core for the SPA (WebAssembly)
     reg-frame/      # the catalog builder: source frame records
     reg-readers/    #   one reader per input format
@@ -92,6 +93,7 @@ Dependency graph (acyclic):
 
 ```text
 reg-meta       → reg-catalog → reg-core
+reg-meta       → reg-mock → reg-core
 reg-core-wasm  → reg-core
 reg-build      → reg-resolve, reg-readers → reg-frame, reg-core
 reg-frame      → reg-core
