@@ -318,6 +318,23 @@ async function browsePagesCase(page, shoot) {
       )
       .then(() => true, () => false);
     check(onOpened, `opening ${opened} from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
+    // Fails if, while the search holds text, the provider's sections stop
+    // following the register column's order, which puts a name hit
+    // (Hushållsregistret for "hush") before a variable-only one.
+    await open(page, "/catalog/demo");
+    await settled(page);
+    await page.getByRole("searchbox", { name: /^Search registers/ }).fill("hush");
+    await tree.getByRole("row", { name: /^Basregistret, matched on/ }).waitFor();
+    await variables.getByRole("group", { name: "Hushållsregistret", exact: true }).waitFor();
+    await settled(page);
+    const orders = () => page.evaluate(() => ({
+      tree: [...document.querySelectorAll('[role="treegrid"] [role="row"][aria-level="2"]')].map((row) => row.innerText.split("\n")[0].trim()),
+      sections: [...document.querySelectorAll('[data-browse-column="variables"] header')].map((header) => header.innerText.trim()),
+    }));
+    const { tree: treeOrder, sections: sectionOrder } = await orders();
+    check(JSON.stringify(sectionOrder) === JSON.stringify(treeOrder),
+      `while searching, the sections read ${JSON.stringify(sectionOrder)}, the tree ${JSON.stringify(treeOrder)}`);
+    await page.getByRole("searchbox", { name: /^Search registers/ }).fill("");
     // Fails if → on the open provider's row stops moving into the variables
     // column, or focus arriving there (→, or Tab from the tree) opens a row:
     // only Enter, Space or a click opens one.

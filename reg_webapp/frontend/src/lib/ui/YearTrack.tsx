@@ -39,15 +39,15 @@ export function YearTrack({
   const windowAt = window ? place(window) : null;
   const years =
     coverage.length === 0
-      ? "no dated delivery"
-      : coverage
+      ? "No dated delivery"
+      : `Delivered ${coverage
           .map(([from, to]) => (from === to ? `${from}` : `${from}–${to}`))
-          .join(", ");
+          .join(", ")}`;
   return (
     // Decorative: the years are read out beside it for assistive tech.
     <span
       className={styles.bar}
-      title={`Delivered ${years}`}
+      title={years}
       data-in-project={inProject || undefined}
     >
       <span className={styles.track} aria-hidden="true">
@@ -63,7 +63,7 @@ export function YearTrack({
           ) : null;
         })}
       </span>
-      <span className="visually-hidden">Delivered {years}.</span>
+      <span className="visually-hidden">{years}.</span>
     </span>
   );
 }

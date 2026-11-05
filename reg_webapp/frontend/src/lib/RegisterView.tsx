@@ -7,7 +7,7 @@ import { catalogPeriodLabel } from "./catalog_period";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
-import { datedYearRuns, studyWindow } from "./study_window";
+import { datedYearRuns, studyWindow, variableYearRuns } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { FilterChip } from "./ui/FilterChip";
@@ -133,7 +133,11 @@ export function RegisterView({
               {[...shown]
                 .sort((a, b) => svCollator.compare(a.name, b.name))
                 .map((variable) => {
-                  const coverage = datedYearRuns([variable], bounds);
+                  const coverage = variableYearRuns(
+                    variable,
+                    node.tables,
+                    bounds,
+                  );
                   return (
                     <VariableRow
                       key={variable.fqid}

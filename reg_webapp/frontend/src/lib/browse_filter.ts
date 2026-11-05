@@ -158,6 +158,12 @@ export const browseOrder = {
 
 const readOrder = () => order;
 
+/** The registers the browse tree keeps for the filter, in its order; empty
+ * while it is not filtering or its search failed. */
+export function useBrowseOrder(): readonly string[] {
+  return useSyncExternalStore(browseFilter.subscribe, readOrder);
+}
+
 /** How many of another register's matches the variables column lists before
  * its "N more" row (#1828); a register with one more than this lists them all,
  * since a "1 more" row would take the place of the row it hides. */
@@ -173,7 +179,7 @@ export function useOtherRegisterMatches(
 ): { reference: RegisterFacet[]; steward: RegisterFacet[] } | null {
   const needle = useBrowseFilter().trim();
   const query = useSettledFilter();
-  const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
+  const treeOrder = useBrowseOrder();
   const matches = useAsyncResource(
     registerFqid === null ? null : query,
     (signal) =>

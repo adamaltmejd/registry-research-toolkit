@@ -69,3 +69,22 @@ export function tableYears(
     to: last ? Number(last.slice(0, 4)) : bounds[1],
   };
 }
+
+/** A register list row's delivered years. The variable's own period is the
+ * hull of its tables', so a variable in a timeless table as well as dated ones
+ * has an open hull, which `datedYearRuns` drops whole; its dated tables'
+ * periods then give its years. */
+export function variableYearRuns(
+  variable: Pick<RegisterShow["variables"][number], "period" | "tables">,
+  tables: readonly RegisterShow["tables"][number][],
+  bounds: readonly [number, number],
+): ProjectStudyWindow[] {
+  const { start, end } = variable.period;
+  if (start !== null || end !== null) return datedYearRuns([variable], bounds);
+  return datedYearRuns(
+    tables.filter(
+      (table) => !table.timeless && variable.tables.includes(table.fqid),
+    ),
+    bounds,
+  );
+}
