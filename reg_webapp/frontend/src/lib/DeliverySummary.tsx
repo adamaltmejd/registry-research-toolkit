@@ -116,7 +116,9 @@ export function DeliverySummary({
                 className={styles.tableHeading}
               >
                 <a className="link" href={catalogHref(group.table)}>
-                  {names.get(group.table) ?? "Table name unavailable"}
+                  {/* As on the table's card: the file's join key stands in
+                      only where the catalog has no name. */}
+                  {names.get(group.table) ?? group.source}
                 </a>{" "}
                 <span className={styles.years}>{years}</span>
               </h3>

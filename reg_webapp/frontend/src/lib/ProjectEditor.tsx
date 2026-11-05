@@ -20,7 +20,6 @@ import { tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
-import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useCatalogNames } from "./use_catalog_names";
 import {
@@ -239,13 +238,12 @@ function Check({
       id="project-checks"
       tabIndex={-1}
       aria-label="Check"
-      aria-busy={busy || undefined}
+      aria-busy={busy || verdict === "checking" || undefined}
       className={styles.check}
     >
       {verdict === "checking" ? (
-        <div aria-busy="true">
-          <Skeleton />
-        </div>
+        // The verdict word, plain as in the banner: no glyph, no tone.
+        <p className={styles.checking}>{words}</p>
       ) : validation.error && !structural ? (
         <StatusRow
           tone="error"

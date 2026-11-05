@@ -377,17 +377,20 @@ export function BrowseTree({ className }: { className?: string }) {
               : `${matchCount} registers`}
         </span>
         {/* One toggle (maintainer-decided 2026-10-22): it collapses while any
-          group is open, and expands once all are closed. */}
-        <Button
-          variant="ghost"
-          onPress={() =>
-            onExpandedChange(
-              expandedKeys.size > 0 ? new Set() : new Set(expandable),
-            )
-          }
-        >
-          {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
-        </Button>
+          group is open, and expands once all are closed. With no group listed
+          (a search that matches nothing) there is nothing to toggle. */}
+        {expandable.length > 0 && (
+          <Button
+            variant="ghost"
+            onPress={() =>
+              onExpandedChange(
+                expandedKeys.size > 0 ? new Set() : new Set(expandable),
+              )
+            }
+          >
+            {expandedKeys.size > 0 ? "Collapse all" : "Expand all"}
+          </Button>
+        )}
       </div>
       {/* The scroll box: the tree and the column's one selection bar. */}
       <div ref={boxRef} className={styles.scroller}>

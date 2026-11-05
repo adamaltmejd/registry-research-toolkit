@@ -50,3 +50,11 @@
 .sourceFindings {
   margin-bottom: var(--space-3);
 }
+/* A table name still loading: the skeleton line, at a name's width. */
+.namePending {
+  composes: skeleton line from "./ui/Skeleton.module.css";
+  display: inline-block;
+  width: 12rem;
+  max-width: 100%;
+  vertical-align: middle;
+}

@@ -62,6 +62,12 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
+/* "Checking": the banner's plain verdict word while the first check runs. */
+.checking {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
 .issues {
   display: flex;
   flex-direction: column;

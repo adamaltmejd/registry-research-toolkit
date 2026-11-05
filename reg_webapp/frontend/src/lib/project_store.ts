@@ -11,6 +11,9 @@ import { checkProject } from "./reg_core";
 
 type Issue = components["schemas"]["Issue"];
 const STORAGE_KEY = "reg_webapp:project_data";
+/** Set while the stored draft is the one last downloaded or opened, so a reload
+ * does not mark a saved draft unsaved. */
+const SAVED_KEY = "reg_webapp:project_data_saved";
 
 export interface ProjectSnapshot {
   draft: ProjectData | null;
@@ -38,11 +41,14 @@ function publish(next: ProjectSnapshot): void {
 
 function replace(raw: string | null, persist: boolean): void {
   const check = raw === null ? null : checkProject(raw);
+  const dirty = raw !== null && raw !== lastDownloaded;
   let storageError: string | null = null;
   if (persist) {
     try {
       if (raw === null) localStorage.removeItem(STORAGE_KEY);
       else localStorage.setItem(STORAGE_KEY, raw);
+      if (raw === null || dirty) localStorage.removeItem(SAVED_KEY);
+      else localStorage.setItem(SAVED_KEY, "1");
     } catch {
       storageError =
         "The browser could not save this draft. Download project_data.json to keep it.";
@@ -53,7 +59,7 @@ function replace(raw: string | null, persist: boolean): void {
     draft: raw !== null && check?.ok ? (JSON.parse(raw) as ProjectData) : null,
     issues: check?.issues ?? [],
     storageError,
-    dirty: raw !== null && raw !== lastDownloaded,
+    dirty,
   });
 }
 
@@ -109,6 +115,11 @@ export const projectStore = {
       "project_data.json",
     );
     lastDownloaded = snapshot.raw;
+    try {
+      localStorage.setItem(SAVED_KEY, "1");
+    } catch {
+      // Only a reload's "unsaved" mark depends on it.
+    }
     publish({ ...snapshot, dirty: false });
   },
 };
@@ -117,7 +128,10 @@ export const projectStore = {
  * document: the same check and rejection path applies to storage and uploads. */
 export function startDraftLifecycle(): void {
   try {
-    replace(localStorage.getItem(STORAGE_KEY), false);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    lastDownloaded =
+      raw !== null && localStorage.getItem(SAVED_KEY) === "1" ? raw : null;
+    replace(raw, false);
   } catch {
     publish({
       ...snapshot,

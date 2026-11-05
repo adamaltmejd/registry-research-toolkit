@@ -873,11 +873,12 @@ grow new visual language meanwhile.
   structure check, whose problems are listed in full under it; a check that did not run
   is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
   will be delivered" keep the previous check's answer (not a check that did not run)
-  with `aria-busy`; a `Skeleton` shows only when there is none, or when a table or
-  column was added, removed or moved since, so the earlier findings would sit on the
-  wrong card. "What will be delivered" is the order the catalog would serve, shown only
-  when the project can be ordered: per table its name and years, each column as a
-  `ColumnChip` (with its years only where they differ from the table's) beside the
+  with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only
+  when there is none, or when a table or column was added, removed or moved since, so
+  the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
+  and is not checked. "What will be delivered" is the order the catalog would serve,
+  shown only when the project can be ordered: per table its name and years, each column
+  as a `ColumnChip` (with its years only where they differ from the table's) beside the
   variable's name, "Years not available" per column the period asks more of than the
   table has, and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
@@ -893,14 +894,15 @@ grow new visual language meanwhile.
   (`--focus-ring-inset`, the same accent line and halo) so the scroll box and a sticky
   row never clip it. An item or group with something in the project carries a 6 px
   `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
-  While the search bar holds text, the list shows its filter state (see Layout). A
-  column renders every row, with no virtualization, so find-in-page works. Measured on a
-  production build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the
-  provider column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is
-  accepted (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows
-  or 150 ms a key in production. The fallback then is to virtualize only lists over
-  about 1,500 rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section
-  headers.
+  While the search bar holds text, the list shows its filter state (see Layout). In the
+  variables column a name, and a section's register name, wraps rather than truncates:
+  many variable names share a long start and differ only at the end. A column renders
+  every row, with no virtualization, so find-in-page works. Measured on a production
+  build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the provider
+  column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is accepted
+  (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows or 150
+  ms a key in production. The fallback then is to virtualize only lists over about 1,500
+  rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section headers.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the

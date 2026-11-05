@@ -670,7 +670,17 @@ function LaneText({
   );
   useEffect(() => {
     const node = focused.current;
-    if (top !== undefined && node && document.activeElement === node)
+    if (top === undefined || !node || document.activeElement !== node) return;
+    // Only a lane out of view scrolls: centring one already in view pushed the
+    // page's head (kind mark, title) half under the sticky top bar.
+    const bar =
+      Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--top-bar-height",
+        ),
+      ) || 0;
+    const { top: y, bottom } = node.getBoundingClientRect();
+    if (y < bar || bottom > window.innerHeight)
       node.scrollIntoView({ block: "center" });
   }, [top]);
   // The reader's own scroll or key ends that: a later resize must not pull

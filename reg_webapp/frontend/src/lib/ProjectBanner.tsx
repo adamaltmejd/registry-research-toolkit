@@ -56,13 +56,18 @@ export function ProjectBanner({
   const snapshot = useProject();
   const route = useRoute();
   const { raw, draft, dirty } = snapshot;
-  // /project offers its own "Create a project" with "Open a project file".
-  if (raw === null && route.name === "project") return null;
+  // /project offers its own "Create a project" with "Open a project file": the
+  // box stays, hidden, so the top bar keeps its height there.
+  const hidden = route.name === "project";
   if (raw === null)
     return (
-      <div className={styles.empty}>
+      <div
+        className={styles.empty}
+        data-hidden={hidden || undefined}
+        aria-hidden={hidden || undefined}
+      >
         <Button
-          isInert={!context}
+          isInert={!context || hidden}
           onPress={() => {
             if (!context) return;
             createProject(context);
