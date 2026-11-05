@@ -18,7 +18,7 @@ pedantic = { level = "warn", priority = -1 }
 opt-level = 1
 
 # `reg-core-wasm` for the SPA (`bun run gen:wasm`): size over speed, under the
-# gzipped budget `scripts/gate.py` checks.
+# gzipped budget `scripts/gate.sh` checks.
 [profile.wasm]
 inherits = "release"
 opt-level = "s"

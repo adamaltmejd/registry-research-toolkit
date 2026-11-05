@@ -25,7 +25,7 @@ last=$(git describe --tags --abbrev=0 --match 'reg_meta/v*' 2>/dev/null ||
   git rev-list --max-parents=0 HEAD)  # no reachable tag: count from the root
 git log --oneline "$last"..HEAD -- crates | wc -l
 git ls-files 'crates/*.rs' | xargs wc -l | tail -1
-git ls-files 'scripts/*.py' 'conformance/*.py' | xargs wc -l | tail -1
+git ls-files 'scripts/*.sh' 'reg_webapp/dev/*.sh' | xargs wc -l | tail -1
 ```
 
 Compare each suite's wall time with its budget in ARCHITECTURE.md → "Tiers". Rust:
@@ -38,18 +38,15 @@ crate's `Cargo.toml` to a use in that crate's sources, tests, examples or `build
 These answer without judgment. Run them first, by one subagent on the tier below the
 family's mid tier (in Claude, Sonnet); the work is lookup.
 
-- **Dependencies.** Rust: `cargo machete` (it also runs in `gate.py crates`). The SPA:
+- **Dependencies.** Rust: `cargo machete` (it also runs in `gate.sh crates`). The SPA:
   `reg_webapp/frontend/package.json` against its imports, scripts, build configuration
-  and CI. The workspace-root `[dependency-groups].dev` against `scripts/`,
-  `conformance/` and CI; no Python package has runtime dependencies. A dependency
-  declared and not used, or used and not declared, is a finding.
+  and CI. A dependency declared and not used, or used and not declared, is a finding.
 - **Dead code.** `cargo machete` and the compiler's warnings for Rust; `rg` each export
-  of `reg_webapp/frontend/src` for a use;
-  `uvx --from vulture==2.16 vulture scripts conformance --min-confidence 80`. Confirm
-  each hit with `rg` across the workspace before calling it dead.
+  of `reg_webapp/frontend/src` for a use. Confirm each hit with `rg` across the
+  workspace before calling it dead.
 - **Trace tables**, kept in the scratchpad: every CLI flag and subcommand (the Rust
-  `parse_args` of `reg-build`, `reg-meta` and `reg-export-gate`; argparse in
-  `scripts/*.py`), to its README or DESIGN.md line, to a test; every `openapi.json`
+  `parse_args` of `reg-build`, `reg-meta`, `reg-export-gate` and `xtask`; the steps of
+  `scripts/gate.sh`), to its README or DESIGN.md line, to a test; every `openapi.json`
   path, to a conformance case; every curation-TOML key the loader accepts, to a
   committed use. A gap is a finding: code without a stated behavior is YAGNI, and a
   stated behavior without a test is either a gap or a line to cut.
@@ -126,10 +123,10 @@ one of three piles.
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push, run the gate steps CI runs for the touched module
-(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0` for `scripts/` and
-`crates/` (it includes `crates`), `rust` for `conformance/` and the Rust server, and
-`frontend` plus `flows` for `reg_webapp/frontend` and `reg_webapp/dev`. The R packages
-are not gated: run their testthat suites by hand. For the edge worker, run
+(`bash scripts/gate.sh <step>`): `lint` always, `g0` for `scripts/` and `crates/` (it
+includes `crates`), `rust` for `conformance/` and the Rust server, and `frontend` plus
+`flows` for `reg_webapp/frontend` and `reg_webapp/dev`. The R packages are not gated:
+run their testthat suites by hand. For the edge worker, run
 `bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
 wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
 redesigns a module rather than deleting from it, or needs more than one sitting, becomes

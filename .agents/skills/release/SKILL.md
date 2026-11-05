@@ -95,7 +95,7 @@ maintainer runs it. A gap is allowed; the guard blocks deployment throughout it.
 
 The bump commit, `Bump <package> version to X.Y.Z`, contains **only** the version files
 (and `Cargo.lock`). Commit it on `origin/main` and push it to a PR branch; CI is the
-gate, so there is no local `gate.py all`. `ci.yml` runs every step `gate.py all` runs
+gate, so there is no local `gate.sh all`. `ci.yml` runs every step `gate.sh all` runs
 (lint, the scripts suite, `rust` with the synthetic release admission, and, because the
 `webapp` filter matches `Cargo.toml`, the frontend and flows jobs):
 
@@ -358,7 +358,7 @@ cargo test -p reg-conformance --test release --locked -- --nocapture
 REG_CATALOG=swecov cargo test -p reg-conformance --test release --locked -- --nocapture
 ```
 
-`gate.py rust` runs the same target on a synthetic artifact; that run does not validate
+`gate.sh rust` runs the same target on a synthetic artifact; that run does not validate
 the release DB. A red artifact run stops publication; a failure only in the pair run
 stops it too. When both pass, `echo "8f $base_sha" >> "$evidence/passed"`. Do not change
 tests to get a pass. If pair admission times out at server start, raise

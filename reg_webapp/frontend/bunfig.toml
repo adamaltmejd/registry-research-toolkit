@@ -1,5 +1,5 @@
-# No minimum release age (mirrors the root pyproject's uv `exclude-newer =
-# false`). Explicit 0, not omitted: an absent key inherits a global bunfig.toml
+# No minimum release age (repo policy: new releases are taken at once,
+# Renovate included). Explicit 0, not omitted: an absent key inherits a global bunfig.toml
 # waiting period, which resolves differently from the committed bun.lock.
 [install]
 minimumReleaseAge = 0

@@ -15,21 +15,22 @@
   },
   "customManagers": [
     {
-      "description": "uvx tool pins (`uvx --from <pkg>==<ver>`) in the gate and skills",
+      "description": "The panache pin, the gate's PANACHE_VERSION (CI's `lint` job installs the release it names).",
       "customType": "regex",
       "managerFilePatterns": [
-        "/^scripts/gate\\.py$/",
-        "/^\\.agents/skills/.+/SKILL\\.md$/"
+        "/^scripts/gate\\.sh$/"
       ],
       "matchStrings": [
-        "(?:uvx --from |\"--from\",\\s*\")(?<depName>[A-Za-z0-9][A-Za-z0-9._-]*)==(?<currentValue>[0-9][^\\s\"'`]*)"
+        "PANACHE_VERSION=(?<currentValue>[0-9][^\\s]*)"
       ],
-      "datasourceTemplate": "pypi"
+      "depNameTemplate": "jolars/panache",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
   "packageRules": [
     {
-      "description": "Nightly: everything the builder does not load (root dev deps, Actions, Docker, tool pins), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy, mirrors uv `exclude-newer = false`); this also lifts config:recommended's npm delay.",
+      "description": "Nightly: everything the builder does not load (Actions, Docker, tool pins, the SPA's deps), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy); this also lifts config:recommended's npm delay.",
       "matchPackageNames": [
         "*"
       ],
@@ -39,13 +40,6 @@
       ],
       "separateMajorMinor": false,
       "minimumReleaseAge": null
-    },
-    {
-      "description": "Move pyproject floors to the newest release and relock (repo convention), not lock-only.",
-      "matchManagers": [
-        "pep621"
-      ],
-      "rangeStrategy": "bump"
     },
     {
       "description": "Weekly: what the builder loads, every Cargo manifest.",
@@ -63,7 +57,7 @@
       ]
     },
     {
-      "description": "Its own weekly PR refreshing uv.lock and Cargo.lock. The group name only keeps all lockfiles in that one branch.",
+      "description": "Its own weekly PR refreshing the lockfiles (Cargo.lock among them). The group name only keeps all lockfiles in that one branch.",
       "matchUpdateTypes": [
         "lockFileMaintenance"
       ],
@@ -74,13 +68,6 @@
       "prBodyNotes": [
         "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
       ]
-    },
-    {
-      "description": "The Python interpreter (.python-version, requires-python) moves with the docs: a manual upgrade (upgrade-deps), not a one-file bump.",
-      "matchDepNames": [
-        "python"
-      ],
-      "enabled": false
     }
   ]
 }

@@ -18,13 +18,13 @@ checkout it lives in, whatever your cwd.
 
 ## Prerequisites
 
-`dev.sh` installs the checkout's own `.venv` (`uv sync --frozen`) and
-`reg_webapp/frontend/node_modules` (`bun install --frozen-lockfile`) on every run — a
-no-op when in sync, so a fresh worktree needs no setup. It then runs
-`cargo build --workspace` and `bun run gen:wasm`. You need:
+`dev.sh` installs the checkout's own `reg_webapp/frontend/node_modules`
+(`bun install --frozen-lockfile`) on every run — a no-op when in sync, so a fresh
+worktree needs no setup. It then runs `cargo build --workspace` and `bun run gen:wasm`.
+You need:
 
-- `uv`, `bun` and `cargo`; for `gen:wasm`, `rustup target add wasm32-unknown-unknown`
-  and `cargo install wasm-bindgen-cli --version <v> --locked`, with `<v>` the `=` pin in
+- `bun` and `cargo`; for `gen:wasm`, `rustup target add wasm32-unknown-unknown` and
+  `cargo install wasm-bindgen-cli --version <v> --locked`, with `<v>` the `=` pin in
   `crates/reg-core-wasm/Cargo.toml`.
 - For `smoke` / `shot`: a Chrome for agent-browser. It finds an installed Google Chrome;
   with none, run
@@ -126,8 +126,8 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
   ```
 
 Server-only changes rarely need the SPA: the conformance `api` corpus runs the Rust
-server on synthetic fixtures (`uv run --no-project scripts/gate.py rust`). Frontend unit
-tests (jsdom, vitest): `(cd reg_webapp/frontend && bun run test)`.
+server on synthetic fixtures (`bash scripts/gate.sh rust`). Frontend unit tests (jsdom,
+vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 ## Gotchas
 

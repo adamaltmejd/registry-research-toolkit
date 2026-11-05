@@ -200,7 +200,7 @@ where the evidence in hand establishes a candidate defect with that impact.
 
 Fill every field of the rendered template and report the routes, states and viewports
 you actually inspected. Say whether captures are author iteration or retained gate
-evidence. `gate.py flows` (`dev.sh --fixture-db flows <out-dir>`, then
+evidence. `gate.sh flows` (`dev.sh --fixture-db flows <out-dir>`, then
 `dev.sh --paired-fixture flows <out-dir> steward-held`) covers only its driver scenarios
 (the `scenarios` table in `driver.mjs`) and, in CI, only phone and desktop
 (`REG_WEBAPP_FLOW_VIEWPORTS`; local runs default to all four); every case must pass, and
@@ -253,7 +253,7 @@ Rendered — the implementer's self-check, the maintainer:
 
 - Candidate: <change, branch, full HEAD>
 - Checkout: <path dev.sh resolved>
-- Gate run: <gate.py step and result, or n/a>
+- Gate run: <gate.sh step and result, or n/a>
 - Command: <exact command>
 - Routes and states inspected: <routes/states actually opened>
 - Viewports inspected: <widths actually opened>

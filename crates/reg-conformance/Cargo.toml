@@ -11,7 +11,7 @@ reg-core = { path = "../reg-core" }
 
 # The black-box suite (conformance/README.md). `test = false`: `cargo test --workspace`
 # does not rebuild `target/debug/reg-meta` or `reg-build` as executables, so this
-# target would test a stale binary. `scripts/gate.py rust` builds the workspace, then
+# target would test a stale binary. `scripts/gate.sh rust` builds the workspace, then
 # runs it by name (`--test conformance`).
 [[test]]
 name = "conformance"
