@@ -34,6 +34,7 @@ import { ColumnChip } from "./ui/ColumnChip";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
+import { NameSkeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { issueId, type ValidationIssue } from "./validation";
 
@@ -79,7 +80,7 @@ export function SourceCard({
   // the join key it would otherwise flash.
   const naming = loading && !names.has(source.table);
   const shownName = naming ? (
-    <span className={styles.namePending} aria-hidden="true" />
+    <NameSkeleton label="Loading table name" />
   ) : (
     tableName
   );
@@ -286,7 +287,7 @@ export function SourceCard({
       action={
         <Button
           variant="ghost"
-          aria-label={`Remove table ${tableName}`}
+          aria-label={naming ? "Remove table" : `Remove table ${tableName}`}
           onPress={() => setRemoving({ binding: null, label: tableName })}
         >
           Remove table
@@ -392,7 +393,9 @@ export function SourceCard({
         }}
         title={
           removesSource
-            ? `Remove table ${tableName}?`
+            ? naming
+              ? "Remove this table?"
+              : `Remove table ${tableName}?`
             : `Remove ${removing?.label ?? "column"} from ${tableName}?`
         }
         actions={

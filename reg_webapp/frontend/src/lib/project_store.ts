@@ -11,8 +11,9 @@ import { checkProject } from "./reg_core";
 
 type Issue = components["schemas"]["Issue"];
 const STORAGE_KEY = "reg_webapp:project_data";
-/** Set while the stored draft is the one last downloaded or opened, so a reload
- * does not mark a saved draft unsaved. */
+/** The exact bytes last downloaded or opened. A reload treats the stored draft as
+ * saved only when it is byte-identical to them: another tab on this storage may
+ * have written newer, undownloaded edits after this tab's download. */
 const SAVED_KEY = "reg_webapp:project_data_saved";
 
 export interface ProjectSnapshot {
@@ -47,8 +48,8 @@ function replace(raw: string | null, persist: boolean): void {
     try {
       if (raw === null) localStorage.removeItem(STORAGE_KEY);
       else localStorage.setItem(STORAGE_KEY, raw);
-      if (raw === null || dirty) localStorage.removeItem(SAVED_KEY);
-      else localStorage.setItem(SAVED_KEY, "1");
+      if (lastDownloaded === null) localStorage.removeItem(SAVED_KEY);
+      else localStorage.setItem(SAVED_KEY, lastDownloaded);
     } catch {
       storageError =
         "The browser could not save this draft. Download project_data.json to keep it.";
@@ -116,7 +117,7 @@ export const projectStore = {
     );
     lastDownloaded = snapshot.raw;
     try {
-      localStorage.setItem(SAVED_KEY, "1");
+      localStorage.setItem(SAVED_KEY, snapshot.raw);
     } catch {
       // Only a reload's "unsaved" mark depends on it.
     }
@@ -129,8 +130,7 @@ export const projectStore = {
 export function startDraftLifecycle(): void {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    lastDownloaded =
-      raw !== null && localStorage.getItem(SAVED_KEY) === "1" ? raw : null;
+    lastDownloaded = localStorage.getItem(SAVED_KEY);
     replace(raw, false);
   } catch {
     publish({

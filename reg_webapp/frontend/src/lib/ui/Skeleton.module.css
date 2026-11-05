@@ -39,3 +39,10 @@
     background-position: -200% 0;
   }
 }
+
+.name {
+  display: inline-block;
+  width: 12rem;
+  max-width: 100%;
+  vertical-align: middle;
+}

@@ -3,7 +3,8 @@ import { catalogHref } from "./catalog";
 import { catalogPeriodRuns, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
-import { useCatalogNames } from "./use_catalog_names";
+import { NameSkeleton } from "./ui/Skeleton";
+import { useCatalogNames, useCatalogNamesPending } from "./use_catalog_names";
 
 type Entry = LogicalOrder["entries"][number];
 
@@ -19,13 +20,23 @@ export function DeliverySummary({
   /** A newer check is in flight: this order is the previous one. */
   busy: boolean;
 }) {
-  const names = useCatalogNames([
+  const refs = [
     ...order.entries.flatMap((entry) => [entry.table, entry.variable]),
     ...order.clips.map((clip) => clip.variable),
     ...order.row_keys.flatMap((key) =>
       key.columns.map((column) => column.variable),
     ),
-  ]);
+  ];
+  const names = useCatalogNames(refs);
+  const pending = useCatalogNamesPending(refs);
+  // A name still loading is a placeholder; only a settled miss says so.
+  const variableName = (ref: string) =>
+    names.get(ref) ??
+    (pending.has(ref) ? (
+      <NameSkeleton label="Loading variable name" />
+    ) : (
+      "Variable name unavailable"
+    ));
   const groups = new Map<
     string,
     { source: string; table: string; entries: Entry[] }
@@ -114,12 +125,17 @@ export function DeliverySummary({
               <h3
                 id={`delivery-${encodeURIComponent(key)}`}
                 className={styles.tableHeading}
+                aria-busy={pending.has(group.table) || undefined}
               >
-                <a className="link" href={catalogHref(group.table)}>
-                  {/* As on the table's card: the file's join key stands in
-                      only where the catalog has no name. */}
-                  {names.get(group.table) ?? group.source}
-                </a>{" "}
+                {/* As on the table's card: the file's join key stands in
+                    only where the catalog has no name. */}
+                {pending.has(group.table) && !names.has(group.table) ? (
+                  <NameSkeleton label="Loading table name" />
+                ) : (
+                  <a className="link" href={catalogHref(group.table)}>
+                    {names.get(group.table) ?? group.source}
+                  </a>
+                )}{" "}
                 <span className={styles.years}>{years}</span>
               </h3>
               <ul className={styles.columns} aria-label="Columns">
@@ -134,8 +150,7 @@ export function DeliverySummary({
                       }
                     />
                     <a className="link" href={catalogHref(column.variable)}>
-                      {names.get(column.variable) ??
-                        "Variable name unavailable"}
+                      {variableName(column.variable)}
                     </a>
                   </li>
                 ))}
@@ -146,8 +161,7 @@ export function DeliverySummary({
                   <ul className={styles.plainList}>
                     {clips.map((clip) => (
                       <li key={JSON.stringify(clip)}>
-                        {names.get(clip.variable) ??
-                          "Variable name unavailable"}{" "}
+                        {variableName(clip.variable)}{" "}
                         <span className={styles.years}>
                           {catalogPeriodRuns(
                             periodsLess(clip.requested, clip.ordered),
@@ -173,8 +187,7 @@ export function DeliverySummary({
                           }
                         />
                         <a className="link" href={catalogHref(column.variable)}>
-                          {names.get(column.variable) ??
-                            "Variable name unavailable"}
+                          {variableName(column.variable)}
                         </a>
                       </li>
                     ))}

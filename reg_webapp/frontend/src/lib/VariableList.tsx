@@ -134,15 +134,23 @@ function variableItems(
 
 /** A register's rows with each concept group folded to one row (#303) that opens
  * the group's page, at the place of its first member in `items`: under its own
- * name in the name order, or at its best-ranked member while searching. */
+ * name in the name order, or at its best-ranked member while searching. While
+ * searching the row names the members that matched ("person: Kommun"): the group's
+ * own name may not contain the search text. */
 function foldGroups(
   items: readonly ColumnItem[],
   sets: RegisterShow["sets"],
-  sorted: boolean,
+  searching: boolean,
 ): ColumnItem[] {
   const setOf = new Map(
     sets.flatMap((set) => set.members.map((member) => [member, set])),
   );
+  const matched = new Map<string, string[]>();
+  for (const item of items) {
+    const set = setOf.get(item.id);
+    if (set)
+      matched.set(set.fqid, [...(matched.get(set.fqid) ?? []), item.name]);
+  }
   const folded = new Set<string>();
   const rows = items.flatMap((item) => {
     const set = setOf.get(item.id);
@@ -154,14 +162,16 @@ function foldGroups(
         ...item,
         id: set.fqid,
         name: set.name,
-        label: undefined,
+        label: searching
+          ? `${set.name}: ${[...new Set(matched.get(set.fqid))].join(", ")}`
+          : undefined,
         href: catalogHref(set.fqid),
       },
     ];
   });
-  return sorted
-    ? rows.sort((a, b) => svCollator.compare(a.name, b.name))
-    : rows;
+  return searching
+    ? rows
+    : rows.sort((a, b) => svCollator.compare(a.name, b.name));
 }
 
 /** ColumnList passes this renderer into RAC's Collection dependencies. A fresh
@@ -244,7 +254,7 @@ function useRegisterColumn(
     variables,
     matchedVariables(variables, needle, matches),
   );
-  const items = foldGroups(listed, sets, !needle.trim());
+  const items = foldGroups(listed, sets, !!needle.trim());
   // A member's address shows its group's page, so its group's row is selected.
   const selectedId =
     sets.find((set) => set.members.includes(selectedFqid ?? ""))?.fqid ??
