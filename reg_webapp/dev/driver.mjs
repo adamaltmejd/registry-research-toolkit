@@ -1009,8 +1009,10 @@ async function stewardHeldCase(page, shoot) {
   const slots = tree.getByRole("row", { name: /^Delivery slots/ });
   await slots.waitFor();
   if (narrow) await slots.click();
-  if (narrow) await page.getByRole("main").getByRole("link", { name: "Second position", exact: true }).waitFor();
-  else await page.getByRole("option", { name: /Second position/ }).waitFor();
+  // Below the breakpoint a register's page shows the column's matches in its
+  // place while the search holds text (maintainer ruling 2026-11-05), so both
+  // layouts find the match as an option.
+  await page.getByRole("option", { name: /Second position/ }).waitFor();
   await settled(page);
   await shoot("steward-filter");
   await page.keyboard.press("Escape");
@@ -1029,8 +1031,7 @@ async function stewardHeldCase(page, shoot) {
   const held = tree.getByRole("row", { name: /^Held reference metadata/ });
   await held.waitFor();
   if (narrow) await held.click();
-  if (narrow) await page.getByRole("main").getByRole("link", { name: "Late measure", exact: true }).click();
-  else await page.getByRole("option", { name: /Late measure/ }).click();
+  await page.getByRole("option", { name: /Late measure/ }).click();
   await page.waitForURL("**/catalog/demo/held/late");
   await page.getByRole("main").getByRole("img", { name: /^Late, .*, Pool, 2019–2020,/ }).first().waitFor({ state: "attached" });
   await page.locator('[role="option"][data-key="steward/slots/slot2"]').waitFor({ state: "detached" });

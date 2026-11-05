@@ -457,8 +457,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   list of classifications) shows that column, with its matches, under the trail in place
   of the page, so a phone sees which variables or classifications matched; clearing the
   search brings the page back. This is the one exception to "Search filters in place",
-  and only below the breakpoint (new rule, proposed by the implementer). Do not mint new
-  breakpoints.
+  and only below the breakpoint (maintainer ruling, 2026-11-05, accepting the exception
+  to #1829). Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
