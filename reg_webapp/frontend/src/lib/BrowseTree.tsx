@@ -17,7 +17,13 @@ import {
   useBrowseFilter,
   useSettledFilter,
 } from "./browse_filter";
-import { catalogHref, leafSlug, rankFilter, registerOfPath } from "./catalog";
+import {
+  catalogHref,
+  leafSlug,
+  rankFilter,
+  registerOfPath,
+  sortedRegisters,
+} from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
 import { Highlight } from "./Highlight";
 import { type Route, router } from "./router";
@@ -139,7 +145,7 @@ function browseNodes(root: RootChild[]): BrowseNode[] {
     id: child.fqid,
     name: child.name ?? child.fqid,
     href: catalogHref(child.fqid),
-    children: child.registers.map((register) => ({
+    children: sortedRegisters(child.registers).map((register) => ({
       id: register.fqid,
       name: register.name ?? register.fqid,
       href: catalogHref(register.fqid),
@@ -155,6 +161,7 @@ function browseNodes(root: RootChild[]): BrowseNode[] {
  * bar. Rows are not links (RAC's selectable rows are not `<a>`). Every group
  * starts open; a group's chevron, ← / →, and the
  * header's one "Collapse all" / "Expand all" toggle fold them, remembered per user.
+ * Pressing a collapsed group's row also opens it, and never closes one.
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
@@ -319,9 +326,20 @@ export function BrowseTree({ className }: { className?: string }) {
     writeCollapsed(next);
   }
 
+  // A press on a collapsed group's row opens it as well as its page; it never
+  // closes one: the chevron, ← and "Collapse all" own that (maintainer
+  // 2026-11-05). Reads the tree's live expansion, not this render's, so a
+  // chevron press that just collapsed the group is not undone.
+  function expandGroup(id: string): void {
+    const keys = treeState.current?.expandedKeys;
+    if (!keys || keys.has(id)) return;
+    onExpandedChange(new Set([...keys, id]));
+  }
+
   // → on a register row (a leaf) moves to the variables column (DESIGN.md →
-  // Layout); RAC's Tree uses → only on a group row. Captured, so the Tree
-  // never sees a key it would ignore.
+  // Layout), and so does → on the open provider row of the provider's own
+  // page, whose variables the column lists; RAC's Tree uses → only to expand
+  // a group row. Captured, so the Tree never sees a key it would ignore.
   function onKeyDownCapture(event: KeyboardEvent): void {
     const row = (event.target as Element).closest('[role="row"]');
     if (
@@ -330,7 +348,9 @@ export function BrowseTree({ className }: { className?: string }) {
       !event.metaKey &&
       !event.ctrlKey &&
       row !== null &&
-      !row.hasAttribute("aria-expanded") &&
+      (!row.hasAttribute("aria-expanded") ||
+        (row.getAttribute("aria-expanded") === "true" &&
+          row.getAttribute("aria-current") === "page")) &&
       focusBrowseColumn("variables")
     ) {
       event.preventDefault();
@@ -435,6 +455,7 @@ export function BrowseTree({ className }: { className?: string }) {
                   current={current}
                   needle={needle}
                   onOpenCurrent={openCurrentRow}
+                  onExpand={expandGroup}
                 />
               )}
             </Tree>
@@ -459,12 +480,14 @@ function BrowseItem({
   current,
   needle,
   onOpenCurrent,
+  onExpand,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
   current: CurrentRow | null;
   needle: string;
   onOpenCurrent: () => void;
+  onExpand: (id: string) => void;
 }) {
   const count = inProjectCount(node, counts);
   // "page" only on the row whose own page is open; "true" on the register row
@@ -483,7 +506,13 @@ function BrowseItem({
           : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
       }
       className={styles.row}
-      onPress={ariaCurrent === "true" ? onOpenCurrent : undefined}
+      onPress={
+        ariaCurrent === "true"
+          ? onOpenCurrent
+          : node.children.length > 0
+            ? () => onExpand(node.id)
+            : undefined
+      }
       render={(props) => (
         <div
           {...props}
@@ -526,6 +555,7 @@ function BrowseItem({
             current={current}
             needle={needle}
             onOpenCurrent={onOpenCurrent}
+            onExpand={onExpand}
           />
         )}
       </Collection>

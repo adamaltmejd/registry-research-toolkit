@@ -1,5 +1,6 @@
 import {
   type ComponentProps,
+  type FocusEvent,
   type KeyboardEvent,
   type ReactNode,
   useEffect,
@@ -113,37 +114,77 @@ export function ColumnList({
   useEffect(() => {
     if (refocus.current === null || refocus.current === root) return;
     const target = selectedId ?? items?.find((i) => !i.leaves)?.id;
-    const active = document.activeElement;
     const box = boxRef.current;
     if (target === undefined || !box) return;
-    const leavingFocused =
-      active instanceof HTMLElement &&
-      box.contains(active) &&
-      items?.some((i) => i.leaves && i.id === active.dataset.key);
-    if (active !== document.body && !leavingFocused) return;
-    box
-      .querySelector<HTMLElement>(
+    // RAC commits a collection's options in a pass of its own, after this
+    // effect, so the target row may not exist yet: wait for it to appear.
+    const tryFocus = (): boolean => {
+      const active = document.activeElement;
+      const leavingFocused =
+        active instanceof HTMLElement &&
+        box.contains(active) &&
+        items?.some((i) => i.leaves && i.id === active.dataset.key);
+      if (refocus.current === null) return true;
+      if (active !== document.body && !leavingFocused) return true;
+      const row = box.querySelector<HTMLElement>(
         `[role="option"][data-key="${CSS.escape(target)}"]`,
-      )
-      ?.focus();
+      );
+      row?.focus();
+      return row !== null;
+    };
+    if (tryFocus()) return;
+    const observer = new MutationObserver(() => {
+      if (tryFocus()) observer.disconnect();
+    });
+    observer.observe(box, { childList: true, subtree: true });
+    return () => observer.disconnect();
   });
+  // Set while a pointer is down in the column, and for the one focus event
+  // that brings focus from outside it (Tab, the → handoff): RAC selects the
+  // first row as focus lands on the list, and arriving must open nothing.
+  // Only Enter, Space or a click opens a row.
+  const pressing = useRef(false);
+  const arriving = useRef(false);
   useEffect(() => {
     const done = () => {
       refocus.current = null;
     };
+    const released = () => {
+      pressing.current = false;
+    };
     document.addEventListener("keydown", done, true);
     document.addEventListener("pointerdown", done, true);
+    document.addEventListener("pointerup", released, true);
+    document.addEventListener("pointercancel", released, true);
     return () => {
       document.removeEventListener("keydown", done, true);
       document.removeEventListener("pointerdown", done, true);
+      document.removeEventListener("pointerup", released, true);
+      document.removeEventListener("pointercancel", released, true);
     };
   }, []);
+
+  function onFocusCapture(event: FocusEvent): void {
+    const from = event.relatedTarget;
+    if (
+      pressing.current ||
+      (from instanceof Node && event.currentTarget.contains(from))
+    )
+      return;
+    arriving.current = true;
+    // React dispatches the capture and bubble phases from separate listeners,
+    // so a microtask would clear this before RAC's handler runs.
+    setTimeout(() => {
+      arriving.current = false;
+    });
+  }
 
   function onSelectionChange(keys: Selection): void {
     if (keys === "all") return;
     const [key] = keys;
     const item = items?.find((i) => i.id === key);
     const current = items?.find((i) => i.id === selectedId);
+    if (arriving.current) return;
     if (item?.leaves && walking.current) return;
     // Two rows can open one page (a variable that is several group members).
     if (item !== undefined && item.href !== current?.href) {
@@ -155,6 +196,10 @@ export function ColumnList({
   // ← in the list returns to the register column; captured, so the ListBox
   // (which ignores ← in a vertical list) never sees it.
   function onKeyDownCapture(event: KeyboardEvent): void {
+    // A key pressed in the list ends the arrival: on a slow machine the
+    // timeout that clears it can run after the key, and Enter then opened
+    // nothing (CI, 2026-11-05).
+    arriving.current = false;
     walking.current = !OPEN_KEYS.has(event.key);
     if (
       event.key === "ArrowLeft" &&
@@ -202,8 +247,10 @@ export function ColumnList({
       onKeyUpCapture={() => {
         walking.current = false;
       }}
+      onFocusCapture={onFocusCapture}
       onPointerDownCapture={() => {
         walking.current = false;
+        pressing.current = true;
       }}
     >
       <div className={styles.header}>

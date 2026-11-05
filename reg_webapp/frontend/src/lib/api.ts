@@ -338,6 +338,7 @@ function searchGet<T>(
     limit?: number;
     type?: SearchType;
     register?: string;
+    provider?: string;
     cursor?: string;
   },
 ): Promise<T> {
@@ -350,6 +351,9 @@ function searchGet<T>(
   }
   if (options?.register !== undefined) {
     params.set("register", options.register);
+  }
+  if (options?.provider !== undefined) {
+    params.set("provider", options.provider);
   }
   if (options?.cursor !== undefined) {
     params.set("cursor", options.cursor);
@@ -391,13 +395,15 @@ export type RegisterFacets = RustSchemas["RegisterFacets"];
 /** Per register, how many of its variables match `q` (#1785): every match, no
  * paging, before concept groups fold. A register without a match is absent.
  * With `register`, only that register, and its entry lists every matched
- * variable (#1788); without it, `limit` lists each register's first `limit`
- * and names the register (#1828). */
+ * variable (#1788); with `provider`, each of its registers, every match
+ * listed; without either, `limit` lists each register's first `limit` and
+ * names the register (#1828). */
 export async function searchFacets(
   q: string,
   options?: {
     signal?: AbortSignal;
     register?: string;
+    provider?: string;
     limit?: number;
   },
 ): Promise<RegisterFacets> {

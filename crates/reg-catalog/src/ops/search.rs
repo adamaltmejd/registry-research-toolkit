@@ -63,10 +63,13 @@ pub const OPERATIONS: &[Operation] = &[
         name: "search_facets",
         paths: &["/api/search/facets"],
         tool: None,
-        description: "Per register, how many variables a search query matches.",
+        description: "Per register, how many variables a search query matches. `register` \
+            or `provider` lists every match in that register, or in each of the \
+            provider's registers.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("register", Type::Ref),
+            Param::optional("provider", Type::Ref),
             Param::optional("limit", Type::Limit),
         ],
         cache: Cache::Minute,
@@ -182,7 +185,12 @@ pub struct FacetVariable {
 
 /// The register a `register` parameter names (rule 4).
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
-    Ok(refs::expect(conn, value, &["register"], "not a register")?.id)
+    entity_of(conn, value, "register")
+}
+
+/// The entity of `kind` a parameter names.
+fn entity_of(conn: &Connection, value: &str, kind: &str) -> Result<i64, Error> {
+    Ok(refs::expect(conn, value, &[kind], &format!("not a {kind}"))?.id)
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -569,24 +577,29 @@ fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
     // Steward mode serves only what the steward holds (maintainer 2026-11-04).
     let held = server.catalog.steward().is_some();
     let run = |conn: &Connection| -> Result<Vec<RegisterFacet>, Error> {
-        let register = match params
-            .get("register")
-            .map(|r| register(conn, r))
-            .transpose()
-        {
-            Ok(id) => id,
-            Err(err) if server.catalog.steward().is_some() && err.kind() == Code::NotFound => {
-                server.catalog.connect_for_ref(params["register"])?;
-                return Ok(vec![]);
-            }
-            Err(err) => return Err(err),
-        };
+        // A scope one origin lacks matches nothing there, once the other has it.
+        let mut scope = [None, None];
+        for (at, kind) in ["register", "provider"].into_iter().enumerate() {
+            scope[at] = match params
+                .get(kind)
+                .map(|r| entity_of(conn, r, kind))
+                .transpose()
+            {
+                Ok(id) => id,
+                Err(err) if server.catalog.steward().is_some() && err.kind() == Code::NotFound => {
+                    server.catalog.connect_for_ref(params[kind])?;
+                    return Ok(vec![]);
+                }
+                Err(err) => return Err(err),
+            };
+        }
+        let [register, provider] = scope;
         if held {
             server.catalog.attach_holdings(conn)?;
         }
         match &expression {
             None => Ok(vec![]),
-            Some(expression) => facets(conn, expression, register, limit, held),
+            Some(expression) => facets(conn, expression, register, provider, limit, held),
         }
     };
     let registers = run(&server.catalog.connect()?)?;
@@ -604,20 +617,30 @@ fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
 }
 
 /// Rule 7: each register's matched variables, counted; with `register` that register's
-/// every match listed; else with `limit` its first `limit` and its name.
+/// every match listed, with `provider` each of its registers' every match and name;
+/// else with `limit` its first `limit` and its name.
 fn facets(
     conn: &Connection,
     expression: &str,
     register: Option<i64>,
+    provider: Option<i64>,
     limit: Option<usize>,
     held: bool,
 ) -> Result<Vec<RegisterFacet>, Error> {
-    let scope = if held {
+    let held_scope = if held {
         // Uncorrelated, like `search_filter`'s: no index leads with `variable_pid`.
         " AND v.pid IN (SELECT variable_pid FROM held.holding_mapping)"
     } else {
         ""
     };
+    // The provider's parameter is the query's last: ?3 in the count, ?4 in the list.
+    let scope = |at: u8| {
+        format!(
+            "{held_scope} AND (?{at} IS NULL OR i.register_id IN \
+             (SELECT id FROM register WHERE provider_id = ?{at}))"
+        )
+    };
+    let counted = scope(3);
     let mut registers: Vec<(i64, RegisterFacet)> = rows(
         conn,
         &format!(
@@ -627,13 +650,13 @@ fn facets(
                    FROM matched m JOIN search_item i ON i.id = m.id
                      JOIN variable v ON v.id = i.entity_id
                    WHERE i.kind = 'variable'
-                     AND (?2 IS NULL OR i.register_id = ?2){scope}
+                     AND (?2 IS NULL OR i.register_id = ?2){counted}
                    GROUP BY i.register_id) m
                JOIN register r ON r.id = m.id
                JOIN text n ON n.id = r.name_text
              ORDER BY r.pid"
         ),
-        params![expression, register],
+        params![expression, register, provider],
         |row| {
             Ok((
                 row.get(0)?,
@@ -646,12 +669,14 @@ fn facets(
             ))
         },
     )?;
-    // A named register lists every match; otherwise `limit` per register, or none.
-    let listed = match (register, limit) {
+    // A named register or provider lists every match; otherwise `limit` per register,
+    // or none.
+    let listed = match (register.or(provider), limit) {
         (Some(_), _) => Some(i64::MAX),
         (None, Some(limit)) => Some(i64::try_from(limit).expect("a limit fits")),
         (None, None) => None,
     };
+    let listing = scope(4);
     let Some(listed) = listed else {
         for (_, facet) in &mut registers {
             facet.name = None;
@@ -670,11 +695,11 @@ fn facets(
                  JOIN variable v ON v.id = i.entity_id
                  JOIN text l ON l.id = v.label_text
                WHERE i.kind = 'variable'
-                 AND (?2 IS NULL OR i.register_id = ?2){scope})
+                 AND (?2 IS NULL OR i.register_id = ?2){listing})
              WHERE n <= ?3
              ORDER BY register_id, pid"
         ),
-        params![expression, register, listed],
+        params![expression, register, listed, provider],
         |row| {
             Ok((
                 row.get::<_, i64>(0)?,

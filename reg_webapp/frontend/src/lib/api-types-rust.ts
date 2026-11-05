@@ -333,7 +333,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Per register, how many variables a search query matches. */
+        /** @description Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers. */
         get: operations["search_facets"];
         put?: never;
         post?: never;
@@ -1134,7 +1134,7 @@ export interface components {
             kind: "provider";
             name: string;
             /** @description On a data holder's catalog, the holder's own registers too. */
-            registers: components["schemas"]["ShowRegisterRef"][];
+            registers: components["schemas"]["ShowProviderRegister"][];
         } | {
             description: string | null;
             fqid: string;
@@ -1211,6 +1211,25 @@ export interface components {
             fqid: string;
             name: string;
             registers: components["schemas"]["ShowRegisterRef"][];
+        };
+        /**
+         * @description A provider's register with its variables, so the provider alone lists every
+         *     variable of its registers.
+         */
+        ShowProviderRegister: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+            variables: components["schemas"]["ShowProviderVariable"][];
+        };
+        /**
+         * @description A variable in a provider's register list: what the list shows (the name, and the
+         *     years where two names repeat), not the tables `show` on the register lists.
+         */
+        ShowProviderVariable: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
         };
         ShowRegisterRef: {
             fqid: string;
@@ -2034,6 +2053,7 @@ export interface operations {
             query: {
                 q: string;
                 register?: string;
+                provider?: string;
                 limit?: number;
             };
             header?: never;

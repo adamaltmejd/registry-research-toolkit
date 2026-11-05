@@ -96,20 +96,50 @@ export function useSettledFilter(): string | null {
  * answer yet, or when the request failed: the caller then filters on the
  * names it holds. */
 export function useRegisterMatches(
-  registerFqid: string,
+  registerFqid: string | null,
 ): ReadonlySet<string> | null {
   const query = useSettledFilter();
   const matches = useAsyncResource(
-    query === null ? null : `${registerFqid}\u0000${query}`,
-    (signal) => searchFacets(query ?? "", { signal, register: registerFqid }),
+    query === null || registerFqid === null
+      ? null
+      : `${registerFqid}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", { signal, register: registerFqid ?? "" }),
   );
-  if (query === null || matches.data === null) return null;
+  if (query === null || registerFqid === null || matches.data === null)
+    return null;
   return new Set(
     allRegisterFacets(matches.data)
       .filter((facet) => facet.fqid === registerFqid)
       .flatMap((facet) => facet.variables ?? [])
       .map((variable) => variable.fqid),
   );
+}
+
+/** The provider's registers' variables the server matches for the filter, by
+ * register FQID: one request for the whole provider, the admission the browse
+ * tree counts, so each register's section lists the number its tree row says.
+ * Null as `useRegisterMatches` is. */
+export function useProviderMatches(
+  providerFqid: string | null,
+): ReadonlyMap<string, ReadonlySet<string>> | null {
+  const query = useSettledFilter();
+  const matches = useAsyncResource(
+    query === null || providerFqid === null
+      ? null
+      : `${providerFqid}\u0000${query}`,
+    (signal) =>
+      searchFacets(query ?? "", { signal, provider: providerFqid ?? "" }),
+  );
+  if (query === null || providerFqid === null || matches.data === null)
+    return null;
+  const byRegister = new Map<string, Set<string>>();
+  for (const facet of allRegisterFacets(matches.data)) {
+    const set = byRegister.get(facet.fqid) ?? new Set<string>();
+    for (const variable of facet.variables ?? []) set.add(variable.fqid);
+    byRegister.set(facet.fqid, set);
+  }
+  return byRegister;
 }
 
 /** The registers the browse tree shows for the filter, in its order (name
@@ -128,6 +158,12 @@ export const browseOrder = {
 
 const readOrder = () => order;
 
+/** The registers the browse tree keeps for the filter, in its order; empty
+ * while it is not filtering or its search failed. */
+export function useBrowseOrder(): readonly string[] {
+  return useSyncExternalStore(browseFilter.subscribe, readOrder);
+}
+
 /** How many of another register's matches the variables column lists before
  * its "N more" row (#1828); a register with one more than this lists them all,
  * since a "1 more" row would take the place of the row it hides. */
@@ -139,16 +175,18 @@ const OTHER_REGISTER_LIMIT = 5;
  * first; empty when nothing else matches or the request failed, so the open
  * register's list never waits on it. */
 export function useOtherRegisterMatches(
-  registerFqid: string,
+  registerFqid: string | null,
 ): { reference: RegisterFacet[]; steward: RegisterFacet[] } | null {
   const needle = useBrowseFilter().trim();
   const query = useSettledFilter();
-  const treeOrder = useSyncExternalStore(browseFilter.subscribe, readOrder);
-  const matches = useAsyncResource(query, (signal) =>
-    searchFacets(query ?? "", {
-      signal,
-      limit: OTHER_REGISTER_LIMIT + 1,
-    }),
+  const treeOrder = useBrowseOrder();
+  const matches = useAsyncResource(
+    registerFqid === null ? null : query,
+    (signal) =>
+      searchFacets(query ?? "", {
+        signal,
+        limit: OTHER_REGISTER_LIMIT + 1,
+      }),
   );
   // The last answer stands while the next query settles and loads, so the
   // sections do not drop out and come back on every keystroke.

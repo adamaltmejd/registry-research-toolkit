@@ -280,6 +280,96 @@ async function browsePagesCase(page, shoot) {
   const trail = main.getByRole("navigation", { name: "Breadcrumb", exact: true });
   await trail.getByRole("link", { name: "Demoleverantören", exact: true }).click();
   await page.waitForURL("**/catalog/demo");
+  // "Browse registers" leads the trail only where the columns stack.
+  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
+  if (!narrow) {
+    // Fails if a provider's page stops listing every variable of its registers,
+    // one group per register under its name (maintainer 2026-11-05), or a press
+    // on a collapsed provider's row stops opening it, or starts closing an open
+    // one. Names are the fixture's.
+    const variables = page.getByRole("listbox", { name: "Variables in Demoleverantören", exact: true });
+    await variables.getByRole("group", { name: "Basregistret", exact: true }).getByRole("option", { name: "Kön", exact: true }).waitFor();
+    await variables.getByRole("group", { name: "Hushållsregistret", exact: true }).getByRole("option", { name: "Bransch", exact: true }).waitFor();
+    const tree = page.getByRole("treegrid", { name: "Registers", exact: true });
+    const provider = (expanded) => tree.getByRole("row", { name: "Demoleverantören", exact: true, expanded });
+    await provider(true).getByRole("button", { name: "Collapse Demoleverantören", exact: true }).click();
+    await provider(false).getByText("Demoleverantören", { exact: true }).click();
+    await provider(true).waitFor();
+    await provider(true).getByText("Demoleverantören", { exact: true }).click();
+    await settled(page);
+    check((await provider(true).count()) === 1, "a press on an open provider collapsed it");
+    // Fails if opening a variable from the provider's list (Enter, from a
+    // fresh page) leaves focus anywhere but that variable's row once the list
+    // has re-rooted under its register: it dropped to the body (round 2).
+    await open(page, "/catalog/demo");
+    await settled(page);
+    await variables.getByRole("option", { name: "Bransch", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await page.waitForURL("**/catalog/demo/hush/**");
+    const opened = new URL(page.url()).pathname.replace("/catalog/", "");
+    await settled(page);
+    await page.locator(`[data-browse-column="variables"] [role="option"][data-key="${opened}"]`).waitFor();
+    const onOpened = await page
+      .waitForFunction(
+        (key) => document.activeElement?.getAttribute("role") === "option" &&
+          document.activeElement.getAttribute("data-key") === key,
+        opened,
+        { timeout: 2_000, polling: 50 },
+      )
+      .then(() => true, () => false);
+    check(onOpened, `opening ${opened} from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
+    // Fails if a grouped variable (Kommun opens its group's page) clicked in
+    // the provider's list loses focus to its lane on that page: the lane takes
+    // focus only on a fresh load or a deep link.
+    await open(page, "/catalog/demo");
+    await settled(page);
+    await variables.getByRole("option", { name: "Kommun", exact: true }).click();
+    await page.waitForURL("**/catalog/demo/bas/kommun");
+    await settled(page);
+    const onMember = await page
+      .waitForFunction(
+        () => document.activeElement?.getAttribute("role") === "option" &&
+          document.activeElement.getAttribute("data-key") === "demo/bas/kommun",
+        undefined,
+        { timeout: 2_000, polling: 50 },
+      )
+      .then(() => true, () => false);
+    check(onMember, `opening demo/bas/kommun from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
+    // Fails if, while the search holds text, the provider's sections stop
+    // following the register column's order, which puts a name hit
+    // (Hushållsregistret for "hush") before a variable-only one.
+    await open(page, "/catalog/demo");
+    await settled(page);
+    await page.getByRole("searchbox", { name: /^Search registers/ }).fill("hush");
+    await tree.getByRole("row", { name: /^Basregistret, matched on/ }).waitFor();
+    await variables.getByRole("group", { name: "Hushållsregistret", exact: true }).waitFor();
+    await settled(page);
+    const orders = () => page.evaluate(() => ({
+      tree: [...document.querySelectorAll('[role="treegrid"] [role="row"][aria-level="2"]')].map((row) => row.innerText.split("\n")[0].trim()),
+      sections: [...document.querySelectorAll('[data-browse-column="variables"] header')].map((header) => header.innerText.trim()),
+    }));
+    const { tree: treeOrder, sections: sectionOrder } = await orders();
+    check(JSON.stringify(sectionOrder) === JSON.stringify(treeOrder),
+      `while searching, the sections read ${JSON.stringify(sectionOrder)}, the tree ${JSON.stringify(treeOrder)}`);
+    await page.getByRole("searchbox", { name: /^Search registers/ }).fill("");
+    // Fails if → on the open provider's row stops moving into the variables
+    // column, or focus arriving there (→, or Tab from the tree) opens a row:
+    // only Enter, Space or a click opens one.
+    const inVariables = () => page.evaluate(() =>
+      document.activeElement?.getAttribute("role") === "option" &&
+      document.activeElement.closest('[data-browse-column="variables"]') !== null);
+    for (const key of ["ArrowRight", "Tab"]) {
+      await open(page, "/catalog/demo");
+      await settled(page);
+      await provider(true).focus();
+      await page.keyboard.press(key);
+      await settled(page);
+      check(new URL(page.url()).pathname === "/catalog/demo", `${key} into the variables column opened ${page.url()}`);
+      check(await inVariables(), `${key} on the open provider did not move into the variables column`);
+    }
+    await open(page, "/catalog/demo");
+    await settled(page);
+  }
   await main.getByRole("link", { name: "Hushållsregistret", exact: true }).click();
   await page.waitForURL("**/catalog/demo/hush");
   await settled(page);
@@ -300,8 +390,6 @@ async function browsePagesCase(page, shoot) {
   await open(page, "/catalog/demo/hush/fam");
   await settled(page);
   await main.getByRole("heading", { name: "Familjer", exact: true }).waitFor();
-  // "Browse registers" leads the trail only where the columns stack.
-  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
   const crumbs = await trail.getByRole("link").filter({ visible: true }).allInnerTexts();
   const expected = [...(narrow ? ["Browse registers"] : []), "Demoleverantören", "Hushållsregistret"];
   check(JSON.stringify(crumbs) === JSON.stringify(expected),
