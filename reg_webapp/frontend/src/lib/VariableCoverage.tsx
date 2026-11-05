@@ -13,6 +13,7 @@ import {
   errMessage,
   type Graph,
   type OrderCheck,
+  reportPicks,
 } from "./api";
 import {
   graphRead,
@@ -298,6 +299,7 @@ export function useVariableCoverage({
       // variable's years in every column and file of that table inside the
       // window; each variable is added on top of the one before.
       let candidate = current;
+      const picks: string[] = [];
       for (const subject of subjects) {
         const adding = columns
           .filter(
@@ -311,7 +313,7 @@ export function useVariableCoverage({
               columnWindowPeriod(column, active) !== null,
           )
           .map(({ column }) => column);
-        if (adding.length)
+        if (adding.length) {
           candidate = addColumns(
             candidate,
             subject.fqid,
@@ -319,8 +321,11 @@ export function useVariableCoverage({
             active,
             tables,
           );
+          picks.push(subject.fqid);
+        }
       }
       projectStore.updateField("sources", candidate.sources);
+      reportPicks(picks);
       setSelected(new Set());
       setError(null);
       setAdded(true);

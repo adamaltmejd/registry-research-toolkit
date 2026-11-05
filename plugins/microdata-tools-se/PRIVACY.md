@@ -23,6 +23,10 @@ catalog at `https://reg-meta.vqv.uk/mcp`.
   browser) and the country. It holds no IP address, user id, cookie or raw User-Agent,
   and nothing that links one request to another. Search text is never shown to other
   users. Nothing else from a `project_data.json` is recorded.
+- The `data.swecov.se` website uses Cloudflare Web Analytics, which sets no cookie, and
+  records when a variable is added to a project in the browser: the variable id, the
+  browser family and the country, kept 3 months. The project itself stays in the
+  browser.
 - Apart from that, the catalog server keeps only a short-lived per-client-address
   counter for rate limiting. Cloudflare and Fly.io, which host it, may log requests and
   connection metadata such as IP addresses under their own policies.
