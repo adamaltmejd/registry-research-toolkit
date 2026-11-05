@@ -1491,13 +1491,14 @@ The generic compiler does the following against the exact catalog/semantic-view 
    unresolved auto-map candidate. Stale decisions naming absent physical columns refuse.
 2. Per routed logical table, match the census column to documented spellings using
    reader-side trimming followed by `reg-core::fold_identity` (Unicode `to_lowercase()`
-   only, no trim or normalization in that function; D12). Only reader-configured
-   rewrites may precede the fold: carry the old `^P1105_LopNr_` key-prefix rewrite
-   explicitly into the census reader config, with its source evidence. Do not add fuzzy
-   matching, label matching or provider-specific branches in resolve. An explicit
-   reviewed mapping may supply a different physical/logical header association. A
-   spelling must match documentation at the owed interval, not merely somewhere in
-   history. Spellings are candidate evidence, never part of the compiled logical key.
+   only, no trim or normalization in that function; D12). Only reader-configured renames
+   and rewrites may precede the fold (see "Census reader renames and rewrites"): carry
+   the old `^P1105_LopNr_` key-prefix rewrite explicitly into the census reader config,
+   with its source evidence. Do not add fuzzy matching, label matching or
+   provider-specific branches in resolve. An explicit reviewed mapping may supply a
+   different physical/logical header association. A spelling must match documentation at
+   the owed interval, not merely somewhere in history. Spellings are candidate evidence,
+   never part of the compiled logical key.
 3. Normalize each physical edition through the existing period grammar. A plain mapping
    owes the physical table's complete served interval set; a column window owes its
    stated subset; a positional or temporal slot owes the whole table interval (a
@@ -1650,10 +1651,47 @@ symlinks.
 inventory and series remain migration evidence, not additional compiler authorities.
 Automatic matching still reads the raw census against the resolved semantic view; it
 does not consume generated automatic mappings. The census reader's closed config names
-the table header and numbered-column prefix and permits evidenced literal prefix
-rewrites only. Identifiers remain exact after reader trimming; rewrites affect matching,
-not emitted physical names. CSV errors identify input roles and row numbers without
-echoing private source values.
+the table header and numbered-column prefix and permits evidenced exact-name renames and
+literal prefix rewrites only. Identifiers remain exact after reader trimming; renames
+and rewrites affect matching, not emitted physical names. CSV errors identify input
+roles and row numbers without echoing private source values.
+
+#### Census reader renames and rewrites
+
+A steward whose physical column names differ from the catalog's documented spellings
+lists the differences in the census reader config. `[[rewrite]]` (`prefix`,
+`replacement`, `evidence`) replaces a literal prefix of every column that has it.
+`[[rename]]` (`physical`, `catalog`, `evidence`) maps one exact trimmed physical name to
+one catalog name, across every census table. Patterns are never accepted; the match name
+then goes through the ordinary fold. Renames exist because a steward that renamed a
+column everywhere (IFAU: 212 such names over about 10,000 tables) would otherwise need
+one reviewed `[[table.column.mapping]]` per table.
+
+Order: the reader looks the exact physical name up in `[[rename]]` first. A hit is the
+match name, and no rewrite applies to it. Otherwise each `[[rewrite]]` applies in config
+order. Rename first is what the real case needs: a source like `dnr2013230_samh` renamed
+to `lopnr_samh` would become `samh` if a `dnr2013230_` strip ran first. A physical name
+therefore has one match result, never one from each list.
+
+Refusals, each naming the entry by its 1-based position, never by name:
+
+- `census_rename_invalid`: an empty or untrimmed physical name, an empty catalog name,
+  or empty evidence.
+- `census_rename_duplicate`: two entries for one physical name.
+- `census_rename_chain`: a catalog name that is itself a renamed physical name. Renames
+  apply once; a chain means the author expected them to compose, so it refuses rather
+  than guess.
+- `census_rename_unresolved` (compiler and verify): a catalog name that folds to no
+  documented spelling in the base or semantic view. It can never match, so it is a typo
+  or a stale entry.
+
+A rename that collides with a rewrite result, or with any other column, is two columns
+of one table reaching the same match name. That is refused where both place, by the
+duplicate-placement rule at verify
+(`inventory_cell_conflict: undeclared duplicate physical placement`), and resolved by a
+column decision (`unmap`, `hold` or an explicit mapping) on one of them. The reader does
+not refuse it earlier: a reader refusal would come before the column decision that fixes
+it, and the steward would have to drop the rename for every table.
 
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.

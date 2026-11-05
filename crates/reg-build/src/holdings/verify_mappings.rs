@@ -245,6 +245,7 @@ pub(super) fn verify(
 ) -> Result<()> {
     // segment_index seeds from every tbl row, including segmentless tables.
     let index = compile::segment_index(base, db)?;
+    compile::renames_resolve(&index, &census.rename_targets)?;
     let tables: BTreeMap<_, _> = topology
         .table
         .iter()
