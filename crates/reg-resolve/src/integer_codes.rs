@@ -2,8 +2,8 @@
 //! maintainer 2026-11-04, #2071).
 //!
 //! A segment whose every covering occurrence is reader text (`char`) with a documented
-//! code list of plain integers is an integer column. Curated > rule > source: curation
-//! may state a type only under its published name, so curated text is `text`, which
+//! code list of plain integers is an integer column. Curated > rule > source: a `set` may
+//! state a type only under its published name, so an override to text is `text`, which
 //! this rule never reads. Provenance records each change as rule `integer-codes`.
 
 use std::collections::BTreeMap;

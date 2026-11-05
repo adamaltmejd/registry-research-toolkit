@@ -171,7 +171,6 @@ impl Statement {
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                     validate_fields(fields)?;
-                    published_type(fields.dtype.as_deref())?;
                     value_set_reference(fields.value_set.as_deref())?;
                     if matches!(fact, AssertFact::Occurrence { .. }) && fields.description.is_some()
                     {
@@ -400,9 +399,10 @@ fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
     Ok(())
 }
 
-/// Curation states a type under its published name only (`integer`, `text`, ...), so a
-/// curated type never reads as a reader alias such as `char`, which the integer-code
-/// rule rewrites (#2071).
+/// A `set` states a type under its published name only (`integer`, `text`, ...), so an
+/// override never reads as a reader alias such as `char`, which the integer-code rule
+/// rewrites (#2071). An `assert` transcribes a delivery in reader vocabulary, so the rule
+/// reads its `char` like a source record's.
 fn published_type(dtype: Option<&str>) -> Result<(), String> {
     match dtype {
         Some(t) if crate::dtype_info(t).and_then(|d| d.published) != Some(t) => Err(format!(
