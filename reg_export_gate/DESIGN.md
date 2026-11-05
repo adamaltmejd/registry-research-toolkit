@@ -150,10 +150,9 @@ output. In order:
 1. **Inventory.** The staging directory holds exactly the schema's files: none missing,
    none extra, no links, folders or hidden files, and no `receipt.json`.
 2. **Structure.** Each file is at most 8 MiB and 100,000 rows, and so is its rewrite,
-   which is uncompressed (`too_large`; maintainer, 2026-11-04; the Rust gate has it, the
-   R gate not yet), so a small compressed file cannot become a large table, is readable
-   Parquet, and its columns are the schema's columns in the schema's order, each of an
-   accepted type.
+   which is uncompressed (`too_large`; maintainer, 2026-11-04), so a small compressed
+   file cannot become a large table, is readable Parquet, and its columns are the
+   schema's columns in the schema's order, each of an accepted type.
 3. **Disclosure.** Each file passes the policy's rules: every non-null `count` and
    `person_count` is at least `min_cell_count`, and a `statistic` is null wherever its
    `support` is null. Null is the suppression marker, so a zero count is refused like
@@ -164,15 +163,12 @@ output. In order:
    count, because the channel is the same in a dimension or an unsuppressed row, and an
    aggregate has no legitimate NaN to lose. Null-ness is Arrow's validity, which is what
    the rewrite writes: a NaN beside a suppressed count is a value, so its statistic is
-   also `unsupported_statistic`. The Rust gate (the reference) reads validity directly.
-   R reads some valid Arrow values as `NA` (a NaN whose low 32-bit word is 1954, R's
-   `NA_real_` pattern with room for 21 free payload bits; `int32` `INT_MIN`; the `int64`
-   NA sentinel), so the R gate today refuses a column whose R `NA`s are not exactly its
-   Arrow nulls as `na_not_null`, an R-only rule. The reference has no such conversion:
-   that NaN is `nan_value`, a sentinel count is `min_cell_count`, and a sentinel in an
-   integer dimension is an ordinary value. Until `export_gate.R` imitates the binary,
-   the two NaN cases (`disclosure-na-bit-pattern`, `disclosure-nan-statistic`) are
-   pending in the R runner.
+   also `unsupported_statistic`. R reads some valid Arrow values as `NA` (a NaN whose
+   low 32-bit word is 1954, R's `NA_real_` pattern with room for 21 free payload bits;
+   `int32` `INT_MIN`; the `int64` NA sentinel), so both gates read validity from Arrow,
+   the R gate through Arrow compute functions, never R's conversion: that NaN is
+   `nan_value`, a sentinel count is `min_cell_count`, and a sentinel in an integer
+   dimension is an ordinary value.
 4. **Backstop scan.** Every value is scanned for personnummer and samordningsnummer
    shapes (10 or 12 digits, optional `-` or `+`, a valid month and day or day + 60, not
    inside a longer digit run): strings as written, integers in full, dates as their day
@@ -252,8 +248,7 @@ The code is the category; the rule locates the finding. Both are stable.
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
   `column_order`, `column_type`.
-- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`; in the R gate
-  only, `na_not_null`.
+- `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`.
 - `backstop`: `identifier_pattern`.
 - `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
   `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
@@ -333,8 +328,8 @@ The Rust binary and the R file are two implementations of one check, an exceptio
 "one implementation per contract". One case corpus (schema and candidate folder →
 expected pass or refusal code) runs against both, so their agreement is the oracle. The
 binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
-receipt, and the R follow-up that makes it imitate the binary names the binary version
-it matches (`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
+receipt: it names the binary version the R file imitates (0.3.0 today;
+`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
 
 ### The R file
 
@@ -372,8 +367,25 @@ it matches (`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
   signals an error of class `export_gate_refusal` with `$code`, so a refused gate fails
   the pipeline. The console shows the code and the findings (rules, files, columns). The
   `.diagnostics/` folder is `dirname(output)/.diagnostics`.
-- **Each file is read once,** into memory, and parsed from that raw vector, so no file
-  handle stays open in staging.
+- **Each file is read once,** into memory (at most the byte cap plus one byte), and
+  parsed from that raw vector, so no file handle stays open in staging. The structure
+  order is the binary's: byte cap, footer row count, columns, then decoding and a
+  recount.
+- **Where R cannot match the binary.** Each is an edge no corpus case reaches:
+  - arrow R restores types from the author's `ARROW:schema` entry and cannot skip it.
+    The gate reads a dictionary (an R factor) as its value type, as the binary does;
+    other hints are not undone, so a column hinted as, say, `duration` over a Parquet
+    `int64` is `column_type` here and `integer` to the binary.
+  - Only the footer's total row count is checked before decoding (arrow R exposes no
+    per-row-group count); the recount after decoding catches a footer that understates.
+  - No 64 MiB bound on decoded memory: arrow R gives no decoded size on arrow 9.
+  - The rewrite's bytes differ from the binary's (arrow writes `ARROW:schema` and its
+    own `created_by`), so a rewrite within a few hundred bytes of the 8 MiB cap can be
+    `too_large` in one gate only.
+  - The rewrite cap is checked on the files written into the new folder, so a folder
+    that cannot be created is `export_not_writable` before `too_large`; the binary
+    checks the rewrite in memory first.
+  - Links in staging go unseen on Windows (`Sys.readlink()`).
 - **The export is written, then renamed.** The checked tables and the receipt go into a
   folder `.export-gate-<random>` (hidden on Unix only) the gate creates beside `output`,
   which one `file.rename()` turns into `output`; so only the output folder's parent must
@@ -387,8 +399,9 @@ it matches (`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
 ## Case corpus
 
 `tests/cases/<case>/case.json`, one behavior per case, run by hand through
-`tests/testthat/` (neither the gate nor CI runs it) and later by the Rust binary's
-tests. It is data: every expectation is in the JSON.
+`tests/testthat/` (neither the gate nor CI runs it; with `REG_EXPORT_GATE` naming a
+`reg-export-gate` binary it runs each case through both gates) and by the Rust crate's
+`corpus` test. It is data: every expectation is in the JSON.
 
 - `description`: the behavior, and so the regression that breaks it.
 - `schema`, `policy`: paths relative to the case folder (the shipped files are

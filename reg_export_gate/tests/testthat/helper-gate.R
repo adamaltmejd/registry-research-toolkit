@@ -1,8 +1,10 @@
 # Runs the case corpus (tests/cases/*/case.json) against export_gate.R as a
 # pipeline's last step calls it: a candidate staging folder in, the output
 # folder, the diagnostics report and the refusal code out. The corpus format is
-# reg_export_gate/DESIGN.md, "Case corpus"; the future Rust binary runs the same
-# cases, so everything a case asserts is in its JSON.
+# reg_export_gate/DESIGN.md, "Case corpus"; the Rust binary runs the same
+# cases, so everything a case asserts is in its JSON. With REG_EXPORT_GATE set
+# to a reg-export-gate binary, each case also runs through it, under the same
+# assertions: the two gates' agreement is the oracle.
 
 gate_dir <- normalizePath(file.path(testthat::test_path(), "..", ".."))
 cases_dir <- file.path(gate_dir, "tests", "cases")
@@ -172,7 +174,31 @@ finding_keys <- function(findings) {
   ))
 }
 
-run_case <- function(name) {
+# The gate under test: "R" (export_gate.R) or the path of a reg-export-gate
+# binary. Gives "pass" or the refusal code.
+run_gate <- function(gate_bin, staging, output, schema, policy) {
+  if (identical(gate_bin, "R")) {
+    return(tryCatch(
+      {
+        utils::capture.output(gate$export_gate(staging, output, schema, policy))
+        "pass"
+      },
+      export_gate_refusal = function(e) e$code
+    ))
+  }
+  args <- c("check", "--staging", staging, "--output", output)
+  if (!is.null(schema)) {
+    args <- c(args, "--schema", schema)
+  }
+  if (!is.null(policy)) {
+    args <- c(args, "--policy", policy)
+  }
+  line <- system2(gate_bin, args, stdout = TRUE, stderr = FALSE)
+  # A refusal exits non-zero, which system2() records as an attribute.
+  sub("^refused: ", "", as.vector(line))
+}
+
+run_case <- function(name, gate_bin = "R") {
   case_dir <- file.path(cases_dir, name)
   case <- jsonlite::read_json(file.path(case_dir, "case.json"))
   root <- tempfile("gate-")
@@ -186,13 +212,7 @@ run_case <- function(name) {
   schema <- case_path(case_dir, case$schema)
   policy <- case_path(case_dir, case$policy)
   staged <- file_hashes(staging)
-  code <- tryCatch(
-    {
-      utils::capture.output(gate$export_gate(staging, output, schema, policy))
-      "pass"
-    },
-    export_gate_refusal = function(e) e$code
-  )
+  code <- suppressWarnings(run_gate(gate_bin, staging, output, schema, policy))
   report_path <- file.path(root, ".diagnostics", "export_gate_report.json")
   list(
     case = case,
@@ -219,8 +239,8 @@ file_hashes <- function(dir) {
   tools::md5sum(paths[!dir.exists(paths)])
 }
 
-expect_case <- function(name) {
-  run <- run_case(name)
+expect_case <- function(name, gate_bin = "R") {
+  run <- run_case(name, gate_bin)
   expect <- run$case$expect
   for (value in c(
     author_strings(run$case$candidate, run$schema),
@@ -278,6 +298,7 @@ expect_case <- function(name) {
     names(receipt),
     c("format", "format_version", "gate", "schema", "policy", "files")
   )
+  # The R gate's version is the binary version it imitates.
   expect_identical(receipt$gate$version, gate$EXPORT_GATE_VERSION)
   expect_identical(
     receipt$schema$sha256,
@@ -293,7 +314,7 @@ expect_case <- function(name) {
     unname(tools::sha256sum(file.path(run$output, declared)))
   )
   # Deterministic: a second run over the same candidate writes the same bytes.
-  again <- run_case(name)
+  again <- run_case(name, gate_bin)
   expect_identical(
     read_raw(file.path(again$output, "receipt.json")),
     read_raw(receipt_path)
