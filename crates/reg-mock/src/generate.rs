@@ -22,6 +22,8 @@ pub enum Cell {
     Null,
     Int(i64),
     Real(f64),
+    /// A decimal as an integer at its column's scale, so codes keep every digit.
+    Decimal(i128),
     Text(String),
     Date(i64),
     DateTime(i64),
@@ -276,10 +278,11 @@ fn cell(
     if let Some(attribute) = column.attribute {
         return attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()));
     }
+    // A value set of sentinels only documents no value: draw from it, invent none.
     let codes: Vec<&str> = column
         .codes
         .iter()
-        .filter(|c| !c.sentinel)
+        .filter(|c| !c.sentinel || column.codes.iter().all(|c| c.sentinel))
         .map(|c| c.code.as_str())
         .collect();
     if !codes.is_empty() {
@@ -291,7 +294,13 @@ fn cell(
         let key = 700_000_001 + i64::try_from(rng.below(10_000_000)).expect("fits");
         return Ok(from_int(key, kind));
     }
-    Ok(drawn(kind, column.length, unit.year, rng))
+    // The held storage's width is the delivery's; the catalog's otherwise.
+    let length = column
+        .storage
+        .as_ref()
+        .and_then(|s| s.length)
+        .or(column.length);
+    Ok(drawn(kind, length, unit.year, rng))
 }
 
 fn not_numeric(at: String) -> Refusal {
@@ -342,7 +351,10 @@ fn attribute_cell(
         }
         Attribute::BirthYear => from_text(&mapped(&person?.birth_year().to_string()), kind)?,
         Attribute::BirthDate => date(person?.birth)?,
-        Attribute::Age => from_int(i64::from(unit.year - person?.birth_year()), kind),
+        Attribute::Age => from_text(
+            &mapped(&(unit.year - person?.birth_year()).to_string()),
+            kind,
+        )?,
         Attribute::County => {
             let county = person.map_or_else(
                 || unit.firm.map(|f| f.county.as_str()),
@@ -400,7 +412,8 @@ fn from_int(n: i64, kind: Kind) -> Cell {
     match kind {
         Kind::Text => Cell::Text(n.to_string()),
         #[allow(clippy::cast_precision_loss)]
-        Kind::Float64 | Kind::Float32 | Kind::Decimal(..) => Cell::Real(n as f64),
+        Kind::Float64 | Kind::Float32 => Cell::Real(n as f64),
+        Kind::Decimal(_, scale) => Cell::Decimal(i128::from(n) * 10i128.pow(u32::from(scale))),
         Kind::Bool => Cell::Bool(n != 0),
         _ => Cell::Int(n),
     }
@@ -411,7 +424,8 @@ fn from_text(code: &str, kind: Kind) -> Option<Cell> {
     Some(match kind {
         Kind::Text => Cell::Text(code.to_owned()),
         Kind::Int32 | Kind::Int64 => Cell::Int(code.trim().parse().ok()?),
-        Kind::Float64 | Kind::Float32 | Kind::Decimal(..) => Cell::Real(code.trim().parse().ok()?),
+        Kind::Float64 | Kind::Float32 => Cell::Real(code.trim().parse().ok()?),
+        Kind::Decimal(_, scale) => Cell::Decimal(scaled(code.trim(), scale)?),
         Kind::Bool => Cell::Bool(matches!(code.trim(), "1" | "true" | "J" | "j")),
         Kind::Date | Kind::DateTime => {
             let digits: String = code.chars().filter(char::is_ascii_digit).collect();
@@ -426,6 +440,24 @@ fn from_text(code: &str, kind: Kind) -> Option<Cell> {
     })
 }
 
+/// A decimal code as an integer at `scale`, or `None` when it is not a decimal or has
+/// more fractional digits than the scale.
+fn scaled(code: &str, scale: u8) -> Option<i128> {
+    let (negative, digits) = code.strip_prefix('-').map_or((false, code), |d| (true, d));
+    let (whole, fraction) = digits.split_once('.').unwrap_or((digits, ""));
+    let all_digits = |s: &str| s.bytes().all(|b| b.is_ascii_digit());
+    if whole.is_empty() && fraction.is_empty()
+        || !all_digits(whole)
+        || !all_digits(fraction)
+        || fraction.len() > usize::from(scale)
+    {
+        return None;
+    }
+    let padded = format!("{whole}{fraction:0<width$}", width = usize::from(scale));
+    let value: i128 = padded.parse().ok()?;
+    Some(if negative { -value } else { value })
+}
+
 /// A value from the type alone: an amount, a short text, a day or time in the year.
 fn drawn(kind: Kind, length: Option<i64>, year: i32, rng: &mut Rng) -> Cell {
     // A skewed amount (median about 150), as most uncoded register numbers are.
@@ -434,9 +466,11 @@ fn drawn(kind: Kind, length: Option<i64>, year: i32, rng: &mut Rng) -> Cell {
         #[allow(clippy::cast_possible_truncation)]
         Kind::Int32 | Kind::Int64 => Cell::Int(amount().round().min(2_000_000_000.0) as i64),
         Kind::Decimal(precision, scale) => {
-            let factor = 10f64.powi(i32::from(scale));
-            let max = 10f64.powi(i32::from(precision) - i32::from(scale)) - 1.0;
-            Cell::Real(((amount().min(max)) * factor).round() / factor)
+            // The largest value is one scaled unit below 10^(p - s): 0.999 for (3, 3).
+            let max = 10i128.pow(u32::from(precision)) - 1;
+            #[allow(clippy::cast_possible_truncation)]
+            let units = (amount() * 10f64.powi(i32::from(scale))).round() as i128;
+            Cell::Decimal(units.min(max))
         }
         Kind::Float64 | Kind::Float32 => Cell::Real(amount()),
         Kind::Bool => Cell::Bool(rng.chance(0.5)),

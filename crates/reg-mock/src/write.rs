@@ -69,7 +69,18 @@ pub fn write_all(
         .map_err(|e| Refusal::new("io", dir.display().to_string(), e.to_string()))?;
     let extension = spec.format.as_str();
     let mut written = Vec::new();
+    let mut names = std::collections::BTreeSet::new();
     for (file, (name, table)) in spec.files.iter().zip(tables) {
+        // A spec is a file anyone can edit: never write outside `dir`, nor one file twice.
+        reg_core::manifest::safe_file_name(name)
+            .map_err(|reason| Refusal::new("file_name_invalid", name.clone(), reason))?;
+        if !names.insert(name.to_ascii_lowercase()) {
+            return Err(Refusal::new(
+                "file_name_collision",
+                name.clone(),
+                "two files would share this name (case ignored)",
+            ));
+        }
         let path = dir.join(format!("{name}.{extension}"));
         let at = path.display().to_string();
         let mut out = std::io::BufWriter::new(
@@ -117,7 +128,8 @@ pub fn csv(out: &mut impl Write, columns: &[SpecColumn], table: &Table) -> Resul
             match cell {
                 Cell::Null => {}
                 Cell::Int(n) => write!(text, "{n}").expect("a String"),
-                Cell::Real(x) => text.push_str(&real(*x, *kind)),
+                Cell::Real(x) => text.push_str(&real(*x)),
+                Cell::Decimal(v) => text.push_str(&decimal(*v, *kind)),
                 Cell::Text(s) => text.push_str(&csv_field(s)),
                 Cell::Date(day) => text.push_str(&reg_core::issue::iso_day(*day)),
                 Cell::DateTime(ms) => text.push_str(&date_time(*ms)),
@@ -143,11 +155,25 @@ fn csv_field(s: &str) -> String {
     }
 }
 
-/// A decimal at its scale; a float to 15 significant digits, never in exponent form.
-fn real(x: f64, kind: Kind) -> String {
-    if let Kind::Decimal(_, scale) = kind {
-        format!("{x:.*}", usize::from(scale))
+/// A decimal's exact digits at its column's scale.
+fn decimal(units: i128, kind: Kind) -> String {
+    let Kind::Decimal(_, scale) = kind else {
+        return units.to_string();
+    };
+    let scale = usize::from(scale);
+    let digits = format!("{:0>width$}", units.unsigned_abs(), width = scale + 1);
+    let (whole, fraction) = digits.split_at(digits.len() - scale);
+    let sign = if units < 0 { "-" } else { "" };
+    if scale == 0 {
+        format!("{sign}{whole}")
     } else {
+        format!("{sign}{whole}.{fraction}")
+    }
+}
+
+/// A float to 15 significant digits, never in exponent form.
+fn real(x: f64) -> String {
+    {
         let digits = if x == 0.0 {
             0
         } else {
@@ -187,82 +213,7 @@ pub fn parquet(
     let mut fields = Vec::new();
     let mut arrays: Vec<ArrayRef> = Vec::new();
     for (i, (column, kind)) in columns.iter().zip(&table.kinds).enumerate() {
-        let cells = table.rows.iter().map(|r| &r[i]);
-        let (data_type, array): (DataType, ArrayRef) = match *kind {
-            Kind::Int32 => {
-                let mut b = Int32Builder::new();
-                for c in cells {
-                    b.append_option(int(c).map(|n| i32::try_from(n).unwrap_or(i32::MAX)));
-                }
-                (DataType::Int32, Arc::new(b.finish()))
-            }
-            Kind::Int64 => {
-                let mut b = Int64Builder::new();
-                cells.for_each(|c| b.append_option(int(c)));
-                (DataType::Int64, Arc::new(b.finish()))
-            }
-            Kind::Decimal(p, s) => {
-                let mut b = Decimal128Builder::new();
-                for c in cells {
-                    #[allow(clippy::cast_possible_truncation)]
-                    b.append_option(
-                        float(c).map(|x| (x * 10f64.powi(i32::from(s))).round() as i128),
-                    );
-                }
-                let array = b
-                    .finish()
-                    .with_precision_and_scale(p, i8::try_from(s).map_err(|e| err(&e))?)
-                    .map_err(|e| err(&e))?;
-                (
-                    DataType::Decimal128(p, i8::try_from(s).map_err(|e| err(&e))?),
-                    Arc::new(array),
-                )
-            }
-            Kind::Float64 => {
-                let mut b = Float64Builder::new();
-                cells.for_each(|c| b.append_option(float(c)));
-                (DataType::Float64, Arc::new(b.finish()))
-            }
-            Kind::Float32 => {
-                let mut b = Float32Builder::new();
-                #[allow(clippy::cast_possible_truncation)]
-                cells.for_each(|c| b.append_option(float(c).map(|x| x as f32)));
-                (DataType::Float32, Arc::new(b.finish()))
-            }
-            Kind::Bool => {
-                let mut b = BooleanBuilder::new();
-                cells.for_each(|c| {
-                    b.append_option(if let Cell::Bool(v) = c {
-                        Some(*v)
-                    } else {
-                        None
-                    });
-                });
-                (DataType::Boolean, Arc::new(b.finish()))
-            }
-            Kind::Date => {
-                let mut b = Date32Builder::new();
-                for c in cells {
-                    b.append_option(day(c).map(|d| i32::try_from(d).unwrap_or(i32::MAX)));
-                }
-                (DataType::Date32, Arc::new(b.finish()))
-            }
-            Kind::DateTime => {
-                let mut b = TimestampMicrosecondBuilder::new().with_timezone("UTC");
-                cells.for_each(|c| b.append_option(ms(c).map(|m| m * 1000)));
-                (
-                    DataType::Timestamp(TimeUnit::Microsecond, Some("UTC".into())),
-                    Arc::new(b.finish()),
-                )
-            }
-            Kind::Text => {
-                let mut b = StringBuilder::new();
-                cells.for_each(|c| {
-                    b.append_option(if let Cell::Text(s) = c { Some(s) } else { None });
-                });
-                (DataType::Utf8, Arc::new(b.finish()))
-            }
-        };
+        let (data_type, array) = arrow_column(*kind, table.rows.iter().map(|r| &r[i]))?;
         fields.push(Field::new(&column.name, data_type, true));
         arrays.push(array);
     }
@@ -282,6 +233,93 @@ pub fn parquet(
     writer.write(&batch).map_err(|e| err(&e))?;
     writer.close().map_err(|e| err(&e))?;
     Ok(())
+}
+
+/// One column's Arrow type and values.
+fn arrow_column<'a>(
+    kind: Kind,
+    cells: impl Iterator<Item = &'a Cell>,
+) -> Result<(DataType, ArrayRef), String> {
+    let err = |e: &dyn std::fmt::Display| e.to_string();
+    Ok(match kind {
+        Kind::Int32 => {
+            let mut b = Int32Builder::new();
+            for c in cells {
+                let n = int(c)
+                    .map(i32::try_from)
+                    .transpose()
+                    .map_err(|_| "an integer past int32 in an int column")?;
+                b.append_option(n);
+            }
+            (DataType::Int32, Arc::new(b.finish()))
+        }
+        Kind::Int64 => {
+            let mut b = Int64Builder::new();
+            cells.for_each(|c| b.append_option(int(c)));
+            (DataType::Int64, Arc::new(b.finish()))
+        }
+        Kind::Decimal(p, s) => {
+            let mut b = Decimal128Builder::new();
+            for c in cells {
+                b.append_option(match c {
+                    Cell::Decimal(v) => Some(*v),
+                    _ => None,
+                });
+            }
+            let array = b
+                .finish()
+                .with_precision_and_scale(p, i8::try_from(s).map_err(|e| err(&e))?)
+                .map_err(|e| err(&e))?;
+            (
+                DataType::Decimal128(p, i8::try_from(s).map_err(|e| err(&e))?),
+                Arc::new(array),
+            )
+        }
+        Kind::Float64 => {
+            let mut b = Float64Builder::new();
+            cells.for_each(|c| b.append_option(float(c)));
+            (DataType::Float64, Arc::new(b.finish()))
+        }
+        Kind::Float32 => {
+            let mut b = Float32Builder::new();
+            #[allow(clippy::cast_possible_truncation)]
+            cells.for_each(|c| b.append_option(float(c).map(|x| x as f32)));
+            (DataType::Float32, Arc::new(b.finish()))
+        }
+        Kind::Bool => {
+            let mut b = BooleanBuilder::new();
+            cells.for_each(|c| {
+                b.append_option(if let Cell::Bool(v) = c {
+                    Some(*v)
+                } else {
+                    None
+                });
+            });
+            (DataType::Boolean, Arc::new(b.finish()))
+        }
+        Kind::Date => {
+            let mut b = Date32Builder::new();
+            for c in cells {
+                b.append_option(day(c).map(|d| i32::try_from(d).unwrap_or(i32::MAX)));
+            }
+            (DataType::Date32, Arc::new(b.finish()))
+        }
+        Kind::DateTime => {
+            let mut b = TimestampMicrosecondBuilder::new().with_timezone("UTC");
+            cells.for_each(|c| b.append_option(ms(c).map(|m| m * 1000)));
+            (
+                DataType::Timestamp(TimeUnit::Microsecond, Some("UTC".into())),
+                Arc::new(b.finish()),
+            )
+        }
+        Kind::Text => {
+            let mut b = StringBuilder::new();
+            cells.for_each(|c| {
+                b.append_option(if let Cell::Text(s) = c { Some(s) } else { None });
+            });
+            (DataType::Utf8, Arc::new(b.finish()))
+        }
+    })
 }
 
 /// Stata 14+ (format 118), as haven writes it: per the runner's type table, `int` a
@@ -343,8 +381,13 @@ pub fn dta(out: impl Write + Seek, columns: &[SpecColumn], table: &Table) -> Res
         let mut values = Vec::with_capacity(row.len());
         for (cell, kind) in row.iter().zip(&table.kinds) {
             values.push(match (*kind, cell) {
-                (Kind::Decimal(p, _), Cell::Real(x)) if p > 15 => {
-                    Value::String(real(*x, *kind).into())
+                (Kind::Decimal(p, _), Cell::Decimal(v)) if p > 15 => {
+                    Value::String(decimal(*v, *kind).into())
+                }
+                (Kind::Decimal(_, s), Cell::Decimal(v)) => {
+                    #[allow(clippy::cast_precision_loss)]
+                    let x = *v as f64 / 10f64.powi(i32::from(s));
+                    Value::Double(StataDouble::Present(x))
                 }
                 (Kind::Text, Cell::Null) => Value::string(""),
                 (Kind::Decimal(p, _), Cell::Null) if p > 15 => Value::string(""),
@@ -398,7 +441,8 @@ fn str_width(table: &Table, i: usize, kind: Kind) -> Result<u16, String> {
         .iter()
         .map(|r| match &r[i] {
             Cell::Text(s) => s.len(),
-            Cell::Real(x) => real(*x, kind).len(),
+            Cell::Real(x) => real(*x).len(),
+            Cell::Decimal(v) => decimal(*v, kind).len(),
             _ => 0,
         })
         .max()

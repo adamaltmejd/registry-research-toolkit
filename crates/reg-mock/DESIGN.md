@@ -97,10 +97,11 @@ bounds, resident that year unless departed units stay). Each unit has one row wi
 probability `rows_per_unit` when the mean is at most 1, else 1 plus a Poisson draw for
 the rest. A column draws its unit attribute when the rules name one, else one of its
 codes, else a value of its type (amounts lognormal, text short and random). A
-municipality with no value set is the county seat (`<county>80`). Values are missing at
-the column's rate (the spec's 2% by default), as a sentinel code where the value set has
-one; keys and the year never are. A timeless file is drawn in the window's last year,
-and a spec with only timeless files in 2024.
+municipality with no value set is the county seat (`<county>80`), a value set of
+sentinels only is drawn as such, text is no wider than its held storage, and decimals
+keep every digit. Values are missing at the column's rate (the spec's 2% by default), as
+a sentinel code where the value set has one; keys and the year never are. A timeless
+file is drawn in the window's last year, and a spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types
 per format"), so a pipeline reads mock and real files alike:
