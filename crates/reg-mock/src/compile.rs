@@ -451,9 +451,9 @@ struct Column<'a> {
     period: &'a Period,
     /// The held file and column, in the delivery layout.
     placement: Option<(&'a str, &'a str)>,
-    /// The period the column covers, when not the reference's own: a standard file's
-    /// year, a delivery file's years.
-    year_period: Option<Period>,
+    /// The periods the column covers, when not the reference's own: a standard file's
+    /// year, each of a delivery file's years.
+    year_periods: Vec<Period>,
 }
 
 impl Context<'_> {
@@ -471,7 +471,7 @@ impl Context<'_> {
             variable: &e.variable,
             period: &e.period,
             placement: None,
-            year_period: None,
+            year_periods: Vec::new(),
         });
         let keys = order.row_keys.iter().flat_map(|k| {
             k.columns.iter().map(move |c| Column {
@@ -482,7 +482,7 @@ impl Context<'_> {
                 variable: &c.variable,
                 period: &k.period,
                 placement: None,
-                year_period: None,
+                year_periods: Vec::new(),
             })
         });
         for column in ordered.chain(keys) {
@@ -498,7 +498,10 @@ impl Context<'_> {
                 // The year within the ordered period: a value set or type can change
                 // between and within years.
                 let mut r = column.clone();
-                r.year_period = year.map(|y| within(year_period(y), column.period));
+                r.year_periods = year
+                    .map(|y| within(year_period(y), column.period))
+                    .into_iter()
+                    .collect();
                 let refs = files.entry((column.table, year)).or_default();
                 let at = refs.iter().position(|(name, _)| *name == column.name);
                 let i = at.unwrap_or_else(|| {
@@ -539,23 +542,24 @@ impl Context<'_> {
                 }
             }
             built.file.years = years.into_iter().collect();
-            let span = match (built.file.years.first(), built.file.years.last()) {
-                (Some(&first), Some(&last)) => Period {
-                    start: year_period(first).start,
-                    end: year_period(last).end,
-                },
-                _ => Period {
-                    start: None,
-                    end: None,
-                },
-            };
+            // Each file year, not their span: a gap year's value sets are not extracted.
+            let file_years: Vec<Period> =
+                built.file.years.iter().map(|&y| year_period(y)).collect();
             for column in &file.columns {
                 let row_filter = file.row_filter.as_ref().filter(|f| f.column == column.name);
                 // The runner's period column: a row key placing no variable. It has no
                 // row filter when the order covers the whole delivery.
                 if column.refs.is_empty() {
                     if column.role == manifest::Role::RowKey {
-                        built.push_unsourced(year_column(column, row_filter.map(|f| f.encoding)));
+                        match year_column(column, row_filter.map(|f| f.encoding)) {
+                            Ok(year) => built.push_unsourced(year),
+                            Err(code) => refusals.push(Refusal::new(
+                                code,
+                                format!("{}/{}", file.name, column.name),
+                                "the order file's period column has no storage type mocks \
+                                 write: save the materialize answer again",
+                            )),
+                        }
                     } else {
                         refusals.push(Refusal::new(
                             "column_unplaced",
@@ -577,7 +581,7 @@ impl Context<'_> {
                         variable: &r.variable,
                         period: &r.period,
                         placement: Some((&file.table, &column.name)),
-                        year_period: Some(span.clone()),
+                        year_periods: file_years.clone(),
                     })
                     .collect();
                 let Some(mut spec_column) = self.resolve(
@@ -734,18 +738,22 @@ impl Context<'_> {
     }
 
     /// The project's `type` for the reference's variable: its own binding's, or for a
-    /// reference without one (a row key, a carried copy) any binding of that variable.
+    /// reference without one (a row key, a carried copy) its source's binding of that
+    /// variable, else any source's.
     fn binding_type(&self, r: &Column<'_>) -> Option<ColumnType> {
+        let source = self.project.sources.iter().find(|s| s.name == r.source);
         if let Some(b) = r.binding {
-            let source = self.project.sources.iter().find(|s| s.name == r.source)?;
-            return source.bindings.get(b)?.column_type;
+            return source?.bindings.get(b)?.column_type;
         }
-        self.project
-            .sources
-            .iter()
-            .flat_map(|s| &s.bindings)
-            .filter(|b| b.variable == r.variable)
-            .find_map(|b| b.column_type)
+        let of = |bindings: &[reg_core::project::Binding]| {
+            bindings
+                .iter()
+                .filter(|b| b.variable == r.variable)
+                .find_map(|b| b.column_type)
+        };
+        source
+            .and_then(|s| of(&s.bindings))
+            .or_else(|| self.project.sources.iter().find_map(|s| of(&s.bindings)))
     }
 
     /// The reference's segments over its period, earliest first: the held placement's
@@ -754,16 +762,22 @@ impl Context<'_> {
     /// carried into a steward table) whose segments are its own table's.
     fn segments(&self, r: &Column<'_>) -> Vec<&Segment> {
         let open = (i64::MIN, i64::MAX);
-        let period = r.year_period.as_ref().unwrap_or(r.period);
-        let (start, end) = period.days(open);
+        let periods: Vec<(i64, i64)> = if r.year_periods.is_empty() {
+            vec![r.period.days(open)]
+        } else {
+            r.year_periods.iter().map(|p| p.days(open)).collect()
+        };
         let overlapping = || {
+            let periods = &periods;
             self.answers
                 .segments
                 .iter()
                 .filter(|s| s.variable == r.variable)
                 .filter(move |s| {
                     let (s_start, s_end) = s.period.days(open);
-                    s_start < end && start < s_end
+                    periods
+                        .iter()
+                        .any(|&(start, end)| s_start < end && start < s_end)
                 })
         };
         let in_table = || overlapping().filter(|s| s.table == r.table);
@@ -809,14 +823,18 @@ fn within(period: Period, bounds: &Period) -> Period {
 }
 
 /// The runner's period column, typed by its storage; without a row filter its
-/// encoding is unknown and the year is written whole.
-fn year_column(column: &manifest::Column, encoding: Option<manifest::Encoding>) -> SpecColumn {
-    SpecColumn {
+/// encoding is unknown and the year is written whole. A storage type that is missing or
+/// one mocks do not write is refused, as for any column.
+fn year_column(
+    column: &manifest::Column,
+    encoding: Option<manifest::Encoding>,
+) -> Result<SpecColumn, &'static str> {
+    let (dtype, _) = resolve_type(None, Some(&column.storage), None)?;
+    Ok(SpecColumn {
         name: column.name.clone(),
         stata_name: column.stata_name.clone(),
         label: column.stata_name.as_ref().map(|_| column.name.clone()),
-        dtype: storage_type(column.storage.dtype.as_deref().unwrap_or("int"))
-            .unwrap_or(ColumnType::Integer),
+        dtype,
         storage: Some(column.storage.clone()),
         length: column.storage.length,
         codes: Vec::new(),
@@ -826,7 +844,7 @@ fn year_column(column: &manifest::Column, encoding: Option<manifest::Encoding>) 
         years: Vec::new(),
         identifier: false,
         null_rate: Some(0.0),
-    }
+    })
 }
 
 fn open_period(source: &str, variable: &str) -> Refusal {
