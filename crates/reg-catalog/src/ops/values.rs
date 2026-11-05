@@ -7,7 +7,7 @@ use rusqlite::{Connection, OptionalExtension};
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
-use utoipa::openapi::{OneOfBuilder, RefOr, Schema};
+use utoipa::openapi::{RefOr, Schema, schema::AnyOfBuilder};
 
 use super::shape::{self, ValueSetRef};
 use super::{
@@ -41,13 +41,14 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result,
 }];
 
-/// One value set's items, or the value sets that hold a pair.
+/// One value set's items, the value sets that hold a pair, or two versions' code
+/// changes. `anyOf`, not `oneOf`: an empty page (`items: []`) fits more than one.
 fn result(components: &mut Components) -> RefOr<Schema> {
     let items = component::<ValueItemsPage>(components);
     let sets = component::<ValueSetsPage>(components);
     let changes = component::<ValueChangesPage>(components);
-    RefOr::T(Schema::OneOf(
-        OneOfBuilder::new()
+    RefOr::T(Schema::AnyOf(
+        AnyOfBuilder::new()
             .item(items)
             .item(sets)
             .item(changes)
