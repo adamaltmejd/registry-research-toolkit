@@ -13,8 +13,9 @@ catalog at `https://reg-meta.vqv.uk/mcp`.
 - The server answers from register metadata only (schemas, value codes, documentation),
   not microdata.
 - The `data.swecov.se` website uses Cloudflare Web Analytics, which sets no cookie, and
-  records when a variable is added to a project in the browser (the variable id only;
-  the project itself stays in the browser), kept 3 months.
+  records when a variable is added to a project in the browser: the variable id, the
+  browser family and the country, kept 3 months. The project itself stays in the
+  browser.
 - The catalog server does not log tool arguments; it keeps a short-lived
   per-client-address counter for rate limiting. Cloudflare and Fly.io, which host it,
   may log requests and connection metadata such as IP addresses under their own
