@@ -109,9 +109,10 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             )));
         }
         other => {
-            return Err(Error::invalid_ref(
+            return Err(refs::wrong_kind(
                 value,
-                format!("{value:?} is a {other}, not a variable, a table or a register."),
+                other,
+                "not a variable, a table or a register",
             ));
         }
     }

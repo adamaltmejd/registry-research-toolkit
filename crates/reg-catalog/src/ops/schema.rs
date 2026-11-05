@@ -135,13 +135,6 @@ struct ScopeTable {
     locals: Vec<(usize, i64, Option<i64>)>,
 }
 
-fn invalid_ref(value: &str, kind: &str, operation: &str) -> Error {
-    Error::invalid_ref(
-        value,
-        format!("{value:?} is a {kind}, which {operation} does not take."),
-    )
-}
-
 /// The database origins a ref's lines are read from: the reference catalog and, in
 /// steward mode, the holdings, whose supplemental segments share public ids.
 fn origins(server: &Server, conn: Connection) -> Result<Vec<Connection>, Error> {
@@ -178,7 +171,13 @@ fn scope(
             "SELECT DISTINCT t.id, t.pid FROM segment s JOIN tbl t ON t.id = s.table_id
              WHERE s.variable_id = ? ORDER BY t.pid",
         ),
-        kind => return Err(invalid_ref(value, kind, operation)),
+        kind => {
+            return Err(refs::wrong_kind(
+                value,
+                kind,
+                &format!("which {operation} does not take"),
+            ));
+        }
     };
     // The narrowing table may be the steward's own: the first origin naming it wins,
     // and the ref's origin's error stands when none does.

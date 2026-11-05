@@ -123,9 +123,10 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
         "table" => SCOPE_TABLE,
         "variable" => SCOPE_VARIABLE,
         kind => {
-            return Err(Error::invalid_ref(
+            return Err(refs::wrong_kind(
                 value,
-                format!("{value:?} is a {kind}, not a register, a table or a variable."),
+                kind,
+                "not a register, a table or a variable",
             ));
         }
     };

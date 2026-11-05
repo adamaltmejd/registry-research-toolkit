@@ -145,16 +145,12 @@ fn by_content(conn: &Connection, hash: &str) -> Result<i64, Error> {
 
 /// The id of the value set of the class version `given` names.
 fn classification_set(conn: &Connection, given: &str) -> Result<i64, Error> {
-    let version = refs::resolve(conn, given)?;
-    if version.kind != "class_version" {
-        return Err(Error::invalid_ref(
-            given,
-            format!(
-                "{given:?} is a {}, not a classification version.",
-                version.kind
-            ),
-        ));
-    }
+    let version = refs::expect(
+        conn,
+        given,
+        &["class_version"],
+        "not a classification version",
+    )?;
     Ok(conn.query_row(
         "SELECT valueset_id FROM class_version WHERE id = ?",
         [version.id],

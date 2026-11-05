@@ -182,14 +182,7 @@ pub struct FacetVariable {
 
 /// The register a `register` parameter names (rule 4).
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
-    let entity = refs::resolve(conn, value)?;
-    if entity.kind != "register" {
-        return Err(Error::invalid_ref(
-            value,
-            format!("{value:?} is a {}, not a register.", entity.kind),
-        ));
-    }
-    Ok(entity.id)
+    Ok(refs::expect(conn, value, &["register"], "not a register")?.id)
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {

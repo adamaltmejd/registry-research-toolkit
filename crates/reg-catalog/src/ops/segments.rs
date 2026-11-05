@@ -176,10 +176,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             (variable_pids(server, named)?, Some(pid))
         }
         (kind, true) => {
-            return Err(Error::invalid_ref(
-                given,
-                format!("{given:?} is a {kind}, not a variable."),
-            ));
+            return Err(refs::wrong_kind(given, kind, "not a variable"));
         }
     };
     let evidence = flag(params, "evidence")?;
@@ -260,14 +257,8 @@ fn variable_pids(server: &Server, values: &[&str]) -> Result<Vec<String>, Error>
     let mut pids = values
         .iter()
         .map(|&value| {
-            let hit = refs::resolve(&server.catalog.connect_for_ref(value)?, value)?;
-            if hit.kind != "variable" {
-                return Err(Error::invalid_ref(
-                    value,
-                    format!("{value:?} is a {}, not a variable.", hit.kind),
-                ));
-            }
-            Ok(hit.pid)
+            let conn = server.catalog.connect_for_ref(value)?;
+            Ok(refs::expect(&conn, value, &["variable"], "not a variable")?.pid)
         })
         .collect::<Result<Vec<_>, Error>>()?;
     pids.sort_unstable();

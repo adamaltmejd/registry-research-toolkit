@@ -213,6 +213,33 @@ fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Valu
     Ok(serde_json::json!({"fqid": &e.pid, "kind": &e.kind, "name": name}))
 }
 
+/// `invalid_ref` for `value`, a ref of kind `kind` where the operation wants another:
+/// `"{value} is a {kind}, {expected}."`.
+#[must_use]
+pub fn wrong_kind(value: &str, kind: &str, expected: &str) -> Error {
+    Error::invalid_ref(value, format!("{value:?} is a {kind}, {expected}."))
+}
+
+/// [`resolve`] `value`, refusing a ref whose kind is not one of `kinds` as
+/// [`wrong_kind`] with `expected`.
+///
+/// # Errors
+///
+/// [`resolve`]'s; `invalid_ref` for another kind.
+pub fn expect(
+    conn: &Connection,
+    value: &str,
+    kinds: &[&str],
+    expected: &str,
+) -> Result<Entity, Error> {
+    let entity = resolve(conn, value)?;
+    if kinds.contains(&entity.kind.as_str()) {
+        Ok(entity)
+    } else {
+        Err(wrong_kind(value, &entity.kind, expected))
+    }
+}
+
 /// A table ref: a `tbl.pid`, or a ref that resolves to a table. A register with an
 /// implicit table resolves to that table, which has the register's pid; one with
 /// explicit tables is `table_is_register`, listing their pids.
@@ -248,10 +275,7 @@ pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
                 vec![value.into(), tables.into()],
             ))
         }
-        kind => Err(Error::invalid_ref(
-            value,
-            format!("{value:?} is a {kind}, not a table."),
-        )),
+        kind => Err(wrong_kind(value, kind, "not a table")),
     }
 }
 
