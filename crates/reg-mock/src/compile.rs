@@ -472,12 +472,8 @@ impl Context<'_> {
                     .position(|c| c.name == column.name)
                 {
                     Some(i) => {
-                        same_type(
-                            &built.file.columns[i],
-                            &spec_column,
-                            &built.file.name,
-                            refusals,
-                        );
+                        let name = built.file.name.clone();
+                        merge_column(&mut built.file.columns[i], spec_column, &name, refusals);
                         built.add_source(i, column.source);
                     }
                     None => built.push(column.source, spec_column),
@@ -513,16 +509,20 @@ impl Context<'_> {
                     }
                     continue;
                 };
-                let mut column_years = BTreeSet::new();
                 for r in &column.refs {
                     match self::years(&r.period) {
-                        Ok(Some(ys)) => column_years.extend(ys),
+                        Ok(Some(ys)) => years.extend(ys),
                         Ok(None) => {}
                         Err(()) => refusals.push(open_period(&r.source, &r.variable)),
                     }
                 }
-                years.extend(column_years.iter().copied());
-                // A column several requested variables share is drawn as the first.
+                // A column several requested variables share is drawn as the first
+                // requested one; an implicit row key (no binding) takes its type.
+                let r = column
+                    .refs
+                    .iter()
+                    .find(|r| r.binding.is_some())
+                    .unwrap_or(r);
                 let draft = Column {
                     name: &column.name,
                     source: &r.source,
@@ -540,9 +540,17 @@ impl Context<'_> {
                         spec_column.attribute = Some(Attribute::Year);
                         spec_column.encoding = Some(filter.encoding);
                     }
-                    spec_column.years = column_years.into_iter().collect();
-                    // Every variable the column delivers must agree on its type.
-                    for other in &column.refs[1..] {
+                    // The runner reads every column over the file's years: a column is
+                    // missing only in years its placement does not hold.
+                    spec_column.years = self.held_years(&file.table, &column.name);
+                    // Every variable the column delivers must agree on its type; its
+                    // codes are all of theirs (simplify: one code list for every year,
+                    // give codes years if a pipeline checks codes by year).
+                    for other in column
+                        .refs
+                        .iter()
+                        .filter(|o| !std::ptr::eq(*o, r) && o.binding.is_some())
+                    {
                         let draft = Column {
                             source: &other.source,
                             binding: other.binding,
@@ -554,12 +562,12 @@ impl Context<'_> {
                         if let Some(other_column) =
                             self.column(&draft, Some(&column.storage), refusals)
                         {
-                            same_type(&spec_column, &other_column, &file.name, refusals);
+                            merge_column(&mut spec_column, other_column, &file.name, refusals);
                         }
                     }
                     built.push(&r.source, spec_column);
                     let i = built.file.columns.len() - 1;
-                    for other in &column.refs[1..] {
+                    for other in &column.refs {
                         built.add_source(i, &other.source);
                     }
                 }
@@ -567,6 +575,7 @@ impl Context<'_> {
             built.file.years = years.into_iter().collect();
             // A column held in every year of its file needs no years of its own.
             for column in &mut built.file.columns {
+                column.years.retain(|y| built.file.years.contains(y));
                 if column.years == built.file.years {
                     column.years.clear();
                 }
@@ -574,6 +583,18 @@ impl Context<'_> {
             files.push(built);
         }
         files
+    }
+
+    /// The years a held placement holds, from its segment rows; empty when the saved
+    /// answers have none (no mask).
+    fn held_years(&self, file: &str, column: &str) -> Vec<i32> {
+        let mut held = BTreeSet::new();
+        for segment in &self.answers.segments {
+            if segment.file.as_deref() == Some(file) && segment.column.as_deref() == Some(column) {
+                held.extend(years(&segment.period).ok().flatten().unwrap_or_default());
+            }
+        }
+        held.into_iter().collect()
     }
 
     /// The column's type, codes and flags from its segment, the project override and
@@ -719,8 +740,8 @@ fn within(period: Period, bounds: &Period) -> Period {
     }
 }
 
-/// Columns merged into one must agree on the type they are written in.
-fn same_type(kept: &SpecColumn, other: &SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
+/// Columns merged into one agree on their type and hold all of their codes.
+fn merge_column(kept: &mut SpecColumn, other: SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
     if kept.dtype != other.dtype || kept.storage.is_some() != other.storage.is_some() {
         refusals.push(Refusal::new(
             "column_types_disagree",
@@ -728,6 +749,11 @@ fn same_type(kept: &SpecColumn, other: &SpecColumn, file: &str, refusals: &mut V
             "the variables delivered in this column resolve to different types: give their \
              bindings the same `type` in project_data.json",
         ));
+    }
+    for code in other.codes {
+        if !kept.codes.iter().any(|c| c.code == code.code) {
+            kept.codes.push(code);
+        }
     }
 }
 
