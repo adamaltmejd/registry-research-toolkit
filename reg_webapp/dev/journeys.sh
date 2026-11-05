@@ -47,9 +47,19 @@ wait_url() {
 	ab wait --url "$1" >/dev/null || fail "never reached $1 (at $(ab get url))" || return 1
 	settled
 }
-# The accessibility tree does, or does not, match an extended regex.
-tree() { ab snapshot -c | grep -qE -- "$1" || fail "the page has no /$1/"; }
-no_tree() { ! ab snapshot -c | grep -qE -- "$1" || fail "the page still has /$1/"; }
+# The accessibility tree does, or does not, match an extended regex. The snapshot is
+# taken first: a failed snapshot fails the check, never reads as "absent".
+snapshot() { ab snapshot -c || fail "could not read the page's accessibility tree"; }
+tree() {
+	local page
+	page=$(snapshot) || return 1
+	grep -qE -- "$1" <<<"$page" || fail "the page has no /$1/"
+}
+no_tree() {
+	local page
+	page=$(snapshot) || return 1
+	if grep -qE -- "$1" <<<"$page"; then fail "the page still has /$1/"; fi
+}
 visit() { ab open "$dev_url$1" >/dev/null && settled; }
 # Open a project file through the Project page's file input (the native chooser the
 # "Open a project file…" button raises cannot be clicked).
@@ -57,20 +67,22 @@ open_project() {
 	visit /project || return 1
 	ab upload 'input[type=file]' "$1" >/dev/null || fail "could not open $1"
 }
-shot() { ab screenshot --full "$out_dir/$journey.png" >/dev/null; }
+shot() { ab screenshot --full "$out_dir/$journey.png" >/dev/null || fail "could not save the screenshot"; }
 
 WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 
 # J1 browse page types. Fails if a provider, register, table or variable route stops
 # dispatching to its page, the trail stops naming the ancestors, a table chip stops
-# narrowing the register's variables, or a finding no longer opens.
+# narrowing the register's variables, or a finding no longer opens. The fixture's Familjer
+# table holds one of Hushållsregistret's five variables (Antal), so the chip must
+# leave "1 of 5 shown": a chip that filters nothing leaves 5 of 5.
 j_browse() {
 	visit /catalog && press row "Demoleverantören" && wait_url "**/catalog/demo" &&
 		see listbox "Variables in Demoleverantören" &&
 		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
 		see heading "Hushållsregistret" &&
 		tree 'checkbox "Familjer 2021–2022" \[checked=false' &&
-		press checkbox "Familjer 2021–2022" && wait_text " of 5 shown" &&
+		press checkbox "Familjer 2021–2022" && wait_text "1 of 5 shown" &&
 		tree 'checkbox "Familjer 2021–2022" \[checked=true' &&
 		press link "Familjer" && wait_url "**/catalog/demo/hush/fam" &&
 		see heading "Familjer" && see link "Demoleverantören" &&
