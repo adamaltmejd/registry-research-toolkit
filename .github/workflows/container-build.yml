@@ -203,6 +203,7 @@ jobs:
       tag: ${{ steps.regmeta.outputs.tag }}
       db_sha256: ${{ steps.regmeta.outputs.db_sha256 }}
       swecov_db_sha256: ${{ steps.regmeta.outputs.swecov_db_sha256 }}
+      schema_match: ${{ steps.schemaguard.outputs.schema_match }}
     steps:
       # Only the code side's schema constants file: the guard below reads the released
       # asset's side from the resolved reg_meta/v* tag, which it fetches alone, without
@@ -249,6 +250,11 @@ jobs:
       # schema), hence the tag fetch. A release from before the constant
       # existed has none, which is a mismatch too. An explicit `reg_meta_tag` pin
       # follows the same rule.
+      #
+      # On a pull request a mismatch is a warning, not a failure: main legitimately
+      # carries a schema bump ahead of its release, and every PR would go red until the
+      # release ships. The PR then skips its build-only image (it would bake an asset
+      # the server refuses). Push and dispatch still fail, which blocks every deploy.
       - name: Schema guard
         id: schemaguard
         run: |
@@ -263,10 +269,17 @@ jobs:
             code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
             asset=$(git show "$TAG:crates/reg-core/src/lib.rs" | grep -oE "$pattern" || true)
             if [ -z "$code" ] || [ "$code" != "$asset" ]; then
-              echo "::error::schema-guard: $name: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first; deploys blocked."
+              msg="schema-guard: $name: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first"
+              if [ "${{ github.event_name }}" = pull_request ]; then
+                echo "::warning::$msg; PR image build skipped."
+                echo "schema_match=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              echo "::error::$msg; deploys blocked."
               exit 1
             fi
           done
+          echo "schema_match=true" >> "$GITHUB_OUTPUT"
           echo "schema-guard: code and $TAG agree on both schema versions"
 
   # A missing paired asset blocks only SWECOV. Keep the run eligible for the
@@ -308,6 +321,7 @@ jobs:
     needs: [changes, schema-guard]
     if: >-
       !cancelled() && needs.schema-guard.result == 'success' &&
+      needs.schema-guard.outputs.schema_match == 'true' &&
       (needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
