@@ -4,10 +4,10 @@
 //! [`crate::write`].
 
 use reg_core::manifest::Encoding;
-use reg_core::project::ColumnType;
+use reg_core::project::{ColumnType, ExtractFormat};
 
 use crate::Refusal;
-use crate::population::{Demography, Exit, Population, day_in, days_from_civil, year_of};
+use crate::population::{Demography, Exit, Population, day_in, year_of};
 use crate::rng::Rng;
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
 
@@ -50,7 +50,7 @@ impl Kind {
     /// # Errors
     ///
     /// The SQL type, when the runner writes no such storage.
-    pub fn of(column: &SpecColumn) -> Result<Self, String> {
+    pub fn of(column: &SpecColumn, format: ExtractFormat) -> Result<Self, String> {
         let Some(storage) = &column.storage else {
             return Ok(match column.dtype {
                 // An integer identifier may pass 2^31; a code or amount stays a long.
@@ -62,7 +62,11 @@ impl Kind {
                 ColumnType::Boolean => Self::Bool,
                 ColumnType::Date => Self::Date,
                 ColumnType::Datetime => Self::DateTime,
-                _ => Self::Text,
+                ColumnType::Text => Self::Text,
+                // Refused by compile; an edited spec may still hold them.
+                ColumnType::Geometry | ColumnType::Uuid | ColumnType::Binary => {
+                    return Err(format!("{:?}", column.dtype).to_ascii_lowercase());
+                }
             });
         };
         let sql = storage
@@ -83,6 +87,9 @@ impl Kind {
                 }
                 Self::Decimal(precision, scale)
             }
+            // The runner writes money only as CSV text (its "Types per format").
+            "money" if format == ExtractFormat::Csv => Self::Decimal(19, 4),
+            "smallmoney" if format == ExtractFormat::Csv => Self::Decimal(10, 4),
             "float" => Self::Float64,
             "real" => Self::Float32,
             "bit" => Self::Bool,
@@ -116,9 +123,9 @@ fn window(spec: &Spec) -> (i32, i32) {
 ///
 /// # Errors
 ///
-/// `size_too_large` past [`MAX_PERSONS`] unless `allow_large`; `code_not_numeric` when a
-/// numeric column's code is not a number; `storage_unsupported` for a storage type the
-/// runner does not write.
+/// A refusal from [`crate::compile::check_spec`]; `size_too_large` past [`MAX_PERSONS`]
+/// unless `allow_large`; `code_invalid` when a code does not fit its column's type;
+/// `storage_unsupported` for a type or storage the runner does not write in the format.
 pub fn generate(
     spec: &Spec,
     seed: u64,
@@ -144,7 +151,7 @@ pub fn generate(
             .columns
             .iter()
             .map(|c| {
-                Kind::of(c).map_err(|sql| {
+                Kind::of(c, spec.format).map_err(|sql| {
                     Refusal::new(
                         "storage_unsupported",
                         format!("{}/{}", file.name, c.name),
@@ -320,10 +327,10 @@ fn cell(
 
 fn not_numeric(at: String) -> Refusal {
     Refusal::new(
-        "code_not_numeric",
+        "code_invalid",
         at,
-        "a numeric column's code or mapped value is not a number: fix the codes or the map \
-         in the rules, or the column's type",
+        "a code or mapped value does not fit the column's type (a number, a calendar date, \
+         the storage's precision): fix the codes or the map in the rules, or the column's type",
     )
 }
 
@@ -407,20 +414,28 @@ fn attribute_cell(
             Some((day, Exit::Death)) if year_of(day) <= unit.year => date(day)?,
             _ => Cell::Null,
         },
-        Attribute::Year => year_cell(column.encoding, kind, unit.year, rng)?,
+        Attribute::Year => year_cell(column.encoding, kind, unit.year, &mapped, rng)?,
     })
 }
 
 /// The row's year in the row filter's encoding: a whole year, or a day or month in it.
-fn year_cell(encoding: Option<Encoding>, kind: Kind, year: i32, rng: &mut Rng) -> Option<Cell> {
+fn year_cell(
+    encoding: Option<Encoding>,
+    kind: Kind,
+    year: i32,
+    mapped: &dyn Fn(&str) -> String,
+    rng: &mut Rng,
+) -> Option<Cell> {
     let day = day_in(year, rng);
     let iso = reg_core::issue::iso_day(day);
     match (encoding, kind) {
         (_, Kind::Date) => Some(Cell::Date(day)),
         (_, Kind::DateTime) => Some(Cell::DateTime(day * 86_400_000)),
-        (Some(Encoding::Yyyymm), _) => from_text(&iso[..7].replace('-', ""), kind),
-        (Some(Encoding::Yyyymmdd | Encoding::Date), _) => from_text(&iso.replace('-', ""), kind),
-        _ => from_text(&year.to_string(), kind),
+        (Some(Encoding::Yyyymm), _) => from_text(&mapped(&iso[..7].replace('-', "")), kind),
+        (Some(Encoding::Yyyymmdd | Encoding::Date), _) => {
+            from_text(&mapped(&iso.replace('-', "")), kind)
+        }
+        _ => from_text(&mapped(&year.to_string()), kind),
     }
 }
 
@@ -441,19 +456,51 @@ fn from_text(code: &str, kind: Kind) -> Option<Cell> {
         Kind::Text => Cell::Text(code.to_owned()),
         Kind::Int32 | Kind::Int64 => Cell::Int(code.trim().parse().ok()?),
         Kind::Float64 | Kind::Float32 => Cell::Real(code.trim().parse().ok()?),
-        Kind::Decimal(_, scale) => Cell::Decimal(scaled(code.trim(), scale)?),
+        Kind::Decimal(precision, scale) => Cell::Decimal(
+            scaled(code.trim(), scale)
+                .filter(|v| v.unsigned_abs() < 10u128.pow(u32::from(precision)))?,
+        ),
         Kind::Bool => Cell::Bool(matches!(code.trim(), "1" | "true" | "J" | "j")),
-        Kind::Date | Kind::DateTime => {
-            let digits: String = code.chars().filter(char::is_ascii_digit).collect();
-            let (y, m, d) = (digits.get(..4)?, digits.get(4..6)?, digits.get(6..8)?);
-            let day = days_from_civil(y.parse().ok()?, m.parse().ok()?, d.parse().ok()?);
-            if kind == Kind::Date {
-                Cell::Date(day)
-            } else {
-                Cell::DateTime(day * 86_400_000)
-            }
-        }
+        Kind::Date | Kind::DateTime => temporal(code.trim(), kind)?,
     })
+}
+
+/// A date code (`YYYY-MM-DD` or `YYYYMMDD`), with a time (` HH:MM:SS` or `T…`) in a
+/// datetime column; `None` for anything else, such as a day the calendar lacks.
+fn temporal(code: &str, kind: Kind) -> Option<Cell> {
+    let (date, time) = code
+        .split_once([' ', 'T'])
+        .map_or((code, None), |(d, t)| (d, Some(t)));
+    let iso = match date.len() {
+        8 if date.bytes().all(|b| b.is_ascii_digit()) => {
+            format!("{}-{}-{}", &date[..4], &date[4..6], &date[6..])
+        }
+        _ => date.to_owned(),
+    };
+    let day = reg_core::iso_day_number(&iso)?;
+    if kind == Kind::Date {
+        return time.is_none().then_some(Cell::Date(day));
+    }
+    let seconds = match time {
+        None => 0,
+        Some(time) => {
+            let mut parts = time.split(':').map(|p| p.parse::<i64>().ok());
+            let (h, m, s) = (
+                parts.next()??,
+                parts.next()??,
+                parts.next().unwrap_or(Some(0))?,
+            );
+            if parts.next().is_some()
+                || !(0..24).contains(&h)
+                || !(0..60).contains(&m)
+                || !(0..60).contains(&s)
+            {
+                return None;
+            }
+            h * 3600 + m * 60 + s
+        }
+    };
+    Some(Cell::DateTime(day * 86_400_000 + seconds * 1000))
 }
 
 /// A decimal code as an integer at `scale`, or `None` when it is not a decimal or has

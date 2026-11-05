@@ -375,53 +375,12 @@ pub fn dta(out: impl Write + Seek, columns: &[SpecColumn], table: &Table) -> Res
         .map_err(|e| err(&e))?
         .into_record_writer()
         .map_err(|e| err(&e))?;
-    let missing_long = Value::Long(StataLong::Missing(MissingValue::System));
-    let missing_double = Value::Double(StataDouble::Missing(MissingValue::System));
     for row in &table.rows {
-        let mut values = Vec::with_capacity(row.len());
-        for (cell, kind) in row.iter().zip(&table.kinds) {
-            values.push(match (*kind, cell) {
-                (Kind::Decimal(p, _), Cell::Decimal(v)) if p > 15 => {
-                    Value::String(decimal(*v, *kind).into())
-                }
-                (Kind::Decimal(_, s), Cell::Decimal(v)) => {
-                    #[allow(clippy::cast_precision_loss)]
-                    let x = *v as f64 / 10f64.powi(i32::from(s));
-                    Value::Double(StataDouble::Present(x))
-                }
-                (Kind::Text, Cell::Null) => Value::string(""),
-                (Kind::Decimal(p, _), Cell::Null) if p > 15 => Value::string(""),
-                (Kind::Text, Cell::Text(s)) => Value::String(s.as_str().into()),
-                (Kind::Int32 | Kind::Date | Kind::Bool, Cell::Null) => missing_long.clone(),
-                (_, Cell::Null) => missing_double.clone(),
-                (Kind::Int32, Cell::Int(n)) => {
-                    // Stata reserves the longs above 2147483620 for missing values.
-                    let n = i32::try_from(*n)
-                        .ok()
-                        .filter(|n| *n <= 2_147_483_620)
-                        .ok_or("a long past Stata's range: order it as Parquet or CSV")?;
-                    Value::Long(StataLong::Present(n))
-                }
-                (Kind::Bool, Cell::Bool(b)) => Value::Long(StataLong::Present(i32::from(*b))),
-                (Kind::Date, Cell::Date(d)) => Value::Long(StataLong::Present(
-                    i32::try_from(d + STATA_EPOCH_DAYS).map_err(|e| err(&e))?,
-                )),
-                (Kind::DateTime, Cell::DateTime(m)) => {
-                    #[allow(clippy::cast_precision_loss)]
-                    let stata_ms = (m + STATA_EPOCH_DAYS * 86_400_000) as f64;
-                    Value::Double(StataDouble::Present(stata_ms))
-                }
-                (_, Cell::Int(n)) => {
-                    if n.unsigned_abs() >= 1 << 53 {
-                        return Err("an integer at or past 2^53: order it as Parquet or CSV".into());
-                    }
-                    #[allow(clippy::cast_precision_loss)]
-                    Value::Double(StataDouble::Present(*n as f64))
-                }
-                (_, Cell::Real(x)) => Value::Double(StataDouble::Present(*x)),
-                (kind, cell) => return Err(format!("a {cell:?} in a {kind:?} column")),
-            });
-        }
+        let values = row
+            .iter()
+            .zip(&table.kinds)
+            .map(|(cell, kind)| stata_value(*kind, cell))
+            .collect::<Result<Vec<_>, _>>()?;
         records.write_record(&values).map_err(|e| err(&e))?;
     }
     records
@@ -432,6 +391,59 @@ pub fn dta(out: impl Write + Seek, columns: &[SpecColumn], table: &Table) -> Res
         .finish()
         .map_err(|e| err(&e))?;
     Ok(())
+}
+
+/// One cell as Stata holds it, or why it cannot (as the runner refuses it).
+fn stata_value(kind: Kind, cell: &Cell) -> Result<Value<'_>, String> {
+    Ok(match (kind, cell) {
+        (Kind::Decimal(p, _), Cell::Decimal(v)) if p > 15 => {
+            Value::String(decimal(*v, kind).into())
+        }
+        (Kind::Decimal(_, s), Cell::Decimal(v)) => {
+            #[allow(clippy::cast_precision_loss)]
+            let x = *v as f64 / 10f64.powi(i32::from(s));
+            Value::Double(StataDouble::Present(x))
+        }
+        (Kind::Text, Cell::Null) => Value::string(""),
+        (Kind::Decimal(p, _), Cell::Null) if p > 15 => Value::string(""),
+        (Kind::Text, Cell::Text(s)) => Value::String(s.as_str().into()),
+        (Kind::Int32 | Kind::Date | Kind::Bool, Cell::Null) => {
+            Value::Long(StataLong::Missing(MissingValue::System))
+        }
+        (_, Cell::Null) => Value::Double(StataDouble::Missing(MissingValue::System)),
+        (Kind::Int32, Cell::Int(n)) => {
+            // Stata reserves the longs above 2147483620 for missing values.
+            let n = i32::try_from(*n)
+                .ok()
+                .filter(|n| *n <= 2_147_483_620)
+                .ok_or("a long past Stata's range: order it as Parquet or CSV")?;
+            Value::Long(StataLong::Present(n))
+        }
+        (Kind::Bool, Cell::Bool(b)) => Value::Long(StataLong::Present(i32::from(*b))),
+        (Kind::Date, Cell::Date(d)) => Value::Long(StataLong::Present(
+            i32::try_from(d + STATA_EPOCH_DAYS).map_err(|e| e.to_string())?,
+        )),
+        (Kind::DateTime, Cell::DateTime(m)) => {
+            #[allow(clippy::cast_precision_loss)]
+            let stata_ms = (m + STATA_EPOCH_DAYS * 86_400_000) as f64;
+            Value::Double(StataDouble::Present(stata_ms))
+        }
+        (_, Cell::Int(n)) => {
+            if n.unsigned_abs() >= 1 << 53 {
+                return Err("an integer at or past 2^53: order it as Parquet or CSV".into());
+            }
+            #[allow(clippy::cast_precision_loss)]
+            Value::Double(StataDouble::Present(*n as f64))
+        }
+        (_, Cell::Real(x)) => {
+            // Stata's largest double; above it the value reads back as missing.
+            if x.abs() > 8.988_465_674_311_579e307 {
+                return Err("a value past Stata's double range: order it as Parquet or CSV".into());
+            }
+            Value::Double(StataDouble::Present(*x))
+        }
+        (kind, cell) => return Err(format!("a {cell:?} in a {kind:?} column")),
+    })
 }
 
 /// The widest value in bytes, at least 1, as haven sizes a `str`.
