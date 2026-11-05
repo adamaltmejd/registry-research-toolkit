@@ -196,6 +196,10 @@ export function ColumnList({
   // ← in the list returns to the register column; captured, so the ListBox
   // (which ignores ← in a vertical list) never sees it.
   function onKeyDownCapture(event: KeyboardEvent): void {
+    // A key pressed in the list ends the arrival: on a slow machine the
+    // timeout that clears it can run after the key, and Enter then opened
+    // nothing (CI, 2026-11-05).
+    arriving.current = false;
     walking.current = !OPEN_KEYS.has(event.key);
     if (
       event.key === "ArrowLeft" &&
