@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "9"
+    "schema_version": "10"
   },
   "project": {
     "name": "Order case",
@@ -24,7 +24,7 @@
         "end": "2019-03-01"
       },
       "spelling": "Kon",
-      "type": "char",
+      "type": "text",
       "length": 1,
       "value_set": {
         "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",

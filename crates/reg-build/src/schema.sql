@@ -234,7 +234,7 @@ CREATE TABLE segment (
   start            INTEGER NOT NULL,
   end              INTEGER NOT NULL,
   spelling_id      INTEGER NOT NULL REFERENCES spelling(id),
-  dtype            TEXT,                  -- normalized: 'int','decimal','char','date',...
+  dtype            TEXT,                  -- published name: 'integer','decimal','text','date',... (reg_frame::dtype_info)
   length           INTEGER,
   format           TEXT,                  -- 'yyyymmdd', 'yyyy', ...
   valueset_id      INTEGER REFERENCES valueset(id),

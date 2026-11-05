@@ -45,26 +45,34 @@ pub struct Locator {
 pub struct Dtype {
     pub family: Option<&'static str>,
     pub widening: u8,
+    /// The one name the catalog publishes for this dtype; `None` publishes unknown
+    /// (NULL). Readers and curation may keep aliases (`int`, `char`); the catalog never
+    /// does (#2071).
+    pub published: Option<&'static str>,
 }
 
 /// The closed vocabulary and widening order of frame and curation dtypes.
 #[must_use]
 pub fn dtype_info(dtype: &str) -> Option<Dtype> {
-    let (family, widening) = match dtype {
-        "int" | "integer" => (Some("integer"), 0),
-        "decimal" => (Some("decimal"), 0),
-        "char" | "text" => (Some("text"), 0),
-        "date" => (Some("temporal"), 0),
-        "datetime" => (Some("temporal"), 1),
-        "boolean" => (Some("boolean"), 0),
-        "geometry" => (Some("geometry"), 0),
-        "uuid" => (Some("uuid"), 0),
-        "binary" => (Some("binary"), 0),
-        "unspecified" => (None, 0),
-        "identifier" => (Some("identifier"), 0),
+    let (family, widening, published) = match dtype {
+        "int" | "integer" => (Some("integer"), 0, Some("integer")),
+        "decimal" => (Some("decimal"), 0, Some("decimal")),
+        "char" | "text" => (Some("text"), 0, Some("text")),
+        "date" => (Some("temporal"), 0, Some("date")),
+        "datetime" => (Some("temporal"), 1, Some("datetime")),
+        "boolean" => (Some("boolean"), 0, Some("boolean")),
+        "geometry" => (Some("geometry"), 0, Some("geometry")),
+        "uuid" => (Some("uuid"), 0, Some("uuid")),
+        "binary" => (Some("binary"), 0, Some("binary")),
+        "unspecified" => (None, 0, None),
+        "identifier" => (Some("identifier"), 0, Some("identifier")),
         _ => return None,
     };
-    Some(Dtype { family, widening })
+    Some(Dtype {
+        family,
+        widening,
+        published,
+    })
 }
 
 /// The widest compatible source dtype: known before unknown, then widening order,

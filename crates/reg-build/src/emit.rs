@@ -110,6 +110,13 @@ fn opt_str(s: Option<&String>) -> Cell {
     s.map_or(Cell::Null, |s| Cell::Str(s.clone()))
 }
 
+/// The catalog's one name for a resolved dtype; unknown (`unspecified`) is NULL.
+fn published_dtype(dtype: Option<&str>) -> Cell {
+    dtype
+        .and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").published)
+        .map_or(Cell::Null, |t| Cell::Str(t.to_owned()))
+}
+
 fn flag(b: Option<bool>) -> Cell {
     opt_int(b.map(i64::from))
 }
@@ -212,7 +219,13 @@ fn write_provenance(
                 Cell::Str(prov.into()),
                 opt_int(statement),
                 rule.map_or(Cell::Null, |code| Cell::Str(code.into())),
-                opt_str(value.value.as_ref()),
+                // A winning type publishes under the catalog's name, like the
+                // occurrence it set; the losing source value stays as stated evidence.
+                if value.field == "type" {
+                    published_dtype(value.value.as_deref())
+                } else {
+                    opt_str(value.value.as_ref())
+                },
                 opt_str(value.source_value.as_ref()),
             ],
         );
@@ -664,7 +677,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                         Cell::Int(start(&segment.period.0)),
                         Cell::Int(end(&segment.period.1)),
                         Cell::Spelling(segment.spelling.clone()),
-                        opt_str(segment.dtype.as_ref()),
+                        published_dtype(segment.dtype.as_deref()),
                         opt_int(segment.length),
                         opt_str(segment.format.as_ref()),
                         opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
@@ -713,7 +726,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     opt_text(x.definition.as_ref()),
                     opt_text(x.operational_definition.as_ref()),
                     opt_text(x.unit.as_ref()),
-                    opt_str(x.dtype.as_ref()),
+                    published_dtype(x.dtype.as_deref()),
                     opt_int(x.length),
                     opt_str(x.format.as_ref()),
                     opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),

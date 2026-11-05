@@ -27,7 +27,7 @@
         "display_name": null,
         "period": {"start": "2018-01-01", "end": "2019-01-01"},
         "spelling": "Slot2",
-        "type": "int",
+        "type": "integer",
         "length": null,
         "value_set": null,
         "classification": null

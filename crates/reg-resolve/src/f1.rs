@@ -269,9 +269,13 @@ fn names(x: &ResolvedRelease) -> BTreeSet<&str> {
         .collect()
 }
 
-/// A segment's type and any stated length.
+/// A segment's type, under its published name, and any stated length.
 fn shape(s: &Segment) -> String {
-    let dtype = s.dtype.as_deref().unwrap_or("untyped");
+    let dtype = s
+        .dtype
+        .as_deref()
+        .and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").published)
+        .unwrap_or("untyped");
     match s.length {
         Some(n) => format!("{dtype}({n})"),
         None => dtype.to_owned(),

@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "9"
+    "schema_version": "10"
   },
   "project": {
     "name": "Order case",
@@ -24,7 +24,7 @@
         "end": "2017-01-01"
       },
       "spelling": "X",
-      "type": "int",
+      "type": "integer",
       "length": null,
       "value_set": null,
       "classification": null
@@ -44,7 +44,7 @@
         "end": "2019-01-01"
       },
       "spelling": "X",
-      "type": "int",
+      "type": "integer",
       "length": null,
       "value_set": null,
       "classification": null
