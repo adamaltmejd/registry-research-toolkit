@@ -666,6 +666,7 @@ async function classificationPickerCase(page, shoot) {
   // hidden under its label's face.
   await older.locator("xpath=ancestor::label[1]").click();
   check(await older.isChecked(), "pressing a span did not pick its version");
+  await main.getByRole("heading", { name: /^Codes in Utbildningsnivå 2000/ }).waitFor();
   await changes.waitFor({ state: "detached" });
   await settled(page);
   await shoot("classification-picker");

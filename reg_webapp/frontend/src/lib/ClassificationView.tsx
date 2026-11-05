@@ -73,7 +73,19 @@ export function ClassificationView({
   // 1996) draws arrows.
   const laneOf = (v: Version) => v.part ?? node.name;
   const spans: LaneSpanModel[] = versions.flatMap((v) =>
-    columnYearRuns([v], bounds, axis[0]).map((run) => {
+    // An open end stops at the catalog's last year, not at a later version's
+    // start that stretched the axis: ICD-10 does not run into ICD-11's 2027.
+    columnYearRuns(
+      [v],
+      [
+        bounds[0],
+        Math.max(
+          catalogBounds.max,
+          v.period.start ? Number(v.period.start.slice(0, 4)) : bounds[0],
+        ),
+      ],
+      axis[0],
+    ).map((run) => {
       const years = catalogPeriodLabel(v.period);
       const name = versionName(v);
       return {
@@ -135,21 +147,21 @@ export function ClassificationView({
             : []),
         ]}
       />
-      <Panel title="Versions">
-        <LaneGraph
-          label="Versions"
-          lanes={lanes}
-          spans={spans}
-          edges={edges}
-          axis={axis}
-          window={study ? [study.from, study.to] : null}
-          focusSpan={focus}
-          hint={null}
-          onToggle={setChosen}
-        />
-      </Panel>
+      {/* Unframed and unheaded, as the variable and group pages draw theirs
+          (maintainer ruling, 2026-11-05). */}
+      <LaneGraph
+        label="Versions"
+        lanes={lanes}
+        spans={spans}
+        edges={edges}
+        axis={axis}
+        window={study ? [study.from, study.to] : null}
+        focusSpan={focus}
+        hint="Click a version to see its codes."
+        onToggle={setChosen}
+      />
       {version && (
-        <Panel title="Codes">
+        <Panel title={`Codes in ${versionName(version)}`}>
           <div className={classStyles.codes}>
             <ValueSetCodes
               key={version.fqid}

@@ -60,7 +60,7 @@ function Versions({ family }: { family: ClassFamilyRef }) {
   const list = (versions: ClassFamilyRef["versions"], part = "") => (
     <ul
       className={`${styles.plainList} ${listStyles.versions}`}
-      aria-label={`Versions of ${family.name}`}
+      aria-label={`Versions of ${family.name}${part ? `, ${part}` : ""}`}
     >
       {versions.map((version) => {
         const years = catalogPeriodLabel(version.period);
