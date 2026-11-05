@@ -344,13 +344,7 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
             let extra = server.catalog.connect_holdings()?;
             let mut providers = provider_refs(&conn)?;
             if let Some(extra) = &extra {
-                let known: BTreeSet<_> = providers.iter().map(|p| p.fqid.clone()).collect();
-                providers.extend(
-                    provider_refs(extra)?
-                        .into_iter()
-                        .filter(|p| !known.contains(&p.fqid)),
-                );
-                providers.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+                union_by_fqid(&mut providers, provider_refs(extra)?, |p| &p.fqid);
             }
             providers.retain(|p| server.catalog.serves("provider", &p.fqid));
             let mut registers = served_registers(server, &conn, extra.as_ref(), None)?;
@@ -433,13 +427,11 @@ fn served_registers(
 ) -> Result<BTreeMap<String, Vec<ShowRegisterRef>>, Error> {
     let mut found = register_refs(server, conn, provider)?;
     if let Some(extra) = extra {
-        let known: BTreeSet<_> = found.iter().map(|(_, r)| r.fqid.clone()).collect();
-        found.extend(
-            register_refs(server, extra, provider)?
-                .into_iter()
-                .filter(|(_, r)| !known.contains(&r.fqid)),
+        union_by_fqid(
+            &mut found,
+            register_refs(server, extra, provider)?,
+            |(_, r)| &r.fqid,
         );
-        found.sort_by(|(_, a), (_, b)| a.fqid.cmp(&b.fqid));
     }
     let mut by_provider: BTreeMap<String, Vec<ShowRegisterRef>> = BTreeMap::new();
     for (provider, register) in found {
@@ -448,6 +440,14 @@ fn served_registers(
         }
     }
     Ok(by_provider)
+}
+
+/// Steward mode: the holdings origin's rows join the base list, a pid both origins
+/// define keeps the base (reference) row, and the list is re-sorted by pid.
+fn union_by_fqid<T>(base: &mut Vec<T>, extra: Vec<T>, fqid: impl Fn(&T) -> &String) {
+    let known: BTreeSet<String> = base.iter().map(|row| fqid(row).clone()).collect();
+    base.extend(extra.into_iter().filter(|row| !known.contains(fqid(row))));
+    base.sort_by(|a, b| fqid(a).cmp(fqid(b)));
 }
 
 /// A register's delivered periods: in steward mode the years it is held, else the merged
@@ -524,29 +524,14 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     // Steward mode: tables the steward defines inside a reference register join it;
     // a pid both origins define keeps the reference row.
     if let Some(extra) = &extra {
-        let steward_tables = register_tables(server, extra, &entity.pid)?;
-        let known: BTreeSet<_> = tables.iter().map(|t| t.fqid.clone()).collect();
-        tables.extend(
-            steward_tables
-                .into_iter()
-                .filter(|t| !known.contains(&t.fqid)),
+        union_by_fqid(
+            &mut tables,
+            register_tables(server, extra, &entity.pid)?,
+            |t| &t.fqid,
         );
-        tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
         let (steward_sets, steward_tags) = groupings(extra, &entity.pid)?;
-        let known: BTreeSet<_> = sets.iter().map(|s| s.fqid.clone()).collect();
-        sets.extend(
-            steward_sets
-                .into_iter()
-                .filter(|s| !known.contains(&s.fqid)),
-        );
-        sets.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        let known: BTreeSet<_> = tags.iter().map(|t| t.fqid.clone()).collect();
-        tags.extend(
-            steward_tags
-                .into_iter()
-                .filter(|t| !known.contains(&t.fqid)),
-        );
-        tags.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+        union_by_fqid(&mut sets, steward_sets, |s| &s.fqid);
+        union_by_fqid(&mut tags, steward_tags, |t| &t.fqid);
     }
     // Steward mode lists only what the steward holds (`Catalog::serves`); a set
     // keeps its held members and goes when none is held.
