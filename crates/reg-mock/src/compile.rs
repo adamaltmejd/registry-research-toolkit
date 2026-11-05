@@ -442,6 +442,18 @@ impl Context<'_> {
                         year.into_iter().collect(),
                     )
                 });
+                // A row key the source also requested is that column, of its type: the
+                // binding's override, which the row key does not carry.
+                if column.binding.is_none()
+                    && let Some(i) = built
+                        .file
+                        .columns
+                        .iter()
+                        .position(|c| c.name == column.name)
+                {
+                    built.add_source(i, column.source);
+                    continue;
+                }
                 // Each year's own segment, within the ordered period: a value set or type
                 // can change between and within years.
                 let period = year.map(|y| within(year_period(y), column.period));
@@ -452,8 +464,7 @@ impl Context<'_> {
                 let Some(spec_column) = self.column(&draft, None, refusals) else {
                     continue;
                 };
-                // A row key the source also requested, or two sources' columns of one
-                // name, are one column, of one type.
+                // Two sources' columns of one name are one column, of one type.
                 match built
                     .file
                     .columns
