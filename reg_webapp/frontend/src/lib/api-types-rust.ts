@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions, each with its part and the versions it succeeds, and the variables that use them, each with its rows that carry the classification; `class` lists the classifications with their versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
+        /** @description Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions, each with its part and the versions it succeeds, and the variables that use them, each with its rows that carry the classification; `class` lists the classifications with their versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -367,7 +367,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other. */
+        /** @description The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other. `compare` with `classification` lists the codes added, removed and relabelled from the `compare` version to the `classification` version. */
         get: operations["values"];
         put?: never;
         post?: never;
@@ -387,6 +387,11 @@ export interface components {
             release: string;
             schema: string;
         };
+        /**
+         * @description In page order.
+         * @enum {string}
+         */
+        Change: "added" | "removed" | "relabelled";
         /** @description A requested variable this column delivers. */
         ColumnRef: {
             /** @description The variable's position in the source; null for a row key nobody requested. */
@@ -1211,6 +1216,8 @@ export interface components {
             /** @enum {string} */
             kind: "class_family";
             name: string;
+            /** @description Who publishes it. */
+            publisher?: string;
             variables: components["schemas"]["ShowClassUser"][];
             /** @description In start order. */
             versions: components["schemas"]["ShowClassVersion"][];
@@ -1220,13 +1227,18 @@ export interface components {
             /** @enum {string} */
             kind: "class_version";
             name: string;
+            /** @description The line it belongs to, in a classification with several. */
+            part?: string;
             /** @description The version's validity. */
             period: components["schemas"]["Period"];
+            /** @description The versions it directly succeeds, in fqid order. */
+            succeeds: string[];
             value_set: components["schemas"]["ValueSetRef"];
             /** @description The variables that use this version. */
             variables: components["schemas"]["ShowClassUser"][];
         };
         ShowClassFamilyRef: {
+            description?: string;
             fqid: string;
             name: string;
             /** @description From the first version's start to the last one's end. */
@@ -1236,6 +1248,17 @@ export interface components {
              * @description How many versions it has.
              */
             version_count: number;
+            /** @description In start order. */
+            versions: components["schemas"]["ShowClassFamilyVersion"][];
+        };
+        /** @description A version in the list of classifications. */
+        ShowClassFamilyVersion: {
+            fqid: string;
+            name: string;
+            /** @description The line it belongs to, in a classification with several. */
+            part?: string;
+            /** @description The version's validity. */
+            period: components["schemas"]["Period"];
         };
         /** @description A variable that uses the classification, with its rows that carry it. */
         ShowClassUser: {
@@ -1250,8 +1273,12 @@ export interface components {
         ShowClassVersion: {
             fqid: string;
             name: string;
+            /** @description The line it belongs to, in a classification with several. */
+            part?: string;
             /** @description The version's validity. */
             period: components["schemas"]["Period"];
+            /** @description The versions it directly succeeds, in fqid order. */
+            succeeds: string[];
             /** @description Whether one of `variables` uses this version. */
             used: boolean;
             value_set: components["schemas"]["ValueSetRef"];
@@ -1431,6 +1458,32 @@ export interface components {
         Validation: {
             issues: components["schemas"]["NamedIssue"][];
             ok: boolean;
+        };
+        ValueChange: {
+            change: components["schemas"]["Change"];
+            /** @description May be `""`: a real code. */
+            code: string;
+            /** @description The label in `classification`; `null` for a removed code. */
+            label: string | null;
+            /** @description The label in `compare`; `null` for an added code. */
+            previous_label: string | null;
+        };
+        ValueChangeCounts: {
+            added: number;
+            relabelled: number;
+            removed: number;
+        };
+        /** @description The code changes from the `compare` version to the `classification` version. */
+        ValueChangesPage: {
+            /** @description The version compared to, the newer side. */
+            classification: string;
+            /** @description The version compared from, the older side. */
+            compare: string;
+            /** @description Over the whole comparison. */
+            counts: components["schemas"]["ValueChangeCounts"];
+            /** @description Added, then removed, then relabelled; by code within each. */
+            items: components["schemas"]["ValueChange"][];
+            next_cursor: string | null;
         };
         ValueItem: {
             /**
@@ -2204,6 +2257,7 @@ export interface operations {
             query?: {
                 value_set?: string;
                 classification?: string;
+                compare?: string;
                 code?: string;
                 label?: string;
                 level?: string;
@@ -2225,7 +2279,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["ValueItemsPage"] | components["schemas"]["ValueSetsPage"];
+                        data: components["schemas"]["ValueItemsPage"] | components["schemas"]["ValueSetsPage"] | components["schemas"]["ValueChangesPage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

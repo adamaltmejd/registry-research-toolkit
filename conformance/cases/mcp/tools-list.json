@@ -444,7 +444,7 @@
   },
   {
     "name": "show",
-    "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+    "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions, each with its part and the versions it succeeds, and the variables that use them, each with its rows that carry the classification; `class` lists the classifications with their versions. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
     "inputSchema": {
       "properties": {
         "evidence": {
@@ -1357,6 +1357,10 @@
                 "name": {
                   "type": "string"
                 },
+                "publisher": {
+                  "description": "Who publishes it.",
+                  "type": "string"
+                },
                 "variables": {
                   "items": {
                     "$ref": "#/$defs/ShowClassUser"
@@ -1397,9 +1401,20 @@
                 "name": {
                   "type": "string"
                 },
+                "part": {
+                  "description": "The line it belongs to, in a classification with several.",
+                  "type": "string"
+                },
                 "period": {
                   "$ref": "#/$defs/Period",
                   "description": "The version's validity."
+                },
+                "succeeds": {
+                  "description": "The versions it directly succeeds, in fqid order.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
                 },
                 "value_set": {
                   "$ref": "#/$defs/ValueSetRef"
@@ -1418,6 +1433,7 @@
                 "period",
                 "value_set",
                 "family",
+                "succeeds",
                 "variables",
                 "kind"
               ],
@@ -1427,6 +1443,9 @@
         },
         "ShowClassFamilyRef": {
           "properties": {
+            "description": {
+              "type": "string"
+            },
             "fqid": {
               "type": "string"
             },
@@ -1442,12 +1461,45 @@
               "format": "int32",
               "minimum": 0,
               "type": "integer"
+            },
+            "versions": {
+              "description": "In start order.",
+              "items": {
+                "$ref": "#/$defs/ShowClassFamilyVersion"
+              },
+              "type": "array"
             }
           },
           "required": [
             "fqid",
             "name",
             "version_count",
+            "period",
+            "versions"
+          ],
+          "type": "object"
+        },
+        "ShowClassFamilyVersion": {
+          "description": "A version in the list of classifications.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "part": {
+              "description": "The line it belongs to, in a classification with several.",
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period",
+              "description": "The version's validity."
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
             "period"
           ],
           "type": "object"
@@ -1484,9 +1536,20 @@
             "name": {
               "type": "string"
             },
+            "part": {
+              "description": "The line it belongs to, in a classification with several.",
+              "type": "string"
+            },
             "period": {
               "$ref": "#/$defs/Period",
               "description": "The version's validity."
+            },
+            "succeeds": {
+              "description": "The versions it directly succeeds, in fqid order.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             },
             "used": {
               "description": "Whether one of `variables` uses this version.",
@@ -1501,6 +1564,7 @@
             "name",
             "period",
             "value_set",
+            "succeeds",
             "used"
           ],
           "type": "object"
@@ -2518,13 +2582,16 @@
   },
   {
     "name": "values",
-    "description": "The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other.",
+    "description": "The codes and labels of a value set, by `value_set` hash or `classification`. `parent` steps through a hierarchy one level at a time; `q` searches it. Or give `code` (and `label`) to find the value sets that contain it. The blank code is a code like any other. `compare` with `classification` lists the codes added, removed and relabelled from the `compare` version to the `classification` version.",
     "inputSchema": {
       "properties": {
         "classification": {
           "type": "string"
         },
         "code": {
+          "type": "string"
+        },
+        "compare": {
           "type": "string"
         },
         "cursor": {
@@ -2557,6 +2624,15 @@
     },
     "outputSchema": {
       "$defs": {
+        "Change": {
+          "description": "In page order.",
+          "enum": [
+            "added",
+            "removed",
+            "relabelled"
+          ],
+          "type": "string"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}`.",
           "properties": {
@@ -2635,6 +2711,98 @@
             "catalog_generation",
             "holdings_generation",
             "schema_version"
+          ],
+          "type": "object"
+        },
+        "ValueChange": {
+          "properties": {
+            "change": {
+              "$ref": "#/$defs/Change"
+            },
+            "code": {
+              "description": "May be `\"\"`: a real code.",
+              "type": "string"
+            },
+            "label": {
+              "description": "The label in `classification`; `null` for a removed code.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "previous_label": {
+              "description": "The label in `compare`; `null` for an added code.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "label",
+            "previous_label",
+            "change"
+          ],
+          "type": "object"
+        },
+        "ValueChangeCounts": {
+          "properties": {
+            "added": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "relabelled": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "removed": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "added",
+            "removed",
+            "relabelled"
+          ],
+          "type": "object"
+        },
+        "ValueChangesPage": {
+          "description": "The code changes from the `compare` version to the `classification` version.",
+          "properties": {
+            "classification": {
+              "description": "The version compared to, the newer side.",
+              "type": "string"
+            },
+            "compare": {
+              "description": "The version compared from, the older side.",
+              "type": "string"
+            },
+            "counts": {
+              "$ref": "#/$defs/ValueChangeCounts",
+              "description": "Over the whole comparison."
+            },
+            "items": {
+              "description": "Added, then removed, then relabelled; by code within each.",
+              "items": {
+                "$ref": "#/$defs/ValueChange"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor",
+            "counts",
+            "classification",
+            "compare"
           ],
           "type": "object"
         },
@@ -2776,12 +2944,15 @@
         {
           "properties": {
             "data": {
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/$defs/ValueItemsPage"
                 },
                 {
                   "$ref": "#/$defs/ValueSetsPage"
+                },
+                {
+                  "$ref": "#/$defs/ValueChangesPage"
                 }
               ]
             },

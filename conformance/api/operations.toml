@@ -165,8 +165,8 @@ check carry the findings an agent needs; the SPA's entity pages are the consumer
 name = "values"
 http = ["GET /api/values"]
 tool = "values"
-params = { value_set = "hash?", classification = "ref?", code = "string?", label = "string?", level = "string?", parent = "string?", q = "string?", limit = "limit?", cursor = "cursor?" }
-result = "Page<ValueItem> plus `value_set` (ValueSetRef) and `total` (matches of `q` in the whole set); with `code`: Page<ValueSetRef>, ordered by hash"
+params = { value_set = "hash?", classification = "ref?", compare = "ref?", code = "string?", label = "string?", level = "string?", parent = "string?", q = "string?", limit = "limit?", cursor = "cursor?" }
+result = "Page<ValueItem> plus `value_set` (ValueSetRef) and `total` (matches of `q` in the whole set); with `code`: Page<ValueSetRef>, ordered by hash; with `compare`: Page<ValueChange> plus `counts`, `classification` and `compare`"
 errors = ["invalid_parameter", "invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
 note = """Two modes. By content: one value set's items, by its hash or by a \
 classification version's ref (its `valueset_id`). By pair: `code` with an optional \
@@ -184,7 +184,15 @@ for its children; `child_count` is null for a flat set. A non-empty `q` matches 
 or label in the set, flat. `q`, `parent` and `child_count` read the one set by its \
 primary-key prefix, bounded by `n_items`; there is no text index on `vs_item`. Default \
 limit 50, maximum 200. The old `partition`, `alias_window_from`, `column` and `state` \
-are gone: a value set is addressed by content."""
+are gone: a value set is addressed by content. `compare` (a class version) with \
+`classification` lists the code changes from `compare` to `classification`: codes only \
+in `classification` (`added`, `previous_label` null), only in `compare` (`removed`, \
+`label` null) and in both with another label (`relabelled`). Codes compare exactly, the \
+blank code included; items are added, then removed, then relabelled, by code within \
+each, and `counts` covers the whole comparison. The versions may belong to different \
+families. There are no code correspondence tables: this is a set difference. `compare` \
+without `classification`, or beside any other parameter but `limit` and `cursor`, is \
+`invalid_parameter` naming `compare`."""
 
 [[operation]]
 name = "graph"

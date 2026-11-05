@@ -1,0 +1,35 @@
+# One classification with two parts and a succession inside one part, for the
+# classification pages: Nivå 2000 → Nivå 2020 adds, removes and relabels codes;
+# Inriktning has one version.
+[[classification]]
+family = "demo-utb"
+version = "v2000-niva"
+name = "Utbildningsnivå 2000"
+family_name = "Utbildningsnomenklatur"
+family_description = "Demoleverantörens indelning av utbildningar efter nivå och inriktning."
+publisher = "Demoleverantören"
+part = "Nivå"
+value_set = "codes/niva-2000.csv"
+period = "2000..2019"
+evidence = "Synthetic first level edition."
+
+[[classification]]
+family = "demo-utb"
+version = "v2020-niva"
+name = "Utbildningsnivå 2020"
+family_name = "Utbildningsnomenklatur"
+part = "Nivå"
+succeeds = ["class/demo-utb/v2000-niva"]
+value_set = "codes/niva-2020.csv"
+period = "2020.."
+evidence = "Synthetic next level edition: splits post-secondary, adds research, drops Övrig."
+
+[[classification]]
+family = "demo-utb"
+version = "v2000-inr"
+name = "Utbildningsinriktning 2000"
+family_name = "Utbildningsnomenklatur"
+part = "Inriktning"
+value_set = "codes/inriktning-2000.csv"
+period = "2000.."
+evidence = "Synthetic field edition, a second line of the same classification."
