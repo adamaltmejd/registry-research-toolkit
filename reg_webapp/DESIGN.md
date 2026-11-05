@@ -100,12 +100,12 @@ page, as a grouped variable's address renders its group. The codes are the colum
 value sets on the shared `CodeTimeline`, fetched through `values`, not the version's
 whole list. Every classification name on screen is the name the server serves (`show`,
 or `classification_name` on a segment row); the SPA never makes a name up from a slug,
-and a null value-set classification is never inferred from its names. The project
-editor and its findings name versions only from the segment rows already read, never
-with a `show` per version (one binding can have dozens of candidates); where no loaded
-row carries a version (a pin not delivered on the project's tables), it shows the
-version's own id, the ref's last part, as an id. A cross-register version list names
-each variable's register from the root read the browse column makes.
+and a null value-set classification is never inferred from its names. The project editor
+and its findings name versions only from the segment rows already read, never with a
+`show` per version (one binding can have dozens of candidates); where no loaded row
+carries a version (a pin not delivered on the project's tables), it shows the version's
+own id, the ref's last part, as an id. A cross-register version list names each
+variable's register from the root read the browse column makes.
 
 ## Why no auth — cost protection instead
 
