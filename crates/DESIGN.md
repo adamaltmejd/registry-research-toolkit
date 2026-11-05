@@ -1335,11 +1335,13 @@ public metadata definitions do not authorize publishing private source files.
 The toolkit contains only generic compilation and serving code; it pins no steward. The
 steward repository pins a `reg_meta` release instead and builds its holdings from its
 own checkout (maintainer 2026-11-04): `reg-build holdings` records the checkout's
-`origin` URL, `HEAD` commit and the `--config` path as the steward pin, and refuses a
-dirty tree, untracked files included. The dedicated repo's `steward.toml` declares owner
-id, scope, presentation paths, reader/input roles and semantic curation root. Use
-`scope.toml`, `branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers
-and statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+`origin` as `<host>/<owner>/<repo>` (scheme, user, port and `.git` dropped, lower-cased,
+so HTTPS and SSH clones pin alike; a local path or bare name is refused), its `HEAD`
+commit and the `--config` path as the steward pin, and refuses a dirty tree, untracked
+files included. The dedicated repo's `steward.toml` declares owner id, scope,
+presentation paths, reader/input roles and semantic curation root. Use `scope.toml`,
+`branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers and
+statements, including slots), `curation/readers/`, and `inputs/` (census, storage
 export, provider source TOML/converted transcription CSV, inventory and legacy slug
 evidence). Pin selected delivery-document evidence there too, retaining originals
 privately. Reuse the catalog input-pin discipline: verify the declared paths/hashes in

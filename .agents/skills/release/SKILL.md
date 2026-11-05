@@ -298,10 +298,11 @@ record each step: `echo "8b $base_sha" >> "$evidence/passed"`,
 #### 8d. Compile the holdings
 
 The pin is the steward checkout itself: a fresh clone of swecov-steward at `main`. The
-compiler records its `origin` URL, `HEAD` commit and `--config` path in the pair, and
-refuses a dirty tree, untracked files included, with `holdings_pin_invalid`. Never edit
-the steward checkout. The steward's re-lock against this release's base lands on
-swecov-steward `main` in a reviewed PR before the bump, not during the release.
+compiler records its `origin` (canonical `host/owner/repo`), `HEAD` commit and
+`--config` path in the pair, and refuses a dirty tree, untracked files included, with
+`holdings_pin_invalid`. Never edit the steward checkout. The steward's re-lock against
+this release's base lands on swecov-steward `main` in a reviewed PR before the bump, not
+during the release.
 
 ```sh
 git clone git@github.com:adamaltmejd/swecov-steward.git "$steward"
