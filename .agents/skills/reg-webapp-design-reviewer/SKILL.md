@@ -182,6 +182,11 @@ printed console output alongside it.
 - Cross-route coherence: render at least one untouched sibling route beside the changed
   one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
   divergence from the surrounding app.
+- Box geometry, with the neighbour check: compare each new element's rendered width and
+  height against its neighbour and the viewport, not only colours and type, and drive a
+  search or data state whose content is short, so a box shrink-wrapped to its text does
+  not hide behind long content. (A narrow-width match list shrink-wrapped to 149 px
+  passed a review that compared colours and type on long-text searches only.)
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
 tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.

@@ -1,38 +1,24 @@
-import { useCallback, useMemo, useState } from "react";
-import {
-  Button,
-  Disclosure,
-  DisclosurePanel,
-  Heading,
-} from "react-aria-components";
+import { useState } from "react";
 import type { ClassFamilyShow, Context } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import classStyles from "./ClassificationView.module.css";
-import { CodeTimeline } from "./CodeTimeline";
-import { catalogHref, svCollator } from "./catalog";
-import { catalogRootChildren } from "./catalog_names";
-import { catalogPeriodLabel, catalogPeriodRuns } from "./catalog_period";
+import { catalogPeriodLabel } from "./catalog_period";
+import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
 import { dataAxis } from "./period";
-import { datedYearRuns, studyWindow } from "./study_window";
+import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
-import { NameSkeleton } from "./ui/Skeleton";
-import { TreeChevron } from "./ui/TreeChevron";
-import { VariableRow, VariableRowList } from "./ui/VariableRow";
+import { Select } from "./ui/Select";
 import { useProject } from "./use_project";
-import { useCatalogRead } from "./use_store_read";
+import { ValueSetCodes, VersionChanges } from "./ValueSetCodes";
 import { windowBounds } from "./window_bounds";
 
-/** A whole family's variable lists open at once when they come to at most this
- * many rows (about two screens); past that each version opens on demand (lkf:
- * 36 used versions, ~700 rows, a 35,000 px page). A row cap, not a version cap:
- * two versions can hold hundreds of rows. */
-const OPEN_ALL_ROWS = 30;
+type Version = ClassFamilyShow["versions"][number];
 
-/** A classification family's page (DESIGN.md → Detail pane): its versions in
- * start order, each over the steward's variables that use it behind a
- * disclosure, then the codes those variables' columns use. A version's address
- * renders this page with that version `focus`ed and open (Operator Q4, #2252). */
+/** A classification's page (DESIGN.md → Detail pane): its versions as lanes
+ * on the year axis, then one version's codes and what changed since the
+ * version before it. A version's address renders this page with that version
+ * picked (`focus`). */
 export function ClassificationView({
   node,
   focus,
@@ -43,278 +29,154 @@ export function ClassificationView({
   context: Context | null;
 }) {
   const { draft } = useProject();
-  const bound = useMemo(
-    () =>
-      new Set(
-        draft?.sources.flatMap((source) =>
-          source.bindings.map((binding) => binding.variable),
-        ) ?? [],
-      ),
-    [draft],
-  );
   const study = studyWindow(draft);
   const catalogBounds = windowBounds(context);
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
-  const studyYears: [number, number] | null = study
-    ? [study.from, study.to]
-    : null;
-  const variables = [...node.variables].sort((a, b) =>
-    svCollator.compare(a.name, b.name),
-  );
+  const versions = laneOrder(node.versions);
+  const byFqid = new Map(versions.map((version) => [version.fqid, version]));
+  // The latest version by start (the API's order) when no address picks one,
+  // passing over a version that starts after the catalog's last year (ICD-11).
+  const fallback =
+    node.versions.findLast(
+      (v) =>
+        v.period.start === null ||
+        Number(v.period.start.slice(0, 4)) <= bounds[1],
+    )?.fqid ??
+    node.versions.at(-1)?.fqid ??
+    null;
+  const [picked, setPicked] = useState(focus ?? fallback);
+  const [pickedFor, setPickedFor] = useState(focus);
+  if (focus !== pickedFor) {
+    setPickedFor(focus);
+    setPicked(focus ?? fallback);
+  }
+  const version = picked ? byFqid.get(picked) : undefined;
   const axis = dataAxis(
-    datedYearRuns(
-      variables.flatMap((variable) => variable.segments),
-      bounds,
-    ).flatMap((run) => [run.from, run.to]),
+    datedYearRuns(versions, bounds).flatMap((run) => [run.from, run.to]),
     study,
     bounds,
   );
-  // Like a grouped variable's lane: the focused version takes focus unless
-  // the reader is already elsewhere, and scrolls only when out of view.
-  const focusVersion = useCallback((heading: HTMLHeadingElement | null) => {
-    if (!heading) return;
-    const active = document.activeElement;
-    if (active && active !== document.body) return;
-    heading.focus({ preventScroll: true });
-    const bar =
-      Number.parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--top-bar-height",
-        ),
-      ) || 0;
-    const { top, bottom } = heading.getBoundingClientRect();
-    if (top < bar || bottom > window.innerHeight)
-      heading.scrollIntoView({ block: "center" });
-  }, []);
-  // The register names come from the root read the browse column makes, so
-  // naming each row's register costs no request per register.
-  const root = useCatalogRead(catalogRootChildren, undefined);
-  const registerNames = new Map(
-    (root.value ?? []).flatMap((provider) =>
-      provider.registers.map((register) => [register.fqid, register.name]),
-    ),
+  const parts = new Set(versions.map((v) => v.part ?? ""));
+  const successors = new Map<string, Version[]>();
+  for (const v of versions)
+    for (const older of v.succeeds)
+      successors.set(older, [...(successors.get(older) ?? []), v]);
+  const lanes: LaneModel[] = versions.map((v) => ({
+    id: v.fqid,
+    name: v.name,
+    // A classification with parts says which each version belongs to; the
+    // name alone often does too, but not always (SUN 1996).
+    sub: parts.size > 1 && v.part ? { text: v.part } : null,
+    wrap: true,
+    current: v.fqid === picked,
+    relations: [
+      ...v.succeeds.flatMap((older) => {
+        const name = byFqid.get(older)?.name;
+        return name ? [`Continues ${name}`] : [];
+      }),
+      ...(successors.get(v.fqid) ?? []).map(
+        (newer) => `Succeeded by ${newer.name}`,
+      ),
+    ],
+  }));
+  const spans: LaneSpanModel[] = versions.flatMap((v) =>
+    columnYearRuns([v], bounds, axis[0]).map((run) => {
+      const years = catalogPeriodLabel(v.period);
+      return {
+        id: v.fqid,
+        lane: v.fqid,
+        // The lane's name column names the version; the span is its years.
+        name: "",
+        from: run.from,
+        to: run.to,
+        years,
+        state: "default",
+        selectable: false,
+        accessibleName: `${v.name}, ${years}`,
+      };
+    }),
   );
-  // Only a list that spans registers names them: on one register's family the
-  // name alone is enough.
-  const crossRegister =
-    new Set(variables.map((variable) => registerOf(variable.fqid))).size > 1;
-  const registerLabel = (register: string) =>
-    registerNames.get(register) ??
-    (root.loading ? <NameSkeleton label="Loading register name" /> : null);
-  const items = versionItems(node.versions, variables, focus);
-  // Which versions show their variables: local state, not the URL. A family
-  // with one used version, or few rows in all, opens whole; otherwise only the
-  // version an address targets opens, and a later address opens its own.
-  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => {
-    const used = items.flatMap((item) =>
-      item.kind === "version" && item.users.length > 0 ? [item] : [],
-    );
-    const rows = used.reduce((sum, item) => sum + item.users.length, 0);
-    return new Set(
-      used.length <= 1 || rows <= OPEN_ALL_ROWS
-        ? used.map((item) => item.version.fqid)
-        : focus
-          ? [focus]
-          : [],
-    );
-  });
-  const [openedFocus, setOpenedFocus] = useState(focus);
-  if (focus !== openedFocus) {
-    setOpenedFocus(focus);
-    if (focus) setExpanded((open) => new Set(open).add(focus));
-  }
-  const setOpen = (fqid: string, open: boolean) =>
-    setExpanded((current) => {
-      const next = new Set(current);
-      if (open) next.add(fqid);
-      else next.delete(fqid);
-      return next;
-    });
+  const edges = versions.flatMap((v) =>
+    v.succeeds
+      .filter((older) => byFqid.has(older))
+      .map((older) => ({
+        id: `${older}>${v.fqid}`,
+        from: older,
+        to: v.fqid,
+        kind: "succession" as const,
+      })),
+  );
   return (
     <article className={styles.page}>
       <Definitions
         kind="classification"
         title={node.name}
-        definitions={
-          node.description
+        definitions={[
+          ...(node.publisher
+            ? [{ term: "Publisher", value: node.publisher }]
+            : []),
+          ...(node.description
             ? [{ term: "Description", value: node.description }]
-            : []
-        }
+            : []),
+        ]}
       />
-      <Panel title="Versions" flush>
-        <ul className={classStyles.versions}>
-          {items.map((item) =>
-            item.kind === "unused" ? (
-              <li
-                key={item.versions[0].fqid}
-                className={`${classStyles.version} ${classStyles.unused}`}
-              >
-                {unusedLine(item.versions)}
-              </li>
-            ) : (
-              <li
-                key={item.version.fqid}
-                className={classStyles.version}
-                data-current={item.version.fqid === focus || undefined}
-              >
-                {item.users.length > 0 ? (
-                  <Disclosure
-                    className={classStyles.disclosure}
-                    isExpanded={expanded.has(item.version.fqid)}
-                    onExpandedChange={(open) =>
-                      setOpen(item.version.fqid, open)
-                    }
-                  >
-                    {({ isExpanded }) => (
-                      <>
-                        <Heading
-                          level={3}
-                          ref={
-                            item.version.fqid === focus
-                              ? focusVersion
-                              : undefined
-                          }
-                          tabIndex={
-                            item.version.fqid === focus ? -1 : undefined
-                          }
-                          className={classStyles.versionHeading}
-                        >
-                          <Button
-                            slot="trigger"
-                            className={classStyles.versionTrigger}
-                          >
-                            <TreeChevron />
-                            <span className={classStyles.versionLine}>
-                              <span className={classStyles.versionName}>
-                                {item.version.name}
-                              </span>
-                              <span className={classStyles.years}>
-                                {catalogPeriodLabel(item.version.period)}
-                              </span>
-                              <span className={classStyles.count}>
-                                {item.users.length === 1
-                                  ? "1 variable"
-                                  : `${item.users.length} variables`}
-                              </span>
-                            </span>
-                          </Button>
-                        </Heading>
-                        <DisclosurePanel
-                          className={`motion-disclose ${isExpanded ? "open" : ""}`}
-                        >
-                          <div>
-                            {/* Rows mount only while open: a long family's
-                                closed versions cost no DOM. */}
-                            {isExpanded && (
-                              <VariableRowList
-                                label={`Variables using ${item.version.name}`}
-                                axis={axis}
-                              >
-                                {item.users.map(({ variable, rows }) => (
-                                  <VariableRow
-                                    key={variable.fqid}
-                                    name={variable.name}
-                                    href={catalogHref(variable.fqid)}
-                                    inProject={bound.has(variable.fqid)}
-                                    coverage={datedYearRuns(rows, bounds)}
-                                    axis={axis}
-                                    window={studyYears}
-                                    detail={
-                                      crossRegister
-                                        ? registerLabel(
-                                            registerOf(variable.fqid),
-                                          )
-                                        : undefined
-                                    }
-                                  />
-                                ))}
-                              </VariableRowList>
-                            )}
-                          </div>
-                        </DisclosurePanel>
-                      </>
-                    )}
-                  </Disclosure>
-                ) : (
-                  <>
-                    <div className={classStyles.versionHead}>
-                      <h3
-                        ref={
-                          item.version.fqid === focus ? focusVersion : undefined
-                        }
-                        tabIndex={item.version.fqid === focus ? -1 : undefined}
-                        className={classStyles.versionName}
-                      >
-                        {item.version.name}
-                      </h3>
-                      <span className={classStyles.years}>
-                        {catalogPeriodLabel(item.version.period)}
-                      </span>
-                    </div>
-                    <p className={classStyles.unusedNote}>
-                      No variable here uses this version.
-                    </p>
-                  </>
-                )}
-              </li>
-            ),
-          )}
-        </ul>
+      <Panel title="Versions">
+        <LaneGraph
+          label="Versions"
+          lanes={lanes}
+          spans={spans}
+          edges={edges}
+          axis={axis}
+          window={study ? [study.from, study.to] : null}
+          focus={focus}
+        />
       </Panel>
-      <CodeTimeline
-        members={variables}
-        axis={axis}
-        window={studyYears}
-        bounds={bounds}
-      />
+      {version && (
+        <Panel title="Codes">
+          <div className={classStyles.codes}>
+            {versions.length > 1 && (
+              <Select
+                label="Version"
+                value={version.fqid}
+                options={versions.map((v) => ({
+                  id: v.fqid,
+                  name: `${v.name}, ${catalogPeriodLabel(v.period)}`,
+                }))}
+                onChange={setPicked}
+              />
+            )}
+            <ValueSetCodes
+              key={version.fqid}
+              subject={{ classification: version.fqid }}
+              valueSet={version.value_set}
+            />
+            {version.succeeds.flatMap((older) => {
+              const name = byFqid.get(older)?.name;
+              return name
+                ? [
+                    <VersionChanges
+                      key={`${older}>${version.fqid}`}
+                      classification={version.fqid}
+                      compare={older}
+                      compareName={name}
+                    />,
+                  ]
+                : [];
+            })}
+          </div>
+        </Panel>
+      )}
     </article>
   );
 }
 
-type Version = ClassFamilyShow["versions"][number];
-type User = ClassFamilyShow["variables"][number];
-
-const registerOf = (fqid: string) => fqid.split("/").slice(0, 2).join("/");
-
-/** The versions in start order, with each run of consecutive versions no
- * variable uses folded into one line, so a long family is not a page of empty
- * entries. A version address that lands inside a run splits it: the focused
- * version keeps its own entry (heading, years, focus), and the versions
- * before and after it fold on their own. */
-function versionItems(
-  versions: readonly Version[],
-  variables: readonly User[],
-  focus: string | null,
-) {
-  const items: (
-    | {
-        kind: "version";
-        version: Version;
-        users: { variable: User; rows: User["segments"] }[];
-      }
-    | { kind: "unused"; versions: Version[] }
-  )[] = [];
-  for (const version of versions) {
-    const users = variables.flatMap((variable) => {
-      const rows = variable.segments.filter(
-        (segment) => segment.classification === version.fqid,
-      );
-      return rows.length > 0 ? [{ variable, rows }] : [];
-    });
-    const last = items.at(-1);
-    if (users.length > 0 || version.fqid === focus)
-      items.push({ kind: "version", version, users });
-    else if (last?.kind === "unused") last.versions.push(version);
-    else items.push({ kind: "unused", versions: [version] });
-  }
-  return items;
-}
-
-/** A folded run: its version count and years, the family name being the
- * page's heading. A single version keeps its own name. */
-function unusedLine(versions: readonly Version[]): string {
-  if (versions.length === 1)
-    return `${versions[0].name}: no variable here uses this version.`;
-  const years = catalogPeriodRuns(versions.map((version) => version.period));
-  return `${versions.length} versions, ${years}: no variable here uses these versions.`;
+/** The versions part by part, each part where its first version starts, and
+ * by start within a part: a part's succession reads down its lanes, and an
+ * arrow crosses parts only where a version is split (SUN 1996 into its
+ * three parts). */
+function laneOrder(versions: readonly Version[]): Version[] {
+  const parts = [...new Set(versions.map((version) => version.part ?? ""))];
+  return parts.flatMap((part) =>
+    versions.filter((version) => (version.part ?? "") === part),
+  );
 }

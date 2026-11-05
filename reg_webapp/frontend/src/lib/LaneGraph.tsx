@@ -41,6 +41,10 @@ export interface LaneModel {
   /** More about the lane under its name and line, in the name column: a
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
+  /** The name and its line wrap and the lane grows to hold them, as with a
+   * `detail`: where long names share their first words (a classification's
+   * versions). */
+  wrap?: boolean;
   /** Its relations as sentences, for a screen reader: the edges are drawn
    * only. */
   relations?: string[];
@@ -274,7 +278,7 @@ export function LaneGraph({
                       // Stacked, every lane's spans start under its measured
                       // name; beside the track only a detail grows the lane.
                       onHeight={
-                        lane.detail || geometry.stacked
+                        lane.detail || lane.wrap || geometry.stacked
                           ? onNameHeight
                           : undefined
                       }
@@ -700,7 +704,7 @@ function LaneText({
   return (
     <div
       ref={measure}
-      className={`${styles.name} ${lane.detail ? styles.detailed : ""}`}
+      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""}`}
       style={width ? { width } : undefined}
     >
       {lane.href ? (
@@ -863,9 +867,17 @@ function Span({
       offset={6}
       style={{ zIndex: "var(--z-popover)" }}
     >
+      {/* A span without a column name (a classification version, named in
+          its lane) says its years alone. */}
       <span>
-        <code>{span.name}</code>
-        {span.where && ` in ${span.where}`}, {span.years}
+        {span.name ? (
+          <>
+            <code>{span.name}</code>
+            {span.where && ` in ${span.where}`}, {span.years}
+          </>
+        ) : (
+          span.years
+        )}
       </span>
       {span.note && <span>{span.note.text}</span>}
     </Tooltip>
