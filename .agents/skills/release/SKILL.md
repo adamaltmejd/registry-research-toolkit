@@ -373,7 +373,8 @@ key only when the holdings place it in the table, since a steward takes its row 
 from the holdings (`ops/order/rows.rs`). Each run prints
 `release order: N tables sampled, M blocked`; record both lines in the notes. A sample
 where most tables are blocked covers little: report it to the maintainer, do not wave it
-through.
+through. Any census/server disagreement fails the run and stops the release for the
+maintainer's call. Never adjust the census, or its row-key approximation, to get a pass.
 
 #### 8g. Compare the holdings census with the previous paired release
 

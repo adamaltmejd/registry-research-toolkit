@@ -277,6 +277,12 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         // a preliminary segment orders with a warning. A steward takes its row keys from
         // the holdings (ops/order/rows.rs), so there only a row key the holdings place
         // in the serving table joins.
+        // simplify: approximates the server's `key_requirements` (entity/time over the
+        // composed segments) by the holdings' `role = 'row_key'` placements. Ceiling: a
+        // declared key column whose mapping role is not `row_key`, or the reverse, is
+        // modelled wrong. It surfaces as a census/server disagreement, which stops the
+        // release. Upgrade trigger: the first such disagreement; then read
+        // `key_requirements` as the server does.
         let joins = |s: &Segment| {
             s.role.as_deref() == Some("row_key")
                 && holdings
