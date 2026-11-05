@@ -56,8 +56,9 @@ fn search_text_is_scrubbed() {
     );
 }
 
-/// Fails if an MCP `order` stops counting each bound variable as a pick, or if the
-/// SPA's `order` (sent after every edit) starts counting them.
+/// Fails if an MCP `order` stops counting each bound variable as a pick, if the SPA's
+/// `order` (sent after every edit) starts counting them, or if a client's own method
+/// name reaches the label (it is not scrubbed).
 #[test]
 fn only_an_mcp_order_names_its_variables() {
     let port = port("orders");
@@ -74,5 +75,10 @@ fn only_an_mcp_order_names_its_variables() {
     assert_eq!(
         label(port, "POST", "/api/project/order", Some(&project), false),
         json!({"op": "order"})
+    );
+    let unknown = json!({"jsonrpc": "2.0", "id": 2, "method": "anna@example.se", "params": {}});
+    assert_eq!(
+        label(port, "POST", "/mcp", Some(&unknown), true),
+        json!({"op": "other"})
     );
 }

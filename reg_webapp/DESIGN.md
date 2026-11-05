@@ -465,7 +465,8 @@ response, over HTTP and over `/mcp`, carries `x-reg-usage`, a compact JSON objec
 only the fields the request has:
 
 - `op`: the operation name; for an `/mcp` request that runs none, its JSON-RPC method
-  (`initialize`, `tools/list`).
+  (`initialize`, `tools/list`), or `other` for a method outside the MCP methods the
+  server knows, since the client chooses that text.
 - `fqids`: the ref parameters, and for an MCP `order` each bound variable (at most 100):
   an agent's pick. The SPA calls `order` after every edit (Loaded projects), so its
   `order` names none; the SPA reports a pick with its own beacon instead.

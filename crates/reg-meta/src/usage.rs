@@ -33,6 +33,17 @@ const SCRUB_DIGITS: usize = 6;
 const MAX_TEXT: usize = 200;
 /// Variable ids of one MCP `order` counted as picks.
 const MAX_PICKS: usize = 100;
+/// The MCP methods a label names; any other is `other` ([`Usage::method`]).
+const MCP_METHODS: [&str; 8] = [
+    "initialize",
+    "notifications/initialized",
+    "notifications/cancelled",
+    "ping",
+    "tools/list",
+    "tools/call",
+    "resources/list",
+    "prompts/list",
+];
 /// The header's bytes: ids are dropped, then the text cut, to stay under it.
 const MAX_HEADER: usize = 4096;
 
@@ -97,18 +108,22 @@ impl Usage {
     }
 
     /// The label of an MCP tool call refused before an operation ran: the tool name
-    /// and the refusal's code.
+    /// (a registered tool's, the call already matched it) and the refusal's code.
     pub fn refused(tool: &str, err: &Error) -> Self {
         Self {
+            op: tool.to_owned(),
             err: Some(code(err)),
-            ..Self::method(tool)
+            ..Self::default()
         }
     }
 
-    /// The label of an MCP request that runs no operation, by its JSON-RPC method.
+    /// The label of an MCP request that runs no operation, by its JSON-RPC method:
+    /// a method of [`MCP_METHODS`] as is, any other as `other`, since a client chooses
+    /// the text and it would reach the label unscrubbed.
     fn method(method: &str) -> Self {
+        let known = MCP_METHODS.contains(&method);
         Self {
-            op: method.chars().take(64).collect(),
+            op: (if known { method } else { "other" }).to_owned(),
             ..Self::default()
         }
     }
@@ -144,11 +159,14 @@ impl Usage {
     }
 }
 
-/// A search's hits on the answered page: its `items`, a paired steward group's too,
-/// or `search_facets`' `registers`.
+/// A search's hits on the answered page: its `items`, or `search_facets'`
+/// `registers`, each with a paired steward group's.
 fn hits(data: &Value) -> usize {
     let count = |value: &Value| value.as_array().map_or(0, Vec::len);
-    count(&data["items"]) + count(&data["steward"]["items"]) + count(&data["registers"])
+    ["items", "registers"]
+        .iter()
+        .map(|key| count(&data[key]) + count(&data["steward"][key]))
+        .sum()
 }
 
 /// The refusal's code, as its error document names it.
