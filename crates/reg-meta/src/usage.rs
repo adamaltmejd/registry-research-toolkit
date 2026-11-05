@@ -86,12 +86,12 @@ impl Usage {
     ) -> Self {
         let declared = |name: &str| op.params.iter().find(|p| p.name == name);
         // Bounded before anything is scrubbed or serialized: a refused request may
-        // repeat a ref parameter thousands of times.
+        // repeat a ref parameter thousands of times, or name one of a megabyte.
         let mut fqids: Vec<String> = query
             .iter()
             .filter(|(name, _)| declared(name).is_some_and(|p| matches!(p.ty, Type::Ref)))
             .take(MAX_PICKS)
-            .map(|(_, value)| scrub(value))
+            .map(|(_, value)| bounded(value))
             .collect();
         if mcp && op.name == "order" {
             let body = query
@@ -99,13 +99,19 @@ impl Usage {
                 .find(|(name, _)| declared(name).is_some_and(|p| matches!(p.ty, Type::Project)))
                 .and_then(|(_, text)| serde_json::from_str::<Value>(text).ok());
             let room = MAX_PICKS - fqids.len();
-            fqids.extend(bound_variables(body.as_ref()).take(room).map(scrub));
+            fqids.extend(bound_variables(body.as_ref()).take(room).map(bounded));
         }
+        // Ids past the header's budget would only be dropped again in `header`.
+        let mut budget = MAX_HEADER;
+        fqids.retain(|id| {
+            budget = budget.saturating_sub(id.len() + 3);
+            budget > 0
+        });
         let text = query.iter().find(|(name, _)| name == "q").map(|(_, q)| q);
         Self {
             op: op.name.to_owned(),
             fqids,
-            q: text.map(|q| scrub(q).chars().take(MAX_TEXT).collect()),
+            q: text.map(|q| bounded(q)),
             n: text.and(result.as_ref().ok()).map(hits),
             err: result.as_ref().err().map(code),
         }
@@ -179,6 +185,13 @@ fn code(err: &Error) -> String {
         .as_str()
         .expect("an error code")
         .to_owned()
+}
+
+/// `text` cut to [`MAX_TEXT`] characters, then scrubbed. A value cut inside a person
+/// number keeps too few digits to identify anyone, and its run is still scrubbed from
+/// six digits.
+fn bounded(text: &str) -> String {
+    scrub(&text.chars().take(MAX_TEXT).collect::<String>())
 }
 
 /// The `variable` of every binding of a `project_data.json` document.
