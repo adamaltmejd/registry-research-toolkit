@@ -90,6 +90,18 @@ const VIRTUALIZE_OVER = 1500;
 // wraps, so heights differ.
 const LAYOUT_OPTIONS = { estimatedRowHeight: 29, estimatedHeadingHeight: 31 };
 
+// Scrolls a virtualized row into view over two frames: rows the scroll
+// passes are measured in the first and can move it.
+function revealAfterLayout(row: HTMLElement): void {
+  let frames = 2;
+  const step = () => {
+    if (!row.isConnected) return;
+    row.scrollIntoView({ block: "nearest" });
+    if (--frames > 0) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
  * items, the current page's selected. Selection follows the arrow keys and a
@@ -119,20 +131,51 @@ export function ColumnList({
   // The ListBox's state, read from its className render prop.
   const listState = useRef<ListBoxRenderProps["state"] | null>(null);
   // A virtualized list renders only the rows in view, plus the focused key's
-  // row wherever it is. So the selected row is made the focused key while the
-  // list does not hold focus: the refocus below and the → handoff
-  // (focusBrowseColumn) then find it in the DOM. Once per selection and list,
-  // so a type-ahead's focus is not pulled back.
+  // row wherever it is. So the selected row is made the focused key whenever
+  // the list does not hold focus: every way back in (→ from the register
+  // column via focusBrowseColumn, Tab, the refocus below) then finds it in the
+  // DOM, as in a list rendered whole. Set as focus leaves the column (a
+  // type-ahead moved the focused key off the selected row), and as the
+  // selection or the list changes while focus is elsewhere (a fresh load, a
+  // re-root, a search cleared); never while the list holds focus, so a
+  // type-ahead's focus is not pulled back.
+  const persistSelected = (): void => {
+    const manager = listState.current?.selectionManager;
+    if (!virtual || !manager || selectedId === null) return;
+    if (manager.focusedKey !== selectedId) manager.setFocusedKey(selectedId);
+  };
+  // Run from the ListBox's ref, not an effect: RAC mounts the list's state in
+  // a commit of its own, after this component's effects, and fills its
+  // collection later still (a fresh load). A focused key not yet in the
+  // collection is dropped, so wait for the options to render.
   const persisted = useRef<[unknown, string | null]>([null, null]);
-  useEffect(() => {
-    const state = listState.current;
-    if (!virtual || !state || selectedId === null) return;
-    const [lastState, lastId] = persisted.current;
-    if (lastState === state && lastId === selectedId) return;
-    persisted.current = [state, selectedId];
-    if (!state.selectionManager.isFocused)
-      state.selectionManager.setFocusedKey(selectedId);
-  });
+  const onListRef = (element: HTMLDivElement | null) => {
+    if (!element || !virtual || selectedId === null) return;
+    const tryPersist = (): boolean => {
+      const state = listState.current;
+      if (!state || !state.collection.getItem(selectedId)) return false;
+      const [lastState, lastId] = persisted.current;
+      if (lastState === state && lastId === selectedId) return true;
+      persisted.current = [state, selectedId];
+      if (!state.selectionManager.isFocused) persistSelected();
+      return true;
+    };
+    if (tryPersist()) return;
+    const observer = new MutationObserver(() => {
+      if (tryPersist()) observer.disconnect();
+    });
+    observer.observe(element, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  };
+  function onBlurCapture(event: FocusEvent): void {
+    const to = event.relatedTarget;
+    if (!virtual || (to instanceof Node && event.currentTarget.contains(to)))
+      return;
+    // This capture handler runs before RAC's own blur: unfocus the list
+    // first, or RAC focuses the new focused key's row and pulls focus back.
+    listState.current?.selectionManager.setFocused(false);
+    persistSelected();
+  }
   // Set while a key that walks the list is down: a leaving row opens on a
   // click, Enter or Space, not as the arrows or type-ahead pass it.
   const walking = useRef(false);
@@ -156,7 +199,7 @@ export function ColumnList({
     const reveal = (row: HTMLElement) => {
       if (revealed.current === root) return;
       revealed.current = root ?? null;
-      requestAnimationFrame(() => row.scrollIntoView({ block: "nearest" }));
+      revealAfterLayout(row);
     };
     // RAC commits a collection's options in a pass of its own, after this
     // effect, so the target row may not exist yet: wait for it to appear.
@@ -230,6 +273,11 @@ export function ColumnList({
     setTimeout(() => {
       arriving.current = false;
     });
+    // The browser scrolls the row it focuses into view, but in a virtualized
+    // list the rows it scrolls past are then measured and the row moves: bring
+    // it into view again once the layout has settled.
+    const row = event.target;
+    if (virtual && row instanceof HTMLElement) revealAfterLayout(row);
   }
 
   function onSelectionChange(keys: Selection): void {
@@ -309,6 +357,7 @@ export function ColumnList({
 
   const list = sections !== null && (
     <ListBox
+      ref={onListRef}
       aria-labelledby={labelId}
       className={({ state }) => {
         listState.current = state;
@@ -366,6 +415,7 @@ export function ColumnList({
         walking.current = false;
       }}
       onFocusCapture={onFocusCapture}
+      onBlurCapture={onBlurCapture}
       onPointerDownCapture={() => {
         walking.current = false;
         pressing.current = true;
