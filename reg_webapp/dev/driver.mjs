@@ -290,7 +290,7 @@ async function browsePagesCase(page, shoot) {
     const variables = page.getByRole("listbox", { name: "Variables in Demoleverantören", exact: true });
     await variables.getByRole("group", { name: "Basregistret", exact: true }).getByRole("option", { name: "Kön", exact: true }).waitFor();
     await variables.getByRole("group", { name: "Hushållsregistret", exact: true }).getByRole("option", { name: "Bransch", exact: true }).waitFor();
-    const tree = page.getByRole("treegrid", { name: "Registers and classifications", exact: true });
+    const tree = page.getByRole("treegrid", { name: /^Registers/ });
     const provider = (expanded) => tree.getByRole("row", { name: "Demoleverantören", exact: true, expanded });
     await provider(true).getByRole("button", { name: "Collapse Demoleverantören", exact: true }).click();
     await provider(false).getByText("Demoleverantören", { exact: true }).click();
@@ -1005,7 +1005,7 @@ async function stewardHeldCase(page, shoot) {
   const search = page.getByRole("searchbox", { name: /^Search registers/ });
   if (narrow) await page.getByRole("button", { name: /^Search registers/ }).click();
   await search.fill("position");
-  const tree = page.getByRole("treegrid", { name: "Registers and classifications", exact: true });
+  const tree = page.getByRole("treegrid", { name: /^Registers/ });
   const slots = tree.getByRole("row", { name: /^Delivery slots/ });
   await slots.waitFor();
   if (narrow) await slots.click();
