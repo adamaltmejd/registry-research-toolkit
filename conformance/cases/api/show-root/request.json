@@ -1,7 +1,0 @@
-{
-  "note": "Fails if `show` without a ref stops answering the root, lists the wrong providers, the root gains an fqid (the one kind without one), or a provider stops carrying its registers as its own summary lists them (show-provider's list, so the browse column needs no read per provider, #2232).",
-  "fixture": "entities",
-  "requests": [
-    {"operation": "show", "path": "/api/catalog"}
-  ]
-}

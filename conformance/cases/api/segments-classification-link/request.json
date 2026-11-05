@@ -1,8 +1,0 @@
-{
-  "note": "Fails if a value set stops naming the one classification version its segments are curated to when its codes are that version's (`old` {1,2} in kind/old {1,2,4}; `new` {1,2,3} in kind/new {1,2,3,4}; `local` {1} in kind/new), or if a link comes from containment alone rather than curation (#2082, D29). Oracle: the fixture's code lists and classification statements.",
-  "fixture": "classification-domains",
-  "requests": [
-    {"operation": "segments", "path": "/api/segments/demo/domains/edition"},
-    {"operation": "segments", "path": "/api/segments/demo/domains/local"}
-  ]
-}
