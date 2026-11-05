@@ -49,7 +49,7 @@ const PENDING: Read<never> = { value: null, loading: true };
 
 /** The shared never-started entry — what a caller with nothing to ask about gets,
  * so it too holds a stable identity. */
-export const UNASKED: Read<never> = { value: null, loading: false };
+const UNASKED: Read<never> = { value: null, loading: false };
 
 /** Which CACHE the in-flight reads belong to — bumped by every reset, so a read
  * started before one cannot write into the cache that replaced it. */
@@ -92,16 +92,6 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
   // A failed name read is not an error surface — see the module comment.
   fetcher().then(settle, () => settle(null));
   return PENDING;
-}
-
-/** Drop every cached read, in-flight ones included. The test seam: the cache is a
- * session singleton, so a case that stubs a DIFFERENT catalog response for the
- * same coordinate must start from an empty one. */
-export function resetCatalogNames(): void {
-  generation += 1;
-  reads = {};
-  showsInFlight.clear();
-  notify();
 }
 
 /** `getShow` reads in flight, by ref. The detail page and the browse column of

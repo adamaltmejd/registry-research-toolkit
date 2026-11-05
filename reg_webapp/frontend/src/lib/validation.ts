@@ -65,7 +65,7 @@ export function issueTitle(issue: ValidationIssue): string {
   return TITLES[issue.code] ?? issue.message;
 }
 
-export function parseJsonPointer(path: string): string[] {
+function parseJsonPointer(path: string): string[] {
   return path.startsWith("/")
     ? path
         .slice(1)

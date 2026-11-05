@@ -27,13 +27,7 @@ import {
 /** The finding's title. Its stable code, the identifier people cite, is in a
  * tooltip that opens on hover after a delay or at once on focus; pressing the
  * title copies the code. */
-export function FindingTitle({
-  title,
-  code,
-}: {
-  title: string;
-  code: string | null;
-}) {
+function FindingTitle({ title, code }: { title: string; code: string | null }) {
   const [copied, setCopied] = useState(false);
   if (code === null) {
     return <strong className={styles.title}>{title}</strong>;

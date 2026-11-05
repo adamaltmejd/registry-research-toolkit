@@ -12,14 +12,14 @@
 
 /** A structural view of the bits of `navigator` we read — so a test can pass a
  * stub for either branch without a full `Navigator`. */
-export interface PlatformNavigator {
+interface PlatformNavigator {
   userAgentData?: { platform?: string } | null;
   platform?: string;
 }
 
 /** Whether the given platform string names macOS. Pure + injectable: the source
  * of the string (real navigator vs. a test stub) is the caller's concern. */
-export function platformIsMac(platform: string | null | undefined): boolean {
+function platformIsMac(platform: string | null | undefined): boolean {
   return /mac/i.test(platform ?? "");
 }
 

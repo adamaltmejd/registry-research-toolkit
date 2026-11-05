@@ -95,7 +95,7 @@ export function sourcePeriodToWire(period: unknown): string | null {
 /** The days a `Source.period` (any draft value) requests, merged: `intervals`
  * is null for the year-independent `"_default"`; `error` when the period's
  * structural check or its range order refuses it. */
-export type SourcePeriodIntervals =
+type SourcePeriodIntervals =
   | { intervals: Interval[] | null }
   | { error: string; message: string };
 

@@ -12,9 +12,7 @@
         (see the [data-theme="dark"] seam at the bottom), so authoring against
         roles makes a re-tint or a dark theme free.
 
-   Imported once in main.ts (before mount) and once from the Vitest browser
-   setup (src/test-setup.browser.ts) so component tests render with the same
-   tokens + fonts the app does. */
+   Imported once, in main.tsx (before mount). */
 
 /* ── Webfonts (self-hosted woff2, OFL; no runtime CDN) ────────────────────
    latin covers Swedish å/ä/ö (U+00E5/E4/F6 ∈ U+0000–00FF); latin-ext carries

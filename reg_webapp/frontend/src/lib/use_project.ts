@@ -1,18 +1,11 @@
 import { useState, useSyncExternalStore } from "react";
 import { checkProjectOrder, type OrderCheck } from "./api";
-import type { ProjectData, ProjectStudyWindow } from "./project_data";
+import type { ProjectData } from "./project_data";
 import { type ProjectSnapshot, projectStore } from "./project_store";
 import { type AsyncResource, useAsyncResource } from "./use_async_resource";
-import { windowStore } from "./window";
 
 export function useProject(): ProjectSnapshot {
   return useSyncExternalStore(projectStore.subscribe, projectStore.getSnapshot);
-}
-
-const readWindow = () => windowStore.value;
-
-export function useStudyWindow(): ProjectStudyWindow | null {
-  return useSyncExternalStore(windowStore.subscribe, readWindow);
 }
 
 export interface ProjectCheck extends AsyncResource<OrderCheck> {

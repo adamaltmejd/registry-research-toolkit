@@ -10,16 +10,6 @@ import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
 import { VariableView } from "./VariableView";
 
-// Retained for the disconnected authoring views restored in later workstreams.
-export interface PeriodProps {
-  regMetaVersion: string;
-  steward: string;
-  windowMinYear: number;
-  windowMaxYear: number;
-  enforcePeriodBounds: boolean;
-  vintageYear: number;
-}
-
 export function CatalogNodeView({
   fqidPath,
   context,

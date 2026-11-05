@@ -28,20 +28,13 @@ import {
   studyWindowInterval,
 } from "./reg_core";
 
-/** Sentinel `?value_set_version` selecting the empty/default label (a state with
- * `value_set_version_label === ""`). The empty string can't ride in the query
- * (≡ absent), so the picker sends this for the unlabeled-version option; the Rust
- * `states` operation reads it as `""`. MUST match `NO_VERSION` in
- * `crates/reg-catalog/src/ops/states.rs`. */
-export const VALUE_SET_VERSION_NONE = "_none";
-
 // ── Period answers from reg-core ─────────────────────────────────────────────
 
 /** The days a `Source.period` (any draft value) requests, merged, or null when
  * it requests none the SPA can place: the year-independent `_default`, an unset
  * period, or one reg-core's structural check refuses (all-or-nothing: one bad
  * list member refuses the whole period). */
-export function datedIntervals(period: unknown): Interval[] | null {
+function datedIntervals(period: unknown): Interval[] | null {
   const days = sourcePeriodIntervals(period);
   return "intervals" in days ? days.intervals : null;
 }
@@ -147,15 +140,6 @@ export function periodCoverageUnion(
 // stays behind the picker's "more" expander. These pure helpers do the
 // year-int ↔ wire shaping so the slider can be a presentation-only component
 // (props in / `onchange` out, unit-testable) and the picker stays the wire seam.
-
-/** The `?period` WIRE for a year-grain window: a bare year when `from === to`
- * (`2018`), else the inclusive `from..to` range (`2018..2020`) — exactly the
- * forms the existing range path already round-trips. */
-export function yearWindowToWire(window: ProjectStudyWindow): string {
-  return window.from === window.to
-    ? String(window.from)
-    : `${window.from}..${window.to}`;
-}
 
 /** Seed a year-grain `{from, to}` from a wire `?period`, or null when the value
  * isn't a pure YEAR token / uniform year range (a sub-annual token, `_default`,
@@ -416,7 +400,7 @@ export function periodLabel(period: unknown): string | null {
  * what an add writes — is the same as the window. A window wholly outside the
  * availability has no part to match, and falls back to the plain test.
  * Disjointness stays the plain test: it is what blocks an order. */
-export type WindowRelation = "same" | "differs" | "disjoint";
+type WindowRelation = "same" | "differs" | "disjoint";
 
 export function periodWindowRelation(
   period: unknown,

@@ -78,7 +78,7 @@ export function VariableRowList({
 }
 
 /** The shared read-only project mark on register and group member rows. */
-export function InProjectDot({ inProject }: { inProject: boolean }) {
+function InProjectDot({ inProject }: { inProject: boolean }) {
   return (
     <span
       className={styles.dot}

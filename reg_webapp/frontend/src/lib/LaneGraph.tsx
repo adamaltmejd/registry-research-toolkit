@@ -90,7 +90,7 @@ export interface LaneEdgeModel {
 
 /** The variable page's coverage row (DESIGN.md → Time → Timeline), drawn
  * between the axis and the lanes. */
-export interface LaneCoverage {
+interface LaneCoverage {
   /** The coverage edges, open ends resolved; null when unknown. */
   covered: ProjectStudyWindow | null;
   /** The delivered years, or null to draw coverage as one bar. */
