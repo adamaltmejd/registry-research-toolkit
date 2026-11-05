@@ -79,16 +79,17 @@ pub fn load_answers(dir: &Path) -> Result<Answers, Refusal> {
     };
     check_periods(order_periods, order_file)?;
     let mut segments = Vec::new();
-    for path in json_files(&dir.join("segments"))? {
-        let page: SegmentPage = read_answer(&path, &mut generations)?;
+    for (path, page) in pages::<SegmentPage>(&dir.join("segments"), &mut generations, |p| {
+        p.next_cursor.as_deref()
+    })? {
         check_periods(page.items.iter().map(|s| &s.period), &path)?;
         segments.extend(page.items);
     }
     let mut values: BTreeMap<String, Vec<Code>> = BTreeMap::new();
     let mut sizes: BTreeMap<String, Option<usize>> = BTreeMap::new();
-    // Pages in file-name order: name them so a set's pages sort in page order.
-    for path in json_files(&dir.join("values"))? {
-        let page: ValuesPage = read_answer(&path, &mut generations)?;
+    for (_, page) in pages::<ValuesPage>(&dir.join("values"), &mut generations, |p| {
+        p.next_cursor.as_deref()
+    })? {
         sizes.insert(page.value_set.hash.clone(), page.value_set.n_items);
         values
             .entry(page.value_set.hash)
@@ -146,6 +147,55 @@ fn check_periods<'a>(
         path.display().to_string(),
         "a period bound is not an ISO day; save the response document unchanged",
     ))
+}
+
+/// Every saved page under `dir`, in page order. Each answer's pages are named
+/// `<name>-0001.json`, `<name>-0002.json`, ... (as `save-answers.sh` writes them), so a
+/// page left out or a last page that still points to a next one is refused rather
+/// than compiled from part of an answer.
+fn pages<T: DeserializeOwned>(
+    dir: &Path,
+    generations: &mut BTreeSet<String>,
+    next: impl Fn(&T) -> Option<&str>,
+) -> Result<Vec<(std::path::PathBuf, T)>, Refusal> {
+    let mut answers: BTreeMap<String, Vec<(u32, std::path::PathBuf)>> = BTreeMap::new();
+    for path in json_files(dir)? {
+        let stem = path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or_default();
+        let numbered = stem
+            .rsplit_once('-')
+            .filter(|(_, n)| n.len() == 4)
+            .and_then(|(name, n)| Some((name.to_owned(), n.parse::<u32>().ok()?)));
+        let Some((name, number)) = numbered else {
+            return Err(Refusal::new(
+                "answer_invalid",
+                path.display().to_string(),
+                "name each saved page <answer>-NNNN.json, numbered from 0001",
+            ));
+        };
+        answers.entry(name).or_default().push((number, path));
+    }
+    let mut out = Vec::new();
+    for (name, mut numbered) in answers {
+        numbered.sort();
+        let count = numbered.len();
+        for (i, (number, path)) in numbered.into_iter().enumerate() {
+            let page: T = read_answer(&path, generations)?;
+            let last = i + 1 == count;
+            if usize::try_from(number).ok() != Some(i + 1) || next(&page).is_some() == last {
+                return Err(Refusal::new(
+                    "answers_incomplete",
+                    format!("{}/{name}", dir.display()),
+                    "a page of this answer is missing: save every page, following next_cursor \
+                     until it is null",
+                ));
+            }
+            out.push((path, page));
+        }
+    }
+    Ok(out)
 }
 
 fn json_files(dir: &Path) -> Result<Vec<std::path::PathBuf>, Refusal> {

@@ -58,6 +58,8 @@ pub struct RowKeyColumn {
 #[derive(Deserialize)]
 pub struct SegmentPage {
     pub items: Vec<Segment>,
+    #[serde(default)]
+    pub next_cursor: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -93,6 +95,8 @@ pub struct ValueSetRef {
 pub struct ValuesPage {
     pub items: Vec<ValueItem>,
     pub value_set: ValueSetRef,
+    #[serde(default)]
+    pub next_cursor: Option<String>,
 }
 
 #[derive(Deserialize)]
