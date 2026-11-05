@@ -22,8 +22,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
         or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's \
         whole `segments` list, so no `segments` call per member is needed). A classification \
         (`class/<family>`) or one of its versions lists its versions and the variables that \
-        use them, each with its rows that carry the classification. No `ref` lists the \
-        providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
+        use them, each with its rows that carry the classification; `class` lists the \
+        classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
         fallback. `evidence=true` adds the provider's original texts, column names, curation \
         locators and linked documents.",
     params: &[
@@ -35,7 +35,7 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result: component::<Show>,
 }];
 
-/// A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back.
+/// A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back.
 #[derive(Serialize, ToSchema)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Show {
@@ -117,6 +117,9 @@ pub enum Show {
         #[schema(nullable = false)]
         evidence: Option<VariableEvidence>,
     },
+    /// The classifications, at ref `class`, in fqid order. On a data holder's catalog
+    /// only those the holder's variables use.
+    ClassFamilies { families: Vec<ShowClassFamilyRef> },
     /// A classification. Classifications are shared, so every version is listed; on a
     /// data holder's catalog only the holder's variables are.
     ClassFamily {
@@ -147,6 +150,14 @@ pub struct ShowTableVariable {
     fqid: String,
     name: String,
     period: Period,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ShowClassFamilyRef {
+    fqid: String,
+    name: String,
+    /// How many versions it has.
+    version_count: u32,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -280,6 +291,10 @@ pub struct ShowSetFacet {
 }
 
 fn show(server: &Server, params: &Params) -> Result<Value, Error> {
+    if params.get("ref").is_some_and(|r| *r == "class") {
+        let families = class_families(server)?;
+        return Ok(serde_json::to_value(Show::ClassFamilies { families }).expect("Show serializes"));
+    }
     let conn = match params.get("ref") {
         Some(value) => server.catalog.connect_for_ref(value)?,
         None => server.catalog.connect()?,
@@ -853,6 +868,62 @@ fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<
         },
         variables: class_users(server, &BTreeSet::from([entity.pid.clone()]))?,
     })
+}
+
+/// Every classification, or on a data holder's catalog those with a row in a placement
+/// the holder holds. Both origins are read by family pid, the way the root reads
+/// providers.
+fn class_families(server: &Server) -> Result<Vec<ShowClassFamilyRef>, Error> {
+    let origins = segments::origins(server, server.catalog.connect()?)?;
+    let steward = server.catalog.steward().is_some();
+    let mut families: BTreeMap<String, ShowClassFamilyRef> = BTreeMap::new();
+    for conn in &origins {
+        let found = rows(
+            conn,
+            "SELECT f.pid, n.body, (SELECT count(*) FROM class_version c WHERE c.family_id = f.id)
+                 FROM class_family f JOIN text n ON n.id = f.name_text",
+            [],
+            |row| {
+                Ok(ShowClassFamilyRef {
+                    fqid: row.get(0)?,
+                    name: row.get(1)?,
+                    version_count: row.get(2)?,
+                })
+            },
+        )?;
+        for family in found {
+            families.entry(family.fqid.clone()).or_insert(family);
+        }
+    }
+    if steward {
+        // simplify: a held placement counts whatever its years; scope by held years if
+        // a listed classification's page turns up with no variables.
+        let mut used = BTreeSet::new();
+        for conn in &origins {
+            for (family, variable, table) in rows(
+                conn,
+                "SELECT DISTINCT f.pid, v.pid, t.pid FROM segment s
+                     JOIN class_version c ON c.id = s.class_version_id
+                     JOIN class_family f ON f.id = c.family_id
+                     JOIN variable v ON v.id = s.variable_id
+                     JOIN tbl t ON t.id = s.table_id",
+                [],
+                |row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, String>(2)?,
+                    ))
+                },
+            )? {
+                if server.catalog.serves_in(&variable, &table) {
+                    used.insert(family);
+                }
+            }
+        }
+        families.retain(|fqid, _| used.contains(fqid));
+    }
+    Ok(families.into_values().collect())
 }
 
 /// The served variables whose rows carry one of `versions`, each with those rows, in

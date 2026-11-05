@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
+        "description": "Describe a provider, register, table, variable, set or classification by id or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's whole `segments` list, so no `segments` call per member is needed). A classification (`class/<family>`) or one of its versions lists its versions and the variables that use them, each with its rows that carry the classification; `class` lists the classifications. No `ref` lists the providers, each with its registers. Variables show curated metadata, with the provider's text only as a fallback. `evidence=true` adds the provider's original texts, column names, curation locators and linked documents.",
         "operationId": "show",
         "parameters": [
           {
@@ -4617,6 +4617,28 @@
           },
           {
             "type": "object",
+            "description": "The classifications, at ref `class`, in fqid order. On a data holder's catalog\nonly those the holder's variables use.",
+            "required": [
+              "families",
+              "kind"
+            ],
+            "properties": {
+              "families": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowClassFamilyRef"
+                }
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "class_families"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
             "description": "A classification. Classifications are shared, so every version is listed; on a\ndata holder's catalog only the holder's variables are.",
             "required": [
               "fqid",
@@ -4700,7 +4722,29 @@
             }
           }
         ],
-        "description": "A summary tagged by `kind`. Every kind but `root` carries the resolved `fqid`, so a bare-name request gets the id back."
+        "description": "A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back."
+      },
+      "ShowClassFamilyRef": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "version_count"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version_count": {
+            "type": "integer",
+            "format": "int32",
+            "description": "How many versions it has.",
+            "minimum": 0
+          }
+        }
       },
       "ShowClassUser": {
         "type": "object",
