@@ -61,14 +61,6 @@
   overflow-wrap: anywhere;
 }
 
-/* The register a row lives in, where the list spans registers: a muted suffix
-   on the name's line, wrapping under it only when the line is full. */
-.detail {
-  margin-left: var(--space-2);
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-}
-
 .bar {
   grid-column: 3;
 }
