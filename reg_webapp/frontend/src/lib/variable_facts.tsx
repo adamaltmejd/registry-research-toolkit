@@ -23,17 +23,17 @@ const FACTS: readonly {
     of: (row) => (row.sensitive ? { key: "yes", value: "Yes" } : null),
   },
   // The codes themselves have their own section; only the classification
-  // they code is a fact here.
+  // they code is a fact here, by the name the server serves with the row
+  // (never derived from its ref; a row without one states no fact).
   {
     term: "Classification",
     of: (row) =>
-      row.classification
+      row.classification && row.classification_name
         ? {
             key: row.classification,
             value: (
               <a className="link" href={catalogHref(row.classification)}>
-                {row.classification_name ??
-                  row.classification.split("/").at(-1)}
+                {row.classification_name}
               </a>
             ),
           }
