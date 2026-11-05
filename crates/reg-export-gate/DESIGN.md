@@ -25,11 +25,10 @@ specific to the Rust implementation, which is the reference: the R gate imitates
 - **Structure** decodes each file from its bytes in memory, with the author's embedded
   Arrow schema (`ARROW:schema`) ignored: column types come from the Parquet types alone,
   so the type check reads the same file the same way whatever the author's writer
-  recorded. One consequence: a string column R's arrow writes from a factor is a
-  dictionary to the R gate (refused, `column_type`) and plain `string` here (accepted).
-  The R gate follows when it imitates this one. The same holds for other hints (a
-  pyarrow `date64` stored as a Parquet date is `date` here), and a hint that contradicts
-  the Parquet types is ignored rather than `unreadable`.
+  recorded. One consequence: a string column R's arrow writes from a factor is plain
+  `string` here; the R gate reads a dictionary as its value type to match. The same
+  holds for other hints (a pyarrow `date64` stored as a Parquet date is `date` here),
+  and a hint that contradicts the Parquet types is ignored rather than `unreadable`.
 - **Reading** opens each staging file once, with `O_NOFOLLOW | O_NONBLOCK`, checks the
   open handle is a regular file and reads at most the byte cap plus one byte: a link or
   FIFO swapped in after the inventory is `unreadable`, and nothing is read through a
@@ -206,9 +205,7 @@ verified gate bytes in it. The agent's side ignores dot-folders.
 ## The R gate follows
 
 `export_gate.R` stays the MONA implementation (MONA runs no executables) and imitates
-this one in its own PR, naming the gate version it matches: the size caps (the rewrite's
-too), the `na_not_null` change (a NaN beside a null count is `unsupported_statistic`),
-and a duplicate column refused as `column_order` (today R ends in `internal_error`
-there, since `GetFieldByName` gives NULL). The binary's first release is 0.3.0, after
-R's 0.2.0, since it changes behaviour; R moves to 0.3.0 when it imitates (maintainer,
-2026-11-04). From then on a corpus change lands with the Rust change, and R follows.
+this one, naming the gate version it matches: 0.3.0 (maintainer, 2026-11-04), with the
+size caps, validity read from Arrow and a duplicate column refused as `column_order`.
+Where it cannot match is in `reg_export_gate/DESIGN.md`, "The R file". From then on a
+corpus change lands with the Rust change, and R follows.

@@ -54,9 +54,10 @@ is a setting). SWECOV's catalog is also browsable at <https://data.swecov.se>.
 ### Local server
 
 Each `reg_meta/v*` release carries a `reg-meta` binary for macOS arm64
-(`aarch64-apple-darwin`) and Linux x86_64 (`x86_64-unknown-linux-gnu`), each with a
-SHA-256 checksum file, and `reg_meta.db.zst`. Download the binary for your platform and
-the catalog, verify them, and unpack the catalog into one directory:
+(`aarch64-apple-darwin`), Linux x86_64 (`x86_64-unknown-linux-gnu`) and Windows x86_64
+(`x86_64-pc-windows-msvc`, asset `reg-meta-<target>.exe`), each with a SHA-256 checksum
+file, and `reg_meta.db.zst`. Download the binary for your platform and the catalog,
+verify them, and unpack the catalog into one directory:
 
 ```bash
 tag=reg_meta/vX.Y.Z
@@ -73,9 +74,10 @@ zstd -d reg_meta.db.zst -o catalog/reg_meta.db
 ```
 
 GitHub records the DB asset's SHA-256 digest
-(`gh release view reg_meta/vX.Y.Z --json assets`). On other platforms, build the binary
-from a checkout with a Rust toolchain and copy it next to `catalog`
-(`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
+(`gh release view reg_meta/vX.Y.Z --json assets`). On Windows, download the `.exe` from
+the release page and compare `Get-FileHash -Algorithm SHA256` with its `.sha256` file.
+On other platforms, build the binary from a checkout with a Rust toolchain and copy it
+next to `catalog` (`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
 
 Then run local stdio MCP:
 

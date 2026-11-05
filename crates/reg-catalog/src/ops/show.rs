@@ -9,7 +9,7 @@ use utoipa::ToSchema;
 
 use super::refs::{self, Entity};
 use super::segments::{self, Segment};
-use super::shape::{self, Release};
+use super::shape::{self, Release, ValueSetRef};
 use super::show_evidence::{self, VariableEvidence};
 use super::{Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag};
 use crate::{Error, rows};
@@ -18,9 +18,11 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
-    description: "Describe a provider, register, table, variable or set by id or name (a set \
-        only by `set/<provider>/<register>/<slug>`; it carries each member's whole \
-        `segments` list, so no `segments` call per member is needed). No `ref` lists the \
+    description: "Describe a provider, register, table, variable, set or classification by id \
+        or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's \
+        whole `segments` list, so no `segments` call per member is needed). A classification \
+        (`class/<family>`) or one of its versions lists its versions and the variables that \
+        use them, each with its rows that carry the classification. No `ref` lists the \
         providers, each with its registers. Variables show curated metadata, with the provider's text only as a \
         fallback. `evidence=true` adds the provider's original texts, column names, curation \
         locators and linked documents.",
@@ -77,6 +79,8 @@ pub enum Show {
         #[serde(skip_serializing_if = "Vec::is_empty")]
         releases: Vec<Release>,
         row_keys: Vec<ShowRowKey>,
+        /// The variables in this table, each over the years it has here.
+        variables: Vec<ShowTableVariable>,
     },
     Set {
         fqid: String,
@@ -113,6 +117,57 @@ pub enum Show {
         #[schema(nullable = false)]
         evidence: Option<VariableEvidence>,
     },
+    /// A classification. Classifications are shared, so every version is listed; on a
+    /// data holder's catalog only the holder's variables are.
+    ClassFamily {
+        fqid: String,
+        name: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[schema(nullable = false)]
+        description: Option<String>,
+        /// In start order.
+        versions: Vec<ShowClassVersion>,
+        variables: Vec<ShowClassUser>,
+    },
+    ClassVersion {
+        fqid: String,
+        name: String,
+        /// The version's validity.
+        period: Period,
+        value_set: ValueSetRef,
+        family: ShowMembership,
+        /// The variables that use this version.
+        variables: Vec<ShowClassUser>,
+    },
+}
+
+/// A variable in a table, over the years it has in that table.
+#[derive(Serialize, ToSchema)]
+pub struct ShowTableVariable {
+    fqid: String,
+    name: String,
+    period: Period,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ShowClassVersion {
+    fqid: String,
+    name: String,
+    /// The version's validity.
+    period: Period,
+    value_set: ValueSetRef,
+    /// Whether one of `variables` uses this version.
+    used: bool,
+}
+
+/// A variable that uses the classification, with its rows that carry it.
+#[derive(Serialize, ToSchema)]
+pub struct ShowClassUser {
+    fqid: String,
+    name: String,
+    /// Its rows, as `segments` serves them, whose `classification` is the family's (or
+    /// the version's).
+    segments: Vec<Segment>,
 }
 
 /// A root provider, with its registers as its provider summary lists them, so the
@@ -258,28 +313,8 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                 "table" => table(server, &conn, &entity)?,
                 "variable" => variable(server, &conn, &entity, evidence)?,
                 "set" => set(server, &conn, &entity)?,
-                // simplify: a classification is refused, not summarized; give it a
-                // summary when a client needs one beyond `values` (#2235).
-                "class_family" => {
-                    return Err(Error::invalid_ref(
-                        &entity.pid,
-                        format!(
-                            "{:?} is a classification, which show does not take; values \
-                             lists the codes of one of its versions.",
-                            entity.pid
-                        ),
-                    ));
-                }
-                "class_version" => {
-                    return Err(Error::invalid_ref(
-                        &entity.pid,
-                        format!(
-                            "{:?} is a classification version, which show does not take; \
-                             values lists its codes.",
-                            entity.pid
-                        ),
-                    ));
-                }
+                "class_family" => class_family(server, &conn, &entity)?,
+                "class_version" => class_version(server, &conn, &entity)?,
                 kind => {
                     return Err(Error::internal(format!(
                         "show has no summary for a {kind}."
@@ -662,6 +697,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         )?,
     };
     let row_keys = row_keys(server, conn, &entity.pid)?;
+    let variables = table_variables(server, conn, &entity.pid)?;
     Ok(Show::Table {
         fqid: entity.pid.clone(),
         name,
@@ -679,7 +715,182 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             shape::releases(server, conn, entity.id)?
         },
         row_keys,
+        variables,
     })
+}
+
+/// A table's variables, each over the hull of the years its segments here hold, from
+/// both origins; in steward mode only the pairs the steward places, clipped as
+/// `row_keys` clips.
+fn table_variables(
+    server: &Server,
+    conn: &Connection,
+    pid: &str,
+) -> Result<Vec<ShowTableVariable>, Error> {
+    let spans = |conn: &Connection| {
+        rows(
+            conn,
+            "SELECT v.pid, s.start, s.end
+                 FROM segment s JOIN variable v ON v.id = s.variable_id
+                   JOIN tbl t ON t.id = s.table_id
+                 WHERE t.pid = ?",
+            [pid],
+            |row| Ok((row.get::<_, String>(0)?, row.get(1)?, row.get(2)?)),
+        )
+    };
+    let mut found: Vec<(String, i64, i64)> = spans(conn)?;
+    let extra = server.catalog.connect_holdings()?;
+    if let Some(extra) = &extra {
+        found.extend(spans(extra)?);
+    }
+    let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
+    let mut hulls: BTreeMap<String, (i64, i64)> = BTreeMap::new();
+    for (fqid, start, end) in found {
+        if !server.catalog.serves_in(&fqid, pid) {
+            continue;
+        }
+        let days = match held.as_mut() {
+            Some(held) => held.clip(pid, &fqid, (start, end))?,
+            None => Some((start, end)),
+        };
+        if let Some((start, end)) = days {
+            let hull = hulls.entry(fqid).or_insert((start, end));
+            *hull = (hull.0.min(start), hull.1.max(end));
+        }
+    }
+    let names = refs::names(server, hulls.keys().map(String::as_str))?;
+    hulls
+        .into_iter()
+        .map(|(fqid, (start, end))| {
+            Ok(ShowTableVariable {
+                name: names.of(refs::Named::Variable, &fqid)?,
+                period: server.period(start, end),
+                fqid,
+            })
+        })
+        .collect()
+}
+
+fn class_family(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
+    let (name, description): (String, Option<String>) = conn.query_row(
+        "SELECT n.body, d.body FROM class_family f JOIN text n ON n.id = f.name_text
+           LEFT JOIN text d ON d.id = f.description_text
+         WHERE f.id = ?",
+        [entity.id],
+        |row| Ok((row.get(0)?, row.get(1)?)),
+    )?;
+    let versions: Vec<(String, String, i64, i64, i64)> = rows(
+        conn,
+        "SELECT c.pid, n.body, c.start, c.end, c.valueset_id
+             FROM class_version c JOIN text n ON n.id = c.label_text
+             WHERE c.family_id = ? ORDER BY c.start, c.pid",
+        [entity.id],
+        |row| {
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                row.get(3)?,
+                row.get(4)?,
+            ))
+        },
+    )?;
+    let pids: BTreeSet<String> = versions.iter().map(|v| v.0.clone()).collect();
+    let variables = class_users(server, &pids)?;
+    let versions = versions
+        .into_iter()
+        .map(|(fqid, name, start, end, valueset)| {
+            Ok(ShowClassVersion {
+                used: variables.iter().any(|v| {
+                    v.segments
+                        .iter()
+                        .any(|s| s.classification() == Some(fqid.as_str()))
+                }),
+                fqid,
+                name,
+                period: server.period(start, end),
+                value_set: shape::value_set_ref(conn, valueset)?,
+            })
+        })
+        .collect::<Result<_, Error>>()?;
+    Ok(Show::ClassFamily {
+        fqid: entity.pid.clone(),
+        name,
+        description,
+        versions,
+        variables,
+    })
+}
+
+fn class_version(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
+    type Head = (String, i64, i64, i64, String, String);
+    let (name, start, end, valueset, family, family_name): Head = conn.query_row(
+        "SELECT n.body, c.start, c.end, c.valueset_id, f.pid, fam.body
+             FROM class_version c JOIN text n ON n.id = c.label_text
+               JOIN class_family f ON f.id = c.family_id
+               JOIN text fam ON fam.id = f.name_text
+             WHERE c.id = ?",
+        [entity.id],
+        |row| {
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                row.get(3)?,
+                row.get(4)?,
+                row.get(5)?,
+            ))
+        },
+    )?;
+    Ok(Show::ClassVersion {
+        fqid: entity.pid.clone(),
+        name,
+        period: server.period(start, end),
+        value_set: shape::value_set_ref(conn, valueset)?,
+        family: ShowMembership {
+            fqid: family,
+            name: family_name,
+        },
+        variables: class_users(server, &BTreeSet::from([entity.pid.clone()]))?,
+    })
+}
+
+/// The served variables whose rows carry one of `versions`, each with those rows, in
+/// fqid order. Candidates come from both origins by version pid (row ids are per
+/// origin); the rows are the scoped `segments` list, so steward mode keeps only held
+/// placements over held years.
+fn class_users(server: &Server, versions: &BTreeSet<String>) -> Result<Vec<ShowClassUser>, Error> {
+    let origins = segments::origins(server, server.catalog.connect()?)?;
+    let wanted = serde_json::Value::from(versions.iter().cloned().collect::<Vec<_>>()).to_string();
+    let mut candidates = BTreeSet::new();
+    for conn in &origins {
+        candidates.extend(rows(
+            conn,
+            "SELECT DISTINCT v.pid FROM json_each(?1) x
+                 JOIN class_version c ON c.pid = x.value
+                 JOIN segment s ON s.class_version_id = c.id
+                 JOIN variable v ON v.id = s.variable_id",
+            [&wanted],
+            |row| row.get::<_, String>(0),
+        )?);
+    }
+    candidates.retain(|fqid| server.catalog.serves("variable", fqid));
+    let names = refs::names(server, candidates.iter().map(String::as_str))?;
+    // simplify: one segments list per candidate; batch by variable if a classification
+    // reaches hundreds of served users and show times it.
+    let mut users = Vec::new();
+    for fqid in candidates {
+        let mut segments = segments::all(server, &origins, &fqid)?;
+        segments.retain(|s| s.classification().is_some_and(|c| versions.contains(c)));
+        if !segments.is_empty() {
+            users.push(ShowClassUser {
+                name: names.of(refs::Named::Variable, &fqid)?,
+                fqid,
+                segments,
+            });
+        }
+    }
+    Ok(users)
 }
 
 /// A table's row keys. By table pid: in steward mode the holdings origin adds the key
