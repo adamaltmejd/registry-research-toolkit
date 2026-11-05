@@ -102,7 +102,8 @@ pub fn load_answers(dir: &Path) -> Result<Answers, Refusal> {
     // A page missing or saved twice (or filtered with `q`, `level`, `parent`) would
     // give the mock a wrong code list.
     for (hash, codes) in &values {
-        if sizes[hash].is_some_and(|n| n != codes.len()) {
+        let distinct: BTreeSet<&str> = codes.iter().map(|c| c.code.as_str()).collect();
+        if distinct.len() != codes.len() || sizes[hash].is_some_and(|n| n != codes.len()) {
             return Err(Refusal::new(
                 "values_incomplete",
                 format!("values/{hash}"),
@@ -311,14 +312,20 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
         ),
     };
     let mut files = apply_rules(built, rules, &mut refusals);
-    for (from, to) in &rules.rename {
-        match files.iter_mut().find(|f| &f.name == from) {
-            Some(file) => file.name.clone_from(to),
-            None => refusals.push(Refusal::new(
+    // Each rename applies once, to a compiled name; check_files then refuses a final
+    // name two files share.
+    for from in rules.rename.keys() {
+        if !files.iter().any(|f| &f.name == from) {
+            refusals.push(Refusal::new(
                 "rename_unknown_file",
                 format!("/rename/{from}"),
                 "no compiled file has this name",
-            )),
+            ));
+        }
+    }
+    for file in &mut files {
+        if let Some(to) = rules.rename.get(&file.name) {
+            file.name.clone_from(to);
         }
     }
     for table in &rules.tables {
@@ -396,7 +403,7 @@ impl Context<'_> {
     /// One file per table and year (or one for a timeless table): the source's
     /// requested columns, then the table's row keys.
     fn standard_files(&self, order: &LogicalOrder, refusals: &mut Vec<Refusal>) -> Vec<Built> {
-        let mut files: BTreeMap<String, Built> = BTreeMap::new();
+        let mut files: BTreeMap<(&str, Option<i32>), Built> = BTreeMap::new();
         let ordered = order.entries.iter().map(|e| Column {
             name: &e.spelling,
             source: &e.source,
@@ -427,29 +434,42 @@ impl Context<'_> {
                 None => vec![None],
             };
             for year in years {
-                let name = standard_file_name(column.table, year);
-                let built = files
-                    .entry(name.clone())
-                    .or_insert_with(|| Built::new(name, year.into_iter().collect()));
+                // Keyed by table, not by file name: two tables whose names collide stay
+                // two files, and check_files refuses the shared name.
+                let built = files.entry((column.table, year)).or_insert_with(|| {
+                    Built::new(
+                        standard_file_name(column.table, year),
+                        year.into_iter().collect(),
+                    )
+                });
+                // Each year's own segment, within the ordered period: a value set or type
+                // can change between and within years.
+                let period = year.map(|y| within(year_period(y), column.period));
+                let draft = Column {
+                    period: period.as_ref().unwrap_or(column.period),
+                    ..column
+                };
+                let Some(spec_column) = self.column(&draft, None, refusals) else {
+                    continue;
+                };
                 // A row key the source also requested, or two sources' columns of one
-                // name, are one column.
-                if let Some(i) = built
+                // name, are one column, of one type.
+                match built
                     .file
                     .columns
                     .iter()
                     .position(|c| c.name == column.name)
                 {
-                    built.add_source(i, column.source);
-                    continue;
-                }
-                // Each year's own segment: a value set or type can change between years.
-                let period = year.map(year_period);
-                let draft = Column {
-                    period: period.as_ref().unwrap_or(column.period),
-                    ..column
-                };
-                if let Some(spec_column) = self.column(&draft, None, refusals) {
-                    built.push(column.source, spec_column);
+                    Some(i) => {
+                        same_type(
+                            &built.file.columns[i],
+                            &spec_column,
+                            &built.file.name,
+                            refusals,
+                        );
+                        built.add_source(i, column.source);
+                    }
+                    None => built.push(column.source, spec_column),
                 }
             }
         }
@@ -468,15 +488,17 @@ impl Context<'_> {
             for column in &file.columns {
                 let row_filter = file.row_filter.as_ref().filter(|f| f.column == column.name);
                 // The runner's period column: a row key placing no variable.
+                // It has no row filter when the order covers the whole delivery.
                 let Some(r) = column.refs.first() else {
-                    match row_filter {
-                        Some(filter) => built.push_unsourced(year_column(column, filter.encoding)),
-                        None => refusals.push(Refusal::new(
+                    if column.role == manifest::Role::RowKey {
+                        built.push_unsourced(year_column(column, row_filter.map(|f| f.encoding)));
+                    } else {
+                        refusals.push(Refusal::new(
                             "column_unplaced",
                             format!("{}/{}", file.name, column.name),
                             "the order file has a column that places no variable and is not \
-                             the row filter: save the materialize answer again",
-                        )),
+                             a row key: save the materialize answer again",
+                        ));
                     }
                     continue;
                 };
@@ -508,6 +530,22 @@ impl Context<'_> {
                         spec_column.encoding = Some(filter.encoding);
                     }
                     spec_column.years = column_years.into_iter().collect();
+                    // Every variable the column delivers must agree on its type.
+                    for other in &column.refs[1..] {
+                        let draft = Column {
+                            source: &other.source,
+                            binding: other.binding,
+                            table: &other.table,
+                            variable: &other.variable,
+                            period: &other.period,
+                            ..draft
+                        };
+                        if let Some(other_column) =
+                            self.column(&draft, Some(&column.storage), refusals)
+                        {
+                            same_type(&spec_column, &other_column, &file.name, refusals);
+                        }
+                    }
                     built.push(&r.source, spec_column);
                     let i = built.file.columns.len() - 1;
                     for other in &column.refs[1..] {
@@ -654,8 +692,37 @@ fn year_period(year: i32) -> Period {
     }
 }
 
-/// The runner's period column, typed by its storage.
-fn year_column(column: &manifest::Column, encoding: manifest::Encoding) -> SpecColumn {
+/// `period` cut to `bounds`; ISO days compare as text.
+fn within(period: Period, bounds: &Period) -> Period {
+    let later = |a: Option<String>, b: &Option<String>| match (a, b) {
+        (Some(a), Some(b)) => Some(if *b > a { b.clone() } else { a }),
+        (a, b) => a.or_else(|| b.clone()),
+    };
+    let earlier = |a: Option<String>, b: &Option<String>| match (a, b) {
+        (Some(a), Some(b)) => Some(if *b < a { b.clone() } else { a }),
+        (a, b) => a.or_else(|| b.clone()),
+    };
+    Period {
+        start: later(period.start, &bounds.start),
+        end: earlier(period.end, &bounds.end),
+    }
+}
+
+/// Columns merged into one must agree on the type they are written in.
+fn same_type(kept: &SpecColumn, other: &SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
+    if kept.dtype != other.dtype || kept.storage.is_some() != other.storage.is_some() {
+        refusals.push(Refusal::new(
+            "column_types_disagree",
+            format!("{file}/{}", kept.name),
+            "the variables delivered in this column resolve to different types: give their \
+             bindings the same `type` in project_data.json",
+        ));
+    }
+}
+
+/// The runner's period column, typed by its storage; without a row filter its
+/// encoding is unknown and the year is written whole.
+fn year_column(column: &manifest::Column, encoding: Option<manifest::Encoding>) -> SpecColumn {
     SpecColumn {
         name: column.name.clone(),
         stata_name: column.stata_name.clone(),
@@ -667,7 +734,7 @@ fn year_column(column: &manifest::Column, encoding: manifest::Encoding) -> SpecC
         codes: Vec::new(),
         attribute: Some(Attribute::Year),
         map: BTreeMap::new(),
-        encoding: Some(encoding),
+        encoding,
         years: Vec::new(),
         identifier: false,
         null_rate: Some(0.0),
