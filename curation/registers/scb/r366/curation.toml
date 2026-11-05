@@ -19777,7 +19777,7 @@ evidence = "#2102 same-label cluster 'Yrke' (2 variables): judged different mean
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: personnr @2020-01-01..2022-12-31 where key = 'stmt:e53f5276f061f232e96c3eece5c68b4c9e23eba60530bfdf2909b128885a6aff'"
+subject = "distansundervisning-gymnasieskolan: personnr @2020-01-01..2022-12-31 where key = 'stmt:9dcec51de8dc48c8724fbdb2a38ab474681ffad7a5b387e818436c6cea7949c6'"
 fields = { "variable" = "personnummer-for-eleven-personnr-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): personnr in distansundervisning-grundskola; personnr in distansundervisning-gymnasieskolan: same definition and code list, never concurrent under another spelling in one table; folded into personnummer-for-eleven-personnr-2."
 

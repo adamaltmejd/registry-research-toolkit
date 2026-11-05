@@ -3982,67 +3982,67 @@ evidence = "#2102 same-label cluster 'År' (2 variables): held in #2127 for occu
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2000inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:92f7f8c5eba187c62fbacc7e68e97b690c41f588d465864e244a6a5b468c3db6'"
+subject = "grundutbildning-1993: sun2000inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:e3c02c361d5825d4f32e6d4aeb2f60777319ec0c5937597275735946c724810b'"
 fields = { "variable" = "programmets-suninriktning-pa-3-sun2000inr3-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_lprog in grundutbildning-poang; sun2000inr3_lprog in grundutbildning-1993; sun2000inr_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2000inr3-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: sun2000inr_lprog @2007-01-01..2024-12-31 where key = 'stmt:6de3a4ec1930fd80446cd52ef1d8d537041f06ac322bb0569f4ae611987a2fb2'"
+subject = "sokande-grund-avancerad: sun2000inr_lprog @2007-01-01..2024-12-31 where key = 'stmt:98aada53e8da9058a8fa413a261dae91a2914e4964c9f12dbcf30142eb07102e'"
 fields = { "variable" = "programmets-suninriktning-pa-3-sun2000inr3-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_lprog in grundutbildning-poang; sun2000inr3_lprog in grundutbildning-1993; sun2000inr_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2000inr3-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2020inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:694ee8586e8fa5242d991539e080a4fdbe4796f752792dc55e6ff2b356b8e5cb'"
+subject = "grundutbildning-1993: sun2020inr3_lprog @1993-01-01..2024-12-31 where key = 'stmt:e94a7a7dc40101af552be60c71be5cb376da3f5220f58e6f8b5d515043bb7146'"
 fields = { "variable" = "programmets-suninriktning-pa-3-sun2020inr3-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_lprog in grundutbildning-poang; sun2020inr3_lprog in grundutbildning-1993; sun2020inr3_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2020inr3-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: sun2020inr3_lprog @2015-01-01..2024-12-31 where key = 'stmt:e7ee2bd4ca991e7dfcf89b83e99596c80b31e1e5dcdc97a25c7fede197914660'"
+subject = "sokande-grund-avancerad: sun2020inr3_lprog @2015-01-01..2024-12-31 where key = 'stmt:eb9a0e22cd8dc6eb786146da6b248dc96ca77c638f43f4f312354d710fedf608'"
 fields = { "variable" = "programmets-suninriktning-pa-3-sun2020inr3-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_lprog in grundutbildning-poang; sun2020inr3_lprog in grundutbildning-1993; sun2020inr3_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-suninriktning-pa-3-sun2020inr3-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2000niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:191069ba30199be8f77dd27c490b98963294e96c6a4c9fad3c16d06a822bb7ca'"
+subject = "grundutbildning-1993: sun2000niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:7eb46bd08d06364e5a500485e980e2e678a9fca64bc566067fa55b5e0f010c5a'"
 fields = { "variable" = "programmets-sunniva-sun2000-sun2000niva-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000niva_lprog in grundutbildning-poang; sun2000niva_lprog in grundutbildning-1993; sun2000niva_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2000-sun2000niva-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: sun2000niva_lprog @2015-01-01..2024-12-31 where key = 'stmt:176306e4c3d7eabe3537a4fa882cdedb6bb83905d05ce9721aefc71d33d651c7'"
+subject = "sokande-grund-avancerad: sun2000niva_lprog @2015-01-01..2024-12-31 where key = 'stmt:23bf215ba369193198af472941b43b6f0e6077935ccf6095e51514e56220f2cd'"
 fields = { "variable" = "programmets-sunniva-sun2000-sun2000niva-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000niva_lprog in grundutbildning-poang; sun2000niva_lprog in grundutbildning-1993; sun2000niva_lprog in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2000-sun2000niva-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2020niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:76aa9c67fd1f9cfecfcae15c339c24a67205c7244472c629b3e5e5eedc8302a9'"
+subject = "grundutbildning-1993: sun2020niva_lprog @1993-01-01..2024-12-31 where key = 'stmt:17951aa1698ae8773aec933dc755e67dd5b68520d0b095222a9f6cad9056d81d'"
 fields = { "variable" = "programmets-sunniva-sun2020-sun2020niva-lprog-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020niva_lprog in grundutbildning-poang; sun2020niva_lprog in grundutbildning-1993: same definition and code list, never concurrent under another spelling in one table; folded into programmets-sunniva-sun2020-sun2020niva-lprog-2."
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2000inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:c75268930aa594af5b5aab74286d7552257af4b66830d247d72aac985e918627'"
+subject = "grundutbildning-1993: sun2000inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:b01fd1cd13fca15bd150538ffc3ea2216ed3ff58e180b4e132aa676cea1df4d5'"
 fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_amnegrupp in grundutbildning-poang; sun2000inr3_amnegrupp in grundutbildning-1993; sun2000inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2."
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: sun2000inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:8fbfa60151220098f5f8a0a7e0cc410ac123072c30b5052d5d91b0b29ced2bde'"
+subject = "sokande-grund-avancerad: sun2000inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:e18212dc3b286b94f9640cdcf39ed73bec8e85b4edbb79143796966479fe5532'"
 fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2000inr3_amnegrupp in grundutbildning-poang; sun2000inr3_amnegrupp in grundutbildning-1993; sun2000inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2000inr3-amnegrupp-2."
 
 [[statement]]
 kind = "set"
-subject = "grundutbildning-1993: sun2020inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:cf82f03ed972e12bd2d5dbf4ea807e436399fcdb85f1f91bf62d2fa1a2fdf885'"
+subject = "grundutbildning-1993: sun2020inr3_amnegrupp @1993-01-01..2024-12-31 where key = 'stmt:236929be8e81d6fe9401f20757a24d6284b18671772132c7386ff3ad1e462bd3'"
 fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_amnegrupp in grundutbildning-poang; sun2020inr3_amnegrupp in grundutbildning-1993; sun2020inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2."
 
 [[statement]]
 kind = "set"
-subject = "sokande-grund-avancerad: sun2020inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:97c2eb85215191e4b968d3b00da3e80c77ee7e1784a4fb1ff97ccf6040ec30fd'"
+subject = "sokande-grund-avancerad: sun2020inr3_amnegrupp @2015-01-01..2024-12-31 where key = 'stmt:72ff4e0189f4e750eb6a4996399230432c441217ec871bbebff823e197ea6d82'"
 fields = { "variable" = "amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): sun2020inr3_amnegrupp in grundutbildning-poang; sun2020inr3_amnegrupp in grundutbildning-1993; sun2020inr3_amnegrupp in sokande-grund-avancerad: same definition and code list, never concurrent under another spelling in one table; folded into amnesgruppens-suninriktning-pa-3-sun2020inr3-amnegrupp-2."
 
