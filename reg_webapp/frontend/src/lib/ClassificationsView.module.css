@@ -1,0 +1,68 @@
+/* The list of classifications (DESIGN.md → Detail pane): entries between
+   hairlines and padded as a VariableRow list's rows, each its name, its
+   description and its versions. */
+.list {
+  border-top: 1px solid var(--border);
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.name {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-weight: 600;
+}
+
+/* Two lines, as a group lane's description: the classification's own page
+   has the rest. */
+.description {
+  display: -webkit-box;
+  max-width: 60ch;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.parts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.part {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.versions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.years {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+/* A lone version's years, as a version line's. */
+.single {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}

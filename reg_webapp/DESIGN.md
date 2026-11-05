@@ -95,24 +95,26 @@ branches while search shows flat matches with levels. Only active search shows a
 matching result count; sentinel items are labelled in plain words.
 
 The list of classifications (`/catalog/class`) reads `show` at ref `class`: each
-family's name, version count and years (its first version's start to its last's end). On
-a steward site the server lists only the families a held placement's rows carry. The
-browse column lists them from the same read, below the providers.
+family's name, description and versions (name, part and years). On a steward site the
+server lists only the families a held placement's rows carry. The browse column lists
+them from the same read, below the providers.
 
-A classification family page (`/catalog/class/<family>`) reads `show`: its versions in
-start order and the steward's variables that use them, each with the `segments` rows
-that carry the family. A version route (`/catalog/class/<family>/<version>`) reads the
-version, then its family, and renders the family page with that version in focus: one
-page, as a grouped variable's address renders its group. The codes are the columns'
-value sets on the shared `CodeTimeline`, fetched through `values`, not the version's
-whole list. Every classification name on screen is the name the server serves (`show`,
-or `classification_name` on a segment row); the SPA never makes a name up from a slug,
-and a null value-set classification is never inferred from its names. The project editor
-and its findings name versions only from the segment rows already read, never with a
-`show` per version (one binding can have dozens of candidates); where no loaded row
-carries a version (a pin not delivered on the project's tables), it shows the version's
-own id, the ref's last part, as an id. A cross-register version list names each
-variable's register from the root read the browse column makes.
+A classification family page (`/catalog/class/<family>`) reads `show`: its publisher,
+description and versions in start order, each with its part, the versions it succeeds
+and its value set (the `variables` it also serves are not shown). A version route
+(`/catalog/class/<family>/<version>`) reads the version, then its family, and renders
+the family page with that version picked: one page, as a grouped variable's address
+renders its group. The picked version's codes are its whole list through `values` with
+`classification`; its changes since each version it succeeds are `values` with
+`classification` and `compare`, paged, the counts from the first page. Every
+classification name on screen is the name the server serves (`show`, or
+`classification_name` on a segment row); the SPA never makes a name up from a slug, and
+a null value-set classification is never inferred from its names. The project editor and
+its findings name versions only from the segment rows already read, never with a `show`
+per version (one binding can have dozens of candidates); where no loaded row carries a
+version (a pin not delivered on the project's tables), it shows the version's own id,
+the ref's last part, as an id. A cross-register version list names each variable's
+register from the root read the browse column makes.
 
 ## Why no auth — cost protection instead
 

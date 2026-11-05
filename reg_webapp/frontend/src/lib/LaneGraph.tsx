@@ -41,6 +41,10 @@ export interface LaneModel {
   /** More about the lane under its name and line, in the name column: a
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
+  /** The name and its line wrap and the lane grows to hold them, as with a
+   * `detail`: a long name rather than an ellipsis (a classification's
+   * lanes, named by its parts or its own long name). */
+  wrap?: boolean;
   /** Its relations as sentences, for a screen reader: the edges are drawn
    * only. */
   relations?: string[];
@@ -77,6 +81,10 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** Starts with the column name, then the variable, the years and the
    * state. */
   accessibleName: string;
+  /** What a span with no column name stands for (a classification
+   * version), its tooltip in the UI face in place of its years: the caller
+   * adds the years where the label lacks them. */
+  label?: string;
 }
 
 export interface LaneEdgeModel {
@@ -121,6 +129,11 @@ interface Props {
    * drawn: a group page opened at one member's address, when nothing else
    * holds focus. */
   focus?: string | null;
+  /** The selectable span that takes focus the same way: a classification
+   * opened at one version's address. */
+  focusSpan?: string | null;
+  /** Under the graph while any span is selectable; null for none. */
+  hint?: string | null;
 }
 
 /** Measured heights by lane id, and the callback a measured block reports
@@ -167,6 +180,8 @@ export function LaneGraph({
   isDisabled = false,
   onToggle,
   focus = null,
+  focusSpan = null,
+  hint = "Click a column to add it to your project.",
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -274,7 +289,7 @@ export function LaneGraph({
                       // Stacked, every lane's spans start under its measured
                       // name; beside the track only a detail grows the lane.
                       onHeight={
-                        lane.detail || geometry.stacked
+                        lane.detail || lane.wrap || geometry.stacked
                           ? onNameHeight
                           : undefined
                       }
@@ -301,6 +316,7 @@ export function LaneGraph({
                               isDisabled={isDisabled}
                               onToggle={onToggle}
                               onActive={setHovered}
+                              focus={span.id === focusSpan}
                             />
                           </li>
                         ) : null;
@@ -322,8 +338,8 @@ export function LaneGraph({
           </>
         )}
       </div>
-      {spans.some((s) => s.selectable) && (
-        <p className={styles.hint}>Click a column to add it to your project.</p>
+      {hint && spans.some((s) => s.selectable) && (
+        <p className={styles.hint}>{hint}</p>
       )}
     </div>
   );
@@ -652,55 +668,11 @@ function LaneText({
   top?: number;
 }) {
   const subId = useId();
-  // Focus once, when the lane is first drawn (the lanes mount only after the
-  // graph is measured); keep it in view while the lanes above it grow to
-  // their measured names, until focus moves on. Only when nothing holds focus
-  // (a fresh load or a deep link): a member opened from a browse column keeps
-  // focus on that column's row, which owns it.
-  const focused = useRef<HTMLElement | null>(null);
-  const focusName = useCallback(
-    (node: HTMLElement | null) => {
-      if (!node || !focus) return;
-      const active = document.activeElement;
-      if (active && active !== document.body) return;
-      focused.current = node;
-      node.focus({ preventScroll: true });
-    },
-    [focus],
-  );
-  useEffect(() => {
-    const node = focused.current;
-    if (top === undefined || !node || document.activeElement !== node) return;
-    // Only a lane out of view scrolls: centring one already in view pushed the
-    // page's head (kind mark, title) half under the sticky top bar.
-    const bar =
-      Number.parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--top-bar-height",
-        ),
-      ) || 0;
-    const { top: y, bottom } = node.getBoundingClientRect();
-    if (y < bar || bottom > window.innerHeight)
-      node.scrollIntoView({ block: "center" });
-  }, [top]);
-  // The reader's own scroll or key ends that: a later resize must not pull
-  // the page back.
-  useEffect(() => {
-    if (!focus) return;
-    const release = () => {
-      focused.current = null;
-    };
-    const events = ["wheel", "touchmove", "keydown", "pointerdown"] as const;
-    for (const event of events)
-      window.addEventListener(event, release, { once: true, passive: true });
-    return () => {
-      for (const event of events) window.removeEventListener(event, release);
-    };
-  }, [focus]);
+  const focusName = useFocusOnce(focus, top);
   return (
     <div
       ref={measure}
-      className={`${styles.name} ${lane.detail ? styles.detailed : ""}`}
+      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""}`}
       style={width ? { width } : undefined}
     >
       {lane.href ? (
@@ -757,20 +729,86 @@ function LaneText({
   );
 }
 
+/** A ref that focuses its node once, when it is first drawn (the lanes mount
+ * only after the graph is measured), and keeps it in view while the lanes
+ * above grow to their measured names, until focus moves on. Only when nothing
+ * holds focus (a fresh load or a deep link): a member opened from a browse
+ * column keeps focus on that column's row, which owns it. `top` is the node's
+ * place in the drawing, which moves while the lanes above measure. */
+function useFocusOnce(focus: boolean, top: number | undefined) {
+  const focused = useRef<HTMLElement | null>(null);
+  const focusNode = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node || !focus) return;
+      const active = document.activeElement;
+      if (active && active !== document.body) return;
+      focused.current = node;
+      node.focus({ preventScroll: true });
+    },
+    [focus],
+  );
+  useEffect(() => {
+    const node = focused.current;
+    if (top === undefined || !node || document.activeElement !== node) return;
+    // Only a lane out of view scrolls: centring one already in view pushed the
+    // page's head (kind mark, title) half under the sticky top bar.
+    const bar =
+      Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--top-bar-height",
+        ),
+      ) || 0;
+    const { top: y, bottom } = node.getBoundingClientRect();
+    if (y < bar || bottom > window.innerHeight)
+      node.scrollIntoView({ block: "center" });
+  }, [top]);
+  // The reader's own scroll or key ends that: a later resize must not pull
+  // the page back.
+  useEffect(() => {
+    if (!focus) return;
+    const release = () => {
+      focused.current = null;
+    };
+    const events = ["wheel", "touchmove", "keydown", "pointerdown"] as const;
+    for (const event of events)
+      window.addEventListener(event, release, { once: true, passive: true });
+    return () => {
+      for (const event of events) window.removeEventListener(event, release);
+    };
+  }, [focus]);
+  return focusNode;
+}
+
 function Span({
   span,
   at,
   isDisabled,
   onToggle,
   onActive,
+  focus,
 }: {
   span: LaneSpanModel;
   at: PlacedSpan;
   isDisabled: boolean;
   onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
+  focus: boolean;
 }) {
   const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
+  const focusInput = useFocusOnce(focus, at.y);
+  // Set while the page moves focus here itself (a version address): that
+  // focus opens no tooltip, which would cover the lane's name.
+  const quiet = useRef(false);
+  // The checkbox's root is its label; focus lands on its input.
+  const pickRef = useCallback(
+    (node: HTMLLabelElement | null) => {
+      face.current = node;
+      quiet.current = true;
+      focusInput(node?.querySelector("input") ?? null);
+      quiet.current = false;
+    },
+    [focusInput],
+  );
   const [open, setOpen] = useState(false);
   // A span too narrow for its name, with the name beside it, carries its
   // years where they fit, so the bar is not an empty box.
@@ -863,14 +901,23 @@ function Span({
       offset={6}
       style={{ zIndex: "var(--z-popover)" }}
     >
+      {/* A span without a column name (a classification version) says its
+          label, or else its years, in the UI face. */}
       <span>
-        <code>{span.name}</code>
-        {span.where && ` in ${span.where}`}, {span.years}
+        {span.name ? (
+          <>
+            <code>{span.name}</code>
+            {span.where && ` in ${span.where}`}, {span.years}
+          </>
+        ) : (
+          (span.label ?? span.years)
+        )}
       </span>
       {span.note && <span>{span.note.text}</span>}
     </Tooltip>
   );
   const show = (on: boolean) => {
+    if (on && quiet.current) return;
     setOpen(on);
     onActive(on ? span.id : null);
   };
@@ -907,7 +954,7 @@ function Span({
     // input is visually hidden. The tooltip is placed on the visible face.
     <TooltipTrigger isOpen={open} onOpenChange={show} delay={0} closeDelay={0}>
       <Checkbox
-        ref={face}
+        ref={pickRef}
         className={`${styles.span} ${styles.pick}`}
         style={{ height: SPAN_HEIGHT }}
         aria-label={span.accessibleName}

@@ -15,9 +15,6 @@ interface Props {
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
   window: YearSpan | null;
-  /** A muted suffix after the name: where the row lives, in a list that spans
-   * registers (a classification's versions). */
-  detail?: ReactNode;
 }
 
 /**
@@ -35,7 +32,6 @@ export function VariableRow({
   coverage,
   axis,
   window,
-  detail,
 }: Props) {
   return (
     <li className={styles.row} data-in-project={inProject || undefined}>
@@ -45,7 +41,6 @@ export function VariableRow({
           {name}
         </a>
         {inProject && <span className="visually-hidden">, in the project</span>}
-        {detail && <span className={styles.detail}>{detail}</span>}
       </div>
       <span className={styles.bar}>
         <YearTrack

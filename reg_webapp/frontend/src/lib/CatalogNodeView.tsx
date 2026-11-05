@@ -89,7 +89,7 @@ export function CatalogNodeView({
         />
       );
     case "class_families":
-      return <ClassificationsView node={node} context={context} />;
+      return <ClassificationsView node={node} />;
     case "class_family":
       return (
         <ClassificationView

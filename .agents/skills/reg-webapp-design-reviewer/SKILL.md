@@ -191,7 +191,11 @@ printed console output alongside it.
 - Neighbour check (mandatory): for each new element in the PR body's "new elements"
   table (a row, a divider, a header, a mark), find its nearest analogue on the same page
   or in the same column and compare their computed styles in the rendered pass: border
-  colour and width, spacing on each side, type, radius. Any difference the table does
+  colour and width, spacing on each side, type, radius, and box geometry: rendered width
+  and height against the neighbour and the viewport. Drive a search or data state whose
+  content is short, so a box shrink-wrapped to its text does not hide behind long
+  content (#2307's narrow match list shrink-wrapped to 149 px and passed a review that
+  compared colours and type on long-text searches only). Any difference the table does
   not explain is at least a P2, even when a token comment or the candidate's own
   DESIGN.md edit allows it. (#2305 drew the Classifications rule in `border-strong`
   beside the column's `border` section rules.)

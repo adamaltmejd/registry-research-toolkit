@@ -59,3 +59,24 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
+
+/* A version's code changes since its predecessor (DESIGN.md → Detail pane):
+   the heading at the version heading's size, the counts as a body line, then
+   the codes behind the shared disclosure. */
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.changesHeading {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-weight: 600;
+}
+.counts {
+  margin: 0;
+}
+.runHeading {
+  margin: var(--space-2) 0 0;
+}

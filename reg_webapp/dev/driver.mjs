@@ -646,6 +646,32 @@ async function browseGroupCase(page, shoot) {
   await shoot("browse-group-project");
 }
 
+// Classification page → version picker boundary (maintainer ruling 2026-11-05):
+// the Versions graph is the picker at every width, pressed with the mouse.
+// Fails if a version has no span, the default is not picked, or a mouse press
+// on a span does not pick its version (its code changes stay on screen).
+// Versions and the default (the latest started, Nivå 2020) come from
+// webapp-dev/curation/classifications.toml.
+async function classificationPickerCase(page, shoot) {
+  const main = page.getByRole("main");
+  await main.getByRole("heading", { name: "Utbildningsnomenklatur", level: 1, exact: true }).waitFor();
+  await settled(page);
+  const changes = main.getByRole("heading", { name: "Changes since Utbildningsnivå 2000", exact: true });
+  await changes.waitFor();
+  const spans = main.getByRole("checkbox");
+  check(await spans.count() === 3, `expected one span per version, got ${await spans.count()}`);
+  check(await main.getByRole("checkbox", { name: /^Utbildningsnivå 2020/ }).isChecked(), "the default version's span is not picked");
+  const older = main.getByRole("checkbox", { name: /^Utbildningsnivå 2000/ });
+  // A mouse press on the drawn span: the checkbox input itself is visually
+  // hidden under its label's face.
+  await older.locator("xpath=ancestor::label[1]").click();
+  check(await older.isChecked(), "pressing a span did not pick its version");
+  await main.getByRole("heading", { name: /^Codes in Utbildningsnivå 2000/ }).waitFor();
+  await changes.waitFor({ state: "detached" });
+  await settled(page);
+  await shoot("classification-picker");
+}
+
 // Project + catalog → saved project boundary. Fails if a keyboard period edit
 // is not saved, or removing a lane loses focus or removes the wrong binding. Existing cases open files
 // and add columns; none edits a source card. Names and initial values come from
@@ -1083,6 +1109,12 @@ const scenarios = {
     shots: 2,
     route: "/catalog/demo/bas/inkomst",
     run: browseGroupCase,
+  },
+  "classification-picker": {
+    fixture: "webapp-dev",
+    shots: 1,
+    route: "/catalog/class/demo-utb",
+    run: classificationPickerCase,
   },
   "variable-succession": {
     fixture: "webapp-dev",
