@@ -472,12 +472,8 @@ impl Context<'_> {
                     .position(|c| c.name == column.name)
                 {
                     Some(i) => {
-                        same_type(
-                            &built.file.columns[i],
-                            &spec_column,
-                            &built.file.name,
-                            refusals,
-                        );
+                        let name = built.file.name.clone();
+                        merge_column(&mut built.file.columns[i], spec_column, &name, refusals);
                         built.add_source(i, column.source);
                     }
                     None => built.push(column.source, spec_column),
@@ -520,7 +516,13 @@ impl Context<'_> {
                         Err(()) => refusals.push(open_period(&r.source, &r.variable)),
                     }
                 }
-                // A column several requested variables share is drawn as the first.
+                // A column several requested variables share is drawn as the first
+                // requested one; an implicit row key (no binding) takes its type.
+                let r = column
+                    .refs
+                    .iter()
+                    .find(|r| r.binding.is_some())
+                    .unwrap_or(r);
                 let draft = Column {
                     name: &column.name,
                     source: &r.source,
@@ -544,7 +546,11 @@ impl Context<'_> {
                     // Every variable the column delivers must agree on its type; its
                     // codes are all of theirs (simplify: one code list for every year,
                     // give codes years if a pipeline checks codes by year).
-                    for other in &column.refs[1..] {
+                    for other in column
+                        .refs
+                        .iter()
+                        .filter(|o| !std::ptr::eq(*o, r) && o.binding.is_some())
+                    {
                         let draft = Column {
                             source: &other.source,
                             binding: other.binding,
@@ -556,17 +562,12 @@ impl Context<'_> {
                         if let Some(other_column) =
                             self.column(&draft, Some(&column.storage), refusals)
                         {
-                            same_type(&spec_column, &other_column, &file.name, refusals);
-                            for code in other_column.codes {
-                                if !spec_column.codes.iter().any(|c| c.code == code.code) {
-                                    spec_column.codes.push(code);
-                                }
-                            }
+                            merge_column(&mut spec_column, other_column, &file.name, refusals);
                         }
                     }
                     built.push(&r.source, spec_column);
                     let i = built.file.columns.len() - 1;
-                    for other in &column.refs[1..] {
+                    for other in &column.refs {
                         built.add_source(i, &other.source);
                     }
                 }
@@ -739,8 +740,8 @@ fn within(period: Period, bounds: &Period) -> Period {
     }
 }
 
-/// Columns merged into one must agree on the type they are written in.
-fn same_type(kept: &SpecColumn, other: &SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
+/// Columns merged into one agree on their type and hold all of their codes.
+fn merge_column(kept: &mut SpecColumn, other: SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
     if kept.dtype != other.dtype || kept.storage.is_some() != other.storage.is_some() {
         refusals.push(Refusal::new(
             "column_types_disagree",
@@ -748,6 +749,11 @@ fn same_type(kept: &SpecColumn, other: &SpecColumn, file: &str, refusals: &mut V
             "the variables delivered in this column resolve to different types: give their \
              bindings the same `type` in project_data.json",
         ));
+    }
+    for code in other.codes {
+        if !kept.codes.iter().any(|c| c.code == code.code) {
+            kept.codes.push(code);
+        }
     }
 }
 
