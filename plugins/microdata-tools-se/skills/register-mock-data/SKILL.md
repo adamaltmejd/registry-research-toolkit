@@ -79,8 +79,8 @@ choice so the researcher can judge it:
   for registers that keep the dead and emigrated (cause of death).
 - `rows_per_unit.mean`: below 1, the share of eligible units with a row; above 1, the
   mean count (events).
-- `columns`, by the column's `name` in `mock_spec.json` (the order's name, not the
-  `stata_name` a `.dta` file shows for a long or invalid one): `attribute`
+- `columns`, by the column's name in the saved order answer (`order.json` or
+  `manifest.json`), never the shorter `stata_name` a `.dta` file shows: `attribute`
   (`person_key`, `firm_key`, `sex`, `birth_year`, `birth_date`, `age`, `county`,
   `municipality`, `death_date`, `year`), `map` from an attribute's value to the
   delivered code (`male`/`female` for sex), `null_rate`, or `codes` replacing the
