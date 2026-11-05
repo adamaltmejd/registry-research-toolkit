@@ -248,7 +248,32 @@ own origin and worker.
   keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A worker without the
   secret refuses every forward with a `no-store` 503, rather than put every edge client
   in the proxy's one bucket. After each edge deploy, `container-build.yml` sends
-  `initialize`, `tools/list` and one `search` to each public `/mcp`.
+  `initialize`, `tools/list` and one `search` to each public `/mcp`. Those smoke
+  requests send `User-Agent: reg-meta-ci-smoke`, which usage statistics count as client
+  `ci` and the reports leave out.
+- **Usage recording** (#1323; the origin's label is "Usage statistics" below): both
+  workers write one Workers Analytics Engine data point (dataset `reg_meta_usage`,
+  binding `USAGE`, kept 3 months) per forwarded `/api` and `/mcp` request, from the
+  origin's `x-reg-usage` label, which `edge/src/usage.ts` strips before answering. The
+  blobs are steward (`STEWARD` var), surface, kind, op, fqids, q, err, cache status,
+  client family, country and status. The doubles are edge ms (to the origin's response
+  headers), app ms, bytes (`-1` when unknown) and hits. The index is `steward:op`.
+  - **Surface** is `mcp` for `/mcp`, `spa` for an `/api` request with
+    `Sec-Fetch-Site: same-origin`, and `rest` otherwise.
+  - **App ms** comes from `Server-Timing`, but only when the response came from the
+    origin. On a HIT it would be the time of the request that filled the cache. Hits are
+    `-1` when the request is not a search.
+  - **Client family** comes from a fixed User-Agent substring table. The raw User-Agent,
+    the IP address and any cookie are never written.
+  - **An MCP `order`** adds one `pick` data point per bound variable.
+  - **`POST /api/event`** (SPA deployment only) is the SPA's pick beacon, one request
+    per add, `{"fqids": [...]}` with at most 100 ids, answered 204 `no-store` at the
+    edge and never forwarded. It is taken only same-origin (`Sec-Fetch-Site`) with a
+    declared length of at most 24 KiB. It never reaches the origin's rate limit; the
+    site's Cloudflare rate-limiting rule on `/api/` counts it with the reads, one
+    request per add.
+  - **Invocation logs are off** (`observability.logs.invocation_logs: false`). They
+    record each request's URL, search text included, outside the scrub.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/2GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
