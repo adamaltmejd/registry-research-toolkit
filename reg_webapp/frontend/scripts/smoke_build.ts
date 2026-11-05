@@ -1,4 +1,4 @@
-// The production build's bootstrap, before merge (`scripts/gate.py frontend`, after
+// The production build's bootstrap, before merge (`scripts/gate.sh frontend`, after
 // `bun run build`): Vite's preview server serves dist/, and Chromium checks that
 //   1. the app mounts (its "Catalog" navigation, the browse tree, renders),
 //   2. the reg-core .wasm answers 200 with `application/wasm`,

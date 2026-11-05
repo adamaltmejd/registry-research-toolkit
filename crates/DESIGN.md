@@ -1078,7 +1078,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 5.2.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 6.0.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -1121,11 +1121,11 @@ whole-project finding) and `source_outside_window` (a dated source period wholly
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`period_clipped`, `form_change`, `table_succession_undated`, `identifier` and
-`coverage_end_unstated`. Each is an `Issue` whose `path` points at the source, binding
-or panel and whose `source`, `variable`, `table` and `period` say what it is about
-(`null` for a whole-project finding). The conditions are the order check's to state in
-its own tests; the rules that shape them:
+`period_clipped`, `form_change`, `table_succession_undated`, `identifier`,
+`coverage_end_unstated` and `binding_type_differs`. Each is an `Issue` whose `path`
+points at the source, binding or panel and whose `source`, `variable`, `table` and
+`period` say what it is about (`null` for a whole-project finding). The conditions are
+the order check's to state in its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -1147,6 +1147,14 @@ its own tests; the rules that shape them:
 - A table succession with no `at` is not followed: the check returns
   `table_succession_undated` naming the successor and clips the rest. No day is inferred
   from coverage (v4 §2.1); D's `link … at` supplies the day.
+- `binding_type_differs` is a warning, one per entry whose catalog type is known and is
+  not the binding's `type` override, at the binding over the entry's period; the message
+  names both types (#2071, maintainer G10). It signals a catalog to fix: the entry keeps
+  the catalog type. An unknown catalog type is what the override fills, so it gets none.
+  On a steward server the holdings stage drops it where every steward column holding
+  those days is stored in the override's family (`manifest::StorageFamily`, the same
+  families the holdings build compares storage by), since the researcher then describes
+  the real file (G14).
 
 ### A clear order
 
@@ -1162,7 +1170,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "5.2.0",
+    "project": {"name": "income-panel", "schema_version": "6.0.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1212,7 +1220,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1241,7 +1249,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "5.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1526,11 +1534,11 @@ logical cell. This is an explicit-variable fallback, not authority to auto-match
 out-of-period historical header. Retain the exact physical column; never treat an alias
 as possession of another variable or use fallback to defeat an owner/window refusal.
 
-Storage checks run in the holdings compiler **after mapping**, separately from N1: the
-`disagrees`, `narrower`, `uncurated` and `unmatched` findings of the old steward build,
-against type curation and physical precision/scale/length. N1 sees catalog metadata, not
-this storage export. Storage mismatch findings require review; missing or ambiguous
-schema facts and unsafe output types remain publication/materialization refusals. No
+Storage checks run in the holdings compiler **after mapping**: the `disagrees`,
+`narrower`, `uncurated` and `unmatched` findings of the old steward build, against the
+adopted catalog type and physical precision/scale/length. Catalog typing never sees this
+storage export. Storage mismatch findings require review; missing or ambiguous schema
+facts and unsafe output types remain publication/materialization refusals. No
 disagreement auto-corrects provider types.
 
 ### Compiled facts and publication
@@ -1832,7 +1840,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-5.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+6.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2090,60 +2098,44 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
   added key's caveat is located at its source.
 
-### Logical types (N1) and metadata for local mocks
+### Integer-coded text and metadata for local mocks
 
-N1 runs after source normalization and occurrence curation, with the other review-only
-proposals (`reg-build/src/proposals/types.rs`, beside V1), not in a SWECOV reader or the
-runner. Keep source dtype/length evidence distinct from the inferred logical type. A
-disagreement with the reader's `[types]` map emits a located `N1` review with both
-types, evidence and a proposed ordinary `set type` where representable. It does not
-automatically rewrite a segment, clear ambiguity or silence F1. This follows the
-maintainer ruling of 2026-10-28: curate only evidenced affected occurrences; unresolved
-integer/decimal switches remain visible. The input basis is settled: N1 infers from the
-type string and value pattern and emits review on disagreement (clean-room design §4.5).
-Value patterns mean documented code literals/pattern metadata, never MONA row samples. A
-column's role is a separate attribute (§2.2); a row-key role is not a dtype
-disagreement. The implementer uses a conservative closed pattern table: complete
-documented code literals and normalized type strings only, no sampling threshold or
-name-only inference. An all-integer code domain with no significant leading zero may
-propose integer; alphanumeric or zero-padded codes preserve text, and documented
-non-integral numeric literals may propose decimal. Unsupported/ambiguous domains propose
-nothing. This is review output, not permission to reinterpret an amount from an
-incomplete code list.
+Reader text (`char`) whose documented code list is all plain integers publishes as
+`integer` (`reg-resolve/src/integer_codes.rs`; maintainer 2026-11-04, #2071, which
+replaced the review-only N1 proposals with this rule). A plain integer is `0` or an
+optional `-` and digits without a leading zero; a zero-padded, alphanumeric, decimal or
+comma code keeps the column text, and so does a code list that includes a non-integer
+sentinel. The rule judges a whole published segment: every delivery in it must be reader
+`char` with such a code list, not `coded = false`, not classification-bound and not an
+identifier, and the segment must not be a row key. Otherwise the segment stays text, so
+the rule never splits a segment into text and integer years. It runs in resolution after
+the segments are built and before F1, so a type change between an integer segment and a
+text neighbour is an ordinary `F1:type-change` notice.
 
-The implemented table reads a used occurrence's documented codes less its
-statement-declared sentinels and emits `N1:logical-type` (review, on the occurrence)
-with a `set type` proposal in two cases only: text whose codes are all integers with no
-leading zero proposes `integer`, and an integer whose numeric codes include a
-non-integral `.` literal proposes `decimal`. It proposes nothing for a decimal's integer
-codes (the list does not prove an uncoded amount integral, and D's ruling keeps
-integer/decimal switches to evidenced curation), for letters or punctuation on a numeric
-column (unflagged missing markers such as `.` and `blank` are as common as real codes
-there), for a comma (`1,5` may list two codes), or for a classification-bound occurrence
-(its binding governs the codes). A curator adopts a proposal with the `set type` it
-carries, or acknowledges the review. A read-only query of the 0.73.0 catalog estimates
-about 25,900 reviews on 3,850 variables, all from the text rule (V1 publishes about
-155,000). Documented date/number-format extensions require an evidenced later rule
-change, not an open maintainer question for E. Curated > rule > source is fixed
-(clean-room §2.4). N1 reviews propose and never apply a correction: consumers use
-adopted normalized types until curation changes them (§4.5; D's TYPE FAMILIES and
-NUMERIC SWITCHERS rulings). Integer and decimal remain different families; unresolved
-types stay unresolved. No unreviewed inference may change mocks, output types or catalog
-generation as if adopted.
+Curated > rule > source (clean-room §2.4): a `set` may name a type only by its published
+name (`type-name` refusal otherwise), so an override to text is `text`, which the rule
+never reads, and `set type = "text"` pins a column as text. An `assert` transcribes a
+delivery in reader vocabulary, so the rule reads its `char` like a source record's. Each
+change the rule makes is provenance: an occurrence override on `type`, rule
+`integer-codes`, with the stated `char` as its source value. A converted segment that
+now matches an adjacent integer segment of one form joins it, as segment building joins
+adjacent runs. The rule reads documented code literals only, never MONA rows, names or
+sampling. It proposes no decimal: D's 2026-10-28 ruling keeps integer/decimal switches
+to evidenced curation, and a code list proves its codes, not that an uncoded amount is
+integral. On 0.75.0 the retired N1 pass published 25,676 reviews (all text to integer)
+on 3,673 coded variables and 45 row keys; the rule applies to the coded ones whose whole
+segment qualifies.
 
-For example, `curation/readers/scb.toml` maps `numeric` to `decimal`, and `char` to
-`char`. An integer-looking coded column can still require text: leading-zero codes must
-survive. A code list alone proves the listed codes, not that an uncoded amount never has
-a decimal. N1 records that distinction; storage `numeric(p,s)` remains storage evidence,
-and `s = 0` does not retroactively change provider metadata.
+The adopted type is catalog metadata. Extract files take their types from SQL storage
+(`reg_mona_runner/DESIGN.md`, "Types per format"), so the rule changes no `.dta`,
+Parquet or CSV byte; the holdings compiler's storage notices compare it with the held
+storage as with any adopted type.
 
-For a concrete pattern input, `DIA1` in the SV pivot is a diagnosis code slot. N1
-compares its normalized type string with its documented code domain: an alphanumeric
-pattern supports text, whereas a numeric-looking subset does not support integer
-inference. `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_PersonNr` in the FK child
-projection instead have separately evidenced recipient/child identifier roles. Mocks
-reuse distinct synthetic key domains without recasting a numeric storage type as a role.
-These are worked metadata inputs, not claims of findings from an unrun N1 pass.
+For a concrete pattern input, `DIA1` in the SV pivot is a diagnosis code slot: its
+alphanumeric codes keep it text. `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_PersonNr`
+in the FK child projection have separately evidenced recipient/child identifier roles
+and stay text whatever their codes. Mocks reuse distinct synthetic key domains without
+recasting a numeric storage type as a role.
 
 **Local mock skill, later (maintainer 2026-10-29).** Mock generation is not a server
 capability or part of E's build. A later skill on the researcher's machine reads
@@ -2171,16 +2163,15 @@ names, physical headers, slot topology, filters, keys and logical references. Ea
 column must expose its adopted logical/output type, length and value-set/classification
 references, or provide exact references so `schema`/`segments`/`values` can retrieve
 them. Logical row-key entries have only variable/spelling; key types come from those
-semantic operations, never from the header. Unknown remains unknown; N1 proposals become
-effective output types only after review/adoption.
+semantic operations, never from the header. Unknown remains unknown.
 
 The e-types audit (#2152) found no gap: in steward mode `segments` rows are the holdings
 file's placements (column, file, years held); `materialize_order` columns carry exact
 `refs` (source, binding, table, variable, period, spelling) that join the logical
 order's entries, which carry the adopted type, length, value set and classification;
 row-key types and identifier kinds come from `schema`/`segments`; `values` flags
-sentinels; open N1 reviews are read through `findings`. The manifest keeps storage types
-only, as the runner checks SQL storage; it gains no logical type.
+sentinels. The manifest keeps storage types only, as the runner checks SQL storage; it
+gains no logical type.
 
 Mocks read no MONA rows or empirical distributions. Use adopted types, lengths, value
 sets and classification pins; refuse unknown/unsupported types needing a guess. Generate
@@ -2231,7 +2222,7 @@ holdings/steward cases and the SWECOV series, and records what became of each it
   | Warned-gap catalog-state clones                            | Dropped                       | Ordinary supplemental coding tables preserve provenance and warn-not-hold notices; never copy widened global segments or add a holdings-only exception contract.                      |
   | Alias or succession as possession shortcut                 | Dropped                       | Documentary relations grant no possession.                                                                                                                                            |
   | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                           |
-  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                                |
+  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping, against the adopted catalog type.                                                                                |
   | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                                          |
   | Legacy slug pins (`swecov/slugs/`)                         | Changed                       | Reconcile 55 pin files into normal ledgers; no silent fallback slug minting.                                                                                                          |
   | Steward delivery documents                                 | Changed                       | Pin selected source evidence/derived text; supplemental doc/FTS tables, original documents stay private.                                                                              |
@@ -2262,10 +2253,15 @@ actual-file spelling differing from the latest catalog spelling. Project-only ca
 deferred. This restores the holdings/steward cases removed in C; it does not introduce
 another test suite or resolver oracle.
 
-`conformance/test_release_order.py` keeps its independent published-catalog SQL census,
-repeat-byte and HTTP/MCP checks. It has no steward mode. The holdings release proof is
-release step 8g (`reg-build diff --holdings` against the previous paired release) plus
-the integration workflow's `swecov` leg. Real-artifact runs are maintainer scheduled.
+The release checks (`crates/reg-conformance`, `--test release`) keep an independent
+published-catalog SQL census of sampled whole-table orders and their repeat bytes. On a
+steward pair the census also reads the holdings file: it samples the reference tables
+the holdings place something in, binds only the variables placed there, and models the
+holdings' own segments and row keys. A held-only sweep there checks that the browse
+root, every register and table page, search and segments name only held ids, since that
+filter lives in each reader operation. The holdings release proof is release step 8g
+(`reg-build diff --holdings` against the previous paired release) plus the integration
+workflow's `swecov` leg. Real-artifact runs are maintainer scheduled.
 
 The runner and its manifests moved together (#2125). Its testthat suite reads the
 materialize corpus's manifests and covers the pre-database refusals only; extraction is
@@ -2297,6 +2293,21 @@ a steward server `validate` and `order` also run the holdings stage of
 `materialize_order` would not block: a variable the steward does not hold is
 `mapping_missing` at check time, not when the coordinator makes the order (#2194). A
 steward `order` that succeeds carries the holdings stage's warnings with its own.
+
+### Project document 6.0.0
+
+`schema_version` `6.0.0` makes the binding `type` an optional override of the catalog
+type for the whole binding, in the catalog's published names (`integer`, `decimal`,
+`text`, `date`, `datetime`, `boolean`, `geometry`, `uuid`, `binary`, `identifier`), and
+removes `id_subtype`, `numeric_subtype`, `date_format` and `datetime_format` (#2071,
+maintainer G10–G12). Absent means the catalog type. A 5.x type name is
+`invalid_enum_value`, a removed field `unexpected_field`, an explicit `null` type
+`invalid_field_type`. The extract's storage is the steward's SQL type, so the override
+reaches no order file; the order check compares it with the catalog
+(`binding_type_differs`, "The logical order"). A 5.2.0 document is re-authored by
+deleting `type` and the four fields.
+
+Nothing else changes: 5.2.0 below holds otherwise.
 
 ### Project document 5.2.0
 

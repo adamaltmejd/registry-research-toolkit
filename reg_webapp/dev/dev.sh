@@ -3,8 +3,8 @@
 # checkout (main, a git worktree, a container) with no port
 # collisions. Picks a free port for each of the two servers — the Rust server
 # (`reg-meta serve`, which answers every /api route) and Vite — points the Vite
-# /api proxy at the first via REG_META_SERVER_URL, and starts them from the .venv
-# and cargo target of THIS SCRIPT's own checkout — resolved from this file's path,
+# /api proxy at the first via REG_META_SERVER_URL, and starts them from the
+# node_modules and cargo target of THIS SCRIPT's own checkout — resolved from this file's path,
 # never from the caller's cwd, so an absolute-path launch from elsewhere still
 # serves the checkout the script belongs to.
 #
@@ -42,13 +42,13 @@
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
 #                          REG_META_DB you name: the reg_meta.db `reg-build` makes
 #                          from conformance/cases/fixtures/webapp-dev, looked up in the
-#                          shared fixture cache (target/debug/reg-fixture, built on
+#                          shared fixture cache (<target>/debug/reg-fixture, built on
 #                          a miss) and exported as REG_META_DB. Without the flag,
 #                          REG_META_DB (a directory holding reg_meta.db) is required;
 #                          REG_META_CATALOG=<name> also serves its holdings partner
 #                          reg_meta_<name>.db there (a steward site, e.g. swecov).
 #   --paired-fixture       build the synthetic holdings pair into a per-session
-#                          temp directory (target/debug/reg-fixture --paired), export
+#                          temp directory (<target>/debug/reg-fixture --paired), export
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
 #
 # smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
@@ -200,15 +200,11 @@ fi
 # whichever one the caller happened to be standing in.
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
 cd "$root" || exit 1
+# The binaries the build below writes; a per-worktree CARGO_TARGET_DIR moves them.
+bin=${CARGO_TARGET_DIR:-$root/target}/debug
 
 # This checkout's OWN environment, never main's, installed on demand (near-instant
-# when already in sync). The venv runs freeport and the default DB resolution;
-# node_modules runs Vite, agent-browser and the driver. `env -u`: an inherited
-# UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
-if ! env -u UV_PROJECT_ENVIRONMENT uv sync --frozen --quiet; then
-	echo "dev: 'uv sync --frozen' failed — see output above." >&2
-	exit 1
-fi
+# when already in sync): node_modules runs Vite, agent-browser and the driver.
 if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
 	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
@@ -244,9 +240,8 @@ fi
 # WHICH commit, and where this run's evidence lands.
 echo "dev: repo $root HEAD $(git -C "$root" rev-parse HEAD 2>/dev/null || echo unknown)${shots_dir:+ shots $shots_dir}" >&2
 
-# .venv/bin/python, not a system `python3`: the gate image ships no system
-# Python, and this checkout's venv is already required (checked above).
-freeport() { .venv/bin/python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
+# A port the OS hands out as free, through bun (already required above).
+freeport() { bun -e 'const s=Bun.listen({hostname:"127.0.0.1",port:0,socket:{data(){}}});console.log(s.port);s.stop(true)'; }
 rust_port=${RUST_PORT:-$(freeport)}
 if [ "$mode" = preview ]; then
 	# preview_start assigns the frontend port via $PORT (autoPort always exports it,
@@ -311,15 +306,15 @@ trap 'exit 143' TERM
 catalog="${REG_META_CATALOG:-}"
 if [ -n "$paired_fixture" ]; then
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
-	catalog=$(target/debug/reg-fixture --paired "$fixture_db_dir") || {
-		echo "dev: building the paired fixture failed — see 'target/debug/reg-fixture --paired'." >&2
+	catalog=$("$bin/reg-fixture" --paired "$fixture_db_dir") || {
+		echo "dev: building the paired fixture failed — see '$bin/reg-fixture --paired'." >&2
 		exit 1
 	}
 	export REG_META_DB="$fixture_db_dir"
 	export REG_WEBAPP_FIXTURE=paired
 elif [ -n "$fixture_db" ]; then
-	fixture_catalog=$(target/debug/reg-fixture webapp-dev) || {
-		echo "dev: building the webapp-dev fixture failed — see 'target/debug/reg-fixture webapp-dev'." >&2
+	fixture_catalog=$("$bin/reg-fixture" webapp-dev) || {
+		echo "dev: building the webapp-dev fixture failed — see '$bin/reg-fixture webapp-dev'." >&2
 		exit 1
 	}
 	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
@@ -335,7 +330,7 @@ if [ -z "${REG_META_DB:-}" ]; then
 	exit 1
 fi
 rust_db=$REG_META_DB
-server_command=(target/debug/reg-meta serve --db "$rust_db" --port "$rust_port")
+server_command=("$bin/reg-meta" serve --db "$rust_db" --port "$rust_port")
 if [ -n "$catalog" ]; then server_command+=(--catalog "$catalog"); fi
 "${server_command[@]}" &
 pids+=($!)
@@ -396,9 +391,8 @@ capture() {
 	ab console | grep '^\[error\]' || true
 	# --json: agent-browser 0.39.1's text output for `errors` prints a bare "✗"
 	# whatever it holds; revisit on a bump.
-	ab errors --json | .venv/bin/python -c 'import json, sys
-for e in (json.load(sys.stdin).get("data") or {}).get("errors", []):
-    print("[pageerror]", e["text"].splitlines()[0])'
+	ab errors --json | bun -e 'for (const e of (await Bun.stdin.json()).data?.errors ?? [])
+	console.log("[pageerror]", e.text.split("\n")[0])'
 	ab console --clear >/dev/null && ab errors --clear >/dev/null
 }
 

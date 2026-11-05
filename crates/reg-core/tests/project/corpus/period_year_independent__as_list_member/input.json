@@ -1,5 +1,5 @@
 {
-  "schema_version": "5.2.0",
+  "schema_version": "6.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "demo",
   "sources": [
@@ -12,14 +12,11 @@
       "bindings": [
         {
           "variable": "scb/lisa/lopnr",
-          "display_name": "LopNr_PersonNr",
-          "type": "id",
-          "id_subtype": "integer"
+          "display_name": "LopNr_PersonNr"
         },
         {
           "variable": "scb/lisa/kon",
           "display_name": "Kon",
-          "type": "categorical",
           "classification": "class/sun/2020"
         }
       ]

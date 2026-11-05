@@ -817,22 +817,22 @@ export interface components {
         ProjectBinding: {
             /** @description A classification version's public id `class/<family>/<version>`. */
             classification?: string | null;
-            date_format?: string | null;
-            datetime_format?: string | null;
             display_name?: string | null;
             /**
              * @description Follow the variable's continues successors after it ends; absent means false.
              * @default false
              */
             follow_successor: boolean;
-            id_subtype?: components["schemas"]["ProjectIdSubtype"] | null;
-            numeric_subtype?: components["schemas"]["ProjectNumericSubtype"] | null;
-            type: components["schemas"]["ProjectColumnType"];
+            /**
+             * @description Overrides the catalog type for the whole binding; absent means the catalog type.
+             *     An explicit `null` is `invalid_field_type`.
+             */
+            type?: components["schemas"]["ProjectColumnType"];
             /** @description The binding FQID `<provider>/<register>/<slug>`. */
             variable: string;
         };
         /** @enum {string} */
-        ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
+        ProjectColumnType: "integer" | "decimal" | "text" | "date" | "datetime" | "boolean" | "geometry" | "uuid" | "binary" | "identifier";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
             /**
@@ -850,8 +850,6 @@ export interface components {
         };
         /** @enum {string} */
         ProjectExtractFormat: "dta" | "parquet" | "csv";
-        /** @enum {string} */
-        ProjectIdSubtype: "integer" | "string";
         ProjectIdentity: {
             /** @description Never blank: an unnamed project is `project_unnamed`. */
             name: string;
@@ -859,8 +857,6 @@ export interface components {
             project_hash: string;
             schema_version: string;
         };
-        /** @enum {string} */
-        ProjectNumericSubtype: "integer" | "double";
         /** @description A panel over sources. */
         ProjectPanel: {
             comment?: string | null;

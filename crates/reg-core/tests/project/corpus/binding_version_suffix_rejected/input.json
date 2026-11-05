@@ -1,5 +1,5 @@
 {
-  "schema_version": "5.2.0",
+  "schema_version": "6.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "lisa_retired_version_suffix",
   "sources": [
@@ -9,8 +9,7 @@
       "period": 2018,
       "bindings": [
         {
-          "variable": "scb/lisa/naringsgren@sni2007",
-          "type": "categorical"
+          "variable": "scb/lisa/naringsgren@sni2007"
         }
       ]
     }

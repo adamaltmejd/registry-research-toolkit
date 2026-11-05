@@ -23,7 +23,7 @@ approved a plan on 2026-11-04 that removes everything else.
 - **One PR per slice**, straight to main; the site works after each.
 - **Delete with the code.** Component tests are not ported; behaviour is pinned through
   the flows driver (`reg_webapp/dev/driver.mjs`).
-- **Each PR** passes `gate.py frontend flows`, a Codex source review
+- **Each PR** passes `gate.sh frontend flows`, a Codex source review
   (`codex -C <wt> review --base origin/main`) and a fresh-agent rendered design review
   (`reg-webapp-design-reviewer`) at 375, 768, 1280 and 1920 px on the fixture and on the
   real SWECOV pair.

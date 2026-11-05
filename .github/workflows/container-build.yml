@@ -309,7 +309,7 @@ jobs:
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
-  # (lint + ty + pytest + Rust jobs). CI runs on every main push (no paths
+  # (lint, Rust and SPA jobs). CI runs on every main push (no paths
   # filter), so a run always exists; for a workflow_dispatch the gate finds the
   # CI run from the SHA's original push. Polls because ci.yml (~2 min) and the
   # image build run in parallel — this usually resolves first.
@@ -358,7 +358,7 @@ jobs:
           registry: registry.fly.io
           username: x
           password: ${{ secrets.FLY_API_TOKEN }}
-      # Build context is the repo root (the Dockerfile needs the uv workspace);
+      # Build context is the repo root (the Dockerfile needs the Cargo workspace);
       # -f points at reg_webapp/Dockerfile. PRs build-only: no push, no `load`
       # (nothing ever runs the PR image — all gates execute during the build
       # itself, and loading exports the full ~1 GB image into the runner's

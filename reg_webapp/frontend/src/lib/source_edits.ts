@@ -25,22 +25,6 @@ function editBinding(
   };
 }
 
-export function setBindingType(
-  project: ProjectData,
-  sourceIndex: number,
-  bindingIndex: number,
-  type: ProjectBinding["type"],
-): ProjectData {
-  return editBinding(project, sourceIndex, bindingIndex, (binding) => {
-    const next = { ...binding, type };
-    if (type !== "id") delete next.id_subtype;
-    if (type !== "numeric") delete next.numeric_subtype;
-    if (type !== "date") delete next.date_format;
-    if (type !== "datetime") delete next.datetime_format;
-    return next;
-  });
-}
-
 export function pinClassification(
   project: ProjectData,
   sourceIndex: number,

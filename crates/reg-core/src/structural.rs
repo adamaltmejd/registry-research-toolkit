@@ -24,33 +24,21 @@
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, iso};
-use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype};
+use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
 const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
 const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
-const BINDING_KEYS: [&str; 9] = [
+const BINDING_KEYS: [&str; 5] = [
     "variable",
     "follow_successor",
     "type",
     "display_name",
-    "id_subtype",
-    "numeric_subtype",
-    "date_format",
-    "datetime_format",
     "classification",
 ];
 const PANEL_KEYS: [&str; 3] = ["panel_id", "members", "comment"];
 const WINDOW_KEYS: [&str; 2] = ["from", "to"];
-
-/// Fields valid only on one column type, with that type.
-const SUBTYPE_FIELDS: [(&str, ColumnType); 4] = [
-    ("id_subtype", ColumnType::Id),
-    ("numeric_subtype", ColumnType::Numeric),
-    ("date_format", ColumnType::Date),
-    ("datetime_format", ColumnType::Datetime),
-];
 
 const PERIOD_FORMS: &str =
     "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LA<YYYY>, YYYY-Q[1-4], YYYY-H[12])";
@@ -639,10 +627,15 @@ fn check_binding(
         }
     }
 
-    let typ = required_string(binding, "type", base, "binding 'type'", issues);
-    let column_type = typ.and_then(ColumnType::parse);
-    if let (Some(typ), None) = (typ, column_type) {
-        issues.error(
+    // The optional catalog type override: absent is the catalog type, `null` is refused
+    // like the root's optional fields.
+    match binding.get("type") {
+        Some(Value::Null) => issues.error(
+            "invalid_field_type",
+            format!("{base}/type"),
+            "binding 'type' must not be null when present".into(),
+        ),
+        Some(Value::String(typ)) if ColumnType::parse(typ).is_none() => issues.error(
             "invalid_enum_value",
             format!("{base}/type"),
             format!(
@@ -650,7 +643,13 @@ fn check_binding(
                 allowed(ColumnType::ALL.iter().map(|v| v.as_str())),
                 q(typ)
             ),
-        );
+        ),
+        None | Some(Value::String(_)) => {}
+        Some(_) => issues.error(
+            "invalid_field_type",
+            format!("{base}/type"),
+            "binding 'type' must be a string".into(),
+        ),
     }
 
     optional_string(
@@ -660,7 +659,6 @@ fn check_binding(
         "binding 'display_name'",
         issues,
     );
-    check_subtypes(binding, base, column_type, issues);
 
     match get(binding, "classification") {
         None => {}
@@ -679,62 +677,6 @@ fn check_binding(
             format!("{base}/classification"),
             "classification must be a string".into(),
         ),
-    }
-}
-
-/// The subtype and format fields: each only on its column type, a string, and the
-/// subtypes from their enums.
-fn check_subtypes(
-    binding: &Map<String, Value>,
-    base: &str,
-    column_type: Option<ColumnType>,
-    issues: &mut Issues,
-) {
-    for (field, owner) in SUBTYPE_FIELDS {
-        let Some(value) = get(binding, field) else {
-            continue;
-        };
-        if let Some(typ) = column_type
-            && typ != owner
-        {
-            issues.error(
-                "subtype_on_wrong_type",
-                format!("{base}/{field}"),
-                format!(
-                    "{} is only valid on type={}; binding type is {}",
-                    q(field),
-                    q(owner.as_str()),
-                    q(typ.as_str())
-                ),
-            );
-            continue;
-        }
-        let Some(value) = value.as_str() else {
-            issues.error(
-                "invalid_field_type",
-                format!("{base}/{field}"),
-                format!("{field} must be a string"),
-            );
-            continue;
-        };
-        let values: Vec<&str> = match field {
-            "id_subtype" if IdSubtype::parse(value).is_none() => {
-                IdSubtype::ALL.iter().map(|v| v.as_str()).collect()
-            }
-            "numeric_subtype" if NumericSubtype::parse(value).is_none() => {
-                NumericSubtype::ALL.iter().map(|v| v.as_str()).collect()
-            }
-            _ => continue,
-        };
-        issues.error(
-            "invalid_enum_value",
-            format!("{base}/{field}"),
-            format!(
-                "{field} must be one of {}; got {}",
-                allowed(values),
-                q(value)
-            ),
-        );
     }
 }
 

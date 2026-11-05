@@ -31,10 +31,9 @@ Resolve the requested scope before updating. A named dependency stays a named up
 with its necessary dependency closure. For a complete refresh, audit these surfaces
 together, reading actual files rather than a saved version list:
 
-- Root `pyproject.toml`, `uv.lock`, Python floor and `.python-version`.
-- Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
-  pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
-  dependencies.
+- Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.sh` (`PANACHE_VERSION`,
+  the release CI's `lint` job installs), `reg_webapp/Dockerfile`, and the Rust toolchain
+  and `Cargo.toml`/`Cargo.lock` dependencies.
 - The SPA: `reg_webapp/frontend/package.json` and `bun.lock` (exact pins, including
   `agent-browser`, `playwright` and React Aria), the wrangler pin in
   `.github/workflows/container-build.yml` (`bunx wrangler@<pin> deploy`), and the
@@ -47,17 +46,16 @@ line. Record held-back packages and the specific constraint; do not force every
 transitive package to its newest version through overrides. Docker tag/digest pairs must
 identify the same exact multi-architecture image.
 
-Read the repository's release-age policy. Its explicit uv `exclude-newer = false`
-prevents inherited host delays; deleting it is not equivalent. Project-less `uvx` can
-still inherit host configuration: use a task-scoped `UV_EXCLUDE_NEWER=false` when
-applying this policy there. Prefer task-local tooling to modifying shared host
+Read the repository's release-age policy: no minimum release age. The SPA's explicit
+`minimumReleaseAge = 0` (`reg_webapp/frontend/bunfig.toml`) prevents an inherited host
+delay; deleting it is not equivalent. Prefer task-local tooling to modifying shared host
 installations, and verify the tool actually invoked by a gate step or image rather than
 relying on the shell's PATH.
 
 ## Update and repair in one worktree
 
-Use the repository's package managers: `uv lock --upgrade` for resolution;
-`uv add`/`uv add --dev` only when a new dependency is necessary. An existing declared
+Use the repository's package managers: `cargo update` and `bun update` for resolution;
+`cargo add`/`bun add` only when a new dependency is necessary. An existing declared
 constraint may be edited to admit the chosen version, then regenerated through its
 package manager. For a scoped upgrade, use targeted resolution and avoid unrelated
 lockfile churn.
@@ -76,11 +74,11 @@ worktree.
 
 Run focused checks during repair. On the resulting candidate, execute the relevant
 existing checks once; read their current commands and checker pins from
-`scripts/gate.py` and CI instead of duplicating version pins in this skill:
+`scripts/gate.sh` and CI instead of duplicating version pins in this skill:
 
-- Python, Rust and the SPA: frozen installation, lint/format/types and the relevant full
-  test suite (`scripts/gate.py all` covers all three; the SPA's steps are
-  `gate.py frontend flows`).
+- Rust and the SPA: frozen installation, lint/format/types and the relevant full test
+  suite (`scripts/gate.sh all` covers both; the SPA's steps are
+  `gate.sh frontend flows`).
 - Images/toolchains: build affected stages and exercise the existing affected gate
   commands directly in the candidate image, including their documented offline
   environment. A host test pass alone does not verify Linux image tools.

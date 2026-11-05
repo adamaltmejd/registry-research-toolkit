@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -24,7 +24,7 @@
         "end": "2019-03-01"
       },
       "spelling": "Kon",
-      "type": "text",
+      "type": "integer",
       "length": 1,
       "value_set": {
         "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",

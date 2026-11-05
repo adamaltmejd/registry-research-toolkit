@@ -15,6 +15,7 @@ use serde::de::{Deserializer, Error as _};
 use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
 
+use crate::manifest::StorageFamily;
 use crate::structural::validate_source_period;
 use crate::{
     Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult, merge, quote,
@@ -22,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "5.2.0";
+pub const SCHEMA_VERSION: &str = "6.0.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -86,7 +87,7 @@ macro_rules! str_enum {
 
             /// The value spelled `s`, if any.
             #[must_use]
-            pub(crate) fn parse(s: &str) -> Option<Self> {
+            pub fn parse(s: &str) -> Option<Self> {
                 Self::ALL.iter().copied().find(|v| v.as_str() == s)
             }
         }
@@ -125,24 +126,35 @@ macro_rules! str_enum {
 }
 
 str_enum!(
-    /// A binding's column type.
+    /// A binding's type override, in the catalog's published type names (the list
+    /// `reg_frame::dtype_info` publishes; reg-core does not depend on reg-frame).
     ColumnType {
-        Id = "id",
-        Categorical = "categorical",
-        Numeric = "numeric",
+        Integer = "integer",
+        Decimal = "decimal",
+        Text = "text",
         Date = "date",
         Datetime = "datetime",
-        Opaque = "opaque",
+        Boolean = "boolean",
+        Geometry = "geometry",
+        Uuid = "uuid",
+        Binary = "binary",
+        Identifier = "identifier",
     }
 );
-str_enum!(
-    /// The storage of an `id` column.
-    IdSubtype { Integer = "integer", String = "string" }
-);
-str_enum!(
-    /// The storage of a `numeric` column.
-    NumericSubtype { Integer = "integer", Double = "double" }
-);
+
+impl ColumnType {
+    /// The SQL storage family a column of this type is stored in, if it has one.
+    #[must_use]
+    pub fn storage_family(self) -> Option<StorageFamily> {
+        match self {
+            Self::Integer | Self::Boolean => Some(StorageFamily::Integer),
+            Self::Decimal => Some(StorageFamily::Real),
+            Self::Text | Self::Identifier => Some(StorageFamily::Text),
+            Self::Date | Self::Datetime => Some(StorageFamily::Date),
+            Self::Geometry | Self::Uuid | Self::Binary => None,
+        }
+    }
+}
 
 str_enum!(
     /// The file format of an order's extract files.
@@ -242,18 +254,13 @@ pub struct Binding {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false, default = false))]
     pub follow_successor: Option<bool>,
-    #[serde(rename = "type")]
-    pub column_type: ColumnType,
+    /// Overrides the catalog type for the whole binding; absent means the catalog type.
+    /// An explicit `null` is `invalid_field_type`.
+    #[serde(rename = "type", default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub column_type: Option<ColumnType>,
     #[serde(default)]
     pub display_name: Option<String>,
-    #[serde(default)]
-    pub id_subtype: Option<IdSubtype>,
-    #[serde(default)]
-    pub numeric_subtype: Option<NumericSubtype>,
-    #[serde(default)]
-    pub date_format: Option<String>,
-    #[serde(default)]
-    pub datetime_format: Option<String>,
     /// A classification version's public id `class/<family>/<version>`.
     #[cfg_attr(
         feature = "openapi",

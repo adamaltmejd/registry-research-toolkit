@@ -1,7 +1,7 @@
 {
   "note": "Fails if row_filter_widened is reported to a source whose own request the year filter does not widen (#2207 F9): a asks for 2018-H1, which the Year filter widens to 2018; b asks for 2017, whole years already, and is told only of the union.",
   "project": {
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.71.0",
     "name": "Row filter widened",
     "sources": [
@@ -11,8 +11,7 @@
         "period": "2018-H1",
         "bindings": [
           {
-            "variable": "demo/keyed/amount",
-            "type": "numeric"
+            "variable": "demo/keyed/amount"
           }
         ]
       },
@@ -22,8 +21,7 @@
         "period": 2017,
         "bindings": [
           {
-            "variable": "demo/keyed/score",
-            "type": "numeric"
+            "variable": "demo/keyed/score"
           }
         ]
       }

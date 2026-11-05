@@ -1,5 +1,6 @@
 # The segments fixture: value sets that change over time, a flag-only boundary, a T1
-# clamp, a preliminary delivery and an ambiguous bare name.
+# clamp, a preliminary delivery, an ambiguous bare name, and integer-coded text
+# columns (`demo/ic`, #2071).
 repo = "fixture"
 commit = "fixture"
 

@@ -129,3 +129,9 @@
 {"kind":"release","provider":"demo","register":"ark","table":"","release":"r2020p","name":"Ark 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
 {"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020p","column":"Nyckel","source_key":"k4","label":"Nyckel","dtype":"int","identifier":true}
+{"kind":"register","provider":"demo","register":"typ","name":"Typregistret"}
+{"kind":"release","provider":"demo","register":"typ","table":"","release":"y2020","name":"Typ 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Belopp","source_key":"k2","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Namn","source_key":"k3","label":"Namn","dtype":"char","length":20}
+{"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Okand","source_key":"k4","label":"Okänd typ","dtype":"unspecified"}

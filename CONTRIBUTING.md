@@ -2,25 +2,28 @@
 
 ## Setup
 
-Prerequisites: **Python 3.15+** and [uv](https://docs.astral.sh/uv/) for the scripts and
-the test tooling, a stable **Rust** toolchain for `crates/`.
+Prerequisites: a stable **Rust** toolchain for `crates/`, [bun](https://bun.sh) for the
+SPA, and for the gate `cargo-machete`, `shellcheck` and panache at the version
+`scripts/gate.sh` pins (`PANACHE_VERSION`).
 
 ```bash
 git clone https://github.com/adamaltmejd/registry-research-toolkit.git
 cd registry-research-toolkit
-uv sync --group dev
+cargo install cargo-machete --locked
+cargo install panache --version <PANACHE_VERSION> --locked
 ```
 
 ## Testing
 
 ```bash
-uv run --no-project scripts/gate.py all   # the full gate before a PR
-uv run --no-project scripts/gate.py rust  # the workspace build and conformance against the Rust server
-cargo test --workspace                    # the crates
+bash scripts/gate.sh all   # the full gate before a PR
+bash scripts/gate.sh rust  # the workspace build and conformance against the Rust server
+cargo test --workspace     # the crates
 ```
 
-Conformance checks on a real artifact run only with `--run-release --artifact-dir=...`
-(see `conformance/README.md`).
+Conformance checks on a real artifact run only with
+`REG_ARTIFACT_DIR=... cargo test -p reg-conformance --test release` (see
+`conformance/README.md`).
 
 There are no git hooks: CI (`ci.yml`) runs the gate on every PR to main, and merges
 require it green. Run the relevant steps locally before pushing.
@@ -28,8 +31,9 @@ require it green. Run the relevant steps locally before pushing.
 ## Linting
 
 ```bash
-uv run --no-project scripts/gate.py lint   # ruff, panache and ty, at the pinned versions
-uv run ruff format                         # fix Python formatting
+bash scripts/gate.sh lint   # panache (markdown) and shellcheck
+panache format .            # fix markdown formatting
+cargo fmt --all             # fix Rust formatting
 ```
 
 ## Releasing

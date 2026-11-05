@@ -154,17 +154,7 @@ and to a sweep.
 - **Report what ran.** Name the checks you ran and the ones you did not; never claim an
   unrun check passed.
 
-# Python conventions
-
-- The Python here is tooling and tests (`scripts/`, `conformance/`); their deps are dev
-  deps in the root `pyproject.toml`. Add with `uv add --dev`; hand-edit only to bump an
-  existing constraint (then `uv lock`). CI uses `uv sync --frozen`.
-- No minimum release age: keep `exclude-newer = false` in the root `pyproject.toml`
-  `[tool.uv]`; deleting it inherits the checkout's global waiting period.
-- Python floor `>=3.15` everywhere. The root `.python-version` makes
-  `uv run --no-project` tooling in `scripts/` resolve 3.15 too.
-
-## Stack
+# Stack
 
 - **Builder** (`crates/`, Rust): `reg-build` reads the pinned inputs into source frames,
   resolves each register with its curation and emits one SQLite file (DDL in
@@ -172,10 +162,11 @@ and to a sweep.
   compatibility, regenerate-not-migrate, no ORM).
 - **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
   materializer, HTTP API and MCP tools. There is no Python web backend.
-- **Tests**: `cargo test` (crates), pytest + pytest-xdist (conformance),
-  `@pytest.mark.release` for real-artifact tests. Build coverage is fully synthetic.
-- **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
-  and run with `uvx` (not a dev dep).
+- **Tests**: `cargo test` (crates), the `reg-conformance` harness (conformance), its
+  `--test release` target for real-artifact checks. Build coverage is fully synthetic.
+- **Tooling**: Rust (`crates/xtask`), shell (`scripts/gate.sh`) and bun for the SPA. The
+  repository holds no Python; the xtask test `no_python` fails on any tracked `.py`
+  file or Python project file.
 
 # Run
 
@@ -184,26 +175,30 @@ and to a sweep.
 
 # Lint and test
 
-`scripts/gate.py` owns every check command and tool pin; CI calls its steps. There are
+`scripts/gate.sh` owns every check command and tool pin; CI calls its steps. There are
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
-- `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `flows`, `frontend`). The R packages are not gated: their testthat suites run only by
-  hand (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
-- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty and plugin
-  schema drift. The repo-policy lints (provider vocabulary, skill reads and aliases,
-  test size) are `crates/xtask` tests, run by `crates`.
-- `uv run --no-project scripts/gate.py g0 rust` — lint and crates, plus the conformance
-  run against the Rust server.
-- `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
-  files; after a rebase, commit the diff separately.
+- `bash scripts/gate.sh all` — the full gate before a PR (`g0`, `rust`, `flows`,
+  `frontend`). The R packages are not gated: their testthat suites run only by hand
+  (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
+- `bash scripts/gate.sh lint` — panache (markdown) and shellcheck. The repo-policy
+  lints (provider vocabulary, skill reads and aliases, test size, no Python) and the
+  plugin schema drift check are `crates/xtask` tests, run by `crates`.
+- `bash scripts/gate.sh g0 rust` — lint and crates, plus the conformance run against
+  the Rust server.
+- `bash scripts/gate.sh regen` — regenerate rebase-sensitive generated files; after a
+  rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
   Operator schedules them with the maintainer.
-- Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
-- Real-artifact conformance: the `rust` step in `scripts/gate.py` shows the flags
-  (`--run-release --artifact-dir=… --server-cmd=…`).
-- Local prerequisite: `cargo install cargo-machete --locked`.
-- A new worktree needs no setup step: Python syncs on the first `uv run`.
+- Narrow runs: `cargo test -p <crate>`.
+- Real-artifact conformance:
+  `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=swecov] cargo test -p reg-conformance --test release`
+  (release step 8f).
+- Local prerequisites: `cargo install cargo-machete --locked`, panache at the
+  `PANACHE_VERSION` in `scripts/gate.sh` (`cargo install panache --version <pin>
+  --locked`), shellcheck and bun.
+- A new worktree needs no setup step: the gate and `dev.sh` install the SPA's packages
+  on demand.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs
   repository) is a build artifact — fix that repository's `tools/parse_lisa_docs.py`,
   not the output.

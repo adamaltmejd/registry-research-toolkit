@@ -7,7 +7,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Order case",
         "sources": [
@@ -15,49 +15,49 @@
             "name": "register",
             "table": "demo/nam",
             "period": 2020,
-            "bindings": [{"variable": "demo/nam/annan", "type": "numeric"}]
+            "bindings": [{"variable": "demo/nam/annan"}]
           },
           {
             "name": "not-in-table",
             "table": "demo/nam/a",
             "period": 2020,
-            "bindings": [{"variable": "demo/nam/annan", "type": "numeric"}]
+            "bindings": [{"variable": "demo/nam/annan"}]
           },
           {
             "name": "outside",
             "table": "demo/imp",
             "period": 2010,
-            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
             "name": "ambiguous",
             "table": "demo/amb",
             "period": 2019,
-            "bindings": [{"variable": "demo/amb/del", "type": "numeric"}]
+            "bindings": [{"variable": "demo/amb/del"}]
           },
           {
             "name": "default",
             "table": "demo/imp",
             "period": "_default",
-            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
             "name": "timeless",
             "table": "demo/tid",
             "period": 2019,
-            "bindings": [{"variable": "demo/tid/kod", "type": "categorical"}]
+            "bindings": [{"variable": "demo/tid/kod"}]
           },
           {
             "name": "inverted",
             "table": "demo/imp",
             "period": {"from": 2020, "to": 2019},
-            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
             "name": "chain",
             "table": "demo/suc/gammal",
             "period": 2019,
-            "bindings": [{"variable": "demo/suc/bara", "type": "numeric"}]
+            "bindings": [{"variable": "demo/suc/bara"}]
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "note": "Slot2 is a steward-only slot variable (steward/inputs/slots/slots.csv, 2017..2020, integer) in the steward-only table steward/slots. The paired server orders it from the composed view; Pool maps it and declares demo/held/id (Received_Id) as its entity key, so the 2018 request carries that row key. The base catalog alone defines neither the table nor the variable. Oracle: the slots fixture, Pool's authored key and census, and the 2018 request.",
   "project": {
-    "schema_version": "5.2.0",
+    "schema_version": "6.0.0",
     "reg_meta_version": "0.64.0",
     "name": "Steward slot",
     "sources": [
@@ -9,7 +9,7 @@
         "name": "s",
         "table": "steward/slots",
         "period": {"from": 2018, "to": 2018},
-        "bindings": [{"variable": "steward/slots/slot2", "type": "numeric"}]
+        "bindings": [{"variable": "steward/slots/slot2"}]
       }
     ]
   },

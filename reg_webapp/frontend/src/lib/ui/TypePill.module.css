@@ -21,11 +21,6 @@
   stroke: currentColor;
   stroke-width: 1.2;
 }
-.fill {
-  fill: currentColor;
-  stroke: none;
-}
-
 .years {
   color: var(--text-muted);
   font-family: var(--font-mono);

@@ -1,0 +1,25 @@
+{
+  "note": "Text columns whose documented codes are all plain integers publish as integer, as a whole segment only (#2071). Fails if `Heltal` (char 2018-2021 and int 2022, codes 1 and 2) stays text, its char occurrence loses the rule override (field `type`, rule `integer-codes`, value `integer`, source_value the stated `char`), or its converted 2018-2021 segment does not rejoin the 2022 integer one; if zero-padded codes (`Nolla`, 01 and 02) become integer; if `Blandad`, one 2018-2019 segment whose two deliveries document codes 1 and 2 and codes 01 and 02, becomes integer (the rule needs every delivery of the segment); or if the identifier `Id` (char, codes 1 and 2) becomes integer. Oracle: the segments fixture's `demo/ic` rows.",
+  "fixture": "segments",
+  "requests": [
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/ic/heltal",
+      "query": {
+        "evidence": "true"
+      }
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/ic/nolla"
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/ic/blandad"
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/ic/id"
+    }
+  ]
+}

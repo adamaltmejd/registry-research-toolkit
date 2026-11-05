@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "5.2.0"
+contract_version = "6.0.0"
 
 [[operation]]
 name = "search"
@@ -481,7 +481,7 @@ matches = "[{fqid, name, register, alias (\"delivered\" | \"curated\")}]"
 
 [shape.Issue]
 level = "\"error\" | \"warning\" | \"info\""
-code = "string; a project issue or order finding code (crates/DESIGN.md, \"Project document 5.2.0\" and \"The logical order\")"
+code = "string; a project issue or order finding code (crates/DESIGN.md, \"Project document 6.0.0\" and \"The logical order\")"
 path = "string; an RFC 6901 pointer into the project; empty for the whole document"
 message = "string"
 source = "string | null; the project source's name"

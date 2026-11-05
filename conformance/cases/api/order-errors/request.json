@@ -18,14 +18,14 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "sources": [
           {
             "name": "point",
             "table": "demo/imp",
             "period": 2019,
-            "bindings": [{"variable": "demo/nam/annan", "type": "numeric"}]
+            "bindings": [{"variable": "demo/nam/annan"}]
           }
         ]
       }
@@ -35,7 +35,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "body": {
-        "schema_version": "5.2.0",
+        "schema_version": "6.0.0",
         "reg_meta_version": "0.64.0",
         "name": "Order case",
         "sources": [
@@ -43,13 +43,13 @@
             "name": "outside",
             "table": "demo/imp",
             "period": 2010,
-            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
             "name": "sensitive",
             "table": "demo/imp",
             "period": 2020,
-            "bindings": [{"variable": "demo/imp/kansl", "type": "numeric"}]
+            "bindings": [{"variable": "demo/imp/kansl"}]
           }
         ]
       }
@@ -59,7 +59,7 @@
       "method": "POST",
       "path": "/api/project/order",
       "query": {"verbose": "true"},
-      "body": {"schema_version": "5.2.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
+      "body": {"schema_version": "6.0.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
     }
   ]
 }
