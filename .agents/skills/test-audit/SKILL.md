@@ -82,10 +82,10 @@ that fails on main is a product bug: reproduce it at the boundary and file it (s
 first; read through `cargo xtask gh-issue`), never delete it.
 
 Before pushing, always run conformance, which runs against the Rust server
-(`uv run --no-project scripts/gate.py rust`), plus the tree's own gate step
-(`uv run --no-project scripts/gate.py <step>`): `crates` for `crates/`, `frontend` for
-the SPA's vitest suite (`bun run test` in `reg_webapp/frontend`) and `flows` for the
-driver. The R packages' testthat suites are not gated; run them by hand
+(`bash scripts/gate.sh rust`), plus the tree's own gate step
+(`bash scripts/gate.sh <step>`): `crates` for `crates/`, `frontend` for the SPA's vitest
+suite (`bun run test` in `reg_webapp/frontend`) and `flows` for the driver. The R
+packages' testthat suites are not gated; run them by hand
 (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`). Then compare the wall time
 with the package budget. Report in the PR body, or in the code-cleanup report when run
 inside that pass: each disposition with its boundary, test lines removed beside product

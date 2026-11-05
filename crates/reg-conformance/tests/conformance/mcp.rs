@@ -7,7 +7,7 @@
 //! golden (`cases/mcp/tools-list.json`). The stdio session writes that golden under
 //! `REG_META_BLESS=1`:
 //! `REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session`
-//! (`scripts/gate.py regen`).
+//! (`scripts/gate.sh regen`).
 //!
 //! Every `/mcp` request here shares its server's one rate bucket for this address with
 //! the `api` cases; the servers' raised write limit (`server::serve_argv`) keeps the

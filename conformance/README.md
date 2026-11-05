@@ -10,7 +10,7 @@ product imports or internal patches are allowed.
 cargo build --workspace
 cargo test -p reg-conformance --test conformance   # the surfaces below
 cargo test -p reg-conformance --test release       # the release checks (below)
-uv run --no-project scripts/gate.py rust           # both, after the workspace build
+bash scripts/gate.sh rust                          # both, after the workspace build
 ```
 
 The harness is `crates/reg-conformance`. The builder surfaces run
@@ -26,7 +26,7 @@ write limit keeps the suite inside its rate bucket; the burst case
 selects surfaces. A failing surface lists every failing case as
 `<case>: <first mismatch>`. The `conformance` and `release` test targets are
 `test = false`: `cargo test --workspace` would not rebuild the binaries they run, so
-they run only by name after `cargo build --workspace`. `scripts/gate.py` holds the
+they run only by name after `cargo build --workspace`. `scripts/gate.sh` holds the
 commands.
 
 ## Case contract
@@ -84,7 +84,7 @@ server builds each tool's schemas from its OpenAPI entry, so a schema change sho
 reviewed diff of that file; the stdio session (`reg-meta mcp`: initialize, list the
 tools and call `search`) writes it under
 `REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session`
-(`scripts/gate.py regen`). The body cap and the rate limit on `/mcp` answer with their
+(`scripts/gate.sh regen`). The body cap and the rate limit on `/mcp` answer with their
 error documents, and the drained bucket also refuses the address's project POSTs while
 its reads pass; the burst runs on a server of its own.
 
@@ -99,7 +99,7 @@ target/debug/reg-build build --inputs <fixture>/inputs --curation <fixture>/cura
   --out <dir>/reg_meta.db --report <dir>/report.json
 ```
 
-and never runs cargo itself: `scripts/gate.py rust` builds the workspace first. `build`
+and never runs cargo itself: `scripts/gate.sh rust` builds the workspace first. `build`
 verifies what it writes (`reg-build verify`), so a synthetic artifact is checked when it
 is built. `fixtures/base` has one provider (`demo`), one register with one table, two
 yearly releases, three variables (one with a value set whose third item has the blank
@@ -155,7 +155,7 @@ a real catalog, and only behaviour neither the fixture corpus nor the release's
 `reg-build verify` and `diff` show. `REG_ARTIFACT_DIR` names the artifact directory;
 `REG_CATALOG=NAME` serves `reg_meta_NAME.db` beside `reg_meta.db` as `--catalog NAME`
 (`global` or unset: the reference catalog alone). Without `REG_ARTIFACT_DIR` it runs on
-the `base` fixture's artifact, as `gate.py rust` does, so it stays runnable between
+the `base` fixture's artifact, as `gate.sh rust` does, so it stays runnable between
 releases. Release step 8f runs it once per catalog with a release-built server
 (`REG_META_BIN`); integration.yml does the same on the published assets.
 
@@ -176,7 +176,7 @@ releases. Release step 8f runs it once per catalog with a release-built server
 ## Verification gates
 
 One gate, named G0 so it is not confused with the test tiers of `ARCHITECTURE.md`
-("Tiers", which also has the budgets): `scripts/gate.py g0` (lint,
-`cargo test --workspace`, and the touched packages) and `scripts/gate.py rust` (this
+("Tiers", which also has the budgets): `scripts/gate.sh g0` (lint,
+`cargo test --workspace`, and the touched packages) and `scripts/gate.sh rust` (this
 suite against the Rust server), all on synthetic artifacts. Each release is checked by
 `reg-build diff` against the previous one.

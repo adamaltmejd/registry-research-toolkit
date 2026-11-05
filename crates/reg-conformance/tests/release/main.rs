@@ -4,7 +4,7 @@
 //!
 //! `REG_ARTIFACT_DIR` names the artifact directory (`reg_meta.db`). `REG_CATALOG=NAME`
 //! also serves `reg_meta_NAME.db` beside it, as `--catalog NAME`. Without
-//! `REG_ARTIFACT_DIR` the run uses the synthetic `base` fixture (`scripts/gate.py
+//! `REG_ARTIFACT_DIR` the run uses the synthetic `base` fixture (`scripts/gate.sh
 //! rust`), so the target stays runnable between releases. Run it after building
 //! `reg-meta` (`$REG_META_BIN` for a release build), by name: `cargo test -p
 //! reg-conformance --test release`.

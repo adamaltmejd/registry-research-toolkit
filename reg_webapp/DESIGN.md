@@ -212,7 +212,7 @@ open); it is null when every period served is timeless.
 
 `crates/reg-meta/openapi.json` is committed and is the canonical server contract.
 `cargo test -p reg-meta --test openapi_snapshot` asserts that it equals the server's
-rendered document. `scripts/gate.py regen` refreshes the snapshot.
+rendered document. `scripts/gate.sh regen` refreshes the snapshot.
 
 ## Deployment (global and SWECOV on Fly.io, Cloudflare edges in front)
 
@@ -274,7 +274,7 @@ hosted MCP through its own origin and worker.
   DB in sorted order. The server admits the pair at boot. The non-global bake branch
   remains unexercised by CI until a release carries the paired asset. Nothing deploys
   without green CI: a `wait-ci` job polls this commit's ci.yml run and the origin/edge
-  deploy jobs require its success — an image that builds but fails lint/ty/pytest never
+  deploy jobs require its success — an image that builds but fails the CI gate never
   ships. Each deploy job carries a HEAD-of-main guard (GHA concurrency serializes by
   build-completion order, not commit order — without the guard an older commit's slow
   build could overwrite a newer deploy; it also makes non-main dispatches deploy-inert).

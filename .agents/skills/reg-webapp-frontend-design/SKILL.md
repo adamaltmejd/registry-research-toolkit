@@ -224,9 +224,9 @@ smallest coherent change that satisfies the brief.
 Write no component tests. Behavior is pinned black-box by the `flows` driver and the
 existing pure-TS unit tests (AGENTS.md → "Testing policy").
 
-1. `uv run --no-project scripts/gate.py frontend`: types, lint (Biome, Oxlint with the
-   React rules and jsx-a11y, `lint:tokens`), unit tests, build and codegen drift check;
-   none of it is visual. Narrower loop: that step's package scripts.
+1. `bash scripts/gate.sh frontend`: types, lint (Biome, Oxlint with the React rules and
+   jsx-a11y, `lint:tokens`), unit tests, build and codegen drift check; none of it is
+   visual. Narrower loop: that step's package scripts.
 
 2. Render the changed view at the four widths:
 
