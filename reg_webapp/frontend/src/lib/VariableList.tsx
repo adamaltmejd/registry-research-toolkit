@@ -132,6 +132,38 @@ function variableItems(
   }));
 }
 
+/** A register's rows with each concept group folded to one row (#303) that opens
+ * the group's page, at the place of its first member in `items`: under its own
+ * name in the name order, or at its best-ranked member while searching. */
+function foldGroups(
+  items: readonly ColumnItem[],
+  sets: RegisterShow["sets"],
+  sorted: boolean,
+): ColumnItem[] {
+  const setOf = new Map(
+    sets.flatMap((set) => set.members.map((member) => [member, set])),
+  );
+  const folded = new Set<string>();
+  const rows = items.flatMap((item) => {
+    const set = setOf.get(item.id);
+    if (!set) return [item];
+    if (folded.has(set.fqid)) return [];
+    folded.add(set.fqid);
+    return [
+      {
+        ...item,
+        id: set.fqid,
+        name: set.name,
+        label: undefined,
+        href: catalogHref(set.fqid),
+      },
+    ];
+  });
+  return sorted
+    ? rows.sort((a, b) => svCollator.compare(a.name, b.name))
+    : rows;
+}
+
 /** ColumnList passes this renderer into RAC's Collection dependencies. A fresh
  * function rebuilds every row, so keep it stable until the search text changes. */
 function useRenderName(needle: string) {
@@ -207,11 +239,17 @@ function useRegisterColumn(
   if (registerFqid === null) return null;
   const node = resource.data?.kind === "register" ? resource.data : null;
   const variables = sortedVariables(node);
-  const items = variableItems(
+  const sets = node?.sets ?? [];
+  const listed = variableItems(
     variables,
     matchedVariables(variables, needle, matches),
   );
-  const seen = new Set(items.map((item) => item.id));
+  const items = foldGroups(listed, sets, !needle.trim());
+  // A member's address shows its group's page, so its group's row is selected.
+  const selectedId =
+    sets.find((set) => set.members.includes(selectedFqid ?? ""))?.fqid ??
+    selectedFqid;
+  const seen = new Set(listed.map((item) => item.id));
   const others = [
     ...otherRegisterSections(
       otherMatches?.reference ?? null,
@@ -230,10 +268,10 @@ function useRegisterColumn(
       resource.loading || (otherMatches === null && items.length === 0)
         ? null
         : sections,
-    selectedId: items.some((item) => item.id === selectedFqid)
-      ? selectedFqid
+    selectedId: items.some((item) => item.id === selectedId)
+      ? selectedId
       : null,
-    selectedExact: items.some((item) => item.id === selectedFqid),
+    selectedExact: items.some((item) => item.id === selectedId),
     empty: needle.trim()
       ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
       : "This register lists no variables.",
