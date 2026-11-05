@@ -2,17 +2,19 @@
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
 Socialstyrelsen, and other holders). It declares the hosted catalog MCP server and
-bundles three skills:
+bundles four skills:
 
   | Component                    | Purpose                                                                                                                                                   |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `catalog` MCP server         | The hosted register metadata catalog, the global catalog: `https://reg-meta.vqv.uk/mcp`.                                                                  |
   | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                            |
   | `register-project`           | Skill, loaded on demand: drafting a `project_data.json`, and answering questions about a project.                                                         |
+  | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-meta mock`.                                                                          |
   | `register-research-scaffold` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution and the toolkit's export gate as its release stage. |
 
-Nothing to install beyond the plugin: the tools run on the hosted server. The scaffold's
-evaluation records are in `trials/register-research-scaffold/`.
+Nothing to install beyond the plugin: the tools run on the hosted server. Mock data
+needs the `reg-meta` binary (see Local catalog). The scaffold's evaluation records are
+in `trials/register-research-scaffold/`.
 
 ## Install
 

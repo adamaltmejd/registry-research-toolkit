@@ -476,6 +476,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "dta"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dc1471d5023b6710062b4db0c09b786ac37e5bdba62a350eacd44912bc73bef"
+dependencies = [
+ "encoding_rs",
+]
+
+[[package]]
 name = "dyn-clone"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1362,6 +1371,10 @@ dependencies = [
 name = "reg-mock"
 version = "0.0.0"
 dependencies = [
+ "arrow-array",
+ "arrow-schema",
+ "dta",
+ "parquet",
  "reg-core",
  "serde",
  "serde_json",

@@ -83,11 +83,12 @@ Preserve original executable code and execution revision. Promote construction r
 analyses still needed by current research into maintained code rather than archiving
 live dependencies.
 
-The mock generator is an external executable/CLI, not part of this skill or a new
-subsystem to build. Consume its declared outputs if available. For a trial without it,
-the brief may provide an independent wholly invented mock sample; keep it separate from
-unit fixtures and identify its limitations. Never derive unit fixtures from mock data or
-restricted records.
+The mock generator is `reg-meta mock` (the `register-mock-data` skill), not part of this
+skill or a new subsystem to build. Consume its outputs: the generated files in the
+configured mock input directory, and the committed `mock_spec.json` that declares them.
+For a trial without it, the brief may provide an independent wholly invented mock
+sample; keep it separate from unit fixtures and identify its limitations. Never derive
+unit fixtures from mock data or restricted records.
 
 ## Verification proportional to risk
 

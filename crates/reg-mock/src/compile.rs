@@ -984,6 +984,14 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
     files
 }
 
+/// The checks compile makes on its output, for a spec read back from a file.
+#[must_use]
+pub fn check_spec(spec: &Spec) -> Vec<Refusal> {
+    let mut refusals = Vec::new();
+    check_files(&spec.files, spec.null_rate, &mut refusals);
+    refusals
+}
+
 /// File names the runner would accept, unique ignoring case; rates in `[0, 1]`, rows
 /// per unit above 0, an age range not reversed, a value map only on an attribute.
 fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) {
