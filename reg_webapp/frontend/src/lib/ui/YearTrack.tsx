@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import type { YearRun } from "../study_window";
 import styles from "./YearTrack.module.css";
 
 /** Inclusive years. */
@@ -16,8 +17,9 @@ export function YearTrack({
   window,
   inProject = false,
 }: {
-  /** The years delivered, merged and ordered; empty draws a bare track. */
-  coverage: readonly YearSpan[];
+  /** The years delivered, merged and ordered; empty draws a bare track. An
+   * open end is drawn to the axis but said as "from" or "through". */
+  coverage: readonly YearRun[];
   /** The pane's axis, shared by every row. */
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
@@ -40,9 +42,7 @@ export function YearTrack({
   const years =
     coverage.length === 0
       ? "No dated delivery"
-      : `Delivered ${coverage
-          .map(([from, to]) => (from === to ? `${from}` : `${from}–${to}`))
-          .join(", ")}`;
+      : `Delivered ${coverage.map(deliveredText).join(", ")}`;
   return (
     // Decorative: the years are read out beside it for assistive tech.
     <span
@@ -52,20 +52,25 @@ export function YearTrack({
     >
       <span className={styles.track} aria-hidden="true">
         {windowAt && <span className={styles.window} style={windowAt} />}
-        {coverage.map((span) => {
-          const at = place(span);
+        {coverage.map(({ from, to }) => {
+          const at = place([from, to]);
           return at ? (
-            <span
-              key={`${span[0]}:${span[1]}`}
-              className={styles.segment}
-              style={at}
-            />
+            <span key={`${from}:${to}`} className={styles.segment} style={at} />
           ) : null;
         })}
       </span>
       <span className="visually-hidden">{years}.</span>
     </span>
   );
+}
+
+/** One run in words. An open end is the catalog's bound, not a delivered
+ * year, so it is not named (the page's period says "From 1952" too). */
+function deliveredText({ from, to, openStart, openEnd }: YearRun): string {
+  if (openStart && openEnd) return "in every year";
+  if (openEnd) return `from ${from}`;
+  if (openStart) return `through ${to}`;
+  return from === to ? `${from}` : `${from}–${to}`;
 }
 
 /**

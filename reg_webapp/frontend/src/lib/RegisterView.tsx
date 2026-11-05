@@ -144,9 +144,7 @@ export function RegisterView({
                       name={variable.name}
                       href={catalogHref(variable.fqid)}
                       inProject={bound.has(variable.fqid)}
-                      coverage={coverage.map(
-                        (run) => [run.from, run.to] as const,
-                      )}
+                      coverage={coverage}
                       axis={axis}
                       window={study ? [study.from, study.to] : null}
                     />

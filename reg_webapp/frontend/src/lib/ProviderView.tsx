@@ -55,7 +55,7 @@ export function ProviderView({
                 inProject={bound.some((fqid) =>
                   fqid.startsWith(`${register.fqid}/`),
                 )}
-                coverage={years.map((run) => [run.from, run.to] as const)}
+                coverage={years}
                 axis={axis}
                 window={study ? [study.from, study.to] : null}
               />

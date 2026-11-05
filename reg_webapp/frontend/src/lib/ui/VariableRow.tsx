@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { YearRun } from "../study_window";
 import styles from "./VariableRow.module.css";
 import { YearAxis, type YearSpan, YearTrack } from "./YearTrack";
 
@@ -9,7 +10,7 @@ interface Props {
   /** Something of this row is in the open project: the dot and the wash. */
   inProject: boolean;
   /** The years delivered, merged and ordered; empty draws a bare track. */
-  coverage: readonly YearSpan[];
+  coverage: readonly YearRun[];
   /** The pane's axis, shared by every row. */
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */

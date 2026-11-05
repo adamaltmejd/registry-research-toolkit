@@ -702,9 +702,10 @@ Time is the axis every relation is drawn on.
   start and its last over their end, in the `axis` type (maintainer 2026-11-05). The
   axis row shares the rows' grid, so below `breakpoint-narrow`, where the bar sits on
   top and then the name with its dot (#1826), the axis still sits over the bars.
-  Assistive technology reads "Delivered <years>" ("No dated delivery." for a bare track)
-  and, when bound, ", in the project"; the axis is decorative. Adding starts from the
-  variable page, where the coverage `LaneGraph`, add window and add bar show which
+  Assistive technology reads "Delivered <years>", an open end as "from 1952" or "through
+  1990" as the period says it, never the axis bound ("No dated delivery." for a bare
+  track) and, when bound, ", in the project"; the axis is decorative. Adding starts from
+  the variable page, where the coverage `LaneGraph`, add window and add bar show which
   tables and years are added.
 
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
