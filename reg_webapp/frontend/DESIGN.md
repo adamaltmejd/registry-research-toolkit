@@ -252,8 +252,7 @@ attribute and nothing else. Do not pre-build it; design so that it stays that sm
 The site is a steward site (SWECOV now, IFAU next) and shows only what its steward
 holds. Screens use the researcher's words, never the catalog's internal model
 (maintainer 2026-11-04, #2066). The steward's own name, description and order
-instructions come from `/api/context`, never from code. Some screens still use the old
-words; the slices in `SPA-REDESIGN.md` bring them in line.
+instructions come from `/api/context`, never from code.
 
   | Say                                                              | Not                                    |
   | ---------------------------------------------------------------- | -------------------------------------- |
@@ -268,7 +267,7 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Group                                                            | groups, part of                        |
   | Notes on this data                                               | findings, data warnings                |
   | Row identifier                                                   | row keys                               |
-  | Who is included                                                  | populations                            |
+  | Classification, version                                          | class family, vintage                  |
   | Table (in a project)                                             | source                                 |
   | Column, variable                                                 | binding                                |
   | Check                                                            | draft check, catalog check             |
@@ -284,8 +283,10 @@ catalog does not state has no pill. The SPA never edits a project's type: a proj
 states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
-source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
-stated has no row. A yes/no fact (identifier, sensitive) shows only when yes.
+source and provenance, timeless, implicit, cadence, edition, primary, populations,
+releases, and a table's row keys (the catalog marks every identifier column as one;
+Operator Q2, #2252). A fact that is not stated has no row. A yes/no fact (identifier,
+sensitive) shows only when yes.
 
 ## Colors
 
@@ -492,12 +493,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
   already make, so the trail fetches nothing of its own; an ancestor whose name has not
   arrived is left out, never shown as its slug. A group page's trail skips the group
-  namespace, and a classification page has none. Then, on a register's or a variable's
-  page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line, facets as a
-  labelled row, the actions row, then definitions, then the `Timeline`, then the list of
-  variables or columns, "Notes on this data" (the findings, only when there are any;
-  maintainer 2026-11-04), then source documents. A variable page has no source and
-  provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
+  namespace. A classification page has no ancestors, so its trail is the "Browse
+  registers" crumb alone, on a version address too: that address renders the family
+  page, whose `h1` already names the family (slice 3, Q4). Then, on a register's or a
+  variable's page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line,
+  facets as a labelled row, the actions row, then definitions, then the `Timeline`, then
+  the list of variables or columns, "Notes on this data" (the findings, only when there
+  are any; maintainer 2026-11-04), then source documents. A variable page has no source
+  and provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
   `spacing.5`. A grouped variable has no page of its own (maintainer 2026-11-04): its
   address (from search, the palette, a project card or a note) renders its group's page,
   one route and one page, not a redirect, with that member's lane `current` and its name
@@ -527,9 +530,19 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   provider's wording is the Description: once when every period agrees, otherwise each
   wording under its years. It sits under the facts, above the `Timeline`. Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are
-  the files and columns the steward has, over the years it has them. A table page leaves
-  out a Row keys, Populations or Releases panel with nothing to list, and Timeless or
-  Implicit when "No". Placement caveats are steward working notes, not shown until the
+  the files and columns the steward has, over the years it has them. A table page shows
+  its `h1` name, a member-of line naming its register, its description only when stated,
+  a Years row, then its variables as `VariableRow`s on one axis, each over the years it
+  has in this table, then notes and source documents; it has no role, cadence, row-key,
+  population or release section (Operator Q2, #2252). A classification page is its
+  family's (Operator Q4, #2252): the family name as `h1`, its description only when
+  stated, then a Versions panel listing every version in start order (Q1), each with its
+  name, its years, and the steward's variables that use it as `VariableRow`s over the
+  years their columns use that version, or "No variable here uses this version." Then
+  the `CodeTimeline` of the codes those columns use (their value sets, not the version's
+  whole list; Q3). A version's address renders the family page with that version
+  current: its heading on `accent-soft`, focused and scrolled into view as a grouped
+  variable's lane is. Placement caveats are steward working notes, not shown until the
   steward curates them for readers. A register page has no tables table: its tables are
   FilterChips over the variable list, each with its period, a lens with OR within the
   selection, offered only when two or more tables deliver variables (the archived
@@ -981,8 +994,10 @@ grow new visual language meanwhile.
   a near-duplicate of a primitive.
 - Do keep one `primary` button per pane. Don't add counters, hero sections, decorative
   gradients, oversized cards, cards inside cards, or stock imagery.
-- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`. Don't
-  add breakpoints or `display: contents` (it strips accessibility roles).
+- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`, on the
+  fixture and on a real steward pair (`REG_META_DB` with `REG_META_CATALOG`), with a
+  fresh-agent rendered review before merge. Don't add breakpoints or `display: contents`
+  (it strips accessibility roles).
 - Do keep focus visible via `:focus-visible` (or `[data-focus-visible]` on RAC parts)
   `{ box-shadow: var(--focus-ring) }` in each component's own CSS, and respect
   `prefers-reduced-motion`. Motion answers a user action at the three durations above;
