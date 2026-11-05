@@ -39,10 +39,12 @@ the fields it uses and ignores the rest.
 order answer, `order.json` (`POST /api/project/order`, any catalog) or `manifest.json`
 (`POST /api/project/materialize`, a steward's), plus every page under `segments/`
 (`GET /api/segments/{table}?variable=…`, and `GET /api/segments/{variable}` for a row
-key from another register) and `values/` (`GET /api/values?value_set=…`, pages named to
-sort in page order). Answers from different catalog generations, an order answer for
-another version of the project (its `project_hash`), and a value set whose saved pages
-do not hold each of its `n_items` codes once are refused.
+key from another register) and `values/` (`GET /api/values?value_set=…`, each answer's
+pages named `<answer>-0001.json`, `-0002.json`, ..., as `save-answers.sh` writes them).
+A page left out (numbering with a gap, or a last page whose `next_cursor` is not null),
+answers from different catalog generations, an order answer for another version of the
+project (its `project_hash`), and a value set whose saved pages do not hold each of its
+`n_items` codes once are refused.
 
 **Layout.** With a manifest, files and columns are the runner's: the order file's names,
 `stata_name` aliases and labels, and the period column, a row key placing no variable,
