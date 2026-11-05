@@ -4,7 +4,7 @@
 //! forgets it leaks. The synthetic pair needs an overlay to reach the (variable,
 //! table) pair filter; the real pair reaches it from the browse root.
 
-use std::collections::HashSet;
+use std::collections::{BTreeSet, HashSet};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -44,8 +44,14 @@ impl Held {
         Self { ids, pairs }
     }
 
-    /// Every page of `variable`'s segments names only held ids and placed pairs.
-    fn segments(&self, port: u16, variable: &str) -> Result<(), String> {
+    /// Every page of `variable`'s segments names only held ids and placed pairs; the
+    /// classification families its rows carry go into `families`.
+    fn segments(
+        &self,
+        port: u16,
+        variable: &str,
+        families: &Mutex<BTreeSet<String>>,
+    ) -> Result<(), String> {
         let mut cursor: Option<String> = None;
         loop {
             let mut query = vec![("limit", "200")];
@@ -61,6 +67,15 @@ impl Held {
                 );
                 if !self.pairs.contains(&pair) {
                     return Err(format!("segments row in unplaced table {}", pair.1));
+                }
+                if let Some((family, _)) = row["classification"]
+                    .as_str()
+                    .and_then(|c| c.rsplit_once('/'))
+                {
+                    families
+                        .lock()
+                        .expect("the families")
+                        .insert(family.to_owned());
                 }
             }
             match page["data"]["next_cursor"].as_str() {
@@ -113,10 +128,10 @@ impl Held {
 
 #[test]
 fn steward_serves_only_held() {
-    // Fails when the browse root, a register or table page, a search hit (either
-    // group) or a segments row names a provider, register, table or variable the
-    // steward places nothing in, or a segments row pairs a variable with a table it is
-    // not placed in.
+    // Fails when the browse root, a register, table or classification page, a search
+    // hit (either group) or a segments row names a provider, register, table or
+    // variable the steward places nothing in, or a segments row or a table page's
+    // variable pairs a variable with a table it is not placed in.
     let artifact = artifact();
     let Some(holdings) = artifact.holdings() else {
         eprintln!("steward_serves_only_held: skipped, no steward catalog is served");
@@ -155,7 +170,15 @@ fn steward_serves_only_held() {
     let tables = tables.into_inner().expect("the tables");
     let variables = variables.into_inner().expect("the variables");
     run_all("held tables", &tables, Clone::clone, |table| {
-        held.check("show", &get(port, &format!("/api/catalog/{table}"))?)
+        let page = get(port, &format!("/api/catalog/{table}"))?;
+        held.check("show", &page)?;
+        for variable in page["data"]["variables"].as_array().into_iter().flatten() {
+            let variable = variable["fqid"].as_str().unwrap_or_default().to_owned();
+            if !held.pairs.contains(&(variable.clone(), table.clone())) {
+                return Err(format!("table page lists unplaced {variable}"));
+            }
+        }
+        Ok(())
     });
 
     // Typed: an untyped page of a one-letter query can be all codes and documents, which
@@ -178,18 +201,29 @@ fn steward_serves_only_held() {
         },
     );
 
+    let families = Mutex::new(BTreeSet::new());
     run_all("held segments", &variables, Clone::clone, |variable| {
-        held.segments(port, variable)
+        held.segments(port, variable, &families)
+    });
+    // A classification is shared, but the variables that use it are the steward's.
+    let families: Vec<String> = families
+        .into_inner()
+        .expect("the families")
+        .into_iter()
+        .collect();
+    run_all("held classifications", &families, Clone::clone, |family| {
+        held.check("show", &get(port, &format!("/api/catalog/{family}"))?)
     });
     assert!(
         hits.load(Ordering::Relaxed) > 0,
         "no search returned a register, table or variable hit to check"
     );
     eprintln!(
-        "held sweep: {} registers, {} tables, {} variables, {} search hits",
+        "held sweep: {} registers, {} tables, {} variables, {} classifications, {} search hits",
         registers.len(),
         tables.len(),
         variables.len(),
+        families.len(),
         hits.load(Ordering::Relaxed)
     );
 }
