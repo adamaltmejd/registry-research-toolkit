@@ -298,20 +298,41 @@ async function browsePagesCase(page, shoot) {
     await provider(true).getByText("Demoleverantören", { exact: true }).click();
     await settled(page);
     check((await provider(true).count()) === 1, "a press on an open provider collapsed it");
-    // Fails if → on the open provider's row stops moving into the variables
-    // column, or opening a variable from the provider's list drops focus out
-    // of the column as the list re-roots under the variable's register.
-    const inVariables = () => page.evaluate(() =>
-      document.activeElement?.getAttribute("role") === "option" &&
-      document.activeElement.closest('[data-browse-column="variables"]') !== null);
-    await provider(true).focus();
-    await page.keyboard.press("ArrowRight");
-    check(await inVariables(), "→ on the open provider did not move into the variables column");
+    // Fails if opening a variable from the provider's list (Enter, from a
+    // fresh page) leaves focus anywhere but that variable's row once the list
+    // has re-rooted under its register: it dropped to the body (round 2).
+    await open(page, "/catalog/demo");
+    await settled(page);
     await variables.getByRole("option", { name: "Bransch", exact: true }).focus();
     await page.keyboard.press("Enter");
     await page.waitForURL("**/catalog/demo/hush/**");
+    const opened = new URL(page.url()).pathname.replace("/catalog/", "");
     await settled(page);
-    check(await inVariables(), "opening a variable from the provider's list lost focus");
+    await page.locator(`[data-browse-column="variables"] [role="option"][data-key="${opened}"]`).waitFor();
+    const onOpened = await page
+      .waitForFunction(
+        (key) => document.activeElement?.getAttribute("role") === "option" &&
+          document.activeElement.getAttribute("data-key") === key,
+        opened,
+        { timeout: 2_000, polling: 50 },
+      )
+      .then(() => true, () => false);
+    check(onOpened, `opening ${opened} from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
+    // Fails if → on the open provider's row stops moving into the variables
+    // column, or focus arriving there (→, or Tab from the tree) opens a row:
+    // only Enter, Space or a click opens one.
+    const inVariables = () => page.evaluate(() =>
+      document.activeElement?.getAttribute("role") === "option" &&
+      document.activeElement.closest('[data-browse-column="variables"]') !== null);
+    for (const key of ["ArrowRight", "Tab"]) {
+      await open(page, "/catalog/demo");
+      await settled(page);
+      await provider(true).focus();
+      await page.keyboard.press(key);
+      await settled(page);
+      check(new URL(page.url()).pathname === "/catalog/demo", `${key} into the variables column opened ${page.url()}`);
+      check(await inVariables(), `${key} on the open provider did not move into the variables column`);
+    }
     await open(page, "/catalog/demo");
     await settled(page);
   }
