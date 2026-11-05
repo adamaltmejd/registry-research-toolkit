@@ -165,9 +165,8 @@
   overflow-wrap: anywhere;
 }
 
-/* The virtualized list wraps each section in a div of its own. */
-.list > :first-child > .register,
-.virtual > * > :first-child .register {
+/* The first section has no run above it to divide from. */
+.register[data-first] {
   border-top-color: transparent;
 }
 

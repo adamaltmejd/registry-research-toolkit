@@ -80,9 +80,9 @@ const OPEN_KEYS = new Set(["Enter", " "]);
 
 // Over this many rows the list renders only the rows in view: a provider's
 // page lists every variable of its registers (4,378 on /catalog/scb), which
-// took seconds to paint whole. Below it every row renders, so find-in-page
-// works and the selection bar can measure its row (DESIGN.md → ColumnList).
-// Only the provider column comes this high, and it has no selected row.
+// took seconds to paint whole, and the global catalog's largest registers
+// pass it too (ULF, FRIDA, HEK). Below it every row renders, so find-in-page
+// works (DESIGN.md → ColumnList).
 const VIRTUALIZE_OVER = 1500;
 
 // Row and header heights the layout starts from, then measures: a header
@@ -227,6 +227,22 @@ export function ColumnList({
     }
   }
 
+  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
+  // RAC's virtualized options carry an aria-posinset counted from the section's
+  // header and an aria-setsize of the whole list ("2 of 4378" on the first
+  // row): state each row's place in its own section instead. The Collection's
+  // items change whenever this does, so it needs no dependency of its own.
+  const place = virtual
+    ? new Map(
+        sections?.flatMap((section) =>
+          section.items.map((item, at) => [
+            item.id,
+            [at + 1, section.items.length] as const,
+          ]),
+        ),
+      )
+    : null;
+
   const option = (item: ColumnItem) => (
     <ListBoxItem
       key={item.id}
@@ -238,6 +254,8 @@ export function ColumnList({
         <div
           // Items carry no href, so RAC renders a div, never a link.
           {...(props as ComponentProps<"div">)}
+          aria-posinset={place?.get(item.id)?.[0] ?? props["aria-posinset"]}
+          aria-setsize={place?.get(item.id)?.[1] ?? props["aria-setsize"]}
           aria-current={
             item.id !== selectedId ? undefined : selectedExact ? "page" : "true"
           }
@@ -249,7 +267,6 @@ export function ColumnList({
     </ListBoxItem>
   );
 
-  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
   const list = sections !== null && (
     <ListBox
       aria-labelledby={labelId}
@@ -262,7 +279,7 @@ export function ColumnList({
     >
       {/* A flat list is plain options; only labelled runs get a section
       (an unnamed group would be noise to a screen reader). */}
-      {sections.map((section) =>
+      {sections.map((section, index) =>
         section.label === null ? (
           <Collection
             key={section.id}
@@ -274,7 +291,11 @@ export function ColumnList({
         ) : (
           section.items.length > 0 && (
             <ListBoxSection key={section.id} id={section.id}>
-              <Header className={styles.register} title={section.label}>
+              <Header
+                className={styles.register}
+                title={section.label}
+                data-first={index === 0 || undefined}
+              >
                 {section.label}
               </Header>
               <Collection
@@ -343,12 +364,17 @@ export function ColumnList({
             )}
           </>
         )}
-        <span
-          ref={barRef}
-          className={styles.selectionBar}
-          aria-hidden="true"
-          hidden
-        />
+        {/* A virtualized list's rows sit in the layout's own positioned
+        wrappers, out of the bar's reach: there the selected row draws its
+        own bar. */}
+        {!virtual && (
+          <span
+            ref={barRef}
+            className={styles.selectionBar}
+            aria-hidden="true"
+            hidden
+          />
+        )}
       </div>
     </nav>
   );
