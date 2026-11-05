@@ -4647,7 +4647,7 @@
       },
       "ShowProviderRegister": {
         "type": "object",
-        "description": "A provider's register with its variables as `show` on the register lists them, so\nthe provider alone lists every variable of its registers.",
+        "description": "A provider's register with its variables, so the provider alone lists every\nvariable of its registers.",
         "required": [
           "fqid",
           "name",
@@ -4667,8 +4667,28 @@
           "variables": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ShowVariableRef"
+              "$ref": "#/components/schemas/ShowProviderVariable"
             }
+          }
+        }
+      },
+      "ShowProviderVariable": {
+        "type": "object",
+        "description": "A variable in a provider's register list: what the list shows (the name, and the\nyears where two names repeat), not the tables `show` on the register lists.",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
           }
         }
       },

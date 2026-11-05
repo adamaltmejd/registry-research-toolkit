@@ -131,14 +131,23 @@ pub struct ShowRegisterRef {
     period: Period,
 }
 
-/// A provider's register with its variables as `show` on the register lists them, so
-/// the provider alone lists every variable of its registers.
+/// A provider's register with its variables, so the provider alone lists every
+/// variable of its registers.
 #[derive(Serialize, ToSchema)]
 pub struct ShowProviderRegister {
     fqid: String,
     name: String,
     period: Period,
-    variables: Vec<ShowVariableRef>,
+    variables: Vec<ShowProviderVariable>,
+}
+
+/// A variable in a provider's register list: what the list shows (the name, and the
+/// years where two names repeat), not the tables `show` on the register lists.
+#[derive(Serialize, ToSchema)]
+pub struct ShowProviderVariable {
+    fqid: String,
+    name: String,
+    period: Period,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -365,7 +374,14 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         .into_iter()
         .map(|register| {
             Ok(ShowProviderRegister {
-                variables: served_variables(server, conn, extra.as_ref(), &register.fqid)?,
+                variables: served_variables(server, conn, extra.as_ref(), &register.fqid)?
+                    .into_iter()
+                    .map(|v| ShowProviderVariable {
+                        fqid: v.fqid,
+                        name: v.name,
+                        period: v.period,
+                    })
+                    .collect(),
                 fqid: register.fqid,
                 name: register.name,
                 period: register.period,

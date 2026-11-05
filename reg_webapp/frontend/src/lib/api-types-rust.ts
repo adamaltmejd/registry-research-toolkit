@@ -1213,14 +1213,23 @@ export interface components {
             registers: components["schemas"]["ShowRegisterRef"][];
         };
         /**
-         * @description A provider's register with its variables as `show` on the register lists them, so
-         *     the provider alone lists every variable of its registers.
+         * @description A provider's register with its variables, so the provider alone lists every
+         *     variable of its registers.
          */
         ShowProviderRegister: {
             fqid: string;
             name: string;
             period: components["schemas"]["Period"];
-            variables: components["schemas"]["ShowVariableRef"][];
+            variables: components["schemas"]["ShowProviderVariable"][];
+        };
+        /**
+         * @description A variable in a provider's register list: what the list shows (the name, and the
+         *     years where two names repeat), not the tables `show` on the register lists.
+         */
+        ShowProviderVariable: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
         };
         ShowRegisterRef: {
             fqid: string;

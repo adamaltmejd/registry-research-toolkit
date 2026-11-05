@@ -14,26 +14,22 @@
             {
               "fqid": "demo/reg2/inkomstbrutto",
               "name": "Inkomst efter skatt",
-              "period": {"start": "2019-01-01", "end": "2021-01-01"},
-              "tables": ["demo/reg2/ind"]
+              "period": {"start": "2019-01-01", "end": "2021-01-01"}
             },
             {
               "fqid": "demo/reg2/kon",
               "name": "Kön",
-              "period": {"start": "2019-01-01", "end": "2021-01-01"},
-              "tables": ["demo/reg2/ind"]
+              "period": {"start": "2019-01-01", "end": "2021-01-01"}
             },
             {
               "fqid": "demo/reg2/lopnr",
               "name": "Löpnummer",
-              "period": {"start": "2019-01-01", "end": "2021-01-01"},
-              "tables": ["demo/reg2/hus", "demo/reg2/ind"]
+              "period": {"start": "2019-01-01", "end": "2021-01-01"}
             },
             {
               "fqid": "demo/reg2/storlek",
               "name": "Storlek",
-              "period": {"start": "2020-01-01", "end": "2021-01-01"},
-              "tables": ["demo/reg2/hus"]
+              "period": {"start": "2020-01-01", "end": "2021-01-01"}
             }
           ]
         },
@@ -45,8 +41,7 @@
             {
               "fqid": "demo/reg3/kon",
               "name": "Kön",
-              "period": {"start": "2018-01-01", "end": "2021-01-01"},
-              "tables": ["demo/reg3"]
+              "period": {"start": "2018-01-01", "end": "2021-01-01"}
             }
           ]
         }

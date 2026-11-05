@@ -2,6 +2,7 @@ import { type ComponentProps, useCallback } from "react";
 import type { RegisterFacet, RegisterShow } from "./api";
 import {
   useBrowseFilter,
+  useBrowseOrder,
   useOtherRegisterMatches,
   useProviderMatches,
   useRegisterMatches,
@@ -71,7 +72,11 @@ function otherRegisterSections(
   });
 }
 
-type VariableRef = RegisterShow["variables"][number];
+// What the column reads of a variable: a provider's `show` carries no more.
+type VariableRef = Pick<
+  RegisterShow["variables"][number],
+  "fqid" | "name" | "period"
+>;
 
 function sortedVariables(
   node: { variables: readonly VariableRef[] } | null,
@@ -261,9 +266,19 @@ function useProviderColumn(
     sharedShow(providerFqid ?? "", signal),
   );
   const matches = useProviderMatches(providerFqid);
+  const treeOrder = useBrowseOrder();
   if (providerFqid === null) return null;
   const provider = resource.data?.kind === "provider" ? resource.data : null;
-  const registers = sortedRegisters(provider?.registers ?? []);
+  // While the search holds text the sections follow the register column,
+  // which puts name hits first (#1828); a stable sort keeps the name order
+  // otherwise.
+  const place = (fqid: string) => {
+    const at = treeOrder.indexOf(fqid);
+    return at === -1 ? treeOrder.length : at;
+  };
+  const registers = sortedRegisters(provider?.registers ?? []).sort(
+    (a, b) => place(a.fqid) - place(b.fqid),
+  );
   const sections: ColumnSection[] = registers.map((node) => {
     const variables = sortedVariables(node);
     const items = variableItems(
