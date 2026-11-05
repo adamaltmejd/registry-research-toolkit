@@ -14,7 +14,7 @@ import {
   sortedRegisters,
   svCollator,
 } from "./catalog";
-import { catalogRootChildren, sharedShow } from "./catalog_names";
+import { sharedShow } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { Highlight } from "./Highlight";
 import {
@@ -23,7 +23,6 @@ import {
   type ColumnSection,
 } from "./ui/ColumnList";
 import { useAsyncResource } from "./use_async_resource";
-import { useCatalogRead } from "./use_store_read";
 
 const MORE = "more:";
 
@@ -74,7 +73,9 @@ function otherRegisterSections(
 
 type VariableRef = RegisterShow["variables"][number];
 
-function sortedVariables(node: RegisterShow | null): VariableRef[] {
+function sortedVariables(
+  node: { variables: readonly VariableRef[] } | null,
+): VariableRef[] {
   return [...(node?.variables ?? [])].sort((a, b) =>
     svCollator.compare(a.name, b.name),
   );
@@ -246,32 +247,24 @@ function useRegisterColumn(
  * register under the register's name, in the register column's order. The
  * search filters each section as a register's list is filtered, by the
  * server's matches for the whole provider in one request, so a section lists
- * what its tree row counts; a register with no match drops out. Its rows open a page under another
- * register, so they are leaving rows: a click or Enter opens one, never the
- * arrows passing it. Null without a provider.
+ * what its tree row counts; a register with no match drops out. Its rows open
+ * a page under another register, so they are leaving rows: a click or Enter
+ * opens one, never the arrows passing it. Null without a provider.
  */
 function useProviderColumn(
   providerFqid: string | null,
   needle: string,
 ): ColumnProps | null {
-  const root = useCatalogRead(catalogRootChildren, undefined);
-  const provider = root.value?.find((p) => p.fqid === providerFqid) ?? null;
-  const registers = provider
-    ? sortedRegisters(provider.registers).map((r) => r.fqid)
-    : null;
-  // simplify: one cached `show` per register. The largest SWECOV provider
-  // (scb) has 36 registers and 4378 variables on the 0.76.0 pair, past the
-  // ~30-register trigger already: the provider's own `show` should carry its
-  // registers' variables (and the list may need measuring for virtualization).
-  const resource = useAsyncResource(
-    registers === null ? null : `${providerFqid}\u0000${registers.join(" ")}`,
-    (signal) =>
-      Promise.all((registers ?? []).map((fqid) => sharedShow(fqid, signal))),
+  // The provider's own `show` carries its registers' variables: one request
+  // for the column, shared with the page's (#2257's request budget).
+  const resource = useAsyncResource(providerFqid, (signal) =>
+    sharedShow(providerFqid ?? "", signal),
   );
   const matches = useProviderMatches(providerFqid);
   if (providerFqid === null) return null;
-  const sections: ColumnSection[] = (resource.data ?? []).flatMap((node) => {
-    if (node.kind !== "register") return [];
+  const provider = resource.data?.kind === "provider" ? resource.data : null;
+  const registers = sortedRegisters(provider?.registers ?? []);
+  const sections: ColumnSection[] = registers.map((node) => {
     const variables = sortedVariables(node);
     const items = variableItems(
       variables,
@@ -282,20 +275,19 @@ function useProviderColumn(
       ),
       true,
     );
-    return [{ id: `register:${node.fqid}`, label: node.name, items }];
+    return { id: `register:${node.fqid}`, label: node.name, items };
   });
-  const failed = root.value !== null && provider === null;
   return {
-    subject: provider?.name ?? undefined,
+    subject: provider?.name,
     root: providerFqid,
-    sections: resource.data === null ? null : sections,
+    sections: resource.loading ? null : sections,
     selectedId: null,
     selectedExact: false,
     empty: needle.trim()
       ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
       : "This provider lists no variables.",
     error:
-      resource.error || failed || (!root.loading && root.value === null)
+      resource.error || (!resource.loading && !provider)
         ? `The variables did not load${resource.error ? ` (${resource.error})` : ""}. Reload the page to try again.`
         : null,
   };
