@@ -77,4 +77,3 @@ def http_servers(server_cmd, tmp_path_factory):
     Every server is stopped at session end, whether or not the cases passed."""
     with closing(ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))) as pool:
         yield pool
-
