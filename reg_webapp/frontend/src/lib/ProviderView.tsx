@@ -2,7 +2,7 @@ import type { Context, ProviderShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, sortedRegisters } from "./catalog";
 import { dataAxis } from "./period";
-import { columnYearRuns, studyWindow } from "./study_window";
+import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { Panel } from "./ui/Panel";
@@ -26,7 +26,7 @@ export function ProviderView({
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
   const registers = sortedRegisters(node.registers).map((register) => ({
     register,
-    years: columnYearRuns([register], bounds),
+    years: datedYearRuns([register], bounds),
   }));
   const axis = dataAxis(
     registers.flatMap(({ years }) =>

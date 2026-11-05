@@ -642,8 +642,11 @@ Time is the axis every relation is drawn on.
   group's its members', a variable page's its columns and the lanes a succession
   reaches. Anything else drawn on the axis counts too: the active window, a source
   period as well as the study window. Data still delivered ends at the catalog's last
-  year, and data whose start is unknown begins at its first, where that data is drawn; a
-  span with no start at all (year-independent) begins at the axis start. A one-year axis
+  year, and data whose start is unknown begins at its first, where that data is drawn. A
+  year-independent span (no start and no end, a timeless table's) begins at the axis
+  start on a lane, so its column stays pickable; a `VariableRow` has no dated years for
+  it, so it draws a bare track read as "no dated delivery" and does not count toward the
+  axis. A one-year axis
   widens by one step of 5, backward where forward would pass the catalog's last year. A
   page's drawings share its one axis, so a register's `VariableRow`s line up with its
   `Timeline`, and a page with several sources draws them on one axis. The axis of a

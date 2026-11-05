@@ -7,7 +7,7 @@ import { catalogPeriodLabel } from "./catalog_period";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { ScopedDataWarnings } from "./ScopedDataWarnings";
-import { columnYearRuns, studyWindow } from "./study_window";
+import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { FilterChip } from "./ui/FilterChip";
@@ -36,7 +36,7 @@ export function RegisterView({
   const study = studyWindow(draft);
   const catalogBounds = windowBounds(context);
   const bounds = [catalogBounds.min, catalogBounds.max] as const;
-  const deliveries = columnYearRuns(node.tables, bounds);
+  const deliveries = datedYearRuns(node.tables, bounds);
   const axis = dataAxis(
     deliveries.flatMap((run) => [run.from, run.to]),
     study,
@@ -133,7 +133,7 @@ export function RegisterView({
               {[...shown]
                 .sort((a, b) => svCollator.compare(a.name, b.name))
                 .map((variable) => {
-                  const coverage = columnYearRuns([variable], bounds, axis[0]);
+                  const coverage = datedYearRuns([variable], bounds);
                   return (
                     <VariableRow
                       key={variable.fqid}

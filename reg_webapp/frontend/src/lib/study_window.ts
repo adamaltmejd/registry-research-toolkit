@@ -38,6 +38,23 @@ export function columnYearRuns(
   return runs;
 }
 
+/** A list row's delivered years (`VariableRow`): `columnYearRuns` less the
+ * year-independent segments (both ends null, a timeless table's), which have
+ * no dated years, so the row draws a bare track and they do not stretch the
+ * axis (the server's `period_span` leaves them out too). A lane keeps them,
+ * from the axis start, so their column stays pickable. */
+export function datedYearRuns(
+  segments: readonly Pick<CatalogSegment, "period">[],
+  bounds: readonly [number, number],
+): ProjectStudyWindow[] {
+  return columnYearRuns(
+    segments.filter(
+      ({ period }) => period.start !== null || period.end !== null,
+    ),
+    bounds,
+  );
+}
+
 /** Table coverage, with open ends projected to catalog bounds only for drawing. */
 export function tableYears(
   table: RegisterShow["tables"][number] | undefined,
