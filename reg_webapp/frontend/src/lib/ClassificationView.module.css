@@ -1,5 +1,5 @@
-/* A classification family's versions (DESIGN.md → Detail pane): each version
-   heads the variables that use it, in start order. */
+/* A classification family's versions (DESIGN.md → Detail pane): each used
+   version is a disclosure over the variables that use it, in start order. */
 .versions {
   margin: 0;
   padding: 0;
@@ -19,8 +19,60 @@
 }
 
 /* The version a version address opens: the current lane's fill. */
-.version[data-current] > .versionHead {
+.version[data-current] > .versionHead,
+.version[data-current] .versionTrigger {
   background: var(--accent-soft);
+}
+
+.disclosure {
+  min-width: 0;
+}
+
+.versionHeading {
+  margin: 0;
+  font: inherit;
+}
+.versionHeading:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring-inset);
+}
+
+/* Chevron, then name, years and count on one line; on a narrow pane they wrap
+   under the name, not under the chevron. */
+.versionTrigger {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.versionTrigger svg {
+  flex-shrink: 0;
+}
+
+.versionLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+.disclosure[data-expanded] .versionTrigger svg {
+  transform: rotate(90deg);
+}
+.version .versionTrigger[data-hovered] {
+  background: var(--surface-hover);
+}
+.versionTrigger[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring-inset);
 }
 
 .versionName {
@@ -36,6 +88,11 @@
 .years {
   color: var(--text-muted);
   font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.count {
+  color: var(--text-muted);
   font-size: var(--text-sm);
 }
 

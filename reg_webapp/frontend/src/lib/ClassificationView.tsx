@@ -1,4 +1,10 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import {
+  Button,
+  Disclosure,
+  DisclosurePanel,
+  Heading,
+} from "react-aria-components";
 import type { ClassFamilyShow, Context } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import classStyles from "./ClassificationView.module.css";
@@ -11,15 +17,22 @@ import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { NameSkeleton } from "./ui/Skeleton";
+import { TreeChevron } from "./ui/TreeChevron";
 import { VariableRow, VariableRowList } from "./ui/VariableRow";
 import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { windowBounds } from "./window_bounds";
 
+/** A whole family's variable lists open at once when they come to at most this
+ * many rows (about two screens); past that each version opens on demand (lkf:
+ * 36 used versions, ~700 rows, a 35,000 px page). A row cap, not a version cap:
+ * two versions can hold hundreds of rows. */
+const OPEN_ALL_ROWS = 30;
+
 /** A classification family's page (DESIGN.md → Detail pane): its versions in
- * start order, each over the steward's variables that use it, then the codes
- * those variables' columns use. A version's address renders this page with
- * that version `focus`ed (Operator Q4, #2252). */
+ * start order, each over the steward's variables that use it behind a
+ * disclosure, then the codes those variables' columns use. A version's address
+ * renders this page with that version `focus`ed and open (Operator Q4, #2252). */
 export function ClassificationView({
   node,
   focus,
@@ -89,6 +102,34 @@ export function ClassificationView({
     registerNames.get(register) ??
     (root.loading ? <NameSkeleton label="Loading register name" /> : null);
   const items = versionItems(node.versions, variables, focus);
+  // Which versions show their variables: local state, not the URL. A family
+  // with one used version, or few rows in all, opens whole; otherwise only the
+  // version an address targets opens, and a later address opens its own.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => {
+    const used = items.flatMap((item) =>
+      item.kind === "version" && item.users.length > 0 ? [item] : [],
+    );
+    const rows = used.reduce((sum, item) => sum + item.users.length, 0);
+    return new Set(
+      used.length <= 1 || rows <= OPEN_ALL_ROWS
+        ? used.map((item) => item.version.fqid)
+        : focus
+          ? [focus]
+          : [],
+    );
+  });
+  const [openedFocus, setOpenedFocus] = useState(focus);
+  if (focus !== openedFocus) {
+    setOpenedFocus(focus);
+    if (focus) setExpanded((open) => new Set(open).add(focus));
+  }
+  const setOpen = (fqid: string, open: boolean) =>
+    setExpanded((current) => {
+      const next = new Set(current);
+      if (open) next.add(fqid);
+      else next.delete(fqid);
+      return next;
+    });
   return (
     <article className={styles.page}>
       <Definitions
@@ -116,44 +157,104 @@ export function ClassificationView({
                 className={classStyles.version}
                 data-current={item.version.fqid === focus || undefined}
               >
-                <div className={classStyles.versionHead}>
-                  <h3
-                    ref={item.version.fqid === focus ? focusVersion : undefined}
-                    tabIndex={item.version.fqid === focus ? -1 : undefined}
-                    className={classStyles.versionName}
-                  >
-                    {item.version.name}
-                  </h3>
-                  <span className={classStyles.years}>
-                    {catalogPeriodLabel(item.version.period)}
-                  </span>
-                </div>
                 {item.users.length > 0 ? (
-                  <VariableRowList
-                    label={`Variables using ${item.version.name}`}
-                    axis={axis}
+                  <Disclosure
+                    className={classStyles.disclosure}
+                    isExpanded={expanded.has(item.version.fqid)}
+                    onExpandedChange={(open) =>
+                      setOpen(item.version.fqid, open)
+                    }
                   >
-                    {item.users.map(({ variable, rows }) => (
-                      <VariableRow
-                        key={variable.fqid}
-                        name={variable.name}
-                        href={catalogHref(variable.fqid)}
-                        inProject={bound.has(variable.fqid)}
-                        coverage={datedYearRuns(rows, bounds)}
-                        axis={axis}
-                        window={studyYears}
-                        detail={
-                          crossRegister
-                            ? registerLabel(registerOf(variable.fqid))
-                            : undefined
-                        }
-                      />
-                    ))}
-                  </VariableRowList>
+                    {({ isExpanded }) => (
+                      <>
+                        <Heading
+                          level={3}
+                          ref={
+                            item.version.fqid === focus
+                              ? focusVersion
+                              : undefined
+                          }
+                          tabIndex={
+                            item.version.fqid === focus ? -1 : undefined
+                          }
+                          className={classStyles.versionHeading}
+                        >
+                          <Button
+                            slot="trigger"
+                            className={classStyles.versionTrigger}
+                          >
+                            <TreeChevron />
+                            <span className={classStyles.versionLine}>
+                              <span className={classStyles.versionName}>
+                                {item.version.name}
+                              </span>
+                              <span className={classStyles.years}>
+                                {catalogPeriodLabel(item.version.period)}
+                              </span>
+                              <span className={classStyles.count}>
+                                {item.users.length === 1
+                                  ? "1 variable"
+                                  : `${item.users.length} variables`}
+                              </span>
+                            </span>
+                          </Button>
+                        </Heading>
+                        <DisclosurePanel
+                          className={`motion-disclose ${isExpanded ? "open" : ""}`}
+                        >
+                          <div>
+                            {/* Rows mount only while open: a long family's
+                                closed versions cost no DOM. */}
+                            {isExpanded && (
+                              <VariableRowList
+                                label={`Variables using ${item.version.name}`}
+                                axis={axis}
+                              >
+                                {item.users.map(({ variable, rows }) => (
+                                  <VariableRow
+                                    key={variable.fqid}
+                                    name={variable.name}
+                                    href={catalogHref(variable.fqid)}
+                                    inProject={bound.has(variable.fqid)}
+                                    coverage={datedYearRuns(rows, bounds)}
+                                    axis={axis}
+                                    window={studyYears}
+                                    detail={
+                                      crossRegister
+                                        ? registerLabel(
+                                            registerOf(variable.fqid),
+                                          )
+                                        : undefined
+                                    }
+                                  />
+                                ))}
+                              </VariableRowList>
+                            )}
+                          </div>
+                        </DisclosurePanel>
+                      </>
+                    )}
+                  </Disclosure>
                 ) : (
-                  <p className={classStyles.unusedNote}>
-                    No variable here uses this version.
-                  </p>
+                  <>
+                    <div className={classStyles.versionHead}>
+                      <h3
+                        ref={
+                          item.version.fqid === focus ? focusVersion : undefined
+                        }
+                        tabIndex={item.version.fqid === focus ? -1 : undefined}
+                        className={classStyles.versionName}
+                      >
+                        {item.version.name}
+                      </h3>
+                      <span className={classStyles.years}>
+                        {catalogPeriodLabel(item.version.period)}
+                      </span>
+                    </div>
+                    <p className={classStyles.unusedNote}>
+                      No variable here uses this version.
+                    </p>
+                  </>
                 )}
               </li>
             ),

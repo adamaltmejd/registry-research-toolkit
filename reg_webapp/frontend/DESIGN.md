@@ -540,24 +540,30 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (Operator Q4, #2252): the family name as `h1`, its description only when stated, then
   a Versions panel listing every version in start order (Q1), each with its name, its
   years, and the steward's variables that use it as `VariableRow`s over the years their
-  columns use that version, or "No variable here uses this version." A run of
-  consecutive versions no variable uses folds into one muted line naming them (all up to
-  three, else the first two … the last), so a 47-version family is not a page of empty
-  entries; a version address inside a run splits it, and that version keeps its own
-  entry. Where the family's variables span registers, each row names its register on a
-  muted second line. Every version shares the family's one axis, so bars compare across
-  versions and line up with the codes below. Then the `CodeTimeline` of the codes those
-  columns use (their value sets, not the version's whole list; Q3). A version's address
-  renders the family page with that version current: its heading on `accent-soft`,
-  focused and scrolled into view as a grouped variable's lane is. Placement caveats are
-  steward working notes, not shown until the steward curates them for readers. A
-  register page has no tables table: its tables are FilterChips over the variable list,
-  each with its period, a lens with OR within the selection, offered only when two or
-  more tables deliver variables (the archived variant chips, maintainer 2026-11-03). A
-  Tables definition row links every table's page by name. A register page has no
-  "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a supplemental-only
-  variable is selectable for a project like a reference variable: `order` and `validate`
-  read the composed steward view (crates/DESIGN.md, "Three questions, three scopes").
+  columns use that version, or "No variable here uses this version." A used version is a
+  disclosure whose trigger shows its name, years and a count ("24 variables"), closed by
+  default; its rows mount only while open. A family with one used version, or at most 30
+  rows in all (about two screens), opens whole: a short list costs less to show than to
+  open version by version, and a long one (lkf: 36 used versions, ~700 rows) would
+  otherwise be a 35,000 px page. Which versions are open is local state, not in the URL.
+  A run of consecutive versions no variable uses folds into one muted line naming them
+  (all up to three, else the first two … the last), so a 47-version family is not a page
+  of empty entries; a version address inside a run splits it, and that version keeps its
+  own entry. Where the family's variables span registers, each row names its register on
+  a muted second line. Every version shares the family's one axis, so bars compare
+  across versions and line up with the codes below. Then the `CodeTimeline` of the codes
+  those columns use (their value sets, not the version's whole list; Q3). A version's
+  address renders the family page with that version current and open: its heading on
+  `accent-soft`, focused and scrolled into view as a grouped variable's lane is.
+  Placement caveats are steward working notes, not shown until the steward curates them
+  for readers. A register page has no tables table: its tables are FilterChips over the
+  variable list, each with its period, a lens with OR within the selection, offered only
+  when two or more tables deliver variables (the archived variant chips, maintainer
+  2026-11-03). A Tables definition row links every table's page by name. A register page
+  has no "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
+  supplemental-only variable is selectable for a project like a reference variable:
+  `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
+  questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
