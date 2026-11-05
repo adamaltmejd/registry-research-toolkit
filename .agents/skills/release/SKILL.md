@@ -477,12 +477,12 @@ Re-validate a transient failure with `gh workflow run integration.yml --ref main
 
 Every release redeploys SWECOV with global.
 
-**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin` and
-`x86_64-unknown-linux-gnu`), `reg-meta-<target>`, `reg-build-<target>` and
-`reg-export-gate-<gate version>-<target>`, and from the Linux leg the SPA bundle
-`reg-webapp-spa-X.Y.Z.tar.zst` and the MONA runner `extract.R`, each with a `.sha256`. A
-steward repository downloads `reg-build`, the SPA bundle and the runner at its pinned
-tag. Confirm all sixteen:
+**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin`,
+`x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>`,
+`reg-build-<target>` and `reg-export-gate-<gate version>-<target>` (Windows assets end
+in `.exe`), and from the Linux leg the SPA bundle `reg-webapp-spa-X.Y.Z.tar.zst` and the
+MONA runner `extract.R`, each with a `.sha256`. A steward repository downloads
+`reg-build`, the SPA bundle and the runner at its pinned tag. Confirm all twenty-two:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |

@@ -103,9 +103,9 @@ reg_export_gate → its schemas and policies (files, offline inside MONA; no cod
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
-crate version, the catalog asset and the `reg-meta` binaries for macOS arm64 and Linux
-x86_64. The webapp ships as a container image built from the newest `reg_meta/v*`
-release's assets.
+crate version, the catalog asset and the `reg-meta` binaries for macOS arm64, Linux
+x86_64 and Windows x86_64. The webapp ships as a container image built from the newest
+`reg_meta/v*` release's assets.
 
 ### Why this split
 
