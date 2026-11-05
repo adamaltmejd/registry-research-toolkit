@@ -56,8 +56,8 @@ jobs:
 
   # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), the
   # `reg-build` binary a steward repository builds and verifies its holdings with, the
-  # SPA bundle a steward deploy serves (Linux leg only; the bundle is
-  # platform-independent), and the export gate's `reg-export-gate`, named by the gate crate's own version
+  # SPA bundle a steward deploy serves and the MONA runner `extract.R` (Linux leg only;
+  # both are platform-independent), and the export gate's `reg-export-gate`, named by the gate crate's own version
   # (crates/reg-export-gate/DESIGN.md), built natively on each runner, each with a
   # `shasum -a 256 -c` checksum file. Not gated
   # on `wait-ci`: the tagged commit already passed CI on main, and gating would skip the
@@ -177,6 +177,15 @@ jobs:
           cd dist
           shasum -a 256 "$spa" > "$spa.sha256"
           shasum -a 256 -c "$spa.sha256"
+      # The MONA extract runner, as is: one self-contained R file a steward uploads with
+      # its extract-config.json (reg_mona_runner/README.md).
+      - name: Add the extract runner
+        if: matrix.spa
+        run: |
+          cp reg_mona_runner/extract.R dist/extract.R
+          cd dist
+          shasum -a 256 extract.R > extract.R.sha256
+          shasum -a 256 -c extract.R.sha256
       # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
       # or a gh retry after the first upload landed (HTTP 422), skips an asset that
       # exists with the same digest and fails on a different one.

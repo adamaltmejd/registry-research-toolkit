@@ -7,7 +7,7 @@ MONA](https://www.scb.se/mona).
   | ------------------------------------- | ----------------------------------------------------------------------------------- |
   | [`crates/`](crates/)                  | Rust: the `reg-meta` server (HTTP API and MCP), the catalog reader, and `reg-build` |
   | [`reg_webapp`](reg_webapp/)           | Rust server container and hosted MCP edge deployment                                |
-  | [`reg_mona_runner`](reg_mona_runner/) | `swecov_extract.R`, the extract runner a SWECOV data manager runs inside MONA       |
+  | [`reg_mona_runner`](reg_mona_runner/) | `extract.R`, the extract runner a steward's data manager runs inside MONA           |
   | [`reg_export_gate`](reg_export_gate/) | `export_gate.R`, the check a MONA pipeline runs before anything is exported         |
   | [`plugins/`](plugins/)                | The `microdata-tools-se` agent plugin                                               |
 

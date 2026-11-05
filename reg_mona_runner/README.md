@@ -1,16 +1,35 @@
-# SWECOV extract runner
+# Extract runner
 
-`swecov_extract.R` extracts SWECOV orders inside MONA. Each order is an order file
-(version 4) that the catalog wrote for one sub-project; the script writes the ordered
-columns into that sub-project's export folder, in the format the researcher chose for
-the project: Stata `.dta` (the default), Parquet or CSV. Run it by hand in MONA.
+`extract.R` extracts a steward's orders inside MONA. Each order is an order file
+(version 4) that the steward's catalog wrote for one sub-project; the script writes the
+ordered columns into that sub-project's export folder, in the format the researcher
+chose for the project: Stata `.dta` (the default), Parquet or CSV. Run it by hand in
+MONA. It ships as an asset of each `reg_meta` release (`extract.R`, with a `.sha256`).
+
+## Steward configuration
+
+Everything steward-specific is one JSON file the steward repository keeps (SWECOV's is
+`mona/extract-config.json` in swecov-steward), read from `extract-config.json` in R's
+working directory or from the path in `REG_EXTRACT_CONFIG`:
+
+```json
+{
+  "steward": "<the steward id, as in the order's provenance.steward>",
+  "base": "<the export root>",
+  "odbc": { "dsn": "<DSN>", "Driver": "ODBC Driver 17 for SQL Server", "Server": "<server>", "Database": "<database>" }
+}
+```
+
+`odbc` holds the `DBI::dbConnect(odbc::odbc(), ...)` arguments, all strings; the script
+adds `encoding = "UTF-8"` and `bigint = "character"`. A missing or malformed file stops
+the run with exit code 2 before any order.
 
 ## Folders
 
-All under the export root, set at the top of the script:
+All under the export root:
 
 ```text
-\\micro.intra\projekt\P1105$\P1105_Gem\subproject_export\
+<base>\
   orders\                  orders waiting to run, named <project number>.json
   orders\archive\          orders that ran, as <project number>_<date>.json
   export_data\             one folder per run, <project number>_<date>\
@@ -18,25 +37,17 @@ All under the export root, set at the top of the script:
 
 ## Run an order
 
-1. The researcher sends `project_data.json`; the data site offers no order download. The
-   coordinator reviews it, then writes the order file from the reviewed project, on the
-   SWECOV server (the runner trusts the file fully: no allowlist, no hash check):
+1. The coordinator writes the order file from the reviewed `project_data.json` with the
+   steward server's `POST /api/project/materialize` (or the MCP `materialize_order`
+   tool). The runner trusts the file fully: no allowlist, no hash check. The steward
+   repository documents its own order workflow (SWECOV: `mona/ORDERS.md`).
 
-   ```bash
-   curl -sS --fail-with-body -X POST https://data.swecov.se/api/project/materialize \
-     -H 'content-type: application/json' --data @project_data.json -o response.json
-   jq -e .data response.json > order.json
-   ```
+2. Upload the order file to MONA together with `extract.R` and `extract-config.json`,
+   and save it as `orders\<project number>.json` (for example `orders\1234.json`).
 
-   The MCP `materialize_order` tool gives the same file. A project the server blocks
-   returns `order_blocked` with located findings (`curl` fails and `response.json` holds
-   them) instead; fix the project and ask again.
-
-2. Upload `order.json` to MONA together with `swecov_extract.R`, and save it as
-   `orders\<project number>.json` (for example `orders\1234.json`).
-
-3. In R on MONA, `source("swecov_extract.R")`, or run `Rscript swecov_extract.R`. Every
-   order in `orders\` runs, one after the other.
+3. In R on MONA, with the working directory holding `extract-config.json`,
+   `source("extract.R")`, or run `Rscript extract.R`. Every order in `orders\` runs, one
+   after the other.
 
 4. Read the console: each order ends with `done` or `FAILED (exit code N)`.
 
@@ -54,15 +65,15 @@ library, no or unreachable mirror).
 A successful order writes `export_data\<nr>_<date>\`:
 
 - one file per delivered table in the order's format, named after the database table,
-  such as `swecov_sos_sv.dta` (or `.parquet`, `.csv`); a register delivered as one table
-  per year, such as LISA, gives one file per year. A table that holds several years is
-  one file, holding only the ordered years' rows (`run_log.csv` shows the filter). A
-  `.dta` file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty
-  field for a missing value. A `.dta` column whose name is not a Stata variable name
-  (for example one over 32 characters) is written under its alias, the order's
-  `stata_name` (a Stata-safe form of its first 25 characters, `_` and 6 hex digits),
-  with the full name as the variable label. [DESIGN.md](DESIGN.md), "Types per format",
-  lists what each column type becomes;
+  such as `sos_sv.dta` (or `.parquet`, `.csv`); a register delivered as one table per
+  year, such as LISA, gives one file per year. A table that holds several years is one
+  file, holding only the ordered years' rows (`run_log.csv` shows the filter). A `.dta`
+  file is Stata 14 format (UTF-8); a CSV is UTF-8 with a header row and an empty field
+  for a missing value. A `.dta` column whose name is not a Stata variable name (for
+  example one over 32 characters) is written under its alias, the order's `stata_name`
+  (a Stata-safe form of its first 25 characters, `_` and 6 hex digits), with the full
+  name as the variable label. [DESIGN.md](DESIGN.md), "Types per format", lists what
+  each column type becomes;
 - `run_log.csv`: each file's row count, column count and the period filter applied.
 
 The order then moves to `orders\archive\`.
@@ -73,9 +84,9 @@ that day's export folder.
 
   | Code    | What to do                                                                                                                                                                                                                                                                                                                                  |
   | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 2       | Check the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                                                                                                                                                                  |
+  | 2       | Check the steward configuration, the export root, the R packages (DBI, odbc, jsonlite, haven, arrow) and the database                                                                                                                                                                                                                       |
   | 3, 4, 6 | The file is not a usable order: write it again with `materialize`                                                                                                                                                                                                                                                                           |
-  | 5       | Not an order from SWECOV's holdings: rebuild the project in the SWECOV view                                                                                                                                                                                                                                                                 |
+  | 5       | Not an order from this steward's holdings: rebuild the project in its view                                                                                                                                                                                                                                                                  |
   | 7       | A table or column is not in the database, or is stored otherwise than the order expects: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name that is not a Stata name even as an alias, or a full name over 80 characters, which a label cannot hold): the researcher orders it as Parquet or CSV |
   | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                                                                                                                                                              |
 
@@ -90,8 +101,3 @@ contain microdata: they stay in MONA like any other project data.
 The automated suite (testthat, run by hand) covers only the refusals and validation that
 fire before the database, and needs no database. Extraction itself is verified by a
 manual run on MONA with real code.
-
-## Other stewards
-
-The steward-specific settings (steward id, export root, database connection) are in the
-configuration block at the top of the script. Copy the script and edit that block.

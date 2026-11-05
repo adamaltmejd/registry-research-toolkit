@@ -19,9 +19,10 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   `release-base-reuse`, `gen-case-folding`, `search-eval`) and the repo-policy lints; it
   is not released.
 - `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
-- `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
-  inside MONA: order manifests in, one file per manifest file out, in the order's
-  format: Stata `.dta`, Parquet or CSV (R: DBI, odbc, jsonlite, haven, arrow).
+- `reg_mona_runner` — `extract.R`, the extract runner a steward's data manager runs
+  inside MONA, configured by the steward's `extract-config.json`: order manifests in,
+  one file per manifest file out, in the order's format: Stata `.dta`, Parquet or CSV
+  (R: DBI, odbc, jsonlite, haven, arrow).
 - `reg_export_gate` — the export gate: `export_gate.R`, the version-pinned check a MONA
   pipeline runs as its last step (inventory, structure, disclosure, identifier backstop;
   Parquet plus `receipt.json` out only on a pass), the toolkit's fixed schemas and

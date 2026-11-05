@@ -719,7 +719,7 @@ export_gate <- local({
     }
   }
 
-  # Same helper in reg_mona_runner/swecov_extract.R: each script is uploaded to
+  # Same helper in reg_mona_runner/extract.R: each script is uploaded to
   # MONA alone. Installs each package into R's default library (.libPaths()[1])
   # from the repository R's options name (MONA's own mirror), so neither `lib`
   # nor `repos` is set. It installs only when that library is writable and a

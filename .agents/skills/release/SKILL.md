@@ -25,7 +25,8 @@ draft or tag already exists, follow Error recovery first.
 
 A `reg_meta/v*` release carries two DB assets, `reg_meta.db.zst` and
 `reg_meta_swecov.db.zst` (step 8), the `reg-meta`, `reg-build` and `reg-export-gate`
-binaries and the SPA bundle (step 10; the gate's is named by its own crate version).
+binaries, the SPA bundle and the runner `extract.R` (step 10; the gate's is named by its
+own crate version).
 
 ## Validation
 
@@ -480,13 +481,13 @@ Every release redeploys SWECOV with global.
 **Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin`,
 `x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>`,
 `reg-build-<target>` and `reg-export-gate-<gate version>-<target>` (Windows assets end
-in `.exe`), and from the Linux leg the SPA bundle `reg-webapp-spa-X.Y.Z.tar.zst`, each
-with a `.sha256`. A steward repository downloads `reg-build` and the SPA bundle at its
-pinned tag. Confirm all twenty:
+in `.exe`), and from the Linux leg the SPA bundle `reg-webapp-spa-X.Y.Z.tar.zst` and the
+MONA runner `extract.R`, each with a `.sha256`. A steward repository downloads
+`reg-build`, the SPA bundle and the runner at its pinned tag. Confirm all twenty-two:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |
-  grep -E '^reg-(meta|build|export-gate|webapp-spa)-'
+  grep -E '^(reg-(meta|build|export-gate|webapp-spa)-|extract\.R)'
 ```
 
 If one failed, fix the cause on main and upload by hand from the release commit:
