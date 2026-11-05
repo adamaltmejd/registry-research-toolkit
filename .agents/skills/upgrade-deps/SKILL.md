@@ -16,7 +16,7 @@ selected versions; unrelated product features remain outside this task. Do not p
 packages or deploy merely because an upgrade is complete.
 
 Renovate (`renovate.json`) opens the routine dependency PRs: tools, CI and dev deps
-nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
+nightly; every Cargo manifest weekly, plus a separate weekly
 lockfile-maintenance PR (the weekly ones are proven by the next curation real-seed
 build). This skill is for an Operator session repairing a red Renovate PR locally, on
 its branch, and for manual, larger upgrades.

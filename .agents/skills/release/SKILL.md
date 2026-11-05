@@ -256,7 +256,7 @@ on `main`. Merging reader-only fixes before the bump avoids the question altoget
 
 #### 8b. Verify the base
 
-For every release after the switch, download the immediately previous published
+Download the immediately previous published
 release's `reg_meta.db.zst`, verify its compressed SHA-256 against GitHub's asset
 digest, and decompress it into a separate directory (`$prev`). Never substitute an older
 release or a synthetic artifact. Run the single validation authority:
@@ -377,7 +377,7 @@ maintainer's call. Never adjust the census, or its row-key approximation, to get
 
 #### 8g. Compare the holdings census with the previous paired release
 
-From 0.72.0 on both sides are built by `reg-build holdings`. The baseline (`$old`) is
+The baseline (`$old`) is
 always the previous paired release's published `reg_meta_swecov.db`, what users had:
 download its `reg_meta_swecov.db.zst` to a separate directory, verify its compressed
 SHA-256 against GitHub's asset digest and decompress it. Never recompile an old steward
