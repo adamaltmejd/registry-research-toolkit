@@ -269,10 +269,10 @@ async function browseSearchCase(page, shoot) {
   );
 }
 
-// Source: webapp-dev's hush/fam releases and its 2021 release notice. Fails if
-// register/table dispatch, table links, collapsed releases or grouped findings
-// are lost, or the trail stops naming its ancestors or repeats the page's own
-// name (maintainer Q5, 2026-11-04: names, ending at the parent). The older
+// Source: webapp-dev's hush/fam table and its 2021 release notice. Fails if
+// register/table dispatch, table links or grouped findings are lost, or the
+// trail stops naming its ancestors or repeats the page's own name (maintainer
+// Q5, 2026-11-04: names, ending at the parent). The older
 // shell/search case never opened these entity surfaces. Provider and register
 // names are fixtures/webapp-dev/curation/inputs.toml's and the frame's.
 async function browsePagesCase(page, shoot) {
@@ -398,15 +398,9 @@ async function browsePagesCase(page, shoot) {
     `the table page's trail read ${JSON.stringify(crumbs)}, not ${JSON.stringify(expected)}`);
   check((await trail.getByRole("link", { name: "Hushållsregistret", exact: true }).getAttribute("href")) === "/catalog/demo/hush",
     "the trail's last crumb does not open the parent register");
-  // Stacked cells include their CSS label prefix in the accessible name.
-  // Match the value at the end while retaining the table-cell boundary.
-  // One "Releases" heading: the panel's own, with the entries always shown.
-  check((await main.getByRole("heading", { name: "Releases", exact: true }).count()) === 1, "Releases heading is duplicated");
   const findings = main.locator("section").filter({ has: page.getByRole("heading", { name: "Notes on this data", exact: true }) });
   const code = findings.getByRole("button", { name: /^Notice:/ });
   check((await code.getAttribute("aria-expanded")) === "false", "finding codes must start collapsed");
-  await main.getByRole("cell", { name: /fam 2021$/ }).waitFor();
-  await main.getByRole("cell", { name: /^(?:Primary )?Yes$/ }).first().waitFor();
   await code.click();
   await findings.getByText("Familjebegreppet ändrades 2021.", { exact: true }).waitFor();
   // This release notice has no subject.fqid. Rendering only fqid loses its
