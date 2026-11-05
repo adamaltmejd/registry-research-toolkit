@@ -235,6 +235,7 @@ export function VariableList({
       {...(register ??
         provider ?? {
           sections: [],
+          size: 0,
           selectedId: null,
           selectedExact: false,
           empty: "Choose a register to list its variables.",
@@ -282,6 +283,7 @@ function useRegisterColumn(
   const ownEmpty = others.length > 0 && items.length === 0;
   return {
     subject: node?.name,
+    size: variables.length,
     root: registerFqid,
     // Wait for other registers before declaring an empty search result.
     sections:
@@ -356,6 +358,10 @@ function useProviderColumn(
   if (providerFqid === null) return null;
   return {
     subject: provider?.name,
+    size: (provider?.registers ?? []).reduce(
+      (sum, node) => sum + node.variables.length,
+      0,
+    ),
     root: providerFqid,
     sections: resource.loading ? null : sections,
     selectedId: null,

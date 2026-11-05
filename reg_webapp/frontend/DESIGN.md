@@ -906,7 +906,8 @@ grow new visual language meanwhile.
   find-in-page sees only the rows in view; the search bar covers it. The global
   catalog's largest registers (ULF, FRIDA, HEK) pass the threshold too; in a virtualized
   list the selected row draws its own static bar, since the layout places rows where the
-  moving bar cannot measure them.
+  moving bar cannot measure them. The unfiltered list's size decides, so a search never
+  switches a list between the two (that remounts it and drops focus).
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the

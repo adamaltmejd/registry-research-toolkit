@@ -59,6 +59,10 @@ interface Props {
   root?: string;
   /** Null while the items load. */
   sections: readonly ColumnSection[] | null;
+  /** How many rows the list holds with no search. Over VIRTUALIZE_OVER it
+   * renders only the rows in view, searching or not, so a search never
+   * switches it between the two and remounts it (focus would drop). */
+  size: number;
   /** The item whose page is open, or null. */
   selectedId: string | null;
   /** True when that page is the item's own, not one under it. */
@@ -114,6 +118,7 @@ export function ColumnList({
   subject,
   root,
   sections,
+  size,
   selectedId,
   selectedExact,
   renderName,
@@ -127,7 +132,7 @@ export function ColumnList({
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
   const items = sections?.flatMap((s) => s.items) ?? null;
-  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
+  const virtual = size > VIRTUALIZE_OVER;
   // The ListBox's state, read from its className render prop.
   const listState = useRef<ListBoxRenderProps["state"] | null>(null);
   // A virtualized list renders only the rows in view, plus the focused key's
