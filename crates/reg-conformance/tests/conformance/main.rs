@@ -8,6 +8,9 @@ mod common;
 
 mod api;
 mod api_spec;
+mod build_report;
+mod ids;
+mod lock;
 mod materialize;
 mod mcp;
 mod order;

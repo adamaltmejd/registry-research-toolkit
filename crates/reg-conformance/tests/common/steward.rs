@@ -1,49 +1,120 @@
-//! The run's steward pairs, each built once and served as catalog `fixture` by one
-//! shared server. They live in the run's directory beside the server logs: a static
-//! is never dropped, so nothing would remove a scratch directory.
+//! The run's synthetic steward: locked once, then copied and pinned per use, so a
+//! mutation case pays for its own compile only. The steward pairs are each built once
+//! and served as catalog `fixture` by one shared server. They live in the run's
+//! directory beside the server logs: a static is never dropped, so nothing would
+//! remove a scratch directory.
 
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
-use reg_conformance::{build_paired, cases, holdings_case, pin_steward, prepare_holdings, run};
+use reg_conformance::{
+    Holdings, cases, copy_tree, holdings_case, lock_holdings, pinned_holdings, run,
+};
 
 use super::server;
 
 type Built = OnceLock<Result<PathBuf, String>>;
 
-fn serve(
-    pair: &'static Built,
-    name: &str,
-    build: fn(&Path) -> Result<(), String>,
-) -> Result<u16, String> {
-    let dir = pair
-        .get_or_init(|| {
-            let dir = server::log_dir().join(name);
-            build(&dir).map(|()| dir)
-        })
+/// An unpinned copy of the run's locked synthetic steward in `directory/steward`; its
+/// root. `reg-build lock` writes the same lock for every copy, so it runs once per
+/// run; a case that changes what the lock reads relocks its copy
+/// (`reg_conformance::lock_steward`). A case mutates the copy, then pins it
+/// (`reg_conformance::pinned_holdings`).
+pub fn locked_copy(directory: &Path) -> Result<PathBuf, String> {
+    static LOCKED: Built = OnceLock::new();
+    let locked = LOCKED
+        .get_or_init(|| lock_holdings(&server::log_dir().join("locked")))
         .clone()?;
-    Ok(server::steward_server(&dir, "fixture")?.port)
+    let root = directory.join("steward");
+    copy_tree(&locked, &root)?;
+    Ok(root)
 }
 
-/// The server of the unmodified synthetic pair (`reg_conformance::build_paired`).
+/// A pinned, unmodified copy of the run's locked synthetic steward in `directory`.
+pub fn holdings(directory: &Path) -> Result<Holdings, String> {
+    locked_copy(directory)?;
+    pinned_holdings(directory)
+}
+
+/// The unmodified synthetic pair: its steward checkout and its directory, which holds
+/// the compiled `reg_meta_fixture.db` beside a link to its base as `reg_meta.db`.
+pub struct Pair {
+    pub dir: PathBuf,
+    pub holdings: Holdings,
+}
+
+/// The unmodified synthetic pair, built once per run.
+pub fn pair() -> Result<&'static Pair, String> {
+    static PAIR: OnceLock<Result<Pair, String>> = OnceLock::new();
+    PAIR.get_or_init(|| {
+        let dir = server::log_dir().join("paired");
+        locked_copy(&dir)?;
+        let holdings = compile(&dir)?;
+        Ok(Pair { dir, holdings })
+    })
+    .as_ref()
+    .map_err(Clone::clone)
+}
+
+/// The steward copy in `directory/steward`, pinned and compiled into
+/// `directory/reg_meta_fixture.db`, with its base linked as `reg_meta.db`: a pair
+/// `reg-meta serve --catalog fixture` serves.
+pub fn compile(directory: &Path) -> Result<Holdings, String> {
+    let holdings = pinned_holdings(directory)?;
+    run(holdings
+        .command()
+        .arg("--out")
+        .arg(directory.join("reg_meta_fixture.db")))?;
+    std::os::unix::fs::symlink(&holdings.base, directory.join("reg_meta.db"))
+        .map_err(|e| e.to_string())?;
+    Ok(holdings)
+}
+
+/// The server of the unmodified synthetic pair.
 pub fn paired() -> Result<u16, String> {
-    static PAIR: Built = OnceLock::new();
-    serve(&PAIR, "paired", build_paired)
+    Ok(server::steward_server(&pair()?.dir, "fixture")?.port)
 }
 
 /// The server of the materialize cases' steward (`prepare_materialize`).
 pub fn materialize() -> Result<u16, String> {
     static PAIR: Built = OnceLock::new();
-    serve(&PAIR, "materialize", prepare_materialize)
+    let dir = PAIR
+        .get_or_init(|| {
+            let dir = server::log_dir().join("materialize");
+            prepare_materialize(&dir).map(|()| dir)
+        })
+        .clone()?;
+    Ok(server::steward_server(&dir, "fixture")?.port)
 }
 
-fn read(path: &Path) -> Result<String, String> {
+pub fn read(path: &Path) -> Result<String, String> {
     fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))
 }
 
-fn write(path: &Path, text: &str) -> Result<(), String> {
+pub fn write(path: &Path, text: &str) -> Result<(), String> {
     fs::write(path, text).map_err(|e| format!("{}: {e}", path.display()))
+}
+
+/// Replace `from` with `to` in the file at `path`: its first occurrence, or every one
+/// when `all`. A missing `from` is an error, so a fixture edit cannot silently turn a
+/// mutation into a no-op.
+pub fn edit(path: &Path, from: &str, to: &str, all: bool) -> Result<(), String> {
+    let text = read(path)?;
+    if !text.contains(from) {
+        return Err(format!("{}: no {from:?} to replace", path.display()));
+    }
+    let edited = if all {
+        text.replace(from, to)
+    } else {
+        text.replacen(from, to, 1)
+    };
+    write(path, &edited)
+}
+
+/// Append `tail` to the file at `path`.
+pub fn append(path: &Path, tail: &str) -> Result<(), String> {
+    write(path, &(read(path)? + tail))
 }
 
 /// `text` with its one `anchor` followed by `insert`; a missing anchor is an error, so
@@ -65,7 +136,7 @@ fn replaced(text: &str, from: &str, to: &str) -> Result<String, String> {
 }
 
 /// Replace Pool's single Slot2 with the documented position family 1, 2, 10.
-fn splice_slot_family(root: &Path) -> Result<(), String> {
+pub fn splice_slot_family(root: &Path) -> Result<(), String> {
     let slots = holdings_case().join("slot-family");
     for name in ["census.csv", "storage.csv"] {
         fs::copy(slots.join(name), root.join(name)).map_err(|e| format!("{name}: {e}"))?;
@@ -92,8 +163,7 @@ fn splice_slot_family(root: &Path) -> Result<(), String> {
 /// Part B, a first-half Parent amount, a wholly contested Owners column and Visits,
 /// whose row identifier moves between columns.
 fn prepare_materialize(directory: &Path) -> Result<(), String> {
-    let holdings = prepare_holdings(directory)?;
-    let root = &holdings.root;
+    let root = &locked_copy(directory)?;
     splice_slot_family(root)?;
     let extension = cases().join("materialize/fixture");
     let census = root.join("census.csv");
@@ -139,11 +209,5 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
     text.push('\n');
     text += &read(&extension.join("keyed.toml"))?;
     write(&path, &text)?;
-    pin_steward(root, &directory.join("stewards.toml"))?;
-    run(holdings
-        .command()
-        .arg("--out")
-        .arg(directory.join("reg_meta_fixture.db")))?;
-    std::os::unix::fs::symlink(&holdings.base, directory.join("reg_meta.db"))
-        .map_err(|e| e.to_string())
+    compile(directory).map(drop)
 }

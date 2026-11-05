@@ -331,30 +331,60 @@ impl Holdings {
     }
 }
 
-/// Copy the synthetic steward into `directory`, lock its curation against the cached
-/// base artifact and pin it. The private steward repository is never used.
+/// Copy the synthetic steward into `directory/steward` and lock its curation against
+/// the cached base artifact, unpinned; returns the copy's root. The private steward
+/// repository is never used.
 ///
 /// # Errors
-/// When a copy, the lock or a git step fails.
-pub fn prepare_holdings(directory: &Path) -> Result<Holdings, String> {
+/// When a copy or the lock fails.
+pub fn lock_holdings(directory: &Path) -> Result<PathBuf, String> {
     let root = directory.join("steward");
     copy_tree(&holdings_case().join("steward"), &root)?;
+    lock_steward(&root)?;
+    Ok(root)
+}
+
+/// `reg-build lock` of the steward checkout at `root` against the cached base.
+///
+/// # Errors
+/// When the base cannot be built or the lock refuses.
+pub fn lock_steward(root: &Path) -> Result<(), String> {
     let base = cached_reader_artifact(&holdings_case().join("base"))?;
     run(Command::new(reg_build())
         .arg("lock")
         .arg("--base")
         .arg(&base)
         .arg("--inputs")
-        .arg(&root)
+        .arg(root)
         .arg("--curation")
-        .arg(root.join("curation")))?;
+        .arg(root.join("curation")))
+    .map(drop)
+}
+
+/// The steward checkout at `directory/steward`, pinned (`pin_steward`) with its
+/// registry beside it.
+///
+/// # Errors
+/// When the base cannot be built or a git step fails.
+pub fn pinned_holdings(directory: &Path) -> Result<Holdings, String> {
+    let root = directory.join("steward");
     let registry = directory.join("stewards.toml");
     pin_steward(&root, &registry)?;
     Ok(Holdings {
-        base,
+        base: cached_reader_artifact(&holdings_case().join("base"))?,
         root,
         registry,
     })
+}
+
+/// Copy the synthetic steward into `directory`, lock its curation against the cached
+/// base artifact and pin it.
+///
+/// # Errors
+/// When a copy, the lock or a git step fails.
+pub fn prepare_holdings(directory: &Path) -> Result<Holdings, String> {
+    lock_holdings(directory)?;
+    pinned_holdings(directory)
 }
 
 /// Pin the steward checkout at `root` (including a refusal case's mutations): write

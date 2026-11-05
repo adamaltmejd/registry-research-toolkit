@@ -31,13 +31,10 @@
     "location": "registers/demo/r/curation.toml:1",
     "code": "premise-changed",
     "subject": "var:published",
-    "max_entry_bytes": 256,
     "original_count": 1,
     "grown_count": 3
   },
   "shared_objects": {
-    "object_count": 3,
-    "statement_count": 2,
     "locations": [
       "registers/demo/r/curation.toml:1",
       "registers/demo/r/curation.toml:7"
