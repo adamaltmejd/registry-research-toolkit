@@ -68,10 +68,12 @@ its scope and its `steward_config` branding (`/api/context`).
 
 Provider, register, table and classification pages read `catalog/{ref}`; register and
 table findings come from `findings/{ref}`. A table page lists its variables from the
-table answer (`variables`, each over the years it has in that table) and reads no
-segments. The generated OpenAPI types own the response shapes. An implicit table shares
-its register's FQID, so its canonical link opens the register; it has no separately
-addressable table page.
+table answer (`variables`, each with the merged `periods` its segments hold in that
+table, so a gap in delivery stays a gap) and reads no segments. A provider page draws
+each register from its `periods` the same way (merged spans of its dated tables). The
+generated OpenAPI types own the response shapes. An implicit table shares its register's
+FQID, so its canonical link opens the register; it has no separately addressable table
+page.
 
 Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
 to reg-core's inclusive interval renderer, without copying its period grammar. The

@@ -16,6 +16,10 @@ import { useProject } from "./use_project";
 import { useCatalogRead } from "./use_store_read";
 import { windowBounds } from "./window_bounds";
 
+/** A variable's delivered periods here, as the rows `datedYearRuns` draws. */
+const tablePeriods = (variable: TableShow["variables"][number]) =>
+  variable.periods.map((period) => ({ period }));
+
 /** A table's page (DESIGN.md → Detail pane): its name, its description where
  * stated, its years, and its variables on the table's own axis (the years its
  * variables have here, not the register's), each over the years it has in
@@ -46,7 +50,10 @@ export function TableView({
     svCollator.compare(a.name, b.name),
   );
   const axis = dataAxis(
-    datedYearRuns(node.variables, bounds).flatMap((run) => [run.from, run.to]),
+    datedYearRuns(
+      variables.flatMap((variable) => tablePeriods(variable)),
+      bounds,
+    ).flatMap((run) => [run.from, run.to]),
     study,
     bounds,
   );
@@ -89,7 +96,7 @@ export function TableView({
                 name={variable.name}
                 href={catalogHref(variable.fqid)}
                 inProject={bound.has(variable.fqid)}
-                coverage={datedYearRuns([variable], bounds)}
+                coverage={datedYearRuns(tablePeriods(variable), bounds)}
                 axis={axis}
                 window={study ? [study.from, study.to] : null}
               />
