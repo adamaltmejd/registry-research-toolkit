@@ -72,12 +72,20 @@ jobs:
             target: aarch64-apple-darwin
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            exe: .exe
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
+    # Git Bash on the Windows runner, so every step is the same script.
+    defaults:
+      run:
+        shell: bash
     env:
-      ASSET: reg-meta-${{ matrix.target }}
+      ASSET: reg-meta-${{ matrix.target }}${{ matrix.exe }}
       TARGET: ${{ matrix.target }}
+      EXE: ${{ matrix.exe }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
@@ -90,16 +98,18 @@ jobs:
       - run: cargo build --release --locked -p reg-meta -p reg-export-gate
       - name: Package with checksums
         run: |
+          # Git Bash on Windows has sha256sum, not shasum; both print `<hash>  <name>`.
+          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; elif [ "$1" = -c ]; then sha256sum "$@"; else sha256sum --text "$@"; fi; }
           gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
-          GATE_ASSET="reg-export-gate-$gate_version-$TARGET"
+          GATE_ASSET="reg-export-gate-$gate_version-$TARGET$EXE"
           echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
           mkdir dist
-          cp target/release/reg-meta "dist/$ASSET"
-          cp target/release/reg-export-gate "dist/$GATE_ASSET"
+          cp target/release/reg-meta$EXE "dist/$ASSET"
+          cp target/release/reg-export-gate$EXE "dist/$GATE_ASSET"
           cd dist
           for name in "$ASSET" "$GATE_ASSET"; do
-            shasum -a 256 "$name" > "$name.sha256"
-            shasum -a 256 -c "$name.sha256"
+            sha256 "$name" > "$name.sha256"
+            sha256 -c "$name.sha256"
           done
       # The binary has no --help; a missing catalog is its documented refusal
       # (`db_not_found`, exit 10), which proves it loads and parses its arguments.
@@ -128,6 +138,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
+          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; elif [ "$1" = -c ]; then sha256sum "$@"; else sha256sum --text "$@"; fi; }
           for name in "$ASSET" "$ASSET.sha256" "$GATE_ASSET" "$GATE_ASSET.sha256"; do
             remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
               --jq ".assets[] | select(.name == \"$name\") | .digest")
@@ -141,7 +152,7 @@ jobs:
                 }
             fi
             if [ -n "$remote" ]; then
-              test "$remote" = "sha256:$(shasum -a 256 "dist/$name" | cut -d' ' -f1)" ||
+              test "$remote" = "sha256:$(sha256 "dist/$name" | cut -d' ' -f1)" ||
                 { echo "::error::$name exists on $TAG with a different digest"; exit 1; }
             fi
           done
