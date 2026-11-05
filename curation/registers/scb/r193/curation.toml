@@ -179,19 +179,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 [[statement]]
 kind = "set"
 subject = "individregister: {sun2000niva_1_far,sun2000niva_1_mor,sun2000niva_far,sun2000niva_far_grupperad,sun2000niva_for,sun2000niva_for_grupperad,sun2000niva_mor,sun2000niva_mor_grupperad}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "individregister: {sun2000niva_old_far,sun2000niva_old_mor}"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "individregister: {sun2020niva_far,sun2020niva_for,sun2020niva_mor}"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]

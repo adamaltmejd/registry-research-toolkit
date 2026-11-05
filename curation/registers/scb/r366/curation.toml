@@ -1178,19 +1178,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:39
 [[statement]]
 kind = "set"
 subject = "internationell-rorlighet: sun2000niva"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lararforsorjningen-icke-aktiva: sun2000inr"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:26\n\nLegacy exact value-set label: SUN2000Inriktning"
 
 [[statement]]
 kind = "set"
 subject = "lararforsorjningen-icke-aktiva: sun2000niva"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:47\n\nLegacy exact value-set label: SUN2000Niva"
 
 [[statement]]

@@ -7436,7 +7436,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:39
 [[statement]]
 kind = "set"
 subject = "arbetsmiljoundersokningen-2015: sun2020niva"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]

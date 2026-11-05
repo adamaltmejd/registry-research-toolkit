@@ -236,85 +236,85 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:19\
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000grp where key = 'v6416'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000grp where key = 'v801'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000inr where key = 'v65'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000inr where key = 'v784'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva where key = 'v66'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva where key = 'v778'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva_old where key = 'v66'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva_old where key = 'v774'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2020grp"
-fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+fields = { "classification" = "class/sun/sun2020-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2020inr"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+fields = { "classification" = "class/sun/sun2020-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2020niva"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2020niva_oldfar where key = 'v47475'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2020niva_oldmor where key = 'v47477'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "stativ: {sun2020niva_old,sun2020niva_oldadbiofar,sun2020niva_oldadbiomor}"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
@@ -4407,19 +4407,19 @@ evidence = "Variabeln är en metodvariant för yrkesställning.\ncatalog:variabl
 kind = "set"
 subject = "stativ: sun2000niva_old @2016-01-01..2016-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
-evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/sun/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva_old @2017-01-01..2017-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
-evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/sun/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
 
 [[statement]]
 kind = "set"
 subject = "stativ: sun2000niva_old @2018-01-01..2018-12-31 where key = 'v66'"
 fields = { "variable" = "sun2000niva-old" }
-evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/niva-old/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
+evidence = "Both measure highest attained education using the same seven-level aggregation and classification class/sun/niva-oldv1. Their complete eight-code lists, including the missing-value code, are identical. Observations in STATIV column Sun2000Niva_old meet at day 16801 without overlap."
 
 [[statement]]
 kind = "link"

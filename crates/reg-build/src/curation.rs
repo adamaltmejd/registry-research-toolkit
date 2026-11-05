@@ -489,7 +489,11 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
             at: format!("line={}", entry.line),
         };
         let located = |message: String| inventory_error(root, &at, message);
-        for (field, value) in [("family_name", &c.family_name), ("publisher", &c.publisher)] {
+        for (field, value) in [
+            ("family_name", &c.family_name),
+            ("family_description", &c.family_description),
+            ("publisher", &c.publisher),
+        ] {
             if let Some(value) = value {
                 let key = (c.family.clone(), field);
                 if let Some((previous, line)) = families.get(&key)
@@ -534,6 +538,8 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
             reg_resolve::curation::apply::classification(&statement, &at).map_err(located)?;
         class.name.clone_from(&c.name);
         class.family_name.clone_from(&c.family_name);
+        class.family_description.clone_from(&c.family_description);
+        class.part.clone_from(&c.part);
         class.publisher.clone_from(&c.publisher);
         class.succeeds.clone_from(&c.succeeds);
         class.sentinel_codes = c
@@ -565,6 +571,30 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
                     format!("classification-reference-unresolved: predecessor {target:?}"),
                 )
                 .into());
+            }
+        }
+    }
+    // A family's versions are grouped into parts on its page: a version with no part
+    // in a family that has them would belong to no line. Fails fast here, located;
+    // a register's inline version is checked against this list later.
+    let mut parted = BTreeMap::<&str, (bool, &reg_frame::Locator)>::new();
+    for class in &out.classifications {
+        let has = class.part.is_some();
+        match parted.get(class.family.as_str()) {
+            Some((first, at)) if *first != has => {
+                return Err(inventory_error(
+                    root,
+                    &class.locator,
+                    format!(
+                        "classification-part-partial: class/{} states part on some versions only (see {})",
+                        class.family, at.at
+                    ),
+                )
+                .into());
+            }
+            Some(_) => {}
+            None => {
+                parted.insert(&class.family, (has, &class.locator));
             }
         }
     }
@@ -1846,6 +1876,33 @@ fn run_selected(
             message: format!(
                 "{}:{}: curation-overlap: classification version overlaps {}:{}",
                 left.locator.input, left.locator.at, right.locator.input, right.locator.at
+            ),
+        });
+    }
+    // A register's inline `assert classification-version` states no part, so it may
+    // break the part rule of a family classifications.toml gives parts. The inventory
+    // comes first in the list and already holds the rule (`inventory`), so the
+    // offending entry is always a register statement, which a rerun drops.
+    let mut parted = BTreeMap::<&str, &reg_resolve::curation::apply::Classification>::new();
+    for class in &result.classifications {
+        let first = *parted.entry(class.family.as_str()).or_insert(class);
+        if first.part.is_some() == class.part.is_some() {
+            continue;
+        }
+        if let Some(statement) =
+            crate::emit::StatementRow::for_locator(&result.statements, &class.locator)
+        {
+            conflicts.insert(statement.hash.clone());
+        }
+        refusals.push(Refusal {
+            register: None,
+            message: format!(
+                "{}:{}: classification-part-partial: class/{} states part on some versions only (see {}:{})",
+                class.locator.input,
+                class.locator.at,
+                class.family,
+                first.locator.input,
+                first.locator.at
             ),
         });
     }

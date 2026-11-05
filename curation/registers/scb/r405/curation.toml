@@ -80,19 +80,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 [[statement]]
 kind = "set"
 subject = "barn-ulf-12-18-ar-2023: {sun2020niva_grov_bofar,sun2020niva_grov_bomor}"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "barn-ulf-12-18-ar: {sun2000niva_grov,sun2000niva_grov_p}"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "barn-ulf-10-18-ar: {sun2000_ip,sun2000_maka,sun2000_niva_ip,sun2000_niva_maka}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
 
 [[statement]]

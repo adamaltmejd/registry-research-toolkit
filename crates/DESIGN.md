@@ -316,7 +316,8 @@ Accepting one requires reviewed curation and a premise lock.
   their consumers. Code lists are defined before occurrences consume their hashes;
   attachment to selected occurrences follows occurrence creation. A value-set assertion
   fills an occurrence whose source states no set; replacement needs `set`. Existing
-  facts remain assertion refusals. Classification versions of a family cannot overlap.
+  facts remain assertion refusals. Versions of one classification family may overlap;
+  two versions of a family cannot share a slug.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
   withholds the selected occurrences. An explicit `set variable` changes the variable of
   exactly the selected occurrences; every unselected occurrence resolves as if the
@@ -2349,10 +2350,17 @@ value set has `value_set: null`. `values` reads a set by its hash, or lists the 
 holding a code and label. The blank code `""` is an item like any other. Classifications
 (versions, codes) use curated identities. `curation/classifications.toml` holds
 family/version metadata, served names, publisher, existence periods, sentinel codes and
-explicit succession edges. Its code lists reference reader value sets; they are never
-copied into inventory items. Inventory versions reuse the existing
-`assert classification-version` construction and emission path. Inline `items` remain
-available for genuinely hand-authored assertions.
+explicit succession edges. A family is one classification as a researcher knows it (SUN,
+with its level, field, group and aggregate codes; ICD with KS87-P), so its versions can
+run side by side. Each version of a family with several lines states its `part` (SUN's
+"Utbildningsnivå"), and every version of such a family states one, or the build refuses
+with `classification-part-partial`; a family with one line states none. Family facts
+(`family_name`, `family_description`, `publisher`) may be stated on any of its entries
+and must agree where repeated (`classification-family-conflict`); the description is
+stated once. Its code lists reference reader value sets; they are never copied into
+inventory items. Inventory versions reuse the existing `assert classification-version`
+construction and emission path. Inline `items` remain available for genuinely
+hand-authored assertions.
 
 Book periods describe existence only. They are neither inferred nor truncated, and
 versions of one family may overlap. Applicability comes exclusively from occurrence

@@ -662,13 +662,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 [[statement]]
 kind = "set"
 subject = "anstallningar-dagbefolkning: sektorkod"
-fields = { "classification" = "class/sektorkod/sektorkod" }
+fields = { "classification" = "class/sektor/sektorkod" }
 evidence = "python-builder-pre-cutover:curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
 
 [[statement]]
 kind = "set"
 subject = "arbetsstallen-uppgifter: sektorkod"
-fields = { "classification" = "class/sektorkod/sektorkod" }
+fields = { "classification" = "class/sektor/sektorkod" }
 evidence = "python-builder-pre-cutover:curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
 
 [[statement]]

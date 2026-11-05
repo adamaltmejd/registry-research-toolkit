@@ -58,7 +58,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 [[statement]]
 kind = "set"
 subject = "fritidsfiske: {sun2000niva_2,sun2020niva_2}"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]

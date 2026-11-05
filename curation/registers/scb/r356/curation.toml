@@ -33,13 +33,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\
 [[statement]]
 kind = "set"
 subject = "grundskola-nationella-prov-ak-5: {sun2000niva_far,sun2000niva_mor,sunniva_far,sunniva_mor}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "grundskola-nationella-prov-ak-5: {sunniva_old_far,sunniva_old_mor}"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]

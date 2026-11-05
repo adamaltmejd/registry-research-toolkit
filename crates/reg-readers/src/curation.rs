@@ -37,6 +37,11 @@ pub struct Classification {
     pub evidence: String,
     pub name: Option<String>,
     pub family_name: Option<String>,
+    /// A short plain description of the whole classification, stated once per family.
+    pub family_description: Option<String>,
+    /// The line this version belongs to inside a classification with several (SUN's
+    /// "Utbildningsnivå"); stated on every version of such a family or on none.
+    pub part: Option<String>,
     pub publisher: Option<String>,
     pub period: Option<reg_frame::address::PeriodSet>,
     /// Known non-canonical codes in occurrence value sets bound to this version.

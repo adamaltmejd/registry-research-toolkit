@@ -27,6 +27,13 @@ pub struct Change {
     pub source_value: Option<String>,
 }
 
+/// A classification family's served facts, read from its versions' entries.
+pub struct FamilyFacts<'a> {
+    pub name: &'a str,
+    pub description: Option<&'a str>,
+    pub publisher: Option<&'a str>,
+}
+
 #[derive(Debug, Clone)]
 pub struct Classification {
     pub family: String,
@@ -36,6 +43,8 @@ pub struct Classification {
     pub period: Interval,
     pub name: Option<String>,
     pub family_name: Option<String>,
+    pub family_description: Option<String>,
+    pub part: Option<String>,
     pub publisher: Option<String>,
     pub succeeds: Vec<String>,
     pub sentinel_codes: Option<BTreeSet<String>>,
@@ -44,20 +53,21 @@ pub struct Classification {
 impl Classification {
     /// Effective served family facts, shared by versions and inline assertions.
     #[must_use]
-    pub fn family_facts<'a>(classes: &'a [Self], family: &'a str) -> (&'a str, Option<&'a str>) {
+    pub fn family_facts<'a>(classes: &'a [Self], family: &'a str) -> FamilyFacts<'a> {
         let versions = || classes.iter().filter(|c| c.family == family);
-        (
-            versions()
+        FamilyFacts {
+            name: versions()
                 .find_map(|c| c.family_name.as_deref())
                 .unwrap_or(family),
-            versions().find_map(|c| c.publisher.as_deref()),
-        )
+            description: versions().find_map(|c| c.family_description.as_deref()),
+            publisher: versions().find_map(|c| c.publisher.as_deref()),
+        }
     }
 
     /// Facts emitted in classification tables and curated succession relations.
     #[must_use]
     pub fn facts(&self, classes: &[Self]) -> BTreeMap<String, Value> {
-        let (family_name, publisher) = Self::family_facts(classes, &self.family);
+        let family = Self::family_facts(classes, &self.family);
         let mut facts = BTreeMap::from([
             ("family".into(), json!(self.family)),
             ("version".into(), json!(self.version)),
@@ -66,8 +76,10 @@ impl Classification {
                 "name".into(),
                 json!(self.name.as_deref().unwrap_or(&self.version)),
             ),
-            ("family_name".into(), json!(family_name)),
-            ("publisher".into(), json!(publisher)),
+            ("family_name".into(), json!(family.name)),
+            ("family_description".into(), json!(family.description)),
+            ("part".into(), json!(self.part)),
+            ("publisher".into(), json!(family.publisher)),
             ("period".into(), json!(self.period)),
             ("succeeds".into(), json!(self.succeeds)),
         ]);
@@ -112,6 +124,8 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
         period: p[0].clone(),
         name: None,
         family_name: None,
+        family_description: None,
+        part: None,
         publisher: None,
         succeeds: Vec::new(),
         sentinel_codes: None,

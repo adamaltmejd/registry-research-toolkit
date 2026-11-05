@@ -76,6 +76,11 @@ SELECT DISTINCT v.id FROM valueset v
 WHERE v.class_match = 'subset' AND i.sentinel = 0 AND NOT EXISTS (
   SELECT 1 FROM vs_item k WHERE k.valueset_id = c.valueset_id AND k.code_text = i.code_text);
 
+-- A classification states a part on every version or on none: its page groups the
+-- versions by part, and a version without one would belong to no line.
+SELECT f.pid FROM class_family f JOIN class_version c ON c.family_id = f.id
+GROUP BY f.id HAVING COUNT(c.part_text) NOT IN (0, COUNT(*));
+
 -- Class-version periods describe book existence. Same-family overlaps are allowed;
 -- applicability belongs to exact-version occurrence bindings.
 
