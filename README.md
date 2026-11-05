@@ -3,13 +3,13 @@
 Tools for working with Swedish registry microdata on [SCB
 MONA](https://www.scb.se/mona).
 
-  | Package                     | Description                                                                         |
-  | --------------------------- | ----------------------------------------------------------------------------------- |
-  | [`crates/`](crates/)        | Rust: the `reg-meta` server (HTTP API and MCP), the catalog reader, and `reg-build` |
-  | [`reg_webapp`](reg_webapp/) | Rust server container and hosted MCP edge deployment                                |
-  | [`reg_mona_runner`](reg_mona_runner/) | `swecov_extract.R`, the extract runner a SWECOV data manager runs inside MONA |
-  | [`reg_export_gate`](reg_export_gate/) | `export_gate.R`, the check a MONA pipeline runs before anything is exported   |
-  | [`plugins/`](plugins/)      | The `microdata-tools-se` agent plugin                                               |
+  | Package                               | Description                                                                         |
+  | ------------------------------------- | ----------------------------------------------------------------------------------- |
+  | [`crates/`](crates/)                  | Rust: the `reg-meta` server (HTTP API and MCP), the catalog reader, and `reg-build` |
+  | [`reg_webapp`](reg_webapp/)           | Rust server container and hosted MCP edge deployment                                |
+  | [`reg_mona_runner`](reg_mona_runner/) | `swecov_extract.R`, the extract runner a SWECOV data manager runs inside MONA       |
+  | [`reg_export_gate`](reg_export_gate/) | `export_gate.R`, the check a MONA pipeline runs before anything is exported         |
+  | [`plugins/`](plugins/)                | The `microdata-tools-se` agent plugin                                               |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
@@ -34,8 +34,8 @@ then install `microdata-tools-se` from the plugin marketplace UI.
 
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
 (or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles three skills:
-`register-metadata-search`, which documents its tools, `register-project`, for drafting a
-`project_data.json`, and `register-research-scaffold`. Nothing else to install.
+`register-metadata-search`, which documents its tools, `register-project`, for drafting
+a `project_data.json`, and `register-research-scaffold`. Nothing else to install.
 
 ## Quick start
 
@@ -91,7 +91,6 @@ Run the HTTP API and `/mcp` with the same binary and catalog directory:
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
 it). The SPA is described in [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
-
 
 ## Development
 

@@ -1506,12 +1506,13 @@ mapped/unmatched counts before and after each build, never remove unmatched colu
 the denominator. Under the intersection rule, partial coverage yields clips and notices
 and never a publication refusal; an empty intersection yields an unmatched notice.
 
-Historical-spelling fallbacks are variable/window lookup: a table explicitly serving a variable can serve its other historical delivered
-spellings in that table, only over owed-interval slices where that other spelling is
-documented, the mapped spelling is absent, and no other physical column serves that
-logical cell. This is an explicit-variable fallback, not authority to auto-match an
-out-of-period historical header. Retain the exact physical column; never treat an alias
-as possession of another variable or use fallback to defeat an owner/window refusal.
+Historical-spelling fallbacks are variable/window lookup: a table explicitly serving a
+variable can serve its other historical delivered spellings in that table, only over
+owed-interval slices where that other spelling is documented, the mapped spelling is
+absent, and no other physical column serves that logical cell. This is an
+explicit-variable fallback, not authority to auto-match an out-of-period historical
+header. Retain the exact physical column; never treat an alias as possession of another
+variable or use fallback to defeat an owner/window refusal.
 
 Storage checks run in the holdings compiler **after mapping**: the `disagrees`,
 `narrower`, `uncurated` and `unmatched` findings of the old steward build, against the
@@ -2080,9 +2081,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 ### Integer-coded text
 
 Reader text (`char`) whose documented code list is all plain integers publishes as
-`integer` (`reg-resolve/src/integer_codes.rs`). A plain integer is `0` or an
-optional `-` and digits without a leading zero; a zero-padded, alphanumeric, decimal or
-comma code keeps the column text, and so does a code list that includes a non-integer
+`integer` (`reg-resolve/src/integer_codes.rs`). A plain integer is `0` or an optional
+`-` and digits without a leading zero; a zero-padded, alphanumeric, decimal or comma
+code keeps the column text, and so does a code list that includes a non-integer
 sentinel. The rule judges a whole published segment: every delivery in it must be reader
 `char` with such a code list, not `coded = false`, not classification-bound and not an
 identifier, and the segment must not be a row key. Otherwise the segment stays text, so
@@ -2090,17 +2091,16 @@ the rule never splits a segment into text and integer years. It runs in resoluti
 the segments are built and before F1, so a type change between an integer segment and a
 text neighbour is an ordinary `F1:type-change` notice.
 
-Curated > rule > source: a `set` may name a type only by its published
-name (`type-name` refusal otherwise), so an override to text is `text`, which the rule
-never reads, and `set type = "text"` pins a column as text. An `assert` transcribes a
-delivery in reader vocabulary, so the rule reads its `char` like a source record's. Each
-change the rule makes is provenance: an occurrence override on `type`, rule
-`integer-codes`, with the stated `char` as its source value. A converted segment that
-now matches an adjacent integer segment of one form joins it, as segment building joins
-adjacent runs. The rule reads documented code literals only, never MONA rows, names or
-sampling. It proposes no decimal: D's 2026-10-28 ruling keeps integer/decimal switches
-to evidenced curation, and a code list proves its codes, not that an uncoded amount is
-integral.
+Curated > rule > source: a `set` may name a type only by its published name (`type-name`
+refusal otherwise), so an override to text is `text`, which the rule never reads, and
+`set type = "text"` pins a column as text. An `assert` transcribes a delivery in reader
+vocabulary, so the rule reads its `char` like a source record's. Each change the rule
+makes is provenance: an occurrence override on `type`, rule `integer-codes`, with the
+stated `char` as its source value. A converted segment that now matches an adjacent
+integer segment of one form joins it, as segment building joins adjacent runs. The rule
+reads documented code literals only, never MONA rows, names or sampling. It proposes no
+decimal: D's 2026-10-28 ruling keeps integer/decimal switches to evidenced curation, and
+a code list proves its codes, not that an uncoded amount is integral.
 
 The adopted type is catalog metadata. Extract files take their types from SQL storage
 (`reg_mona_runner/DESIGN.md`, "Types per format"), so the rule changes no `.dta`,
@@ -2142,13 +2142,12 @@ root, every register and table page, search and segments name only held ids, sin
 filter lives in each reader operation. The holdings release proof is release step 8g
 (`reg-build diff --holdings` against the previous paired release), which compares the
 orderable-column and held-period census and classifies every difference; a failed or
-missing mapping is never dropped from the denominator. Real-artifact runs are
-maintainer scheduled.
+missing mapping is never dropped from the denominator. Real-artifact runs are maintainer
+scheduled.
 
-The MONA runner's testthat suite reads the materialize corpus's manifests and covers
-the pre-database refusals only; extraction is verified by hand on MONA, with no SQL
-Server suite ([runner design](../reg_mona_runner/DESIGN.md), "Tests").
-
+The MONA runner's testthat suite reads the materialize corpus's manifests and covers the
+pre-database refusals only; extraction is verified by hand on MONA, with no SQL Server
+suite ([runner design](../reg_mona_runner/DESIGN.md), "Tests").
 
 ## Project semantic validation
 

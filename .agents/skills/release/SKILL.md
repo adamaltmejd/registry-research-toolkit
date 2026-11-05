@@ -256,10 +256,10 @@ on `main`. Merging reader-only fixes before the bump avoids the question altoget
 
 #### 8b. Verify the base
 
-Download the immediately previous published
-release's `reg_meta.db.zst`, verify its compressed SHA-256 against GitHub's asset
-digest, and decompress it into a separate directory (`$prev`). Never substitute an older
-release or a synthetic artifact. Run the single validation authority:
+Download the immediately previous published release's `reg_meta.db.zst`, verify its
+compressed SHA-256 against GitHub's asset digest, and decompress it into a separate
+directory (`$prev`). Never substitute an older release or a synthetic artifact. Run the
+single validation authority:
 
 ```sh
 target/release/reg-build verify "$evidence/catalog/reg_meta.db" --previous "$prev/reg_meta.db" > "$evidence/catalog-verify.txt"
@@ -377,22 +377,22 @@ maintainer's call. Never adjust the census, or its row-key approximation, to get
 
 #### 8g. Compare the holdings census with the previous paired release
 
-The baseline (`$old`) is
-always the previous paired release's published `reg_meta_swecov.db`, what users had:
-download its `reg_meta_swecov.db.zst` to a separate directory, verify its compressed
-SHA-256 against GitHub's asset digest and decompress it. Never recompile an old steward
-pin. `reg-build diff --holdings` accepts a baseline on an older holdings schema, never a
-newer one; it refuses a missing or non-numeric schema, or a `PRAGMA user_version` that
-differs from the `schema_version` meta key, and names both sides. Across a schema bump
-the text starts with `cross-schema comparison: previous schema N, current schema M`
-(JSON `cross_schema`) and a `schema changes` section (JSON `schema_changes`) counts the
-version change and names each table and column on one side only, without diffing their
-rows; a query the older schema cannot answer exits 2 with
-`holdings schema N is not comparable: <sqlite error>`. It reports census placement per
-column (placed, held, unplaced, and the changed placements by old to new `table_pid`,
-classed newly placed, folded or renamed, variable or interval changed, or unmapped),
-reader-visible text changes by kind (keys, never bodies), and finding and
-holdings-notice deltas by code. The JSON goes to the evidence directory only.
+The baseline (`$old`) is always the previous paired release's published
+`reg_meta_swecov.db`, what users had: download its `reg_meta_swecov.db.zst` to a
+separate directory, verify its compressed SHA-256 against GitHub's asset digest and
+decompress it. Never recompile an old steward pin. `reg-build diff --holdings` accepts a
+baseline on an older holdings schema, never a newer one; it refuses a missing or
+non-numeric schema, or a `PRAGMA user_version` that differs from the `schema_version`
+meta key, and names both sides. Across a schema bump the text starts with
+`cross-schema comparison: previous schema N, current schema M` (JSON `cross_schema`) and
+a `schema changes` section (JSON `schema_changes`) counts the version change and names
+each table and column on one side only, without diffing their rows; a query the older
+schema cannot answer exits 2 with `holdings schema N is not comparable: <sqlite error>`.
+It reports census placement per column (placed, held, unplaced, and the changed
+placements by old to new `table_pid`, classed newly placed, folded or renamed, variable
+or interval changed, or unmapped), reader-visible text changes by kind (keys, never
+bodies), and finding and holdings-notice deltas by code. The JSON goes to the evidence
+directory only.
 
 ```sh
 target/release/reg-build diff --holdings "$old/reg_meta_swecov.db" \

@@ -66,9 +66,10 @@ data) belongs to exactly one module; a file the split below misses joins its nea
 module. Today's split: `reg_webapp/edge` with the Dockerfile and deploy scripts;
 `reg_webapp/frontend` (the SPA) with `reg_webapp/dev`; `scripts/`; the `conformance/`
 case data (its runner, `crates/reg-conformance`, is in the `crates/` module);
-`plugins/microdata-tools-se/`; the R packages `reg_mona_runner` and `reg_export_gate`; `curation/` (TOML, read for stale keys and entries); and `crates/`
-(Rust). The test trees are the `test-audit` skill's: run its sweep in the same waves and
-merge its list into step 3.
+`plugins/microdata-tools-se/`; the R packages `reg_mona_runner` and `reg_export_gate`;
+`curation/` (TOML, read for stale keys and entries); and `crates/` (Rust). The test
+trees are the `test-audit` skill's: run its sweep in the same waves and merge its list
+into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -103,8 +104,9 @@ or `Lean already.`
 In the same waves, one more agent reads what a user reads: the README files and each
 CLI's usage text (`reg-build` and `reg-meta` have no `--help`; the usage is the module
 comment in `main.rs`). The bar: every sentence says how to use the current tooling, as
-briefly as it can. It hunts history, ticket references, restated design, and drift between help,
-README and behavior, with tags `cut:`, `shrink:` (quoting the new text) and `drift:`.
+briefly as it can. It hunts history, ticket references, restated design, and drift
+between help, README and behavior, with tags `cut:`, `shrink:` (quoting the new text)
+and `drift:`.
 
 ## 3. Judge
 
