@@ -13,12 +13,16 @@ uv run --no-project scripts/gate.py rust           # it, then the pytest surface
 ```
 
 The Rust harness (`crates/reg-conformance`) is replacing the pytest one surface by
-surface; `api`, `api_spec`, `mcp`, `order` and `materialize` have moved. It runs
-`$REG_META_BIN` (default `reg-meta` beside the test in its cargo target, so a
-per-worktree `CARGO_TARGET_DIR` works) as `serve --db D --port 0 --write-limit 100000`,
-plus `$REG_META_SERVE_ARGS` split on whitespace. The sampled projects and MCP calls all
-come from one address, so the raised write limit keeps the suite inside its rate bucket;
-the burst case (`mcp::burst_is_rate_limited`) drops it and pins the default.
+surface; `api`, `api_spec`, `mcp`, `order`, `materialize` and the builder CLI (`lock`,
+`ids`, `build_report`, `holdings*`) have moved, and only the tier 3 checks remain in
+pytest. The builder surfaces run `target/debug/reg-build` on readable case sources and
+assert exit codes, located refusals and report files; the synthetic steward is locked
+once per run and copied for each case that edits it. It runs `$REG_META_BIN` (default
+`reg-meta` beside the test in its cargo target, so a per-worktree `CARGO_TARGET_DIR`
+works) as `serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS`
+split on whitespace. The sampled projects and MCP calls all come from one address, so
+the raised write limit keeps the suite inside its rate bucket; the burst case
+(`mcp::burst_is_rate_limited`) drops it and pins the default.
 `REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases; libtest's own filter
 selects surfaces. A failing surface lists every failing case as
 `<case>: <first mismatch>`. The `conformance` test target is `test = false`:
@@ -63,7 +67,7 @@ earlier) and requires no repeats and exactly the `equals` set.
   | build-report      | `reg-build build`: one complete refusal report before publication |
   | lock              | `reg-build lock`: located refusals, statement identity            |
   | release-ids       | Published ids across catalog releases                             |
-  | holdings          | Holdings compilation, verification, pinned source admission       |
+  | holdings          | Holdings verification, pinned source admission, the paired server |
   | materialize       | The MONA order file over HTTP                                     |
   | fixtures          | Readable sources, not independently executed cases                |
 

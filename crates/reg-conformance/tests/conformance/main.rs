@@ -8,6 +8,12 @@ mod common;
 
 mod api;
 mod api_spec;
+mod build_report;
+mod holdings;
+mod holdings_admission;
+mod holdings_reference;
+mod ids;
+mod lock;
 mod materialize;
 mod mcp;
 mod order;

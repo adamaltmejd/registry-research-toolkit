@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import json
-import shutil
 from contextlib import closing
 from pathlib import Path
 
 import pytest
 from http_cases import ServerPool
-from reader_artifacts import CASES, cached_reader_artifact
+from reader_artifacts import cached_reader_artifact
 
 
 def pytest_addoption(parser):
@@ -79,22 +77,3 @@ def http_servers(server_cmd, tmp_path_factory):
     Every server is stopped at session end, whether or not the cases passed."""
     with closing(ServerPool(server_cmd, tmp_path_factory.mktemp("servers"))) as pool:
         yield pool
-
-
-@pytest.fixture
-def membership_case(tmp_path):
-    """Membership overlays share the existing published-id source and ledgers."""
-    fixture = CASES / "release-ids"
-    overlay = CASES / "lock/memberships"
-    curation = tmp_path / "curation"
-    shutil.copytree(fixture / "curation", curation)
-    shutil.copyfile(
-        overlay / "allowed.toml", curation / "registers/demo/r/curation.toml"
-    )
-    shutil.copyfile(overlay / "tag-vocabulary.toml", curation / "tag-vocabulary.toml")
-    return (
-        fixture,
-        overlay,
-        curation,
-        json.loads((overlay / "expected.json").read_text()),
-    )

@@ -1,0 +1,159 @@
+# Refusals of invalid authored holdings inputs (the `holdings` module of
+# crates/reg-conformance). Each case copies the locked synthetic steward (`steward/`),
+# applies its edits in order, pins the copy and runs `reg-build holdings`, which must
+# exit 1 with every `located` string in stderr, leave the previous publication in
+# place and leave no staging file. Unmodified, the steward compiles: it is the allowed
+# twin of every case.
+#
+# An edit names a steward `file` and one change: `from`/`to` replaces the first
+# occurrence (`all = true`: every one; a missing `from` fails the case), `drop`
+# removes the lines containing it, `append` adds text. `after_pin` edits run after the
+# pin (an unpinned dirty checkout); `assume_unchanged` hides that file's edit from
+# `git status` first. `slot_family = true` starts from Pool's documented slot family
+# 1, 2, 10 (`slot-family/`).
+#
+# A location names the edited census table (`holdings:table=N` counts the census
+# tables in name order: Child 1, Excluded 2, Lookup 3, Owners 4, Parent 5, Part A 6,
+# Part B 7, Pool 8; `CON` sorts before Child, `Other positions` after Lookup) and its
+# column, or the edited key's locator. The pin refusals have no location, so their
+# message names which check refused.
+
+[[refusal]]
+name = "route"
+located = ["holdings:table=6: holdings_table_route_unresolved:"]
+edit = [{ file = "holdings.toml", from = 'table_pids = ["demo/held"]', to = 'table_pids = ["demo/absent"]' }]
+
+[[refusal]]
+name = "target"
+located = ["holdings:table=8: column=6: stale_declared_mapping_target:"]
+edit = [{ file = "holdings.toml", from = 'variable_pid = "steward/slots/slot2"', to = 'variable_pid = "steward/slots/absent"', all = true }]
+
+[[refusal]]
+name = "window"
+located = ["holdings:table=8: column=7: inventory_window_invalid:"]
+edit = [{ file = "holdings.toml", from = 'delivery = "2017"', to = 'delivery = "2016"', all = true }]
+
+[[refusal]]
+name = "storage"
+located = ["holdings:table=8: column=6: holdings_storage_missing:"]
+edit = [{ file = "storage.csv", drop = ",Slot2," }]
+
+[[refusal]]
+name = "mixed-schema"
+located = ["holdings:table=8: column=1: holdings_storage_ambiguous:"]
+edit = [{ file = "storage.csv", from = "dbo,Pool,BASE TABLE,New,", to = "other,Pool,BASE TABLE,New,", all = true }]
+
+[[refusal]]
+name = "dirty"
+located = ["holdings_pin_invalid: checkout must match the exact clean steward pin"]
+after_pin = [{ file = "holdings.toml", append = "\n# dirty\n" }]
+
+[[refusal]]
+name = "hidden-config"
+located = ["holdings_pin_invalid: config bytes differ from pinned commit"]
+assume_unchanged = "steward.toml"
+after_pin = [{ file = "steward.toml", append = "\n# hidden changed config\n" }]
+
+[[refusal]]
+name = "blank-hold"
+located = ["holdings:table=8: column=8: holdings_column_disposition_invalid:"]
+edit = [{ file = "holdings.toml", from = 'hold = "Await reviewed association"', to = 'hold = " "', all = true }]
+
+# A pooled year key on a table that does not supply one constant value.
+[[refusal]]
+name = "pooled-year-key"
+located = ["holdings:table=8: fixture:declared-entity-time-key: holdings_period_key_invalid: table does not supply one constant value"]
+edit = [{ file = "holdings.toml", from = 'period_key = "column"', to = 'period_key = "year"' }]
+
+# Disjoint deliveries must not supply one implicit period.
+[[refusal]]
+name = "disjoint-period-key"
+located = ["holdings:table=8: fixture:declared-entity-time-key: holdings_period_key_invalid: table does not supply one constant value"]
+edit = [
+  { file = "holdings.toml", from = 'delivery = "2017..2020"', to = 'delivery = "2017,2019"' },
+  { file = "holdings.toml", from = 'period_key = "column"', to = 'period_key = "period"' },
+]
+
+# A column key needs its column.
+[[refusal]]
+name = "missing-period-column"
+located = ["holdings:table=8: fixture:declared-entity-time-key: holdings_period_key_invalid: no period column"]
+edit = [{ file = "holdings.toml", from = "period_column = \"Year\"\nperiod_encoding = \"year\"\n", to = "" }]
+
+# Malformed or combined held key claims.
+[[refusal]]
+name = "held-key-without-followup"
+located = ["holdings:table=5: fixture:declared-entity-time-key: holdings_row_key_invalid"]
+edit = [{ file = "holdings.toml", from = "entity = [\"demo/projected/id\"]\ntime = []\n", to = "entity = [\"demo/projected/id\"]\ntime = []\nhold = \"Await reviewed key\"\n" }]
+
+[[refusal]]
+name = "scoped-held-key"
+located = ["holdings:table=5: fixture:declared-entity-time-key: holdings_row_key_invalid"]
+edit = [{ file = "holdings.toml", from = "entity = [\"demo/projected/id\"]\ntime = []\n", to = "entity = [\"demo/projected/id\"]\ntime = []\nhold = \"Await reviewed key\"\nfollow_up = \"synthetic:review-key\"\nperiod = \"2018\"\n" }]
+
+[[refusal]]
+name = "duplicate-entity-key"
+located = ["holdings:table=5: fixture:declared-entity-time-key: holdings_row_key_invalid"]
+edit = [{ file = "holdings.toml", from = 'entity = ["demo/projected/id"]', to = 'entity = ["demo/projected/id", "demo/projected/id"]' }]
+
+[[refusal]]
+name = "mixed-held-key"
+located = ["holdings:table=5: fixture:held-key: holdings_row_key_invalid"]
+edit = [{ file = "holdings.toml", from = "entity = [\"demo/projected/id\"]\ntime = []\n", to = "entity = [\"demo/projected/id\"]\ntime = []\nhold = \"Await reviewed key\"\nfollow_up = \"synthetic:review-key\"\nlocator = \"fixture:held-key\"\n\n[[table.key]]\nentity = [\"demo/projected/id\"]\ntime = []\n" }]
+
+[[refusal]]
+name = "projection-held-parent"
+located = ["holdings:table=1:parent=5:period=17532..17897: holdings_projection_key_missing:"]
+edit = [{ file = "holdings.toml", from = "entity = [\"demo/projected/id\"]\ntime = []\n", to = "entity = [\"demo/projected/id\"]\ntime = []\nhold = \"Parent key held\"\nfollow_up = \"synthetic:review-parent-key\"\n" }]
+
+# Part B placed in Part A's partition, beside the disjoint partitions it is allowed in.
+[[refusal]]
+name = "duplicate-placement"
+located = ["holdings:tables=6,7:route=demo/held:variable=demo/held/id:period=18628..18993: inventory_cell_conflict:"]
+edit = [{ file = "holdings.toml", from = 'partition = "b"', to = 'partition = "a"' }]
+
+[[refusal]]
+name = "overlapping-key-scopes"
+located = ["holdings:table=4: route=demo/owners: period=17532..17897: holdings_row_key_undeclared_or_ambiguous"]
+edit = [{ file = "holdings.toml", from = 'period = "2019"', to = 'period = "2018..2019"' }]
+
+# A name the runner refuses must not be published, deferring the refusal to every
+# order that selects the table: `CON` slugs to `con`, a Windows device name.
+[[refusal]]
+name = "device-file-name"
+located = ["holdings:table=1: holdings_filename_invalid: locator=fixture:lookup:"]
+edit = [
+  { file = "census.csv", from = "Synthetic,Lookup,Lookup,", to = "Synthetic,Lookup,CON,", all = true },
+  { file = "holdings.toml", from = 'physical_name = "Lookup"', to = 'physical_name = "CON"' },
+]
+
+# The slot family: a slot tag alone must not authorize duplicates, lexical index
+# aliases must not evade position uniqueness, unrelated families must not combine,
+# and a family must not span physical tables without a partition or projection.
+[[refusal]]
+name = "slot-undeclared"
+slot_family = true
+located = ["holdings:tables=8,8:route=steward/slots:variable=steward/slots/slot2:period=17167..18628: inventory_cell_conflict:"]
+edit = [{ file = "holdings.toml", from = "slot_family = \"received-position\"\n", to = "", all = true }]
+
+[[refusal]]
+name = "slot-same-position"
+slot_family = true
+located = ["holdings:tables=8,8:route=steward/slots:variable=steward/slots/slot2:period=17167..18628: inventory_cell_conflict:"]
+edit = [{ file = "holdings.toml", from = "slot_index = 10", to = 'slot_index = "02"' }]
+
+[[refusal]]
+name = "slot-different-family"
+slot_family = true
+located = ["holdings:tables=8,8:route=steward/slots:variable=steward/slots/slot2:period=17167..18628: inventory_cell_conflict:"]
+edit = [{ file = "holdings.toml", from = 'slot_family = "received-position"', to = 'slot_family = "unrelated-position"' }]
+
+[[refusal]]
+name = "slot-cross-table"
+slot_family = true
+located = ["holdings:tables=4,9:route=steward/slots:variable=steward/slots/slot2:period=17532..17897: inventory_cell_conflict:"]
+edit = [
+  { file = "holdings.toml", append_case = "slot-family/cross-table.toml" },
+  { file = "census.csv", append_case = "slot-family/cross-table-census.csv" },
+  { file = "storage.csv", append_case = "slot-family/cross-table-storage.csv" },
+]

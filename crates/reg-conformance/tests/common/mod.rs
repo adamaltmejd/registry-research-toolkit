@@ -1,6 +1,7 @@
 //! The harness shared by the conformance surfaces: the server pool, the HTTP client,
 //! the corpus runner and the HTTP case steps.
 
+pub mod cli;
 pub mod client;
 pub mod http_case;
 pub mod server;
@@ -86,23 +87,42 @@ pub fn run_cases(
     cases: &[PathBuf],
     check: impl Fn(&Path) -> Result<(), String> + Sync,
 ) {
+    run_all(
+        surface,
+        cases,
+        |case| {
+            case.file_name()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .into_owned()
+        },
+        |case| check(case),
+    );
+}
+
+/// [`run_cases`] over any named items: a panic fails its item like an `Err`.
+pub fn run_all<T: Sync>(
+    surface: &str,
+    items: &[T],
+    name: impl Fn(&T) -> String + Sync,
+    check: impl Fn(&T) -> Result<(), String> + Sync,
+) {
     let next = AtomicUsize::new(0);
     let failures = Mutex::new(Vec::new());
     let workers = std::thread::available_parallelism()
         .map_or(4, usize::from)
-        .min(cases.len());
+        .min(items.len());
     std::thread::scope(|scope| {
         for _ in 0..workers {
             scope.spawn(|| {
-                while let Some(case) = cases.get(next.fetch_add(1, Ordering::Relaxed)) {
-                    let outcome = catch_unwind(AssertUnwindSafe(|| check(case)))
+                while let Some(item) = items.get(next.fetch_add(1, Ordering::Relaxed)) {
+                    let outcome = catch_unwind(AssertUnwindSafe(|| check(item)))
                         .unwrap_or_else(|panic| Err(panic_message(&*panic)));
                     if let Err(why) = outcome {
-                        let name = case.file_name().unwrap_or_default().to_string_lossy();
                         failures
                             .lock()
                             .expect("failures")
-                            .push(format!("{name}: {why}"));
+                            .push(format!("{}: {why}", name(item)));
                     }
                 }
             });
@@ -112,14 +132,14 @@ pub fn run_cases(
     failures.sort();
     eprintln!(
         "{surface}: {} cases, {} failed",
-        cases.len(),
+        items.len(),
         failures.len()
     );
     assert!(
         failures.is_empty(),
         "{surface}: {} of {} cases failed:\n{}",
         failures.len(),
-        cases.len(),
+        items.len(),
         failures.join("\n")
     );
 }
