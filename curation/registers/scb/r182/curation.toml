@@ -8933,7 +8933,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:30\
 [[statement]]
 kind = "set"
 subject = "uoh-personal: utbniva @2005,2007,2009,2011,2013,2015"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]

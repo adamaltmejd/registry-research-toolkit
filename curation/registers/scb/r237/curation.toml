@@ -27447,43 +27447,43 @@ evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:40
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut0016"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut3021 where key = 'v13984'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut3021 where key = 'v15061'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut3013 @2002..2004"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: sun2000niva_grov"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: sun2020niva_grov"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "ulf-2021: sun2020niva_grov"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
 
 [[statement]]
@@ -27531,13 +27531,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:5\
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut3013 @2006,2008..2012"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
 
 [[statement]]
 kind = "set"
 subject = "individer-16plus-ulf: ut3014"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
 
 [[statement]]

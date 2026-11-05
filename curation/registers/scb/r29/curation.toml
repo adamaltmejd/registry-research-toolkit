@@ -2330,49 +2330,49 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:20\
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: {bsuninr,bsuninrr}"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: {bsuninr,bsuninrr}"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: bsunniv where key = 'v2714'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: bsunniv where key = 'v66'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "panelurval-befolkningen: bsunnivr"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "tillaggsurval-utrikesfodda: bsunnivr"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]

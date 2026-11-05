@@ -8,6 +8,7 @@ sentinel_codes = ["00", "9", "NULL"]
 evidence = "python-builder-pre-cutover:curation/classifications/AGARKAT2000.toml:1; reviewed D-9 family/version mapping"
 name = "Standard för indelning efter ägarkategori 2000"
 family_name = "Standard för indelning efter ägarkategori"
+family_description = "SCB:s standard för att dela in företag och andra enheter efter vem som äger eller kontrollerar dem, till exempel staten, kommuner eller privata ägare."
 publisher = "SCB"
 period = "2000..2019"
 
@@ -30,6 +31,7 @@ value_set = "catalog/source/classifications/sos/atc.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ATC.toml:1; reviewed D-9 family/version mapping"
 name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
 family_name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
+family_description = "Klassifikation som delar in läkemedel efter vilket organ eller organsystem de verkar på och efter deras terapeutiska, farmakologiska och kemiska egenskaper."
 publisher = "Läkemedelsverket"
 
 [[classification]]
@@ -39,6 +41,7 @@ value_set = "catalog/source/classifications/district2016.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/DISTR2016.toml:1; reviewed D-9 family/version mapping"
 name = "Distriktsindelning från 2016"
 family_name = "Distriktsindelning"
+family_description = "Indelning av Sverige i distrikt, som infördes 2016 och utgår från församlingarna som de såg ut år 2000."
 publisher = "Lantmäteriet / SCB"
 period = "2016.."
 
@@ -49,6 +52,8 @@ value_set = "catalog/source/classifications/sos/drg.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/DRG.toml:1; reviewed D-9 family/version mapping"
 name = "NordDRG — diagnosrelaterade grupper"
 family_name = "NordDRG — diagnosrelaterade grupper"
+family_description = "NordDRG delar in vårdtillfällen i grupper som är medicinskt likartade och väntas kräva ungefär lika mycket resurser. De större diagnosgrupperna (MDC) är klassifikationens översta nivå."
+part = "DRG"
 publisher = "Socialstyrelsen / Nordic Casemix Centre"
 
 [[classification]]
@@ -58,6 +63,8 @@ value_set = "catalog/source/classifications/sos/icd-10-se.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ICD-10-SE.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
 name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"
 family_name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem (ICD)"
+family_description = "WHO:s klassifikation av sjukdomar och hälsoproblem, i svensk version, för diagnoser i vården och för dödsorsaker. KS87-P är en förenklad version av ICD-9 för primärvården."
+part = "ICD"
 period = "1997.."
 succeeds = ["class/icd/icd-9-ks87"]
 
@@ -68,6 +75,7 @@ value_set = "catalog/source/classifications/sos/icd-11-se.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ICD-11-SE.toml:1; reviewed D-9 family/version mapping; edition publisher: WHO"
 name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
 family_name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem (ICD)"
+part = "ICD"
 period = "2027.."
 succeeds = ["class/icd/icd-10-se"]
 
@@ -78,6 +86,7 @@ value_set = "catalog/source/classifications/sos/icd-8.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ICD-8-KS68.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
 name = "Klassifikation av sjukdomar 1968 (ICD-8 / KS68)"
 family_name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem (ICD)"
+part = "ICD"
 period = "1969..1986"
 
 [[classification]]
@@ -87,6 +96,7 @@ value_set = "catalog/source/classifications/sos/icd-9-ks87.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ICD-9-KS87.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
 name = "Klassifikation av sjukdomar 1987 (ICD-9 / KS87)"
 family_name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem (ICD)"
+part = "ICD"
 period = "1987..1996"
 succeeds = ["class/icd/icd-8-ks68"]
 
@@ -97,15 +107,18 @@ value_set = "catalog/source/classifications/sos/icf.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ICF.toml:1; reviewed D-9 family/version mapping"
 name = "Internationell klassifikation av funktionstillstånd, funktionshinder och hälsa (ICF)"
 family_name = "Internationell klassifikation av funktionstillstånd, funktionshinder och hälsa (ICF)"
+family_description = "WHO:s klassifikation för att beskriva funktionsförmåga, funktionshinder och hälsa, och de omgivningsfaktorer som påverkar dem."
 publisher = "Socialstyrelsen"
 
 [[classification]]
-family = "isced-f"
+family = "isced"
 version = "isced-f2013"
 value_set = "catalog/source/classifications/isced-f2013.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED-F2013.toml:1; reviewed D-9 family/version mapping"
 name = "ISCED Fields of Education and Training 2013"
-family_name = "ISCED Fields of Education and Training"
+family_name = "International Standard Classification of Education (ISCED)"
+family_description = "UNESCO:s internationella standard för att klassificera utbildning, efter nivå och efter utbildningsområde (ISCED-F)."
+part = "Fields of education and training"
 publisher = "UNESCO"
 period = "2013.."
 
@@ -116,7 +129,8 @@ value_set = "catalog/source/classifications/isced2011.csv"
 sentinel_codes = ["-1", "-2"]
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED2011.toml:1; reviewed D-9 family/version mapping"
 name = "International Standard Classification of Education 2011 — Level"
-family_name = "International Standard Classification of Education (ISCED) — Level"
+family_name = "International Standard Classification of Education (ISCED)"
+part = "Levels of education"
 publisher = "UNESCO"
 period = "2011.."
 
@@ -128,6 +142,7 @@ sentinel_codes = ["0", "00"]
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:1; reviewed D-9 family/version mapping"
 name = "Standard för indelning efter juridisk form 2000"
 family_name = "Standard för indelning efter juridisk form"
+family_description = "SCB:s standard för att dela in företag och organisationer efter juridisk form, till exempel aktiebolag, enskild firma eller ideell förening."
 publisher = "SCB"
 period = "2000..2019"
 
@@ -144,12 +159,13 @@ period = "2020.."
 succeeds = ["class/jurform/jurform2000"]
 
 [[classification]]
-family = "ks87-p"
+family = "icd"
 version = "ks87-p"
 value_set = "catalog/source/classifications/sos/ks87-p.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/KS87-P.toml:1; reviewed D-9 family/version mapping; declared flat hierarchy; existing value-set normalization drops external parents"
 name = "Klassifikation av sjukdomar 1987, primärvård (KS87-P)"
-family_name = "Klassifikation av sjukdomar 1987, primärvård (KS87-P)"
+family_name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem (ICD)"
+part = "Primärvård (KS87-P)"
 publisher = "Socialstyrelsen"
 period = "1987..1996"
 
@@ -160,6 +176,7 @@ value_set = "catalog/source/classifications/sos/ksi.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/KSI.toml:1; reviewed D-9 family/version mapping"
 name = "Klassifikation av socialtjänstens insatser och aktiviteter (KSI)"
 family_name = "Klassifikation av socialtjänstens insatser och aktiviteter (KSI)"
+family_description = "Socialstyrelsens klassifikation av de insatser och aktiviteter som socialtjänsten utför."
 publisher = "Socialstyrelsen"
 
 [[classification]]
@@ -169,6 +186,7 @@ value_set = "catalog/source/classifications/sos/kva.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/KVA.toml:12; reviewed D-9 family/version mapping"
 name = "Klassifikation av vårdåtgärder (KVÅ)"
 family_name = "Klassifikation av vårdåtgärder (KVÅ)"
+family_description = "Socialstyrelsens klassifikation av åtgärder i hälso- och sjukvården, till exempel operationer, undersökningar och behandlingar."
 publisher = "Socialstyrelsen"
 
 [[classification]]
@@ -179,6 +197,7 @@ sentinel_codes = ["058313", "999999"]
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1980.toml:1; reviewed D-9 family/version mapping"
 name = "Län, kommuner och församlingar 1980"
 family_name = "Län, kommuner och församlingar"
+family_description = "Sveriges indelning i län, kommuner och församlingar, med en version per år eftersom gränser och koder ändras."
 publisher = "SCB"
 period = "1980..1980"
 
@@ -730,32 +749,36 @@ period = "2026..2026"
 succeeds = ["class/lkf/lkf2025"]
 
 [[classification]]
-family = "mdc"
+family = "drg"
 version = "mdc"
 value_set = "catalog/source/classifications/sos/mdc.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/MDC.toml:1; reviewed D-9 family/version mapping"
 name = "Större diagnosgrupper (MDC, NordDRG)"
-family_name = "Större diagnosgrupper (MDC, NordDRG)"
+family_name = "NordDRG — diagnosrelaterade grupper"
+part = "Större diagnosgrupper (MDC)"
 publisher = "Socialstyrelsen / Nordic Casemix Centre"
 
 [[classification]]
-family = "niva-grov"
+family = "sun"
 version = "niva-grovv1"
 value_set = "catalog/source/classifications/niva-grov.csv"
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:15; reviewed D-9 family/version mapping"
 name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
-family_name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+family_description = "SCB:s standard för att klassificera utbildningar efter nivå och inriktning. Från SUN 2000 har nivå, inriktning och utbildningsgrupp var sin kod, och nivån finns också i grövre indelningar."
+part = "Utbildningsnivå, fem nivåer"
 publisher = "SCB"
 period = "2000.."
 
 [[classification]]
-family = "niva-old"
+family = "sun"
 version = "niva-oldv1"
 value_set = "catalog/source/classifications/niva-old.csv"
 sentinel_codes = ["*", "-", "0", "9", "NULL"]
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:15; reviewed D-9 family/version mapping"
 name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
-family_name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsnivå, sju nivåer"
 publisher = "SCB"
 period = "2000.."
 
@@ -767,17 +790,20 @@ sentinel_codes = ["000"]
 evidence = "python-builder-pre-cutover:curation/classifications/SEKTOR2000.toml:6; reviewed D-9 family/version mapping"
 name = "Institutionell sektorindelning 2000"
 family_name = "Institutionell sektorindelning"
+family_description = "SCB:s indelning av ekonomins enheter i institutionella sektorer, till exempel icke-finansiella företag, offentlig förvaltning och hushåll. Sektorkoden i RAMS och LISA är en grövre indelning."
+part = "Institutionell sektor"
 publisher = "SCB"
 period = "2000.."
 
 [[classification]]
-family = "sektorkod"
+family = "sektor"
 version = "sektorkod"
 value_set = "catalog/source/classifications/sektorkod.csv"
 sentinel_codes = ["0", "99"]
 evidence = "python-builder-pre-cutover:curation/classifications/SEKTORKOD.toml:17; reviewed D-9 family/version mapping"
 name = "Sektorkod (RAMS/LISA)"
-family_name = "Sektorkod (RAMS/LISA)"
+family_name = "Institutionell sektorindelning"
+part = "Sektorkod (RAMS/LISA)"
 publisher = "SCB"
 period = "1993.."
 
@@ -789,6 +815,7 @@ sentinel_codes = [".", "0", "00", "000", "0000", "00000", "X", "XX", "XXXX", "XX
 evidence = "python-builder-pre-cutover:curation/classifications/SNI2002.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk standard för näringsgrensindelning 2002"
 family_name = "Svensk standard för näringsgrensindelning (SNI)"
+family_description = "SCB:s standard för att dela in företag och arbetsställen efter den verksamhet de bedriver (näringsgren)."
 publisher = "SCB"
 period = "2002..2007"
 succeeds = ["class/sni/sni1992"]
@@ -846,6 +873,7 @@ sentinel_codes = ["***", "****", "*****", "0000", "88", "8888", "99", "9991", "9
 evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:1; reviewed D-9 family/version mapping"
 name = "Standard för svensk yrkesklassificering 2012"
 family_name = "Standard för svensk yrkesklassificering (SSYK)"
+family_description = "SCB:s standard för att klassificera yrken efter arbetsuppgifter och den kompetens de kräver."
 publisher = "SCB"
 period = "2014.."
 succeeds = ["class/ssyk/ssyk1996"]
@@ -869,77 +897,84 @@ sentinel_codes = ["***", "*****", "00000"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 1996"
 family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningskod"
 publisher = "SCB"
 period = "1996..1999"
 
 [[classification]]
-family = "sun-grupp"
+family = "sun"
 version = "sun2000-grupp"
 value_set = "catalog/source/classifications/sun2000-grupp.csv"
 sentinel_codes = ["***"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsgrupper"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsgrupper"
 publisher = "SCB"
 period = "2000..2019"
 succeeds = ["class/sun/sun1996"]
 
 [[classification]]
-family = "sun-inriktning"
+family = "sun"
 version = "sun2000-inriktning"
 value_set = "catalog/source/classifications/sun2000-inriktning.csv"
 sentinel_codes = ["*", "****", "9", "977", "977z", "988", "988z", "998z", "[BLANK]"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsinriktning"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsinriktning"
 publisher = "SCB"
 period = "2000..2019"
 succeeds = ["class/sun/sun1996"]
 
 [[classification]]
-family = "sun-niva"
+family = "sun"
 version = "sun2000-niva"
 value_set = "catalog/source/classifications/sun2000-niva.csv"
 sentinel_codes = ["*", "***", "400", "405", "88", "888", "9", "97", "977", "988", "99", "M", "NULL", "[BLANK]"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:16; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsnivå"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsnivå"
 publisher = "SCB"
 period = "2000..2019"
 succeeds = ["class/sun/sun1996"]
 
 [[classification]]
-family = "sun-grupp"
+family = "sun"
 version = "sun2020-grupp"
 value_set = "catalog/source/classifications/sun2020-grupp.csv"
 sentinel_codes = ["99Z"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsgrupper"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsgrupper"
 publisher = "SCB"
 period = "2020.."
-succeeds = ["class/sun-grupp/sun2000-grupp"]
+succeeds = ["class/sun/sun2000-grupp"]
 
 [[classification]]
-family = "sun-inriktning"
+family = "sun"
 version = "sun2020-inriktning"
 value_set = "catalog/source/classifications/sun2020-inriktning.csv"
 sentinel_codes = ["*", "000", "NULL"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsinriktning"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsinriktning"
 publisher = "SCB"
 period = "2020.."
-succeeds = ["class/sun-inriktning/sun2000-inriktning"]
+succeeds = ["class/sun/sun2000-inriktning"]
 
 [[classification]]
-family = "sun-niva"
+family = "sun"
 version = "sun2020-niva"
 value_set = "catalog/source/classifications/sun2020-niva.csv"
 sentinel_codes = ["400", "405", "88", "97", "99", "999"]
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:1; reviewed D-9 family/version mapping"
 name = "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå"
-family_name = "Svensk utbildningsnomenklatur — Utbildningsnivå"
+family_name = "Svensk utbildningsnomenklatur (SUN)"
+part = "Utbildningsnivå"
 publisher = "SCB"
 period = "2020.."
-succeeds = ["class/sun-niva/sun2000-niva"]
+succeeds = ["class/sun/sun2000-niva"]

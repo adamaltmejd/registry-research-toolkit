@@ -218,6 +218,7 @@ CREATE TABLE class_version (
   start       INTEGER NOT NULL,
   end         INTEGER NOT NULL,
   valueset_id INTEGER NOT NULL REFERENCES valueset(id),
+  part_text   INTEGER REFERENCES text(id),  -- the line inside a family with several (SUN's 'Utbildningsnivå')
   CHECK (start < end)
 ) STRICT;
 CREATE INDEX class_version_family ON class_version(family_id, start);

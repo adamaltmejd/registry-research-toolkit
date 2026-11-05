@@ -80,7 +80,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 [[statement]]
 kind = "set"
 subject = "studieforbund-stuv-2012: sun2000niva_old"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]

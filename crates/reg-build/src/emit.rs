@@ -1132,7 +1132,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
 
     let family_id = sorted_ids(catalog.classifications.iter().map(|c| c.family.as_str()));
     for (family, family_row) in &family_id {
-        let (family_name, publisher) = reg_resolve::curation::apply::Classification::family_facts(
+        let facts = reg_resolve::curation::apply::Classification::family_facts(
             &catalog.classifications,
             family,
         );
@@ -1149,9 +1149,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Int(*family_row),
                 Cell::Str(format!("class/{family}")),
                 Cell::Str("classification".into()),
-                Cell::Text(family_name.into()),
-                publisher.map_or(Cell::Null, |s| Cell::Text(s.into())),
-                Cell::Null,
+                Cell::Text(facts.name.into()),
+                facts
+                    .publisher
+                    .map_or(Cell::Null, |s| Cell::Text(s.into())),
+                facts
+                    .description
+                    .map_or(Cell::Null, |s| Cell::Text(s.into())),
             ],
         );
     }
@@ -1180,6 +1184,10 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Int(start(&class.period.0)),
                 Cell::Int(end(&class.period.1)),
                 Cell::Int(*vid),
+                class
+                    .part
+                    .as_deref()
+                    .map_or(Cell::Null, |s| Cell::Text(s.into())),
             ],
         );
         write_provenance(

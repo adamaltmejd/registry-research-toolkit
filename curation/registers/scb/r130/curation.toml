@@ -194,67 +194,67 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:19\
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000grp where key = 'v6416'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000grp where key = 'v801'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000inr"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000inr1 where key = 'v1315'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000inr1 where key = 'v65'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000niva"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000niva_old where key = 'v66'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2000niva_old where key = 'v774'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2020grp"
-fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+fields = { "classification" = "class/sun/sun2020-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2020inr1"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+fields = { "classification" = "class/sun/sun2020-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-kommuner: sun2020niva_old"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]

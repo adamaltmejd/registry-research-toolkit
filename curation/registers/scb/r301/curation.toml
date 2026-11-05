@@ -1532,19 +1532,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/ISCED2011.toml:1
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {fedfield,hatfield,nfefield1,nfefield2} @2016,2022"
-fields = { "classification" = "class/isced-f/isced-f2013" }
+fields = { "classification" = "class/isced/isced-f2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield @2011-07-01..2012-06-30"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {finr1,finr2,ifinr1,ifinr2,ifinr3,inffield1,inffield2,infinr1,infinr2,infinr3}"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]

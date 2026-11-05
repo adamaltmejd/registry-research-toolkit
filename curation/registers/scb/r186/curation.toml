@@ -128,109 +128,109 @@ evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000grp where key = 'v6416'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000grp where key = 'v801'"
-fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: <none> where key = 'v784'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000inr where key = 'v65'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000inr where key = 'v784'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbin @2016..2019"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbin where key = 'v785'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: <none> where key = 'v66'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000niva where key = 'v66'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2000niva where key = 'v778'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbnv @2016..2018"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbnv where key = 'v779'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbnv @2019"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2020grp"
-fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+fields = { "classification" = "class/sun/sun2020-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2020inr"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+fields = { "classification" = "class/sun/sun2020-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbin @2020..2024"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+fields = { "classification" = "class/sun/sun2020-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: sun2020niva"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: utbnv @2020..2024"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]

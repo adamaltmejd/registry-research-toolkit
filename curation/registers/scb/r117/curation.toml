@@ -249,7 +249,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2026.toml:14\
 [[statement]]
 kind = "set"
 subject = "var:sektor"
-fields = { "classification" = "class/sektorkod/sektorkod" }
+fields = { "classification" = "class/sektor/sektorkod" }
 evidence = "python-builder-pre-cutover:curation/classifications/SEKTORKOD.toml:32\npython-builder-pre-cutover:curation/classifications/SEKTORKOD.toml:51\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000"
 
 [[statement]]

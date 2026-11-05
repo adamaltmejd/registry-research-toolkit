@@ -738,55 +738,55 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:19\
 [[statement]]
 kind = "set"
 subject = "gymnasieintyg: {sun2000niva_far,sun2000niva_far_grupperad,sun2000niva_for,sun2000niva_for_grupperad,sun2000niva_mor,sun2000niva_mor_grupperad}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "nytt-grundskolebetyg: {sun2000niva_far,sun2000niva_mor}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "slutbetyg: {sun2000_niva3_far,sun2000_niva3_mor,sun2000niva_far,sun2000niva_far_grupperad,sun2000niva_for,sun2000niva_for_grupperad,sun2000niva_mor,sun2000niva_mor_grupperad}"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "slutbetyg: {sun2020niva_far,sun2020niva_far_grupperad,sun2020niva_for,sun2020niva_for_grupperad,sun2020niva_mor,sun2020niva_mor_grupperad} @2019-07-01..2020-06-30"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
+fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "avgangna-fran-waldorf: {sunniva_far,sunniva_mor} @1999-07-01..2001-06-30"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "slutbetyg: {sunniva_far,sunniva_mor} @1999-07-01..2000-06-30"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
+fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
 subject = "slutbetyg: {sun2000niva_grov_far,sun2000niva_grov_mor}"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "gymnasieintyg: {sun2020niva_far,sun2020niva_for,sun2020niva_mor}"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
 subject = "slutbetyg: {sun2020niva_far,sun2020niva_for,sun2020niva_mor} @2020-07-01..2025-06-30"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
+fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]

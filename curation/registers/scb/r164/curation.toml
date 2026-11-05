@@ -662,13 +662,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SSYK2012.toml:39
 [[statement]]
 kind = "set"
 subject = "november: utbildn @2003-05-01..2003-05-31,2003-11-01..2003-11-30,2004-05-01..2004-05-31,2004-11-01..2004-11-30,2005-05-01..2005-05-31,2005-11-01..2005-11-30,2006-05-01..2006-05-31,2006-11-01..2006-11-30,2007-05-01..2007-05-31,2007-11-01..2007-11-30,2008-05-01..2008-05-31,2008-11-01..2008-11-30,2009-05-01..2009-05-31,2009-11-01..2009-11-30,2010-05-01..2010-05-31,2010-11-01..2010-11-30,2011-05-01..2011-05-31,2011-11-01..2011-11-30,2012-05-01..2012-05-31,2012-11-01..2012-11-30,2013-05-01..2013-05-31,2013-11-01..2013-11-30,2014-05-01..2014-05-31,2014-11-01..2014-11-30,2015-05-01..2015-05-31,2015-11-01..2015-11-30,2016-05-01..2016-05-31,2016-11-01..2016-11-30,2017-05-01..2017-05-31,2017-11-01..2017-11-30,2018-05-01..2018-05-31,2018-11-01..2018-11-30,2019-05-01..2019-05-31,2019-11-01..2019-11-30,2020-05-01..2020-05-31,2020-11-01..2020-11-30,2021-05-01..2021-05-31,2021-11-01..2021-11-30,2022-05-01..2022-05-31,2022-11-01..2022-11-30,2023-05-01..2023-05-31"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
 subject = "november: utbildn @2024-05-01..2024-05-31,2025-05-01..2025-05-31"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
+fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
 
 [[statement]]
