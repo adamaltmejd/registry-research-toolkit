@@ -678,12 +678,20 @@ impl Context<'_> {
         }
         segments.sort_by_key(|s| s.period.days((i64::MIN, i64::MAX)));
         let primary = segments[0];
-        let (dtype, held) = match resolve_type(
-            overrides.first().copied(),
-            storage,
-            primary.dtype.as_deref(),
-        ) {
-            Ok(resolved) => resolved,
+        // The catalog's type decides only without an override or held storage; then
+        // every segment's must resolve, and to the same type.
+        let resolved = segments
+            .iter()
+            .map(|s| resolve_type(overrides.first().copied(), storage, s.dtype.as_deref()))
+            .try_fold(None, |seen: Option<(ColumnType, bool)>, r| {
+                let r = r?;
+                match seen {
+                    Some(seen) if seen != r => Err("column_types_disagree"),
+                    _ => Ok(Some(r)),
+                }
+            });
+        let (dtype, held) = match resolved {
+            Ok(resolved) => resolved.expect("a segment per reference"),
             Err(code) => {
                 refusals.push(Refusal::new(
                     code,
@@ -696,6 +704,7 @@ impl Context<'_> {
             }
         };
         let mut codes: Vec<Code> = Vec::new();
+        let mut seen = BTreeSet::new();
         let hashes: BTreeSet<&str> = segments
             .iter()
             .filter_map(|s| s.value_set.as_ref().map(|v| v.hash.as_str()))
@@ -712,7 +721,7 @@ impl Context<'_> {
                 return None;
             };
             for code in set {
-                if !codes.iter().any(|c| c.code == code.code) {
+                if seen.insert(code.code.as_str()) {
                     codes.push(code.clone());
                 }
             }
