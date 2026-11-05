@@ -13,7 +13,6 @@
   "name": "reg-webapp-global-edge",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-01",
-  "vars": { "ROUTE_MCP": "true" },
   // `wrangler deploy` replaces the worker's routes with this list.
   "routes": [{ "pattern": "reg-meta.vqv.uk/*", "zone_name": "vqv.uk" }],
   "observability": { "enabled": true }
