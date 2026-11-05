@@ -12,9 +12,17 @@ use serde_json::Value;
 
 use crate::error::Result;
 
-/// Delivered spellings and selectors are source names, not curated text; they stay as
-/// the source delivers them.
-const SOURCE_NAMES: [&str; 3] = ["subject", "object", "spelling"];
+/// Field paths that hold source names, not curated text: selectors, delivered spellings
+/// and a classification's reader locator stay as the source delivers them. Exact paths
+/// from the top of an entry, so a nested key of the same name (a facet axis called
+/// `spelling`) is still curated text.
+const SOURCE_NAMES: [&str; 5] = [
+    "subject",
+    "object",
+    "fields.spelling",
+    "fact.fields.spelling",
+    "value_set",
+];
 
 /// Every curated string of `value` with its dotted field path, source names excepted.
 fn texts<'a>(value: &'a Value, path: &str, out: &mut Vec<(String, &'a str)>) {
@@ -23,12 +31,12 @@ fn texts<'a>(value: &'a Value, path: &str, out: &mut Vec<(String, &'a str)>) {
         Value::Array(items) => items.iter().for_each(|item| texts(item, path, out)),
         Value::Object(fields) => {
             for (key, item) in fields {
-                if !SOURCE_NAMES.contains(&key.as_str()) {
-                    let path = if path.is_empty() {
-                        key.clone()
-                    } else {
-                        format!("{path}.{key}")
-                    };
+                let path = if path.is_empty() {
+                    key.clone()
+                } else {
+                    format!("{path}.{key}")
+                };
+                if !SOURCE_NAMES.contains(&path.as_str()) {
                     texts(item, &path, out);
                 }
             }
@@ -108,10 +116,28 @@ pub(crate) fn curation(
     let inventory = curation.join("classifications.toml");
     for c in classifications {
         let at = format!("{}:{}", inventory.display(), c.line);
-        let mut value = serde_json::to_value(&c.classification)?;
-        // A reader locator: an inputs path, not curated text.
-        value.as_object_mut().map(|v| v.remove("value_set"));
-        entry(&at, &value, keys.as_ref(), &mut out);
+        entry(
+            &at,
+            &serde_json::to_value(&c.classification)?,
+            keys.as_ref(),
+            &mut out,
+        );
+    }
+    // Files with no source names: every line, comments included, is public text.
+    for file in ["inputs.toml", "tag-vocabulary.toml", "retired.toml"] {
+        let path = curation.join(file);
+        let Ok(text) = std::fs::read_to_string(&path) else {
+            continue;
+        };
+        for (n, line) in text.lines().enumerate() {
+            if let Some(name) = reg_readers::private_evidence::steward_name(line) {
+                out.push(format!(
+                    "{}:{}: steward-name: the line names a steward ({name}); reword it without the steward",
+                    path.display(),
+                    n + 1
+                ));
+            }
+        }
     }
     refuse(out)
 }

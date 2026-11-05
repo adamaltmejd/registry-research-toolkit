@@ -564,11 +564,13 @@ retirement and no redirect. The names are an exact list in `reg-readers`'s
 text split at every non-alphanumeric character, so `P1105_LopNr` and `p1105-lopnr` match
 and a code such as `CP1105` does not. A new steward adds its names to the list. There
 are no patterns. Source names are not curated text and are not checked: `subject`, link
-`object`, `spelling`, and a classification's `value_set` locator. A delivered spelling
-stays as the source delivers it. A steward holdings build (`reg-build holdings`, which
-passes a base) checks none of this: its curation is the steward's own. The ruling
-applies from the change forward. Git history and earlier release assets are left
-unchanged.
+`object`, a statement's own `spelling` field, and a classification's `value_set`
+locator, each at its exact field path (a facet axis named `spelling` is still checked).
+A delivered spelling stays as the source delivers it. `inputs.toml`,
+`tag-vocabulary.toml` and `retired.toml` hold no source names, so every line of them is
+checked, comments included. A steward holdings build (`reg-build holdings`, which passes
+a base) checks none of this: its curation is the steward's own. The ruling applies from
+the change forward. Git history and earlier release assets are left unchanged.
 
 **Value sets, populations and series.**
 

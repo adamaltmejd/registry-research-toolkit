@@ -514,8 +514,8 @@ fn reserved_provider_prefixes_refuse_at_lock() {
 
 #[test]
 fn steward_names_stay_out_of_the_global_catalog() {
-    // Regression: the global build publishes curated text or an id that names a data
-    // steward, or accepts a private:ev-NNNN reference the pinned private evidence file
+    // Regression: the global build publishes curated text, a line of a curation file
+    // without source names (inputs.toml) or an id that names a data steward, or accepts a private:ev-NNNN reference the pinned private evidence file
     // does not hold (maintainer ruling, 2026-11-05). Each refusal is located with its
     // code. Twin: a resolving reference builds, and the catalog carries the reference
     // only, never the private text.

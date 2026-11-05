@@ -17,6 +17,12 @@
       "to": "ifau-x = [\"t: X\"]",
       "located": "registers/demo/r/ids.toml:7: steward-name: ledger id \"ifau-x\" names a steward (IFAU)"
     },
+    "manifest": {
+      "file": "inputs.toml",
+      "from": "name = \"Demo\"",
+      "to": "name = \"Demo (SWECOV)\"",
+      "located": "inputs.toml:6: steward-name: the line names a steward (SWECOV)"
+    },
     "unresolved": {
       "file": "registers/demo/r/curation.toml",
       "to": "evidence = \"private:ev-0002\"",
