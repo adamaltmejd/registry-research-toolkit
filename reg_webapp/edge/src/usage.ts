@@ -79,28 +79,42 @@ function appMs(timing: string | null): number {
 function write(
   dataset: UsageDataset,
   steward: string,
-  blobs: { surface: string; kind: string; op: string; fqid?: string; q?: string; err?: string },
+  blobs: {
+    surface: string;
+    kind: string;
+    op: string;
+    fqid?: string;
+    q?: string;
+    err?: string;
+  },
   request: Request,
   response: { cache: string; status: number },
   doubles: [number, number, number, number],
 ): void {
-  dataset.writeDataPoint({
-    indexes: [`${steward}:${blobs.op}`.slice(0, 96)],
-    blobs: [
-      steward,
-      blobs.surface,
-      blobs.kind,
-      blobs.op,
-      blobs.fqid ?? "",
-      blobs.q ?? "",
-      blobs.err ?? "",
-      response.cache,
-      clientFamily(request.headers.get("user-agent")),
-      country(request),
-      String(response.status),
-    ],
-    doubles,
-  });
+  // The index is at most 96 bytes: `op` can be a client's JSON-RPC method, so it is
+  // made ASCII first. A failed write never decides the response.
+  const index = `${steward}:${blobs.op}`.replace(/[^\x20-\x7e]/g, "?").slice(0, 96);
+  try {
+    dataset.writeDataPoint({
+      indexes: [index],
+      blobs: [
+        steward,
+        blobs.surface,
+        blobs.kind,
+        blobs.op,
+        blobs.fqid ?? "",
+        blobs.q ?? "",
+        blobs.err ?? "",
+        response.cache,
+        clientFamily(request.headers.get("user-agent")),
+        country(request),
+        String(response.status),
+      ],
+      doubles,
+    });
+  } catch {
+    // Recording is best-effort.
+  }
 }
 
 // Record one forwarded request and return its response without the label. `started`
@@ -114,14 +128,9 @@ export function recordRequest(
   started: number,
 ): Response {
   const label = parseLabel(origin.headers.get(LABEL_HEADER));
-  if (!dataset) {
-    if (!label) return origin;
-    const stripped = new Response(origin.body, origin);
-    stripped.headers.delete(LABEL_HEADER);
-    return stripped;
-  }
   const response = new Response(origin.body, origin);
   response.headers.delete(LABEL_HEADER);
+  if (!dataset) return response;
   const cache = origin.headers.get("cf-cache-status") ?? "";
   // A 304 answered before the route runs carries no label: a revalidation, counted
   // without attributing it.
@@ -131,13 +140,21 @@ export function recordRequest(
   write(
     dataset,
     steward,
-    { surface: where, kind: "req", op, fqid: label?.fqids?.join(" "), q: label?.q, err: label?.err },
+    {
+      surface: where,
+      kind: "req",
+      op,
+      fqid: label?.fqids?.join(" "),
+      q: label?.q,
+      err: label?.err,
+    },
     request,
     status,
     [
       Date.now() - started,
       FROM_ORIGIN.has(cache) ? appMs(origin.headers.get("server-timing")) : -1,
-      Number(origin.headers.get("content-length") ?? 0) || 0,
+      // -1 when the size is unknown (a chunked or compressed answer).
+      Number(origin.headers.get("content-length") ?? -1),
       typeof label?.n === "number" ? label.n : -1,
     ],
   );
@@ -145,7 +162,14 @@ export function recordRequest(
   // over MCP); at most 100, under the 250 data points a worker may write.
   if (where === "mcp" && op === "order") {
     for (const fqid of (label?.fqids ?? []).slice(0, 100)) {
-      write(dataset, steward, { surface: where, kind: "pick", op, fqid }, request, status, [0, -1, 0, -1]);
+      write(
+        dataset,
+        steward,
+        { surface: where, kind: "pick", op, fqid },
+        request,
+        status,
+        [0, -1, -1, -1],
+      );
     }
   }
   return response;
@@ -153,7 +177,9 @@ export function recordRequest(
 
 // The SPA's pick beacon, `POST /api/event` with `{"fqid": "..."}`: answered here, never
 // forwarded or cached. A Cloudflare rate-limiting rule on the path bounds it, since the
-// origin's per-client limit never sees it.
+// origin's per-client limit never sees it. Only the SPA's own page may send it
+// (`Sec-Fetch-Site: same-origin`), with a declared length, so another site cannot
+// inflate picks and no body is read unbounded.
 export async function recordPick(
   dataset: UsageDataset | undefined,
   steward: string,
@@ -162,7 +188,10 @@ export async function recordPick(
   const answer = (status: number) =>
     new Response(null, { status, headers: { "cache-control": "no-store" } });
   if (request.method !== "POST") return answer(405);
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_EVENT_BYTES) return answer(413);
+  if (request.headers.get("sec-fetch-site") !== "same-origin") return answer(403);
+  const length = request.headers.get("content-length");
+  if (length === null) return answer(411);
+  if (!(Number(length) <= MAX_EVENT_BYTES)) return answer(413);
   const text = await request.text();
   if (text.length > MAX_EVENT_BYTES) return answer(413);
   let fqid: unknown;
@@ -180,7 +209,7 @@ export async function recordPick(
       { surface: "spa", kind: "pick", op: "event", fqid },
       request,
       { cache: "", status: 204 },
-      [0, -1, 0, -1],
+      [0, -1, -1, -1],
     );
   }
   return answer(204);

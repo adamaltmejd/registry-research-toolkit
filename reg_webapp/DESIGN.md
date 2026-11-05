@@ -256,7 +256,8 @@ own origin and worker.
   binding `USAGE`, kept 3 months) per forwarded `/api` and `/mcp` request, from the
   origin's `x-reg-usage` label, which `edge/src/usage.ts` strips before answering. The
   blobs are steward (`STEWARD` var), surface, kind, op, fqids, q, err, cache status,
-  client family, country and status. The doubles are edge ms, app ms, bytes and hits.
+  client family, country and status. The doubles are edge ms (to the origin's response
+  headers), app ms, bytes (`-1` when unknown) and hits.
   The index is `steward:op`.
   - **Surface** is `mcp` for `/mcp`, `spa` for an `/api` request with
     `Sec-Fetch-Site: same-origin`, and `rest` otherwise.
@@ -267,7 +268,9 @@ own origin and worker.
     the IP address and any cookie are never written.
   - **An MCP `order`** adds one `pick` data point per bound variable.
   - **`POST /api/event`** (SPA deployment only) is the SPA's pick beacon,
-    `{"fqid": ...}`, answered 204 `no-store` at the edge and never forwarded. Because it
+    `{"fqid": ...}`, answered 204 `no-store` at the edge and never forwarded. It is
+    taken only same-origin (`Sec-Fetch-Site`) with a declared length of at most 1 KiB.
+    Because it
     never reaches the origin's rate limit, a Cloudflare rate-limiting rule on that path
     bounds it.
   - **Invocation logs are off** (`observability.logs.invocation_logs: false`). They
