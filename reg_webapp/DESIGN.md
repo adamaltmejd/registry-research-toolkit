@@ -429,6 +429,38 @@ Confirm `REG_META_EDGE_TOKEN` on Fly app `reg-webapp-swecov` equals `EDGE_TOKEN`
 worker `reg-webapp-swecov-edge`; the repository secrets must include
 `FLY_API_TOKEN_SWECOV` and `CLOUDFLARE_API_TOKEN` scoped to zone swecov.se.
 
+## Steward repositories (reusable workflows)
+
+A steward repository builds, publishes and deploys itself (maintainer 2026-11-04, SWECOV
+repository move R1, R8, R14). It pins one `reg_meta` release and calls three reusable
+workflows from the toolkit at that tag, passing the same tag as `reg_meta_tag`. None of
+them builds Rust for the steward: they download the release's `reg-build`, `reg-meta`,
+base catalog and SPA bundle, each checked against its digest. Each workflow's header
+lists its inputs and an example call.
+
+- `steward-build.yml`: `reg-build holdings` on the caller's clean checkout (the pin is
+  that checkout: `origin`, `HEAD` and `--config`), which also runs the pair verifier and
+  its content check, then `reg-build diff --holdings` against a previous holdings asset
+  (a release in the caller repository or a URL). With no previous asset, the diff is
+  skipped and the summary says so. A second job runs the release's pair conformance with
+  the released `reg-meta`. The diff goes to the job summary, which is the review gate on
+  a PR. The pair leaves as a workflow artifact.
+- `steward-deploy.yml`: bakes `reg_webapp/steward.Dockerfile` (the runtime stage of the
+  toolkit image, with the binary and both DBs from the build context, so the image needs
+  no token), deploys it to the steward's Fly app, deploys the toolkit's edge worker with
+  the caller's wrangler config and the release's SPA, then probes the edge as the
+  toolkit's own deploys do (`.wasm`, cache, `/api/context`, hosted MCP). It deploys a
+  holdings release by tag, so rollback is a redeploy of an older tag.
+  `access: cloudflare-access` serves a host behind Cloudflare Access: the probes send a
+  service token, and the cache probe is skipped. `dry_run` builds and runs the image and
+  stops there.
+- `steward-bump.yml`: when a newer `reg_meta/v*` release exists, re-locks the curation
+  against its base, moves `toolkit.toml` and the caller's `uses:` refs, and opens a PR
+  with a token the caller supplies (`GITHUB_TOKEN` cannot change workflow files).
+
+The inputs of these workflows are a contract with every steward repository. A change to
+them breaks a steward only at its next bump, as a red PR; the release notes name it.
+
 ## Why CI uses a fixture DB, not a real asset
 
 Conformance builds synthetic catalogs from readable source contracts with `reg-build`

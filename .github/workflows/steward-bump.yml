@@ -1,0 +1,118 @@
+name: Steward bump
+
+# Reusable: a steward repository's scheduled bump (SWECOV move T5, R10 and R13). When a
+# newer reg_meta/v* release than the steward's `toolkit.toml` pin exists, re-lock the
+# steward's curation against that release's base, move the pin and every
+# `steward-*.yml@reg_meta/v…` ref in the caller's workflows, and open a PR. The PR's own
+# CI (the caller's steward-build) posts the holdings diff for review; merging it
+# publishes and deploys. A release that breaks the steward contract fails the re-lock
+# here, and the steward stays on its last good pin.
+#
+#   on: { schedule: [{ cron: "23 5 * * *" }], workflow_dispatch: {} }
+#   jobs:
+#     bump:
+#       uses: adamaltmejd/registry-research-toolkit/.github/workflows/steward-bump.yml@reg_meta/vX.Y.Z
+#       with: { steward: swecov }
+#       secrets: { BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }} }
+#
+# `toolkit.toml` at the repository root holds the pin: `tag = "reg_meta/vX.Y.Z"`.
+# BUMP_TOKEN is a fine-grained token on the steward repository with contents,
+# pull-requests and workflows write: GITHUB_TOKEN can neither push a change under
+# .github/workflows/ nor open a PR that triggers the PR's CI.
+
+on:
+  workflow_call:
+    inputs:
+      steward:
+        description: The steward id, for the PR title.
+        required: true
+        type: string
+      curation:
+        description: The steward's curation directory, relative to the repository root.
+        default: curation
+        type: string
+    secrets:
+      BUMP_TOKEN:
+        required: true
+
+env:
+  TOOLKIT: adamaltmejd/registry-research-toolkit
+  TARGET: x86_64-unknown-linux-gnu
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ secrets.BUMP_TOKEN }}
+      STEWARD: ${{ inputs.steward }}
+      CURATION: ${{ inputs.curation }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.BUMP_TOKEN }}
+      - name: Find a newer release
+        id: find
+        run: |
+          set -euo pipefail
+          current=$(sed -n 's/^tag = "\(reg_meta\/v[0-9.]*\)"$/\1/p' toolkit.toml)
+          [ -n "$current" ] || { echo "::error::toolkit.toml has no tag = \"reg_meta/vX.Y.Z\" line"; exit 1; }
+          newest=$(gh release list --repo "$TOOLKIT" --limit 100 --exclude-drafts --exclude-pre-releases \
+            --json tagName -q '.[].tagName | select(startswith("reg_meta/v"))' | sort -V | tail -n 1)
+          echo "pinned $current, newest $newest"
+          if [ "$newest" = "$current" ] || [ "$(printf '%s\n%s\n' "$current" "$newest" | sort -V | tail -n 1)" = "$current" ]; then
+            echo "::notice::$current is the newest reg_meta release"
+            exit 0
+          fi
+          branch="bump/${newest//\//-}"
+          if git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+            echo "::notice::$branch exists: its PR is open or awaits cleanup"
+            exit 0
+          fi
+          { echo "current=$current"; echo "newest=$newest"; echo "branch=$branch"; } >> "$GITHUB_OUTPUT"
+      - name: Re-lock against the newer base
+        if: steps.find.outputs.newest
+        env:
+          NEWEST: ${{ steps.find.outputs.newest }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/toolkit"
+          mkdir -p "$dir"
+          gh release download "$NEWEST" --repo "$TOOLKIT" --dir "$dir" \
+            --pattern "reg-build-$TARGET" --pattern "reg-build-$TARGET.sha256" \
+            --pattern reg_meta.db.zst
+          (cd "$dir" && shasum -a 256 -c "reg-build-$TARGET.sha256")
+          want=$(gh release view "$NEWEST" --repo "$TOOLKIT" --json assets \
+            --jq '.assets[] | select(.name == "reg_meta.db.zst") | .digest')
+          test "$want" = "sha256:$(shasum -a 256 "$dir/reg_meta.db.zst" | cut -d' ' -f1)" ||
+            { echo "::error::reg_meta.db.zst does not match its digest on $NEWEST"; exit 1; }
+          zstd -q -d --rm "$dir/reg_meta.db.zst" -o "$dir/reg_meta.db"
+          install -m 755 "$dir/reg-build-$TARGET" "$dir/reg-build"
+          "$dir/reg-build" lock --base "$dir/reg_meta.db" --inputs "$GITHUB_WORKSPACE" \
+            --curation "$GITHUB_WORKSPACE/$CURATION"
+      - name: Move the pin and open the PR
+        if: steps.find.outputs.newest
+        env:
+          CURRENT: ${{ steps.find.outputs.current }}
+          NEWEST: ${{ steps.find.outputs.newest }}
+          BRANCH: ${{ steps.find.outputs.branch }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          old=${CURRENT//./\\.}
+          sed -i "s|^tag = \"$old\"$|tag = \"$NEWEST\"|" toolkit.toml
+          # Every reusable-workflow ref at the old pin moves with it.
+          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
+            [ -f "$f" ] || continue
+            sed -i "s|\(/\.github/workflows/steward-[a-z]*\.yml\)@$old\$|\1@$NEWEST|; s|\(/\.github/workflows/steward-[a-z]*\.yml\)@$old\([[:space:]]\)|\1@$NEWEST\2|" "$f"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add -A
+          git commit -q -m "chore($STEWARD): bump reg_meta to ${NEWEST#reg_meta/v} and re-lock"
+          git push -q origin "$BRANCH"
+          gh pr create --base "$DEFAULT_BRANCH" --head "$BRANCH" \
+            --title "chore($STEWARD): bump reg_meta to ${NEWEST#reg_meta/v} and re-lock" \
+            --body "Moves the toolkit pin from \`$CURRENT\` to \`$NEWEST\` and re-locks the curation against its base. Review the holdings diff in this PR's steward-build summary; merging publishes and deploys."
